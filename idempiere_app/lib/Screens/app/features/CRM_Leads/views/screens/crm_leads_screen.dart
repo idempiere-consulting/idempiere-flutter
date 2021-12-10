@@ -78,7 +78,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                   ? ListView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      itemCount: 1,
+                      itemCount: 5,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           elevation: 8.0,
@@ -87,11 +87,8 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                           child: Container(
                             decoration: const BoxDecoration(
                                 color: Color.fromRGBO(64, 75, 96, .9)),
-                            child: ListTile(
-                              onTap: () {
-                                log("tile pressed");
-                              },
-                              contentPadding: const EdgeInsets.symmetric(
+                            child: ExpansionTile(
+                              tilePadding: const EdgeInsets.symmetric(
                                   horizontal: 20.0, vertical: 10.0),
                               leading: Container(
                                 padding: const EdgeInsets.only(right: 12.0),
@@ -101,15 +98,18 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                             width: 1.0,
                                             color: Colors.white24))),
                                 child: IconButton(
-                                  icon: const Icon(Icons.info),
-                                  tooltip: 'Increase volume by 10',
+                                  icon: const Icon(
+                                    Icons.person,
+                                    color: Colors.green,
+                                  ),
+                                  tooltip: 'Lead Info',
                                   onPressed: () {
                                     log("info button pressed");
                                   },
                                 ),
                               ),
                               title: Text(
-                                controller.trx.windowrecords![index].bPName ??
+                                controller.trx.windowrecords![index].name ??
                                     "???",
                                 style: const TextStyle(
                                     color: Colors.white,
@@ -129,11 +129,90 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                   ),
                                 ],
                               ),
-                              trailing: const Icon(
+                              /* trailing: const Icon(
                                 Icons.keyboard_arrow_right,
                                 color: Colors.white,
                                 size: 30.0,
-                              ),
+                              ), */
+                              childrenPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
+                              children: [
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          "BPartner: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(controller.trx
+                                                .windowrecords![index].bPName ??
+                                            ""),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          "Tel: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(controller.trx
+                                                .windowrecords![index].phone ??
+                                            ""),
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.call,
+                                            color: Colors.green,
+                                          ),
+                                          tooltip: 'Call',
+                                          onPressed: () {
+                                            log("info button pressed");
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          "Email: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(controller.trx
+                                                .windowrecords![index].eMail ??
+                                            ""),
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.mail,
+                                            color: Colors.white,
+                                          ),
+                                          tooltip: 'EMail',
+                                          onPressed: () {
+                                            log("info button pressed");
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          "Agente: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(controller
+                                                .trx
+                                                .windowrecords![index]
+                                                .salesRepID!
+                                                .identifier ??
+                                            ""),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         );
