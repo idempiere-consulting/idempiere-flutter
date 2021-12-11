@@ -76,9 +76,10 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
               const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
+                      primary: false,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      itemCount: 5,
+                      itemCount: 100,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           elevation: 8.0,
@@ -130,10 +131,10 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                 ],
                               ),
                               /* trailing: const Icon(
-                                Icons.keyboard_arrow_right,
-                                color: Colors.white,
-                                size: 30.0,
-                              ), */
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
                               childrenPadding: const EdgeInsets.symmetric(
                                   horizontal: 20.0, vertical: 10.0),
                               children: [
