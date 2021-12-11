@@ -1,7 +1,38 @@
 part of dashboard;
 
-class CRMController extends GetxController {
+class CRMOpportunityController extends GetxController {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late LeadJson _trx;
+  var _dataAvailable = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    getLeads();
+  }
+
+  bool get dataAvailable => _dataAvailable.value;
+  LeadJson get trx => _trx;
+
+  Future<void> getLeads() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      _trx = LeadJson.fromJson(jsonDecode(response.body));
+      //print(trx.rowcount);
+      //print(response.body);
+      _dataAvailable.value = _trx != null;
+    }
+  }
 
   void openDrawer() {
     if (scaffoldKey.currentState != null) {
@@ -27,7 +58,7 @@ class CRMController extends GetxController {
     return [
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/CRMleads');
+          Get.toNamed('/leads');
         },
         addFunction: () {
           //Get.toNamed('/createLead');
@@ -46,13 +77,9 @@ class CRMController extends GetxController {
         ],
       ),
       TaskCardData(
-        seeAllFunction: () {
-          Get.toNamed('/CRMOpportunity');},
-        addFunction: () {
-          //Get.toNamed('/createLead');
-          log('hallooooo');
-        },
-        title: "Opportunità",
+        seeAllFunction: () {},
+        addFunction: () {},
+        title: "Landing page UI Design",
         dueDay: -1,
         totalComments: 50,
         totalContributors: 34,
@@ -152,5 +179,44 @@ class CRMController extends GetxController {
         totalUnread: 1,
       ),
     ];
+  }
+}
+
+class Provider extends GetConnect {
+  Future<void> getLeads() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    //print(authorization);
+    //String clientid = GetStorage().read('clientid');
+    /* final response = await get(
+      'http://' + ip + '/api/v1/windows/lead',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.status.hasError) {
+      return Future.error(response.statusText!);
+    } else {
+      return response.body;
+    } */
+
+    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+      //print(json['window-records'][0]);
+      return json;
+    } else {
+      return Future.error(response.body);
+    }
   }
 }
