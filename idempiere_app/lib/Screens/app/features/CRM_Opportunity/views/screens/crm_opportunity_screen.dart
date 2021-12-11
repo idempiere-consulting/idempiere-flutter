@@ -8,7 +8,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -20,7 +20,6 @@ import 'package:idempiere_app/Screens/app/shared_components/search_field.dart';
 import 'package:idempiere_app/Screens/app/shared_components/selection_button.dart';
 import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
-import 'package:idempiere_app/Screens/app/shared_components/upgrade_premium_card.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
@@ -72,13 +71,13 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              const Text("LEADS LIST"),
+              const Text("OPPORTUNITIES LIST"),
               const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      itemCount: 5,
+                      itemCount: controller.trx.rowcount,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           elevation: 8.0,
@@ -99,7 +98,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                             color: Colors.white24))),
                                 child: IconButton(
                                   icon: const Icon(
-                                    Icons.person,
+                                    Icons.paid,
                                     color: Colors.green,
                                   ),
                                   tooltip: 'Lead Info',
@@ -109,7 +108,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                 ),
                               ),
                               title: Text(
-                                controller.trx.windowrecords![index].name ??
+                                controller.trx.records![index].cBPartnerID
+                                        ?.identifier ??
                                     "???",
                                 style: const TextStyle(
                                     color: Colors.white,
@@ -122,8 +122,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                   const Icon(Icons.linear_scale,
                                       color: Colors.yellowAccent),
                                   Text(
-                                    controller.trx.windowrecords![index]
-                                            .leadStatus!.identifier ??
+                                    controller.trx.records![index]
+                                            .cSalesStageID!.identifier ??
                                         "??",
                                     style: const TextStyle(color: Colors.white),
                                   ),
@@ -142,57 +142,38 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                     Row(
                                       children: [
                                         const Text(
-                                          "BPartner: ",
+                                          "Contatto: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(controller.trx
-                                                .windowrecords![index].bPName ??
+                                        Text(controller.trx.records![index]
+                                                .aDUserID?.identifier ??
                                             ""),
                                       ],
                                     ),
                                     Row(
                                       children: [
                                         const Text(
-                                          "Tel: ",
+                                          "Prodotto: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(controller.trx
-                                                .windowrecords![index].phone ??
+                                        Text(controller.trx.records![index]
+                                                .mProductID?.identifier ??
                                             ""),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.call,
-                                            color: Colors.green,
-                                          ),
-                                          tooltip: 'Call',
-                                          onPressed: () {
-                                            log("info button pressed");
-                                          },
-                                        ),
                                       ],
                                     ),
                                     Row(
                                       children: [
                                         const Text(
-                                          "Email: ",
+                                          "Importo Atteso: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(controller.trx
-                                                .windowrecords![index].eMail ??
-                                            ""),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.mail,
-                                            color: Colors.white,
-                                          ),
-                                          tooltip: 'EMail',
-                                          onPressed: () {
-                                            log("info button pressed");
-                                          },
-                                        ),
+                                        Text("€" +
+                                            controller.trx.records![index]
+                                                .opportunityAmt
+                                                .toString()),
                                       ],
                                     ),
                                     Row(
@@ -202,11 +183,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .salesRepID!
-                                                .identifier ??
+                                        Text(controller.trx.records![index]
+                                                .salesRepID!.identifier ??
                                             ""),
                                       ],
                                     ),

@@ -3,6 +3,7 @@ part of dashboard;
 class CRMLeadController extends GetxController {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late LeadJson _trx;
+  // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
   @override
@@ -30,6 +31,7 @@ class CRMLeadController extends GetxController {
       _trx = LeadJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
+      // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     }
   }
@@ -70,10 +72,10 @@ class CRMLeadController extends GetxController {
         type: TaskType.inProgress,
         totalContributors: 30,
         profilContributors: [
-          AssetImage(ImageRasterPath.avatar1),
-          AssetImage(ImageRasterPath.avatar2),
-          AssetImage(ImageRasterPath.avatar3),
-          AssetImage(ImageRasterPath.avatar4),
+          const AssetImage(ImageRasterPath.avatar1),
+          const AssetImage(ImageRasterPath.avatar2),
+          const AssetImage(ImageRasterPath.avatar3),
+          const AssetImage(ImageRasterPath.avatar4),
         ],
       ),
       TaskCardData(
@@ -85,10 +87,10 @@ class CRMLeadController extends GetxController {
         totalContributors: 34,
         type: TaskType.inProgress,
         profilContributors: [
-          AssetImage(ImageRasterPath.avatar5),
-          AssetImage(ImageRasterPath.avatar6),
-          AssetImage(ImageRasterPath.avatar7),
-          AssetImage(ImageRasterPath.avatar8),
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
         ],
       ),
       TaskCardData(
@@ -100,10 +102,10 @@ class CRMLeadController extends GetxController {
         totalContributors: 34,
         type: TaskType.done,
         profilContributors: [
-          AssetImage(ImageRasterPath.avatar5),
-          AssetImage(ImageRasterPath.avatar3),
-          AssetImage(ImageRasterPath.avatar4),
-          AssetImage(ImageRasterPath.avatar2),
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar3),
+          const AssetImage(ImageRasterPath.avatar4),
+          const AssetImage(ImageRasterPath.avatar2),
         ],
       ),
     ];

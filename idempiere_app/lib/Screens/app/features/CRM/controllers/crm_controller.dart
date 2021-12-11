@@ -39,15 +39,16 @@ class CRMController extends GetxController {
         type: TaskType.inProgress,
         totalContributors: 30,
         profilContributors: [
-          AssetImage(ImageRasterPath.avatar1),
-          AssetImage(ImageRasterPath.avatar2),
-          AssetImage(ImageRasterPath.avatar3),
-          AssetImage(ImageRasterPath.avatar4),
+          const AssetImage(ImageRasterPath.avatar1),
+          const AssetImage(ImageRasterPath.avatar2),
+          const AssetImage(ImageRasterPath.avatar3),
+          const AssetImage(ImageRasterPath.avatar4),
         ],
       ),
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/CRMOpportunity');},
+          Get.toNamed('/CRMOpportunity');
+        },
         addFunction: () {
           //Get.toNamed('/createLead');
           log('hallooooo');
@@ -58,10 +59,10 @@ class CRMController extends GetxController {
         totalContributors: 34,
         type: TaskType.inProgress,
         profilContributors: [
-          AssetImage(ImageRasterPath.avatar5),
-          AssetImage(ImageRasterPath.avatar6),
-          AssetImage(ImageRasterPath.avatar7),
-          AssetImage(ImageRasterPath.avatar8),
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
         ],
       ),
       TaskCardData(
@@ -73,10 +74,10 @@ class CRMController extends GetxController {
         totalContributors: 34,
         type: TaskType.done,
         profilContributors: [
-          AssetImage(ImageRasterPath.avatar5),
-          AssetImage(ImageRasterPath.avatar3),
-          AssetImage(ImageRasterPath.avatar4),
-          AssetImage(ImageRasterPath.avatar2),
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar3),
+          const AssetImage(ImageRasterPath.avatar4),
+          const AssetImage(ImageRasterPath.avatar2),
         ],
       ),
     ];

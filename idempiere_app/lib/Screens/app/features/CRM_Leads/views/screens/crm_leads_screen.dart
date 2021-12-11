@@ -20,7 +20,6 @@ import 'package:idempiere_app/Screens/app/shared_components/search_field.dart';
 import 'package:idempiere_app/Screens/app/shared_components/selection_button.dart';
 import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
-import 'package:idempiere_app/Screens/app/shared_components/upgrade_premium_card.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
