@@ -52,7 +52,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: controller.scaffoldKey,
+      //key: controller.scaffoldKey,
       drawer: (ResponsiveBuilder.isDesktop(context))
           ? null
           : Drawer(
@@ -66,7 +66,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
           mobileBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(onPressedMenu: () => controller.openDrawer()),
+              _buildHeader(
+                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
               _buildProfile(data: controller.getProfil()),
@@ -209,7 +210,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                     children: [
                       const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
                       _buildHeader(
-                          onPressedMenu: () => controller.openDrawer()),
+                          onPressedMenu: () =>
+                              Scaffold.of(context).openDrawer()),
                       const SizedBox(height: kSpacing * 2),
                       _buildProgress(
                         axis: (constraints.maxWidth < 950)

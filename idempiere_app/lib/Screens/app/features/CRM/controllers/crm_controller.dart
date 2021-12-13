@@ -1,13 +1,13 @@
 part of dashboard;
 
 class CRMController extends GetxController {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  /* final scaffoldKey = GlobalKey<ScaffoldState>();
 
   void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();
     }
-  }
+  } */
 
   // Data
   _Profile getProfil() {

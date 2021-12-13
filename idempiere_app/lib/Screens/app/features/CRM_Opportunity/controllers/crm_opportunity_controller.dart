@@ -1,7 +1,7 @@
 part of dashboard;
 
 class CRMOpportunityController extends GetxController {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  //final scaffoldKey = GlobalKey<ScaffoldState>();
   late OpportunityJson _trx;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
@@ -36,11 +36,11 @@ class CRMOpportunityController extends GetxController {
     }
   }
 
-  void openDrawer() {
+  /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();
     }
-  }
+  } */
 
   // Data
   _Profile getProfil() {

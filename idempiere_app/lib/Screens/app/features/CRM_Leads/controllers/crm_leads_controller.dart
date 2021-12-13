@@ -1,7 +1,7 @@
 part of dashboard;
 
 class CRMLeadController extends GetxController {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  //final scaffoldKey = GlobalKey<ScaffoldState>();
   late LeadJson _trx;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
@@ -36,11 +36,11 @@ class CRMLeadController extends GetxController {
     }
   }
 
-  void openDrawer() {
+  /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();
     }
-  }
+  } */
 
   // Data
   _Profile getProfil() {

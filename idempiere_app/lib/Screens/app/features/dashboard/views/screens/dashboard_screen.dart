@@ -48,7 +48,7 @@ class DashboardScreen extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: controller.scaffoldKey,
+      //key: controller.scaffoldKey,
       drawer: (ResponsiveBuilder.isDesktop(context))
           ? null
           : Drawer(
@@ -62,7 +62,8 @@ class DashboardScreen extends GetView<DashboardController> {
         mobileBuilder: (context, constraints) {
           return Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-            _buildHeader(onPressedMenu: () => controller.openDrawer()),
+            _buildHeader(
+                onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
             _buildProfile(data: controller.getProfil()),
@@ -101,7 +102,8 @@ class DashboardScreen extends GetView<DashboardController> {
                 child: Column(
                   children: [
                     const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                    _buildHeader(onPressedMenu: () => controller.openDrawer()),
+                    _buildHeader(
+                        onPressedMenu: () => Scaffold.of(context).openDrawer()),
                     const SizedBox(height: kSpacing * 2),
                     _buildProgress(
                       axis: (constraints.maxWidth < 950)

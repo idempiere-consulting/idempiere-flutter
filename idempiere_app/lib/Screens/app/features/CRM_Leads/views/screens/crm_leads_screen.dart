@@ -52,7 +52,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: controller.scaffoldKey,
+      //key: controller.scaffoldKey,
       drawer: (ResponsiveBuilder.isDesktop(context))
           ? null
           : Drawer(
@@ -66,7 +66,8 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
           mobileBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(onPressedMenu: () => controller.openDrawer()),
+              _buildHeader(
+                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
               _buildProfile(data: controller.getProfil()),
@@ -205,8 +206,8 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                         Text(controller
                                                 .trx
                                                 .windowrecords![index]
-                                                .salesRepID!
-                                                .identifier ??
+                                                .salesRepID
+                                                ?.identifier ??
                                             ""),
                                       ],
                                     ),
@@ -231,7 +232,8 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                     children: [
                       const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
                       _buildHeader(
-                          onPressedMenu: () => controller.openDrawer()),
+                          onPressedMenu: () =>
+                              Scaffold.of(context).openDrawer()),
                       const SizedBox(height: kSpacing * 2),
                       _buildProgress(
                         axis: (constraints.maxWidth < 950)
