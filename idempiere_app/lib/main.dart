@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/', page: () => const WelcomeScreen()),
         GetPage(
-          name: '/home',
+          name: '/Dashboard',
           page: () => const DashboardScreen(),
           binding: DashboardBinding(),
         ),

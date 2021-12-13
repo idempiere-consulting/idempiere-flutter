@@ -60,6 +60,7 @@ class _Sidebar extends StatelessWidget {
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
+                Get.toNamed('/${value.label}');
               },
             ),
             const Divider(thickness: 1),
