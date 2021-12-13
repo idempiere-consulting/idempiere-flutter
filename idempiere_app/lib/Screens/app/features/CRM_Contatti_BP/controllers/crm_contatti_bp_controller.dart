@@ -2,23 +2,23 @@ part of dashboard;
 
 class CRMContattiBPController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late LeadJson _trx;
+  late ContactsJson _trx;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    getLeads();
+    getContacts();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  LeadJson get trx => _trx;
+  ContactsJson get trx => _trx;
 
-  Future<void> getLeads() async {
+  Future<void> getContacts() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('http://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -28,8 +28,8 @@ class CRMContattiBPController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = LeadJson.fromJson(jsonDecode(response.body));
-      //print(trx.rowcount);
+      _trx = ContactsJson.fromJson(jsonDecode(response.body));
+      //print(_trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;

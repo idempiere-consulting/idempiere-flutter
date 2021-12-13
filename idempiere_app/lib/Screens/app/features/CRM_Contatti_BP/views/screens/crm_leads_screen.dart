@@ -8,7 +8,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contatti_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -72,72 +72,73 @@ class CRMContattiBPScreen extends GetView<CRMContattiBPController> {
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              const Text("LEADS LIST"),
+              const Text("LISTA CONTATTI BUSINESS PARTNER"),
               const SizedBox(height: kSpacing),
-              Obx(() => controller.dataAvailable
-                  ? ListView.builder(
-                      primary: false,
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: 100,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 8.0,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 6.0),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Color.fromRGBO(64, 75, 96, .9)),
-                            child: ExpansionTile(
-                              tilePadding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              leading: Container(
-                                padding: const EdgeInsets.only(right: 12.0),
-                                decoration: const BoxDecoration(
-                                    border: Border(
-                                        right: BorderSide(
-                                            width: 1.0,
-                                            color: Colors.white24))),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.person,
-                                    color: Colors.green,
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: 100,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.person,
+                                      color: Colors.green,
+                                    ),
+                                    tooltip: 'Lead Info',
+                                    onPressed: () {
+                                      log("info button pressed");
+                                    },
                                   ),
-                                  tooltip: 'Lead Info',
-                                  onPressed: () {
-                                    log("info button pressed");
-                                  },
                                 ),
-                              ),
-                              title: Text(
-                                controller.trx.windowrecords![index].name ??
-                                    "???",
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                title: Text(
+                                  controller.trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                              subtitle: Row(
-                                children: <Widget>[
-                                  const Icon(Icons.linear_scale,
-                                      color: Colors.yellowAccent),
-                                  Text(
-                                    controller.trx.windowrecords![index]
-                                            .leadStatus!.identifier ??
-                                        "??",
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              /* trailing: const Icon(
+                                subtitle: Row(
+                                  children: <Widget>[
+                                    const Icon(Icons.linear_scale,
+                                        color: Colors.yellowAccent),
+                                    Text(
+                                      controller.trx.records![index].cbPartnerID
+                                              ?.identifier ??
+                                          "??",
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
                                     Icons.keyboard_arrow_right,
                                     color: Colors.white,
                                     size: 30.0,
                                   ), */
-                              childrenPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              children: [
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                /* children: [
                                 Column(
                                   children: [
                                     Row(
@@ -213,13 +214,16 @@ class CRMContattiBPScreen extends GetView<CRMContattiBPController> {
                                     ),
                                   ],
                                 ),
-                              ],
+                              ], */
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    )
-                  : const Text('... waiting ...')),
+                          );
+                        },
+                      )
+                    : const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+              ),
             ]);
           },
           tabletBuilder: (context, constraints) {

@@ -197,7 +197,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         );
                       },
                     )
-                  : const Text('... waiting ...')),
+                  : const Center(child: CircularProgressIndicator())),
             ]);
           },
           tabletBuilder: (context, constraints) {
