@@ -11,6 +11,8 @@ import 'package:idempiere_app/Screens/app/features/CRM/views/screens/crm_screen.
 import 'package:idempiere_app/Screens/app/features/CRM_Clienti_BP/views/screens/crm_clienti_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contatti_BP/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Listino_Prodotti/views/screens/crm_listino_prodotti_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Offerte/views/screens/crm_offerte_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task_Appuntamenti/views/screens/crm_task_appuntamenti_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
@@ -68,6 +70,16 @@ class MyApp extends StatelessWidget {
           name: '/Task&Appuntamenti',
           page: () => const CRMTaskAppuntamentiScreen(),
           binding: CRMTaskAppuntamentiBinding(),
+        ),
+        GetPage(
+          name: '/Offerte',
+          page: () => const CRMOfferteScreen(),
+          binding: CRMOfferteBinding(),
+        ),
+        GetPage(
+          name: '/ListinoProdotti',
+          page: () => const CRMListinoProdottiScreen(),
+          binding: CRMListinoProdottiBinding(),
         ),
       ],
       /* routes: {
