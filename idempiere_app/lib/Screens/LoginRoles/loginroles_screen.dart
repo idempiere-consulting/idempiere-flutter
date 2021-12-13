@@ -73,7 +73,14 @@ class _LoginRolesState extends State<LoginRoles> {
                                 tileColor: kPrimaryLightColor,
                                 contentPadding: const EdgeInsets.all(10),
                                 title: Center(
-                                    child: Text(snapshot.data![index]['name'])),
+                                  child: Text(
+                                    snapshot.data![index]['name'],
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                                 onTap: () {
                                   GetStorage().write('roleid',
                                       snapshot.data![index]['id'].toString());

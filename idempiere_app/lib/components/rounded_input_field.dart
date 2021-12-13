@@ -23,7 +23,7 @@ class RoundedInputField extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         decoration: InputDecoration(
-          hintStyle: const TextStyle(color: Colors.black),
+          hintStyle: const TextStyle(color: Colors.grey),
           hintText: hintText,
           icon: Icon(
             icon,
