@@ -27,7 +27,7 @@ class CRMController extends GetxController {
     return [
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/CRMleads');
+          Get.toNamed('/Leads');
         },
         addFunction: () {
           //Get.toNamed('/createLead');
@@ -47,7 +47,7 @@ class CRMController extends GetxController {
       ),
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/CRMOpportunity');
+          Get.toNamed('/Opportunity');
         },
         addFunction: () {
           //Get.toNamed('/createLead');
@@ -67,7 +67,7 @@ class CRMController extends GetxController {
       ),
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/CRMOpportunity');
+          Get.toNamed('/Contatti');
         },
         addFunction: () {},
         title: "Contatti Business Partner",
@@ -89,7 +89,7 @@ class CRMController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "iDempiere APP",
+      projectName: "CRM",
       releaseTime: DateTime.now(),
     );
   }

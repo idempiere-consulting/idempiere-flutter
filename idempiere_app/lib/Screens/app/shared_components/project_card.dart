@@ -104,7 +104,7 @@ class _TitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      data.capitalize!,
+      data,
       style: TextStyle(
         fontSize: 13,
         fontWeight: FontWeight.w600,

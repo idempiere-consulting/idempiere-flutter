@@ -43,17 +43,17 @@ class MyApp extends StatelessWidget {
           binding: CRMBinding(),
         ),
         GetPage(
-          name: '/CRMleads',
+          name: '/Lead',
           page: () => const CRMLeadScreen(),
           binding: CRMLeadBinding(),
         ),
         GetPage(
-          name: '/CRMOpportunity',
+          name: '/Opportunity',
           page: () => const CRMOpportunityScreen(),
           binding: CRMOpportunityBinding(),
         ),
         GetPage(
-          name: '/CRMContattiBP',
+          name: '/Contatti',
           page: () => const CRMContattiBPScreen(),
           binding: CRMContattiBPBinding(),
         ),

@@ -24,38 +24,28 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 1,
+              initialSelected: 0,
               data: [
                 SelectionButtonData(
-                  activeIcon: EvaIcons.grid,
-                  icon: EvaIcons.gridOutline,
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
                   label: "Dashboard",
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.person,
                   icon: EvaIcons.personOutline,
-                  label: "CRM",
+                  label: "Lead",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.calendar,
-                  icon: EvaIcons.calendarOutline,
-                  label: "Calendar",
+                  activeIcon: Icons.paid,
+                  icon: Icons.paid_outlined,
+                  label: "Opportunity",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.email,
-                  icon: EvaIcons.emailOutline,
-                  label: "Email",
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "Contatti",
                   totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Profil",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.settings,
-                  icon: EvaIcons.settingsOutline,
-                  label: "Setting",
                 ),
               ],
               onSelected: (index, value) {
