@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 //import 'package:idempiere_app/Screens/LoginWarehouses/loginwarehouses.dart';
 import 'package:idempiere_app/Screens/app/config/themes/app_theme.dart';
 import 'package:idempiere_app/Screens/app/features/CRM/views/screens/crm_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Clienti_BP/views/screens/crm_clienti_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contatti_BP/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
@@ -56,6 +57,11 @@ class MyApp extends StatelessWidget {
           name: '/Contatti',
           page: () => const CRMContattiBPScreen(),
           binding: CRMContattiBPBinding(),
+        ),
+        GetPage(
+          name: '/Clienti',
+          page: () => const CRMClientiBPScreen(),
+          binding: CRMClientiBPBinding(),
         ),
       ],
       /* routes: {
