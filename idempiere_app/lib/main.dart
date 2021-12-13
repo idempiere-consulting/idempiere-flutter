@@ -12,6 +12,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Clienti_BP/views/screens/
 import 'package:idempiere_app/Screens/app/features/CRM_Contatti_BP/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Task_Appuntamenti/views/screens/crm_task_appuntamenti_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 //import 'package:idempiere_app/constants.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
@@ -62,6 +63,11 @@ class MyApp extends StatelessWidget {
           name: '/Clienti',
           page: () => const CRMClientiBPScreen(),
           binding: CRMClientiBPBinding(),
+        ),
+        GetPage(
+          name: '/Task&Appuntamenti',
+          page: () => const CRMTaskAppuntamentiScreen(),
+          binding: CRMTaskAppuntamentiBinding(),
         ),
       ],
       /* routes: {
