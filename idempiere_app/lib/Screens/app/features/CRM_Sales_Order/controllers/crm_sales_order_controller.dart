@@ -1,9 +1,42 @@
 part of dashboard;
 
-class CRMController extends GetxController {
-  /* final scaffoldKey = GlobalKey<ScaffoldState>();
+class CRMSalesOrderController extends GetxController {
+  //final scaffoldKey = GlobalKey<ScaffoldState>();
+  late OpportunityJson _trx;
+  // ignore: prefer_final_fields
+  var _dataAvailable = false.obs;
 
-  void openDrawer() {
+  @override
+  void onInit() {
+    super.onInit();
+    getOpportunities();
+  }
+
+  bool get dataAvailable => _dataAvailable.value;
+  OpportunityJson get trx => _trx;
+
+  Future<void> getOpportunities() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' + ip + '/api/v1/models/c_opportunity');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      _trx = OpportunityJson.fromJson(jsonDecode(response.body));
+      //print(_trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      _dataAvailable.value = _trx != null;
+    }
+  }
+
+  /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();
     }
@@ -27,7 +60,7 @@ class CRMController extends GetxController {
     return [
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/Lead');
+          Get.toNamed('/leads');
         },
         addFunction: () {
           //Get.toNamed('/createLead');
@@ -46,14 +79,9 @@ class CRMController extends GetxController {
         ],
       ),
       TaskCardData(
-        seeAllFunction: () {
-          Get.toNamed('/Opportunity');
-        },
-        addFunction: () {
-          //Get.toNamed('/createLead');
-          log('hallooooo');
-        },
-        title: "Opportunità",
+        seeAllFunction: () {},
+        addFunction: () {},
+        title: "Landing page UI Design",
         dueDay: -1,
         totalComments: 50,
         totalContributors: 34,
@@ -66,100 +94,18 @@ class CRMController extends GetxController {
         ],
       ),
       TaskCardData(
-        seeAllFunction: () {
-          Get.toNamed('/Contatti');
-        },
+        seeAllFunction: () {},
         addFunction: () {},
-        title: "Contatti Business Partner",
+        title: "Landing page UI Design",
         dueDay: 1,
         totalComments: 50,
         totalContributors: 34,
-        type: TaskType.inProgress,
+        type: TaskType.done,
         profilContributors: [
           const AssetImage(ImageRasterPath.avatar5),
           const AssetImage(ImageRasterPath.avatar3),
           const AssetImage(ImageRasterPath.avatar4),
           const AssetImage(ImageRasterPath.avatar2),
-        ],
-      ),
-      TaskCardData(
-        seeAllFunction: () {
-          Get.toNamed('/Clienti');
-        },
-        addFunction: () {
-          //Get.toNamed('/createLead');
-          log('hallooooo');
-        },
-        title: "Clienti BP",
-        dueDay: -1,
-        totalComments: 50,
-        totalContributors: 34,
-        type: TaskType.inProgress,
-        profilContributors: [
-          const AssetImage(ImageRasterPath.avatar5),
-          const AssetImage(ImageRasterPath.avatar6),
-          const AssetImage(ImageRasterPath.avatar7),
-          const AssetImage(ImageRasterPath.avatar8),
-        ],
-      ),
-      TaskCardData(
-        seeAllFunction: () {
-          Get.toNamed('/Task&Appuntamenti');
-        },
-        addFunction: () {
-          //Get.toNamed('/createLead');
-          log('hallooooo');
-        },
-        title: "Task e Appuntamenti",
-        dueDay: -1,
-        totalComments: 50,
-        totalContributors: 34,
-        type: TaskType.inProgress,
-        profilContributors: [
-          const AssetImage(ImageRasterPath.avatar5),
-          const AssetImage(ImageRasterPath.avatar6),
-          const AssetImage(ImageRasterPath.avatar7),
-          const AssetImage(ImageRasterPath.avatar8),
-        ],
-      ),
-      TaskCardData(
-        seeAllFunction: () {
-          Get.toNamed('/Offerte');
-        },
-        addFunction: () {
-          //Get.toNamed('/createLead');
-          log('hallooooo');
-        },
-        title: "Offerte",
-        dueDay: -1,
-        totalComments: 50,
-        totalContributors: 34,
-        type: TaskType.inProgress,
-        profilContributors: [
-          const AssetImage(ImageRasterPath.avatar5),
-          const AssetImage(ImageRasterPath.avatar6),
-          const AssetImage(ImageRasterPath.avatar7),
-          const AssetImage(ImageRasterPath.avatar8),
-        ],
-      ),
-      TaskCardData(
-        seeAllFunction: () {
-          Get.toNamed('/Fattura');
-        },
-        addFunction: () {
-          //Get.toNamed('/createLead');
-          log('hallooooo');
-        },
-        title: "Fatture di Vendita",
-        dueDay: -1,
-        totalComments: 50,
-        totalContributors: 34,
-        type: TaskType.inProgress,
-        profilContributors: [
-          const AssetImage(ImageRasterPath.avatar5),
-          const AssetImage(ImageRasterPath.avatar6),
-          const AssetImage(ImageRasterPath.avatar7),
-          const AssetImage(ImageRasterPath.avatar8),
         ],
       ),
     ];
@@ -169,7 +115,7 @@ class CRMController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "CRM",
+      projectName: "iDempiere APP",
       releaseTime: DateTime.now(),
     );
   }

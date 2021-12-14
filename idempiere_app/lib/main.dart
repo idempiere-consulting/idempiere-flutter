@@ -8,13 +8,14 @@ import 'package:get_storage/get_storage.dart';
 //import 'package:idempiere_app/Screens/LoginWarehouses/loginwarehouses.dart';
 import 'package:idempiere_app/Screens/app/config/themes/app_theme.dart';
 import 'package:idempiere_app/Screens/app/features/CRM/views/screens/crm_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Clienti_BP/views/screens/crm_clienti_bp_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contatti_BP/views/screens/crm_leads_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_clienti_bp_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Listino_Prodotti/views/screens/crm_listino_prodotti_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Offerte/views/screens/crm_offerte_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Task_Appuntamenti/views/screens/crm_task_appuntamenti_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Product%20_List/views/screens/crm_product_list_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_appuntamenti_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 //import 'package:idempiere_app/constants.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
@@ -58,28 +59,33 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/Contatti',
-          page: () => const CRMContattiBPScreen(),
-          binding: CRMContattiBPBinding(),
+          page: () => const CRMContactBPScreen(),
+          binding: CRMContactBPBinding(),
         ),
         GetPage(
           name: '/Clienti',
-          page: () => const CRMClientiBPScreen(),
-          binding: CRMClientiBPBinding(),
+          page: () => const CRMCustomerBPScreen(),
+          binding: CRMCustomerBPBinding(),
         ),
         GetPage(
           name: '/Task&Appuntamenti',
-          page: () => const CRMTaskAppuntamentiScreen(),
-          binding: CRMTaskAppuntamentiBinding(),
+          page: () => const CRMTaskScreen(),
+          binding: CRMTaskBinding(),
         ),
         GetPage(
           name: '/Offerte',
-          page: () => const CRMOfferteScreen(),
-          binding: CRMOfferteBinding(),
+          page: () => const CRMSalesOrderScreen(),
+          binding: CRMSalesOrderBinding(),
         ),
         GetPage(
           name: '/ListinoProdotti',
-          page: () => const CRMListinoProdottiScreen(),
-          binding: CRMListinoProdottiBinding(),
+          page: () => const CRMProductListScreen(),
+          binding: CRMProductListBinding(),
+        ),
+        GetPage(
+          name: '/Fattura',
+          page: () => const CRMInvoiceScreen(),
+          binding: CRMInvoiceBinding(),
         ),
       ],
       /* routes: {
