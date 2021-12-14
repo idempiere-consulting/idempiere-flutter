@@ -32,7 +32,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 part '../../bindings/crm_customer_bp_binding.dart';
 
 // controller
-part '../../controllers/crm_clienti_bp_controller.dart';
+part '../../controllers/crm_customer_bp_controller.dart';
 
 // models
 part '../../models/profile.dart';
