@@ -13,6 +13,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm_payment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product%20_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_appuntamenti_screen.dart';
@@ -86,6 +87,11 @@ class MyApp extends StatelessWidget {
           name: '/Fattura',
           page: () => const CRMInvoiceScreen(),
           binding: CRMInvoiceBinding(),
+        ),
+        GetPage(
+          name: '/Incassi',
+          page: () => const CRMPaymentScreen(),
+          binding: CRMPaymentBinding(),
         ),
       ],
       /* routes: {
