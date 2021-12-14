@@ -182,6 +182,26 @@ class CRMController extends GetxController {
           const AssetImage(ImageRasterPath.avatar8),
         ],
       ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Provvigioni');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Provvigioni",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
     ];
   }
 

@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 //import 'package:idempiere_app/Screens/LoginWarehouses/loginwarehouses.dart';
 import 'package:idempiere_app/Screens/app/config/themes/app_theme.dart';
 import 'package:idempiere_app/Screens/app/features/CRM/views/screens/crm_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Commission/views/screens/crm_commission_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_customer_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_screen.dart';
@@ -16,7 +17,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens
 import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm_payment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product%20_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_appuntamenti_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 //import 'package:idempiere_app/constants.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
@@ -92,6 +93,11 @@ class MyApp extends StatelessWidget {
           name: '/Incassi',
           page: () => const CRMPaymentScreen(),
           binding: CRMPaymentBinding(),
+        ),
+        GetPage(
+          name: '/Provvigioni',
+          page: () => const CRMCommissionScreen(),
+          binding: CRMCommissionBinding(),
         ),
       ],
       /* routes: {
