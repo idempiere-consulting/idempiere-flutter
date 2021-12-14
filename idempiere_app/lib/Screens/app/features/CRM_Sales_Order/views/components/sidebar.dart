@@ -77,6 +77,12 @@ class _Sidebar extends StatelessWidget {
                   label: "Fattura",
                   totalNotif: 20,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "Incassi",
+                  totalNotif: 20,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
