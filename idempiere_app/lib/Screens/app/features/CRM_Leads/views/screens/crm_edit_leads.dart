@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contatti_BP/models/contact.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
@@ -48,7 +48,7 @@ class _EditLeadState extends State<EditLead> {
     bPartnerFieldController.text = args["bpName"];
     phoneFieldController.text = args["Tel"];
     mailFieldController.text = args["eMail"];
-    salesRepFieldController.text = args["salesRep"];
+    //salesRepFieldController.text = args["salesRep"];
   }
 
   static String _displayStringForOption(Records option) => option.name!;
@@ -59,7 +59,6 @@ class _EditLeadState extends State<EditLead> {
   final bPartnerFieldController = TextEditingController();
   final phoneFieldController = TextEditingController();
   final mailFieldController = TextEditingController();
-  final salesRepFieldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +139,9 @@ class _EditLeadState extends State<EditLead> {
                   ),
                 ),
                 Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.grey)),
                   margin: const EdgeInsets.all(10),
                   child: /* TextField(
                     controller: salesRepFieldController,
@@ -156,6 +158,8 @@ class _EditLeadState extends State<EditLead> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: args["salesRep"]),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
