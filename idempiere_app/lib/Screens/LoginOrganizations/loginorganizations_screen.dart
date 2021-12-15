@@ -65,40 +65,41 @@ class _LoginOrganizationsState extends State<LoginOrganizations> {
             height: size.height,
             width: double.infinity,
             child: FutureBuilder(
-                future: _getOrganizationsList(),
-                builder: (BuildContext ctx, AsyncSnapshot<List> snapshot) =>
-                    snapshot.hasData
-                        ? ListView.builder(
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (BuildContext context, index) => Card(
-                              margin: const EdgeInsets.all(10),
-                              child: ListTile(
-                                tileColor: kPrimaryLightColor,
-                                contentPadding: const EdgeInsets.all(10),
-                                title: Center(
-                                  child: Text(
-                                    snapshot.data![index]['name'],
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+              future: _getOrganizationsList(),
+              builder: (BuildContext ctx, AsyncSnapshot<List> snapshot) =>
+                  snapshot.hasData
+                      ? ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (BuildContext context, index) => Card(
+                            margin: const EdgeInsets.all(10),
+                            child: ListTile(
+                              tileColor: kPrimaryLightColor,
+                              contentPadding: const EdgeInsets.all(10),
+                              title: Center(
+                                child: Text(
+                                  snapshot.data![index]['name'],
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                onTap: () {
-                                  GetStorage().write('organizationid',
-                                      snapshot.data![index]['id'].toString());
-                                  GetStorage().write('organizationname',
-                                      snapshot.data![index]['name'].toString());
-                                  /* Navigator.pushNamed(
-                                      context, '/loginwarehouse'); */
-                                  Get.to(() => const LoginWarehouses());
-                                },
                               ),
+                              onTap: () {
+                                GetStorage().write('organizationid',
+                                    snapshot.data![index]['id'].toString());
+                                GetStorage().write('organizationname',
+                                    snapshot.data![index]['name'].toString());
+                                /* Navigator.pushNamed(
+                                      context, '/loginwarehouse'); */
+                                Get.to(() => const LoginWarehouses());
+                              },
                             ),
-                          )
-                        : const Center(
-                            child: CircularProgressIndicator(),
-                          )),
+                          ),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+            ),
           ),
         ));
   }
