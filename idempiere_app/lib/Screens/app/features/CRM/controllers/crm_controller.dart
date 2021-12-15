@@ -27,7 +27,7 @@ class CRMController extends GetxController {
     return [
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/Leads');
+          Get.toNamed('/Lead');
         },
         addFunction: () {
           //Get.toNamed('/createLead');
@@ -91,6 +91,106 @@ class CRMController extends GetxController {
           log('hallooooo');
         },
         title: "Clienti BP",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Task&Appuntamenti');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Task e Appuntamenti",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Offerte');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Offerte",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Fattura');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Fatture di Vendita",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Incassi');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Incassi",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Provvigioni');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Provvigioni",
         dueDay: -1,
         totalComments: 50,
         totalContributors: 34,
