@@ -1,10 +1,12 @@
 import 'dart:convert';
-import 'dart:developer';
+//import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,6 +18,60 @@ class EditLead extends StatefulWidget {
 }
 
 class _EditLeadState extends State<EditLead> {
+  editLead() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "Name": nameFieldController.text,
+      "BPName": bPartnerFieldController.text,
+      "Phone": phoneFieldController.text,
+      "EMail": mailFieldController.text,
+      "SalesRep_ID": {"identifier": salesrepValue},
+      "LeadStatus": {"id": dropdownValue}
+    });
+    var url =
+        Uri.parse('http://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    print(msg);
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print("done!");
+    }
+  }
+
+  Future<List<LSRecords>> getAllLeadStatuses() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
+      //print(json.rowcount);
+
+      return json.records!;
+    } else {
+      throw Exception("Failed to load lead statuses");
+    }
+
+    //print(response.body);
+  }
+
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -48,23 +104,39 @@ class _EditLeadState extends State<EditLead> {
     bPartnerFieldController.text = args["bpName"];
     phoneFieldController.text = args["Tel"];
     mailFieldController.text = args["eMail"];
+    //dropdownValue = args["leadStatus"];
+    salesrepValue = args["salesRep"];
     //salesRepFieldController.text = args["salesRep"];
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
-  late List<Records> salesrepRecord;
-  bool isSalesRepLoading = false;
   dynamic args = Get.arguments;
-  final nameFieldController = TextEditingController();
-  final bPartnerFieldController = TextEditingController();
-  final phoneFieldController = TextEditingController();
-  final mailFieldController = TextEditingController();
+  var nameFieldController;
+  var bPartnerFieldController;
+  var phoneFieldController;
+  var mailFieldController;
+  String dropdownValue = "";
+  String salesrepValue = "";
+
+  @override
+  void initState() {
+    super.initState();
+    nameFieldController = TextEditingController();
+    phoneFieldController = TextEditingController();
+    bPartnerFieldController = TextEditingController();
+    mailFieldController = TextEditingController();
+    dropdownValue = Get.arguments["leadStatus"];
+    fillFields();
+    getAllLeadStatuses();
+  }
+
+  static String _displayStringForOption(Records option) => option.name!;
+  //late List<Records> salesrepRecord;
+  //bool isSalesRepLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    fillFields();
     //getSalesRepAutoComplete();
-    //Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -74,7 +146,9 @@ class _EditLeadState extends State<EditLead> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                editLead();
+              },
               icon: const Icon(
                 Icons.save,
               ),
@@ -139,20 +213,25 @@ class _EditLeadState extends State<EditLead> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration:
-                      BoxDecoration(border: Border.all(color: Colors.grey)),
-                  margin: const EdgeInsets.all(10),
-                  child: /* TextField(
-                    controller: salesRepFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.work_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Agente',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Agente",
+                      style: TextStyle(fontSize: 12),
                     ),
-                  ), */
-                      FutureBuilder(
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<Records>> snapshot) =>
@@ -175,8 +254,14 @@ class _EditLeadState extends State<EditLead> {
                                   });
                                 },
                                 onSelected: (Records selection) {
-                                  debugPrint(
-                                      'You just selected ${_displayStringForOption(selection)}');
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    salesrepValue =
+                                        _displayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
                                 },
                               )
                             : const Center(
@@ -184,7 +269,108 @@ class _EditLeadState extends State<EditLead> {
                               ),
                   ),
                 ),
-                Container(),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Stato Lead",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                /* Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    //icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    //style: const TextStyle(color: Colors.deepPurple),
+                    /* underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ), */
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    items: <String>[
+                      'Chiuso',
+                      'Convertito',
+                      'In Lavoro',
+                      'Nuovo'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ), */
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadStatuses(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                value: dropdownValue,
+                                //icon: const Icon(Icons.arrow_downward),
+                                elevation: 16,
+                                //style: const TextStyle(color: Colors.deepPurple),
+                                /* underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ), */
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: /* <String>[
+                                  'Chiuso',
+                                  'Convertito',
+                                  'In Lavoro',
+                                  'Nuovo'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList()*/
+                                    snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                    value: list.value.toString(),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
               ],
             );
           },

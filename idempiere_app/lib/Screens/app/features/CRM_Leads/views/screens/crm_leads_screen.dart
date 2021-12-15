@@ -117,7 +117,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                                 .trx
                                                 .windowrecords![index]
                                                 .leadStatus
-                                                ?.identifier ??
+                                                ?.id ??
                                             "",
                                         "bpName": controller
                                             .trx.windowrecords![index].bPName,
