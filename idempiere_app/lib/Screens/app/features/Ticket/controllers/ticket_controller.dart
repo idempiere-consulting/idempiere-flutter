@@ -53,7 +53,7 @@ class TicketController extends GetxController {
           //Get.toNamed('/createLead');
           log('hallooooo');
         },
-        title: "Tic",
+        title: "Ticket",
         dueDay: -1,
         totalComments: 50,
         totalContributors: 34,
@@ -67,10 +67,10 @@ class TicketController extends GetxController {
       ),
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/Contatti');
+          Get.toNamed('/TicketCustomerTicket');
         },
         addFunction: () {},
-        title: "Contatti Business Partner",
+        title: "Ticket customer",
         dueDay: 1,
         totalComments: 50,
         totalContributors: 34,
