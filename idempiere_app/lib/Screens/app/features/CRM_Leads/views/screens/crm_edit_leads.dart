@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
@@ -42,12 +43,51 @@ class _EditLeadState extends State<EditLead> {
       },
     );
     if (response.statusCode == 200) {
+      Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
         "Fatto!",
         "Il record è stato aggiornato",
         icon: const Icon(
           Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Errore!",
+        "Record non aggiornato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  deleteLead() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url =
+        Uri.parse('http://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    //print(msg);
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.find<CRMLeadController>().getLeads();
+      //print("done!");
+      Get.back();
+      Get.back();
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato cancellato",
+        icon: const Icon(
+          Icons.delete,
           color: Colors.green,
         ),
       );
@@ -167,6 +207,23 @@ class _EditLeadState extends State<EditLead> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
+                Get.defaultDialog(
+                  title: "Eliminazione record",
+                  middleText: "Sicuro di voler eliminare il record?",
+                  backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
+                  //titleStyle: TextStyle(color: Colors.white),
+                  //middleTextStyle: TextStyle(color: Colors.white),
+                  textConfirm: "Elimina",
+                  textCancel: "Annulla",
+                  cancelTextColor: Colors.white,
+                  confirmTextColor: Colors.white,
+                  buttonColor: const Color.fromRGBO(31, 29, 44, 1),
+                  barrierDismissible: false,
+                  onConfirm: () {
+                    deleteLead();
+                  },
+                  //radius: 50,
+                );
                 //editLead();
               },
               icon: const Icon(
