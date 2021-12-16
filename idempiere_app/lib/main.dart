@@ -19,6 +19,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Product%20_List/views/scr
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance/views/screens/maintenance_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/maintenance_calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Customer_Ticket/views/screens/ticket_customer_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
@@ -134,6 +135,11 @@ class MyApp extends StatelessWidget {
           name: '/Maintenance',
           page: () => const MaintenanceScreen(),
           binding: MaintenanceBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceCalendar',
+          page: () => const MaintenanceCalendarScreen(),
+          binding: MaintenanceCalendarBinding(),
         ),
       ],
       /* routes: {
