@@ -3,6 +3,13 @@ part of dashboard;
 class CRMLeadController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late LeadJson _trx;
+
+  var value = "Tutti".obs;
+
+  var apiUrlFilter = ["", "\$filter=SalesRep_ID eq"];
+
+  var filters = ["Tutti", "Miei" /* , "Team" */];
+  var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
@@ -14,6 +21,16 @@ class CRMLeadController extends GetxController {
 
   bool get dataAvailable => _dataAvailable.value;
   LeadJson get trx => _trx;
+  //String get value => _value.toString();
+
+  changeFilter() {
+    filterCount++;
+    if (filterCount == 2) {
+      filterCount = 0;
+    }
+
+    value.value = filters[filterCount];
+  }
 
   Future<void> getLeads() async {
     _dataAvailable.value = false;
