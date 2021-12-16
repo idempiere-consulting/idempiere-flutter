@@ -5,58 +5,31 @@ draft: false
 weight : 2500
 pre: "<b>90. </b>"
 ---
-
-# Elenco Moduli
-
-## Dashboard 
-
-## {{%expand" Dashboard"%}} 
-#### - Email* (Miei/Team)
-#### - Calendario   (Miei/Team)
-#### - Notifiche
-#### - Bacheca
-#### - BI Vendite
-#### - Prenotazioni (asset : salariunioni., proiettore,auto)
- {{% /expand%}}
-
-## {{%expand"1 CRM"%}}
-#### - Lead (Miei/Team/Tutti)
-#### - Contatti BP (miei/tutti*)
-#### - Clienti BP (Miei/Team)
-#### - Task/Appuntamenti (Miei/Team)
-#### - Opportunità (Miei/Team)
-#### - Offerte  
-#### - Listino Prodotti
-#### - Fatture di Vendita (miei/tutti*) 
-#### - Incassi (miei/tutti*)  
-#### - Provvigioni 
-{{% /expand%}} 
-
-
 # Progetto iDempiere Flutter 
 
 #  Funzionalità da vedere
 
-* [ ] Eseguire processo completa di idempiere
-* [ ] Eseguire processo idempiere con parametri
+* [ ] Eseguire processo completa di idempiere APIREST
+* [ ] Eseguire processo idempiere con parametri APIREST
 * [ ] Calendario (vista giorno,week,mese,lista,)
-      https://github.com/aleksanderwozniak/table_calendar
-* [ ] Invio Email
+    https://pub.dev/packages/syncfusion_flutter_calendar
+* [ ] Invio Email vers base a) indirizzo test@test.it invia
       https://www.youtube.com/watch?v=yUeBPg8Z7I0
       https://www.youtube.com/watch?v=RDwst9icjAY
 
-* [ ] Chat
-* [ ] Attivare Acquisizione Fotocamera e allegare
+* [ ] Chat (wishing list)
+* [ ] Attivare Acquisizione Fotocamera e allegare API REST 
    https://docs.flutter.dev/cookbook/plugins/picture-using-camera
-* [ ] Allegare Documento (jpg,PDF)
-* [ ] Visualizzare Allegato 
-* [ ] Stampa iDempiere (da idempiere)
-* [ ] Stampa Diretta Bluetooth o IP
-* [ ] Gestione Barcode QRcode
-* [ ] Gestione NFC - Per segnare le ore ? 	- controllare plugin NFC
+* [ ] Allegare Documento (jpg,PDF) 
+* [ ] Visualizzare Allegato (vedere ticket desktop app)
+* [ ] Stampa report (da idempiere)  da vedere con AC (TOP)
+* [ ] Stampa Diretta Bluetooth o IP (Step 2)
+* [ ] Gestione Barcode QRcode (vedi processi produzione)
+* [ ] Gestione NFC - Per segnare le ore ? - controllare plugin NFC 
+      (in background ? )
 * [ ] Notifiche    (vedere quello fatto con Vincenzo sulla Desktop APP )
-* [ ] Gestione Lingua
-* [ ] Gestione Permessi
+* [ ] Gestione Lingua (step 2)
+* [ ] Gestione Permessi 
 * [ ] Sondaggi https://github.com/quickbirdstudios/survey_kit
  
 ## Login
@@ -65,7 +38,7 @@ pre: "<b>90. </b>"
 * [ ] Accesso via https
 * [ ] Salvataggio Ruolo e login con solo ok se memorizzato password
 * [ ] Non si visualizzano i Dati Server  
-* [ ] Exit / Logout 
+* [ ] Exit / Logout (step 2)
 
 
 ## Dashboard {#Dashnoard}
@@ -112,18 +85,18 @@ pre: "<b>90. </b>"
 * -Lista Agente : select name from ad_user where c_bpartner is not null and il BP is salesrep
 * [ ] Creare,Modificare(Tutti) 
 * [ ] Caricare da Contatto
-* [ ] Eseguire Telefonata
-* [ ] Invio Email
+* [ ] Eseguire Telefonata ( step 1)
+* [ ] Invio Email (Step 2)
 * [ ] Scarica Lead come Contatto Telefono,
-* [ ] Crea Task Lead,
-* [ ] Crea Opportunità Lead (Se BP completo)
-* [ ] Mostra Task da fare
-* [ ] Mostra Task eseguiti
+* [ ] Crea Task Lead, (Step 2)
+* [ ] Crea Opportunità Lead (Se BP completo) (Step 2)
+* [ ] Mostra Task da fare (Step 2)
+* [ ] Mostra Task eseguiti (Step 2)
 * [ ] Mostra Opportunità - Vai a
-* [ ] Mostra Offerte - Vai a 
-* [ ] Invio Msg Telegram
-* [ ] Invio Msg SMS 
-* [ ] * [ ] Invio Msg Whatsapp
+* [ ] Mostra Offerte - Vai a (Step 2)
+* [ ] Invio Msg Telegram (Step 3)
+* [ ] Invio Msg SMS  (Step 3)
+* [ ] Invio Msg Whatsapp
 
 ### Contatti BP (miei/tutti*)
 * Stato/note : Definito / 10%  
@@ -210,9 +183,12 @@ pre: "<b>90. </b>"
 ### Fatture di Vendita (miei/tutti*) (idem vendita)
 * Stato/note : Definito / 10%  
 * Nome Oggetto : InvoiceCustomer
-* API window : invoicecustomer  Filtro fisso : isactive=Y
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
+* API window : invoicecustomer  Filtro fisso : isactive=Y 
+* 
+* [ ] Filtro Base = Stato documento
+* [ ] Filtri Avanzata: 
+* [ ] * [ ] Visualizzare Prodotti ( Immagine, Value,name,descrizione,Prezzo,Giacenza)
+* [ ]Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
 
 ### Incasso / Pagamento (miei/tutti*)  (idem vendita)
 * Stato/note : Definito / 10%  
@@ -695,17 +671,19 @@ Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
  {{% /expand%}}
 
 ## 99 Setup e Opzioni
-#### - Opzioni Server
+#### - Opzioni Server (Client)
 * Stato/note :  / 10%  
 * Nome Oggetto : Server Option 
-* API model : ad_user  Filtro fisso : 
-- Accesso record ALL Y/N
-- Listino Base : 1000023 
+* API model :  Filtro fisso : 
+da 1-30 Y/N moduli (Crm,Vendite,...)
+31 Accesso record ALL Y/N
+- Listino Base : 1000023
+-  
 #### - Opzioni Utente
 * Stato/note :  / 10%  
 * Nome Oggetto : User Option
 * API model :  ad_user Filtro fisso : 
--
+- 
 
 
 {{% pageinfo %}} ##CRM {{% /pageinfo %}}
