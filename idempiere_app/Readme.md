@@ -257,63 +257,57 @@ pre: "<b>90. </b>"
 ## 4 Manutenzione Tecnico
 ### -  Calendario Tecnico ((miei/Team)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : calendar 
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
   
-### -  Intervento
+### -  Intervento Manutenzione
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : mptask
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-### -  Anomalia
+### -  Anomalia Manutenzione
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
-* API model :   .. Filtro fisso : 
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
-### -  Intervento (gratuito/vendita)
-* Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : mpanomaly
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 ### -  Magazzino Furgone
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : mpwarehouse
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 ### -  Prelievo da Magazzino Centrale
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : 
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 ### -  Carico/Scarico 
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : internaluseinventory
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 
 ### -  Carico Scheda tecnica
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : mpimportitem
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
   
 ## {{%expand"5 Manutenzione Portale"%}}
-### - Dashboard Portale
+### - Dashboard Portale (no a menu)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : tbd
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-#### - News  (Promo)
+#### - News  (Promo) (no a menu)
 * Stato/note : Definito / 10%  
 * Nome Oggetto :
 * API model :   .. Filtro fisso : 
