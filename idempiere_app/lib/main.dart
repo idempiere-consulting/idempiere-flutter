@@ -20,6 +20,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance/views/screens/maintenance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/maintenance_calendar_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Internaluseinventory/views/screens/maintenance_internaluseinventory_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/screens/maintenance_mpanomaly_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mppicking/views/screens/maintenance_mppicking_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views/screens/maintenance_mpwarehouse_screen.dart';
@@ -163,6 +164,11 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceMppicking',
           page: () => const MaintenanceMppickingScreen(),
           binding: MaintenanceMppickingBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceInternaluseinventory',
+          page: () => const MaintenanceInternaluseinventoryScreen(),
+          binding: MaintenanceInternaluseinventoryBinding(),
         ),
       ],
       /* routes: {
