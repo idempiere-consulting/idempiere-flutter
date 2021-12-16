@@ -46,6 +46,11 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.arrowBackOutline,
                   label: "TicketCustoTicket",
                 ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "TicketTask",
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
