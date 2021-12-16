@@ -20,6 +20,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance/views/screens/maintenance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/maintenance_calendar_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/screens/maintenance_mpanomaly_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Customer_Ticket/views/screens/ticket_customer_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
@@ -140,6 +141,16 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceCalendar',
           page: () => const MaintenanceCalendarScreen(),
           binding: MaintenanceCalendarBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceMptask',
+          page: () => const MaintenanceCalendarScreen(),
+          binding: MaintenanceCalendarBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceMpanomaly',
+          page: () => const MaintenanceMpanomalyScreen(),
+          binding: MaintenanceMpanomalyBinding(),
         ),
       ],
       /* routes: {
