@@ -32,131 +32,8 @@ pre: "<b>90. </b>"
 #### - Provvigioni 
 {{% /expand%}} 
 
-## {{%expand"2 Vendite "%}}
-####  - Clienti
-#### - Ordini di Vendita (miei/Team)
-#### - Listino Prodotti/Prezzi
-#### - Documento di Trasporto (miei/Team)
-#### - Fatture di Vendita (miei/Team)
-#### - Incassi (miei/tutti*) (miei/Team) 
-#### - {{% /expand%}}
 
-
-## {{%expand"3 Ticket Task e Ore"%}}
-#### - Ticket (miei/Team) (tecnico)
-#### - Ticket (portale)
-#### - Task (miei/Team)
-#### - Riepilogo Ore (miei/Team)
-{{% /expand%}}
-
-
-## {{%expand"4 Manutenzione Tecnico"%}}
-#### -  Calendario Tecnico ((miei/Team)
-#### -  Intervento
-#### -  Anomalia
-#### -  Intervento (gratuito/vendita)
-#### -  Magazzino Furgone
-#### -  Prelievo da Magazzino Centrale
-#### -  Carico/Scarico 
-#### -  Carico Scheda tecnica
-  {{% /expand%}}
-
-## {{%expand"5 Manutenzione Portale"%}}
-### - Dashboard Portale
-#### - News  (Promo)
-#### - Fatture di Acquisto (Pagamento)
-#### - Indicatori ( Ultima visita / Prossima Visita)/anomalie) 
-### Offerte di Vendita (aperte/tutte)
-### - Manutenzione 
-### - Contratto
-### - Impianto
-### - Anomalie
-### - Ticket (crea)
- {{% /expand%}}
-
-
-## {{%expand"6 Formazione"%}}
-#### - Contratto di Formazione
-#### - Corsi di Formazione
- {{% /expand%}}
-
-## {{%expand"7 Formazione Portale"%}}
-#### - Corsi in Scadenza
-#### - Attestati Corsisti
- {{% /expand%}}
-
-## {{%expand"8 Formazione Corsista"%}}
-#### - Presenza Corso
-#### - Attestato
- {{% /expand%}}
-
-## {{%expand"9 Acquisti "%}}
-#### - Lead Fornitore
-#### - Prodotto / Giacenza / Prezzi Acquisto
-#### - Prodotti SottoScorta -> Crea ODA
-#### - Richiesta di Acquisto
-#### - Ordini di Acquisto
- {{% /expand%}}
-
-## {{%expand"10  Logistica"%}}
-#### - Prodotto / Giacenza
-#### - Inventario 
-#### - Spedizione Prodotti
-#### - Trasferimento 
-#### - Consumi 
-#### - Entrata Merce 
-    {{% /expand%}}
-
-## {{%expand"11 Mezzi e Attrezzature"%}}
-#### - Anagrafica Mezzi
-#### - Anagrafica Attrezzatura
-#### - Presa in carico/Spostamento Mezzo/Attrezzatura e Rilascio
-#### - Scadenze 
-{{% /expand%}}
-
-## {{%expand"12 Produzione "%}}
-#### - Ordine di Produzione
-#### - Prelievo da Ord. di Prod.
-#### - Dich. di Prod.
-#### - Prelievo e Dichi.di Prod.
-#### - Avanzamento di Produzione
- {{% /expand%}}
-
-## {{%expand"13 Contabilità "%}}
-#### - Fattura di Acquisto
-#### - Fattura di Vendita
-#### - Incassi e Pagamenti  (in scadenza / tutti ?)
-#### - Partite Aperte
-#### - Movimenti Bancari
-#### - Cash Flow 
- {{% /expand%}}
-
-## {{%expand"14 Risorse Umane"%}}
-
-### Responsabile 
-#### - Ritardi e Assenze
-#### - Chat 
-#### - Ticket HR ( Ferie,Permessi,Malattia,altro..)
-#### - Scheda Dipendente
-#### - Dotazione Dipendente
-#### - Bacheca ( aziendale, ufficio/report , personale)
-#### - Ricerca personale (assunzione, curriculum )
-
-### Dipendente 
-#### - Bacheca Personale
-#### - Timbracartellino (Qrcode, GPS,Foto)
-#### - Richiesta Permesso / Ferie /Malattia
-#### - Sondaggi (light)
-#### - Armadietto (busta paga)
-Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
- {{% /expand%}}
-
-## {{%expand"99 Opzioni"%}}
-####- Opzioni Server  : 
-####  Opzioni Utente  : 
- {{% /expand%}}
-
-# Dettaglio / TO DO
+# Progetto iDempiere Flutter 
 
 #  Funzionalità da vedere
 
@@ -182,9 +59,6 @@ Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
 * [ ] Gestione Permessi
 * [ ] Sondaggi https://github.com/quickbirdstudios/survey_kit
  
-
-
-
 ## Login
 * [ ] Logo App 
 * [ ] Logo e Nome in alto a Sx
@@ -379,27 +253,27 @@ Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
 
 ### Ticket (miei/Team) (tecnico)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto :Ticket
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
   
 ### Ticket (portale)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : CustomerTicket
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
   
 ### Task (miei/Team)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : Task
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 ### Riepilogo Ore (miei/Team)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : ResourceAssignment
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
