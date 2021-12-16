@@ -18,7 +18,7 @@ class LeadJson {
         pagesize = json['page-size'] as int?,
         pagenumber = json['page-number'] as int?,
         rowcount = json['row-count'] as int?,
-        windowrecords = (json['window-records'] as List?)
+        windowrecords = (json['records'] as List?)
             ?.map((dynamic e) =>
                 Windowrecords.fromJson(e as Map<String, dynamic>))
             .toList();
@@ -28,7 +28,7 @@ class LeadJson {
         'page-size': pagesize,
         'page-number': pagenumber,
         'row-count': rowcount,
-        'window-records': windowrecords?.map((e) => e.toJson()).toList()
+        'records': windowrecords?.map((e) => e.toJson()).toList()
       };
 }
 

@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -123,7 +122,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: 100,
+                        itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 8.0,
@@ -225,16 +224,6 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Tel: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .phone ??
-                                              ""),
                                           IconButton(
                                             icon: const Icon(
                                               Icons.call,
@@ -245,20 +234,15 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                               log("info button pressed");
                                             },
                                           ),
+                                          Text(controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .phone ??
+                                              ""),
                                         ],
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Email: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .eMail ??
-                                              ""),
                                           IconButton(
                                             icon: const Icon(
                                               Icons.mail,
@@ -269,6 +253,11 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                               log("info button pressed");
                                             },
                                           ),
+                                          Text(controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .eMail ??
+                                              ""),
                                         ],
                                       ),
                                       Row(
