@@ -56,6 +56,11 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.personOutline,
                   label: "MaintenanceMpwarehouse",
                 ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "MaintenanceMppicking",
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
