@@ -6,6 +6,31 @@ weight : 2500
 pre: "<b>90. </b>"
 ---
 
+# Elenco Moduli
+
+## Dashboard 
+
+## {{%expand" Dashboard"%}} 
+#### - Email* (Miei/Team)
+#### - Calendario   (Miei/Team)
+#### - Notifiche
+#### - Bacheca
+#### - BI Vendite
+#### - Prenotazioni (asset : salariunioni., proiettore,auto)
+ {{% /expand%}}
+
+## {{%expand"1 CRM"%}}
+#### - Lead (Miei/Team/Tutti)
+#### - Contatti BP (miei/tutti*)
+#### - Clienti BP (Miei/Team)
+#### - Task/Appuntamenti (Miei/Team)
+#### - Opportunità (Miei/Team)
+#### - Offerte  
+#### - Listino Prodotti
+#### - Fatture di Vendita (miei/tutti*) 
+#### - Incassi (miei/tutti*)  
+#### - Provvigioni 
+{{% /expand%}} 
 
 ## {{%expand"2 Vendite "%}}
 ####  - Clienti
@@ -224,7 +249,7 @@ Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
 * [ ] Mostra Offerte - Vai a 
 * [ ] Invio Msg Telegram
 * [ ] Invio Msg SMS 
-* [ ] Invio Msg Whatsapp
+* [ ] * [ ] Invio Msg Whatsapp
 
 ### Contatti BP (miei/tutti*)
 * Stato/note : Definito / 10%  
