@@ -21,6 +21,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_ta
 import 'package:idempiere_app/Screens/app/features/Maintenance/views/screens/maintenance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/maintenance_calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/screens/maintenance_mpanomaly_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views/screens/maintenance_mpwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Customer_Ticket/views/screens/ticket_customer_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
@@ -151,6 +152,11 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceMpanomaly',
           page: () => const MaintenanceMpanomalyScreen(),
           binding: MaintenanceMpanomalyBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceMpwarehouse',
+          page: () => const MaintenanceMpwarehouseScreen(),
+          binding: MaintenanceMpwarehouseBinding(),
         ),
       ],
       /* routes: {
