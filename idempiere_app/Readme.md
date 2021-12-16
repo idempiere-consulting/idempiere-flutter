@@ -192,14 +192,14 @@ pre: "<b>90. </b>"
 
 ### Incasso / Pagamento (miei/tutti*)  (idem vendita)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : Payment
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 
 ### Provvigione
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : Commission
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -282,7 +282,7 @@ pre: "<b>90. </b>"
 * [ ] Filtri Avanzata: ???
 ### -  Prelievo da Magazzino Centrale
 * Stato/note : Definito / 10%  
-* Nome Oggetto : 
+* Nome Oggetto : mppicking
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -309,25 +309,25 @@ pre: "<b>90. </b>"
 * [ ] Filtri Avanzata: ???
 #### - News  (Promo) (no a menu)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : tbd
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Fatture di Acquisto (Pagamento)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : invoicepo
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Indicatori ( Ultima visita / Prossima Visita)/anomalie) 
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : tbd
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 ### Offerte di Vendita (aperte/tutte)
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : portaloffer 
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -367,7 +367,7 @@ pre: "<b>90. </b>"
 ## {{%expand"6 Formazione"%}}
 #### - Contratto di Formazione
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : 
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -412,13 +412,13 @@ pre: "<b>90. </b>"
 ## {{%expand"9 Acquisti "%}}
 #### - Lead Fornitore
 * Stato/note :  / 10%  
-* Nome Oggetto :
+* Nome Oggetto : orderpo
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Prodotto / Giacenza / Prezzi Acquisto
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : productwarehouseprice
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -445,19 +445,19 @@ pre: "<b>90. </b>"
 ## {{%expand"10  Logistica"%}}
 #### - Prodotto / Giacenza
 * Stato/note :  / 10%  
-* Nome Oggetto :
+* Nome Oggetto : productwarehouse
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Inventario 
 * Stato/note :  / 10%  
-* Nome Oggetto :
+* Nome Oggetto : inventory
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Spedizione Prodotti
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : s
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
