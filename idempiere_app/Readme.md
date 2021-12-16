@@ -469,13 +469,13 @@ pre: "<b>90. </b>"
 * [ ] Filtri Avanzata: ???
 #### - Consumi 
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : 
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Entrata Merce 
 * Stato/note : Definito / 10%  
-* Nome Oggetto :
+* Nome Oggetto : materialreceipt
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -484,7 +484,7 @@ pre: "<b>90. </b>"
 ## {{%expand"11 Mezzi e Attrezzature"%}}
 #### - Anagrafica Mezzi
 * Stato/note :  / 10%  
-* Nome Oggetto :
+* Nome Oggetto : 
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -655,7 +655,7 @@ pre: "<b>90. </b>"
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 * [ ] 
-#### - Armadietto (busta paga)
+#### - Armadietto (busta paga) TDBTDBTDBTDBTDBTDB
 * Stato/note : DA DEFINIRE  / 10%  
 * Nome Oggetto : 
 * API model :   .. Filtro fisso : 
