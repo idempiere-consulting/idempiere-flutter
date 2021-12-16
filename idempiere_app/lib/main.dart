@@ -18,6 +18,8 @@ import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm
 import 'package:idempiere_app/Screens/app/features/CRM_Product%20_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Ticket/views/screens/ticket_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 //import 'package:idempiere_app/constants.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
@@ -98,6 +100,16 @@ class MyApp extends StatelessWidget {
           name: '/Provvigioni',
           page: () => const CRMCommissionScreen(),
           binding: CRMCommissionBinding(),
+        ),
+        GetPage(
+          name: '/Ticket',
+          page: () => const TicketScreen(),
+          binding: TicketBinding(),
+        ),
+        GetPage(
+          name: '/TicketTicket',
+          page: () => const TicketTicketScreen(),
+          binding: TicketTicketBinding(),
         ),
       ],
       /* routes: {

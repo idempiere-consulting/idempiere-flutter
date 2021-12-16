@@ -36,6 +36,11 @@ class _Sidebar extends StatelessWidget {
                   label: "CRM",
                 ),
                 SelectionButtonData(
+                  activeIcon: EvaIcons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Ticket",
+                ),
+                SelectionButtonData(
                   activeIcon: EvaIcons.calendar,
                   icon: EvaIcons.calendarOutline,
                   label: "Calendar",

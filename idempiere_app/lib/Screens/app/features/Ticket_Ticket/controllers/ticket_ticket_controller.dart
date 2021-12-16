@@ -60,13 +60,13 @@ class TicketTicketController extends GetxController {
     return [
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/leads');
+          Get.toNamed('/Ticket');
         },
         addFunction: () {
           //Get.toNamed('/createLead');
           log('hallooooo');
         },
-        title: "Lead",
+        title: "Ticket",
         dueDay: 2,
         totalComments: 50,
         type: TaskType.inProgress,
@@ -79,9 +79,11 @@ class TicketTicketController extends GetxController {
         ],
       ),
       TaskCardData(
-        seeAllFunction: () {},
+        seeAllFunction: () {
+          Get.toNamed('/TicketTicket');
+        },
         addFunction: () {},
-        title: "Landing page UI Design",
+        title: "Ticket TIcket",
         dueDay: -1,
         totalComments: 50,
         totalContributors: 34,
