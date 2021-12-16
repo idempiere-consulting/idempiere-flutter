@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ContactsJson {
   final int? pagecount;
   final int? recordssize;

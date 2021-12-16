@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +32,7 @@ class _EditLeadState extends State<EditLead> {
     });
     var url =
         Uri.parse('http://' + ip + '/api/v1/models/ad_user/${args["id"]}');
-    print(msg);
+    //print(msg);
     var response = await http.put(
       url,
       body: msg,
@@ -43,7 +42,24 @@ class _EditLeadState extends State<EditLead> {
       },
     );
     if (response.statusCode == 200) {
-      print("done!");
+      //print("done!");
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato aggiornato",
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Errore!",
+        "Record non aggiornato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
     }
   }
 
@@ -110,9 +126,13 @@ class _EditLeadState extends State<EditLead> {
   }
 
   dynamic args = Get.arguments;
+  // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var bPartnerFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var phoneFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var mailFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
@@ -143,6 +163,18 @@ class _EditLeadState extends State<EditLead> {
           child: Text('Edit Lead'),
         ),
         actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
+                //editLead();
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
