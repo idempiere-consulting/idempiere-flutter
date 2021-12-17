@@ -21,14 +21,21 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  bool checkboxState = GetStorage().read('checkboxLogin') ?? false;
+  var checkboxState;
   final userFieldController = TextEditingController();
   final passwordFieldController = TextEditingController();
   final ip = GetStorage().read('ip');
   final user = GetStorage().read('user');
   final password = GetStorage().read('password');
 
+  @override
+  void initState() {
+    super.initState();
+    checkboxState = GetStorage().read('checkboxLogin') ?? false;
+  }
+
   checkSavedLogin() {
+    //print(GetStorage().read("maial"));
     if (user != null && password != null) {
       userFieldController.text = user;
       passwordFieldController.text = password;
@@ -94,6 +101,9 @@ class _BodyState extends State<Body> {
           // then parse the JSON.
           // ignore: unused_local_variable
           var json = jsonDecode(response.body);
+          print(json);
+          GetStorage().write("token", json["token"]);
+          Get.offAndToNamed("/Dashboard");
         } else {
           // If the server did not return a 200 OK response,
           // then throw an exception.
