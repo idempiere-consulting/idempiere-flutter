@@ -33,6 +33,7 @@ import 'package:idempiere_app/Screens/app/features/Purchase_Orderpo/views/screen
 import 'package:idempiere_app/Screens/app/features/Purchase_Productwarehouseprice/views/screens/purchase_productwarehouseprice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain/views/screens/supplychain_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_inventory_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Productwarehouse/views/screens/supplychain_productwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Customer_Ticket/views/screens/ticket_customer_ticket_screen.dart';
@@ -229,6 +230,11 @@ class MyApp extends StatelessWidget {
           name: '/SupplychainInventory',
           page: () => const SupplychainInventoryScreen(),
           binding: SupplychainInventoryBinding(),
+        ),
+        GetPage(
+          name: '/SupplychainMaterialreceipt',
+          page: () => const SupplychainMaterialreceiptScreen(),
+          binding: SupplychainMaterialreceiptBinding(),
         ),
       ],
       /* routes: {

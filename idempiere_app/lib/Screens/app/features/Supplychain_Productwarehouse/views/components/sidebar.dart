@@ -44,17 +44,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.arrowBack,
-                  icon: EvaIcons.arrowBackOutline,
-                  label: "",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.arrowBack,
-                  icon: EvaIcons.arrowBackOutline,
-                  label: "",
+                  label: "SupplychainMaterialreceipt",
                 ),
               ],
               onSelected: (index, value) {
