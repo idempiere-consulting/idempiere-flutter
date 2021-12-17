@@ -163,7 +163,7 @@ class _CreateLeadState extends State<CreateLead> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Edit Lead'),
+          child: Text('Add Lead'),
         ),
         actions: [
           Padding(

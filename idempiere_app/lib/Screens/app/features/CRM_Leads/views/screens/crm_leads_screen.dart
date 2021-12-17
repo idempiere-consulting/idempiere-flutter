@@ -270,7 +270,20 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                             ),
                                             tooltip: 'EMail',
                                             onPressed: () {
-                                              log("info button pressed");
+                                              if (controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .eMail ==
+                                                  null) {
+                                                log("mail button pressed");
+                                              } else {
+                                                controller.writeMailTo(
+                                                    controller
+                                                        .trx
+                                                        .windowrecords![index]
+                                                        .eMail
+                                                        .toString());
+                                              }
                                             },
                                           ),
                                           Text(controller
