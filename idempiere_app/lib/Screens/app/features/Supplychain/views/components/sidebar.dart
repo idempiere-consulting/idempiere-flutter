@@ -24,62 +24,26 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
+              initialSelected: 0,
               data: [
                 SelectionButtonData(
-                  activeIcon: EvaIcons.grid,
-                  icon: EvaIcons.gridOutline,
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
                   label: "Dashboard",
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.person,
                   icon: EvaIcons.personOutline,
-                  label: "CRM",
+                  label: "PortalMpInvoicepo",
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Ticket",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.calendar,
-                  icon: EvaIcons.calendarOutline,
-                  label: "Maintenance",
-                ),
-                SelectionButtonData(
+                  label: "PortalMpPortaloffer",
+                ),SelectionButtonData(
                   activeIcon: EvaIcons.person,
                   icon: EvaIcons.personOutline,
-                  label: "PortalMp",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Purchase",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Supplychain",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.calendar,
-                  icon: EvaIcons.calendarOutline,
-                  label: "Calendar",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.email,
-                  icon: EvaIcons.emailOutline,
-                  label: "Email",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Profil",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.settings,
-                  icon: EvaIcons.settingsOutline,
-                  label: "Setting",
+                  label: "PortalMpPortaloffer",
                 ),
               ],
               onSelected: (index, value) {
