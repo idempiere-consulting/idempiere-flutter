@@ -41,6 +41,21 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.personOutline,
                   label: "PortalMpPortaloffer",
                 ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "",
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "",
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "",
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");

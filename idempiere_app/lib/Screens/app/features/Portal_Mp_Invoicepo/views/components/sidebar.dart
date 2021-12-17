@@ -39,7 +39,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.person,
                   icon: EvaIcons.personOutline,
-                  label: "TicketTicket",
+                  label: "PortalMpPortaloffer",
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,

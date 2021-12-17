@@ -27,6 +27,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mppicking/views/s
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views/screens/maintenance_mpwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/portal_mp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoicepo/views/screens/portal_mp_invoicepo_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Portaloffer/views/screens/portal_mp_portaloffer_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Customer_Ticket/views/screens/ticket_customer_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
@@ -187,6 +188,11 @@ class MyApp extends StatelessWidget {
           name: '/PortalMpInvoicepo',
           page: () => const PortalMpInvoicepoScreen(),
           binding: PortalMpInvoicepoBinding(),
+        ),
+        GetPage(
+          name: '/PortalMpPortaloffer',
+          page: () => const PortalMpPortalofferScreen(),
+          binding: PortalMpPortalofferBinding(),
         ),
       ],
       /* routes: {
