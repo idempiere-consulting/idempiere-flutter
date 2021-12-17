@@ -25,6 +25,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mpimportitem/view
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/screens/maintenance_mpanomaly_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mppicking/views/screens/maintenance_mppicking_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views/screens/maintenance_mpwarehouse_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/portal_mp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Customer_Ticket/views/screens/ticket_customer_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
@@ -175,6 +176,11 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceMpimportitem',
           page: () => const MaintenanceMpimportitemScreen(),
           binding: MaintenanceMpimportitemBinding(),
+        ),
+        GetPage(
+          name: '/PortalMp',
+          page: () => const PortalMpScreen(),
+          binding: PortalMpBinding(),
         ),
       ],
       /* routes: {
