@@ -61,6 +61,11 @@ class _Sidebar extends StatelessWidget {
                   label: "Supplychain",
                 ),
                 SelectionButtonData(
+                  activeIcon: EvaIcons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "VehicleEquipment",
+                ),
+                SelectionButtonData(
                   activeIcon: EvaIcons.calendar,
                   icon: EvaIcons.calendarOutline,
                   label: "Calendar",
