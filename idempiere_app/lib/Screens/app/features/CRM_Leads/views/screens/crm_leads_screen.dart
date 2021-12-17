@@ -29,6 +29,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/crm_leads_binding.dart';
@@ -236,7 +237,21 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                             ),
                                             tooltip: 'Call',
                                             onPressed: () {
-                                              log("info button pressed");
+                                              //log("info button pressed");
+                                              if (controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .phone ==
+                                                  null) {
+                                                log("info button pressed");
+                                              } else {
+                                                controller.makePhoneCall(
+                                                    controller
+                                                        .trx
+                                                        .windowrecords![index]
+                                                        .phone
+                                                        .toString());
+                                              }
                                             },
                                           ),
                                           Text(controller
