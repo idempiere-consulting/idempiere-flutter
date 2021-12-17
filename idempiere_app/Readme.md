@@ -72,53 +72,70 @@ pre: "<b>90. </b>"
 * [ ] Prenota Risorsa (data, durata) / Libera Prenotazione
 * [ ] Poke Risorsa occupata
   
-## 1-CRM
-....Select /Vista i dati Lead
+
+## {{%expand"## 1-CRM"%}}
+Nome Oggetto : CRM
+get API :   Lead (count(*),count(*)Miei, Count(*)Last 7day,
+            Contatti BP count(*) 
+            Clienti BP count (*)
+            Task Lead 
+            Opportunità 
+            Offerta/Ordini count(*)
+            Listino Prodotti count(*)PirceChanged 
+            Spedizioni count(*)7days
+            Fattura Vendita (count)(*)Last7da
+            Incassi count(*)Last7day Sum(*)Last7day
+
 
 ### Lead 
-* Stato/note : Definito / 50%  Edit in corso
+* Stato/note : Definito / 50%  
 * Nome Oggetto : leads   
 * API window lead Filtro fisso = isactive='Y'
-* [ ] Filtro Base = All Miei Team
+* [x] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Stato Lead
+* [ ] Ricerca : Nome 
 * [x] Visualizzare(Nome,Telefono,Email,Stato del Lead,Agente,Nome del BP)
 * -Lista Agente : select name from ad_user where c_bpartner is not null and il BP is salesrep
-* [ ] Creare,Modificare(Tutti) 
-* [ ] Caricare da Contatto
-* [ ] Eseguire Telefonata ( step 1)
-* [ ] Invio Email (Step 2)
-* [ ] Scarica Lead come Contatto Telefono,
-* [ ] Crea Task Lead, (Step 2)
-* [ ] Crea Opportunità Lead (Se BP completo) (Step 2)
-* [ ] Mostra Task da fare (Step 2)
-* [ ] Mostra Task eseguiti (Step 2)
-* [ ] Mostra Opportunità - Vai a
-* [ ] Mostra Offerte - Vai a (Step 2)
-* [ ] Invio Msg Telegram (Step 3)
-* [ ] Invio Msg SMS  (Step 3)
-* [ ] Invio Msg Whatsapp
+* [x] Modificare(Tutti) 
+* [ ] Creare
+* [x] Cancellare
+* [ ] Caricare da Contatto (S2)
+* [ ] Eseguire Telefonata ( S1)
+* [ ] Invio Email (S1)
+* [ ] Scarica Lead come Contatto Telefono (S2)
+* [ ] Converti Lead in BP
+* [ ] Crea Task Lead, (S2)
+* [ ] Crea Opportunità Lead (Se BP completo) (S2)
+* [ ] Mostra Task da fare (S2)
+* [ ] Mostra Task eseguiti (S2)
+* [ ] Mostra Opportunità - Vai a (S3)
+* [ ] Mostra Offerte - Vai a (S2)
+* [ ] Invio Msg Telegram (S3)
+* [ ] Invio Msg SMS  (S3)
+* [ ] Invio Msg Whatsapp (S3)
 
 ### Contatti BP (miei/tutti*)
 * Stato/note : Definito / 10%  
 * Nome Oggetto : contact
 * API Window : Contact - Filtro fisso = isactive='Y'
-* [ ] Filtro Base = Nessuno
+* [ ] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Nessuno
 * [ ] Visualizzare : (Nome,Telefono,Email,Stato del Lead,Agente,Nome del BP)
-* [ ] Creare (Assegnare BP), Modificare 
-* [ ] Caricare da Contatto(Assegnare BP),
-* [ ] Eseguire Telefonata,
-* [ ] Invio Email
+* [ ] Creare (Assegnare BP)
+* [ ] Modificare 
+* [ ] Caricare da Contatto(Assegnare BP) (S2)
+* [ ] Eseguire Telefonata (S1)
+* [ ] Invio Email (S1)
 * [ ] Scarica come Contatto Telefono,
 * [ ] Crea Task Business Partner,
-* [ ] Crea Opportunità Business Partner 
-* [ ] Mostra Task da fare
-* [ ] Mostra Task eseguiti
-* [ ] Mostra Opportunità - Vai a
-* [ ] Mostra Offerte - Vai a 
-* [ ] Invio Msg Telegram
-* [ ] Invio Msg SMS
-* [ ] Invio Msg Whatsapp
+* [ ] Crea Opportunità Business Partner (S2)
+* [ ] Mostra Task da fare (S2)
+* [ ] Mostra Task eseguiti (S2)
+* [ ] Mostra Opportunità - Vai a (S3)
+* [ ] Mostra Offerte - Vai a (S2)
+* [ ] Invio Msg Telegram (S3)
+* [ ] Invio Msg SMS (S3)
+* [ ] Invio Msg Whatsapp (S3)
 
 ### Clienti BP
 * Stato/note : Definito / 10%  
@@ -127,47 +144,52 @@ pre: "<b>90. </b>"
 * [ ] Filtro Base = All Miei(agente=user)
 * [ ] Filtri Avanzata: Gruppo Business Partner or Categoria BP
 * [ ] Visualizzare BP (Nome,indirizzo(isbillto),Telefono,Email,Agente)
-* [ ] Creare,Modificare BP(Nome,indirizzo, Telefono,email,Agente)
+* [ ] Creare
+* [ ] Modificare BP(Nome,indirizzo, Telefono,email,Agente)
 * [ ] Visualizzazione Contatti Vai a Contatti
-* [ ] Crea Task  Business Partner
-* [ ] Crea Opportunità  Business Partner
-* [ ] Mostra Opportunità - Vai a
-* [ ] Mostra Offerte - Vai a 
+* [ ] Crea Task  Business Partner 
+* [ ] Crea Opportunità  Business Partner (S2)
+* [ ] Mostra Opportunità - Vai a (S2)
+* [ ] Mostra Offerte - Vai a (S2)
 
 ### Task Lead / BP
 * Stato/note : Definito / 10%  
 * Nome Oggetto : Task
-* API window : Contact Activity - Filtro fisso : EndDate is null isactive='Y'
+* API window : ContactActivity - Filtro fisso : EndDate is null isactive='Y'
 * [ ] Filtro Base = All miei Team
 * [ ] Filtri Avanzata: Stato
 * [ ] Visualizzare Task (Descrizione,Stato,Priorita,Tipoattività,DataInizio,;Salesrep,iscomplete
-* [ ] Creare,Modificare (tutto)
-* [ ] Impostare Y su iscomplete
+* [ ] Creare
+* [ ] Modificare (tutto)
+* [ ] Bottone xImpostare Y su iscomplete
 * [ ] Se Lead Telefonare
 * [ ] Invio Email 
-* [ ] Promeria / Notifica per Data/ora
+* [ ] Promemoria / Notifica per Data/ora
   
-### Opportunità Lead  
+### Opportunità Lead  BP
 * Stato/note : Definito / 10%  
 * Nome Oggetto : Opportunity
 * API window : Opportunity  Filtro fisso : isactive='Y'
 * [ ] Filtro Base =All Miei Team
-* [ ] Filtri Avanzata: Stao
+* [ ] Filtri Avanzata: Stato
 * [ ] Visualizzare Opportunità (NrDocumento,Business Partner,Agente,Stato,Importo,Descrizione,Prodotto)
-* [ ] Crea, Modificare (tutto)
+* [ ] Crea
+* [ ] Modificare (tutto)
 * [ ] Crea Task 
+* [ ] Crea Offerta
 
 ### Offerta/Ordine di Vendita
 * Stato/note : Definito / 10%  
 * Nome Oggetto : Offer
-* API window Sales Order  Filtro fisso :  isactive='Y'
+* API window Sales Order  Filtro fisso:  isactive='Y' < #GiorniOfferta
 * [ ] Filtro Base = All Miei Team
-* [ ] Filtri Avanzata: ???
+* [ ] Filtri Avanzata: Bozza/Completato/Fatturato/Pagato
 * [ ] Visualizzare Offerta (Nrdocumento,Business Partner,Data Ordine,Tipo Documento,Agente,Metodo di Pagemento,Termine di Pagamento)
 * [ ] Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
-* [ ] Crea, Modificare (tutto)
+* [ ] Crea
+* [ ] Modificare (tutto)
 * [ ] Completare Offerta
-* [ ] Riaprire Offerta
+* [ ] Riaprire Offerta(solo se Standard Order e non Spedito)
 * [ ] Inviare Email con template email 
 
 ### Listino Prodotti
@@ -177,23 +199,36 @@ pre: "<b>90. </b>"
 * [ ] Filtro Base = Categoria Prodotto
 * [ ] Filtri Avanzata: Categoria Merceologica
 * [ ] Visualizzare Prodotti ( Immagine, Value,name,descrizione,Prezzo,Giacenza)
-* [ ]Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
-* [ ] Crea, Modificare (tutto)
-  
+* [ ] Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
+* [ ] Crea
+* [ ] Modificare (tutto)
+
+### Documento di Trasporto (miei/Team)
+* Stato/note : Definito / 10%  
+* Nome Oggetto : Shipment
+* API window :  ShipmentCustomer  Filtro fisso : isactive=Y 
+* [ ] Filtro Base = ???
+* [ ] Filtri Avanzata: ???
+* [ ] Visualizzare DDT ( Documentno,data,BP)
+* [ ] Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
+* [ ] Crea
+* [ ] Modificare (tutto)
+* [ ] Completare Documento
+
+
 ### Fatture di Vendita (miei/tutti*) (idem vendita)
 * Stato/note : Definito / 10%  
 * Nome Oggetto : InvoiceCustomer
 * API window : invoicecustomer  Filtro fisso : isactive=Y 
-* 
 * [ ] Filtro Base = Stato documento
 * [ ] Filtri Avanzata: 
-* [ ] * [ ] Visualizzare Prodotti ( Immagine, Value,name,descrizione,Prezzo,Giacenza)
-* [ ]Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
+* [ ] Visualizzare Prodotti ( Immagine, Value,name,descrizione,Prezzo,Giacenza)
+* [ ] Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
 
 ### Incasso / Pagamento (miei/tutti*)  (idem vendita)
 * Stato/note : Definito / 10%  
 * Nome Oggetto : Payment
-* API model :   .. Filtro fisso : 
+* API window : Payment   Filtro fisso : isactive=Y
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 
@@ -204,29 +239,12 @@ pre: "<b>90. </b>"
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 
-## 2 Vendite 
-### Contatti BP (miei/tutti*)
- .. vedi Lead
-### Clienti BP
- .. vedi Lead
-### Offerta/Ordini di Vendita (miei/Team)
- .. vedi Lead
-### Listino Prodotti/Prezzi
- .. vedi Lead
-### Documento di Trasporto (miei/Team)
-* Stato/note : Definito / 10%  
-* Nome Oggetto :
-* API model :   .. Filtro fisso : 
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
-  
-### Fatture di Vendita (miei/Team)
- .. vedi Lead
-### Incasso (miei/tutti*) (miei/Team) 
- .. vedi Lead
 
-## 3-Ticket Task e Ore
+## {{%expand"## 3-Ticket Task e Ore"%}}
 
+Nome Oggetto : Ticket
+get API : Ticket (count(*),count(*)Miei, Count(*)Last 7day,
+          Ticket  
 ### Ticket (miei/Team) (tecnico)
 * Stato/note : Definito / 10%  
 * Nome Oggetto :Ticket
@@ -253,8 +271,13 @@ pre: "<b>90. </b>"
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+{{% /expand%}}
 
-## 4 Manutenzione Tecnico
+## {{%expand"## 4 Manutenzione Tecnico"%}}
+
+Nome Oggetto : Maintenance
+get API : 
+
 ### -  Calendario Tecnico ((miei/Team)
 * Stato/note : Definito / 10%  
 * Nome Oggetto : calendar 
@@ -299,8 +322,11 @@ pre: "<b>90. </b>"
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+{{% /expand%}}
   
 ## {{%expand"5 Manutenzione Portale"%}}
+Nome Oggetto : Maintenance
+get API : 
 ### - Dashboard Portale (no a menu)
 * Stato/note : Definito / 10%  
 * Nome Oggetto : tbd
@@ -482,16 +508,20 @@ pre: "<b>90. </b>"
     {{% /expand%}}
 
 ## {{%expand"11 Mezzi e Attrezzature"%}}
-#### - Anagrafica Mezzi
-* Stato/note :  / 10%  
-* Nome Oggetto : 
-* API model :   .. Filtro fisso : 
+#### - Mezzi
+* Stato/note :  Definito/ 10%  
+* Nome Oggetto : Vehicle
+* API window :   Vehicles Filtro fisso : isactive=Y
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-#### - Anagrafica Attrezzatura
-* Stato/note :  / 10%  
-* Nome Oggetto :
-* API model :   .. Filtro fisso : 
+* [ ] Ricerca per TARGA,NAME
+* [ ] Visualizza : [Targa,Name,AssetType,BPartner,]
+* [ ] Modifica ( No Delete)
+* [ ] 
+#### - Attrezzatura
+* Stato/note : Definito/ 10%  
+* Nome Oggetto :Equipment
+* API windo : Equipment  Filtro fisso : isactive=Y
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Presa in carico/Spostamento Mezzo/Attrezzatura e Rilascio
@@ -606,8 +636,8 @@ pre: "<b>90. </b>"
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Scheda Dipendente
-* Nome Oggetto :
-* API model :   .. Filtro fisso : 
+* Nome Oggetto : Employee
+* API model :   Profilemployee Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Dotazione Dipendente
@@ -629,7 +659,7 @@ pre: "<b>90. </b>"
 ### Dipendente 
 #### - Bacheca Personale
 * Stato/note :  / 10%  
-* Nome Oggetto :
+* Nome Oggetto :tbd
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -670,14 +700,30 @@ Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
 * Nome Oggetto : Server Option 
 * API model :  Filtro fisso : 
 da 1-30 Y/N moduli (Crm,Vendite,...)
-31 Accesso record ALL Y/N
-- Listino Base : 1000023
--  
+1 CRM Y/N
+2 (libero)
+3 Ticket-Task-Ore Y/N
+4 Manutenzione-Tecnico Y/N
+5 Manutenzione-Portale Y/N
+6 Formazione Y/N
+7 Formazione Portale Y/N
+8 Formazione Corsista Y/N
+9 Acquisti Y/N
+10 Logistica Y/N
+11 Mezzi e Attrezzatura Y/N
+12 Prodzione Y/N
+13 Contabilità Y/N
+14 Risorse Umane Y/N
+15 Dipendente Y/N
+16-30 (libero)
+31 ##FilterAll  Y/N
+32-33-34-35-36-37 #BasePriceList : 1000023
+38 #OfferDays :30
 #### - Opzioni Utente
 * Stato/note :  / 10%  
 * Nome Oggetto : User Option
 * API model :  ad_user Filtro fisso : 
-- 
+1 
 
 
 {{% pageinfo %}} ##CRM {{% /pageinfo %}}
