@@ -91,7 +91,7 @@ class CRMPaymentController extends GetxController {
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/c_payment?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+        '/api/v1/models/c_payment?\$filter=C_DocType_ID eq 1000008 and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{
