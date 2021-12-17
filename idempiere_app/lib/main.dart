@@ -30,6 +30,7 @@ import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoicepo/views/scr
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Portaloffer/views/screens/portal_mp_portaloffer_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase/views/screens/purchase_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Orderpo/views/screens/purchase_orderpo_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Purchase_Productwarehouseprice/views/screens/purchase_productwarehouseprice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Customer_Ticket/views/screens/ticket_customer_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
@@ -205,6 +206,11 @@ class MyApp extends StatelessWidget {
           name: '/PurchaseOrderpo',
           page: () => const PurchaseOrderpoScreen(),
           binding: PurchaseOrderpoBinding(),
+        ),
+        GetPage(
+          name: '/PurchaseProductwarehouseprice',
+          page: () => const PurchaseProductwarehousepriceScreen(),
+          binding: PurchaseProductwarehousepriceBinding(),
         ),
       ],
       /* routes: {

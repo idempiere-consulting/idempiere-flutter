@@ -36,6 +36,11 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.arrowBackOutline,
                   label: "PurchaseOrderpo",
                 ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "PurchaseProductwarehouseprice",
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
