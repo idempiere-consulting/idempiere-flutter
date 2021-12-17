@@ -21,6 +21,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  // ignore: prefer_typing_uninitialized_variables
   var checkboxState;
   final userFieldController = TextEditingController();
   final passwordFieldController = TextEditingController();
@@ -101,7 +102,7 @@ class _BodyState extends State<Body> {
           // then parse the JSON.
           // ignore: unused_local_variable
           var json = jsonDecode(response.body);
-          print(json);
+          //print(json);
           GetStorage().write("token", json["token"]);
           Get.offAndToNamed("/Dashboard");
         } else {

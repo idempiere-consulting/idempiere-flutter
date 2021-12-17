@@ -44,7 +44,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       // ignore: unused_local_variable
       var json = jsonDecode(response.body);
       GetStorage().write('token', json['token']);
-      Get.toNamed('/Dashboard');
+      Get.offAllNamed('/Dashboard');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
