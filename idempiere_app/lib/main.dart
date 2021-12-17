@@ -41,6 +41,7 @@ import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/vi
 import 'package:idempiere_app/Screens/app/features/Ticket_Task/views/screens/ticket_task_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Ticket/views/screens/ticket_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment/views/screens/vehicle_equipment_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/views/screens/vehicle_equipment_vehicle_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 //import 'package:idempiere_app/constants.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
@@ -241,6 +242,11 @@ class MyApp extends StatelessWidget {
           name: '/VehicleEquipment',
           page: () => const VehicleEquipmentScreen(),
           binding: VehicleEquipmentBinding(),
+        ),
+        GetPage(
+          name: '/VehicleEquipmentVehicle',
+          page: () => const VehicleEquipmentVehicleScreen(),
+          binding: VehicleEquipmentVehicleBinding(),
         ),
       ],
       /* routes: {
