@@ -42,8 +42,18 @@ class _Sidebar extends StatelessWidget {
                   label: "",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "",
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "",
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
                   label: "",
                 ),
               ],
