@@ -80,11 +80,11 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("LEAD: ")
-                        : const Text("LEAD: ")),
+                        ? Text("FATTURE: ${controller.trx.rowcount}")
+                        : const Text("FATTURE: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
@@ -95,7 +95,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ),
+                  ), */
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -150,7 +150,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                               color: Colors.white24))),
                                   child: IconButton(
                                     icon: const Icon(
-                                      Icons.edit,
+                                      Icons.article,
                                       color: Colors.green,
                                     ),
                                     tooltip: 'Edit Lead',
@@ -184,8 +184,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                   ),
                                 ),
                                 title: Text(
-                                  controller.trx.records![index].documentNo ??
-                                      "???",
+                                  "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -212,106 +211,23 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                   ), */
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                /* children: [
+                                children: [
                                   Column(
                                     children: [
                                       Row(
                                         children: [
                                           const Text(
-                                            "BPartner: ",
+                                            "Importo: ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .bPName ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.call,
-                                              color: Colors.green,
-                                            ),
-                                            tooltip: 'Call',
-                                            onPressed: () {
-                                              //log("info button pressed");
-                                              if (controller
-                                                      .trx
-                                                      .windowrecords![index]
-                                                      .phone ==
-                                                  null) {
-                                                log("info button pressed");
-                                              } else {
-                                                controller.makePhoneCall(
-                                                    controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .phone
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .phone ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.mail,
-                                              color: Colors.white,
-                                            ),
-                                            tooltip: 'EMail',
-                                            onPressed: () {
-                                              if (controller
-                                                      .trx
-                                                      .windowrecords![index]
-                                                      .eMail ==
-                                                  null) {
-                                                log("mail button pressed");
-                                              } else {
-                                                controller.writeMailTo(
-                                                    controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .eMail
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .eMail ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""),
+                                          Text(
+                                              "€${controller.trx.records![index].grandTotal}"),
                                         ],
                                       ),
                                     ],
                                   ),
-                                ], */
+                                ],
                               ),
                             ),
                           );
