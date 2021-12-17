@@ -9,6 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
@@ -76,13 +77,17 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
               Row(
                 children: [
                   Container(
-                    child: const Text("LISTA LEAD"),
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("LEAD: ${controller.trx.rowcount}")
+                        : const Text("LEAD: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(const CreateLead());
+                      },
                       icon: const Icon(
                         Icons.person_add,
                         color: Colors.lightBlue,
