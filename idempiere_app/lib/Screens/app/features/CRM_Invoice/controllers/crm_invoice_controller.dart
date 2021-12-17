@@ -2,7 +2,7 @@ part of dashboard;
 
 class CRMInvoiceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late LeadJson _trx;
+  late InvoiceJson _trx;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -17,12 +17,12 @@ class CRMInvoiceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getLeads();
+    getInvoices();
     getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  LeadJson get trx => _trx;
+  InvoiceJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -32,7 +32,7 @@ class CRMInvoiceController extends GetxController {
     }
 
     value.value = filters[filterCount];
-    getLeads();
+    getInvoices();
   }
 
   Future<void> getADUserID() async {
@@ -84,14 +84,14 @@ class CRMInvoiceController extends GetxController {
     await launch(launchUri.toString());
   }
 
-  Future<void> getLeads() async {
+  Future<void> getInvoices() async {
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+        '/api/v1/models/c_invoice?\$filter= IsSoTrx eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -100,12 +100,12 @@ class CRMInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
-      _trx = LeadJson.fromJson(jsonDecode(response.body));
+      print(response.body);
+      _trx = InvoiceJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      //_dataAvailable.value = _trx != null;
     }
   }
 

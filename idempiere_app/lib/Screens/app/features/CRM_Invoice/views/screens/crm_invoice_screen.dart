@@ -8,6 +8,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/invoice_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
@@ -79,7 +80,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("LEAD: ${controller.trx.rowcount}")
+                        ? Text("LEAD: ")
                         : const Text("LEAD: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
@@ -99,7 +100,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
                       onPressed: () {
-                        controller.getLeads();
+                        controller.getInvoices();
                       },
                       icon: const Icon(
                         Icons.refresh,
@@ -155,35 +156,35 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                     tooltip: 'Edit Lead',
                                     onPressed: () {
                                       //log("info button pressed");
-                                      Get.to(const EditLead(), arguments: {
+                                      /* Get.to(const EditLead(), arguments: {
                                         "id": controller
-                                            .trx.windowrecords![index].id,
+                                            .trx.records![index].id,
                                         "name": controller
-                                            .trx.windowrecords![index].name,
+                                            .trx.records![index].name,
                                         "leadStatus": controller
                                                 .trx
-                                                .windowrecords![index]
-                                                .leadStatus
+                                                .records![index]
+                                                .Status
                                                 ?.id ??
                                             "",
                                         "bpName": controller
-                                            .trx.windowrecords![index].bPName,
+                                            .trx.records![index].bPName,
                                         "Tel": controller
-                                            .trx.windowrecords![index].phone,
+                                            .trx.records![index].phone,
                                         "eMail": controller
-                                            .trx.windowrecords![index].eMail,
+                                            .trx.records![index].eMail,
                                         "salesRep": controller
                                                 .trx
-                                                .windowrecords![index]
+                                                .records![index]
                                                 .salesRepID
                                                 ?.identifier ??
                                             ""
-                                      });
+                                      }); */
                                     },
                                   ),
                                 ),
                                 title: Text(
-                                  controller.trx.windowrecords![index].name ??
+                                  controller.trx.records![index].documentNo ??
                                       "???",
                                   style: const TextStyle(
                                       color: Colors.white,
@@ -196,8 +197,8 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                     const Icon(Icons.linear_scale,
                                         color: Colors.yellowAccent),
                                     Text(
-                                      controller.trx.windowrecords![index]
-                                              .leadStatus!.identifier ??
+                                      controller.trx.records![index]
+                                              .cBPartnerID!.identifier ??
                                           "??",
                                       style:
                                           const TextStyle(color: Colors.white),
@@ -211,7 +212,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                   ), */
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                children: [
+                                /* children: [
                                   Column(
                                     children: [
                                       Row(
@@ -310,7 +311,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                       ),
                                     ],
                                   ),
-                                ],
+                                ], */
                               ),
                             ),
                           );
