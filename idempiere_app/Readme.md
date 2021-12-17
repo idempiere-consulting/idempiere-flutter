@@ -325,7 +325,7 @@ get API :
 {{% /expand%}}
   
 ## {{%expand"5 Manutenzione Portale"%}}
-Nome Oggetto : Maintenance
+Nome Oggetto : PortalMaintenance
 get API : 
 ### - Dashboard Portale (no a menu)
 * Stato/note : Definito / 10%  
