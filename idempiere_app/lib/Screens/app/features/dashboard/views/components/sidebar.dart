@@ -51,6 +51,11 @@ class _Sidebar extends StatelessWidget {
                   label: "PortalMp",
                 ),
                 SelectionButtonData(
+                  activeIcon: EvaIcons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Purchase",
+                ),
+                SelectionButtonData(
                   activeIcon: EvaIcons.calendar,
                   icon: EvaIcons.calendarOutline,
                   label: "Calendar",

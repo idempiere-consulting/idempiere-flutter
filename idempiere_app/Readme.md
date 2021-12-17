@@ -435,7 +435,7 @@ get API :
 * [ ] Filtri Avanzata: ???
  {{% /expand%}}
 
-## {{%expand"9 Acquisti "%}}
+## {{%expand"9 Acquisti "%}} 
 #### - Lead Fornitore
 * Stato/note :  / 10%  
 * Nome Oggetto : orderpo
