@@ -51,14 +51,14 @@ class Records {
   final bool? isApproved;
   final bool? isTransferred;
   final CCurrencyID? cCurrencyID;
-  final int? totalLines;
+  final num? totalLines;
   final num? grandTotal;
   final String? dateAcct;
   final SalesRepID? salesRepID;
   final bool? isSOTrx;
   final CDocTypeTargetID? cDocTypeTargetID;
   final String? dateInvoiced;
-  final int? chargeAmt;
+  final num? chargeAmt;
   final MPriceListID? mPriceListID;
   final PaymentRule? paymentRule;
   final bool? isDiscountPrinted;
@@ -74,11 +74,11 @@ class Records {
   final bool? isFixedAssetInvoice;
   final bool? isOverrideCurrencyRate;
   final bool? lITIsNoCheckPaymentTerm;
-  final int? withholdingAmt;
+  final num? withholdingAmt;
   final String? vATDocumentNo;
   final LITVATPeriodID? lITVATPeriodID;
   final Status? status;
-  final int? taxBaseAmt;
+  final num? taxBaseAmt;
   final String? modelname;
 
   Records({
@@ -178,8 +178,8 @@ class Records {
             ? CCurrencyID.fromJson(
                 json['C_Currency_ID'] as Map<String, dynamic>)
             : null,
-        totalLines = json['TotalLines'] as int?,
-        grandTotal = json['GrandTotal'] as int?,
+        totalLines = json['TotalLines'] as num?,
+        grandTotal = json['GrandTotal'] as num?,
         dateAcct = json['DateAcct'] as String?,
         salesRepID = (json['SalesRep_ID'] as Map<String, dynamic>?) != null
             ? SalesRepID.fromJson(json['SalesRep_ID'] as Map<String, dynamic>)
@@ -191,7 +191,7 @@ class Records {
                     json['C_DocTypeTarget_ID'] as Map<String, dynamic>)
                 : null,
         dateInvoiced = json['DateInvoiced'] as String?,
-        chargeAmt = json['ChargeAmt'] as int?,
+        chargeAmt = json['ChargeAmt'] as num?,
         mPriceListID = (json['M_PriceList_ID'] as Map<String, dynamic>?) != null
             ? MPriceListID.fromJson(
                 json['M_PriceList_ID'] as Map<String, dynamic>)
@@ -216,7 +216,7 @@ class Records {
         isFixedAssetInvoice = json['IsFixedAssetInvoice'] as bool?,
         isOverrideCurrencyRate = json['IsOverrideCurrencyRate'] as bool?,
         lITIsNoCheckPaymentTerm = json['LIT_isNoCheckPaymentTerm'] as bool?,
-        withholdingAmt = json['WithholdingAmt'] as int?,
+        withholdingAmt = json['WithholdingAmt'] as num?,
         vATDocumentNo = json['VATDocumentNo'] as String?,
         lITVATPeriodID =
             (json['LIT_VAT_Period_ID'] as Map<String, dynamic>?) != null
@@ -226,7 +226,7 @@ class Records {
         status = (json['Status'] as Map<String, dynamic>?) != null
             ? Status.fromJson(json['Status'] as Map<String, dynamic>)
             : null,
-        taxBaseAmt = json['TaxBaseAmt'] as int?,
+        taxBaseAmt = json['TaxBaseAmt'] as num?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
