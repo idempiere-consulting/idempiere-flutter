@@ -24,10 +24,11 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
+              initialSelected: 0,
               data: [
                 SelectionButtonData(
-                  activeIcon: EvaIcons.grid,
-                  icon: EvaIcons.gridOutline,
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
                   label: "Dashboard",
                 ),
                 SelectionButtonData(
@@ -36,60 +37,57 @@ class _Sidebar extends StatelessWidget {
                   label: "CRM",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Ticket",
+                  activeIcon: Icons.paid,
+                  icon: Icons.paid_outlined,
+                  label: "Maintenence",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.calendar,
-                  icon: EvaIcons.calendarOutline,
-                  label: "Maintenance",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "PortalMp",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Purchase",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Supplychain",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "VehicleEquipment",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
                   label: "DashboardAssetresource",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.calendar,
-                  icon: EvaIcons.calendarOutline,
-                  label: "Calendar",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.email,
-                  icon: EvaIcons.emailOutline,
-                  label: "Email",
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Profil",
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "Clienti",
+                  totalNotif: 20,
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.settings,
-                  icon: EvaIcons.settingsOutline,
-                  label: "Setting",
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "Task&Appuntamenti",
+                  totalNotif: 20,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "Offerte",
+                  totalNotif: 20,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "ListinoProdotti",
+                  totalNotif: 20,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "Fattura",
+                  totalNotif: 20,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "Incassi",
+                  totalNotif: 20,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "Provvigioni",
+                  totalNotif: 20,
                 ),
               ],
               onSelected: (index, value) {

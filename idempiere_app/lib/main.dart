@@ -46,6 +46,7 @@ import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/vie
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 //import 'package:idempiere_app/constants.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_assetresource/views/screens/dashboard_assetresource_screen.dart';
 
 void main() async {
   await GetStorage.init();
@@ -253,6 +254,11 @@ class MyApp extends StatelessWidget {
           name: '/VehicleEquipmentEquipment',
           page: () => const VehicleEquipmentEquipmentScreen(),
           binding: VehicleEquipmentEquipmentBinding(),
+        ),
+        GetPage(
+          name: '/DashboardAssetresource',
+          page: () => const DashboardAssetresourceScreen(),
+          binding: DashboardAssetresourceBinding(),
         ),
       ],
       /* routes: {
