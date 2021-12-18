@@ -9,69 +9,83 @@ pre: "<b>90. </b>"
 
 #  Funzionalità da vedere
 
-* [ ] Eseguire processo completa di idempiere APIREST
-* [ ] Eseguire processo idempiere con parametri APIREST
+## Step 1
+* [ ] Eseguire processo completa di idempiere APIREST 
+* [ ] Eseguire processo idempiere con parametri APIREST 
 * [ ] Calendario (vista giorno,week,mese,lista,)
     https://pub.dev/packages/syncfusion_flutter_calendar
 * [ ] Invio Email vers base a) indirizzo test@test.it invia
       https://www.youtube.com/watch?v=yUeBPg8Z7I0
       https://www.youtube.com/watch?v=RDwst9icjAY
 
-* [ ] Chat (wishing list)
-* [ ] Attivare Acquisizione Fotocamera e allegare API REST 
+## Step 2
+* [ ] Attivare Acquisizione Fotocamera e allegare API REST (S2)
    https://docs.flutter.dev/cookbook/plugins/picture-using-camera
-* [ ] Allegare Documento (jpg,PDF) 
-* [ ] Visualizzare Allegato (vedere ticket desktop app)
-* [ ] Stampa report (da idempiere)  da vedere con AC (TOP)
-* [ ] Stampa Diretta Bluetooth o IP (Step 2)
-* [ ] Gestione Barcode QRcode (vedi processi produzione)
+* [ ] Allegare Documento (jpg,PDF)  (S2)
+* [ ] Visualizzare Allegato (vedere ticket desktop app) (S2)
+* [ ] Gestione Barcode QRcode (vedi processi produzione) 
+* [ ] Gestione Lingua (step 2) 
+* [ ] Notifiche    (vedere quello fatto con Vincenzo sulla Desktop APP ) 
+
+## Step 3
+* [ ] Chat (wishing list) 
+* [ ] Stampa report (da idempiere)  da vedere con AC (TOP) 
+* [ ] Stampa Diretta Bluetooth o IP
+
 * [ ] Gestione NFC - Per segnare le ore ? - controllare plugin NFC 
-      (in background ? )
-* [ ] Notifiche    (vedere quello fatto con Vincenzo sulla Desktop APP )
-* [ ] Gestione Lingua (step 2)
-* [ ] Gestione Permessi 
 * [ ] Sondaggi https://github.com/quickbirdstudios/survey_kit
  
-## Login
-* [ ] Logo App 
-* [ ] Logo e Nome in alto a Sx
-* [ ] Accesso via https
-* [ ] Salvataggio Ruolo e login con solo ok se memorizzato password
-* [ ] Non si visualizzano i Dati Server  
-* [ ] Exit / Logout (step 2)
+## Login 
+* [ ] Logo App , immagini login (S1)
+* [ ] Logo e Nome in alto a Sx  (S1)
+* [ ] Accesso via https  (S2)
+* [x] Salvataggio Ruolo e login con solo ok se memorizzato password
+* [ ] Saltare la prima pagine e andare alla Login Page (S1)
+* [ ] Non si visualizzano i Dati Server  (S2)
+* [ ] Exit / Logout (step 2) (S2)
 
 
 ## Dashboard {#Dashnoard}
-### Email/Notifiche
-* [ ] Inbox Notifiche
-   * [ ] Task / Lead Promeria / Notifica per Data/ora
+### Email/Notifiche (S3)
+* [ ] -> Notifiche
+* [ ] Task / Lead Promeria / Notifica per Data/ora
 * [ ] Impostare Letto
 * [ ] Invia Messaggio 
 
-### Calendario
+### Calendario (S1)
 * [ ] Calendario 
      - Task Lead
      - Task Business Partner
 
-
-* [ ] ..
-* [ ] ..
 ### Notifiche
 
-### Bacheca
+### Bacheca (S2)
 * [ ] Filtro fisso = user or team
 * [ ] Filtri : Stato Lead
 * [ ] Bacheca 
 * [ ] Imposta "letto"
 
-### BI Vendite
+### BI Vendite (S2)
 * [ ] Grafico Chart Fatturato 
 * [ ] Grafico Chart 
-### Prenotazione Risorse Aziendali 
-* [ ] Elenco Risorse Aziendali [libere/tutte]
+  
+### Risorse Aziendali (new)
+! Fare Maschera su iDempiere 
+* Stato/note : Definito / 50%  
+* Nome Oggetto : AssetResource
+* API model a_asset Filtro fisso = isactive='Y' isresource=Y
+* [ ] Filtro Base = All Miei 
+* [ ] Filtri Avanzata: Tipo : A_Asset_Type_ID
+* [ ] Ricerca : Nome , Targa
+* [ ] Visualizzare(Inventoryno,Nome)
+* [ ] Modificare 
+* [ ] Creare
+* [ ] Cancellare (?)
+* [ ] Caricare da Contatto (S2)
+* [ ] Eseguire Telefonata ( S1)
+* [ ] Elenco Risorse Aziendali 
 * [ ] Prenota Risorsa (data, durata) / Libera Prenotazione
 * [ ] Poke Risorsa occupata
-  
 
 ## {{%expand"## 1-CRM"%}}
 Nome Oggetto : CRM
@@ -93,15 +107,15 @@ get API :   Lead (count(*),count(*)Miei, Count(*)Last 7day,
 * API window lead Filtro fisso = isactive='Y'
 * [x] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Stato Lead
-* [ ] Ricerca : Nome 
+* [ ] Ricerca : Nome,Telefono,Nome BP
 * [x] Visualizzare(Nome,Telefono,Email,Stato del Lead,Agente,Nome del BP)
 * -Lista Agente : select name from ad_user where c_bpartner is not null and il BP is salesrep
 * [x] Modificare(Tutti) 
-* [ ] Creare
+* [x] Creare
 * [x] Cancellare
 * [ ] Caricare da Contatto (S2)
-* [ ] Eseguire Telefonata ( S1)
-* [ ] Invio Email (S1)
+* [x] Eseguire Telefonata ( S1)
+* [x] Invio Email (S1)
 * [ ] Scarica Lead come Contatto Telefono (S2)
 * [ ] Converti Lead in BP
 * [ ] Crea Task Lead, (S2)
