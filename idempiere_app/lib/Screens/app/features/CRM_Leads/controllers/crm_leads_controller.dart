@@ -3,6 +3,8 @@ part of dashboard;
 class CRMLeadController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late LeadJson _trx;
+  var _hasCallSupport = false;
+  //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -17,6 +19,10 @@ class CRMLeadController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    canLaunch('tel:123').then((bool result) {
+      _hasCallSupport = result;
+    });
+
     getLeads();
     getADUserID();
   }
@@ -65,11 +71,13 @@ class CRMLeadController extends GetxController {
     // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
     // such as spaces in the input, which would cause `launch` to fail on some
     // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
-    await launch(launchUri.toString());
+    if (_hasCallSupport) {
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: phoneNumber,
+      );
+      await launch(launchUri.toString());
+    }
   }
 
   Future<void> writeMailTo(String receiver) async {
