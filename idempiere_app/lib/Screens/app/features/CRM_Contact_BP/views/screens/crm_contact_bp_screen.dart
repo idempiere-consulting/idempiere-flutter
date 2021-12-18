@@ -8,7 +8,10 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact_bp_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -27,6 +30,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/crm_contact_bp_binding.dart';
@@ -72,7 +76,52 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              const Text("LISTA CONTATTI BUSINESS PARTNER"),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("CONTATTI: ${controller.trx.rowcount}")
+                        : const Text("CONTATTI: ")),
+                    margin: const EdgeInsets.only(left: 15),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateLead());
+                      },
+                      icon: const Icon(
+                        Icons.person_add,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getContacts();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -80,7 +129,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: 100,
+                        itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 8.0,
@@ -101,12 +150,36 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                               color: Colors.white24))),
                                   child: IconButton(
                                     icon: const Icon(
-                                      Icons.person,
+                                      Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Lead Info',
+                                    tooltip: 'Edit Lead',
                                     onPressed: () {
-                                      log("info button pressed");
+                                      //log("info button pressed");
+                                      /* Get.to(const EditLead(), arguments: {
+                                        "id": controller
+                                            .trx.records![index].id,
+                                        "name": controller
+                                            .trx.records![index].name,
+                                        "leadStatus": controller
+                                                .trx
+                                                .records![index]
+                                                .contactStatus
+                                                ?.id ??
+                                            "",
+                                        "bpName": controller
+                                            .trx.windowrecords![index].bPName,
+                                        "Tel": controller
+                                            .trx.windowrecords![index].phone,
+                                        "eMail": controller
+                                            .trx.windowrecords![index].eMail,
+                                        "salesRep": controller
+                                                .trx
+                                                .windowrecords![index]
+                                                .salesRepID
+                                                ?.identifier ??
+                                            ""
+                                      }); */
                                     },
                                   ),
                                 ),
@@ -123,8 +196,8 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                     const Icon(Icons.linear_scale,
                                         color: Colors.yellowAccent),
                                     Text(
-                                      controller.trx.records![index].cbPartnerID
-                                              ?.identifier ??
+                                      controller.trx.records![index]
+                                              .cBPartnerID!.identifier ??
                                           "??",
                                       style:
                                           const TextStyle(color: Colors.white),
@@ -138,91 +211,77 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                   ), */
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                /* children: [
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          "BPartner: ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx
-                                                .windowrecords![index].bPName ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          "Tel: ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx
-                                                .windowrecords![index].phone ??
-                                            ""),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.call,
-                                            color: Colors.green,
+                                children: [
+                                  Column(
+                                    children: [
+                                      /* Row(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.call,
+                                              color: Colors.green,
+                                            ),
+                                            tooltip: 'Call',
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                              if (controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .phone ==
+                                                  null) {
+                                                log("info button pressed");
+                                              } else {
+                                                controller.makePhoneCall(
+                                                    controller
+                                                        .trx
+                                                        .records![index]
+                                                        .phone
+                                                        .toString());
+                                              }
+                                            },
                                           ),
-                                          tooltip: 'Call',
-                                          onPressed: () {
-                                            log("info button pressed");
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          "Email: ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx
-                                                .windowrecords![index].eMail ??
-                                            ""),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.mail,
-                                            color: Colors.white,
+                                          Text(controller
+                                                  .trx
+                                                  .records![index]
+                                                  .phone ??
+                                              ""),
+                                        ],
+                                      ), */
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.mail,
+                                              color: Colors.white,
+                                            ),
+                                            tooltip: 'EMail',
+                                            onPressed: () {
+                                              if (controller.trx.records![index]
+                                                      .eMail ==
+                                                  null) {
+                                                log("mail button pressed");
+                                              } else {
+                                                controller.writeMailTo(
+                                                    controller.trx
+                                                        .records![index].eMail
+                                                        .toString());
+                                              }
+                                            },
                                           ),
-                                          tooltip: 'EMail',
-                                          onPressed: () {
-                                            log("info button pressed");
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          "Agente: ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .salesRepID
-                                                ?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ], */
+                                          Text(controller
+                                                  .trx.records![index].eMail ??
+                                              ""),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           );
                         },
                       )
-                    : const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                    : const Center(child: CircularProgressIndicator()),
               ),
             ]);
           },

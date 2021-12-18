@@ -2,7 +2,15 @@ part of dashboard;
 
 class CRMContactBPController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late ContactsJson _trx;
+  late ContactJson _trx;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var adUserId;
+
+  var value = "Tutti".obs;
+
+  var filters = ["Tutti", "Miei" /* , "Team" */];
+  var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
@@ -10,15 +18,29 @@ class CRMContactBPController extends GetxController {
   void onInit() {
     super.onInit();
     getContacts();
+    getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  ContactsJson get trx => _trx;
+  ContactJson get trx => _trx;
+  //String get value => _value.toString();
 
-  Future<void> getContacts() async {
+  changeFilter() {
+    filterCount++;
+    if (filterCount == 2) {
+      filterCount = 0;
+    }
+
+    value.value = filters[filterCount];
+    getContacts();
+  }
+
+  Future<void> getADUserID() async {
+    var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse(
+        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -28,8 +50,59 @@ class CRMContactBPController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = ContactsJson.fromJson(jsonDecode(response.body));
-      //print(_trx.rowcount);
+      var json = jsonDecode(response.body);
+
+      adUserId = json["records"][0]["id"];
+
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    }
+  }
+
+  Future<void> makePhoneCall(String phoneNumber) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launch(launchUri.toString());
+  }
+
+  Future<void> writeMailTo(String receiver) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'mailto',
+      path: receiver,
+    );
+    await launch(launchUri.toString());
+  }
+
+  Future<void> getContacts() async {
+    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    _dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter=C_BPartner_ID neq null and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      _trx = ContactJson.fromJson(jsonDecode(response.body));
+      //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
@@ -185,7 +258,7 @@ class CRMContactBPController extends GetxController {
 }
 
 class Provider extends GetConnect {
-  Future<void> getLeads() async {
+  Future<void> getContacts() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     //print(authorization);
