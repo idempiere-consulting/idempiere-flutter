@@ -47,7 +47,6 @@ pre: "<b>90. </b>"
 
 ## Dashboard {#Dashnoard}
 ### Email/Notifiche (S3)
-* [ ] -> Notifiche
 * [ ] Task / Lead Promeria / Notifica per Data/ora
 * [ ] Impostare Letto
 * [ ] Invia Messaggio 
@@ -70,7 +69,7 @@ pre: "<b>90. </b>"
 * [ ] Grafico Chart 
   
 ### Risorse Aziendali (new)
-! Fare Maschera su iDempiere 
+!! Fare Maschera su iDempiere 
 * Stato/note : Definito / 50%  
 * Nome Oggetto : AssetResource
 * API model a_asset Filtro fisso = isactive='Y' isresource=Y
@@ -154,7 +153,7 @@ get API :   Lead (count(*),count(*)Miei, Count(*)Last 7day,
 ### Clienti BP
 * Stato/note : Definito / 10%  
 * Nome Oggetto : BusinessPartner
-* API Window : businesspartner - Filtro fisso : C_Bpartner_id not null and islead='N' isactive='Y'
+* API model : businesspartner - Filtro fisso : C_Bpartner_id not null and islead='N' isactive='Y'
 * [ ] Filtro Base = All Miei(agente=user)
 * [ ] Filtri Avanzata: Gruppo Business Partner or Categoria BP
 * [ ] Visualizzare BP (Nome,indirizzo(isbillto),Telefono,Email,Agente)
@@ -710,7 +709,7 @@ Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
 
 ## 99 Setup e Opzioni
 #### - Opzioni Server (Client)
-* Stato/note :  / 10%  
+!! Fare maschera su idempiere come Parametrizzazione Azienda 
 * Nome Oggetto : Server Option 
 * API model :  Filtro fisso : 
 da 1-30 Y/N moduli (Crm,Vendite,...)
