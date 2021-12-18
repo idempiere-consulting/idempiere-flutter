@@ -625,7 +625,7 @@ get API :
 
 ## {{%expand"14 Risorse Umane"%}}
 
-### Responsabile 
+### Responsabile diPARTIMENTO / hr
 * Stato/note :  / 10%  
 * Nome Oggetto :
 * API model :   .. Filtro fisso : 
@@ -633,7 +633,7 @@ get API :
 * [ ] Filtri Avanzata: ???
 #### - Ritardi e Assenze
 * Stato/note :  / 10%  
-* Nome Oggetto :
+* Nome Oggetto : VISTA !!!
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -644,7 +644,9 @@ get API :
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Ticket HR ( Ferie,Permessi,Malattia,altro..)
-* Nome Oggetto :
+* Nome Oggetto : HR_Ticket -> Calendario
+  fACCIO LA RICHEISTA DAL CALENDARIO
+
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -659,24 +661,26 @@ get API :
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Bacheca ( aziendale, ufficio/report , personale)
-* Nome Oggetto :
+* Nome Oggetto : 
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Ricerca personale (assunzione, curriculum )
-* Nome Oggetto :
+* Nome Oggetto : ad_user!
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 
 ### Dipendente 
 #### - Bacheca Personale
+!!!
 * Stato/note :  / 10%  
 * Nome Oggetto :tbd
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 #### - Timbracartellino (Qrcode, GPS,Foto)
+!!! SSDFSDFSDFSDFFSD
 * Stato/note :  / 10%  
 * Nome Oggetto :
 * API model :   .. Filtro fisso : 
@@ -684,6 +688,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   
 #### - Richiesta Permesso / Ferie /Malattia
+!! Definire tabelle/maschere su idempiere !!!!!!!!!!!!!!!!!!!
 * Stato/note :  / 10%  
 * Nome Oggetto :
 * API model :   .. Filtro fisso : 
@@ -691,14 +696,16 @@ get API :
 * [ ] Filtri Avanzata: ???
 * [ ] 
 #### - Sondaggi (light)
+!! Definire tabelle/maschere su idempiere !!!!!!!!!!!!!!!!!!!
 * how to https://github.com/quickbirdstudios/survey_kit
 * Stato/note : DA DEFINIRE / 10%  
 * Nome Oggetto :
 * API model :   .. Filtro fisso : 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-* [ ] 
-#### - Armadietto (busta paga) TDBTDBTDBTDBTDBTDB
+
+#### - Armadietto (busta paga) 
+!! Definire cos'è un armadietto !!!!!!!!!!!!!!!!!!!!!!!!!!!
 * Stato/note : DA DEFINIRE  / 10%  
 * Nome Oggetto : 
 * API model :   .. Filtro fisso : 
