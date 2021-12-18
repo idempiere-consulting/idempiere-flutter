@@ -156,12 +156,12 @@ class _EditLeadState extends State<EditLead> {
   }
 
   void fillFields() {
-    nameFieldController.text = args["name"];
-    bPartnerFieldController.text = args["bpName"];
-    phoneFieldController.text = args["Tel"];
-    mailFieldController.text = args["eMail"];
+    nameFieldController.text = args["name"] ?? "";
+    bPartnerFieldController.text = args["bpName"] ?? "";
+    phoneFieldController.text = args["Tel"] ?? "";
+    mailFieldController.text = args["eMail"] ?? "";
     //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"];
+    salesrepValue = args["salesRep"] ?? "";
     //salesRepFieldController.text = args["salesRep"];
   }
 

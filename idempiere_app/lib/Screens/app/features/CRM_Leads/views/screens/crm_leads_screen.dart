@@ -158,8 +158,9 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                       Get.to(const EditLead(), arguments: {
                                         "id": controller
                                             .trx.windowrecords![index].id,
-                                        "name": controller
-                                            .trx.windowrecords![index].name,
+                                        "name": controller.trx
+                                                .windowrecords![index].name ??
+                                            "",
                                         "leadStatus": controller
                                                 .trx
                                                 .windowrecords![index]
@@ -168,10 +169,12 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                             "",
                                         "bpName": controller
                                             .trx.windowrecords![index].bPName,
-                                        "Tel": controller
-                                            .trx.windowrecords![index].phone,
-                                        "eMail": controller
-                                            .trx.windowrecords![index].eMail,
+                                        "Tel": controller.trx
+                                                .windowrecords![index].phone ??
+                                            "",
+                                        "eMail": controller.trx
+                                                .windowrecords![index].eMail ??
+                                            "",
                                         "salesRep": controller
                                                 .trx
                                                 .windowrecords![index]
