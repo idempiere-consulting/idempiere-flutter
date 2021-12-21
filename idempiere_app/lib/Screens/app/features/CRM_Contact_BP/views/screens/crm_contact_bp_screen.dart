@@ -212,7 +212,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                 children: [
                                   Column(
                                     children: [
-                                      /* Row(
+                                      Row(
                                         children: [
                                           IconButton(
                                             icon: const Icon(
@@ -222,29 +222,23 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                             tooltip: 'Call',
                                             onPressed: () {
                                               //log("info button pressed");
-                                              if (controller
-                                                      .trx
-                                                      .windowrecords![index]
+                                              if (controller.trx.records![index]
                                                       .phone ==
                                                   null) {
                                                 log("info button pressed");
                                               } else {
                                                 controller.makePhoneCall(
-                                                    controller
-                                                        .trx
-                                                        .records![index]
-                                                        .phone
+                                                    controller.trx
+                                                        .records![index].phone
                                                         .toString());
                                               }
                                             },
                                           ),
                                           Text(controller
-                                                  .trx
-                                                  .records![index]
-                                                  .phone ??
+                                                  .trx.records![index].phone ??
                                               ""),
                                         ],
-                                      ), */
+                                      ),
                                       Row(
                                         children: [
                                           IconButton(

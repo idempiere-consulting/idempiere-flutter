@@ -100,7 +100,7 @@ class CRMPaymentController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       //_trx = InvoiceJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
