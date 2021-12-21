@@ -1,8 +1,8 @@
 part of dashboard;
 
-class CalendarBinding extends Bindings {
+/* class CalendarBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => CalendarController());
   }
-}
+} */

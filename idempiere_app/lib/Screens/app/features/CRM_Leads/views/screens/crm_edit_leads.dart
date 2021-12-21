@@ -368,43 +368,6 @@ class _EditLeadState extends State<EditLead> {
                     alignment: Alignment.centerLeft,
                   ),
                 ),
-                /* Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    //icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    //style: const TextStyle(color: Colors.deepPurple),
-                    /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: <String>[
-                      'Chiuso',
-                      'Convertito',
-                      'In Lavoro',
-                      'Nuovo'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ), */
                 Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -422,31 +385,14 @@ class _EditLeadState extends State<EditLead> {
                         snapshot.hasData
                             ? DropdownButton(
                                 value: dropdownValue,
-                                //icon: const Icon(Icons.arrow_downward),
                                 elevation: 16,
-                                //style: const TextStyle(color: Colors.deepPurple),
-                                /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     dropdownValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },
-                                items: /* <String>[
-                                  'Chiuso',
-                                  'Convertito',
-                                  'In Lavoro',
-                                  'Nuovo'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList()*/
-                                    snapshot.data!.map((list) {
+                                items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     child: Text(
                                       list.name.toString(),

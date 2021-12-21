@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/Calendar',
           page: () => const CalendarScreen(),
-          binding: CalendarBinding(),
+          //binding: CalendarBinding(),
         ),
         GetPage(
           name: '/Lead',

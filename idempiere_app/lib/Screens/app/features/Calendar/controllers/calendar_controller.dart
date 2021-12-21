@@ -1,17 +1,41 @@
 part of dashboard;
 
 class CalendarController extends GetxController {
-  /* final scaffoldKey = GlobalKey<ScaffoldState>();
+  var focusedDay = DateTime.now().obs;
+  var firstDay = DateTime.utc(2010, 10, 16).obs;
+  var lastDay = DateTime.utc(2030, 3, 14).obs;
+  Rx<DateTime> selectedDay = DateTime.now().obs;
 
-  void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
-    }
+  Map<DateTime, List<Event>> selectedEvents = {};
+
+  /*  @override
+  void onInit() {
+    //selectedEvents = {};
+    add
+    super.onInit();
+    //addEvent();
   } */
+
+  List<Event> getEventsfromDay(DateTime date) {
+    return selectedEvents[date] ?? [];
+  }
+
+  addEvent() {
+    if (selectedEvents[selectedDay] != null) {
+      selectedEvents[selectedDay.value]!.add(
+        const Event("hallo"),
+      );
+      //print("aggiunto");
+    } else {
+      selectedEvents[selectedDay.value] = [const Event("hallo")];
+      //print("creato");
+    }
+
+    //print(selectedEvents[selectedDay.value]!.length);
+  }
 
   // Data
   _Profile getProfil() {
-    //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
     String roleName = GetStorage().read('rolename') as String;
     return _Profile(

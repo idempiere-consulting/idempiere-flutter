@@ -3,7 +3,11 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:developer';
 
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/event.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/create_calendar_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -44,11 +48,60 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class CalendarScreen extends GetView<CalendarController> {
+class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
 
   @override
+  State<CalendarScreen> createState() => _CalendarScreenState();
+}
+
+class _CalendarScreenState extends State<CalendarScreen> {
+  late Map<DateTime, List<Event>> selectedEvents;
+
+  final json = {
+    "types": [
+      {"id": "1", "name": "Task To Do"},
+      {"id": "2", "name": "Intervento Tecnico"},
+    ]
+  };
+
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
+  }
+
+  //CalendarFormat format = CalendarFormat.week;
+  // ignore: prefer_typing_uninitialized_variables
+  var selectedDay;
+  // ignore: prefer_typing_uninitialized_variables
+  var focusedDay;
+
+  // ignore: prefer_final_fields, prefer_typing_uninitialized_variables
+  var checkbox;
+  var eventController;
+  String dropdownValue = "";
+  late List<Types> dropDownList;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedEvents = {};
+    selectedDay = DateTime.now();
+    focusedDay = DateTime.now();
+    eventController = TextEditingController();
+    dropdownValue = "1";
+    dropDownList = getTypes()!;
+    checkbox = false;
+  }
+
+  List<Event> _getEventsfromDay(DateTime date) {
+    return selectedEvents[date] ?? [];
+  }
+
+  @override
   Widget build(BuildContext context) {
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       //key: controller.scaffoldKey,
       drawer: (ResponsiveBuilder.isDesktop(context))
@@ -56,9 +109,65 @@ class CalendarScreen extends GetView<CalendarController> {
           : Drawer(
               child: Padding(
                 padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
+                child: _Sidebar(data: getSelectedProject()),
               ),
             ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Icon(
+          Icons.add,
+        ),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text(
+                "Add Event",
+              ),
+              content: DropdownButton(
+                value: dropdownValue,
+                elevation: 16,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    dropdownValue = newValue!;
+                  });
+                  print(dropdownValue);
+                },
+                items: dropDownList.map((list) {
+                  return DropdownMenuItem<String>(
+                    child: Text(
+                      list.name.toString(),
+                    ),
+                    value: list.id,
+                  );
+                }).toList(),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                    setState(() {});
+                    switch (dropdownValue) {
+                      case "1":
+                        Get.off(const CreateCalendarEvent());
+                        break;
+                      default:
+                    }
+                  },
+                  child: const Text("Continua"),
+                ),
+              ],
+            ),
+          );
+        },
+
+        //icon: Icon(Icons.add),
+      ),
       body: SingleChildScrollView(
           child: ResponsiveBuilder(
         mobileBuilder: (context, constraints) {
@@ -68,15 +177,41 @@ class CalendarScreen extends GetView<CalendarController> {
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
-            _buildProfile(data: controller.getProfil()),
+            _buildProfile(data: getProfil()),
             const SizedBox(height: kSpacing),
             TableCalendar(
+              focusedDay: focusedDay,
+              firstDay: DateTime(2000),
+              lastDay: DateTime(2100),
+              //calendarFormat: format,
               calendarStyle: const CalendarStyle(
-                  todayDecoration: BoxDecoration(
-                      color: Colors.deepPurple, shape: BoxShape.circle)),
-              firstDay: DateTime.utc(2010, 10, 16),
-              lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: DateTime.now(),
+                todayDecoration: BoxDecoration(
+                  color: Colors.deepPurple,
+                ),
+              ),
+              headerStyle: const HeaderStyle(
+                formatButtonVisible: false,
+              ),
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              daysOfWeekVisible: true,
+              onDaySelected: (DateTime selectDay, DateTime focusDay) {
+                setState(() {
+                  selectedDay = selectDay;
+                  focusedDay = focusDay;
+                });
+                print(focusedDay);
+              },
+              selectedDayPredicate: (DateTime date) {
+                return isSameDay(selectedDay, date);
+              },
+              eventLoader: _getEventsfromDay,
+            ),
+            ..._getEventsfromDay(selectedDay).map(
+              (Event event) => ListTile(
+                title: Text(
+                  event.title,
+                ),
+              ),
             ),
           ]);
         },
@@ -99,7 +234,7 @@ class CalendarScreen extends GetView<CalendarController> {
                     ),
                     const SizedBox(height: kSpacing * 2),
                     _buildTaskOverview(
-                      data: controller.getAllTask(),
+                      data: getAllTask(),
                       headerAxis: (constraints.maxWidth < 850)
                           ? Axis.vertical
                           : Axis.horizontal,
@@ -112,7 +247,7 @@ class CalendarScreen extends GetView<CalendarController> {
                     ),
                     const SizedBox(height: kSpacing * 2),
                     _buildActiveProject(
-                      data: controller.getActiveProject(),
+                      data: getActiveProject(),
                       crossAxisCount: 6,
                       crossAxisCellCount: (constraints.maxWidth < 950)
                           ? 6
@@ -129,10 +264,10 @@ class CalendarScreen extends GetView<CalendarController> {
                 child: Column(
                   children: [
                     const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                    _buildProfile(data: controller.getProfil()),
+                    _buildProfile(data: getProfil()),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),
-                    _buildTeamMember(data: controller.getMember()),
+                    _buildTeamMember(data: getMember()),
                     const SizedBox(height: kSpacing),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
@@ -141,7 +276,7 @@ class CalendarScreen extends GetView<CalendarController> {
                     const SizedBox(height: kSpacing),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),
-                    _buildRecentMessages(data: controller.getChatting()),
+                    _buildRecentMessages(data: getChatting()),
                   ],
                 ),
               )
@@ -159,7 +294,7 @@ class CalendarScreen extends GetView<CalendarController> {
                       topRight: Radius.circular(kBorderRadius),
                       bottomRight: Radius.circular(kBorderRadius),
                     ),
-                    child: _Sidebar(data: controller.getSelectedProject())),
+                    child: _Sidebar(data: getSelectedProject())),
               ),
               Flexible(
                 flex: 9,
@@ -171,13 +306,13 @@ class CalendarScreen extends GetView<CalendarController> {
                     _buildProgress(),
                     const SizedBox(height: kSpacing * 2),
                     _buildTaskOverview(
-                      data: controller.getAllTask(),
+                      data: getAllTask(),
                       crossAxisCount: 6,
                       crossAxisCellCount: (constraints.maxWidth < 1360) ? 3 : 2,
                     ),
                     const SizedBox(height: kSpacing * 2),
                     _buildActiveProject(
-                      data: controller.getActiveProject(),
+                      data: getActiveProject(),
                       crossAxisCount: 6,
                       crossAxisCellCount: (constraints.maxWidth < 1360) ? 3 : 2,
                     ),
@@ -190,10 +325,10 @@ class CalendarScreen extends GetView<CalendarController> {
                 child: Column(
                   children: [
                     const SizedBox(height: kSpacing / 2),
-                    _buildProfile(data: controller.getProfil()),
+                    _buildProfile(data: getProfil()),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),
-                    _buildTeamMember(data: controller.getMember()),
+                    _buildTeamMember(data: getMember()),
                     const SizedBox(height: kSpacing),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
@@ -202,7 +337,7 @@ class CalendarScreen extends GetView<CalendarController> {
                     const SizedBox(height: kSpacing),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),
-                    _buildRecentMessages(data: controller.getChatting()),
+                    _buildRecentMessages(data: getChatting()),
                   ],
                 ),
               )
@@ -390,5 +525,271 @@ class CalendarScreen extends GetView<CalendarController> {
           )
           .toList(),
     ]);
+  }
+
+  _Profile getProfil() {
+    String userName = GetStorage().read('user') as String;
+    String roleName = GetStorage().read('rolename') as String;
+    return _Profile(
+      photo: const AssetImage(ImageRasterPath.avatar1),
+      name: userName,
+      email: roleName,
+    );
+  }
+
+  List<TaskCardData> getAllTask() {
+    //List<TaskCardData> list;
+
+    return [
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Lead');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Lead",
+        dueDay: 2,
+        totalComments: 50,
+        type: TaskType.inProgress,
+        totalContributors: 30,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar1),
+          const AssetImage(ImageRasterPath.avatar2),
+          const AssetImage(ImageRasterPath.avatar3),
+          const AssetImage(ImageRasterPath.avatar4),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Opportunity');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Opportunità",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Contatti');
+        },
+        addFunction: () {},
+        title: "Contatti Business Partner",
+        dueDay: 1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar3),
+          const AssetImage(ImageRasterPath.avatar4),
+          const AssetImage(ImageRasterPath.avatar2),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Clienti');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Clienti BP",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Task&Appuntamenti');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Task e Appuntamenti",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Offerte');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Offerte",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Fattura');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Fatture di Vendita",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Incassi');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Incassi",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+      TaskCardData(
+        seeAllFunction: () {
+          Get.toNamed('/Provvigioni');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Provvigioni",
+        dueDay: -1,
+        totalComments: 50,
+        totalContributors: 34,
+        type: TaskType.inProgress,
+        profilContributors: [
+          const AssetImage(ImageRasterPath.avatar5),
+          const AssetImage(ImageRasterPath.avatar6),
+          const AssetImage(ImageRasterPath.avatar7),
+          const AssetImage(ImageRasterPath.avatar8),
+        ],
+      ),
+    ];
+  }
+
+  ProjectCardData getSelectedProject() {
+    return ProjectCardData(
+      percent: .3,
+      projectImage: const AssetImage(ImageRasterPath.logo1),
+      projectName: "Calendario",
+      releaseTime: DateTime.now(),
+    );
+  }
+
+  List<ProjectCardData> getActiveProject() {
+    return [
+      ProjectCardData(
+        percent: .3,
+        projectImage: const AssetImage(ImageRasterPath.logo2),
+        projectName: "Taxi Online",
+        releaseTime: DateTime.now().add(const Duration(days: 130)),
+      ),
+      ProjectCardData(
+        percent: .5,
+        projectImage: const AssetImage(ImageRasterPath.logo3),
+        projectName: "E-Movies Mobile",
+        releaseTime: DateTime.now().add(const Duration(days: 140)),
+      ),
+      ProjectCardData(
+        percent: .8,
+        projectImage: const AssetImage(ImageRasterPath.logo4),
+        projectName: "Video Converter App",
+        releaseTime: DateTime.now().add(const Duration(days: 100)),
+      ),
+    ];
+  }
+
+  List<ImageProvider> getMember() {
+    return const [
+      AssetImage(ImageRasterPath.avatar1),
+      AssetImage(ImageRasterPath.avatar2),
+      AssetImage(ImageRasterPath.avatar3),
+      AssetImage(ImageRasterPath.avatar4),
+      AssetImage(ImageRasterPath.avatar5),
+      AssetImage(ImageRasterPath.avatar6),
+    ];
+  }
+
+  List<ChattingCardData> getChatting() {
+    return const [
+      ChattingCardData(
+        image: AssetImage(ImageRasterPath.avatar6),
+        isOnline: true,
+        name: "Samantha",
+        lastMessage: "i added my new tasks",
+        isRead: false,
+        totalUnread: 100,
+      ),
+      ChattingCardData(
+        image: AssetImage(ImageRasterPath.avatar3),
+        isOnline: false,
+        name: "John",
+        lastMessage: "well done john",
+        isRead: true,
+        totalUnread: 0,
+      ),
+      ChattingCardData(
+        image: AssetImage(ImageRasterPath.avatar4),
+        isOnline: true,
+        name: "Alexander Purwoto",
+        lastMessage: "we'll have a meeting at 9AM",
+        isRead: false,
+        totalUnread: 1,
+      ),
+    ];
   }
 }
