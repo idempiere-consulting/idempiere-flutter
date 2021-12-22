@@ -1,8 +1,8 @@
 part of dashboard;
 
-class CRMCustomerBpController extends GetxController {
+class CRMCustomerBPController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late LeadJson _trx;
+  late CustomerBpJson _trx;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
@@ -23,12 +23,12 @@ class CRMCustomerBpController extends GetxController {
       _hasCallSupport = result;
     });
 
-    getLeads();
+    getCustomers();
     getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  LeadJson get trx => _trx;
+  CustomerBpJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -38,7 +38,7 @@ class CRMCustomerBpController extends GetxController {
     }
 
     value.value = filters[filterCount];
-    getLeads();
+    getCustomers();
   }
 
   Future<void> getADUserID() async {
@@ -92,14 +92,14 @@ class CRMCustomerBpController extends GetxController {
     await launch(launchUri.toString());
   }
 
-  Future<void> getLeads() async {
+  Future<void> getCustomers() async {
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+        '/api/v1/models/C_BPartner?\$filter= IsCustomer eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -109,7 +109,7 @@ class CRMCustomerBpController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = LeadJson.fromJson(jsonDecode(response.body));
+      _trx = CustomerBpJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
@@ -266,7 +266,7 @@ class CRMCustomerBpController extends GetxController {
 }
 
 class Provider extends GetConnect {
-  Future<void> getLeads() async {
+  Future<void> getCustomers() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     //print(authorization);

@@ -8,6 +8,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/models/customer_bp_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
@@ -49,8 +50,8 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
-  const CRMCustomerBpScreen({Key? key}) : super(key: key);
+class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
+  const CRMCustomerBPScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +80,8 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("LEAD: ${controller.trx.rowcount}")
-                        : const Text("LEAD: ")),
+                        ? Text("CLIENTI: ${controller.trx.rowcount}")
+                        : const Text("CLIENTI: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
@@ -99,7 +100,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
                       onPressed: () {
-                        controller.getLeads();
+                        controller.getCustomers();
                       },
                       icon: const Icon(
                         Icons.refresh,
@@ -155,39 +156,38 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                     tooltip: 'Edit Lead',
                                     onPressed: () {
                                       //log("info button pressed");
-                                      Get.to(const EditLead(), arguments: {
+                                      /* Get.to(const EditLead(), arguments: {
                                         "id": controller
-                                            .trx.windowrecords![index].id,
+                                            .trx.records![index].id,
                                         "name": controller.trx
-                                                .windowrecords![index].name ??
+                                                .records![index].name ??
                                             "",
                                         "leadStatus": controller
                                                 .trx
-                                                .windowrecords![index]
+                                                .records![index]
                                                 .leadStatus
                                                 ?.id ??
                                             "",
                                         "bpName": controller
-                                            .trx.windowrecords![index].bPName,
+                                            .trx.records![index].bPName,
                                         "Tel": controller.trx
-                                                .windowrecords![index].phone ??
+                                                .records![index].phone ??
                                             "",
                                         "eMail": controller.trx
-                                                .windowrecords![index].eMail ??
+                                                .records![index].eMail ??
                                             "",
                                         "salesRep": controller
                                                 .trx
-                                                .windowrecords![index]
+                                                .records![index]
                                                 .salesRepID
                                                 ?.identifier ??
                                             ""
-                                      });
+                                      }); */
                                     },
                                   ),
                                 ),
                                 title: Text(
-                                  controller.trx.windowrecords![index].name ??
-                                      "???",
+                                  controller.trx.records![index].name ?? "???",
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -197,10 +197,9 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                 subtitle: Row(
                                   children: <Widget>[
                                     const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
+                                        color: Colors.greenAccent),
                                     Text(
-                                      controller.trx.windowrecords![index]
-                                              .leadStatus!.identifier ??
+                                      controller.trx.records![index].value ??
                                           "??",
                                       style:
                                           const TextStyle(color: Colors.white),
@@ -214,7 +213,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                   ), */
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                children: [
+                                /* children: [
                                   Column(
                                     children: [
                                       Row(
@@ -226,7 +225,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                           ),
                                           Text(controller
                                                   .trx
-                                                  .windowrecords![index]
+                                                  .records![index]
                                                   .bPName ??
                                               ""),
                                         ],
@@ -243,7 +242,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                               //log("info button pressed");
                                               if (controller
                                                       .trx
-                                                      .windowrecords![index]
+                                                      .records![index]
                                                       .phone ==
                                                   null) {
                                                 log("info button pressed");
@@ -251,7 +250,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                                 controller.makePhoneCall(
                                                     controller
                                                         .trx
-                                                        .windowrecords![index]
+                                                        .records![index]
                                                         .phone
                                                         .toString());
                                               }
@@ -259,7 +258,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                           ),
                                           Text(controller
                                                   .trx
-                                                  .windowrecords![index]
+                                                  .records![index]
                                                   .phone ??
                                               ""),
                                         ],
@@ -275,7 +274,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                             onPressed: () {
                                               if (controller
                                                       .trx
-                                                      .windowrecords![index]
+                                                      .records![index]
                                                       .eMail ==
                                                   null) {
                                                 log("mail button pressed");
@@ -283,7 +282,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                                 controller.writeMailTo(
                                                     controller
                                                         .trx
-                                                        .windowrecords![index]
+                                                        .records![index]
                                                         .eMail
                                                         .toString());
                                               }
@@ -291,7 +290,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                           ),
                                           Text(controller
                                                   .trx
-                                                  .windowrecords![index]
+                                                  .records![index]
                                                   .eMail ??
                                               ""),
                                         ],
@@ -305,7 +304,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                           ),
                                           Text(controller
                                                   .trx
-                                                  .windowrecords![index]
+                                                  .records![index]
                                                   .salesRepID
                                                   ?.identifier ??
                                               ""),
@@ -313,7 +312,7 @@ class CRMCustomerBpScreen extends GetView<CRMCustomerBpController> {
                                       ),
                                     ],
                                   ),
-                                ],
+                                ], */
                               ),
                             ),
                           );
