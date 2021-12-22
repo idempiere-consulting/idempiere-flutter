@@ -98,8 +98,8 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/Clienti',
-          page: () => const CRMCustomerBPScreen(),
-          binding: CRMCustomerBPBinding(),
+          page: () => const CRMCustomerBpScreen(),
+          binding: CRMCustomerBpBinding(),
         ),
         GetPage(
           name: '/Task&Appuntamenti',

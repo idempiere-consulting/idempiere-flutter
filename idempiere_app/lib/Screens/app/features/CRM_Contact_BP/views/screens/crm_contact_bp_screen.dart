@@ -263,7 +263,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                           Text(controller
                                                   .trx.records![index].eMail ??
                                               ""),
-                                        ],
+                                        ], 
                                       ),
                                     ],
                                   ),

@@ -1,8 +1,8 @@
 part of dashboard;
 
-class CRMCustomerBPBinding extends Bindings {
+class CRMCustomerBpBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => CRMCustomerBPController());
+    Get.lazyPut(() => CRMCustomerBpController());
   }
 }
