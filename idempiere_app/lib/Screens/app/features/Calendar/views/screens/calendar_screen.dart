@@ -1,13 +1,17 @@
 library dashboard;
 
 //import 'dart:convert';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:http/http.dart' as http;
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/create_calendar_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -56,7 +60,67 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  late Map<DateTime, List<Event>> selectedEvents;
+  Future<void> getAllEvents() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' + ip + '/api/v1/models/jp_todo');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json = EventJson.fromJson(jsonDecode(response.body));
+      List<EventRecords>? list = json.records;
+
+      for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
+        if (selectedEvents[DateTime.parse(
+                '${list![i].jPToDoScheduledStartDate} 00:00:00.000Z')] !=
+            null) {
+          selectedEvents[DateTime.parse(
+                  '${list[i].jPToDoScheduledStartDate} 00:00:00.000Z')]!
+              .add(
+            Event(
+                id: list[i].id!,
+                type: list[i].jPToDoStatus!.identifier ?? "???",
+                title: list[i].name ?? "???",
+                scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
+                scheduledStartTime:
+                    list[i].jPToDoScheduledStartTime!.substring(0, 5),
+                scheduledEndTime:
+                    list[i].jPToDoScheduledEndTime!.substring(0, 5)),
+          );
+        } else {
+          selectedEvents[DateTime.parse(
+              '${list[i].jPToDoScheduledStartDate} 00:00:00.000Z')] = [
+            Event(
+                id: list[i].id!,
+                type: list[i].jPToDoStatus!.identifier ?? "???",
+                title: list[i].name ?? "???",
+                scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
+                scheduledStartTime:
+                    list[i].jPToDoScheduledStartTime!.substring(0, 5),
+                scheduledEndTime:
+                    list[i].jPToDoScheduledEndTime!.substring(0, 5))
+          ];
+        }
+      }
+      setState(() {});
+
+      //print(json.rowcount);
+    } else {
+      throw Exception("Failed to load events");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Map<DateTime, List<Event>> selectedEvents = {};
 
   final json = {
     "types": [
@@ -71,7 +135,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return dJson.types;
   }
 
-  //CalendarFormat format = CalendarFormat.week;
+  CalendarFormat format = CalendarFormat.month;
   // ignore: prefer_typing_uninitialized_variables
   var selectedDay;
   // ignore: prefer_typing_uninitialized_variables
@@ -79,7 +143,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // ignore: prefer_final_fields, prefer_typing_uninitialized_variables
   var checkbox;
-  var eventController;
   String dropdownValue = "";
   late List<Types> dropDownList;
 
@@ -87,15 +150,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     selectedEvents = {};
+    getAllEvents();
     selectedDay = DateTime.now();
     focusedDay = DateTime.now();
-    eventController = TextEditingController();
     dropdownValue = "1";
     dropDownList = getTypes()!;
     checkbox = false;
   }
 
   List<Event> _getEventsfromDay(DateTime date) {
+    //print(selectedEvents.length);
     return selectedEvents[date] ?? [];
   }
 
@@ -112,7 +176,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: _Sidebar(data: getSelectedProject()),
               ),
             ),
-      floatingActionButton: FloatingActionButton.extended(
+      /* floatingActionButton: FloatingActionButton.extended(
         label: const Icon(
           Icons.add,
         ),
@@ -164,10 +228,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ],
             ),
           );
-        },
+        }, 
 
         //icon: Icon(Icons.add),
-      ),
+      ),*/
       body: SingleChildScrollView(
           child: ResponsiveBuilder(
         mobileBuilder: (context, constraints) {
@@ -183,17 +247,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
               focusedDay: focusedDay,
               firstDay: DateTime(2000),
               lastDay: DateTime(2100),
-              //calendarFormat: format,
+              calendarFormat: format,
               calendarStyle: const CalendarStyle(
+                markerDecoration:
+                    BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
                 todayDecoration: BoxDecoration(
                   color: Colors.deepPurple,
                 ),
               ),
               headerStyle: const HeaderStyle(
-                formatButtonVisible: false,
+                //formatButtonVisible: false,
+                formatButtonShowsNext: false,
               ),
               startingDayOfWeek: StartingDayOfWeek.monday,
               daysOfWeekVisible: true,
+              onFormatChanged: (CalendarFormat _format) {
+                setState(() {
+                  format = _format;
+                });
+              },
               onDaySelected: (DateTime selectDay, DateTime focusDay) {
                 setState(() {
                   selectedDay = selectDay;
@@ -204,12 +276,107 @@ class _CalendarScreenState extends State<CalendarScreen> {
               selectedDayPredicate: (DateTime date) {
                 return isSameDay(selectedDay, date);
               },
+              onHeaderLongPressed: (date) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text(
+                      "Add Event",
+                    ),
+                    content: DropdownButton(
+                      value: dropdownValue,
+                      elevation: 16,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                        print(dropdownValue);
+                      },
+                      items: dropDownList.map((list) {
+                        return DropdownMenuItem<String>(
+                          child: Text(
+                            list.name.toString(),
+                          ),
+                          value: list.id,
+                        );
+                      }).toList(),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                          setState(() {});
+                          switch (dropdownValue) {
+                            case "1":
+                              Get.off(const CreateCalendarEvent());
+                              break;
+                            default:
+                          }
+                        },
+                        child: const Text("Continua"),
+                      ),
+                    ],
+                  ),
+                );
+              },
               eventLoader: _getEventsfromDay,
             ),
             ..._getEventsfromDay(selectedDay).map(
-              (Event event) => ListTile(
+              (Event event) => /* ListTile(
                 title: Text(
                   event.title,
+                ),
+              ), */
+                  Card(
+                elevation: 8.0,
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Color.fromRGBO(64, 75, 96, .9)),
+                  child: ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
+                    leading: Container(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              right: BorderSide(
+                                  width: 1.0, color: Colors.white24))),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.green,
+                        ),
+                        tooltip: 'Edit Event',
+                        onPressed: () {
+                          log("Event button pressed");
+                        },
+                      ),
+                    ),
+                    title: Text(
+                      event.title,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Row(
+                      children: <Widget>[
+                        const Icon(Icons.event),
+                        Text(
+                          '${event.scheduledStartDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
+                  ),
                 ),
               ),
             ),

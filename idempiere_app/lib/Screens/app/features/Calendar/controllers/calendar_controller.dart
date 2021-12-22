@@ -6,7 +6,7 @@ class CalendarController extends GetxController {
   var lastDay = DateTime.utc(2030, 3, 14).obs;
   Rx<DateTime> selectedDay = DateTime.now().obs;
 
-  Map<DateTime, List<Event>> selectedEvents = {};
+  late Map<DateTime, List<Event>> selectedEvents = {};
 
   /*  @override
   void onInit() {
@@ -18,20 +18,6 @@ class CalendarController extends GetxController {
 
   List<Event> getEventsfromDay(DateTime date) {
     return selectedEvents[date] ?? [];
-  }
-
-  addEvent() {
-    if (selectedEvents[selectedDay] != null) {
-      selectedEvents[selectedDay.value]!.add(
-        const Event("hallo"),
-      );
-      //print("aggiunto");
-    } else {
-      selectedEvents[selectedDay.value] = [const Event("hallo")];
-      //print("creato");
-    }
-
-    //print(selectedEvents[selectedDay.value]!.length);
   }
 
   // Data
