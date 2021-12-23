@@ -89,6 +89,12 @@ class _Sidebar extends StatelessWidget {
                   label: "Provvigioni",
                   totalNotif: 20,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: Icons.person_outlined,
+                  label: "Magazzino",
+                  totalNotif: 20,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
