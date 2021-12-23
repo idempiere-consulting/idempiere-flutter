@@ -7,16 +7,17 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 
-class CreateCalendarEvent extends StatefulWidget {
-  const CreateCalendarEvent({Key? key}) : super(key: key);
+class EditCalendarEvent extends StatefulWidget {
+  const EditCalendarEvent({Key? key}) : super(key: key);
 
   @override
-  State<CreateCalendarEvent> createState() => _CreateCalendarEventState();
+  State<EditCalendarEvent> createState() => _EditCalendarEventState();
 }
 
-class _CreateCalendarEventState extends State<CreateCalendarEvent> {
+class _EditCalendarEventState extends State<EditCalendarEvent> {
   /* Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
@@ -44,13 +45,48 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
     }
   } */
 
-  createEvent() async {
+  deleteEvent() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url =
+        Uri.parse('http://' + ip + '/api/v1/models/jp_todo/${args['id']}');
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print("done!");
+      Get.off(const CalendarScreen());
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato cancellato",
+        isDismissible: true,
+        icon: const Icon(
+          Icons.delete,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      //print(response.body);
+      Get.snackbar(
+        "Errore!",
+        "Record non cancellato (è tuo?)",
+        isDismissible: true,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  editEvent() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "AD_User_ID": {"identifier": GetStorage().read('user')},
       "Name": nameFieldController.text,
       "Description": descriptionFieldController.text,
       "JP_ToDo_ScheduledStartDate": date,
@@ -58,12 +94,12 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
       "JP_ToDo_ScheduledStartTime": '$timeStart:00Z',
       "JP_ToDo_ScheduledEndTime": '$timeEnd:00Z',
       "JP_ToDo_Status": {"id": dropdownValue},
-      "IsOpenToDoJP": true,
       "JP_ToDo_Type": {"id": "S"},
     });
-    var url = Uri.parse('http://' + ip + '/api/v1/models/jp_todo/');
+    var url =
+        Uri.parse('http://' + ip + '/api/v1/models/jp_todo/${args['id']}');
     //print(msg);
-    var response = await http.post(
+    var response = await http.put(
       url,
       body: msg,
       headers: <String, String>{
@@ -71,11 +107,11 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       //print("done!");
       Get.snackbar(
         "Fatto!",
-        "Il record è stato creato",
+        "Il record è stato modificato",
         isDismissible: true,
         icon: const Icon(
           Icons.done,
@@ -83,10 +119,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
         ),
       );
     } else {
-      //print(response.statusCode);
+      //print(response.body);
       Get.snackbar(
         "Errore!",
-        "Record non creato",
+        "Record non modificato (è tuo?)",
         isDismissible: true,
         icon: const Icon(
           Icons.error,
@@ -110,6 +146,16 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
     return dJson.types;
   }
 
+  fillFields() {
+    nameFieldController.text = args['name'] ?? "";
+    descriptionFieldController.text = args['description'] ?? "";
+    date = args['startDate'] ?? "";
+    timeStart = args['startTime'] ?? "";
+    timeEnd = args['endTime'] ?? "";
+    dropdownValue = args['statusId'] ?? "NY";
+  }
+
+  dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -123,14 +169,15 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
 
   @override
   void initState() {
+    date = "";
     super.initState();
     nameFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
     dropDownList = getTypes()!;
     dropdownValue = "NY";
-    date = "";
     timeStart = "";
     timeEnd = "";
+    fillFields();
   }
 
   @override
@@ -139,7 +186,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Crea To Do'),
+          child: Text('Edit To Do'),
         ),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
@@ -152,7 +199,36 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createEvent();
+                Get.defaultDialog(
+                  title: "Eliminazione record",
+                  middleText: "Sicuro di voler eliminare il record?",
+                  backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
+                  //titleStyle: TextStyle(color: Colors.white),
+                  //middleTextStyle: TextStyle(color: Colors.white),
+                  textConfirm: "Elimina",
+                  textCancel: "Annulla",
+                  cancelTextColor: Colors.white,
+                  confirmTextColor: Colors.white,
+                  buttonColor: const Color.fromRGBO(31, 29, 44, 1),
+                  barrierDismissible: false,
+                  onConfirm: () {
+                    deleteEvent();
+                  },
+                  //radius: 50,
+                );
+                //editLead();
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
+                editEvent();
               },
               icon: const Icon(
                 Icons.save,
@@ -205,7 +281,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: '',
+                    initialValue: date,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Data',
@@ -219,10 +295,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
-                    onSaved: (val) => print(val),
+                    //onSaved: (val) => print(val),
                   ),
                 ),
                 Container(
@@ -237,7 +313,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.time,
-                    initialValue: '',
+                    initialValue: timeStart,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     timeLabelText: 'Ora Inizio',
@@ -266,7 +342,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.time,
-                    initialValue: '',
+                    initialValue: timeEnd,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     timeLabelText: 'Ora Fine',

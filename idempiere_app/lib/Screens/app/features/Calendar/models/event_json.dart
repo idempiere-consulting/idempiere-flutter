@@ -41,6 +41,7 @@ class EventRecords {
   final CreatedBy? createdBy;
   final bool? isActive;
   final String? name;
+  final String? description;
   final String? updated;
   final UpdatedBy? updatedBy;
   final JPToDoType? jPToDoType;
@@ -66,6 +67,7 @@ class EventRecords {
     this.createdBy,
     this.isActive,
     this.name,
+    this.description,
     this.updated,
     this.updatedBy,
     this.jPToDoType,
@@ -98,6 +100,7 @@ class EventRecords {
             : null,
         isActive = json['IsActive'] as bool?,
         name = json['Name'] as String?,
+        description = json['Description'] as String?,
         updated = json['Updated'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
@@ -134,6 +137,7 @@ class EventRecords {
         'CreatedBy': createdBy?.toJson(),
         'IsActive': isActive,
         'Name': name,
+        'Description': description,
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
         'JP_ToDo_Type': jPToDoType?.toJson(),

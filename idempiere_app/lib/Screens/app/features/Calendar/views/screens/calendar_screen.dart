@@ -9,6 +9,7 @@ import 'package:idempiere_app/Screens/app/features/Calendar/models/event.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/create_calendar_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/edit_calendar_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -70,10 +71,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
 
     if (response.statusCode == 200) {
+      //print(response.body);
       var json = EventJson.fromJson(jsonDecode(response.body));
       List<EventRecords>? list = json.records;
 
       for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
+        //print(list![i].jPToDoScheduledStartTime);
         if (selectedEvents[DateTime.parse(
                 '${list![i].jPToDoScheduledStartDate} 00:00:00.000Z')] !=
             null) {
@@ -82,8 +85,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
               .add(
             Event(
                 id: list[i].id!,
-                type: list[i].jPToDoStatus!.identifier ?? "???",
+                type: list[i].jPToDoType!.identifier ?? "???",
+                typeId: list[i].jPToDoType!.id!,
+                status: list[i].jPToDoStatus!.identifier ?? "???",
+                statusId: list[i].jPToDoStatus!.id!,
                 title: list[i].name ?? "???",
+                description: list[i].description ?? "",
                 scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
                 scheduledStartTime:
                     list[i].jPToDoScheduledStartTime!.substring(0, 5),
@@ -95,9 +102,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
               '${list[i].jPToDoScheduledStartDate} 00:00:00.000Z')] = [
             Event(
                 id: list[i].id!,
-                type: list[i].jPToDoStatus!.identifier ?? "???",
+                type: list[i].jPToDoType!.identifier ?? "???",
+                typeId: list[i].jPToDoType!.id!,
+                status: list[i].jPToDoStatus!.identifier ?? "???",
+                statusId: list[i].jPToDoStatus!.id!,
                 title: list[i].name ?? "???",
-                scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
+                description: list[i].description ?? "",
+                scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "???",
                 scheduledStartTime:
                     list[i].jPToDoScheduledStartTime!.substring(0, 5),
                 scheduledEndTime:
@@ -295,7 +306,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                         tooltip: 'Edit Event',
                         onPressed: () {
-                          log("Event button pressed");
+                          Get.off(const EditCalendarEvent(), arguments: {
+                            "id": event.id,
+                            "name": event.title,
+                            "description": event.description,
+                            "typeId": event.typeId,
+                            "startDate": event.scheduledStartDate,
+                            "startTime": event.scheduledStartTime,
+                            "endTime": event.scheduledEndTime,
+                            "statusId": event.statusId,
+                          });
                         },
                       ),
                     ),
