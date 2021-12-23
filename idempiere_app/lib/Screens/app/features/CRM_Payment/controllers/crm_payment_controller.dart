@@ -2,7 +2,9 @@ part of dashboard;
 
 class CRMPaymentController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late InvoiceJson _trx;
+  late PaymentJson _trx;
+  var _hasCallSupport = false;
+  //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -17,12 +19,16 @@ class CRMPaymentController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    canLaunch('tel:123').then((bool result) {
+      _hasCallSupport = result;
+    });
+
     getPayments();
     getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  InvoiceJson get trx => _trx;
+  PaymentJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -65,11 +71,13 @@ class CRMPaymentController extends GetxController {
     // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
     // such as spaces in the input, which would cause `launch` to fail on some
     // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
-    await launch(launchUri.toString());
+    if (_hasCallSupport) {
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: phoneNumber,
+      );
+      await launch(launchUri.toString());
+    }
   }
 
   Future<void> writeMailTo(String receiver) async {
@@ -91,7 +99,7 @@ class CRMPaymentController extends GetxController {
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/c_payment?\$filter=C_DocType_ID eq 1000008 and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+        '/api/v1/models/C_Payment?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -101,11 +109,11 @@ class CRMPaymentController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      //_trx = InvoiceJson.fromJson(jsonDecode(response.body));
+      _trx = PaymentJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
-      //_dataAvailable.value = _trx != null;
+      _dataAvailable.value = _trx != null;
     }
   }
 
@@ -258,7 +266,7 @@ class CRMPaymentController extends GetxController {
 }
 
 class Provider extends GetConnect {
-  Future<void> getLeads() async {
+  Future<void> getPayments() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     //print(authorization);

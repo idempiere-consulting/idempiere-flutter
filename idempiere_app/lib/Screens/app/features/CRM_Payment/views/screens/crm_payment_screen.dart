@@ -8,7 +8,10 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/invoice_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Payment/models/crm_payment_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -77,11 +80,11 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("FATTURE: ${controller.trx.rowcount}")
-                        : const Text("FATTURE: ")),
+                        ? Text("INCASSI: ${controller.trx.rowcount}")
+                        : const Text("INCASSI: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
-                  /* Container(
+                  Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
@@ -92,7 +95,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ), */
+                  ),
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -147,7 +150,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                               color: Colors.white24))),
                                   child: IconButton(
                                     icon: const Icon(
-                                      Icons.article,
+                                      Icons.edit,
                                       color: Colors.green,
                                     ),
                                     tooltip: 'Edit Lead',
@@ -155,24 +158,27 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                       //log("info button pressed");
                                       /* Get.to(const EditLead(), arguments: {
                                         "id": controller
-                                            .trx.records![index].id,
-                                        "name": controller
-                                            .trx.records![index].name,
+                                            .trx.windowrecords![index].id,
+                                        "name": controller.trx
+                                                .windowrecords![index].name ??
+                                            "",
                                         "leadStatus": controller
                                                 .trx
-                                                .records![index]
-                                                .Status
+                                                .windowrecords![index]
+                                                .leadStatus
                                                 ?.id ??
                                             "",
                                         "bpName": controller
-                                            .trx.records![index].bPName,
-                                        "Tel": controller
-                                            .trx.records![index].phone,
-                                        "eMail": controller
-                                            .trx.records![index].eMail,
+                                            .trx.windowrecords![index].bPName,
+                                        "Tel": controller.trx
+                                                .windowrecords![index].phone ??
+                                            "",
+                                        "eMail": controller.trx
+                                                .windowrecords![index].eMail ??
+                                            "",
                                         "salesRep": controller
                                                 .trx
-                                                .records![index]
+                                                .windowrecords![index]
                                                 .salesRepID
                                                 ?.identifier ??
                                             ""
@@ -181,7 +187,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                   ),
                                 ),
                                 title: Text(
-                                  "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
+                                  controller.trx.records![index].documentNo ??
+                                      "???",
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -193,8 +200,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                     const Icon(Icons.linear_scale,
                                         color: Colors.yellowAccent),
                                     Text(
-                                      controller.trx.records![index]
-                                              .cBPartnerID!.identifier ??
+                                      controller.trx.records![index].dateAcct ??
                                           "??",
                                       style:
                                           const TextStyle(color: Colors.white),
@@ -211,15 +217,76 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                 children: [
                                   Column(
                                     children: [
+                                      /* Row(
+                                        children: [
+                                          const Text(
+                                            "BPartner: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPName ??
+                                              ""),
+                                        ],
+                                      ), */
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.account_balance,
+                                              color: Colors.green,
+                                            ),
+                                            tooltip: 'Bank',
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                            },
+                                          ),
+                                          Text(controller.trx.records![index]
+                                                  .cBankAccountID?.identifier ??
+                                              "??"),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                              icon: const Icon(
+                                                Icons.mail,
+                                                color: Colors.white,
+                                              ),
+                                              tooltip: 'Business Partner',
+                                              onPressed: () {}),
+                                          Text(controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "??"),
+                                        ],
+                                      ),
                                       Row(
                                         children: [
                                           const Text(
-                                            "Importo: ",
+                                            "Pagamento: ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(
-                                              "€${controller.trx.records![index].grandTotal}"),
+                                              '${controller.trx.records![index].payAmt}'),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Fattura: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            controller.trx.records![index]
+                                                    .cInvoiceID ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
                                         ],
                                       ),
                                     ],
