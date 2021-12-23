@@ -187,7 +187,7 @@ Incassi count(*)Last7day Sum(*)Last7day
 
 * Stato/note : Definito / 10%
 * Nome Oggetto : Task
-* API madel  : JP_Todo - Filtro fisso : EndDate is null isactive='Y'
+* API model  : JP_Todo - Filtro fisso : EndDate is null isactive='Y'
 
 * [ ] Filtro Base = All miei Team
 * [ ] Filtri Avanzata: Stato
