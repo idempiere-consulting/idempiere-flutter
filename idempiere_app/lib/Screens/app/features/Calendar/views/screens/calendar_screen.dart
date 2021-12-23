@@ -3,15 +3,12 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/create_calendar_screen.dart';
-import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -165,9 +162,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //Size size = MediaQuery.of(context).size;
     return Scaffold(
-      //key: controller.scaffoldKey,
       drawer: (ResponsiveBuilder.isDesktop(context))
           ? null
           : Drawer(
@@ -176,62 +171,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: _Sidebar(data: getSelectedProject()),
               ),
             ),
-      /* floatingActionButton: FloatingActionButton.extended(
-        label: const Icon(
-          Icons.add,
-        ),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text(
-                "Add Event",
-              ),
-              content: DropdownButton(
-                value: dropdownValue,
-                elevation: 16,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue!;
-                  });
-                  print(dropdownValue);
-                },
-                items: dropDownList.map((list) {
-                  return DropdownMenuItem<String>(
-                    child: Text(
-                      list.name.toString(),
-                    ),
-                    value: list.id,
-                  );
-                }).toList(),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child: const Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Get.back();
-                    setState(() {});
-                    switch (dropdownValue) {
-                      case "1":
-                        Get.off(const CreateCalendarEvent());
-                        break;
-                      default:
-                    }
-                  },
-                  child: const Text("Continua"),
-                ),
-              ],
-            ),
-          );
-        }, 
-
-        //icon: Icon(Icons.add),
-      ),*/
       body: SingleChildScrollView(
           child: ResponsiveBuilder(
         mobileBuilder: (context, constraints) {
@@ -271,7 +210,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   selectedDay = selectDay;
                   focusedDay = focusDay;
                 });
-                print(focusedDay);
+                //print(focusedDay);
               },
               selectedDayPredicate: (DateTime date) {
                 return isSameDay(selectedDay, date);
@@ -290,7 +229,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         setState(() {
                           dropdownValue = newValue!;
                         });
-                        print(dropdownValue);
+                        //print(dropdownValue);
                       },
                       items: dropDownList.map((list) {
                         return DropdownMenuItem<String>(

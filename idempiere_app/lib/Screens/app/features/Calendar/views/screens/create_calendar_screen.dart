@@ -31,7 +31,9 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
     return dJson.types;
   }
 
+  // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var descriptionFieldController;
   String date = "";
   String dropdownValue = "";
