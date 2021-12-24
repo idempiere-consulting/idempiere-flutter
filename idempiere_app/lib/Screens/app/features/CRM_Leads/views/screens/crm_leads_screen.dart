@@ -220,7 +220,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                       Row(
                                         children: [
                                           const Text(
-                                            "BPartner: ",
+                                            "Business Partner: ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
