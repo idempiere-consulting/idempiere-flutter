@@ -26,6 +26,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Internaluseinvent
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpimportitem/views/screens/maintenance_mpimportitem_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/screens/maintenance_mpanomaly_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mppicking/views/screens/maintenance_mppicking_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views/screens/maintenance_mpwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/portal_mp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoicepo/views/screens/portal_mp_invoicepo_screen.dart';
@@ -174,8 +175,8 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/MaintenanceMptask',
-          page: () => const MaintenanceCalendarScreen(),
-          binding: MaintenanceCalendarBinding(),
+          page: () => const MaintenanceMptaskScreen(),
+          binding: MaintenanceMptaskBinding(),
         ),
         GetPage(
           name: '/MaintenanceMpanomaly',

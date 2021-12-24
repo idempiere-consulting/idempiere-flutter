@@ -2,23 +2,51 @@ part of dashboard;
 
 class MaintenanceMptaskController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late LeadJson _trx;
+  late WorkOrderJson _trx;
+  var _hasCallSupport = false;
+  //var _hasMailSupport = false;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var adUserId;
+
+  var value = "Tutti".obs;
+
+  var filters = ["Tutti", "Miei" /* , "Team" */];
+  var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    getLeads();
+    canLaunch('tel:123').then((bool result) {
+      _hasCallSupport = result;
+    });
+
+    getWorkOrders();
+    getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  LeadJson get trx => _trx;
+  WorkOrderJson get trx => _trx;
+  //String get value => _value.toString();
 
-  Future<void> getLeads() async {
+  changeFilter() {
+    filterCount++;
+    if (filterCount == 2) {
+      filterCount = 0;
+    }
+
+    value.value = filters[filterCount];
+    getWorkOrders();
+  }
+
+  Future<void> getADUserID() async {
+    var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse(
+        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -28,7 +56,60 @@ class MaintenanceMptaskController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = LeadJson.fromJson(jsonDecode(response.body));
+      var json = jsonDecode(response.body);
+
+      adUserId = json["records"][0]["id"];
+
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    }
+  }
+
+  Future<void> makePhoneCall(String phoneNumber) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    if (_hasCallSupport) {
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: phoneNumber,
+      );
+      await launch(launchUri.toString());
+    }
+  }
+
+  Future<void> writeMailTo(String receiver) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'mailto',
+      path: receiver,
+    );
+    await launch(launchUri.toString());
+  }
+
+  Future<void> getWorkOrders() async {
+    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    _dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/mp_ot?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      _trx = WorkOrderJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

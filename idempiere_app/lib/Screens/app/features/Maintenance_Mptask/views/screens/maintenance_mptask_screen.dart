@@ -8,7 +8,8 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/workorder_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_create_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -27,6 +28,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/maintenance_mptask_binding.dart';
@@ -72,7 +74,52 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              const Text("LISTA LEAD"),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("WORK ORDER: ${controller.trx.rowcount}")
+                        : const Text("WORK ORDER: ")),
+                    margin: const EdgeInsets.only(left: 15),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateMaintenanceMptask());
+                      },
+                      icon: const Icon(
+                        Icons.note_add_outlined,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getWorkOrders();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -80,7 +127,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: 100,
+                        itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 8.0,
@@ -104,14 +151,42 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Work Order',
                                     onPressed: () {
-                                      log("info button pressed");
+                                      //log("info button pressed");
+                                      /* Get.to(const EditLead(), arguments: {
+                                        "id": controller
+                                            .trx.windowrecords![index].id,
+                                        "name": controller.trx
+                                                .windowrecords![index].name ??
+                                            "",
+                                        "leadStatus": controller
+                                                .trx
+                                                .windowrecords![index]
+                                                .leadStatus
+                                                ?.id ??
+                                            "",
+                                        "bpName": controller
+                                            .trx.windowrecords![index].bPName,
+                                        "Tel": controller.trx
+                                                .windowrecords![index].phone ??
+                                            "",
+                                        "eMail": controller.trx
+                                                .windowrecords![index].eMail ??
+                                            "",
+                                        "salesRep": controller
+                                                .trx
+                                                .windowrecords![index]
+                                                .salesRepID
+                                                ?.identifier ??
+                                            ""
+                                      }); */
                                     },
                                   ),
                                 ),
                                 title: Text(
-                                  controller.trx.windowrecords![index].name ??
+                                  controller.trx.records![index].cBPartnerID!
+                                          .identifier ??
                                       "???",
                                   style: const TextStyle(
                                       color: Colors.white,
@@ -121,11 +196,10 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
 
                                 subtitle: Row(
                                   children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
+                                    const Icon(Icons.event),
                                     Text(
-                                      controller.trx.windowrecords![index]
-                                              .leadStatus!.identifier ??
+                                      controller.trx.records![index]
+                                              .dateWorkStart ??
                                           "??",
                                       style:
                                           const TextStyle(color: Colors.white),
@@ -144,78 +218,18 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
+                                          /* const Text(
                                             "BPartner: ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
-                                          ),
+                                          ), */
+                                          Icon(Icons.location_pin,
+                                              color: Colors.red.shade700),
                                           Text(controller
                                                   .trx
-                                                  .windowrecords![index]
-                                                  .bPName ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Tel: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .phone ??
-                                              ""),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.call,
-                                              color: Colors.green,
-                                            ),
-                                            tooltip: 'Call',
-                                            onPressed: () {
-                                              log("info button pressed");
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Email: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .eMail ??
-                                              ""),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.mail,
-                                              color: Colors.white,
-                                            ),
-                                            tooltip: 'EMail',
-                                            onPressed: () {
-                                              log("info button pressed");
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
+                                                  .records![index]
+                                                  .cBPartnerLocationID!
+                                                  .identifier ??
                                               ""),
                                         ],
                                       ),
