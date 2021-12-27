@@ -13,39 +13,33 @@ pre: "<b>90. </b>"
 
 * [ ] Eseguire processo completa di idempiere APIREST
 * [ ] Eseguire processo idempiere con parametri APIREST
-* [ ] Calendario (vista giorno,week,mese,lista,)
-  https://pub.dev/packages/syncfusion_flutter_calendar
-* [ ] Invio Email vers base a) indirizzo test@test.it invia
-  https://www.youtube.com/watch?v=yUeBPg8Z7I0
-  https://www.youtube.com/watch?v=RDwst9icjAY
-
-## Step 2
-
 * [ ] Attivare Acquisizione Fotocamera e allegare API REST (S2)
   https://docs.flutter.dev/cookbook/plugins/picture-using-camera
 * [ ] Allegare Documento (jpg,PDF)  (S2)
 * [ ] Visualizzare Allegato (vedere ticket desktop app) (S2)
-* [ ] Gestione Barcode QRcode (vedi processi produzione)
 * [ ] Gestione Lingua (step 2)
+  https://docs.flutter.dev/development/accessibility-and-localization/internationalization
 * [ ] Notifiche    (vedere quello fatto con Vincenzo sulla Desktop APP )
+* [ ] Gestione Barcode QRcode (vedi processi produzione)
 
 ## Step 3
 
 * [ ] Chat (wishing list)
 * [ ] Stampa report (da idempiere)  da vedere con AC (TOP)
 * [ ] Stampa Diretta Bluetooth o IP
+      https://pub.dev/packages/bluetooth_print
 * [ ] Gestione NFC - Per segnare le ore ? - controllare plugin NFC
 * [ ] Sondaggi https://github.com/quickbirdstudios/survey_kit
 
 ## Login
 
-* [ ] Logo App , immagini login (S1)
-* [ ] Logo e Nome in alto a Sx  (S1)
-* [ ] Accesso via https  (S2)
+* [ ] Logo App , immagini login 
+* [ ] Logo e Nome in alto a Sx  
+* [ ] Accesso via https  
 * [X] Salvataggio Ruolo e login con solo ok se memorizzato password
-* [ ] Saltare la prima pagine e andare alla Login Page (S1)
-* [ ] Non si visualizzano i Dati Server  (S2)
-* [ ] Exit / Logout (step 2) (S2)
+* [ ] Saltare la prima pagine e andare alla Login Page 
+* [ ] Non si visualizzano i Dati Server  
+* [ ] Exit / Logout (step 2) 
 
 ## Dashboard {#Dashnoard}
 
@@ -53,7 +47,7 @@ pre: "<b>90. </b>"
 
 * [ ] Task / Lead Promeria / Notifica per Data/ora
 * [ ] Impostare Letto
-* [ ] Invia Messaggio
+* [ ] Invia Nota / Messaggio 
 
 ### Calendario (S1)
 
@@ -73,11 +67,11 @@ pre: "<b>90. </b>"
 ### BI Vendite (S2)
 
 * [ ] Grafico Chart Fatturato
-* [ ] Grafico Chart
+   https://pub.dev/packages/charts_flutter
 
 ### Risorse Aziendali (new)
 
-!! Fare Maschera su iDempiere
+!! Fare Maschera su iDempiere [Marco-Matteo]
 
 * Stato/note : Definito / 50%
 * Nome Oggetto : AssetResource
