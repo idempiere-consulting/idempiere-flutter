@@ -21,9 +21,6 @@ pre: "<b>90. </b>"
   https://docs.flutter.dev/development/accessibility-and-localization/internationalization
 * [ ] Notifiche    (vedere quello fatto con Vincenzo sulla Desktop APP )
 * [ ] Gestione Barcode QRcode (vedi processi produzione)
-
-## Step 3
-
 * [ ] Chat (wishing list)
 * [ ] Stampa report (da idempiere)  da vedere con AC (TOP)
 * [ ] Stampa Diretta Bluetooth o IP
@@ -39,12 +36,22 @@ pre: "<b>90. </b>"
 * [X] Salvataggio Ruolo e login con solo ok se memorizzato password
 * [ ] Saltare la prima pagine e andare alla Login Page 
 * [ ] Non si visualizzano i Dati Server  
-* [ ] Exit / Logout (step 2) 
+* [ ] Exit(Tocca ancora per uscire ) / 
+* [ ] Logout (Attenzione cancella i dati di login )
 
 ## Dashboard {#Dashnoard}
 
 ### Email/Notifiche (S3)
+get API : LIT_Mobile_Dashboard
+- Task : Nr Task non completati / Nr Task in Progress
+     model : JP_TODO filter : AND  JP_ToDo_Status='NY' AND TRUNC(JP_ToDo_ScheduledStartDate)<= TRUNC(SysDate)-1
+- Progetti Attivi : TBD
 
+- Notifiche 
+[ ] You have 10 undone
+[ ] DELETE - 1st Sprint
+[ ] DELETe Team Member
+[ ] Get Premium 
 * [ ] Task / Lead Promeria / Notifica per Data/ora
 * [ ] Impostare Letto
 * [ ] Invia Nota / Messaggio 
@@ -55,14 +62,10 @@ pre: "<b>90. </b>"
   - Task Lead
   - Task Business Partner
 
-### Notifiche
 
-### Bacheca (S2)
 
-* [ ] Filtro fisso = user or team
-* [ ] Filtri : Stato Lead
 * [ ] Bacheca
-* [ ] Imposta "letto"
+
 
 ### BI Vendite (S2)
 
