@@ -110,7 +110,7 @@ class MaintenanceMptaskController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = WorkOrderJson.fromJson(jsonDecode(response.body));
-      //print(trx.rowcount);
+      print(trx.records![0].dateTrx);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;

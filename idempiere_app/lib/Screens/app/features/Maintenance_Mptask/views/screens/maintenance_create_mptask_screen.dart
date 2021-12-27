@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/business_partner_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/resource_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class CreateMaintenanceMptask extends StatefulWidget {
   const CreateMaintenanceMptask({Key? key}) : super(key: key);
@@ -22,21 +23,25 @@ class CreateMaintenanceMptask extends StatefulWidget {
 
 class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   createWorkOrder() async {
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+    String now = dateFormat.format(DateTime.now());
+
+    print(now);
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "Name": nameFieldController.text,
-      "BPName": bPartnerFieldController.text,
-      "Phone": phoneFieldController.text,
-      "EMail": mailFieldController.text,
-      "SalesRep_ID": {"identifier": salesrepValue},
-      "LeadStatus": {"id": dropdownValue},
-      "IsSalesLead": true
+      "C_DocType_ID": {"id": docId},
+      "DateTrx": "${now}T00:00:00Z",
+      "C_BPartner_ID": {"identifier": businessPartnerValue},
+      "AD_User_ID": {"id": GetStorage().read('userId')},
+      "S_Resource_ID": {"identifier": resourceName},
+      "DateWorkStart": date
     });
-    var url = Uri.parse('http://' + ip + '/api/v1/models/ad_user/');
-    //print(msg);
+    var url = Uri.parse('http://' + ip + '/api/v1/models/mp_ot/');
+    print(msg);
     var response = await http.post(
       url,
       body: msg,
@@ -57,7 +62,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
         ),
       );
     } else {
-      //print(response.statusCode);
+      print(response.body);
       Get.snackbar(
         "Errore!",
         "Record non creato",
@@ -69,12 +74,59 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     }
   }
 
-  Future<List<LSRecords>> getAllLeadStatuses() async {
+  getResourceName() async {
+    final userId = GetStorage().read('userId');
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+        '/api/v1/models/s_resource?\$filter=AD_User_ID eq $userId');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsondecoded = jsonDecode(response.body);
+      setState(() {
+        resourceName = jsondecoded['records'][0]['Name'].toString();
+      });
+    } else {
+      throw Exception("Failed to load resource name");
+    }
+  }
+
+  getDocType() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/AD_SysConfig?\$filter=Name eq \'LIT_Maintenance_Order_Doc_ID\'');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsondecoded = jsonDecode(response.body);
+      setState(() {
+        docId = jsondecoded['records'][0]['Value'].toString();
+      });
+    } else {
+      throw Exception("Failed to load doctype id");
+    }
+  }
+
+  Future<List<BPRecords>> getAllBusinessPartners() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' + ip + '/api/v1/models/c_bpartner');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -83,15 +135,40 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
       },
     );
     if (response.statusCode == 200) {
-      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
-      //print(json.rowcount);
-
-      return json.records!;
+      var jsondecoded = jsonDecode(response.body);
+      var jsonBPs = BPJson.fromJson(jsondecoded);
+      return jsonBPs.records!;
     } else {
-      throw Exception("Failed to load lead statuses");
+      throw Exception("Failed to load sales reps");
+    }
+  }
+
+  Future<List<RRecords>> getAllResources() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' + ip + '/api/v1/models/s_resource');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonResources = ResourceJson.fromJson(jsondecoded);
+
+      return jsonResources.records!;
+    } else {
+      throw Exception("Failed to load sales reps");
     }
 
-    //print(response.body);
+    //print(list[0].eMail);
+
+    //print(json.);
   }
 
   Future<List<Records>> getAllSalesRep() async {
@@ -140,9 +217,14 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   var phoneFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var mailFieldController;
+
+  var resourceFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
+  String businessPartnerValue = "";
   String date = "";
+  String docId = "";
+  String resourceName = "";
 
   @override
   void initState() {
@@ -151,15 +233,22 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
+    resourceFieldController = TextEditingController();
     dropdownValue = "N";
+    businessPartnerValue = "";
     date = "";
-    //fillFields();
-    getAllLeadStatuses();
+    docId = "";
+    resourceName = "";
+    getDocType();
+    getResourceName();
+    getAllResources();
   }
 
   static String _displayStringForOption(Records option) => option.name!;
-  //late List<Records> salesrepRecord;
-  //bool isSalesRepLoading = false;
+
+  static String _bPdisplayStringForOption(BPRecords option) => option.name!;
+
+  static String _rdisplayStringForOption(RRecords option) => option.name!;
 
   @override
   Widget build(BuildContext context) {
@@ -168,14 +257,14 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Add Lead'),
+          child: Text('Add WorkOrder'),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                //createWorkOrder();
+                createWorkOrder();
               },
               icon: const Icon(
                 Icons.save,
@@ -228,7 +317,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
                     child: Text(
-                      "Agente",
+                      "Risorsa",
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -244,18 +333,22 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                   ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
-                    future: getAllSalesRep(),
+                    future: getAllResources(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<RRecords>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<Records>(
-                                displayStringForOption: _displayStringForOption,
+                            ? Autocomplete<RRecords>(
+                                initialValue:
+                                    TextEditingValue(text: resourceName),
+                                displayStringForOption:
+                                    _rdisplayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<RRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((RRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -263,12 +356,10 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
+                                onSelected: (RRecords selection) {
                                   setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
+                                    resourceName =
+                                        _rdisplayStringForOption(selection);
                                   });
 
                                   //print(salesrepValue);
@@ -283,52 +374,14 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
                     child: Text(
-                      "Stato Lead",
+                      "Business Partner",
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
-                /* Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    //icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    //style: const TextStyle(color: Colors.deepPurple),
-                    /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: <String>[
-                      'Chiuso',
-                      'Convertito',
-                      'In Lavoro',
-                      'Nuovo'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ), */
                 Container(
                   padding: const EdgeInsets.all(10),
-                  width: size.width,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.grey,
@@ -337,44 +390,37 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                   ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
-                    future: getAllLeadStatuses(),
+                    future: getAllBusinessPartners(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                //icon: const Icon(Icons.arrow_downward),
-                                elevation: 16,
-                                //style: const TextStyle(color: Colors.deepPurple),
-                                /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
+                            ? Autocomplete<BPRecords>(
+                                displayStringForOption:
+                                    _bPdisplayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<BPRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((BPRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
                                   });
-                                  //print(dropdownValue);
                                 },
-                                items: /* <String>[
-                                  'Chiuso',
-                                  'Convertito',
-                                  'In Lavoro',
-                                  'Nuovo'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList()*/
-                                    snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                    value: list.value.toString(),
-                                  );
-                                }).toList(),
+                                onSelected: (BPRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    businessPartnerValue =
+                                        _bPdisplayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
                               )
                             : const Center(
                                 child: CircularProgressIndicator(),

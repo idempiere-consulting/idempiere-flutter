@@ -104,6 +104,7 @@ class _BodyState extends State<Body> {
           var json = jsonDecode(response.body);
           //print(json);
           GetStorage().write("token", json["token"]);
+          GetStorage().write("userId", json["userId"]);
           Get.offAndToNamed("/Dashboard");
         } else {
           // If the server did not return a 200 OK response,

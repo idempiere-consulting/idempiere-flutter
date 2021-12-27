@@ -42,8 +42,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       // then parse the JSON.
       GetStorage().write('warehouseid', warehouseid);
       // ignore: unused_local_variable
+      //print(response.body);
       var json = jsonDecode(response.body);
       GetStorage().write('token', json['token']);
+      GetStorage().write('userId', json['userId']);
       Get.offAllNamed('/Dashboard');
     } else {
       // If the server did not return a 200 OK response,

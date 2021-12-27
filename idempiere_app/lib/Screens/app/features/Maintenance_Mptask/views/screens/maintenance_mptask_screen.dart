@@ -228,8 +228,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           Text(controller
                                                   .trx
                                                   .records![index]
-                                                  .cBPartnerLocationID!
-                                                  .identifier ??
+                                                  .cBPartnerLocationID
+                                                  ?.identifier ??
                                               ""),
                                         ],
                                       ),
