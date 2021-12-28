@@ -21,6 +21,43 @@ class EditMaintenanceMptask extends StatefulWidget {
 }
 
 class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
+  deleteWorkOrder() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.find<MaintenanceMptaskController>().getWorkOrders();
+      //print("done!");
+      Get.back();
+      Get.back();
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato cancellato",
+        icon: const Icon(
+          Icons.delete,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      //print(response.body);
+      Get.snackbar(
+        "Errore!",
+        "Il record non è stato cancellato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   editWorkOrder() async {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     String now = dateFormat.format(DateTime.now());
@@ -268,8 +305,6 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     //getAllResources();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
-
   static String _bPdisplayStringForOption(BPRecords option) => option.name!;
 
   static String _rdisplayStringForOption(RRecords option) => option.name!;
@@ -284,6 +319,35 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
           child: Text('Edit WorkOrder'),
         ),
         actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
+                Get.defaultDialog(
+                  title: "Eliminazione record",
+                  middleText: "Sicuro di voler eliminare il record?",
+                  backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
+                  //titleStyle: TextStyle(color: Colors.white),
+                  //middleTextStyle: TextStyle(color: Colors.white),
+                  textConfirm: "Elimina",
+                  textCancel: "Annulla",
+                  cancelTextColor: Colors.white,
+                  confirmTextColor: Colors.white,
+                  buttonColor: const Color.fromRGBO(31, 29, 44, 1),
+                  barrierDismissible: false,
+                  onConfirm: () {
+                    deleteWorkOrder();
+                  },
+                  //radius: 50,
+                );
+                //editLead();
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
