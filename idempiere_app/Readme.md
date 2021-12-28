@@ -605,7 +605,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-## 10  Logistica
+## 9  Logistica
 
 #### - Prodotto / Giacenza
 
@@ -662,7 +662,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"11 Mezzi e Attrezzature"%}}
+##  10 Mezzi e Attrezzature
 
 #### - Mezzi
 
@@ -705,7 +705,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"12 Produzione "%}}
+##  11 Produzione
 
 #### - Ordine di Produzione
 
@@ -753,7 +753,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"13 Contabilità "%}}
+##  12 Contabilità 
 
 * Nome Oggetto : Finance
 #### - Fattura di Acquisto
@@ -811,7 +811,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"14 Risorse Umane"%}}
+## 13 Risorse Umane
 * Stato/note : Definito / 10%
 * Nome Oggetto : HR
 
