@@ -67,16 +67,16 @@ class CRMScreen extends GetView<CRMController> {
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
-            _buildProfile(data: controller.getProfil()),
-            const SizedBox(height: kSpacing),
-            _buildProgress(axis: Axis.vertical),
-            const SizedBox(height: kSpacing),
-            _buildTeamMember(data: controller.getMember()),
-            const SizedBox(height: kSpacing),
+          //  _buildProfile(data: controller.getProfil()),
+          //  const SizedBox(height: kSpacing),
+          //  _buildProgress(axis: Axis.vertical),
+          //  const SizedBox(height: kSpacing),
+          //  _buildTeamMember(data: controller.getMember()),
+           /*  const SizedBox(height: kSpacing),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kSpacing),
               child: GetPremiumCard(onPressed: () {}),
-            ),
+            ), */
             const SizedBox(height: kSpacing * 2),
             _buildTaskOverview(
               data: controller.getAllTask(),
