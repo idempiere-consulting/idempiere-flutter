@@ -110,7 +110,7 @@ Select count(*),
 -Fattura Vendita (count)(*)Last7da
 -Incassi count(*)Last7day Sum(*)Last7day
 
-### Lead
+### Lead 90%
 
 * Stato/note : Definito 
 * Nome Oggetto : leads
@@ -119,12 +119,16 @@ Select count(*),
 * [X] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Stato Lead
 * [ ] Ricerca : Nome,Telefono,Nome BP
-* [X] Visualizzare(Nome,Telefono,Email,Stato del Lead,Agente,Nome del BP)
-
-* -Lista Agente : select name from ad_user where c_bpartner is not null and il BP is salesrep
-
-* [X] Modificare(Tutti)
-* [X] Creare
+* [X] Visualizzare
+*   [X] Nome  (Header)
+*   [X] Stato del Lead (Header) 
+*   [X] Nome del BP
+*   [X] Telefono 
+*   [X] Email
+*   [X] Agente
+* [X] Modificare(Tutti i campi)
+* [X] Creare 
+* [ ] Creare Default LoginUser come Agente
 * [X] Cancellare
 * [ ] Caricare da Contatto (S2)
 * [X] Eseguire Telefonata ( S1)
@@ -133,7 +137,7 @@ Select count(*),
 * [ ] Converti Lead in BP
 * [ ] Crea Task Lead, (S2)
 * [ ] Crea Opportunità Lead (Se BP completo) (S2)
-* [ ] Mostra Task da fare (S2)
+* [ ] Mostra Task da fare -Vai a(S2)
 * [ ] Mostra Task eseguiti (S2)
 * [ ] Mostra Opportunità - Vai a (S3)
 * [ ] Mostra Offerte - Vai a (S2)
@@ -149,12 +153,18 @@ Select count(*),
 
 * [ ] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Nessuno
-* [ ] Visualizzare : (Nome,Telefono,Email,Stato del Lead,Agente,Nome del BP)
+* [X] Visualizzare : 
+*   [X] Nome (Header)
+*   [X] Nome del Business Partner (Header)
+*   [X] Telefono
+*   [X] Email
+*   [ ] Agente
+
 * [ ] Creare (Assegnare BP)
 * [ ] Modificare
 * [ ] Caricare da Contatto(Assegnare BP) (S2)
-* [ ] Eseguire Telefonata (S1)
-* [ ] Invio Email (S1)
+* [X] Eseguire Telefonata (S1)
+* [X] Invio Email (S1)
 * [ ] Scarica come Contatto Telefono,
 * [ ] Crea Task Business Partner,
 * [ ] Crea Opportunità Business Partner (S2)
@@ -183,7 +193,7 @@ Select count(*),
 * [ ] Mostra Opportunità - Vai a (S2)
 * [ ] Mostra Offerte - Vai a (S2)
 
-### Task Lead / BP
+### Task Lead / BP !!! Matteo
 
 * Stato/note : Definito / 10%
 * Nome Oggetto : Task
@@ -229,7 +239,7 @@ Select count(*),
 * [ ] Riaprire Offerta(solo se Standard Order e non Spedito)
 * [ ] Inviare Email con template email
 
-### Listino Prodotti !!!
+### Listino Prodotti !!! Matteo
 
 * Stato/note : Definito / 10%
 * Nome Oggetto : ProductPrice
@@ -242,7 +252,7 @@ Select count(*),
 * [ ] Crea
 * [ ] Modificare (tutto)
 
-### Documento di Trasporto (miei/Team) 
+### Documento di Trasporto 
 
 Tradurre in Documento di Trasporto
 * Stato/note : Definito 
