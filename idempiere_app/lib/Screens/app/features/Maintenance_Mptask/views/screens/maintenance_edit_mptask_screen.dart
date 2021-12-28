@@ -13,16 +13,15 @@ import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.d
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-class CreateMaintenanceMptask extends StatefulWidget {
-  const CreateMaintenanceMptask({Key? key}) : super(key: key);
+class EditMaintenanceMptask extends StatefulWidget {
+  const EditMaintenanceMptask({Key? key}) : super(key: key);
 
   @override
-  State<CreateMaintenanceMptask> createState() =>
-      _CreateMaintenanceMptaskState();
+  State<EditMaintenanceMptask> createState() => _EditMaintenanceMptaskState();
 }
 
-class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
-  createWorkOrder() async {
+class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
+  editWorkOrder() async {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     String now = dateFormat.format(DateTime.now());
 
@@ -33,17 +32,17 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "C_DocType_ID": {"id": docId},
-      "DateTrx": "${now}T00:00:00Z",
+      /* "C_DocType_ID": {"id": docId}, */
+      /* "DateTrx": "${now}T00:00:00Z", */
       "C_BPartner_ID": {"identifier": businessPartnerValue},
       "C_BPartner_Location_ID": {"id": bPLocation},
-      "AD_User_ID": {"id": GetStorage().read('userId')},
+      /* "AD_User_ID": {"id": GetStorage().read('userId')}, */
       "S_Resource_ID": {"identifier": resourceName},
       "DateWorkStart": date
     });
-    var url = Uri.parse('http://' + ip + '/api/v1/models/mp_ot/');
+    var url = Uri.parse('http://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
     //print(msg);
-    var response = await http.post(
+    var response = await http.put(
       url,
       body: msg,
       headers: <String, String>{
@@ -51,12 +50,13 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       Get.find<MaintenanceMptaskController>().getWorkOrders();
       //print("done!");
+      Get.back();
       Get.snackbar(
         "Fatto!",
-        "Il record è stato creato",
+        "Il record è stato modificato",
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -66,7 +66,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
       //print(response.body);
       Get.snackbar(
         "Errore!",
-        "Record non creato",
+        "Il record non è stato modificato",
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -233,27 +233,15 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     //print(json.);
   }
 
-  /* void fillFields() {
-    nameFieldController.text = args["name"];
-    bPartnerFieldController.text = args["bpName"];
-    phoneFieldController.text = args["Tel"];
-    mailFieldController.text = args["eMail"];
+  void fillFields() {
+    businessPartnerValue = args["bPartner"];
+    bPLocation = args["bPartnerLocationId"].toString();
+    resourceName = args["resource"];
     //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"];
+    date = args["dateStart"];
     //salesRepFieldController.text = args["salesRep"];
-  } */
+  }
 
-  //dynamic args = Get.arguments;
-  // ignore: prefer_typing_uninitialized_variables
-  var nameFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var bPartnerFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var phoneFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var mailFieldController;
-
-  var resourceFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
   String businessPartnerValue = "";
@@ -262,23 +250,22 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   String resourceName = "";
   String bPLocation = "";
 
+  dynamic args = Get.arguments;
+
   @override
   void initState() {
-    super.initState();
-    nameFieldController = TextEditingController();
-    phoneFieldController = TextEditingController();
-    bPartnerFieldController = TextEditingController();
-    mailFieldController = TextEditingController();
-    resourceFieldController = TextEditingController();
     dropdownValue = "N";
     businessPartnerValue = "";
     date = "";
     docId = "";
     resourceName = "";
     bPLocation = "";
-    getDocType();
-    getResourceName();
-    getAllResources();
+    fillFields();
+    super.initState();
+
+    //getDocType();
+    //getResourceName();
+    //getAllResources();
   }
 
   static String _displayStringForOption(Records option) => option.name!;
@@ -294,14 +281,14 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Add WorkOrder'),
+          child: Text('Edit WorkOrder'),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createWorkOrder();
+                editWorkOrder();
               },
               icon: const Icon(
                 Icons.save,
@@ -330,7 +317,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: '',
+                    initialValue: date,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Data',
@@ -432,6 +419,8 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                             AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
+                                initialValue: TextEditingValue(
+                                    text: businessPartnerValue),
                                 displayStringForOption:
                                     _bPdisplayStringForOption,
                                 optionsBuilder:

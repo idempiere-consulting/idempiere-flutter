@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/workorder_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_create_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -154,33 +155,34 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     tooltip: 'Edit Work Order',
                                     onPressed: () {
                                       //log("info button pressed");
-                                      /* Get.to(const EditLead(), arguments: {
-                                        "id": controller
-                                            .trx.windowrecords![index].id,
-                                        "name": controller.trx
-                                                .windowrecords![index].name ??
-                                            "",
-                                        "leadStatus": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .leadStatus
-                                                ?.id ??
-                                            "",
-                                        "bpName": controller
-                                            .trx.windowrecords![index].bPName,
-                                        "Tel": controller.trx
-                                                .windowrecords![index].phone ??
-                                            "",
-                                        "eMail": controller.trx
-                                                .windowrecords![index].eMail ??
-                                            "",
-                                        "salesRep": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .salesRepID
-                                                ?.identifier ??
-                                            ""
-                                      }); */
+                                      Get.to(const EditMaintenanceMptask(),
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "bPartner": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier ??
+                                                "",
+                                            "bPartnerLocationId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerLocationID
+                                                    ?.id ??
+                                                "",
+                                            "resource": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .sResourceID
+                                                    ?.identifier ??
+                                                "",
+                                            "dateStart": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .dateWorkStart ??
+                                                ""
+                                          });
                                     },
                                   ),
                                 ),
