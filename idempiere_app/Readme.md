@@ -9,7 +9,7 @@ pre: "<b>90. </b>"
 
 ## Funzionalità da vedere !!! (Vincenzo)
 
-* [ ] Eseguire processo completa di idempiere APIREST
+* [ ] Eseguire processo completa di idempiere APIREST (da window)
 * [ ] Eseguire processo idempiere con parametri APIREST
 * [ ] Attivare Acquisizione Fotocamera e allegare API REST (S2)
   https://docs.flutter.dev/cookbook/plugins/picture-using-camera
@@ -39,10 +39,10 @@ pre: "<b>90. </b>"
 
 ## Dashboard (Vincenzo/Matteo)
 
-[ ] DELETE You have 10 undone (Vincenzo-Matteo)
-[ ] DELETE - 1st Sprint (Matteo)
-[ ] DELETE Team Member  (Matteo)
-[ ] DELETE Get Premium  (Matteo)
+[X] DELETE You have 10 undone (Vincenzo-Matteo)
+[X] DELETE - 1st Sprint (Matteo)
+[X] DELETE Team Member  (Matteo)
+[X] DELETE Get Premium  (Matteo)
 get API : LIT_Mobile_Dashboard [Marco/Matteo]
 Select 'TODO',count(*),User from JP_TODO where status<>CO  group by User
 Union
@@ -562,7 +562,7 @@ get API :
 #### - Lead Fornitore
 
 * Stato/note :  / 10%
-* Nome Oggetto : ad_user
+* Nome Oggetto : ad_user isleadvendor=Y
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
