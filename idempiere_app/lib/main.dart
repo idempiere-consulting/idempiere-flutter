@@ -32,7 +32,7 @@ import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/porta
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoicepo/views/screens/portal_mp_invoicepo_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Portaloffer/views/screens/portal_mp_portaloffer_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase/views/screens/purchase_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Orderpo/views/screens/purchase_orderpo_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Purchase_Lead/views/screens/purchase_lead_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Productwarehouseprice/views/screens/purchase_productwarehouseprice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain/views/screens/supplychain_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_inventory_screen.dart';
@@ -133,7 +133,7 @@ class MyApp extends StatelessWidget {
           page: () => const CRMCommissionScreen(),
           binding: CRMCommissionBinding(),
         ),
-        GetPage(
+        GetPage( 
           name: '/Magazzino',
           page: () => const CRMShipmentScreen(),
           binding: CRMShipmentBinding(),
@@ -225,8 +225,8 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/PurchaseOrderpo',
-          page: () => const PurchaseOrderpoScreen(),
-          binding: PurchaseOrderpoBinding(),
+          page: () => const PurchaseLeadScreen(),
+          binding: PurchaseLeadBinding(),
         ),
         GetPage(
           name: '/PurchaseProductwarehouseprice',
