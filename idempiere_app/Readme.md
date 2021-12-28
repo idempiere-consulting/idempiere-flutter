@@ -7,7 +7,7 @@ pre: "<b>90. </b>"
 ---
 # Progetto iDempiere Flutter
 
-## Funzionalità da vedere !!! (Vincenzo)
+ ## Funzionalità da vedere !!! (Vincenzo)
 
 * [ ] Eseguire processo completa di idempiere APIREST (da window)
 * [ ] Eseguire processo idempiere con parametri APIREST
@@ -92,7 +92,7 @@ Select 'PROJECT',count(*),SalesRep from C_Project where status
 * [ ] Prenota Risorsa (data, durata) / Libera Prenotazione
 * [ ] Poke Risorsa occupata
 
-##  {{%expand"## 1-CRM !!!"%}}
+## 1 CRM
 
 Nome Oggetto : CRM
 get API :   Lead (count(*),count(*)Miei, Count(*)Last 7day
@@ -114,7 +114,7 @@ Select count(*),
 
 * Stato/note : Definito 
 * Nome Oggetto : leads
-* API window lead Filtro fisso = isactive='Y'
+* API window lead Filtro fisso = IsSalesLead eq Y 
 
 * [X] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Stato Lead
@@ -141,11 +141,11 @@ Select count(*),
 * [ ] Invio Msg SMS  (S3)
 * [ ] Invio Msg Whatsapp (S3)
 
-### Contatti BP (miei/tutti*)
+### Contatti BP 
 
 * Stato/note : Definito / 10%
 * Nome Oggetto : contact
-* API Window : Contact - Filtro fisso = isactive='Y'
+* API model: ad_user - Filtro fisso = isactive='Y'
 
 * [ ] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Nessuno
@@ -170,7 +170,7 @@ Select count(*),
 
 * Stato/note : Definito / 10%
 * Nome Oggetto : BusinessPartner
-* API model : businesspartner - Filtro fisso : C_Bpartner_id not null and islead='N' isactive='Y'
+* API model : c_bpartner - Filtro fisso : t null and islead='N' isactive='Y'
 
 * [ ] Filtro Base = All Miei(agente=user)
 * [ ] Filtri Avanzata: Gruppo Business Partner or Categoria BP
@@ -286,7 +286,7 @@ Tradurre in Documento di Trasporto
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 
-##  {{%expand"## 2-Ticket Task e Ore"%}}
+##  2 Ticket Task e Ore
 
 Nome Oggetto : Ticket
 get API : Ticket (count(*),count(*)Miei, Count(*)Last 7day,
@@ -329,7 +329,7 @@ Ticket
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"## 3 Manutenzione Tecnico"%}}
+##   3 Manutenzione Tecnico
 
 Nome Oggetto : Maintenance
 get API :
@@ -398,7 +398,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"4 Manutenzione Portale"%}}
+##  4 Manutenzione Portale
 
 Nome Oggetto : Portal_MP
 get API :
@@ -494,7 +494,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"5 Formazione"%}}
+##  5 Formazione
 Nome Oggetto : Course
 get API :
 
@@ -515,7 +515,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"7 Formazione Portale"%}}
+##  6 Formazione Portale
 
 #### - Corsi in Scadenza
 
@@ -536,7 +536,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"8 Formazione Corsista"%}}
+##  7 Formazione Corsista
 
 #### - Presenza Corso
 
@@ -557,7 +557,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"9 Acquisti "%}}
+##  8 Acquisti 
 
 #### - Lead Fornitore
 
@@ -605,7 +605,7 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"10  Logistica"%}}
+## 10  Logistica
 
 #### - Prodotto / Giacenza
 
