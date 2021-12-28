@@ -80,8 +80,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("MAGAZZINO: ${controller.trx.rowcount}")
-                        : const Text("MAGAZZINO: ")),
+                        ? Text("Documento di Trasporto: ${controller.trx.rowcount}")
+                        : const Text("Documento di Trasporto: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(

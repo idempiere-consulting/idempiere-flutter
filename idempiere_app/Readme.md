@@ -7,9 +7,7 @@ pre: "<b>90. </b>"
 ---
 # Progetto iDempiere Flutter
 
-# Funzionalità da vedere
-
-## Step 1
+## Funzionalità da vedere !!! (Vincenzo)
 
 * [ ] Eseguire processo completa di idempiere APIREST
 * [ ] Eseguire processo idempiere con parametri APIREST
@@ -28,33 +26,39 @@ pre: "<b>90. </b>"
 * [ ] Gestione NFC - Per segnare le ore ? - controllare plugin NFC
 * [ ] Sondaggi https://github.com/quickbirdstudios/survey_kit
 
-## Login
+## Login ! (Vincenzo)
 
 * [ ] Logo App , immagini login 
-* [ ] Logo e Nome in alto a Sx  
+* [ ] Spostare Utente in alto a Sx  
 * [ ] Accesso via https  
 * [X] Salvataggio Ruolo e login con solo ok se memorizzato password
-* [ ] Saltare la prima pagine e andare alla Login Page 
+* [ ] Saltare la prima pagina e andare alla Login Page 
 * [ ] Non si visualizzano i Dati Server  
 * [ ] Exit(Tocca ancora per uscire ) / 
 * [ ] Logout (Attenzione cancella i dati di login )
 
-## Dashboard {#Dashnoard}
+## Dashboard (Vincenzo/Matteo)
 
-### Email/Notifiche (S3)
-get API : LIT_Mobile_Dashboard
-- Task : Nr Task non completati / Nr Task in Progress
-     model : JP_TODO filter : AND  JP_ToDo_Status='NY' AND TRUNC(JP_ToDo_ScheduledStartDate)<= TRUNC(SysDate)-1
-- Progetti Attivi : TBD
-
-- Notifiche 
-[ ] You have 10 undone
-[ ] DELETE - 1st Sprint
-[ ] DELETe Team Member
-[ ] Get Premium 
-* [ ] Task / Lead Promeria / Notifica per Data/ora
-* [ ] Impostare Letto
-* [ ] Invia Nota / Messaggio 
+[ ] DELETE You have 10 undone (Vincenzo-Matteo)
+[ ] DELETE - 1st Sprint (Matteo)
+[ ] DELETE Team Member  (Matteo)
+[ ] DELETE Get Premium  (Matteo)
+get API : LIT_Mobile_Dashboard [Marco/Matteo]
+Select 'TODO',count(*),User from JP_TODO where status<>CO  group by User
+Union
+Select 'OFFER',count(*),SalesRep from C_Order where status<>CO group by SalesRep
+Union 
+Select 'MP_TASK',count(*),SalesRep from MP_TASK where status
+Union
+Select 'PROJECT',count(*),SalesRep from C_Project where status
+### Task : Nr Task non completati / Nr Task in Progress -> vai a Task
+     model : JP_TODO filter : AND  JP_ToDo_Status='NY' AND TRUNC(JP_ToDo_ScheduledStartDate)<= TRUNC(SysDate)-1 
+### Offerte di Vendita : Nr Offerte in bozza-mie -> vai a Offerta di Vendita
+### Ordini di Manutenzione : Nr Ordini di Manutenzioni 
+### Progetti Attivi : Nr
+### Recent Messages -->  
+### Bacheca : tabella : AD_BroadcastMessage (ho letto)
+ * [ ] Invia Nota / Messaggio 
 
 ### Calendario (S1)
 
@@ -63,16 +67,12 @@ get API : LIT_Mobile_Dashboard
   - Task Business Partner
 
 
-
-* [ ] Bacheca
-
-
 ### BI Vendite (S2)
 
-* [ ] Grafico Chart Fatturato
+* [ ] Grafico Chart Fatturato (Vincenzo)
    https://pub.dev/packages/charts_flutter
 
-### Risorse Aziendali (new)
+### Risorse Aziendali !!! (Matteo)
 
 !! Fare Maschera su iDempiere [Marco-Matteo]
 
@@ -87,29 +87,32 @@ get API : LIT_Mobile_Dashboard
 * [ ] Modificare
 * [ ] Creare
 * [ ] Cancellare (?)
-* [ ] Caricare da Contatto (S2)
-* [ ] Eseguire Telefonata ( S1)
+
 * [ ] Elenco Risorse Aziendali
 * [ ] Prenota Risorsa (data, durata) / Libera Prenotazione
 * [ ] Poke Risorsa occupata
 
-##  {{%expand"## 1-CRM"%}}
+##  {{%expand"## 1-CRM !!!"%}}
 
 Nome Oggetto : CRM
-get API :   Lead (count(*),count(*)Miei, Count(*)Last 7day,
-Contatti BP count(*)
-Clienti BP count (*)
-Task Lead
-Opportunità
-Offerta/Ordini count(*)
-Listino Prodotti count(*)PirceChanged
-Spedizioni count(*)7days
-Fattura Vendita (count)(*)Last7da
-Incassi count(*)Last7day Sum(*)Last7day
+get API :   Lead (count(*),count(*)Miei, Count(*)Last 7day
+Select count(*),salesrepo from ad_user where islead=Y group by salesrep
+union
+Select count(*),
+
+-Contatti BP count(*)
+-Clienti BP count (*)
+-Task Lead
+-Opportunità
+-Offerta/Ordini count(*)
+-Listino Prodotti count(*)PirceChanged
+-Spedizioni count(*)7days
+-Fattura Vendita (count)(*)Last7da
+-Incassi count(*)Last7day Sum(*)Last7day
 
 ### Lead
 
-* Stato/note : Definito / 50%
+* Stato/note : Definito 
 * Nome Oggetto : leads
 * API window lead Filtro fisso = isactive='Y'
 
@@ -214,7 +217,7 @@ Incassi count(*)Last7day Sum(*)Last7day
 
 * Stato/note : Definito / 10%
 * Nome Oggetto : Offer
-* API window Sales Order  Filtro fisso:  isactive='Y' < #GiorniOfferta
+* API model c_order  Filtro fisso:  isactive='Y' < #GiorniOfferta
 
 * [ ] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Bozza/Completato/Fatturato/Pagato
@@ -226,7 +229,7 @@ Incassi count(*)Last7day Sum(*)Last7day
 * [ ] Riaprire Offerta(solo se Standard Order e non Spedito)
 * [ ] Inviare Email con template email
 
-### Listino Prodotti
+### Listino Prodotti !!!
 
 * Stato/note : Definito / 10%
 * Nome Oggetto : ProductPrice
@@ -239,9 +242,10 @@ Incassi count(*)Last7day Sum(*)Last7day
 * [ ] Crea
 * [ ] Modificare (tutto)
 
-### Documento di Trasporto (miei/Team)
+### Documento di Trasporto (miei/Team) 
 
-* Stato/note : Definito / 10%
+Tradurre in Documento di Trasporto
+* Stato/note : Definito 
 * Nome Oggetto : Shipment
 * API window :  ShipmentCustomer  Filtro fisso : isactive=Y
 
@@ -282,7 +286,7 @@ Incassi count(*)Last7day Sum(*)Last7day
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 
-##  {{%expand"## 3-Ticket Task e Ore"%}}
+##  {{%expand"## 2-Ticket Task e Ore"%}}
 
 Nome Oggetto : Ticket
 get API : Ticket (count(*),count(*)Miei, Count(*)Last 7day,
@@ -325,7 +329,7 @@ Ticket
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"## 4 Manutenzione Tecnico"%}}
+##  {{%expand"## 3 Manutenzione Tecnico"%}}
 
 Nome Oggetto : Maintenance
 get API :
@@ -394,9 +398,9 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"5 Manutenzione Portale"%}}
+##  {{%expand"4 Manutenzione Portale"%}}
 
-Nome Oggetto : PortalMaintenance
+Nome Oggetto : Portal_MP
 get API :
 
 ### - Dashboard Portale (no a menu)
@@ -482,7 +486,7 @@ get API :
 
 ### - Ticket (crea)
 
-* Stato/note : Definito / 10%
+* Stato/note : Definito / 100%
 * Nome Oggetto :
 * API model :   .. Filtro fisso :
 
@@ -490,13 +494,13 @@ get API :
 * [ ] Filtri Avanzata: ???
   {{% /expand%}}
 
-##  {{%expand"6 Formazione"%}}
+##  {{%expand"5 Formazione"%}}
+Nome Oggetto : Course
+get API :
 
 #### - Contratto di Formazione
-
-* Stato/note : Definito / 10%
-* Nome Oggetto :
-* API model :   .. Filtro fisso :
+* Nome Oggetto : CourseContract
+* API model : c_contract Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -504,8 +508,8 @@ get API :
 #### - Corsi di Formazione
 
 * Stato/note :  / 10%
-* Nome Oggetto :
-* API model :   .. Filtro fisso :
+* Nome Oggetto : CourseTraining
+* API model : MP_Maintain  .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -558,7 +562,7 @@ get API :
 #### - Lead Fornitore
 
 * Stato/note :  / 10%
-* Nome Oggetto : orderpo
+* Nome Oggetto : ad_user
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
@@ -751,6 +755,7 @@ get API :
 
 ##  {{%expand"13 Contabilità "%}}
 
+* Nome Oggetto : Finance
 #### - Fattura di Acquisto
 
 * Stato/note :  / 10%
@@ -807,15 +812,9 @@ get API :
   {{% /expand%}}
 
 ##  {{%expand"14 Risorse Umane"%}}
+* Stato/note : Definito / 10%
+* Nome Oggetto : HR
 
-### Responsabile diPARTIMENTO / hr
-
-* Stato/note :  / 10%
-* Nome Oggetto :
-* API model :   .. Filtro fisso :
-
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
 
 #### - Ritardi e Assenze
 
@@ -876,7 +875,7 @@ get API :
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 
-### Dipendente
+## Dipendente
 
 #### - Bacheca Personale
 
