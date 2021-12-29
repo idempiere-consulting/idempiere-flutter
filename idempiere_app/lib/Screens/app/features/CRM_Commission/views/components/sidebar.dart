@@ -50,7 +50,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.domain,
                   icon: Icons.domain_outlined,
-                  label: "Clienti",
+                  label: "Clienti1",
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
