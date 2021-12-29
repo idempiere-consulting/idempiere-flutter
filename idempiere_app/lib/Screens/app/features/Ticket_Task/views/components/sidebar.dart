@@ -32,12 +32,12 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.person,
+                  activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Ticket",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.person,
+                  activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "TicketTicket",
                 ),

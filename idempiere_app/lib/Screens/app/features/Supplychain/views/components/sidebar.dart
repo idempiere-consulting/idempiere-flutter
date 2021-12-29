@@ -32,17 +32,17 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.person,
+                  activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "SupplychainProductwarehouse",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.person,
+                  activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "SupplychainInventory",
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.person,
+                  activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "SupplychainMaterialreceipt",
                 ),
