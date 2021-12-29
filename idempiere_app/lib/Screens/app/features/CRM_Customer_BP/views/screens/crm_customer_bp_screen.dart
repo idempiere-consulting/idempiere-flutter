@@ -211,106 +211,30 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                   ), */
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                /* children: [
+                                 children: [
                                   Column(
                                     children: [
                                       Row(
                                         children: [
                                           const Text(
-                                            "BPartner: ",
+                                            "Gruppo BP: ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
                                                   .trx
                                                   .records![index]
-                                                  .bPName ??
+                                                  .cBPGroupID?.identifier ??
                                               ""),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.call,
-                                              color: Colors.green,
-                                            ),
-                                            tooltip: 'Call',
-                                            onPressed: () {
-                                              //log("info button pressed");
-                                              if (controller
-                                                      .trx
-                                                      .records![index]
-                                                      .phone ==
-                                                  null) {
-                                                log("info button pressed");
-                                              } else {
-                                                controller.makePhoneCall(
-                                                    controller
-                                                        .trx
-                                                        .records![index]
-                                                        .phone
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .records![index]
-                                                  .phone ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.mail,
-                                              color: Colors.white,
-                                            ),
-                                            tooltip: 'EMail',
-                                            onPressed: () {
-                                              if (controller
-                                                      .trx
-                                                      .records![index]
-                                                      .eMail ==
-                                                  null) {
-                                                log("mail button pressed");
-                                              } else {
-                                                controller.writeMailTo(
-                                                    controller
-                                                        .trx
-                                                        .records![index]
-                                                        .eMail
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .records![index]
-                                                  .eMail ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .records![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""),
-                                        ],
-                                      ),
+                                      
+                                      
+                                      
                                     ],
                                   ),
-                                ], */
+                                ], 
+
                               ),
                             ),
                           );

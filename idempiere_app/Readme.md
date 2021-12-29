@@ -145,7 +145,7 @@ Select count(*),
 * [ ] Invio Msg SMS  (S3)
 * [ ] Invio Msg Whatsapp (S3)
 
-### Contatti BP 
+### Contatti BP 90%
 
 * Stato/note : Definito / 10%
 * Nome Oggetto : contact
@@ -159,7 +159,6 @@ Select count(*),
 *   [X] Telefono
 *   [X] Email
 *   [ ] Agente
-
 * [ ] Creare (Assegnare BP)
 * [ ] Modificare
 * [ ] Caricare da Contatto(Assegnare BP) (S2)
@@ -176,18 +175,32 @@ Select count(*),
 * [ ] Invio Msg SMS (S3)
 * [ ] Invio Msg Whatsapp (S3)
 
-### Clienti BP
+### Clienti BP 50% !!! Non ho indirizzo ne Metodi ne Agente ???
 
-* Stato/note : Definito / 10%
+* Stato/note : Definito 
 * Nome Oggetto : BusinessPartner
-* API model : c_bpartner - Filtro fisso : t null and islead='N' isactive='Y'
+* API model : c_bpartner - Filtro fisso : iscustomer=Y and isactive='Y'
 
 * [ ] Filtro Base = All Miei(agente=user)
 * [ ] Filtri Avanzata: Gruppo Business Partner or Categoria BP
-* [ ] Visualizzare BP (Nome,indirizzo(isbillto),Telefono,Email,Agente)
+* [ ] Visualizzare BP
+    [ ] Nome
+    [ ] Metodo Pagamento 
+    [ ] Termine di Pagamento
+    [ ] indirizzo(isbillto)
+    [ ] Telefono
+    [ ] Email
+    [ ] Agente
 * [ ] Creare
-* [ ] Modificare BP(Nome,indirizzo, Telefono,email,Agente)
-* [ ] Visualizzazione Contatti Vai a Contatti
+* [ ] Modificare 
+    [ ] Nome
+    [ ] Indirizzo
+    [ ] Metodo di Pagamento
+    [ ] Termine di Pagamento
+    [ ] Telefono
+    [ ] Email
+    [ ] Agente
+* [ ] Visualizzazione Contatti -> Vai a Contatti
 * [ ] Crea Task  Business Partner
 * [ ] Crea Opportunità  Business Partner (S2)
 * [ ] Mostra Opportunità - Vai a (S2)
@@ -211,7 +224,7 @@ Select count(*),
 
 ### Opportunità Lead  BP
 
-* Stato/note : Definito / 10%
+* Stato/note : Definito 
 * Nome Oggetto : Opportunity
 * API window : Opportunity  Filtro fisso : isactive='Y'
 
