@@ -161,6 +161,12 @@ Select count(*),
 *   [ ] Agente
 * [ ] Creare (Assegnare BP)
 * [ ] Modificare
+    [ ] Nome  (Header)
+*   [ ] Stato del Lead (Header) 
+*   [ ] Nome del BP
+*   [ ] Telefono 
+*   [ ] Email
+*   [ ] Agente
 * [ ] Caricare da Contatto(Assegnare BP) (S2)
 * [X] Eseguire Telefonata (S1)
 * [X] Invio Email (S1)
@@ -255,7 +261,7 @@ Select count(*),
 ### Listino Prodotti !!! Matteo
 
 * Stato/note : Definito / 10%
-* Nome Oggetto : ProductPrice
+* Nome Oggetto : ProductList
 * API model  : m_product  Filtro fisso : isactive='Y'  listino(vedi opzioni)
 
 * [ ] Filtro Base = Categoria Prodotto
