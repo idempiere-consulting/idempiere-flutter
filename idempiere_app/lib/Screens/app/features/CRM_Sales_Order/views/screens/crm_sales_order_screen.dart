@@ -133,50 +133,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                         ? Colors.green
                                         : Colors.yellow,
                                   ),
-                                  onPressed: () async {
-                                    final ip = GetStorage().read('ip');
-                                    String authorization =
-                                        'Bearer ' + GetStorage().read('token');
-                                    final msg = jsonEncode({
-                                      "DocStatus": "CO",
-                                      "DocAction": "CO",
-                                    });
-                                    var url = Uri.parse('http://' +
-                                        ip +
-                                        '/api/v1/windows/sales-order/${controller.trx.records![index].id}');
-
-                                    var response = await http.put(
-                                      url,
-                                      body: msg,
-                                      headers: <String, String>{
-                                        'Content-Type': 'application/json',
-                                        'Authorization': authorization,
-                                      },
-                                    );
-                                    if (response.statusCode == 200) {
-                                      controller.getSalesOrders();
-                                      //print("done!");
-
-                                      Get.snackbar(
-                                        "Fatto!",
-                                        "Il record è stato modificato",
-                                        icon: const Icon(
-                                          Icons.done,
-                                          color: Colors.green,
-                                        ),
-                                      );
-                                    } else {
-                                      print(response.body);
-                                      Get.snackbar(
-                                        "Errore!",
-                                        "Il record non è stato modificato",
-                                        icon: const Icon(
-                                          Icons.error,
-                                          color: Colors.red,
-                                        ),
-                                      );
-                                    }
-                                  },
+                                  onPressed: () {},
                                 ),
                                 tilePadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
@@ -267,7 +224,53 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                             icon: const Icon(
                                               Icons.settings,
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              final ip =
+                                                  GetStorage().read('ip');
+                                              String authorization = 'Bearer ' +
+                                                  GetStorage().read('token');
+                                              final msg = jsonEncode({
+                                                "DocStatus": "CO",
+                                                "DocAction": "CO",
+                                              });
+                                              var url = Uri.parse('http://' +
+                                                  ip +
+                                                  '/api/v1/windows/sales-order/${controller.trx.records![index].id}');
+
+                                              var response = await http.put(
+                                                url,
+                                                body: msg,
+                                                headers: <String, String>{
+                                                  'Content-Type':
+                                                      'application/json',
+                                                  'Authorization':
+                                                      authorization,
+                                                },
+                                              );
+                                              if (response.statusCode == 200) {
+                                                controller.getSalesOrders();
+                                                //print("done!");
+
+                                                Get.snackbar(
+                                                  "Fatto!",
+                                                  "Il record è stato modificato",
+                                                  icon: const Icon(
+                                                    Icons.done,
+                                                    color: Colors.green,
+                                                  ),
+                                                );
+                                              } else {
+                                                print(response.body);
+                                                Get.snackbar(
+                                                  "Errore!",
+                                                  "Il record non è stato modificato",
+                                                  icon: const Icon(
+                                                    Icons.error,
+                                                    color: Colors.red,
+                                                  ),
+                                                );
+                                              }
+                                            },
                                           ),
                                         ],
                                       ),
