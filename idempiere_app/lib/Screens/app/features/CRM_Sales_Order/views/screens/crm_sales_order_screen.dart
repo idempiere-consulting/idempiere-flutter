@@ -81,18 +81,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                         : const Text("ORDINI: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
-                  /* Container(
-                    margin: const EdgeInsets.only(left: 40),
-                    child: IconButton(
-                      onPressed: () {
-                        Get.to(const CreateLead());
-                      },
-                      icon: const Icon(
-                        Icons.person_add,
-                        color: Colors.lightBlue,
-                      ),
-                    ),
-                  ), */
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -136,6 +124,60 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                               decoration: const BoxDecoration(
                                   color: Color.fromRGBO(64, 75, 96, .9)),
                               child: ExpansionTile(
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.article,
+                                    color: controller.trx.records![index]
+                                                .docStatus?.id ==
+                                            "CO"
+                                        ? Colors.green
+                                        : Colors.yellow,
+                                  ),
+                                  onPressed: () async {
+                                    final ip = GetStorage().read('ip');
+                                    String authorization =
+                                        'Bearer ' + GetStorage().read('token');
+                                    final msg = jsonEncode({
+                                      "DocStatus": "CO",
+                                      "DocAction": "CO",
+                                    });
+                                    var url = Uri.parse('http://' +
+                                        ip +
+                                        '/api/v1/windows/sales-order/${controller.trx.records![index].id}');
+
+                                    var response = await http.put(
+                                      url,
+                                      body: msg,
+                                      headers: <String, String>{
+                                        'Content-Type': 'application/json',
+                                        'Authorization': authorization,
+                                      },
+                                    );
+                                    if (response.statusCode == 200) {
+                                      controller.getSalesOrders();
+                                      //print("done!");
+
+                                      Get.snackbar(
+                                        "Fatto!",
+                                        "Il record è stato modificato",
+                                        icon: const Icon(
+                                          Icons.done,
+                                          color: Colors.green,
+                                        ),
+                                      );
+                                    } else {
+                                      print(response.body);
+                                      Get.snackbar(
+                                        "Errore!",
+                                        "Il record non è stato modificato",
+                                        icon: const Icon(
+                                          Icons.error,
+                                          color: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
                                 tilePadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
                                 leading: Container(
@@ -147,8 +189,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                               color: Colors.white24))),
                                   child: IconButton(
                                     icon: const Icon(
-                                      Icons.article,
-                                      color: Colors.green,
+                                      Icons.edit,
                                     ),
                                     tooltip: 'Edit Lead',
                                     onPressed: () {
@@ -201,11 +242,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                     ),
                                   ],
                                 ),
-                                /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
+
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
                                 children: [
@@ -220,6 +257,18 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                           ),
                                           Text(
                                               "€${controller.trx.records![index].grandTotal}"),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.settings,
+                                            ),
+                                            onPressed: () {},
+                                          ),
                                         ],
                                       ),
                                     ],
