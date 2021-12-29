@@ -108,12 +108,12 @@ class CRMProductListController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
-      //_trx = ProductListJson.fromJson(jsonDecode(response.body));
+      //print(response.body);
+      _trx = ProductListJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
-      //_dataAvailable.value = _trx != null;
+      _dataAvailable.value = _trx != null;
     }
   }
 
