@@ -54,25 +54,25 @@ class Records {
   final MWarehouseID? mWarehouseID;
   final DeliveryRule? deliveryRule;
   final FreightCostRule? freightCostRule;
-  final int? freightAmt;
+  final num? freightAmt;
   final DeliveryViaRule? deliveryViaRule;
-  final int? chargeAmt;
+  final num? chargeAmt;
   final PriorityRule? priorityRule;
   final DocStatus? docStatus;
   final bool? sendEMail;
   final SalesRepID? salesRepID;
-  final int? noPackages;
+  final num? noPackages;
   final bool? isInTransit;
   final bool? isApproved;
   final bool? isInDispute;
-  final int? volume;
-  final int? weight;
+  final num? volume;
+  final num? weight;
   final bool? isDropShip;
-  final int? processedOn;
+  final num? processedOn;
   final bool? isAlternateReturnAddress;
   final bool? lITIsChecked;
   final bool? isDelivered;
-  final int? lITGrossWeight;
+  final num? lITGrossWeight;
   final String? modelname;
 
   Records({
@@ -173,13 +173,13 @@ class Records {
                 ? FreightCostRule.fromJson(
                     json['FreightCostRule'] as Map<String, dynamic>)
                 : null,
-        freightAmt = json['FreightAmt'] as int?,
+        freightAmt = json['FreightAmt'] as num?,
         deliveryViaRule =
             (json['DeliveryViaRule'] as Map<String, dynamic>?) != null
                 ? DeliveryViaRule.fromJson(
                     json['DeliveryViaRule'] as Map<String, dynamic>)
                 : null,
-        chargeAmt = json['ChargeAmt'] as int?,
+        chargeAmt = json['ChargeAmt'] as num?,
         priorityRule = (json['PriorityRule'] as Map<String, dynamic>?) != null
             ? PriorityRule.fromJson(
                 json['PriorityRule'] as Map<String, dynamic>)
@@ -191,18 +191,18 @@ class Records {
         salesRepID = (json['SalesRep_ID'] as Map<String, dynamic>?) != null
             ? SalesRepID.fromJson(json['SalesRep_ID'] as Map<String, dynamic>)
             : null,
-        noPackages = json['NoPackages'] as int?,
+        noPackages = json['NoPackages'] as num?,
         isInTransit = json['IsInTransit'] as bool?,
         isApproved = json['IsApproved'] as bool?,
         isInDispute = json['IsInDispute'] as bool?,
-        volume = json['Volume'] as int?,
-        weight = json['Weight'] as int?,
+        volume = json['Volume'] as num?,
+        weight = json['Weight'] as num?,
         isDropShip = json['IsDropShip'] as bool?,
-        processedOn = json['ProcessedOn'] as int?,
+        processedOn = json['ProcessedOn'] as num?,
         isAlternateReturnAddress = json['IsAlternateReturnAddress'] as bool?,
         lITIsChecked = json['LIT_IsChecked'] as bool?,
         isDelivered = json['IsDelivered'] as bool?,
-        lITGrossWeight = json['LIT_GrossWeight'] as int?,
+        lITGrossWeight = json['LIT_GrossWeight'] as num?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {

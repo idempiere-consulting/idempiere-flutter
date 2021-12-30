@@ -29,70 +29,70 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
+                  label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person,
+                  activeIcon: Icons.person_add,
                   icon: EvaIcons.personOutline,
-                  label: "Lead",
+                  label: "Lead".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.paid,
                   icon: Icons.paid_outlined,
-                  label: "Opportunity",
+                  label: "Opportunity".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.contact_mail,
                   icon: Icons.contact_mail_outlined,
-                  label: "Contatti",
+                  label: "ContactBP".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.domain,
                   icon: Icons.domain_outlined,
-                  label: "Clienti",
+                  label: "CustomerBP".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.task,
                   icon: Icons.task_outlined,
-                  label: "Task&Appuntamenti",
+                  label: "Task".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.description,
                   icon: Icons.description_outlined,
-                  label: "Offerte",
+                  label: "SalesOrder".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.ballot,
                   icon: Icons.ballot_outlined,
-                  label: "ListinoProdotti",
+                  label: "ProductList".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.receipt,
                   icon: Icons.receipt_outlined,
-                  label: "Fattura",
+                  label: "Invoice".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.payments,
                   icon: Icons.payments_outlined,
-                  label: "Incassi",
+                  label: "Payment".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.request_quote,
                   icon: Icons.request_quote_outlined,
-                  label: "Provvigioni",
+                  label: "Commission".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.local_shipping,
                   icon: Icons.local_shipping_outlined,
-                  label: "Documento di Trasporto",
+                  label: "Shipment".tr,
                   totalNotif: 20,
                 ),
               ],
@@ -110,31 +110,31 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/Opportunity');
                     break;
                   case 3:
-                    Get.offNamed('/Contatti');
+                    Get.offNamed('/ContactBP');
                     break;
                   case 4:
-                    Get.offNamed('/clienti');
+                    Get.offNamed('/CustomerBP');
                     break;
                   case 5:
-                    Get.offNamed('/Task&Appuntamenti');
+                    Get.offNamed('/Task');
                     break;
                   case 6:
-                    Get.offNamed('/Offerte');
+                    Get.offNamed('/SalesOrder');
                     break;
                   case 7:
-                    Get.offNamed('/ListinoProdotti');
+                    Get.offNamed('/ProductList');
                     break;
                   case 8:
-                    Get.offNamed('/Fattura');
+                    Get.offNamed('/Invoice');
                     break;
                   case 9:
-                    Get.offNamed('/Incassi');
+                    Get.offNamed('/Payment');
                     break;
                   case 10:
-                    Get.offNamed('/Provvigioni');
+                    Get.offNamed('/Commission');
                     break;
                   case 11:
-                    Get.offNamed('/Magazzino');
+                    Get.offNamed('/Shipment');
                     break;
                   default:
                 }
