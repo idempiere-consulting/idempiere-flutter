@@ -92,7 +92,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.local_shipping,
                   icon: Icons.local_shipping_outlined,
-                  label: "Magazzino",
+                  label: "Documento di Trasporto",
                   totalNotif: 20,
                 ),
               ],
@@ -109,7 +109,7 @@ class _Sidebar extends StatelessWidget {
                   case 2:
                     Get.offNamed('/Opportunity');
                     break;
-                    case 3:
+                  case 3:
                     Get.offNamed('/Contatti');
                     break;
                   case 4:
@@ -118,10 +118,10 @@ class _Sidebar extends StatelessWidget {
                   case 5:
                     Get.offNamed('/Task&Appuntamenti');
                     break;
-                    case 6:
+                  case 6:
                     Get.offNamed('/Offerte');
                     break;
-                    case 7:
+                  case 7:
                     Get.offNamed('/ListinoProdotti');
                     break;
                   case 8:
@@ -130,13 +130,13 @@ class _Sidebar extends StatelessWidget {
                   case 9:
                     Get.offNamed('/Incassi');
                     break;
-                    case 10:
+                  case 10:
                     Get.offNamed('/Provvigioni');
                     break;
-                    case 11:
+                  case 11:
                     Get.offNamed('/Magazzino');
                     break;
-                default:
+                  default:
                 }
               },
             ),
