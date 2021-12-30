@@ -50,6 +50,7 @@ import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashb
 //import 'package:idempiere_app/constants.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_assetresource/views/screens/dashboard_assetresource_screen.dart';
+import 'package:idempiere_app/localestrings.dart';
 
 void main() async {
   await GetStorage.init();
@@ -63,6 +64,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      translations: LocaleString(),
+      locale: const Locale('it', 'IT'),
       title: 'iDempiereApp',
       theme: AppTheme.basic,
       initialRoute: '/',
@@ -133,7 +136,7 @@ class MyApp extends StatelessWidget {
           page: () => const CRMCommissionScreen(),
           binding: CRMCommissionBinding(),
         ),
-        GetPage( 
+        GetPage(
           name: '/Magazzino',
           page: () => const CRMShipmentScreen(),
           binding: CRMShipmentBinding(),

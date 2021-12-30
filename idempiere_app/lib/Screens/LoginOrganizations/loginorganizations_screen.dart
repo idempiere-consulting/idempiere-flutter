@@ -38,6 +38,7 @@ class _LoginOrganizationsState extends State<LoginOrganizations> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
+      print(response.body);
       var json = jsonDecode(response.body);
       var posts = json['organizations'];
 

@@ -86,7 +86,7 @@ class _BodyState extends State<Body> {
           "roleId": roleid,
           "organizationId": organizationid,
           "warehouseId": warehouseid,
-          "language": "it_IT"
+          "language": GetStorage().read('language') ?? "it_IT"
         });
         var response = await http.put(
           url,

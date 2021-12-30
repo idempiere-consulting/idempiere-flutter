@@ -26,7 +26,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       "roleId": roleid,
       "organizationId": organizationid,
       "warehouseId": warehouseid,
-      "language": "it_IT"
+      "language": GetStorage().read('language') ?? "it_IT"
     });
     var response = await http.put(
       url,
@@ -42,7 +42,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       // then parse the JSON.
       GetStorage().write('warehouseid', warehouseid);
       // ignore: unused_local_variable
-      //print(response.body);
+      print(response.body);
       var json = jsonDecode(response.body);
       GetStorage().write('token', json['token']);
       GetStorage().write('userId', json['userId']);
@@ -81,6 +81,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
+      print(response.body);
       var json = jsonDecode(response.body);
       var posts = json['warehouses'];
 
