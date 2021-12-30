@@ -8,7 +8,10 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Commission/models/commission_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -27,6 +30,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/crm_commission_binding.dart';
@@ -72,7 +76,52 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              const Text("LISTA LEAD"),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("PROVVIGIONE: ${controller.trx.rowcount}")
+                        : const Text("PROVVIGIONE: ")),
+                    margin: const EdgeInsets.only(left: 15),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateLead());
+                      },
+                      icon: const Icon(
+                        Icons.person_add,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getCommissions();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -80,7 +129,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: 100,
+                        itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 8.0,
@@ -106,13 +155,39 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                     ),
                                     tooltip: 'Edit Lead',
                                     onPressed: () {
-                                      log("info button pressed");
+                                      //log("info button pressed");
+                                      /* Get.to(const EditLead(), arguments: {
+                                        "id": controller
+                                            .trx.windowrecords![index].id,
+                                        "name": controller.trx
+                                                .windowrecords![index].name ??
+                                            "",
+                                        "leadStatus": controller
+                                                .trx
+                                                .windowrecords![index]
+                                                .leadStatus
+                                                ?.id ??
+                                            "",
+                                        "bpName": controller
+                                            .trx.windowrecords![index].bPName,
+                                        "Tel": controller.trx
+                                                .windowrecords![index].phone ??
+                                            "",
+                                        "eMail": controller.trx
+                                                .windowrecords![index].eMail ??
+                                            "",
+                                        "salesRep": controller
+                                                .trx
+                                                .windowrecords![index]
+                                                .salesRepID
+                                                ?.identifier ??
+                                            ""
+                                      }); */
                                     },
                                   ),
                                 ),
                                 title: Text(
-                                  controller.trx.windowrecords![index].name ??
-                                      "???",
+                                  controller.trx.records![index].name ?? "???",
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -124,9 +199,9 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                     const Icon(Icons.linear_scale,
                                         color: Colors.yellowAccent),
                                     Text(
-                                      controller.trx.windowrecords![index]
-                                              .leadStatus!.identifier ??
-                                          "??",
+                                      controller.trx.records![index].cBPartnerID
+                                              ?.identifier ??
+                                          '??',
                                       style:
                                           const TextStyle(color: Colors.white),
                                     ),
@@ -145,63 +220,13 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                       Row(
                                         children: [
                                           const Text(
-                                            "BPartner: ",
+                                            "Valuta : ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .bPName ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Tel: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .phone ??
-                                              ""),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.call,
-                                              color: Colors.green,
-                                            ),
-                                            tooltip: 'Call',
-                                            onPressed: () {
-                                              log("info button pressed");
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Email: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .eMail ??
-                                              ""),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.mail,
-                                              color: Colors.white,
-                                            ),
-                                            tooltip: 'EMail',
-                                            onPressed: () {
-                                              log("info button pressed");
-                                            },
-                                          ),
+                                          Text(controller.trx.records![index]
+                                                  .cCurrencyID?.identifier ??
+                                              "??"),
                                         ],
                                       ),
                                       Row(
@@ -211,11 +236,8 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
+                                          Text(controller.trx.records![index]
+                                                  .frequencyType?.identifier ??
                                               ""),
                                         ],
                                       ),
