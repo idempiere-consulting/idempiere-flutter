@@ -17,8 +17,8 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   final json = {
     "types": [
-      {"id": "it_IT", "name": "it_IT"},
-      {"id": "en_US", "name": "en_US"},
+      {"id": "it_IT", "name": "Italiano"},
+      {"id": "en_US", "name": "English"},
     ]
   };
 
@@ -69,7 +69,7 @@ class _BodyState extends State<Body> {
           ),
           RoundedInputField(
             controller: myController,
-            hintText: "indirizzo ip ",
+            hintText: "AddressIP".tr,
             onChanged: (value) {},
           ),
           Row(

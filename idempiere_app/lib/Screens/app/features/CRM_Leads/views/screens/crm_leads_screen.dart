@@ -299,7 +299,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                       Row(
                                         children: [
                                           const Text(
-                                            "Agente: ",
+                                            "SalesRep",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
