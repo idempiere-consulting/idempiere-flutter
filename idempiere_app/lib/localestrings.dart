@@ -6,18 +6,14 @@ class LocaleString extends Translations {
         //ENGLISH LANGUAGE
         'en_US': {
           'hello': 'Hello World',
-          'message': 'Welcome to Proto Coders Point',
-          'title': 'Flutter Language - Localization',
-          'sub': 'Subscribe Now',
-          'changelang': 'Language   '
+          'changelang': 'Language   ',
+          'Calendar': 'Calendar'
         },
         //HINDI LANGUAGE
         'it_IT': {
           'hello': 'Ciao mondo',
-          'message': 'Welcome to Proto Coders Point',
-          'title': 'Flutter Language - Localization',
-          'sub': 'Subscribe Now',
-          'changelang': 'Lingua   '
+          'changelang': 'Lingua   ',
+          'Calendar': 'Calendario'
         },
       };
 }

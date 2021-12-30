@@ -34,7 +34,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Calendario",
+                  label: "Calendar".tr,
                 ),
               ],
               onSelected: (index, value) {
