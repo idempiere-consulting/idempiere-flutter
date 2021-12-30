@@ -98,7 +98,46 @@ class _Sidebar extends StatelessWidget {
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
-                Get.toNamed('/${value.label}');
+                //Get.toNamed('/${value.label}');
+                switch (index) {
+                  case 0:
+                    Get.offNamed('/Dashboard');
+                    break;
+                  case 1:
+                    Get.offNamed('/Lead');
+                    break;
+                  case 2:
+                    Get.offNamed('/Opportunity');
+                    break;
+                    case 3:
+                    Get.offNamed('/Contatti');
+                    break;
+                  case 4:
+                    Get.offNamed('/clienti');
+                    break;
+                  case 5:
+                    Get.offNamed('/Task&Appuntamenti');
+                    break;
+                    case 6:
+                    Get.offNamed('/Offerte');
+                    break;
+                    case 7:
+                    Get.offNamed('/ListinoProdotti');
+                    break;
+                  case 8:
+                    Get.offNamed('/Fattura');
+                    break;
+                  case 9:
+                    Get.offNamed('/Incassi');
+                    break;
+                    case 10:
+                    Get.offNamed('/Provvigioni');
+                    break;
+                    case 11:
+                    Get.offNamed('/Magazzino');
+                    break;
+                default:
+                }
               },
             ),
             const Divider(thickness: 1),
