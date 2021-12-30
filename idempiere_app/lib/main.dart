@@ -18,7 +18,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm
 import 'package:idempiere_app/Screens/app/features/CRM_Product%20_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Task%20/views/screens/crm_task_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance/views/screens/maintenance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/maintenance_calendar_screen.dart';
