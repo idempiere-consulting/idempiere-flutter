@@ -24,7 +24,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 0,
+              initialSelected: 1,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -34,73 +34,22 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Lead",
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.paid,
-                  icon: Icons.paid_outlined,
-                  label: "Opportunity",
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Contatti",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Clienti",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Task&Appuntamenti",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Offerte",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "ListinoProdotti",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Fattura",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Incassi",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Provvigioni",
-                  totalNotif: 20,
+                  label: "Calendario",
                 ),
               ],
               onSelected: (index, value) {
-                //log("index : $index | label : ${value.label}");
-                Get.toNamed('/${value.label}');
+                switch (index) {
+                  case 0:
+                    Get.offNamed('/Dashboard');
+                    break;
+                  case 1:
+                    break;
+                  default:
+                }
               },
             ),
             const Divider(thickness: 1),
             const SizedBox(height: kSpacing * 2),
-            /* UpgradePremiumCard(
-              backgroundColor: Theme.of(context).canvasColor.withOpacity(.4),
-              onPressed: () {},
-            ), */
             const SizedBox(height: kSpacing),
           ],
         ),
