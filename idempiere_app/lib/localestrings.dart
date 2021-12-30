@@ -7,13 +7,15 @@ class LocaleString extends Translations {
         'en_US': {
           'hello': 'Hello World',
           'changelang': 'Language   ',
-          'Calendar': 'Calendar'
+          'Calendar': 'Calendar',
+          'Dashborad': 'Dashboard'
         },
         //HINDI LANGUAGE
         'it_IT': {
           'hello': 'Ciao mondo',
           'changelang': 'Lingua   ',
-          'Calendar': 'Calendario'
+          'Calendar': 'Calendario',
+          'Dashboard': 'Cruscotto'
         },
       };
 }
