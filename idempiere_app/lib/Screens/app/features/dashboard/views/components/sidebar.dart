@@ -31,6 +31,18 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
+                  activeIcon: EvaIcons.calendar,
+                  icon: EvaIcons.calendarOutline,
+                  label: "Calendar".tr,
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.email,
+                  icon: EvaIcons.emailOutline,
+                  label: "Email".tr,
+                  totalNotif: 20,
+                ),
+               
+                SelectionButtonData(
                   activeIcon: Icons.attractions,
                   icon: Icons.attractions_outlined,
                   label: "CRM".tr,
@@ -70,17 +82,7 @@ class _Sidebar extends StatelessWidget {
                   icon: Icons.real_estate_agent_outlined,
                   label: "DashboardAssetresource".tr,
                 ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.calendar,
-                  icon: EvaIcons.calendarOutline,
-                  label: "Calendar".tr,
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.email,
-                  icon: EvaIcons.emailOutline,
-                  label: "Email".tr,
-                  totalNotif: 20,
-                ),
+                
                 SelectionButtonData(
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,

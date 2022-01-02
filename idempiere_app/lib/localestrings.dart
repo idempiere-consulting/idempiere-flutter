@@ -47,7 +47,7 @@ class LocaleString extends Translations {
           'VehicleEquipmentVehicle': 'Vehicle',
           'VehicleEquipmentEquipment': 'Equipment',
           'DashboardAssetresource': 'Corporate Resource',
-          'Sale,sRep': 'Sales Rappresentative',
+          'SalesRep': 'Sales Rappresentative',
           'AddressIP': 'Address IP'
         },
         //HINDI LANGUAGE
@@ -94,7 +94,7 @@ class LocaleString extends Translations {
           'VehicleEquipmentVehicle': 'Mezzi',
           'VehicleEquipmentEquipment': 'Attrezzatura',
           'DashboardAssetresource': 'Risorse Aziendali',
-          'Sale,sRep': 'Agente1',
+          'SalesRep': 'Agente ',
           'AddressIP': 'Indirizzo IP'
         },
       };

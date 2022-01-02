@@ -65,6 +65,12 @@ class _Sidebar extends StatelessWidget {
                   label: "SalesOrder".tr,
                   totalNotif: 20,
                 ),
+                 SelectionButtonData(
+                  activeIcon: Icons.local_shipping,
+                  icon: Icons.local_shipping_outlined,
+                  label: "Shipment".tr,
+                  totalNotif: 20,
+                ),
                 SelectionButtonData(
                   activeIcon: Icons.ballot,
                   icon: Icons.ballot_outlined,
@@ -89,12 +95,7 @@ class _Sidebar extends StatelessWidget {
                   label: "Commission".tr,
                   totalNotif: 20,
                 ),
-                SelectionButtonData(
-                  activeIcon: Icons.local_shipping,
-                  icon: Icons.local_shipping_outlined,
-                  label: "Shipment".tr,
-                  totalNotif: 20,
-                ),
+               
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -122,19 +123,19 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/SalesOrder');
                     break;
                   case 7:
-                    Get.offNamed('/ProductList');
+                    Get.offNamed('/Shipment');
                     break;
                   case 8:
-                    Get.offNamed('/Invoice');
+                    Get.offNamed('/ProductList');
                     break;
                   case 9:
-                    Get.offNamed('/Payment');
+                    Get.offNamed('/Invoice');
                     break;
                   case 10:
-                    Get.offNamed('/Commission');
+                    Get.offNamed('/Payment');
                     break;
                   case 11:
-                    Get.offNamed('/Shipment');
+                    Get.offNamed('/Commission');
                     break;
                   default:
                 }

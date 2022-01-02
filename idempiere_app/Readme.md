@@ -9,13 +9,12 @@ pre: "<b>90. </b>"
 
  ## Funzionalità da vedere !!! (Vincenzo)
 
-* [ ] Eseguire processo completa di idempiere APIREST (da window)
+* [ ] Abilitare gestione Ruoli
 * [ ] Eseguire processo idempiere con parametri APIREST
 * [ ] Attivare Acquisizione Fotocamera e allegare API REST (S2)
   https://docs.flutter.dev/cookbook/plugins/picture-using-camera
 * [ ] Allegare Documento (jpg,PDF)  (S2)
 * [ ] Visualizzare Allegato (vedere ticket desktop app) (S2)
-* [ ] Gestione Lingua (step 2)
   https://docs.flutter.dev/development/accessibility-and-localization/internationalization
 * [ ] Notifiche    (vedere quello fatto con Vincenzo sulla Desktop APP )
 * [ ] Gestione Barcode QRcode (vedi processi produzione)
@@ -31,18 +30,13 @@ pre: "<b>90. </b>"
 * [ ] Logo App , immagini login 
 * [ ] Spostare Utente in alto a Sx  
 * [ ] Accesso via https  
-* [X] Salvataggio Ruolo e login con solo ok se memorizzato password
 * [ ] Saltare la prima pagina e andare alla Login Page 
 * [ ] Non si visualizzano i Dati Server  
-* [ ] Exit(Tocca ancora per uscire ) / 
+* [ ] Exit(Tocca ancora per uscire ) 
 * [ ] Logout (Attenzione cancella i dati di login )
 
 ## Dashboard (Vincenzo/Matteo)
 
-[X] DELETE You have 10 undone (Vincenzo-Matteo)
-[X] DELETE - 1st Sprint (Matteo)
-[X] DELETE Team Member  (Matteo)
-[X] DELETE Get Premium  (Matteo)
 get API : LIT_Mobile_Dashboard [Marco/Matteo]
 Select 'TODO',count(*),User from JP_TODO where status<>CO  group by User
 Union
@@ -60,7 +54,7 @@ Select 'PROJECT',count(*),SalesRep from C_Project where status
 ### Bacheca : tabella : AD_BroadcastMessage (ho letto)
  * [ ] Invia Nota / Messaggio 
 
-### Calendario (S1)
+### Calendario 
 
 * [ ] Calendario
   - Task Lead
@@ -110,64 +104,68 @@ Select count(*),
 -Fattura Vendita (count)(*)Last7da
 -Incassi count(*)Last7day Sum(*)Last7day
 
-### Lead 90%
+### Lead [CRUD](..)
 
-* Stato/note : Definito 
+* Stato/note : Funzionalità base OK 
+* Descrizione : Gestione Totale [REWD] + Task + Opportunità + Converti in BP
 * Nome Oggetto : leads
 * API window lead Filtro fisso = IsSalesLead eq Y 
 
 * [X] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Stato Lead
 * [ ] Ricerca : Nome,Telefono,Nome BP
-* [X] Visualizzare
+* [X] (R)Visualizzare
 *   [X] Nome  (Header)
 *   [X] Stato del Lead (Header) 
 *   [X] Nome del BP
 *   [X] Telefono 
 *   [X] Email
 *   [X] Agente
-* [X] Modificare(Tutti i campi)
-* [X] Creare 
+* [X] (U)Modificare(Tutti i campi)
+* [X] (C)Creare 
 * [ ] Creare Default LoginUser come Agente
-* [X] Cancellare
-* [ ] Caricare da Contatto (S2)
-* [X] Eseguire Telefonata ( S1)
-* [X] Invio Email (S1)
-* [ ] Scarica Lead come Contatto Telefono (S2)
+* [X] (D)Cancellare
+* [ ] Caricare da Contatto 
+* [X] Eseguire Telefonata 
+* [X] Invio Email 
+* [ ] Scarica Lead come Contatto Telefono 
 * [ ] Converti Lead in BP
-* [ ] Crea Task Lead, (S2)
-* [ ] Crea Opportunità Lead (Se BP completo) (S2)
-* [ ] Mostra Task da fare -Vai a(S2)
-* [ ] Mostra Task eseguiti (S2)
-* [ ] Mostra Opportunità - Vai a (S3)
-* [ ] Mostra Offerte - Vai a (S2)
-* [ ] Invio Msg Telegram (S3)
-* [ ] Invio Msg SMS  (S3)
-* [ ] Invio Msg Whatsapp (S3)
+* [ ] Crea Task Lead, 
+* [ ] Crea Opportunità Lead (Se BP completo) 
+* [ ] Mostra Task da fare -Vai a
+* [ ] Mostra Task eseguiti 
+* [ ] Mostra Opportunità - Vai a 
+* [ ] Mostra Offerte - Vai a 
+* [ ] Invio Msg Telegram 
+* [ ] Invio Msg SMS  
+* [ ] Invio Msg Whatsapp 
 
-### Contatti BP 90%
+### Contatti [R](CUD..)
 
-* Stato/note : Definito / 10%
+* Stato/note : Manca CUD
+* Descrizione : Gestione Completa Contatti Clienti
 * Nome Oggetto : contact
 * API model: ad_user - Filtro fisso = isactive='Y'
 
 * [ ] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Nessuno
-* [X] Visualizzare : 
+* [ ] Ricerca
+* [X] (R)Visualizzare : 
 *   [X] Nome (Header)
 *   [X] Nome del Business Partner (Header)
 *   [X] Telefono
 *   [X] Email
 *   [ ] Agente
-* [ ] Creare (Assegnare BP)
-* [ ] Modificare
+* [ ] (C)Creare (Assegnare BP) 
+* [ ] (U)Modificare
     [ ] Nome  (Header)
 *   [ ] Stato del Lead (Header) 
 *   [ ] Nome del BP
 *   [ ] Telefono 
 *   [ ] Email
 *   [ ] Agente
-* [ ] Caricare da Contatto(Assegnare BP) (S2)
+* [ ] (D)Cancellare
+* [ ] Caricare da Contatto(Assegnare BP) 
 * [X] Eseguire Telefonata (S1)
 * [X] Invio Email (S1)
 * [ ] Scarica come Contatto Telefono,
@@ -181,14 +179,16 @@ Select count(*),
 * [ ] Invio Msg SMS (S3)
 * [ ] Invio Msg Whatsapp (S3)
 
-### Clienti BP 50% !!! Non ho indirizzo ne Metodi ne Agente ???
+### Clienti [R](CUD) !!!
 
-* Stato/note : Definito 
+* Stato/note : Non visualizzo metodo, termini e indirizzo .. fare vista ?
+* Descrizione : Gestione Completa Bussiness Partner Clienti
 * Nome Oggetto : BusinessPartner
 * API model : c_bpartner - Filtro fisso : iscustomer=Y and isactive='Y'
 
 * [ ] Filtro Base = All Miei(agente=user)
 * [ ] Filtri Avanzata: Gruppo Business Partner or Categoria BP
+* [ ] Ricerca
 * [ ] Visualizzare BP
     [ ] Nome
     [ ] Metodo Pagamento 
@@ -212,108 +212,198 @@ Select count(*),
 * [ ] Mostra Opportunità - Vai a (S2)
 * [ ] Mostra Offerte - Vai a (S2)
 
-### Task Lead / BP !!! Matteo
+### Task Lead [R] (CUD)
 
-* Stato/note : Definito / 10%
+* Stato/note : 
+* Descrizione : Gestione Task 
 * Nome Oggetto : Task
 * API model  : JP_Todo - Filtro fisso : EndDate is null isactive='Y'
 
 * [ ] Filtro Base = All miei Team
 * [ ] Filtri Avanzata: Stato
-* [ ] Visualizzare Task (Descrizione,Stato,Priorita,Tipoattività,DataInizio,;Salesrep,iscomplete
-* [ ] Creare
-* [ ] Modificare (tutto)
-* [ ] Bottone xImpostare Y su iscomplete
+* [ ] Ricerca
+* [ ] (R)Visualizzare Task 
+    [ ] Descrizione
+    [ ] Stato
+    [ ] Priorita
+    [ ] Tipoattività
+    [ ] DataInizi
+    [ ] Salesrep
+* [ ] (C)Creare
+* [ ] (U)Modificare
+* [ ] (D)Cancellazione (se non completato)
+* [ ] (P) Completare (Update Stato)
 * [ ] Se Lead Telefonare
 * [ ] Invio Email
 * [ ] Promemoria / Notifica per Data/ora
 
-### Opportunità Lead  BP
+### Opportunità Lead / BP [R] (CUD)
 
-* Stato/note : Definito 
+* Stato/note :
+* Descrizione : Gestione completa Opportunità 
 * Nome Oggetto : Opportunity
 * API window : Opportunity  Filtro fisso : isactive='Y'
 
 * [ ] Filtro Base =All Miei Team
 * [ ] Filtri Avanzata: Stato
-* [ ] Visualizzare Opportunità (NrDocumento,Business Partner,Agente,Stato,Importo,Descrizione,Prodotto)
-* [ ] Crea
-* [ ] Modificare (tutto)
-* [ ] Crea Task
-* [ ] Crea Offerta
+* [ ] Ricerca : 
+* [X] (R)Visualizzare Opportunità 
+    [ ] NrDocumento
+    [ ] Business Partner
+    [ ] Descrizione
+    [ ] Prodotto
+    [ ] Agente,
+    [ ] Stato
+    [ ] Importo 
+* [ ] (C)Crea
+* [ ] (U) Modificare (tutto)
+* [ ] (D) Cancellare
+* [ ] Crea Task su Opportunità
+* [ ] Crea Offerta (se ho il prodotto)
 
-### Offerta/Ordine di Vendita
+### Offerta/Ordine di Vendita [R-CO](CUD)
 
-* Stato/note : Definito / 10%
+* Stato/note : 
+* Descrizione : Gestione Completa Ordine con Complete
 * Nome Oggetto : Offer
 * API model c_order  Filtro fisso:  isactive='Y' < #GiorniOfferta
 
 * [ ] Filtro Base = All Miei Team
 * [ ] Filtri Avanzata: Bozza/Completato/Fatturato/Pagato
-* [ ] Visualizzare Offerta (Nrdocumento,Business Partner,Data Ordine,Tipo Documento,Agente,Metodo di Pagemento,Termine di Pagamento)
-* [ ] Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
-* [ ] Crea
-* [ ] Modificare (tutto)
-* [ ] Completare Offerta
-* [ ] Riaprire Offerta(solo se Standard Order e non Spedito)
+* [ ] Ricerca : 
+* [X] (R)Visualizzare Offerta 
+    [X] Nrdocumento
+    [X] Data Ordine,
+    [ ] Business Partner
+    [ ] Tipo Documento
+    [ ] Agente
+    [ ] Metodo di Pagemento
+    [ ] Termine di Pagamento)
+* [ ] Visualizzare Righe Offerta
+    [ ] Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
+* [ ] (C) Crea
+* [ ] (U) Modificare (testata e righe)
+* [ ] (D) Cancellare (Solo se Bozza)
+* [X] (P) Completare Offerta
+* [ ] (P) Riaprire Offerta(solo se Standard Order e non Spedito)
 * [ ] Inviare Email con template email
+* [ ] Vai a Fattura
 
-### Listino Prodotti !!! Matteo
+### Listino Prodotti [R](CUD)
 
-* Stato/note : Definito / 10%
+* Stato/note : 
+* Descrizione : Gestione completa Prodotto 
 * Nome Oggetto : ProductList
 * API model  : m_product  Filtro fisso : isactive='Y'  listino(vedi opzioni)
 
 * [ ] Filtro Base = Categoria Prodotto
 * [ ] Filtri Avanzata: Categoria Merceologica
-* [ ] Visualizzare Prodotti ( Immagine, Value,name,descrizione,Prezzo,Giacenza)
-* [ ] Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
-* [ ] Crea
-* [ ] Modificare (tutto)
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Prodotti 
+    [ ] Immagine
+    [ ] Value
+    [ ] Name
+    [ ] Descrizione
+    [ ] Prezzo
+    [ ] Giacenza
+* [ ] (C)Crea
+* [ ] (U) Modificare (tutto)
 
-### Documento di Trasporto 
 
-Tradurre in Documento di Trasporto
+### Documento di Trasporto [R](CUD)
+
+
 * Stato/note : Definito 
+* Descrizione :
 * Nome Oggetto : Shipment
 * API window :  ShipmentCustomer  Filtro fisso : isactive=Y
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-* [ ] Visualizzare DDT ( Documentno,data,BP)
-* [ ] Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
-* [ ] Crea
-* [ ] Modificare (tutto)
-* [ ] Completare Documento
+* [ ] Ricerca : 
+* [ ] Visualizzare DDT 
+    [ ] NrDocumento
+    [ ] Data,BP)
+* [ ] (R)Visualizzare Righe 
+    [ ] Prodotto
+    [ ] Descrizione
+    [ ] um
+    [ ] qty,
+    [ ] prezzo listino
+    [ ] prezzo
+    [ ] sconto
+    [ ]iva
+* [ ] (C)Crea
+* [ ] (U)Modificare (tutto)
+* [ ] (P)Completare Documento
 
-### Fatture di Vendita (miei/tutti*) (idem vendita)
-
-* Stato/note : Definito / 10%
+### Fatture di Vendita [R](CUD)
+* Stato/note : 
+* Descrizione :
 * Nome Oggetto : InvoiceCustomer
 * API window : invoicecustomer  Filtro fisso : isactive=Y
 
 * [ ] Filtro Base = Stato documento
 * [ ] Filtri Avanzata:
-* [ ] Visualizzare Prodotti ( Immagine, Value,name,descrizione,Prezzo,Giacenza)
-* [ ] Visualizzare Righe Offerta(Prodotto,Descrizione,um,qty,prezzo listino,prezzo,sconto,iva)
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Fattura di Vendita
+    [ ] Nr Documento
+    [ ] Data Fattura
+    [ ] Business Partner 
+    [ ] Importo Totale 
+    [ ] Scadenza
+    [ ] Pagato
+* [ ] (R)Visualizzare Righe 
+    [ ] Prodotto
+    [ ] Descrizione
+    [ ] Um
+    [ ] Qty
+    [ ] Prezzo listino,
+    [ ] Prezzo,
+    [ ] Sconto
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . CREA da ODV ?
+* [ ] (U)Modificare (tutto)
+* [ ] (P)Completare Documento
+* [ ] (P)Paga Fattura (Conto corrente - Importo)
+### Incasso [R](CUD)
 
-### Incasso / Pagamento (miei/tutti*)  (idem vendita)
-
-* Stato/note : Definito / 10%
+* Stato/note : 
+* Descrizione :
 * Nome Oggetto : Payment
 * API window : Payment   Filtro fisso : isactive=Y
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+    [ ] Tipo Documento
+    [ ] Data Transazione
+    [ ] Business Partner 
+    [ ] Importo Totale 
+    [ ] Fattura
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare (tutto)
+* [ ] (P)Completare Documento
 
-### Provvigione
+### Provvigione [R] ()
 
 * Stato/note : Definito / 10%
+* Descrizione : Visualizzazione Provvigioni (No Crea/No Modifica/No Processi)
 * Nome Oggetto : Commission
 * API model :   .. Filtro fisso :
 
-* [ ] Filtro Base = ???
+* [ ] Filtro Base = Mese / Anno
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+    [ ] Tipo Documento
+    [ ] Data Transazione
+    [ ] Business Partner 
+    [ ] Importo Totale 
+    [ ] Fattura
+
 
 ##  2 Ticket Task e Ore
 
@@ -321,42 +411,54 @@ Nome Oggetto : Ticket
 get API : Ticket (count(*),count(*)Miei, Count(*)Last 7day,
 Ticket
 
-### Ticket (miei/Team) (tecnico)
+### Ticket  [..](CRUD)
 
-* Stato/note : Definito / 10%
+* Stato/note : 
+* Descrizione :
 * Nome Oggetto :Ticket
-* API model :   .. Filtro fisso :
+* API model :   R_Request Filtro fisso : salesrepo_id=login or Team 
 
-* [ ] Filtro Base = ???
+* [ ] Filtro Base = TIPO
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+  
 
-### Ticket (portale)
+
+### Task TODO (miei/Team) TBD
 
 * Stato/note : Definito / 10%
-* Nome Oggetto : CustomerTicket
-* API model :   .. Filtro fisso :
-
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
-
-### Task (miei/Team)
-
-* Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : Task
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+### Riepilogo Ore (miei/Team) 
 
-### Riepilogo Ore (miei/Team)
-
-* Stato/note : Definito / 10%
+* Stato/note : 
+* Descrizione :
 * Nome Oggetto : ResourceAssignment
-* API model :   .. Filtro fisso :
+* API model :   s_resourceassignment Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
 ##   3 Manutenzione Tecnico
 
@@ -366,162 +468,285 @@ get API :
 ### -  Calendario Tecnico ((miei/Team)
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : calendar
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 ### -  Intervento Manutenzione
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : mptask
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 ### -  Anomalia Manutenzione
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : mpanomaly
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 ### -  Magazzino Furgone
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : mpwarehouse
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 ### -  Prelievo da Magazzino Centrale
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : mppicking
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 ### -  Carico/Scarico
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : internaluseinventory
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 ### -  Carico Scheda tecnica
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : mpimportitem
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
-##  4 Manutenzione Portale
+##  4 Portale Cliente
 
 Nome Oggetto : Portal_MP
 get API :
 
+
 ### - Dashboard Portale (no a menu)
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : tbd
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+  
 #### - News  (Promo) (no a menu)
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : tbd
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Fatture di Acquisto (Pagamento)
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : invoicepo
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
+
 
 #### - Indicatori ( Ultima visita / Prossima Visita)/anomalie)
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : tbd
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
-### Offerte di Vendita (aperte/tutte)
+
+#### Offerte di Vendita (aperte/tutte)
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto : portaloffer
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
+
+### Ticket (portale) TBD
+
+
+#### Ticket (portale) TBD
+
+* Stato/note : Definito / 10%
+* Descrizione :
+* Nome Oggetto : CustomerTicket
+* API model :   .. Filtro fisso :
+
+* [ ] Filtro Base = ???
+* [ ] Filtri Avanzata: ???
+* [ ] * [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+  
 ### - Manutenzione
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto :
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
-### - Contratto
+
+#### - Contratto
 
 * Stato/note : Definito / 10%
-* Nome Oggetto :
-* API model :   .. Filtro fisso :
+* Descrizione :
+* Nome Oggetto : ContractMP
+* API model :   c_contract Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
-### - Impianto
+
+#### - Impianto
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto :
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
-### - Anomalie
+
+#### - Anomalie
 
 * Stato/note : Definito / 10%
+* Descrizione :
 * Nome Oggetto :
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
-### - Ticket (crea)
-
-* Stato/note : Definito / 100%
-* Nome Oggetto :
-* API model :   .. Filtro fisso :
-
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
 ##  5 Formazione
 Nome Oggetto : Course
@@ -533,6 +758,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Corsi di Formazione
 
@@ -542,7 +774,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
 ##  6 Formazione Portale
 
@@ -554,7 +791,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+  
 #### - Attestati Corsisti
 
 * Stato/note :  / 10%
@@ -563,7 +806,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
 ##  7 Formazione Corsista
 
@@ -575,6 +823,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Attestato
 
@@ -584,18 +839,30 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
 ##  8 Acquisti 
 
-#### - Lead Fornitore
+#### - Lead Fornitore [R] (CUD)
 
-* Stato/note :  / 10%
+* Stato/note : 
 * Nome Oggetto : ad_user isleadvendor=Y
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Prodotto / Giacenza / Prezzi Acquisto
 
@@ -605,6 +872,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Prodotti SottoScorta -> Crea ODA
 
@@ -614,6 +888,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Richiesta di Acquisto
 
@@ -623,6 +904,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Ordini di Acquisto
 
@@ -632,7 +920,14 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
+
 
 ## 9  Logistica
 
@@ -644,6 +939,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Inventario
 
@@ -653,6 +955,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Spedizione Prodotti
 
@@ -662,6 +971,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Trasferimento
 
@@ -671,6 +987,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Consumi
 
@@ -680,6 +1003,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Entrata Merce
 
@@ -689,7 +1019,14 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
+
 
 ##  10 Mezzi e Attrezzature
 
@@ -702,9 +1039,17 @@ get API :
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 * [ ] Ricerca per TARGA,NAME
-* [ ] Visualizza : [Targa,Name,AssetType,BPartner,]
-* [ ] Modifica ( No Delete)
-* [ ]
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Targa
+    [ ] Nome
+    [ ] Tipo Asset
+    [ ]
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
+
 
 #### - Attrezzatura
 
@@ -714,6 +1059,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Presa in carico/Spostamento Mezzo/Attrezzatura e Rilascio
 
@@ -723,6 +1075,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Scadenze
 
@@ -732,7 +1091,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
 ##  11 Produzione
 
@@ -744,7 +1108,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Prelievo da Ord. di Prod.
 
 * Stato/note :  / 10%
@@ -753,7 +1122,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Dich. di Prod.
 
 * Stato/note :  / 10%
@@ -762,7 +1136,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Prelievo e Dichi.di Prod.
 
 * Stato/note :  / 10%
@@ -771,7 +1150,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Avanzamento di Produzione
 
 * Stato/note :  / 10%
@@ -780,7 +1164,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
 ##  12 Contabilità 
 
@@ -793,6 +1182,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Fattura di Vendita
 
@@ -802,7 +1198,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Incassi e Pagamenti  (in scadenza / tutti ?)
 
 * Stato/note : / 10%
@@ -811,7 +1212,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Partite Aperte
 
 * Stato/note :  / 10%
@@ -820,7 +1226,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Movimenti Bancari
 
 * Stato/note :  / 10%
@@ -829,7 +1240,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Cash Flow
 
 * Stato/note :  / 10%
@@ -838,14 +1254,19 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-  {{% /expand%}}
+ * [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
 ## 13 Risorse Umane
 * Stato/note : Definito / 10%
 * Nome Oggetto : HR
 
 
-#### - Ritardi e Assenze
+#### - Ritardi e Assenze [TBD]
 
 * Stato/note :  / 10%
 * Nome Oggetto : VISTA !!!
@@ -853,8 +1274,15 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
-#### - Chat
+
+#### - Chat [TBD]
 
 * Stato/note :  / 10%
 * Nome Oggetto :
@@ -871,6 +1299,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Scheda Dipendente
 
@@ -879,6 +1314,13 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 
 #### - Dotazione Dipendente
 
@@ -887,7 +1329,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Bacheca ( aziendale, ufficio/report , personale)
 
 * Nome Oggetto :
@@ -895,7 +1342,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Ricerca personale (assunzione, curriculum )
 
 * Nome Oggetto : ad_user!
@@ -903,7 +1355,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 ## Dipendente
 
 #### - Bacheca Personale
@@ -916,7 +1373,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Timbracartellino (Qrcode, GPS,Foto)
 
 !!! SSDFSDFSDFSDFFSD
@@ -927,7 +1389,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Richiesta Permesso / Ferie /Malattia
 
 !! Definire tabelle/maschere su idempiere !!!!!!!!!!!!!!!!!!!
@@ -938,8 +1405,12 @@ get API :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
-* [ ]
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 #### - Sondaggi (light)
 
 !! Definire tabelle/maschere su idempiere !!!!!!!!!!!!!!!!!!!
@@ -963,8 +1434,12 @@ get API :
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
   Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
-  {{% /expand%}}
-
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 ## 99 Setup e Opzioni
 
 #### - Opzioni Server (Client)
