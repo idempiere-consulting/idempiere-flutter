@@ -434,7 +434,7 @@ Ticket
 * Stato/note : Definito / 10%
 * Descrizione :
 * Nome Oggetto : Task
-* API model :   .. Filtro fisso :
+* API model :   JP_Todo Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -444,7 +444,7 @@ Ticket
 * [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
 * [ ] (U)Modificare ...
 * [ ] (P)...
-### Riepilogo Ore (miei/Team) 
+### Riepilogo Ore [] (CRUD) 
 
 * Stato/note : 
 * Descrizione :
@@ -480,12 +480,13 @@ get API :
 * [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
 * [ ] (U)Modificare ...
 * [ ] (P)...
+* [ ] 
 ### -  Intervento Manutenzione
 
 * Stato/note : Definito / 10%
 * Descrizione :
 * Nome Oggetto : mptask
-* API model :   .. Filtro fisso :
+* API model :  mp_task  Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -752,7 +753,7 @@ get API :
 Nome Oggetto : Course
 get API :
 
-#### - Contratto di Formazione
+#### - Contratto di Formazione (CRUD)
 * Nome Oggetto : CourseContract
 * API model : c_contract Filtro fisso :
 
