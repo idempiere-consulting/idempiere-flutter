@@ -50,7 +50,7 @@ class LocaleString extends Translations {
           'SalesRep': 'Sales Rappresentative',
           'AddressIP': 'Address IP'
         },
-        //HINDI LANGUAGE
+        //ITALIAN LANGUAGE
         'it_IT': {
           'changelang': 'Lingua   ',
           'Calendar': 'Calendario',

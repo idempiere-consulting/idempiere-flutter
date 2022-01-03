@@ -28,6 +28,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/sc
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mppicking/views/screens/maintenance_mppicking_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views/screens/maintenance_mpwarehouse_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Notification/views/screens/notification_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/portal_mp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoicepo/views/screens/portal_mp_invoicepo_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Portaloffer/views/screens/portal_mp_portaloffer_screen.dart';
@@ -75,6 +76,11 @@ class MyApp extends StatelessWidget {
           name: '/Dashboard',
           page: () => const DashboardScreen(),
           binding: DashboardBinding(),
+        ),
+        GetPage(
+          name: '/Notification',
+          page: () => const NotificationScreen(),
+          binding: NotificationBinding(),
         ),
         GetPage(
           name: '/CRM',

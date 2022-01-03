@@ -1,28 +1,32 @@
 part of dashboard;
 
-class DashboardController extends GetxController {
-  /* final scaffoldKey = GlobalKey<ScaffoldState>();
-  void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
-    }
-  } */
+class NotificationController extends GetxController {
+  //final scaffoldKey = GlobalKey<ScaffoldState>();
+  late NotificationJson _trx;
 
-  var notificationCounter = 0.obs;
+  // ignore: prefer_typing_uninitialized_variables
+  var adUserId;
+  // ignore: prefer_final_fields
+  var _dataAvailable = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    getNotificationCounter();
+    getNotifications();
   }
 
-  Future<void> getNotificationCounter() async {
-    var userid = GetStorage().read("userId");
+  bool get dataAvailable => _dataAvailable.value;
+  NotificationJson get trx => _trx;
+  //String get value => _value.toString();
+
+  Future<void> getNotifications() async {
+    _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
+    final userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userid and AD_Client_ID eq 1000000');
+        '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userId and AD_Client_ID eq 1000000');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -30,11 +34,13 @@ class DashboardController extends GetxController {
         'Authorization': authorization,
       },
     );
-
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = jsonDecode(response.body);
-      notificationCounter.value = json["row-count"];
+      _trx = NotificationJson.fromJson(jsonDecode(response.body));
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      _dataAvailable.value = _trx != null;
     }
   }
 
@@ -55,12 +61,17 @@ class DashboardController extends GetxController {
 
     return [
       TaskCardData(
-        seeAllFunction: () {},
-        addFunction: () {},
-        title: "Landing page UI Design",
+        seeAllFunction: () {
+          Get.toNamed('/leads');
+        },
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Lead",
         dueDay: 2,
         totalComments: 50,
-        type: TaskType.todo,
+        type: TaskType.inProgress,
         totalContributors: 30,
         profilContributors: [
           const AssetImage(ImageRasterPath.avatar1),
@@ -172,5 +183,44 @@ class DashboardController extends GetxController {
         totalUnread: 1,
       ),
     ];
+  }
+}
+
+class Provider extends GetConnect {
+  Future<void> getLeads() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    //print(authorization);
+    //String clientid = GetStorage().read('clientid');
+    /* final response = await get(
+      'http://' + ip + '/api/v1/windows/lead',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.status.hasError) {
+      return Future.error(response.statusText!);
+    } else {
+      return response.body;
+    } */
+
+    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+      //print(json['window-records'][0]);
+      return json;
+    } else {
+      return Future.error(response.body);
+    }
   }
 }

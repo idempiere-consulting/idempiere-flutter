@@ -2,10 +2,13 @@ library dashboard;
 
 //import 'dart:convert';
 
+import 'dart:convert';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Notification/views/screens/notification_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -23,6 +26,7 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:http/http.dart' as http;
 
 // binding
 part '../../bindings/dashboard_binding.dart';
@@ -66,13 +70,16 @@ class DashboardScreen extends GetView<DashboardController> {
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
-            _buildProfile(data: controller.getProfil()),
+            Obx(() => _buildProfile(
+                data: controller.getProfil(),
+                counter: controller.notificationCounter.value)),
+            //_buildProfile(data: controller.getProfil(), counter: 0),
             const SizedBox(height: kSpacing),
-          //  _buildProgress(axis: Axis.vertical),
-          //  const SizedBox(height: kSpacing),
-          //  _buildTeamMember(data: controller.getMember()),
-          //  const SizedBox(height: kSpacing),
-           /*  Padding(
+            //  _buildProgress(axis: Axis.vertical),
+            //  const SizedBox(height: kSpacing),
+            //  _buildTeamMember(data: controller.getMember()),
+            //  const SizedBox(height: kSpacing),
+            /*  Padding(
               padding: const EdgeInsets.symmetric(horizontal: kSpacing),
               child: GetPremiumCard(onPressed: () {}),
             ), */
@@ -142,7 +149,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 child: Column(
                   children: [
                     const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                    _buildProfile(data: controller.getProfil()),
+                    _buildProfile(data: controller.getProfil(), counter: 0),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),
                     _buildTeamMember(data: controller.getMember()),
@@ -203,7 +210,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 child: Column(
                   children: [
                     const SizedBox(height: kSpacing / 2),
-                    _buildProfile(data: controller.getProfil()),
+                    _buildProfile(data: controller.getProfil(), counter: 0),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),
                     _buildTeamMember(data: controller.getMember()),
@@ -363,12 +370,15 @@ class DashboardScreen extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildProfile({required _Profile data}) {
+  Widget _buildProfile({required _Profile data, required int counter}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
       child: _ProfilTile(
         data: data,
-        onPressedNotification: () {},
+        onPressedNotification: () {
+          Get.toNamed('/Notification');
+        },
+        counter: counter,
       ),
     );
   }
