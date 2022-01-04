@@ -41,7 +41,6 @@ class _Sidebar extends StatelessWidget {
                   label: "Email".tr,
                   totalNotif: 20,
                 ),
-               
                 SelectionButtonData(
                   activeIcon: Icons.attractions,
                   icon: Icons.attractions_outlined,
@@ -82,7 +81,6 @@ class _Sidebar extends StatelessWidget {
                   icon: Icons.real_estate_agent_outlined,
                   label: "DashboardAssetresource".tr,
                 ),
-                
                 SelectionButtonData(
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,
@@ -96,7 +94,49 @@ class _Sidebar extends StatelessWidget {
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
-                Get.toNamed('/${value.label}');
+                //Get.toNamed('/${value.label}');
+                switch (index) {
+                  case 0:
+                    Get.offNamed('/Dashboard');
+                    break;
+                  case 1:
+                    Get.offNamed('/Calendar');
+                    break;
+                  case 2:
+                    Get.offNamed('/Email');
+                    break;
+                  case 3:
+                    Get.offNamed('/CRM');
+                    break;
+                  case 4:
+                    Get.offNamed('/Ticket');
+                    break;
+                  case 5:
+                    Get.offNamed('/Maintenance');
+                    break;
+                  case 6:
+                    Get.offNamed('/PortalMp');
+                    break;
+                  case 7:
+                    Get.offNamed('/Purchase');
+                    break;
+                  case 8:
+                    Get.offNamed('/Supplychain');
+                    break;
+                  case 9:
+                    Get.offNamed('/VehicleEquipment');
+                    break;
+                  case 10:
+                    Get.offNamed('/DashboardAssetresource');
+                    break;
+                  case 11:
+                    Get.offNamed('/Profil');
+                    break;
+                  case 12:
+                    Get.offNamed('/Setting');
+                    break;
+                  default:
+                }
               },
             ),
             const Divider(thickness: 1),
