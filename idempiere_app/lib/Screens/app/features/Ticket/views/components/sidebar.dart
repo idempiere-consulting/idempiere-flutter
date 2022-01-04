@@ -29,32 +29,51 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
+                  label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "TicketTicket",
+                  label: "TicketTicket".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "TicketCustomerTicket",
+                  label: "TicketCustomerTicket".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "TicketTask",
+                  label: "TicketTask".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "TicketResourceAssignment",
+                  label: "TicketResourceAssignment".tr,
                 ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
-                Get.toNamed('/${value.label}');
+                //Get.toNamed('/${value.label}');
+                switch (index) {
+                  case 0:
+                    Get.offNamed('/Dashboard');
+                    break;
+                  case 1:
+                    Get.offNamed('/TicketTicket');
+                    break;
+                  case 2:
+                    Get.offNamed('/TicketCustomerTicket');
+                    break;
+                  case 3:
+                    Get.offNamed('/TicketTask');
+                    break;
+                  case 4:
+                    Get.offNamed('/TicketResourceAssignment');
+                    break;
+
+                  default:
+                }
               },
             ),
             const Divider(thickness: 1),
