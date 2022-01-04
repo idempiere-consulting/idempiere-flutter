@@ -78,7 +78,7 @@ class Records {
   final bool? isVoided;
   final bool? isOverrideCurrencyRate;
   final String? modelname;
-  final String? cInvoiceID;
+  final CInvoiceID? cInvoiceID;
 
   Records({
     this.id,
@@ -192,7 +192,9 @@ class Records {
         dateTrx = json['DateTrx'] as String?,
         isAllocated = json['IsAllocated'] as bool?,
         documentNo = json['DocumentNo'] as String?,
-        cInvoiceID = json['C_Invoice_ID'] as String?,
+        cInvoiceID = (json['C_Invoice_ID'] as Map<String, dynamic>?) != null
+            ? CInvoiceID.fromJson(json['C_Invoice_ID'] as Map<String, dynamic>)
+            : null,
         isOnline = json['IsOnline'] as bool?,
         docStatus = (json['DocStatus'] as Map<String, dynamic>?) != null
             ? DocStatus.fromJson(json['DocStatus'] as Map<String, dynamic>)
@@ -247,7 +249,7 @@ class Records {
         'DateTrx': dateTrx,
         'IsAllocated': isAllocated,
         'DocumentNo': documentNo,
-        'C_Invoice_ID': cInvoiceID,
+        'C_Invoice_ID': cInvoiceID?.toJson(),
         'IsOnline': isOnline,
         'DocStatus': docStatus?.toJson(),
         'IsReceipt': isReceipt,
@@ -606,6 +608,33 @@ class CBPartnerID {
   });
 
   CBPartnerID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CInvoiceID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CInvoiceID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CInvoiceID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

@@ -282,7 +282,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                           ),
                                           Text(
                                             controller.trx.records![index]
-                                                    .cInvoiceID ??
+                                                    .cInvoiceID?.identifier ??
                                                 "??",
                                             style: const TextStyle(
                                                 color: Colors.white),
