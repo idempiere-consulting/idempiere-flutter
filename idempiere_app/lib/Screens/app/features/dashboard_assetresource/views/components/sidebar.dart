@@ -31,64 +31,6 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.arrowBackOutline,
                   label: "Dashboard",
                 ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "CRM",
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.paid,
-                  icon: Icons.paid_outlined,
-                  label: "Maintenence",
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "DashboardAssetresource",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Clienti",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Task&Appuntamenti",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Offerte",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "ListinoProdotti",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Fattura",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Incassi",
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: Icons.person_outlined,
-                  label: "Provvigioni",
-                  totalNotif: 20,
-                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");

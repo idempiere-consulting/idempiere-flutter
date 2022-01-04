@@ -29,22 +29,35 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
+                  label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "VehicleEquipmentVehicle",
+                  label: "VehicleEquipmentVehicle".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "VehicleEquipmentEquipment",
+                  label: "VehicleEquipmentEquipment".tr,
                 ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
-                Get.toNamed('/${value.label}');
+                //Get.toNamed('/${value.label}');
+                switch (index) {
+                  case 0:
+                    Get.offNamed('/Dashboard');
+                    break;
+                  case 1:
+                    Get.offNamed('/VehicleEquipmentVehicle');
+                    break;
+                  case 2:
+                    Get.offNamed('/VehicleEquipmentEquipment');
+                    break;
+
+                  default:
+                }
               },
             ),
             const Divider(thickness: 1),
