@@ -181,7 +181,7 @@ Select count(*),
 
 ### Clienti [R](CUD) !!!
 
-* Stato/note : Non visualizzo metodo, termini e indirizzo .. fare vista ?
+* Stato/note : Non visualizzo metodo, termini e indirizzo 
 * Descrizione : Gestione Completa Bussiness Partner Clienti
 * Nome Oggetto : BusinessPartner
 * API model : c_bpartner - Filtro fisso : iscustomer=Y and isactive='Y'
