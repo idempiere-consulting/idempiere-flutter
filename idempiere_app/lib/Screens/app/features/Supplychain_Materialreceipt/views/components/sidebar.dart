@@ -29,27 +29,46 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
+                  label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "SupplychainProductwarehouse",
+                  label: "SupplychainProductwarehouse".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "SupplychainInventory",
+                  label: "SupplychainInventory".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.arrowBack,
-                  icon: EvaIcons.arrowBackOutline,
-                  label: "SupplychainMaterialreceipt",
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "SupplychainMaterialreceipt".tr,
                 ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
-                Get.toNamed('/${value.label}');
+                //Get.toNamed('/${value.label}');
+                switch (index) {
+                  case 0:
+                    Get.offNamed('/Dashboard');
+                    break;
+
+                  case 1:
+                    Get.offNamed('/SupplychainProductwarehouse');
+                    break;
+
+                  case 2:
+                    Get.offNamed('/SupplychainInventory');
+                    break;
+
+                  case 3:
+                    Get.offNamed('/SupplychainMaterialreceipt');
+                    break;
+
+                  default:
+                }
               },
             ),
             const Divider(thickness: 1),
