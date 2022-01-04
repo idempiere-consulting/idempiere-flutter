@@ -1450,8 +1450,13 @@ get API :
 * Nome Oggetto : Server Option
 * API model :  Filtro fisso :
   da 1-30 Y/N moduli (Crm,Vendite,...)
-  1 CRM Y/N
-  2 (libero)
+  1 Calendar : CRUD        
+  2 Email R
+  -CRM --------------------
+  3 LEAD CRUD [A/T/M] 
+  4 Contatti
+  5 
+  
   3 Ticket-Task-Ore Y/N
   4 Manutenzione-Tecnico Y/N
   5 Manutenzione-Portale Y/N
@@ -1469,6 +1474,8 @@ get API :
   31 ##FilterAll  Y/N
   32-33-34-35-36-37 #BasePriceList : 1000023
   38 #OfferDays :30
+
+10000000000000
 
 #### - Opzioni Utente
 
