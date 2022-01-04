@@ -29,37 +29,37 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
+                  label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "PortalMpInvoicepo",
+                  label: "PortalMpInvoicepo".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "PortalMpPortaloffer",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.arrowBack,
-                  icon: EvaIcons.arrowBackOutline,
-                  label: "",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.arrowBack,
-                  icon: EvaIcons.arrowBackOutline,
-                  label: "",
-                ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.arrowBack,
-                  icon: EvaIcons.arrowBackOutline,
-                  label: "",
+                  label: "PortalMpPortaloffer".tr,
                 ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
-                Get.toNamed('/${value.label}');
+                //Get.toNamed('/${value.label}');
+                switch (index) {
+                  case 0:
+                    Get.offNamed('/Dashboard');
+                    break;
+
+                  case 1:
+                    Get.offNamed('/PortalMpInvoicepo');
+                    break;
+
+                  case 2:
+                    Get.offNamed('/PortalMpPortaloffer');
+                    break;
+
+                  default:
+                }
               },
             ),
             const Divider(thickness: 1),
