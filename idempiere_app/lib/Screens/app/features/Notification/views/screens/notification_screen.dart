@@ -60,6 +60,19 @@ class NotificationScreen extends GetView<NotificationController> {
             Get.back();
           },
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
+                controller.readAllNotifications();
+              },
+              icon: const Icon(
+                Icons.checklist,
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
@@ -78,7 +91,9 @@ class NotificationScreen extends GetView<NotificationController> {
                               controller.trx.records![index].recordName!;
                           return Dismissible(
                             key: Key(item),
-                            onDismissed: (direction) {},
+                            onDismissed: (direction) {
+                              controller.sendReadNotification(index);
+                            },
                             child: Card(
                               elevation: 8.0,
                               margin: const EdgeInsets.symmetric(
@@ -87,6 +102,9 @@ class NotificationScreen extends GetView<NotificationController> {
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ListTile(
+                                    onTap: () {
+                                      controller.getToNotificationRecord(index);
+                                    },
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 20.0, vertical: 10.0),
                                     leading: Container(

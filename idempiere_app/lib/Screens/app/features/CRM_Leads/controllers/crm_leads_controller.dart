@@ -94,12 +94,20 @@ class CRMLeadController extends GetxController {
 
   Future<void> getLeads() async {
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and AD_User_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+        '/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(
       url,
       headers: <String, String>{

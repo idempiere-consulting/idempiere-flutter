@@ -19,6 +19,85 @@ class NotificationController extends GetxController {
   NotificationJson get trx => _trx;
   //String get value => _value.toString();
 
+  sendReadNotification(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var msg;
+    switch (_trx.records![index].docType) {
+      case "LEAD":
+        msg = jsonEncode({
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_User_ID": {"id": GetStorage().read("userId")},
+          "DocTypeName": "LEAD",
+          "Record_ID": {"id": _trx.records![index].id},
+          "AD_Table_ID": "642",
+          "Updated": _trx.records![index].updated
+        });
+        break;
+      case "OPPORTUNITY":
+        msg = jsonEncode({
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_User_ID": {"id": GetStorage().read("userId")},
+          "DocTypeName": "OPPORTUNITY",
+          "Record_ID": {"id": _trx.records![index].id},
+          "AD_Table_ID": "642",
+          "Updated": _trx.records![index].updated
+        });
+        break;
+      default:
+    }
+    var url = Uri.parse('http://' + ip + '/api/v1/models/lit_mobile_isread/');
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      print(response.body);
+    } else {
+      response.body;
+      throw Exception('Failed to send notification');
+    }
+  }
+
+  readAllNotifications() {
+    int count = _trx.rowcount!;
+    _dataAvailable.value = false;
+
+    if (count > 0) {
+      for (var i = 0; i < count; i++) {
+        sendReadNotification(i);
+      }
+    }
+    Get.back();
+    Get.snackbar(
+      "Done!",
+      "All Notifications Dismissed",
+      isDismissible: true,
+      icon: const Icon(
+        Icons.done,
+        color: Colors.green,
+      ),
+    );
+  }
+
+  getToNotificationRecord(int index) {
+    sendReadNotification(index);
+    switch (_trx.records![index].docType) {
+      case "LEAD":
+        Get.offNamed('/Lead',
+            arguments: {"notificationId": _trx.records![index].id});
+
+        break;
+      default:
+    }
+  }
+
   Future<void> getNotifications() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
