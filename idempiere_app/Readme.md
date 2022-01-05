@@ -667,7 +667,7 @@ get API :
 ### Ticket (portale) TBD
 
 
-#### Ticket (portale) TBD
+#### Ticket (portale) [](CRUD)
 
 * Stato/note : Definito / 10%
 * Descrizione :
@@ -750,42 +750,9 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
-##  5 Formazione
-Nome Oggetto : Course
-get API :
+##   Formazione Portale
 
-#### - Contratto di Formazione (CRUD)
-* Nome Oggetto : CourseContract
-* API model : c_contract Filtro fisso :
-
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
-* [ ] Ricerca : 
-* [ ] (R)Visualizzare Pagamento
-    [ ] Nr Documento
-* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
-* [ ] (U)Modificare ...
-* [ ] (P)...
-
-
-#### - Corsi di Formazione
-
-* Stato/note :  / 10%
-* Nome Oggetto : CourseTraining
-* API model : MP_Maintain  .. Filtro fisso :
-
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
-* [ ] Ricerca : 
-* [ ] (R)Visualizzare Pagamento
-    [ ] Nr Documento
-* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
-* [ ] (U)Modificare ...
-* [ ] (P)...
-
-##  6 Formazione Portale
-
-#### - Corsi in Scadenza
+#### - Corsi di Formazione 
 
 * Stato/note :  / 10%
 * Nome Oggetto :
@@ -815,7 +782,24 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
-##  7 Formazione Corsista
+
+#### - Proposta Nuovi Corsi
+
+* Stato/note :  / 10%
+* Nome Oggetto : CourseTraining
+* API model : MP_Maintain  .. Filtro fisso :
+
+* [ ] Filtro Base = ???
+* [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
+
+##  5 Formazione Corsista
 
 #### - Presenza Corso
 
@@ -848,7 +832,7 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
-##  8 Acquisti 
+##  6 Acquisti 
 
 #### - Lead Fornitore [R] (CUD)
 
@@ -931,7 +915,7 @@ get API :
 
 
 
-## 9  Logistica
+## 7  Logistica
 
 #### - Prodotto / Giacenza
 
@@ -949,20 +933,7 @@ get API :
 * [ ] (P)...
 
 
-#### - Inventario
 
-* Stato/note :  / 10%
-* Nome Oggetto : inventory
-* API model :   .. Filtro fisso :
-
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
-* [ ] Ricerca : 
-* [ ] (R)Visualizzare Pagamento
-    [ ] Nr Documento
-* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
-* [ ] (U)Modificare ...
-* [ ] (P)...
 
 
 #### - Spedizione Prodotti
@@ -980,6 +951,20 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
+#### - Entrata Merce
+
+* Stato/note : Definito / 10%
+* Nome Oggetto : materialreceipt
+* API model :   .. Filtro fisso :
+
+* [ ] Filtro Base = ???
+* [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 
 #### - Trasferimento
 
@@ -1012,11 +997,10 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
+#### - Inventario
 
-#### - Entrata Merce
-
-* Stato/note : Definito / 10%
-* Nome Oggetto : materialreceipt
+* Stato/note :  / 10%
+* Nome Oggetto : inventory
 * API model :   .. Filtro fisso :
 
 * [ ] Filtro Base = ???
@@ -1030,7 +1014,8 @@ get API :
 
 
 
-##  10 Mezzi e Attrezzature
+
+##  8 Mezzi e Attrezzature
 
 #### - Mezzi
 
@@ -1100,7 +1085,7 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
-##  11 Produzione
+##  9 Produzione
 
 #### - Ordine di Produzione
 
@@ -1173,7 +1158,7 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
-##  12 Contabilità 
+##  10 Contabilità 
 
 * Nome Oggetto : Finance
 #### - Fattura di Acquisto
@@ -1263,7 +1248,7 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
-## 13 Risorse Umane
+## 11 Risorse Umane
 * Stato/note : Definito / 10%
 * Nome Oggetto : HR
 
@@ -1363,7 +1348,7 @@ get API :
 * [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
 * [ ] (U)Modificare ...
 * [ ] (P)...
-## Dipendente
+## 12 Dipendente
 
 #### - Bacheca Personale
 
@@ -1442,6 +1427,68 @@ get API :
 * [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
 * [ ] (U)Modificare ...
 * [ ] (P)...
+
+## 13 Punto Vendita
+
+#### Ordine da PV
+* Stato/note : DA DEFINIRE  / 10%
+* Nome Oggetto :
+* API model :   .. Filtro fisso :
+
+* [ ] Filtro Base = ???
+* [ ] Filtri Avanzata: ???
+  Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
+#### Trasferimento PV
+* Stato/note : DA DEFINIRE  / 10%
+* Nome Oggetto :
+* API model :   .. Filtro fisso :
+
+* [ ] Filtro Base = ???
+* [ ] Filtri Avanzata: ???
+  Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+#### Consumo PV
+* Stato/note : DA DEFINIRE  / 10%
+* Nome Oggetto :
+* API model :   .. Filtro fisso :
+
+* [ ] Filtro Base = ???
+* [ ] Filtri Avanzata: ???
+  Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+* [ ] #### Consumo PV
+* Stato/note : DA DEFINIRE  / 10%
+* Nome Oggetto :
+* API model :   .. Filtro fisso :
+
+#### Reso Fornitore
+
+* [ ] Filtro Base = ???
+* [ ] Filtri Avanzata: ???
+  Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
 ## 99 Setup e Opzioni
 
 #### - Opzioni Server (Client)
@@ -1471,82 +1518,143 @@ CRUD=1111=F
 ***********************
 ---1 = Team 
 --1- = All
-0000=0   Solo Miei (Default) 
-0001=1   Solo Team
-0010=2   Solo All
-0011=3   Team+All + Miei(Default)
+0000=0   Solo Miei 
+0001=1   Team + Miei
+0010=2   All + Miei
+0011=3   All + Team + Miei
+0100=4   Complete + Miei
+0101=5   Complete + Team + Miei
+0110=6   Complete + All + Miei
+0111=7   Complete + All + Team + Miei
+
 ************************
-  1 Calendar 		: F (CRUD)  
-  2 Email    		: F
-  3 CRM*****************: 1 ************ 1 CRM
-  4 LEAD  		: F3
-  5 Contatti    	: F3
-  6 Clienti		: F3
+  1 Calendar 		    : F (CRUD)  
+  2 Email    		    : F
+  3 CRM*****************: 1 *** 1 CRM
+  4 LEAD  		        : F3 
+  5 Contatti    	    : F3
+  6 Clienti		        : F3
   7 Task Lead(JPTODO)	: F3
-  8 Opportunità 	: F3
+  8 Opportunità 	    : F3
   9 Offerta di Vendita 	: F3
  10 Listino Prodotti	: 4
- 11 DDT			: F3
- 12 FDV			: 4
- 13 Incasso		: F3
- 14 Provvigione		: 4
- 15 ..			: 
- 16 ..			:
- 17 Ticket**************: 1 *********** 2 TICKET
- 16 Ticketnew/Request	: F3
- 17 TaskTodo		: F3
- 18 Ore			: F3
- 19 ..
- 20 ..	
- 21 Manutenzione Tecnico: 1 *********** 3 MANUT. TECNICO
- 22 Cal. Tecnico (JPTODO):F3
- 23 Intervendo di manutenzione : F3
- 24 Anomalia  
- 25 Magazino Furgone
- 26 Prelievo
- 27 Carocp scarico
- 28 carico scheda tecnica
- 29 ..
- 30 ..
- 31 Portale cliente*******:1 *********** 4 PORTALE CLIENTE
- 32
- 33
- 34
- 35
- 36
- 37
- 38
- 39
- 40
- 41GROUPSANDREA
- 42 
- 43
- 44
- 45
+ 11 Doc. di Trasporto   : F3
+ 12 Fatt.di Vendita 	: 4
+ 13 Incasso		        : F3
+ 14 Provvigione		    : 4
+ 15 ..			        : 0 
+ 16 ..			        : 0
+ 17 Ticket**************: 1 *** 2 Ticket 
+ 18 Ticketnew/Request	: F3
+ 19 TaskTodo		    : F3
+ 20 Ore			        : F3
+ 21 ..
+ 22 ..	
+ 23 Manut. Tecnico******: 1 *** 3 Man.Tecnico
+ 24 Cal. Tecnico        : F3
+ 25 Int. di manutenzione: F3
+ 26 Anomalia            : F3
+ 27 Magazino Furgone    : F
+ 28 Prelievo            : F 
+ 29 Carico/scarico      : F
+ 30 carico scheda tecnica
+ 31 ..
+ 32 ..
+ 33 Portale cliente*****: 1 *** 4 Portale Cliente
+ -- sezione dashboard
+ 34 News                : R
+ 35 Fatture di Acquisto : R
+ 36 Indicatori          : 1
+ 37 Offerta di Vendita  : R
+ -- sezione ticket
+ 38 Ticket              : F
+ -- sezione contratto e manutenzione
+ 39 Contratto           : R
+ 40 Manutenzione        : R
+ 41 Anomalie            : R
+ --- sezione formazione
+ 42 Corsi di Formazione : R 
+ 43 Corsisti e Attestati: R
+ 44 Proposta Nuovi Corsi: R
+ 45 
  46
  47
  48
  49
  50
- 51 Formazione*********** : 1 *********** 5 FORMAZIONE
- 52 Contrato di formazione : F3
- 53 Corsi di formazione
- 54 
- 55 Formazione Portale Y/N
- 56 Formazione Corsista Y/N
- 61 cquisti Y/N
-  10 Logistica Y/N
-  11 Mezzi e Attrezzatura Y/N
-  12 Prodzione Y/N
-  13 Contabilità Y/N
-  14 Risorse Umane Y/N
-  15 Dipendente Y/N
-  16-30 (libero)
-  31 ##FilterAll  Y/N
-  32-33-34-35-36-37 #BasePriceList : 1000023
-  38 #OfferDays :30
+ 51
+ 52
+ 53 Formazione Corsita***: 1 *** 5 Formazione Corsista
+ 54 Presenza Corso       : F3
+ 55 Attestato
+ 56 
+ 57
+ 58
+ 59 Acquisti ************: 1 *** 6 Acquisti
+ 60 Lead Fornitore       : F
+ 61 Prodotto             : R
+ 62 Prodotti Sottoscarta : R
+ 63 
+ 64 Logistica ***********: 1 *** 7 Logistica
+ 65 Prodotto             : F
+ 67 Spedizione Prodotti  :
+ 68 Entrata Merci        :
+ 68 Trasferimento        :
+ 69 Consumo              :
+ 66 Inventario           :
+ 67
+ 68
+ 69 Mezzi ***************: 1 *** 8 Mezzi e Attrezzatura
+ 70 Mezzi
+ 71 Attrezzatura
+ 72 Presa in Carico/Spostamento
+ 73 Scadenze
+ 74
+ 75
+ 76 Prodzione*********** : 1 *** 9 Produzione
+ 77 Ordine di Prodzione
+ 78 Prelievo
+ 79 Dichiarazione di Produzione
+ 80 Preliveo e Dichiarazione
+ 81 Avanzamento di Produzione
+ 82
+ 83
+ 84 Contabilità********* : 1 *** 10 Contabilità
+ 85 Fatture di Acquisto
+ 86 Fatture di Vendita
+ 87 Incassi e Pagamenti
+ 88 Partite Aperte
+ 89 Movimenti Bancari
+ 90 Cash Flow
+ 91
+ 92
+ 93 Risorse Umane ****** : 1 *** 11 Risorse Umane
+ 94 Ritardi e Assenze 
+ 95 Chat
+ 96 Ticket HR
+ 97 Scheda Dipendente
+ 98 Dotazione Dipendente
+ 99 Bacheca 
+ 100 Ricerca Personale
+ 101
+ 102
+ 103
+ 104 Dipendente *******: 1 *** 12 Dipendente
+ 105 Bacheca Personale
+ 106 Timbracartellino 
+ 107 Richiesta Permesso
+ 108 Sondaggi
+ 109 Armadietto
+ 110
+ 111
+ 112 Punto Vendita *** : 1 **  13 Punto Vendita
+ 113 Ordine da PV
+ 114 Trasferimento PV
+ 115 Consumo PV
+ 116 Reso Fornitore
+ 117
 
-10000000000000
+
 
 #### - Opzioni Utente
 
