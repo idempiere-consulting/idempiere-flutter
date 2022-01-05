@@ -411,11 +411,11 @@ Nome Oggetto : Ticket
 get API : Ticket (count(*),count(*)Miei, Count(*)Last 7day,
 Ticket
 
-### Ticket  [..](CRUD)
+### Ticket New [..](CRUD)
 
 * Stato/note : 
 * Descrizione :
-* Nome Oggetto :Ticket
+* Nome Oggetto : TicketNew
 * API model :   R_Request Filtro fisso : salesrepo_id=login or Team 
 
 * [ ] Filtro Base = TIPO
@@ -433,7 +433,7 @@ Ticket
 
 * Stato/note : Definito / 10%
 * Descrizione :
-* Nome Oggetto : Task
+* Nome Oggetto : taskTODO
 * API model :   JP_Todo Filtro fisso :
 
 * [ ] Filtro Base = ???
@@ -444,6 +444,7 @@ Ticket
 * [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
 * [ ] (U)Modificare ...
 * [ ] (P)...
+
 ### Riepilogo Ore [] (CRUD) 
 
 * Stato/note : 
