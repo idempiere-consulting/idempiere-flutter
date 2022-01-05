@@ -35,6 +35,47 @@ class _BodyState extends State<Body> {
     checkboxState = GetStorage().read('checkboxLogin') ?? false;
   }
 
+  getLoginPermission() async {
+    String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+      if (json["records"][0]["IsMobileEnabled"] == true) {
+        String permissions = json["records"][0]["lit_mobilerole"];
+        List<String> list = permissions.split("-");
+        /* print(int.parse(list[0], radix: 16)
+            .toRadixString(2)
+            .padLeft(4, "0")
+            .toString()); */
+        GetStorage().write('permission', list);
+        Get.offAllNamed('/Dashboard');
+      } else {
+        Get.snackbar(
+          "Errore!",
+          "Account senza Codice di Autenticazione valido",
+          icon: const Icon(
+            Icons.lock,
+            color: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   checkSavedLogin() {
     //print(GetStorage().read("maial"));
     if (user != null && password != null) {
@@ -105,7 +146,8 @@ class _BodyState extends State<Body> {
           //print(json);
           GetStorage().write("token", json["token"]);
           GetStorage().write("userId", json["userId"]);
-          Get.offAndToNamed("/Dashboard");
+          //Get.offAndToNamed("/Dashboard");
+          getLoginPermission();
         } else {
           // If the server did not return a 200 OK response,
           // then throw an exception.

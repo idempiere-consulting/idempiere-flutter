@@ -1,12 +1,14 @@
 part of dashboard;
 
 class _Sidebar extends StatelessWidget {
-  const _Sidebar({
+  _Sidebar({
     required this.data,
     Key? key,
   }) : super(key: key);
 
   final ProjectCardData data;
+
+  final List<dynamic> list = GetStorage().read('permission');
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,13 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.attractions,
                   icon: Icons.attractions_outlined,
                   label: "CRM".tr,
+                  visible: int.parse(list[0], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.sell,
