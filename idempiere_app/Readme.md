@@ -1478,7 +1478,7 @@ CRUD=1111=F
 ************************
   1 Calendar 		: F (CRUD)  
   2 Email    		: F
-  3 CRM*****************: 1 
+  3 CRM*****************: 1 ************ 1 CRM
   4 LEAD  		: F3
   5 Contatti    	: F3
   6 Clienti		: F3
@@ -1492,13 +1492,13 @@ CRUD=1111=F
  14 Provvigione		: 4
  15 ..			: 
  16 ..			:
- 17 Ticket**************: 1
+ 17 Ticket**************: 1 *********** 2 TICKET
  16 Ticketnew/Request	: F3
  17 TaskTodo		: F3
  18 Ore			: F3
  19 ..
  20 ..	
- 21 Manutenzione Tecnico: 1 
+ 21 Manutenzione Tecnico: 1 *********** 3 MANUT. TECNICO
  22 Cal. Tecnico (JPTODO):F3
  23 Intervendo di manutenzione : F3
  24 Anomalia  
@@ -1508,7 +1508,7 @@ CRUD=1111=F
  28 carico scheda tecnica
  29 ..
  30 ..
- 31 Portale cliente*******:1
+ 31 Portale cliente*******:1 *********** 4 PORTALE CLIENTE
  32
  33
  34
@@ -1518,7 +1518,7 @@ CRUD=1111=F
  38
  39
  40
- 41
+ 41GROUPSANDREA
  42 
  43
  44
@@ -1528,13 +1528,13 @@ CRUD=1111=F
  48
  49
  50
- 51  Formazione*********** : 1
- 52  Contrato di formazione : F3
+ 51 Formazione*********** : 1 *********** 5 FORMAZIONE
+ 52 Contrato di formazione : F3
  53 Corsi di formazione
  54 
-  7 Formazione Portale Y/N
-  8 Formazione Corsista Y/N
-  9 Acquisti Y/N
+ 55 Formazione Portale Y/N
+ 56 Formazione Corsista Y/N
+ 61 cquisti Y/N
   10 Logistica Y/N
   11 Mezzi e Attrezzatura Y/N
   12 Prodzione Y/N
