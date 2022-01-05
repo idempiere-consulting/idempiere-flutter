@@ -1381,9 +1381,9 @@ get API :
 * [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
 * [ ] (U)Modificare ...
 * [ ] (P)...
+
 #### - Timbracartellino (Qrcode, GPS,Foto)
 
-!!! SSDFSDFSDFSDFFSD
 
 * Stato/note :  / 10%
 * Nome Oggetto :
@@ -1451,17 +1451,87 @@ get API :
 * Nome Oggetto : Server Option
 * API model :  Filtro fisso :
   da 1-30 Y/N moduli (Crm,Vendite,...)
-  1 Calendar : CRUD        
-  2 Email R
-  -CRM --------------------
-  3 LEAD CRUD [A/T/M] 
-  4 Contatti
-  5 
-  
-  3 Ticket-Task-Ore Y/N
-  4 Manutenzione-Tecnico Y/N
-  5 Manutenzione-Portale Y/N
-  6 Formazione Y/N
+  ismobileenable =Y/M
+************************
+---D=0001=1
+--U-=0010=2
+--UD=0011=3
+-R--=0100=4
+-R-D=0101=5
+-RU-=0110=6
+-RUD=0111=7
+C---=1000=8
+C--D=1001=9
+C-U-=1010=A
+C-UD=1011=B
+CR--=1100=C
+CR-D=1101=D
+CRU-=1110=E
+CRUD=1111=F 
+***********************
+---1 = Team 
+--1- = All
+0000=0   Solo Miei (Default) 
+0001=1   Solo Team
+0010=2   Solo All
+0011=3   Team+All + Miei(Default)
+************************
+  1 Calendar 		: F (CRUD)  
+  2 Email    		: F
+  3 CRM*****************: 1 
+  4 LEAD  		: F3
+  5 Contatti    	: F3
+  6 Clienti		: F3
+  7 Task Lead(JPTODO)	: F3
+  8 Opportunità 	: F3
+  9 Offerta di Vendita 	: F3
+ 10 Listino Prodotti	: 4
+ 11 DDT			: F3
+ 12 FDV			: 4
+ 13 Incasso		: F3
+ 14 Provvigione		: 4
+ 15 ..			: 
+ 16 ..			:
+ 17 Ticket**************: 1
+ 16 Ticketnew/Request	: F3
+ 17 TaskTodo		: F3
+ 18 Ore			: F3
+ 19 ..
+ 20 ..	
+ 21 Manutenzione Tecnico: 1 
+ 22 Cal. Tecnico (JPTODO):F3
+ 23 Intervendo di manutenzione : F3
+ 24 Anomalia  
+ 25 Magazino Furgone
+ 26 Prelievo
+ 27 Carocp scarico
+ 28 carico scheda tecnica
+ 29 ..
+ 30 ..
+ 31 Portale cliente*******:1
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42 
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51  Formazione*********** : 1
+ 52  Contrato di formazione : F3
+ 53 Corsi di formazione
+ 54 
   7 Formazione Portale Y/N
   8 Formazione Corsista Y/N
   9 Acquisti Y/N
