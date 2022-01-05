@@ -42,8 +42,8 @@ import 'package:idempiere_app/Screens/app/features/Supplychain_Productwarehouse/
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Customer_Ticket/views/screens/ticket_customer_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Ticket_Task/views/screens/ticket_task_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Ticket_Ticket/views/screens/ticket_ticket_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Task_ToDo/views/screens/ticket_task_todo_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Ticket_New/views/screens/ticket_ticket_new_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment/views/screens/vehicle_equipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Equipment/views/screens/vehicle_equipment_equipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/views/screens/vehicle_equipment_vehicle_screen.dart';
@@ -153,9 +153,9 @@ class MyApp extends StatelessWidget {
           binding: TicketBinding(),
         ),
         GetPage(
-          name: '/TicketTicket',
-          page: () => const TicketTicketScreen(),
-          binding: TicketTicketBinding(),
+          name: '/TicketTicketNew',
+          page: () => const TicketTicketNewScreen(),
+          binding: TicketTicketNewBinding(),
         ),
         GetPage(
           name: '/TicketCustomerTicket',
@@ -163,9 +163,9 @@ class MyApp extends StatelessWidget {
           binding: TicketCustomerTicketBinding(),
         ),
         GetPage(
-          name: '/TicketTask',
-          page: () => const TicketTaskScreen(),
-          binding: TicketTaskBinding(),
+          name: '/TicketTaskToDo',
+          page: () => const TicketTaskToDoScreen(),
+          binding: TicketTaskToDoBinding(),
         ),
         GetPage(
           name: '/TicketResourceAssignment',

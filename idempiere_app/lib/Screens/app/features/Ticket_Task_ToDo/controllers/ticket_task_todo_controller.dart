@@ -1,24 +1,52 @@
 part of dashboard;
 
-class TicketTaskController extends GetxController {
+class TicketTaskToDoController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late OpportunityJson _trx;
+  late TaskToDoJson _trx;
+  var _hasCallSupport = false;
+  //var _hasMailSupport = false;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var adUserId;
+
+  var value = "Tutti".obs;
+
+  var filters = ["Tutti", "Miei" /* , "Team" */];
+  var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    getOpportunities();
+    canLaunch('tel:123').then((bool result) {
+      _hasCallSupport = result;
+    });
+
+    getTaskToDos();
+    getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  OpportunityJson get trx => _trx;
+  TaskToDoJson get trx => _trx;
+  //String get value => _value.toString();
 
-  Future<void> getOpportunities() async {
+  changeFilter() {
+    filterCount++;
+    if (filterCount == 2) {
+      filterCount = 0;
+    }
+
+    value.value = filters[filterCount];
+    getTaskToDos();
+  }
+
+  Future<void> getADUserID() async {
+    var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/c_opportunity');
+    var url = Uri.parse(
+        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -28,8 +56,61 @@ class TicketTaskController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = OpportunityJson.fromJson(jsonDecode(response.body));
-      //print(_trx.rowcount);
+      var json = jsonDecode(response.body);
+
+      adUserId = json["records"][0]["id"];
+
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    }
+  }
+
+  Future<void> makePhoneCall(String phoneNumber) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    if (_hasCallSupport) {
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: phoneNumber,
+      );
+      await launch(launchUri.toString());
+    }
+  }
+
+  Future<void> writeMailTo(String receiver) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'mailto',
+      path: receiver,
+    );
+    await launch(launchUri.toString());
+  }
+
+  Future<void> getTaskToDos() async {
+    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    _dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/JP_ToDo?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      _trx = TaskToDoJson.fromJson(jsonDecode(response.body));
+      //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
@@ -60,13 +141,13 @@ class TicketTaskController extends GetxController {
     return [
       TaskCardData(
         seeAllFunction: () {
-          Get.toNamed('/Ticket');
+          Get.toNamed('/leads');
         },
         addFunction: () {
           //Get.toNamed('/createLead');
           log('hallooooo');
         },
-        title: "Ticket",
+        title: "Lead",
         dueDay: 2,
         totalComments: 50,
         type: TaskType.inProgress,
@@ -79,11 +160,9 @@ class TicketTaskController extends GetxController {
         ],
       ),
       TaskCardData(
-        seeAllFunction: () {
-          Get.toNamed('/TicketTicket');
-        },
+        seeAllFunction: () {},
         addFunction: () {},
-        title: "Ticket TIcket",
+        title: "Landing page UI Design",
         dueDay: -1,
         totalComments: 50,
         totalContributors: 34,
@@ -183,5 +262,44 @@ class TicketTaskController extends GetxController {
         totalUnread: 1,
       ),
     ];
+  }
+}
+
+class Provider extends GetConnect {
+  Future<void> getLeads() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    //print(authorization);
+    //String clientid = GetStorage().read('clientid');
+    /* final response = await get(
+      'http://' + ip + '/api/v1/windows/lead',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.status.hasError) {
+      return Future.error(response.statusText!);
+    } else {
+      return response.body;
+    } */
+
+    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+      //print(json['window-records'][0]);
+      return json;
+    } else {
+      return Future.error(response.body);
+    }
   }
 }

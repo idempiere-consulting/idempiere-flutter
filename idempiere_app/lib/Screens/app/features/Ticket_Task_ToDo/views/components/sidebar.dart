@@ -34,7 +34,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "TicketTicket".tr,
+                  label: "TicketTicketNew".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -44,7 +44,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "TicketTask".tr,
+                  label: "TicketTaskToDo".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -60,13 +60,13 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/Dashboard');
                     break;
                   case 1:
-                    Get.offNamed('/TicketTicket');
+                    Get.offNamed('/TicketTicketNew');
                     break;
                   case 2:
                     Get.offNamed('/TicketCustomerTicket');
                     break;
                   case 3:
-                    Get.offNamed('/TicketTask');
+                    Get.offNamed('/TicketTaskToDo');
                     break;
                   case 4:
                     Get.offNamed('/TicketResourceAssignment');
