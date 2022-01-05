@@ -51,7 +51,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.sell,
                   icon: Icons.sell_outlined,
                   label: "Ticket".tr,
-                  visible: false,
+                  visible: true,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.build,

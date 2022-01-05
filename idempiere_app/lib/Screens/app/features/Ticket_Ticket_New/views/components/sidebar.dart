@@ -32,68 +32,24 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person_add,
+                  activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Lead".tr,
+                  label: "TicketTicketNew".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.paid,
-                  icon: Icons.paid_outlined,
-                  label: "Opportunity".tr,
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "TicketCustomerTicket".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.contact_mail,
-                  icon: Icons.contact_mail_outlined,
-                  label: "ContactBP".tr,
-                  totalNotif: 20,
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "TicketTaskToDo".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.domain,
-                  icon: Icons.domain_outlined,
-                  label: "CustomerBP".tr,
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.task,
-                  icon: Icons.task_outlined,
-                  label: "Task".tr,
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.description,
-                  icon: Icons.description_outlined,
-                  label: "SalesOrder".tr,
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.ballot,
-                  icon: Icons.ballot_outlined,
-                  label: "ProductList".tr,
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.receipt,
-                  icon: Icons.receipt_outlined,
-                  label: "Invoice".tr,
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.payments,
-                  icon: Icons.payments_outlined,
-                  label: "Payment".tr,
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.request_quote,
-                  icon: Icons.request_quote_outlined,
-                  label: "Commission".tr,
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.local_shipping,
-                  icon: Icons.local_shipping_outlined,
-                  label: "Shipment".tr,
-                  totalNotif: 20,
+                  activeIcon: EvaIcons.arrowBack,
+                  icon: EvaIcons.arrowBackOutline,
+                  label: "TicketResourceAssignment".tr,
                 ),
               ],
               onSelected: (index, value) {
@@ -104,38 +60,18 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/Dashboard');
                     break;
                   case 1:
-                    Get.offNamed('/Lead');
+                    Get.offNamed('/TicketTicketNew');
                     break;
                   case 2:
-                    Get.offNamed('/Opportunity');
+                    Get.offNamed('/TicketCustomerTicket');
                     break;
                   case 3:
-                    Get.offNamed('/ContactBP');
+                    Get.offNamed('/TicketTaskToDo');
                     break;
                   case 4:
-                    Get.offNamed('/CustomerBP');
+                    Get.offNamed('/TicketResourceAssignment');
                     break;
-                  case 5:
-                    Get.offNamed('/Task');
-                    break;
-                  case 6:
-                    Get.offNamed('/SalesOrder');
-                    break;
-                  case 7:
-                    Get.offNamed('/ProductList');
-                    break;
-                  case 8:
-                    Get.offNamed('/Invoice');
-                    break;
-                  case 9:
-                    Get.offNamed('/Payment');
-                    break;
-                  case 10:
-                    Get.offNamed('/Commission');
-                    break;
-                  case 11:
-                    Get.offNamed('/Shipment');
-                    break;
+
                   default:
                 }
               },
