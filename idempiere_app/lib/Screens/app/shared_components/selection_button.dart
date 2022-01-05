@@ -7,13 +7,14 @@ class SelectionButtonData {
   final IconData icon;
   final String label;
   final int? totalNotif;
+  final bool? visible;
 
-  SelectionButtonData({
-    required this.activeIcon,
-    required this.icon,
-    required this.label,
-    this.totalNotif,
-  });
+  SelectionButtonData(
+      {required this.activeIcon,
+      required this.icon,
+      required this.label,
+      this.totalNotif,
+      this.visible});
 }
 
 class SelectionButton extends StatefulWidget {
@@ -80,27 +81,30 @@ class _Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: (!selected)
-          ? Theme.of(context).cardColor
-          : Theme.of(context).primaryColor.withOpacity(.1),
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        onTap: onPressed,
+    return Visibility(
+      visible: data.visible != null ? data.visible! : true,
+      child: Material(
+        color: (!selected)
+            ? Theme.of(context).cardColor
+            : Theme.of(context).primaryColor.withOpacity(.1),
         borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: const EdgeInsets.all(kSpacing),
-          child: Row(
-            children: [
-              _icon((!selected) ? data.icon : data.activeIcon),
-              const SizedBox(width: kSpacing / 2),
-              Expanded(child: _labelText(data.label)),
-              if (data.totalNotif != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: kSpacing / 2),
-                  child: _notif(data.totalNotif!),
-                )
-            ],
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(10),
+          child: Padding(
+            padding: const EdgeInsets.all(kSpacing),
+            child: Row(
+              children: [
+                _icon((!selected) ? data.icon : data.activeIcon),
+                const SizedBox(width: kSpacing / 2),
+                Expanded(child: _labelText(data.label)),
+                if (data.totalNotif != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: kSpacing / 2),
+                    child: _notif(data.totalNotif!),
+                  )
+              ],
+            ),
           ),
         ),
       ),

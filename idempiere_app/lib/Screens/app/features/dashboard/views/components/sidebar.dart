@@ -40,6 +40,7 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.emailOutline,
                   label: "Email".tr,
                   totalNotif: 20,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.attractions,
@@ -50,46 +51,55 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.sell,
                   icon: Icons.sell_outlined,
                   label: "Ticket".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.build,
                   icon: Icons.build_outlined,
                   label: "Maintenance".tr,
+                  visible: true,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.dashboard,
                   icon: Icons.dashboard_outlined,
                   label: "PortalMp".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.shopping_cart,
                   icon: Icons.shopping_cart_outlined,
                   label: "Purchase".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.local_convenience_store,
                   icon: Icons.local_convenience_store_outlined,
                   label: "Supplychain".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.emoji_transportation,
                   icon: Icons.emoji_transportation_outlined,
                   label: "VehicleEquipment".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.real_estate_agent,
                   icon: Icons.real_estate_agent_outlined,
                   label: "DashboardAssetresource".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,
                   label: "Profil".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.settings,
                   icon: EvaIcons.settingsOutline,
                   label: "Setting".tr,
+                  visible: false,
                 ),
               ],
               onSelected: (index, value) {
