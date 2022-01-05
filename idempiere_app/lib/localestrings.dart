@@ -69,7 +69,6 @@ class LocaleString extends Translations {
           'Shipment': 'Documento di Trasporto',
           'Ticket': 'Ticket',
           'TicketTicketNew': 'Ticket',
-          'TicketCustomerTicket': 'Ticket Cliente',
           'TicketTaskToDo': 'Task',
           'TicketResourceAssignment': 'Ore',
           'Maintenance': 'Intervento',

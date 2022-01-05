@@ -40,7 +40,6 @@ import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/s
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Productwarehouse/views/screens/supplychain_productwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Ticket_Customer_Ticket/views/screens/ticket_customer_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Task_ToDo/views/screens/ticket_task_todo_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Ticket_New/views/screens/ticket_ticket_new_screen.dart';
@@ -156,11 +155,6 @@ class MyApp extends StatelessWidget {
           name: '/TicketTicketNew',
           page: () => const TicketTicketNewScreen(),
           binding: TicketTicketNewBinding(),
-        ),
-        GetPage(
-          name: '/TicketCustomerTicket',
-          page: () => const TicketCustomerTicketScreen(),
-          binding: TicketCustomerTicketBinding(),
         ),
         GetPage(
           name: '/TicketTaskToDo',
