@@ -1546,7 +1546,7 @@ CRUD=1111=F
 ************************
   1 Calendar 		    : F (CRUD)  
   2 Email    		    : F
-  3 CRM*****************: 1 *** 1 CRM
+  3 CRM*****************: 4 *** 1 CRM
   4 LEAD  		        : F3 
   5 Contatti    	    : F3
   6 Clienti		        : F3

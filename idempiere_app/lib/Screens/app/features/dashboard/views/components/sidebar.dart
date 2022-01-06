@@ -36,19 +36,32 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.calendar,
                   icon: EvaIcons.calendarOutline,
                   label: "Calendar".tr,
+                  visible: int.parse(list[0], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.email,
                   icon: EvaIcons.emailOutline,
                   label: "Email".tr,
                   totalNotif: 20,
-                  visible: false,
+                  visible: int.parse(list[1], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.attractions,
                   icon: Icons.attractions_outlined,
                   label: "CRM".tr,
-                  visible: int.parse(list[0], radix: 16)
+                  visible: int.parse(list[2], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
                               .toString()[1] ==
