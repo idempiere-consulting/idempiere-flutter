@@ -832,7 +832,12 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
+<<<<<<< HEAD
 ##  6 Acquisti 
+=======
+##  8 Acquisti 
+Purchase
+>>>>>>> redme
 
 #### - Lead Fornitore [R] (CUD)
 
@@ -915,7 +920,13 @@ get API :
 
 
 
+<<<<<<< HEAD
 ## 7  Logistica
+=======
+## 9  Logistica  
+    Supplychain
+
+>>>>>>> redme
 
 #### - Prodotto / Giacenza
 
@@ -1014,9 +1025,14 @@ get API :
 
 
 
+<<<<<<< HEAD
 
 ##  8 Mezzi e Attrezzature
 
+=======
+##  10 Mezzi e Attrezzature
+Vehicle Equipment
+>>>>>>> redme
 #### - Mezzi
 
 * Stato/note :  Definito/ 10%
