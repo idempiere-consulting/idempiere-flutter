@@ -22,6 +22,13 @@ class _BodyState extends State<Body> {
     ]
   };
 
+  final json2 = {
+    "types": [
+      {"id": "http", "name": "Http"},
+      {"id": "https", "name": "Https"},
+    ]
+  };
+
   changeAppLanguage(String lang) {
     switch (lang) {
       case "it_IT":
@@ -40,17 +47,26 @@ class _BodyState extends State<Body> {
     return dJson.types;
   }
 
+  List<Types>? getProtocolTypes() {
+    var dJson = TypeJson.fromJson(json2);
+
+    return dJson.types;
+  }
+
   late List<Types> dropDownList;
+  late List<Types> protocolDropDownList;
   // ignore: prefer_typing_uninitialized_variables
   var myController;
   String dropdownValue = "";
-
+  String protocolDropdownValue = "";
   @override
   void initState() {
     super.initState();
     dropDownList = getTypes()!;
+    protocolDropDownList = getProtocolTypes()!;
     myController = TextEditingController();
     dropdownValue = GetStorage().read('language') ?? "it_IT";
+    protocolDropdownValue = GetStorage().read('protocol') ?? "http";
   }
 
   @override
@@ -87,6 +103,31 @@ class _BodyState extends State<Body> {
                   //print(dropdownValue);
                 },
                 items: dropDownList.map((list) {
+                  return DropdownMenuItem<String>(
+                    child: Text(
+                      list.name.toString(),
+                    ),
+                    value: list.id,
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Protocollo "),
+              DropdownButton(
+                value: protocolDropdownValue,
+                elevation: 16,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    protocolDropdownValue = newValue!;
+                  });
+                  GetStorage().write('protocol', protocolDropdownValue);
+                  //print(dropdownValue);
+                },
+                items: protocolDropDownList.map((list) {
                   return DropdownMenuItem<String>(
                     child: Text(
                       list.name.toString(),

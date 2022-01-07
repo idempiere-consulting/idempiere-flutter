@@ -16,6 +16,7 @@ class CRMOpportunityController extends GetxController {
   OpportunityJson get trx => _trx;
 
   Future<void> getOpportunities() async {
+    _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' + ip + '/api/v1/models/c_opportunity');

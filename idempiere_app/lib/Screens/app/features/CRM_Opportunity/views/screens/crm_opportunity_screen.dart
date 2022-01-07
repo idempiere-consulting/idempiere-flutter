@@ -77,8 +77,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("LEAD: ${controller.trx.rowcount}")
-                        : const Text("LEAD: ")),
+                        ? Text("OPPORTUNITY: ${controller.trx.rowcount}")
+                        : const Text("OPPORTUNITY: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
@@ -112,7 +112,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         //controller.changeFilter();
                         //print("hello");
                       },
-                      child: Text('filter'),
+                      child: const Text('filter'),
                       //Text(controller.value.value),
                     ),
                   ),

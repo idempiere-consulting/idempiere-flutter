@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/IdempiereUrlSet/idempiere_set_url.dart';
 import 'package:idempiere_app/Screens/Login/login_screen.dart';
 import 'package:idempiere_app/components/rounded_button.dart';
@@ -14,6 +15,9 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    if (GetStorage().read('protocol') == null) {
+      GetStorage().write('protocol', 'http');
+    }
     // This size provide us total height and width of our screen
     return Background(
       child: SingleChildScrollView(

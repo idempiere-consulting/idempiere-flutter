@@ -298,7 +298,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                       ),
                                       Row(
                                         children: [
-                                           Text(
+                                          Text(
                                             "SalesRep".tr,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
