@@ -9,7 +9,7 @@ pre: "<b>90. </b>"
 
  ## Funzionalità da vedere !!! (Vincenzo)
 
-* [ ] Accesso tramite HTTPS
+
 * [ ] Eseguire processo idempiere con parametri APIREST
 * [ ] Attivare Acquisizione Fotocamera e allegare API REST (S2)
   https://docs.flutter.dev/cookbook/plugins/picture-using-camera
