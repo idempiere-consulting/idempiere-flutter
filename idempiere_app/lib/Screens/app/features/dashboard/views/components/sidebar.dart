@@ -73,55 +73,109 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.sell,
                   icon: Icons.sell_outlined,
                   label: "Ticket".tr,
-                  visible: true,
+                  visible: int.parse(list[16], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.build,
                   icon: Icons.build_outlined,
                   label: "Maintenance".tr,
-                  visible: true,
+                  visible: int.parse(list[22], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.dashboard,
                   icon: Icons.dashboard_outlined,
                   label: "PortalMp".tr,
-                  visible: false,
+                  visible: int.parse(list[32], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.shopping_cart,
                   icon: Icons.shopping_cart_outlined,
                   label: "Purchase".tr,
-                  visible: false,
+                  visible: int.parse(list[58], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.local_convenience_store,
                   icon: Icons.local_convenience_store_outlined,
                   label: "Supplychain".tr,
-                  visible: false,
+                  visible: int.parse(list[63], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.emoji_transportation,
                   icon: Icons.emoji_transportation_outlined,
                   label: "VehicleEquipment".tr,
-                  visible: false,
+                  visible: int.parse(list[68], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.real_estate_agent,
                   icon: Icons.real_estate_agent_outlined,
                   label: "DashboardAssetresource".tr,
-                  visible: false,
+                  visible: int.parse(list[2], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,
                   label: "Profil".tr,
-                  visible: false,
+                  visible: int.parse(list[2], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.settings,
                   icon: EvaIcons.settingsOutline,
                   label: "Setting".tr,
-                  visible: false,
+                  visible: int.parse(list[2], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
               ],
               onSelected: (index, value) {
