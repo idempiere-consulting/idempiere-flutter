@@ -16,7 +16,6 @@ pre: "<b>90. </b>"
 * [ ] Allegare Documento (jpg,PDF)  (S2)
 * [ ] Visualizzare Allegato (vedere ticket desktop app) (S2)
   https://docs.flutter.dev/development/accessibility-and-localization/internationalization
-* [ ] Notifiche    (vedere quello fatto con Vincenzo sulla Desktop APP )
 * [ ] Gestione Barcode QRcode (vedi processi produzione)
 * [ ] Chat (wishing list)
 * [ ] Stampa report (da idempiere)  da vedere con AC (TOP)
@@ -24,6 +23,9 @@ pre: "<b>90. </b>"
       https://pub.dev/packages/bluetooth_print
 * [ ] Gestione NFC - Per segnare le ore ? - controllare plugin NFC
 * [ ] Sondaggi https://github.com/quickbirdstudios/survey_kit
+* [ ] FLutter OFFLINE  Token per offline (4 h ) -> sync tabelle
+
+  
 
 ## Login ! (Vincenzo)
 
@@ -907,7 +909,7 @@ Purchase
 
 * Stato/note : Definito / 10%
 * Nome Oggetto :
-* API model :   .. Filtro fisso :
+* API model :  c_order Filtro fisso : issotrx='N'
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -1447,7 +1449,7 @@ Vehicle Equipment
 ## 13 Punto Vendita
 
 #### Ordine da PV
-* Stato/note : DA DEFINIRE  / 10%
+* Stato/note : 
 * Nome Oggetto :
 * API model :   .. Filtro fisso :
 
