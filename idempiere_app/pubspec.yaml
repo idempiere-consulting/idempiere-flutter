@@ -48,6 +48,7 @@ dependencies:
   table_calendar: ^3.0.3
   date_time_picker: ^2.1.0
   camera: ^0.9.4+5
+  video_player: ^2.2.10
 
 dev_dependencies:
   flutter_test:

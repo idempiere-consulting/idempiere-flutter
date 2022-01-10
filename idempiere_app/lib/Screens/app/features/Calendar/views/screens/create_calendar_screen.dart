@@ -17,33 +17,6 @@ class CreateCalendarEvent extends StatefulWidget {
 }
 
 class _CreateCalendarEventState extends State<CreateCalendarEvent> {
-  /* Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-
-      setState(() {
-        adUserId = json["records"][0]["id"];
-      });
-
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-    }
-  } */
-
   createEvent() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -61,7 +34,9 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
       "IsOpenToDoJP": true,
       "JP_ToDo_Type": {"id": "S"},
     });
-    var url = Uri.parse('http://' + ip + '/api/v1/models/jp_todo/');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
+
     //print(msg);
     var response = await http.post(
       url,

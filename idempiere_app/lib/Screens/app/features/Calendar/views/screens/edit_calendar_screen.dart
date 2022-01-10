@@ -18,38 +18,12 @@ class EditCalendarEvent extends StatefulWidget {
 }
 
 class _EditCalendarEventState extends State<EditCalendarEvent> {
-  /* Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-
-      setState(() {
-        adUserId = json["records"][0]["id"];
-      });
-
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-    }
-  } */
-
   deleteEvent() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
     var url =
-        Uri.parse('http://' + ip + '/api/v1/models/jp_todo/${args['id']}');
+        Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/${args['id']}');
     var response = await http.delete(
       url,
       headers: <String, String>{
@@ -96,8 +70,9 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
       "JP_ToDo_Status": {"id": dropdownValue},
       "JP_ToDo_Type": {"id": "S"},
     });
+    final protocol = GetStorage().read('protocol');
     var url =
-        Uri.parse('http://' + ip + '/api/v1/models/jp_todo/${args['id']}');
+        Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/${args['id']}');
     //print(msg);
     var response = await http.put(
       url,

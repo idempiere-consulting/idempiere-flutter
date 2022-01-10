@@ -61,7 +61,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Future<void> getAllEvents() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-       final protocol = GetStorage().read('protocol');
+    final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo');
     var response = await http.get(
       url,

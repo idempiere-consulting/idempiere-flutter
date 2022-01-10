@@ -19,9 +19,10 @@ class _LoginOrganizationsState extends State<LoginOrganizations> {
     String clientid = GetStorage().read('clientid');
     String roleid = GetStorage().read('roleid');
     String authorization = 'Bearer ' + GetStorage().read('token1');
+    final protocol = GetStorage().read('protocol');
     // ignore: unused_local_variable
     List posts = [];
-    var url = Uri.parse('http://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/auth/organizations?client=' +
         clientid +
@@ -38,7 +39,7 @@ class _LoginOrganizationsState extends State<LoginOrganizations> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      print(response.body);
+      //print(response.body);
       var json = jsonDecode(response.body);
       var posts = json['organizations'];
 

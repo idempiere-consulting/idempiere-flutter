@@ -18,10 +18,11 @@ class _LoginRolesState extends State<LoginRoles> {
     String ip = GetStorage().read('ip');
     String clientid = GetStorage().read('clientid');
     String authorization = 'Bearer ' + GetStorage().read('token1');
+    final protocol = GetStorage().read('protocol');
     // ignore: unused_local_variable
     List posts = [];
-    var url =
-        Uri.parse('http://' + ip + '/api/v1/auth/roles?client=' + clientid);
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/auth/roles?client=' + clientid);
 
     var response = await http.get(
       url,

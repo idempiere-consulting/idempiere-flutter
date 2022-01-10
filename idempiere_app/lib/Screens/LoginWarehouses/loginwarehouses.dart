@@ -17,7 +17,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId');
 
@@ -60,8 +61,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     String roleid = GetStorage().read('roleid');
     String organizationid = GetStorage().read('organizationid');
     String authorization = 'Bearer ' + GetStorage().read('token1');
+    final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('http://' + ip + '/api/v1/auth/tokens');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/auth/tokens');
     final msg = jsonEncode({
       "clientId": clientid,
       "roleId": roleid,
@@ -102,9 +104,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     String roleid = GetStorage().read('roleid');
     String organizationid = GetStorage().read('organizationid');
     String authorization = 'Bearer ' + GetStorage().read('token1');
+    final protocol = GetStorage().read('protocol');
     // ignore: unused_local_variable
     List posts = [];
-    var url = Uri.parse('http://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/auth/warehouses?client=' +
         clientid +

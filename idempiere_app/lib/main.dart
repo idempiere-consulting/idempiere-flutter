@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/Camera/camera.dart';
 //import 'package:idempiere_app/Screens/IdempiereUrlSet/idempiere_set_url.dart';
 //import 'package:idempiere_app/Screens/Login/login_screen.dart';
 //import 'package:idempiere_app/Screens/LoginOrganizations/loginorganizations_screen.dart';
@@ -275,6 +276,10 @@ class MyApp extends StatelessWidget {
           name: '/DashboardAssetresource',
           page: () => const DashboardAssetresourceScreen(),
           binding: DashboardAssetresourceBinding(),
+        ),
+        GetPage(
+          name: '/Camera',
+          page: () => const CameraExampleHome(),
         ),
       ],
       /* routes: {
