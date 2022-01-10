@@ -674,14 +674,15 @@ get API :
 * Stato/note : Definito / 10%
 * Descrizione :
 * Nome Oggetto : CustomerTicket
-* API model :   .. Filtro fisso :
+* API model :  r_request  Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
 * [ ] * [ ] Ricerca : 
 * [ ] (R)Visualizzare Pagamento
     [ ] Nr Documento
-* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (C)Crea Ticket + allega foto
+  
 * [ ] (U)Modificare ...
 * [ ] (P)...
   
