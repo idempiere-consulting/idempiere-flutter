@@ -1448,20 +1448,33 @@ Vehicle Equipment
 
 ## 13 Punto Vendita
 
-#### Ordine da PV
+#### Ordine da PV (CRUD)
 * Stato/note : 
-* Nome Oggetto :
-* API model :   .. Filtro fisso :
+* Nome Oggetto : MOrderPO
+* API model :   lit_c_order Filtro fisso : issotrx=N
+* (copy from c_order )
 
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
-  Formazione/Documenti ( documenti, Video x tutti / ufficio / ruolo )
-* [ ] Ricerca : 
-* [ ] (R)Visualizzare Pagamento
+* [ ] Filtro Base = Bozza/InCompletamento - Completati last 7 days
+* [ ] Filtri Avanzata: TBD
+* [ ] Ricerca : Documentno,
+* [ ] (R)Visualizzare Ordine Mobile
     [ ] Nr Documento
-* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+    [ ] Rappresentate/Operatore=LoginUser
+    [ ] Tipo Documento = Ordine di acquisto
+    [ ] Stato del Documento
+    [ ] data Ordine
+    [ ] Date Prevosta Consegna
+    [ ] Totale Ordine
+* [ ] Linea
+*   [ ] Prodotto
+*   [ ] Qtà
+*   [ ] Udm
+*   [ ] Prezzo
+*   [ ] Sconto
+* [ ] (C)Crea 
 * [ ] (U)Modificare ...
-* [ ] (P)...
+* [ ] (P) Complete Ordine 
+* [ ] Stampa ?
 
 #### Trasferimento PV
 * Stato/note : DA DEFINIRE  / 10%
