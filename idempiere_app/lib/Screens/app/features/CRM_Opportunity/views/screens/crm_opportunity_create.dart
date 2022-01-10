@@ -1,13 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity_status_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/business_partner_json.dart';
@@ -22,6 +22,27 @@ class CreateOpportunity extends StatefulWidget {
 }
 
 class _CreateOpportunityState extends State<CreateOpportunity> {
+  attachImage() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.any);
+
+    if (result != null) {
+      //File file = File(result.files.first.bytes!);
+      setState(() {
+        image64 = base64.encode(result.files.first.bytes!);
+      });
+
+      //print(image64);
+    }
+  }
+
+  sendOpportunityAttachedImage() {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final msg = jsonEncode({"name": imageName, "data": image64});
+  }
+
   static String _bPdisplayStringForOption(BPRecords option) => option.name!;
   createOpportunity() async {
     final ip = GetStorage().read('ip');
@@ -172,6 +193,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
   String businessPartnerValue = "";
   String dropdownOpportunityValue = "";
   String date = "";
+  String image64 = "";
+  String imageName = "";
 
   @override
   void initState() {
@@ -184,6 +207,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     dropdownOpportunityValue = "1000001";
     date = "";
     amtFieldController = TextEditingController();
+    image64 = "";
+    imageName = "";
 
     //fillFields();
     getAllOpportunityStatuses();
@@ -518,6 +543,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                               ),
                   ),
                 ),
+                IconButton(
+                    onPressed: () {
+                      attachImage();
+                    },
+                    icon: const Icon(Icons.attach_file)),
               ],
             );
           },

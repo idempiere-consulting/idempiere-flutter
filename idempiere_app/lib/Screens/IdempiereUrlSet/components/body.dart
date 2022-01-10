@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/components/rounded_button.dart';
 import 'package:idempiere_app/components/rounded_input_field.dart';
+import 'package:http/http.dart' as http;
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -15,6 +16,21 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  /* testApi() async {
+    var url = Uri.parse('https://jsonplaceholder.typicode.com/todos/1');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    }
+  } */
+
   final json = {
     "types": [
       {"id": "it_IT", "name": "Italiano"},
@@ -62,6 +78,7 @@ class _BodyState extends State<Body> {
   @override
   void initState() {
     super.initState();
+    //testApi();
     dropDownList = getTypes()!;
     protocolDropDownList = getProtocolTypes()!;
     myController = TextEditingController();

@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/Camera/camera.dart';
 //import 'package:idempiere_app/Screens/IdempiereUrlSet/idempiere_set_url.dart';
 //import 'package:idempiere_app/Screens/Login/login_screen.dart';
 //import 'package:idempiere_app/Screens/LoginOrganizations/loginorganizations_screen.dart';
@@ -48,12 +49,17 @@ import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment/views/scree
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Equipment/views/screens/vehicle_equipment_equipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/views/screens/vehicle_equipment_vehicle_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
-//import 'package:idempiere_app/constants.dart';
+import 'package:idempiere_app/components/ignoressl.dart';
+import 'package:idempiere_app/constants.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_assetresource/views/screens/dashboard_assetresource_screen.dart';
 import 'package:idempiere_app/localestrings.dart';
 
+//import 'components/ignoressl.dart';
+
 void main() async {
+  HttpOverrides.global = DevHttpOverrides();
+
   await GetStorage.init();
   runApp(const MyApp());
 }
@@ -277,21 +283,7 @@ class MyApp extends StatelessWidget {
           page: () => const DashboardAssetresourceScreen(),
           binding: DashboardAssetresourceBinding(),
         ),
-        GetPage(
-          name: '/Camera',
-          page: () => const CameraExampleHome(),
-        ),
       ],
-      /* routes: {
-          // When navigating to the "/" route, build the FirstScreen widget.
-          '/': (context) => const WelcomeScreen(),
-          // When navigating to the "/second" route, build the SecondScreen widget.
-          '/seturl': (context) => const IdempiereUrl(),
-          '/loginscreen': (context) => const LoginScreen(),
-          '/loginroles': (context) => const LoginRoles(),
-          '/loginorganization': (context) => const LoginOrganizations(),
-          '/loginwarehouse': (context) => const LoginWarehouses(),
-        }*/
     );
   }
 }

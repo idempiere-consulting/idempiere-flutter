@@ -121,6 +121,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
               const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
+                      primary: false,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: controller.trx.rowcount,
