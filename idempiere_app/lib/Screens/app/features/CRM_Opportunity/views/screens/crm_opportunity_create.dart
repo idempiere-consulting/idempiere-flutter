@@ -30,20 +30,39 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       //File file = File(result.files.first.bytes!);
       setState(() {
         image64 = base64.encode(result.files.first.bytes!);
+        imageName = result.files.first.name;
       });
 
       //print(image64);
     }
   }
 
-  sendOpportunityAttachedImage() {
+  sendOpportunityAttachedImage(int id) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
     final msg = jsonEncode({"name": imageName, "data": image64});
+
+    var url = Uri.parse(
+        'http://' + ip + '/api/v1/models/c_opportunity/$id/attachments');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
   }
 
   static String _bPdisplayStringForOption(BPRecords option) => option.name!;
+
   createOpportunity() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -72,6 +91,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       },
     );
     if (response.statusCode == 201) {
+      var json = jsonDecode(response.body);
+      if (imageName != "" && image64 != "") {
+        sendOpportunityAttachedImage(json["id"]);
+        //print(response.body);
+      }
       Get.find<CRMOpportunityController>().getOpportunities();
       //print("done!");
       Get.snackbar(
