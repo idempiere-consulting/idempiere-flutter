@@ -13,6 +13,79 @@ class LoginWarehouses extends StatefulWidget {
 }
 
 class _LoginWarehousesState extends State<LoginWarehouses> {
+  syncData() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              CircularProgressIndicator(),
+              Text("Syncing data with iDempiere..."),
+            ],
+          ),
+        );
+      },
+    );
+
+    syncBusinessPartner();
+    syncProduct();
+  }
+
+  syncBusinessPartner() async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq 1000000');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      GetStorage().write('businessPartnerSync', response.body);
+      businessPartnerSync = true;
+      checkSyncData();
+    }
+  }
+
+  syncProduct() async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter= AD_Client_ID eq 1000000');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      GetStorage().write('productSync', response.body);
+      productSync = true;
+      checkSyncData();
+    }
+  }
+
+  checkSyncData() {
+    if (businessPartnerSync == true && productSync == true) {
+      Get.offAllNamed("/Dashboard");
+    }
+  }
+
   getLoginPermission() async {
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
@@ -41,7 +114,11 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
             .padLeft(4, "0")
             .toString()); */
         GetStorage().write('permission', list);
-        Get.offAllNamed('/Dashboard');
+        if (GetStorage().read('products') != null) {
+          Get.offAllNamed('/Dashboard');
+        } else {
+          syncData();
+        }
       } else {
         Get.snackbar(
           "Errore!",
@@ -126,7 +203,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      print(response.body);
+      //print(response.body);
       var json = jsonDecode(response.body);
       var posts = json['warehouses'];
 
@@ -137,6 +214,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       throw Exception('Failed to load warehouse');
     }
   }
+
+  bool businessPartnerSync = false;
+  bool productSync = false;
 
   @override
   Widget build(BuildContext context) {
