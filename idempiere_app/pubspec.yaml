@@ -48,6 +48,7 @@ dependencies:
   table_calendar: ^3.0.3
   date_time_picker: ^2.1.0
   file_picker: ^4.3.1
+  settings_ui: ^2.0.1
 
 dev_dependencies:
   flutter_test:

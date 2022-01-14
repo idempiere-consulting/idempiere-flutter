@@ -37,6 +37,7 @@ import 'package:idempiere_app/Screens/app/features/Portal_Mp_Portaloffer/views/s
 import 'package:idempiere_app/Screens/app/features/Purchase/views/screens/purchase_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Lead/views/screens/purchase_lead_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Productwarehouseprice/views/screens/purchase_productwarehouseprice_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Settings/views/screens/settings_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain/views/screens/supplychain_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_inventory_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
@@ -284,6 +285,11 @@ class MyApp extends StatelessWidget {
           name: '/DashboardAssetresource',
           page: () => const DashboardAssetresourceScreen(),
           binding: DashboardAssetresourceBinding(),
+        ),
+        GetPage(
+          name: '/Settings',
+          page: () => const SettingsScreen(),
+          binding: SettingsBinding(),
         ),
       ],
     );

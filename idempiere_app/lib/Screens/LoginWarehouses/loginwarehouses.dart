@@ -29,9 +29,12 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         );
       },
     );
-
-    syncBusinessPartner();
-    syncProduct();
+    if (GetStorage().read('isBusinessPartnerSync') ?? true) {
+      syncBusinessPartner();
+    }
+    if (GetStorage().read('isProductSync') ?? true) {
+      syncProduct();
+    }
   }
 
   syncBusinessPartner() async {
@@ -53,6 +56,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (response.statusCode == 200) {
       GetStorage().write('businessPartnerSync', response.body);
       businessPartnerSync = true;
+      setState(() {
+        percentage = percentage + 50;
+      });
       checkSyncData();
     }
   }
@@ -76,6 +82,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (response.statusCode == 200) {
       GetStorage().write('productSync', response.body);
       productSync = true;
+      setState(() {
+        percentage = percentage + 50;
+      });
       checkSyncData();
     }
   }
@@ -109,10 +118,6 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (json["records"][0]["IsMobileEnabled"] == true) {
         String permissions = json["records"][0]["lit_mobilerole"];
         List<String> list = permissions.split("-");
-        /* print(int.parse(list[0], radix: 16)
-            .toRadixString(2)
-            .padLeft(4, "0")
-            .toString()); */
         GetStorage().write('permission', list);
         if (GetStorage().read('products') != null) {
           Get.offAllNamed('/Dashboard');
@@ -217,6 +222,13 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   bool businessPartnerSync = false;
   bool productSync = false;
+  int percentage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    percentage = 0;
+  }
 
   @override
   Widget build(BuildContext context) {

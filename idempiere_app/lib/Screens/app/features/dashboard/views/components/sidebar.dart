@@ -219,7 +219,7 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/Profil');
                     break;
                   case 12:
-                    Get.offNamed('/Setting');
+                    Get.offNamed('/Settings');
                     break;
                   default:
                 }
