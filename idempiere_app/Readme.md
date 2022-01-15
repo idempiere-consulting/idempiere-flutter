@@ -11,11 +11,8 @@ pre: "<b>90. </b>"
 
 
 * [ ] Eseguire processo idempiere con parametri APIREST
-* [ ] Attivare Acquisizione Fotocamera e allegare API REST (S2)
-  https://docs.flutter.dev/cookbook/plugins/picture-using-camera
-* [ ] Allegare Documento (jpg,PDF)  (S2)
+* [ ] Attivare Acquisizione Fotocamera 
 * [ ] Visualizzare Allegato (vedere ticket desktop app) (S2)
-  https://docs.flutter.dev/development/accessibility-and-localization/internationalization
 * [ ] Gestione Barcode QRcode (vedi processi produzione)
 * [ ] Chat (wishing list)
 * [ ] Stampa report (da idempiere)  da vedere con AC (TOP)
@@ -23,7 +20,16 @@ pre: "<b>90. </b>"
       https://pub.dev/packages/bluetooth_print
 * [ ] Gestione NFC - Per segnare le ore ? - controllare plugin NFC
 * [ ] Sondaggi https://github.com/quickbirdstudios/survey_kit
-* [ ] FLutter OFFLINE  Token per offline (4 h ) -> sync tabelle
+* [ ] Flutter OFFLINE -
+      - Login (OK) User=isofflinenbale(OFF) 
+                  - sync/downlaod (?bp,led, !!! mp_task !!! )
+                   Locale/Cache "202101111054MARCOLVal4hr" Tokenlocal per offline (4 h 
+                   anche dei ruoli 
+                   SetupPagina di sincronizzaizone - Lead N  - MPTASK Y  [Avvio sync/Auto] (idempiere)
+       - Login [v]offline solo se l'utente è ismobilenable 
+         Bypassare Ruoli 
+         Pagine in offline (MP_Task, Lead , ...) ? quali sync , quando ?  
+         
 
   
 
@@ -1696,3 +1702,24 @@ CRUD=1111=F
   1
 
 {{% pageinfo %}} ##CRM {{% /pageinfo %}}
+
+## Gestione Offline
+
+Maschera per gestire le opzione di sincronizzione
+
+* 
+* Product/Prodotti [RU] No[CD]  [C_Product] (Filtro)
+* Business Partner [RU] No[CD]  [C_BPartner] (Filtro : I Miei)
+* WorkOrder/Odl di manutenzione [RU] [C?] NO[D] [MP_OT_V] (Filtro) (Da creare Marco)
+*     Create : MP_Maintain_Resource
+*     Create : MP_OT_Task
+   ...a) Calendario (apertura)  // b) LISTA 
+* Not Compliance/Anomalie - [LIT_NC] (Tabella da fare 2pack Marco)
+* JP_TODO [RUCD]  (Filtro : Miei) 
+
+-- Step 2
+* Inventario 
+* S/Carico  
+* Sales Order/ Ordini di Vendita 
+
+
