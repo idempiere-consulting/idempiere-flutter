@@ -70,11 +70,18 @@ class SettingsScreen extends GetView<SettingsController> {
                             SettingsTile(
                               title: const Text('Re-Sync All'),
                               leading: const Icon(Icons.sync),
-                              onPressed: (context) {},
+                              onPressed: (context) {
+                                controller.reSyncAll();
+                              },
                             ),
                             SettingsTile.switchTile(
                               title: const Text('Business Partners'),
-                              leading: const Icon(Icons.cloud_download),
+                              // ignore: prefer_const_constructors
+                              leading:
+                                  controller.isBusinessPartnerSyncing.value ==
+                                          false
+                                      ? const Icon(Icons.cloud_download)
+                                      : const CircularProgressIndicator(),
                               initialValue:
                                   controller.isBusinessPartnerSync.value,
                               onToggle: (bool value) {
@@ -84,8 +91,22 @@ class SettingsScreen extends GetView<SettingsController> {
                               },
                             ),
                             SettingsTile.switchTile(
+                              title: const Text('Event Calendar'),
+                              leading: controller.isjpTODOSyncing.value == false
+                                  ? const Icon(Icons.cloud_download)
+                                  : const CircularProgressIndicator(),
+                              initialValue: controller.isjpTODOSync.value,
+                              onToggle: (bool value) {
+                                controller.isjpTODOSync.value = value;
+                                GetStorage().write('isjpTODOSync', value);
+                              },
+                            ),
+                            SettingsTile.switchTile(
                               title: const Text('Products'),
-                              leading: const Icon(Icons.cloud_download),
+                              leading:
+                                  controller.isProductSyncing.value == false
+                                      ? const Icon(Icons.cloud_download)
+                                      : const CircularProgressIndicator(),
                               initialValue: controller.isProductSync.value,
                               onToggle: (bool value) {
                                 controller.isProductSync.value = value;

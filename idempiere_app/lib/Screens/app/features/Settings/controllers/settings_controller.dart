@@ -3,6 +3,10 @@ part of dashboard;
 class SettingsController extends GetxController {
   var isBusinessPartnerSync = true.obs;
   var isProductSync = true.obs;
+  var isjpTODOSync = true.obs;
+  var isBusinessPartnerSyncing = false.obs;
+  var isProductSyncing = false.obs;
+  var isjpTODOSyncing = false.obs;
 
   @override
   void onInit() {
@@ -10,14 +14,40 @@ class SettingsController extends GetxController {
     isBusinessPartnerSync.value =
         GetStorage().read('isBusinessPartnerSync') ?? true;
     isProductSync.value = GetStorage().read('isProductSync') ?? true;
+    isjpTODOSync.value = GetStorage().read('isjpTODOSync') ?? true;
   }
 
   Future<void> reSyncAll() async {
+    if (isjpTODOSync.value == true) {
+      isjpTODOSyncing.value = true;
+      syncJPTODO();
+    }
     if (isBusinessPartnerSync.value == true) {
+      isBusinessPartnerSyncing.value = true;
       syncBusinessPartner();
     }
     if (isProductSync.value == true) {
+      isProductSyncing.value = true;
       syncProduct();
+    }
+  }
+
+  syncJPTODO() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      GetStorage().write('jpTODOSync', response.body);
+      isjpTODOSyncing.value = false;
     }
   }
 
@@ -38,7 +68,9 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
+      //print(response.body);
       GetStorage().write('businessPartnerSync', response.body);
+      isBusinessPartnerSyncing.value = false;
     }
   }
 
@@ -60,6 +92,7 @@ class SettingsController extends GetxController {
 
     if (response.statusCode == 200) {
       GetStorage().write('productSync', response.body);
+      isProductSyncing.value = false;
     }
   }
 

@@ -29,11 +29,37 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         );
       },
     );
+    if (GetStorage().read('isjpTODOSync') ?? true) {
+      jpTODOSync = true;
+      syncJPTODO();
+    }
     if (GetStorage().read('isBusinessPartnerSync') ?? true) {
+      businessPartnerSync = true;
       syncBusinessPartner();
     }
     if (GetStorage().read('isProductSync') ?? true) {
+      productSync = true;
       syncProduct();
+    }
+  }
+
+  syncJPTODO() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      GetStorage().write('jpTODOSync', response.body);
+      jpTODOSync = false;
+      checkSyncData();
     }
   }
 
@@ -55,10 +81,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       GetStorage().write('businessPartnerSync', response.body);
-      businessPartnerSync = true;
-      setState(() {
-        percentage = percentage + 50;
-      });
+      businessPartnerSync = false;
       checkSyncData();
     }
   }
@@ -81,16 +104,15 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       GetStorage().write('productSync', response.body);
-      productSync = true;
-      setState(() {
-        percentage = percentage + 50;
-      });
+      productSync = false;
       checkSyncData();
     }
   }
 
   checkSyncData() {
-    if (businessPartnerSync == true && productSync == true) {
+    if (businessPartnerSync == false &&
+        productSync == false &&
+        jpTODOSync == false) {
       Get.offAllNamed("/Dashboard");
     }
   }
@@ -222,12 +244,11 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   bool businessPartnerSync = false;
   bool productSync = false;
-  int percentage = 0;
+  bool jpTODOSync = false;
 
   @override
   void initState() {
     super.initState();
-    percentage = 0;
   }
 
   @override
