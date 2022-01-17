@@ -39,8 +39,9 @@ class CRMSalesOrderController extends GetxController {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+        '$protocol://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -89,7 +90,9 @@ class CRMSalesOrderController extends GetxController {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
     var response = await http.get(

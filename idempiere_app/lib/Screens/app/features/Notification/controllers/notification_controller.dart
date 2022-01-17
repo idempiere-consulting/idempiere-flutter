@@ -48,7 +48,9 @@ class NotificationController extends GetxController {
         break;
       default:
     }
-    var url = Uri.parse('http://' + ip + '/api/v1/models/lit_mobile_isread/');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_mobile_isread/');
     var response = await http.post(
       url,
       body: msg,
@@ -103,7 +105,9 @@ class NotificationController extends GetxController {
     final ip = GetStorage().read('ip');
     final userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userId and AD_Client_ID eq 1000000');
     var response = await http.get(
@@ -285,7 +289,9 @@ class Provider extends GetConnect {
       return response.body;
     } */
 
-    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

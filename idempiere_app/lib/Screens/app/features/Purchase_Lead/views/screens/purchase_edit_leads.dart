@@ -31,8 +31,9 @@ class _EditLeadState extends State<EditLead> {
       "SalesRep_ID": {"identifier": salesrepValue},
       "LeadStatus": {"id": dropdownValue}
     });
-    var url =
-        Uri.parse('http://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,

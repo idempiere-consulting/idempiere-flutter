@@ -56,7 +56,9 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
     final msg = jsonEncode({
       "record-id": controller.trx.records![index].id,
     });
-    var url = Uri.parse('http://' + ip + '/api/v1/processes/c-order-process');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/processes/c-order-process');
 
     var response = await http.post(
       url,

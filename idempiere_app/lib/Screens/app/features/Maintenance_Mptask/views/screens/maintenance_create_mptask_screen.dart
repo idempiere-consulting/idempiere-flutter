@@ -41,7 +41,9 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
       "S_Resource_ID": {"identifier": resourceName},
       "DateWorkStart": date
     });
-    var url = Uri.parse('http://' + ip + '/api/v1/models/mp_ot/');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/mp_ot/');
     //print(msg);
     var response = await http.post(
       url,
@@ -79,7 +81,9 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     final userId = GetStorage().read('userId');
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/s_resource?\$filter=AD_User_ID eq $userId');
     var response = await http.get(
@@ -103,7 +107,9 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   getSelectedBPLocation(int id) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/C_BPartner_Location?\$filter=C_BPartner_ID eq $id');
     var response = await http.get(
@@ -137,7 +143,9 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   getDocType() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/AD_SysConfig?\$filter=Name eq \'LIT_Maintenance_Order_Doc_ID\'');
     var response = await http.get(
@@ -161,7 +169,9 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   Future<List<BPRecords>> getAllBusinessPartners() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/c_bpartner');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/c_bpartner');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -181,7 +191,9 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   Future<List<RRecords>> getAllResources() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/s_resource');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/s_resource');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -209,7 +221,9 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/ad_user');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{

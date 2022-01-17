@@ -18,7 +18,9 @@ class VehicleEquipmentEquipmentController extends GetxController {
   Future<void> getOpportunities() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/c_opportunity');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/c_opportunity');
     var response = await http.get(
       url,
       headers: <String, String>{

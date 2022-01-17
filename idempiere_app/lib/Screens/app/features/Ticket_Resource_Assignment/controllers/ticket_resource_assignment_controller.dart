@@ -45,8 +45,9 @@ class TicketResourceAssignmentController extends GetxController {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+        '$protocol://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -105,7 +106,9 @@ class TicketResourceAssignmentController extends GetxController {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/S_ResourceAssignment?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(
@@ -293,7 +296,9 @@ class Provider extends GetConnect {
       return response.body;
     } */
 
-    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

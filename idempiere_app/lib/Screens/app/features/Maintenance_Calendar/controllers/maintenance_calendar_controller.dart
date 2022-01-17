@@ -18,7 +18,9 @@ class MaintenanceCalendarController extends GetxController {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -204,7 +206,9 @@ class Provider extends GetConnect {
       return response.body;
     } */
 
-    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

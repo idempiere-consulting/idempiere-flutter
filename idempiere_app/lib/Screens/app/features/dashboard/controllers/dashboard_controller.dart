@@ -20,7 +20,9 @@ class DashboardController extends GetxController {
     var userid = GetStorage().read("userId");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userid and AD_Client_ID eq 1000000');
     var response = await http.get(

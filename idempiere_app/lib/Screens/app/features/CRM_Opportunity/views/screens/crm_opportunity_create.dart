@@ -43,8 +43,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
 
     final msg = jsonEncode({"name": imageName, "data": image64});
 
+    final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/c_opportunity/$id/attachments');
+        '$protocol://' + ip + '/api/v1/models/c_opportunity/$id/attachments');
 
     var response = await http.post(
       url,
@@ -80,7 +81,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       'C_Currency_ID': {'id': 102},
       'Probability': 50,
     });
-    var url = Uri.parse('http://' + ip + '/api/v1/models/c_opportunity/');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/c_opportunity/');
     //print(msg);
     var response = await http.post(
       url,
@@ -122,7 +125,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
   Future<List<OSRecords>> getAllOpportunityStatuses() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/C_SalesStage/');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/C_SalesStage/');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -145,7 +150,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
   Future<List<BPRecords>> getAllBusinessPartners() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/c_bpartner?\$filter= IsCustomer eq Y and AD_Client_ID eq 1000000');
     var response = await http.get(
@@ -167,7 +174,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/ad_user');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
