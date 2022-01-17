@@ -105,7 +105,9 @@ class CRMLeadController extends GetxController {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(

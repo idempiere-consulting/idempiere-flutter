@@ -98,7 +98,9 @@ class CRMCustomerBPController extends GetxController {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' +
         ip +
         '/api/v1/models/C_BPartner?\$filter= IsCustomer eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
     var response = await http.get(
@@ -286,7 +288,9 @@ class Provider extends GetConnect {
       return response.body;
     } */
 
-    var url = Uri.parse('http://' + ip + '/api/v1/windows/lead');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

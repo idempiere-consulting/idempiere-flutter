@@ -57,8 +57,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
       "record-id": controller.trx.records![index].id,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/processes/c-order-process');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/processes/c-order-process');
 
     var response = await http.post(
       url,
@@ -275,7 +275,9 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                               final msg = jsonEncode({
                                                 "DocAction": "CO",
                                               });
-                                              var url = Uri.parse('http://' +
+                                              final protocol =
+                                                  GetStorage().read('protocol');
+                                              var url = Uri.parse('$protocol://' +
                                                   ip +
                                                   '/api/v1/models/c_order/${controller.trx.records![index].id}');
 
