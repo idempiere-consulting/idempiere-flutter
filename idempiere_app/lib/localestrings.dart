@@ -48,7 +48,11 @@ class LocaleString extends Translations {
           'VehicleEquipmentEquipment': 'Equipment',
           'DashboardAssetresource': 'Corporate Resource',
           'SalesRep': 'Sales Rappresentative',
-          'AddressIP': 'Address IP'
+          'AddressIP': 'Address IP',
+          'NS': 'Not Started',
+          'IP': 'In Progress',
+          'ST': 'Stopped',
+          'CO': 'Completed'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -94,7 +98,11 @@ class LocaleString extends Translations {
           'VehicleEquipmentEquipment': 'Attrezzatura',
           'DashboardAssetresource': 'Risorse Aziendali',
           'SalesRep': 'Agente ',
-          'AddressIP': 'Indirizzo IP'
+          'AddressIP': 'Indirizzo IP',
+          'NS': 'Non Iniziato',
+          'IP': 'In Corso',
+          'ST': 'Fermato',
+          'CO': 'Completato'
         },
       };
 }

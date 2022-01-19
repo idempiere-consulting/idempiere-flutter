@@ -8,6 +8,11 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/workorder_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_create_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -20,19 +25,19 @@ import 'package:idempiere_app/Screens/app/shared_components/selection_button.dar
 import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
-import 'package:settings_ui/settings_ui.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:url_launcher/url_launcher.dart';
 
 // binding
-part '../../bindings/settings_binding.dart';
+part '../../bindings/maintenance_mptask_resource_binding.dart';
 
 // controller
-part '../../controllers/settings_controller.dart';
+part '../../controllers/maintenance_mptask_resource_controller.dart';
 
 // models
 part '../../models/profile.dart';
@@ -46,109 +51,117 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class SettingsScreen extends GetView<SettingsController> {
-  const SettingsScreen({Key? key}) : super(key: key);
+class MaintenanceMpResourceScreen
+    extends GetView<MaintenanceMpResourceController> {
+  const MaintenanceMpResourceScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Settings"),
+        title: Text(
+            "${GetStorage().read('selectedTaskDocNo')} - ${GetStorage().read('selectedTaskBP')}"),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
-            Get.offNamed('/Dashboard');
+            Get.offNamed('/MaintenanceMptaskLine');
           },
         ),
       ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
-            return Column(
-              children: [
-                Obx(() => SettingsList(
-                      shrinkWrap: true,
-                      sections: [
-                        SettingsSection(
-                          margin: const EdgeInsetsDirectional.all(8.0),
-                          title: const Text('Sync Data'),
-                          tiles: <SettingsTile>[
-                            SettingsTile(
-                              title: const Text('Re-Sync All'),
-                              leading: const Icon(Icons.sync),
-                              onPressed: (context) {
-                                controller.reSyncAll();
-                              },
+            return Column(children: [
+              const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Visibility(
+                            visible: GetStorage().read('selectedTaskDocNo') ==
+                                controller.trx.records![index].mpOtDocumentno,
+                            child: Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  trailing: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.view_list,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Work Order',
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.trx.records![index].mProductID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.event),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .mPOTResourceID?.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: const [],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                            SettingsTile.switchTile(
-                              title: const Text('Business Partners'),
-                              // ignore: prefer_const_constructors
-                              leading:
-                                  controller.isBusinessPartnerSyncing.value ==
-                                          false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue:
-                                  controller.isBusinessPartnerSync.value,
-                              onToggle: (bool value) {
-                                controller.isBusinessPartnerSync.value = value;
-                                GetStorage()
-                                    .write('isBusinessPartnerSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Event Calendar'),
-                              leading: controller.isjpTODOSyncing.value == false
-                                  ? const Icon(Icons.cloud_download)
-                                  : const CircularProgressIndicator(),
-                              initialValue: controller.isjpTODOSync.value,
-                              onToggle: (bool value) {
-                                controller.isjpTODOSync.value = value;
-                                GetStorage().write('isjpTODOSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Products'),
-                              leading:
-                                  controller.isProductSyncing.value == false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue: controller.isProductSync.value,
-                              onToggle: (bool value) {
-                                controller.isProductSync.value = value;
-                                GetStorage().write('isProductSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Work Orders'),
-                              // ignore: prefer_const_constructors
-                              leading:
-                                  controller.isWorkOrderSyncing.value == false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue: controller.isWorkOrderSync.value,
-                              onToggle: (bool value) {
-                                controller.isWorkOrderSync.value = value;
-                                GetStorage().write('isWorkOrderSync', value);
-                              },
-                            ),
-                          ],
-                        ),
-                        SettingsSection(
-                          margin: const EdgeInsetsDirectional.all(8.0),
-                          title: const Text('Language'),
-                          tiles: <SettingsTile>[
-                            SettingsTile.navigation(
-                              leading: const Icon(Icons.language),
-                              title: const Text('Language'),
-                              value: const Text('Italian'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
-              ],
-            );
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);
           },
           tabletBuilder: (context, constraints) {
             return Row(

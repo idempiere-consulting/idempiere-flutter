@@ -11,6 +11,7 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/workorder_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_create_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -99,7 +100,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
                       onPressed: () {
-                        controller.getWorkOrders();
+                        //controller.getWorkOrders();
                       },
                       icon: const Icon(
                         Icons.refresh,
@@ -107,7 +108,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                       ),
                     ),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Obx(
                       () => TextButton(
@@ -118,7 +119,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                         child: Text(controller.value.value),
                       ),
                     ),
-                  ),
+                  ), */
                 ],
               ),
               const SizedBox(height: kSpacing),
@@ -138,6 +139,19 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                               decoration: const BoxDecoration(
                                   color: Color.fromRGBO(64, 75, 96, .9)),
                               child: ExpansionTile(
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    GetStorage().write(
+                                        'selectedWorkOrderId',
+                                        controller
+                                            .trx.records![index].mPOTID!.id);
+                                    Get.toNamed('/MaintenanceMptaskLine');
+                                  },
+                                  icon: const Icon(
+                                    Icons.view_list,
+                                    color: Colors.green,
+                                  ),
+                                ),
                                 tilePadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
                                 leading: Container(
@@ -171,12 +185,12 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                     .cBPartnerLocationID
                                                     ?.id ??
                                                 "",
-                                            "resource": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .sResourceID
-                                                    ?.identifier ??
-                                                "",
+                                            "resource":
+                                                controller //serve id risorsa
+                                                        .trx
+                                                        .records![index]
+                                                        .mpOtAdUserName ??
+                                                    "",
                                             "dateStart": controller
                                                     .trx
                                                     .records![index]
@@ -187,8 +201,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                   ),
                                 ),
                                 title: Text(
-                                  controller.trx.records![index].cBPartnerID!
-                                          .identifier ??
+                                  controller.trx.records![index].cBPartnerID
+                                          ?.identifier ??
                                       "???",
                                   style: const TextStyle(
                                       color: Colors.white,
@@ -220,6 +234,30 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     children: [
                                       Row(
                                         children: [
+                                          const Text(
+                                            "Doc Number: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(controller.trx.records![index]
+                                                  .documentNo ??
+                                              "")
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Status: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                              "${controller.trx.records![index].mpOtTaskStatus}"
+                                                  .tr),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
                                           /* const Text(
                                             "BPartner: ",
                                             style: TextStyle(
@@ -227,12 +265,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           ), */
                                           Icon(Icons.location_pin,
                                               color: Colors.red.shade700),
-                                          Text(controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerLocationID
-                                                  ?.identifier ??
-                                              ""),
+                                          Text(
+                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                         ],
                                       ),
                                     ],

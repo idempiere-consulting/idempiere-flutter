@@ -4,9 +4,11 @@ class SettingsController extends GetxController {
   var isBusinessPartnerSync = true.obs;
   var isProductSync = true.obs;
   var isjpTODOSync = true.obs;
+  var isWorkOrderSync = true.obs;
   var isBusinessPartnerSyncing = false.obs;
   var isProductSyncing = false.obs;
   var isjpTODOSyncing = false.obs;
+  var isWorkOrderSyncing = false.obs;
 
   @override
   void onInit() {
@@ -15,6 +17,7 @@ class SettingsController extends GetxController {
         GetStorage().read('isBusinessPartnerSync') ?? true;
     isProductSync.value = GetStorage().read('isProductSync') ?? true;
     isjpTODOSync.value = GetStorage().read('isjpTODOSync') ?? true;
+    isWorkOrderSync.value = GetStorage().read('isWorkOrderSync') ?? true;
   }
 
   Future<void> reSyncAll() async {
@@ -29,6 +32,10 @@ class SettingsController extends GetxController {
     if (isProductSync.value == true) {
       isProductSyncing.value = true;
       syncProduct();
+    }
+    if (isWorkOrderSync.value == true) {
+      isWorkOrderSyncing.value = true;
+      syncWorkOrder();
     }
   }
 
@@ -93,6 +100,54 @@ class SettingsController extends GetxController {
     if (response.statusCode == 200) {
       GetStorage().write('productSync', response.body);
       isProductSyncing.value = false;
+    }
+  }
+
+  Future<void> syncWorkOrder() async {
+    String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      GetStorage().write('workOrderSync', response.body);
+      //isWorkOrderSyncing.value = false;
+      syncWorkOrderResource();
+    }
+  }
+
+  Future<void> syncWorkOrderResource() async {
+    String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_mp_ot_resource_v');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      GetStorage().write('workOrderResourceSync', response.body);
+      isWorkOrderSyncing.value = false;
     }
   }
 

@@ -41,6 +41,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       productSync = true;
       syncProduct();
     }
+    if (GetStorage().read('isWorkOrderSync') ?? true) {
+      workOrderSync = true;
+      syncWorkOrder();
+    }
   }
 
   syncJPTODO() async {
@@ -58,6 +62,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       GetStorage().write('jpTODOSync', response.body);
+      jpTODOSync = false;
+      checkSyncData();
+    } else {
       jpTODOSync = false;
       checkSyncData();
     }
@@ -109,10 +116,61 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     }
   }
 
+  Future<void> syncWorkOrder() async {
+    String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      GetStorage().write('workOrderSync', response.body);
+      syncWorkOrderResource();
+    } else {
+      workOrderSync = false;
+      checkSyncData();
+    }
+  }
+
+  Future<void> syncWorkOrderResource() async {
+    String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_mp_ot_resource_v');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      GetStorage().write('workOrderResourceSync', response.body);
+      workOrderSync = false;
+      checkSyncData();
+    }
+  }
+
   checkSyncData() {
     if (businessPartnerSync == false &&
         productSync == false &&
-        jpTODOSync == false) {
+        jpTODOSync == false &&
+        workOrderSync == false) {
       Get.offAllNamed("/Dashboard");
     }
   }
@@ -245,6 +303,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   bool businessPartnerSync = false;
   bool productSync = false;
   bool jpTODOSync = false;
+  bool workOrderSync = false;
 
   @override
   void initState() {
