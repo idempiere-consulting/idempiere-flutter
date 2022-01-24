@@ -121,7 +121,7 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       GetStorage().write('workOrderSync', response.body);
       //isWorkOrderSyncing.value = false;
       syncWorkOrderResource();
@@ -145,7 +145,7 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       GetStorage().write('workOrderResourceSync', response.body);
       isWorkOrderSyncing.value = false;
     }
@@ -314,8 +314,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

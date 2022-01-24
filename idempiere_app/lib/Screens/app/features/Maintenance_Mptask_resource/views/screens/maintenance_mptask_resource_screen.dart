@@ -113,7 +113,7 @@ class MaintenanceMpResourceScreen
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Work Order',
+                                      tooltip: 'Edit Task',
                                       onPressed: () {
                                         //log("info button pressed");
                                       },

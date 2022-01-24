@@ -30,6 +30,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:idempiere_app/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -84,7 +85,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                         : const Text("WORK ORDER: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
@@ -95,12 +96,12 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ),
+                  ), */
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
                       onPressed: () {
-                        //controller.getWorkOrders();
+                        controller.syncWorkOrder();
                       },
                       icon: const Icon(
                         Icons.refresh,
@@ -163,13 +164,12 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               color: Colors.white24))),
                                   child: IconButton(
                                     icon: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
+                                      Icons.work,
                                     ),
                                     tooltip: 'Edit Work Order',
                                     onPressed: () {
                                       //log("info button pressed");
-                                      Get.to(const EditMaintenanceMptask(),
+                                      /* Get.to(const EditMaintenanceMptask(),
                                           arguments: {
                                             "id": controller
                                                 .trx.records![index].id,
@@ -196,7 +196,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                     .records![index]
                                                     .dateWorkStart ??
                                                 ""
-                                          });
+                                          }); */
                                     },
                                   ),
                                 ),

@@ -3,7 +3,7 @@ class WorkOrderLocalJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<Records>? records;
+  List<Records>? records;
 
   WorkOrderLocalJson({
     this.pagecount,
@@ -55,7 +55,7 @@ class Records {
   final JPTeamID? jPTeamID;
   final String? mpOtAdUserName;
   final int? mpOtTaskQty;
-  final String? mpOtTaskStatus;
+  String? mpOtTaskStatus;
   final String? cBpartnerLocationPhone;
   final String? cBpartnerLocationEmail;
   final String? cBpartnerLocationName;
