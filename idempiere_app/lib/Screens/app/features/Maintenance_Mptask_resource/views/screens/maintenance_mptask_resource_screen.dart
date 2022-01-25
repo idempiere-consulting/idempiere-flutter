@@ -12,6 +12,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/wor
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_create_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
@@ -59,8 +60,12 @@ class MaintenanceMpResourceScreen
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            "${GetStorage().read('selectedTaskDocNo')} - ${GetStorage().read('selectedTaskBP')}"),
+        title: Column(
+          children: [
+            Text("${GetStorage().read('selectedTaskDocNo')}"),
+            Text("${GetStorage().read('selectedTaskBP')}"),
+          ],
+        ),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
@@ -72,6 +77,53 @@ class MaintenanceMpResourceScreen
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
             return Column(children: [
+              const SizedBox(height: kSpacing),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("RESOURCES: ${controller.trx.rowcount}")
+                        : const Text("RESOURCES: ")),
+                    margin: const EdgeInsets.only(left: 15),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateMaintenanceMpResource());
+                      },
+                      icon: const Icon(
+                        Icons.note_add_outlined,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        //controller.syncWorkOrder();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ), */
+                ],
+              ),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -131,10 +183,11 @@ class MaintenanceMpResourceScreen
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.event),
+                                      const Icon(
+                                          Icons.settings_input_component),
                                       Text(
                                         controller.trx.records![index]
-                                                .mPOTResourceID?.identifier ??
+                                                .resourceType?.identifier ??
                                             "??",
                                         style: const TextStyle(
                                             color: Colors.white),
@@ -150,7 +203,73 @@ class MaintenanceMpResourceScreen
                                       horizontal: 20.0, vertical: 10.0),
                                   children: [
                                     Column(
-                                      children: const [],
+                                      children: [
+                                        Row(children: [
+                                          const Text('Quantità: '),
+                                          Text(
+                                              "${controller.trx.records![index].resourceQty}"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Nome: '),
+                                          Text(controller
+                                                  .trx.records![index].name ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('SerNo: '),
+                                          Text(controller
+                                                  .trx.records![index].serNo ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Descrizione: '),
+                                          Text(controller.trx.records![index]
+                                                  .description ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Value: '),
+                                          Text(controller
+                                                  .trx.records![index].value ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control3DateFrom: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control3DateNext: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateNext ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control2DateFrom: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control2DateNext: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateNext ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control1DateFrom: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl1DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control1DateNext: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl1DateNext ??
+                                              "??"),
+                                        ]),
+                                      ],
                                     ),
                                   ],
                                 ),

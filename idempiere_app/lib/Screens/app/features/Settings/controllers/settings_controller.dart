@@ -87,7 +87,7 @@ class SettingsController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_product?\$filter= AD_Client_ID eq 1000000');
+        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -98,6 +98,7 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
+      //print(response.body);
       GetStorage().write('productSync', response.body);
       isProductSyncing.value = false;
     }
@@ -133,8 +134,8 @@ class SettingsController extends GetxController {
     var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_mp_ot_resource_v');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
 
     var response = await http.get(
       url,
@@ -145,7 +146,7 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       GetStorage().write('workOrderResourceSync', response.body);
       isWorkOrderSyncing.value = false;
     }

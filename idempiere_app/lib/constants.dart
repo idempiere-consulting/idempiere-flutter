@@ -44,9 +44,7 @@ emptyEditAPICallStack() {
       (GetStorage().read('storedEditAPICalls')).isEmpty == false) {
     Map calls = GetStorage().read('storedEditAPICalls');
     String authorization = 'Bearer ' + GetStorage().read('token');
-
     calls.forEach((call, msg) async {
-      print("kiao");
       var url = Uri.parse(call);
       var response = await http.put(
         url,
