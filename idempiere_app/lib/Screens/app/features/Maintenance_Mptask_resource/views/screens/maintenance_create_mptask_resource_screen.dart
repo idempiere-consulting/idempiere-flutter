@@ -23,7 +23,7 @@ class CreateMaintenanceMpResource extends StatefulWidget {
 
 class _CreateMaintenanceMpResourceState
     extends State<CreateMaintenanceMpResource> {
-  createWorkOrder() async {
+  createWorkOrderResource() async {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     String now = dateFormat.format(DateTime.now());
 
@@ -34,13 +34,6 @@ class _CreateMaintenanceMpResourceState
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "C_DocType_ID": {"id": docId},
-      "DateTrx": "${now}T00:00:00Z",
-      "C_BPartner_ID": {"identifier": businessPartnerValue},
-      "C_BPartner_Location_ID": {"id": bPLocation},
-      "AD_User_ID": {"id": GetStorage().read('userId')},
-      "S_Resource_ID": {"identifier": resourceName},
-      "DateWorkStart": date
     });
     var url = Uri.parse('http://' + ip + '/api/v1/models/mp_ot/');
     //print(msg);
@@ -180,27 +173,12 @@ class _CreateMaintenanceMpResourceState
   }
 
   Future<List<Records>> getAllProducts() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/s_resource');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
+    //print(response.body);
+    var jsondecoded = jsonDecode(GetStorage().read('productSync'));
 
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var jsondecoded = jsonDecode(GetStorage().read('productSync'));
+    var jsonResources = ProductJson.fromJson(jsondecoded);
 
-      var jsonResources = ProductJson.fromJson(jsondecoded);
-
-      return jsonResources.records!;
-    } else {
-      throw Exception("Failed to load sales reps");
-    }
+    return jsonResources.records!;
 
     //print(list[0].eMail);
 
@@ -220,14 +198,10 @@ class _CreateMaintenanceMpResourceState
   //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var bPartnerFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var phoneFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var mailFieldController;
+  var valueFieldController;
+  var descriptionFieldController;
+  var sernoFieldController;
 
-  var resourceFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
   String businessPartnerValue = "";
@@ -240,10 +214,9 @@ class _CreateMaintenanceMpResourceState
   void initState() {
     super.initState();
     nameFieldController = TextEditingController();
-    phoneFieldController = TextEditingController();
-    bPartnerFieldController = TextEditingController();
-    mailFieldController = TextEditingController();
-    resourceFieldController = TextEditingController();
+    valueFieldController = TextEditingController();
+    descriptionFieldController = TextEditingController();
+    sernoFieldController = TextEditingController();
     dropdownValue = "N";
     businessPartnerValue = "";
     date = "";
@@ -275,7 +248,7 @@ class _CreateMaintenanceMpResourceState
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createWorkOrder();
+                createWorkOrderResource();
               },
               icon: const Icon(
                 Icons.save,
@@ -344,6 +317,150 @@ class _CreateMaintenanceMpResourceState
                             : const Center(
                                 child: CircularProgressIndicator(),
                               ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: valueFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Value',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: sernoFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'SerNo',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Control3DateFrom',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      print(val);
+                      return null;
+                    },
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Control2DateFrom',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      print(val);
+                      return null;
+                    },
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Control1DateFrom',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      print(val);
+                      return null;
+                    },
+                    onSaved: (val) => print(val),
                   ),
                 ),
               ],
