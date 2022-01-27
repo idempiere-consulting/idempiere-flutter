@@ -34,8 +34,21 @@ class _CreateMaintenanceMpResourceState
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_Product_ID": {"id": productId},
+      "IsActive": true,
+      "ResourceType": {"id": "BP"},
+      "ResourceQty": 1,
+      "CostAmt": 0,
+      "Discount": 0,
+      "UseLifeMonths": 0,
+      "LIT_Control3DateFrom": date3,
+      "LIT_Control2DateFrom": date2,
+      "LIT_Control1DateFrom": date1,
     });
-    var url = Uri.parse('http://' + ip + '/api/v1/models/mp_ot/');
+
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/windows/preventive-maintenance/tabs/tasks/${GetStorage().read('selectedTaskId')}/resources');
     //print(msg);
     var response = await http.post(
       url,
@@ -46,7 +59,7 @@ class _CreateMaintenanceMpResourceState
       },
     );
     if (response.statusCode == 201) {
-      Get.find<MaintenanceMptaskController>().getWorkOrders();
+      //Get.find<MaintenanceMptaskController>().getWorkOrders();
       //print("done!");
       Get.snackbar(
         "Fatto!",
@@ -66,109 +79,6 @@ class _CreateMaintenanceMpResourceState
           color: Colors.red,
         ),
       );
-    }
-  }
-
-  getResourceName() async {
-    final userId = GetStorage().read('userId');
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/s_resource?\$filter=AD_User_ID eq $userId');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-      setState(() {
-        resourceName = jsondecoded['records'][0]['Name'].toString();
-      });
-    } else {
-      throw Exception("Failed to load resource name");
-    }
-  }
-
-  getSelectedBPLocation(int id) async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/C_BPartner_Location?\$filter=C_BPartner_ID eq $id');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      //print(response.body);
-
-      var jsondecoded = jsonDecode(response.body);
-
-      if (jsondecoded['row-count'] != 0) {
-        setState(() {
-          bPLocation = jsondecoded['records'][0]['id'].toString();
-        });
-      } else {
-        setState(() {
-          bPLocation = "";
-        });
-      }
-      //print(bPLocation);
-    } else {
-      throw Exception("Failed to load bp location");
-    }
-  }
-
-  getDocType() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/AD_SysConfig?\$filter=Name eq \'LIT_Maintenance_Order_Doc_ID\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-      setState(() {
-        docId = jsondecoded['records'][0]['Value'].toString();
-      });
-    } else {
-      throw Exception("Failed to load doctype id");
-    }
-  }
-
-  Future<List<BPRecords>> getAllBusinessPartners() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/c_bpartner');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-      var jsonBPs = BPJson.fromJson(jsondecoded);
-      return jsonBPs.records!;
-    } else {
-      throw Exception("Failed to load sales reps");
     }
   }
 
@@ -201,14 +111,13 @@ class _CreateMaintenanceMpResourceState
   var valueFieldController;
   var descriptionFieldController;
   var sernoFieldController;
-
-  String dropdownValue = "";
-  String salesrepValue = "";
-  String businessPartnerValue = "";
-  String date = "";
-  String docId = "";
-  String resourceName = "";
-  String bPLocation = "";
+  String date3 = "";
+  int dateCalc3 = 0;
+  String date2 = "";
+  int dateCalc2 = 0;
+  String date1 = "";
+  int dateCalc1 = 0;
+  var productId;
 
   @override
   void initState() {
@@ -217,22 +126,19 @@ class _CreateMaintenanceMpResourceState
     valueFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
     sernoFieldController = TextEditingController();
-    dropdownValue = "N";
-    businessPartnerValue = "";
-    date = "";
-    docId = "";
-    resourceName = "";
-    bPLocation = "";
-    getDocType();
-    getResourceName();
+    date3 = "";
+    dateCalc3 = 0;
+    date2 = "";
+    dateCalc3 = 0;
+    date1 = "";
+    dateCalc3 = 0;
+    productId = 0;
     getAllProducts();
   }
 
   static String _displayStringForOption(Records option) => option.name!;
 
-  static String _bPdisplayStringForOption(BPRecords option) => option.name!;
-
-  static String _rdisplayStringForOption(RRecords option) => option.name!;
+  static int _setIdForOption(Records option) => option.id!;
 
   @override
   Widget build(BuildContext context) {
@@ -307,8 +213,7 @@ class _CreateMaintenanceMpResourceState
                                 },
                                 onSelected: (Records selection) {
                                   setState(() {
-                                    resourceName =
-                                        _displayStringForOption(selection);
+                                    productId = _setIdForOption(selection);
                                   });
 
                                   //print(salesrepValue);
@@ -388,7 +293,7 @@ class _CreateMaintenanceMpResourceState
                       //print(DateTime.parse(val));
                       //print(val);
                       setState(() {
-                        date = val.substring(0, 10);
+                        date3 = val.substring(0, 10);
                       });
                       //print(date);
                     },
@@ -420,7 +325,7 @@ class _CreateMaintenanceMpResourceState
                       //print(DateTime.parse(val));
                       //print(val);
                       setState(() {
-                        date = val.substring(0, 10);
+                        date2 = val.substring(0, 10);
                       });
                       //print(date);
                     },
@@ -452,7 +357,7 @@ class _CreateMaintenanceMpResourceState
                       //print(DateTime.parse(val));
                       //print(val);
                       setState(() {
-                        date = val.substring(0, 10);
+                        date1 = val.substring(0, 10);
                       });
                       //print(date);
                     },
