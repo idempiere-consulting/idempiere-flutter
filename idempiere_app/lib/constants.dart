@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
@@ -23,6 +25,18 @@ const kDesktopBreakPoint = 1050.0;
 const kPhoneBreakPoint = 514.0;
 const kSideMenuWidth = 300.0;
 
+class PostCall {
+  final int id;
+  final String url;
+  String call;
+
+  PostCall({
+    required this.id,
+    required this.url,
+    required this.call,
+  });
+}
+
 Future<bool> checkConnection() async {
   try {
     final result = await InternetAddress.lookup('example.com');
@@ -37,6 +51,41 @@ Future<bool> checkConnection() async {
 
 emptyAPICallStak() {
   emptyEditAPICallStack();
+  emptyPostCallStack();
+}
+
+emptyPostCallStack() {
+  if (GetStorage().read('postCallList') != null &&
+      (GetStorage().read('postCallList')).isEmpty == false) {
+    List<String> list = GetStorage().read('postCallList');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    list.forEach((element) async {
+      var json = jsonDecode(element);
+      var url = Uri.parse(json["url"]);
+      //print(element);
+      //print(json["url"]);
+
+      var response = await http.post(
+        url,
+        body: element,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      list.remove(element);
+    });
+    //GetStorage().write('postCallList', list);
+    Get.snackbar(
+      "Fatto!",
+      "I record salvati localmente sono stati sincronizzati!",
+      icon: const Icon(
+        Icons.cloud_upload,
+        color: Colors.green,
+      ),
+    );
+  }
 }
 
 emptyEditAPICallStack() {

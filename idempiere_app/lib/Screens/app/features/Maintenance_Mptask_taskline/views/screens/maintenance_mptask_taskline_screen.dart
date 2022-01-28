@@ -106,7 +106,7 @@ class MaintenanceMptaskLineScreen
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id);
-                                      Get.offNamed('/MaintenanceMpResource');
+                                      Get.toNamed('/MaintenanceMpResource');
                                     },
                                     icon: const Icon(
                                       Icons.view_list,

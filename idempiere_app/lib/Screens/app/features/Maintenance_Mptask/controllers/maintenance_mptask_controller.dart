@@ -24,7 +24,6 @@ class MaintenanceMptaskController extends GetxController {
     });
 
     getWorkOrders();
-    getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -39,33 +38,6 @@ class MaintenanceMptaskController extends GetxController {
 
     value.value = filters[filterCount];
     getWorkOrders();
-  }
-
-  Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-
-      adUserId = json["records"][0]["id"];
-
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-    }
   }
 
   Future<void> makePhoneCall(String phoneNumber) async {
@@ -107,6 +79,8 @@ class MaintenanceMptaskController extends GetxController {
 
   Future<void> syncWorkOrder() async {
     var isConnected = await checkConnection();
+
+    print(isConnected);
 
     if (isConnected) {
       emptyAPICallStak();
@@ -150,8 +124,8 @@ class MaintenanceMptaskController extends GetxController {
     var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_mp_ot_resource_v');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
 
     var response = await http.get(
       url,

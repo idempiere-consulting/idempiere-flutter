@@ -93,43 +93,13 @@ class MaintenanceMpResourceController extends GetxController {
   }
 
   Future<void> getWorkOrders() async {
-    /* var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/mp_ot?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      _trx = WorkOrderJson.fromJson(jsonDecode(response.body));
-      print(trx.records![0].dateTrx);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
-    } */
-    _dataAvailable.value = false;
-    print(GetStorage().read('workOrderSync'));
-    print(GetStorage().read('userId'));
     if (GetStorage().read('workOrderSync') != null) {
       _trx = WorkOrderResourceLocalJson.fromJson(
           jsonDecode(GetStorage().read('workOrderResourceSync')));
       _dataAvailable.value = _trx != null;
     }
   }
-
-  /* void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
-    }
-  } */
 
   // Data
   _Profile getProfil() {

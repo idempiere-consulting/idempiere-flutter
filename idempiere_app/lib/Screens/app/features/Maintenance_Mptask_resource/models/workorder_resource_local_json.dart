@@ -2,8 +2,8 @@ class WorkOrderResourceLocalJson {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
-  final int? rowcount;
-  final List<Records>? records;
+  int? rowcount;
+  List<RRecords>? records;
 
   WorkOrderResourceLocalJson({
     this.pagecount,
@@ -19,7 +19,7 @@ class WorkOrderResourceLocalJson {
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => RRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class WorkOrderResourceLocalJson {
       };
 }
 
-class Records {
+class RRecords {
   final int? id;
   final String? mpOtDocumentno;
   final String? mpDateworkstart;
@@ -59,7 +59,7 @@ class Records {
   final String? lITControl1DateNext;
   final String? modelname;
 
-  Records({
+  RRecords({
     this.id,
     this.mpOtDocumentno,
     this.mpDateworkstart,
@@ -88,7 +88,7 @@ class Records {
     this.modelname,
   });
 
-  Records.fromJson(Map<String, dynamic> json)
+  RRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         mpOtDocumentno = json['mp_ot_documentno'] as String?,
         mpDateworkstart = json['mp_dateworkstart'] as String?,

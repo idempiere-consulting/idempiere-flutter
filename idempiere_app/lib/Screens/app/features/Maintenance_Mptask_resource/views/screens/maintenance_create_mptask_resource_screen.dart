@@ -5,12 +5,13 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/business_partner_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/resource_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
+
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
 
 class CreateMaintenanceMpResource extends StatefulWidget {
@@ -23,7 +24,7 @@ class CreateMaintenanceMpResource extends StatefulWidget {
 
 class _CreateMaintenanceMpResourceState
     extends State<CreateMaintenanceMpResource> {
-  createWorkOrderResource() async {
+  createWorkOrderResource(bool isConnected) async {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
     String now = dateFormat.format(DateTime.now());
 
@@ -46,36 +47,118 @@ class _CreateMaintenanceMpResourceState
       "LIT_Control1DateFrom": date1,
     });
 
+    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(GetStorage().read('workOrderResourceSync')));
+    MProductID prod = MProductID(id: productId, identifier: productName);
+    ResourceType res =
+        ResourceType(id: "BP", identifier: "Parti Scheda Prodotto");
+    RRecords record = RRecords(
+        mProductID: prod,
+        mpOtDocumentno: GetStorage().read('selectedTaskDocNo'),
+        resourceType: res,
+        resourceQty: 1,
+        lITControl3DateFrom: date3,
+        lITControl2DateFrom: date2,
+        lITControl1DateFrom: date1,
+        name: nameFieldController.text,
+        serNo: sernoFieldController.text,
+        description: descriptionFieldController.text);
+
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/windows/preventive-maintenance/tabs/tasks/${GetStorage().read('selectedTaskId')}/resources');
     //print(msg);
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 201) {
-      //Get.find<MaintenanceMptaskController>().getWorkOrders();
-      //print("done!");
-      Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
-        icon: const Icon(
-          Icons.done,
-          color: Colors.green,
-        ),
+
+    trx.records!.add(record);
+    trx.rowcount = trx.rowcount! + 1;
+    var data = jsonEncode(trx.toJson());
+    GetStorage().write('workOrderResourceSync', data);
+
+    Get.find<MaintenanceMpResourceController>().getWorkOrders();
+
+    if (isConnected) {
+      emptyAPICallStak();
+      var response = await http.post(
+        url,
+        body: msg,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
       );
+      if (response.statusCode == 201) {
+        //print("done!");
+        Get.snackbar(
+          "Fatto!",
+          "Il record è stato creato",
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        //print(response.body);
+        Get.snackbar(
+          "Errore!",
+          "Record non creato",
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
+      }
     } else {
-      //print(response.body);
+      List<String> list = [];
+      if (GetStorage().read('postCallList') == null) {
+        var call = jsonEncode({
+          "offlineid": GetStorage().read('postCallId'),
+          "url": 'http://' +
+              ip +
+              '/api/v1/windows/preventive-maintenance/tabs/tasks/${GetStorage().read('selectedTaskId')}/resources',
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "M_Product_ID": {"id": productId},
+          "IsActive": true,
+          "ResourceType": {"id": "BP"},
+          "ResourceQty": 1,
+          "CostAmt": 0,
+          "Discount": 0,
+          "UseLifeMonths": 0,
+          "LIT_Control3DateFrom": date3,
+          "LIT_Control2DateFrom": date2,
+          "LIT_Control1DateFrom": date1,
+        });
+
+        list.add(call);
+      } else {
+        list = GetStorage().read('postCallList');
+        var call = jsonEncode({
+          "offlineid": GetStorage().read('postCallId'),
+          "url": 'http://' +
+              ip +
+              '/api/v1/windows/preventive-maintenance/tabs/tasks/${GetStorage().read('selectedTaskId')}/resources',
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "M_Product_ID": {"id": productId},
+          "IsActive": true,
+          "ResourceType": {"id": "BP"},
+          "ResourceQty": 1,
+          "CostAmt": 0,
+          "Discount": 0,
+          "UseLifeMonths": 0,
+          "LIT_Control3DateFrom": date3,
+          "LIT_Control2DateFrom": date2,
+          "LIT_Control1DateFrom": date1,
+        });
+        list.add(call);
+      }
+      GetStorage().write('postCallId', GetStorage().read('postCallId') + 1);
+      GetStorage().write('postCallList', list);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Salvato!",
+        "Il record è stato salvato localmente in attesa di connessione internet.",
         icon: const Icon(
-          Icons.error,
+          Icons.save,
           color: Colors.red,
         ),
       );
@@ -118,6 +201,7 @@ class _CreateMaintenanceMpResourceState
   String date1 = "";
   int dateCalc1 = 0;
   var productId;
+  var productName;
 
   @override
   void initState() {
@@ -133,6 +217,7 @@ class _CreateMaintenanceMpResourceState
     date1 = "";
     dateCalc3 = 0;
     productId = 0;
+    productName = "";
     getAllProducts();
   }
 
@@ -153,8 +238,9 @@ class _CreateMaintenanceMpResourceState
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
-              onPressed: () {
-                createWorkOrderResource();
+              onPressed: () async {
+                var isConnected = await checkConnection();
+                createWorkOrderResource(isConnected);
               },
               icon: const Icon(
                 Icons.save,
@@ -214,6 +300,8 @@ class _CreateMaintenanceMpResourceState
                                 onSelected: (Records selection) {
                                   setState(() {
                                     productId = _setIdForOption(selection);
+                                    productName =
+                                        _displayStringForOption(selection);
                                   });
 
                                   //print(salesrepValue);
@@ -224,7 +312,7 @@ class _CreateMaintenanceMpResourceState
                               ),
                   ),
                 ),
-                Container(
+                /* Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: valueFieldController,
@@ -235,7 +323,7 @@ class _CreateMaintenanceMpResourceState
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                ),
+                ), */
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(

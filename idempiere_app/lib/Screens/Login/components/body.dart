@@ -33,6 +33,9 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     checkboxState = GetStorage().read('checkboxLogin') ?? false;
+    if (GetStorage().read('postCallId') == null) {
+      GetStorage().write('postCallId', 1);
+    }
   }
 
   getLoginPermission() async {
