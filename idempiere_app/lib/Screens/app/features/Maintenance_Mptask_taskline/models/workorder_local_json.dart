@@ -3,7 +3,7 @@ class WorkOrderLocalJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<Records>? records;
+  List<Records>? records;
 
   WorkOrderLocalJson({
     this.pagecount,
@@ -55,7 +55,7 @@ class Records {
   final JPTeamID? jPTeamID;
   final String? mpOtAdUserName;
   final int? mpOtTaskQty;
-  final String? mpOtTaskStatus;
+  String? mpOtTaskStatus;
   final String? cBpartnerLocationPhone;
   final String? cBpartnerLocationEmail;
   final String? cBpartnerLocationName;
@@ -63,6 +63,8 @@ class Records {
   final String? cLocationCity;
   final String? cLocationPostal;
   final String? cCountryTrlName;
+  final MPOTTaskID? mPOTTaskID;
+  final MPMaintainTaskID? mPMaintainTaskID;
   final String? modelname;
 
   Records({
@@ -97,6 +99,8 @@ class Records {
     this.cLocationCity,
     this.cLocationPostal,
     this.cCountryTrlName,
+    this.mPOTTaskID,
+    this.mPMaintainTaskID,
     this.modelname,
   });
 
@@ -158,6 +162,14 @@ class Records {
         cLocationCity = json['c_location_city'] as String?,
         cLocationPostal = json['c_location_postal'] as String?,
         cCountryTrlName = json['c_country_trl_name'] as String?,
+        mPOTTaskID = (json['MP_OT_Task_ID'] as Map<String, dynamic>?) != null
+            ? MPOTTaskID.fromJson(json['MP_OT_Task_ID'] as Map<String, dynamic>)
+            : null,
+        mPMaintainTaskID =
+            (json['MP_Maintain_Task_ID'] as Map<String, dynamic>?) != null
+                ? MPMaintainTaskID.fromJson(
+                    json['MP_Maintain_Task_ID'] as Map<String, dynamic>)
+                : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -192,6 +204,8 @@ class Records {
         'c_location_city': cLocationCity,
         'c_location_postal': cLocationPostal,
         'c_country_trl_name': cCountryTrlName,
+        'MP_OT_Task_ID': mPOTTaskID?.toJson(),
+        'MP_Maintain_Task_ID': mPMaintainTaskID?.toJson(),
         'model-name': modelname
       };
 }
@@ -480,6 +494,60 @@ class JPTeamID {
   });
 
   JPTeamID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MPOTTaskID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MPOTTaskID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MPOTTaskID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MPMaintainTaskID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MPMaintainTaskID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MPMaintainTaskID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

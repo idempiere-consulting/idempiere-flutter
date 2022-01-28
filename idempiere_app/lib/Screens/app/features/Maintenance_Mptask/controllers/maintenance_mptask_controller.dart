@@ -2,7 +2,7 @@ part of dashboard;
 
 class MaintenanceMptaskController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late WorkOrderJson _trx;
+  late WorkOrderLocalJson _trx;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
@@ -28,7 +28,7 @@ class MaintenanceMptaskController extends GetxController {
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  WorkOrderJson get trx => _trx;
+  WorkOrderLocalJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -46,8 +46,9 @@ class MaintenanceMptaskController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -94,15 +95,64 @@ class MaintenanceMptaskController extends GetxController {
   }
 
   Future<void> getWorkOrders() async {
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
-    final ip = GetStorage().read('ip');
+    //print(GetStorage().read('workOrderSync'));
+    //print(GetStorage().read('userId'));
+    if (GetStorage().read('workOrderSync') != null) {
+      _trx = WorkOrderLocalJson.fromJson(
+          jsonDecode(GetStorage().read('workOrderSync')));
+      _dataAvailable.value = _trx != null;
+    }
+  }
+
+  Future<void> syncWorkOrder() async {
+    var isConnected = await checkConnection();
+
+    if (isConnected) {
+      emptyAPICallStak();
+      _dataAvailable.value = false;
+      String ip = GetStorage().read('ip');
+      var userId = GetStorage().read('userId');
+      String authorization = 'Bearer ' + GetStorage().read('token');
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
+
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        //print(response.body);
+        GetStorage().write('workOrderSync', response.body);
+        //isWorkOrderSyncing.value = false;
+        syncWorkOrderResource();
+      }
+    } else {
+      Get.snackbar(
+        "Connessione Internet assente!",
+        "Impossibile aggiornare i record.",
+        icon: const Icon(
+          Icons.signal_wifi_connected_no_internet_4,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> syncWorkOrderResource() async {
+    String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
-        ip +
-        '/api/v1/models/mp_ot?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_mp_ot_resource_v');
+
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -110,13 +160,11 @@ class MaintenanceMptaskController extends GetxController {
         'Authorization': authorization,
       },
     );
+
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = WorkOrderJson.fromJson(jsonDecode(response.body));
-      print(trx.records![0].dateTrx);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      GetStorage().write('workOrderResourceSync', response.body);
+      getWorkOrders();
     }
   }
 
@@ -289,8 +337,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

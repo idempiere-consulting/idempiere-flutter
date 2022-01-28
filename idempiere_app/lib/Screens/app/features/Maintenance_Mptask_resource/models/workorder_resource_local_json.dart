@@ -35,44 +35,56 @@ class Records {
   final int? id;
   final String? mpOtDocumentno;
   final String? mpDateworkstart;
-  final MPOTResourceID? mPOTResourceID;
   final ADClientID? aDClientID;
   final UpdatedBy? updatedBy;
   final int? costAmt;
   final String? created;
   final CreatedBy? createdBy;
   final bool? isActive;
-  final MPOTTaskID? mPOTTaskID;
-  final bool? processed;
   final int? resourceQty;
   final ResourceType? resourceType;
   final String? updated;
   final ADOrgID? aDOrgID;
   final MProductID? mProductID;
-  final String? mPOTResourceUU;
   final int? discount;
+  final String? value;
+  final String? name;
+  final String? description;
+  final String? serNo;
+  final String? lITControl3DateFrom;
+  final String? lITControl3DateNext;
+  final String? lITControl2DateFrom;
+  final String? lITControl2DateNext;
+  final String? lITControl1DateFrom;
+  final String? lITControl1DateNext;
   final String? modelname;
 
   Records({
     this.id,
     this.mpOtDocumentno,
     this.mpDateworkstart,
-    this.mPOTResourceID,
     this.aDClientID,
     this.updatedBy,
     this.costAmt,
     this.created,
     this.createdBy,
     this.isActive,
-    this.mPOTTaskID,
-    this.processed,
     this.resourceQty,
     this.resourceType,
     this.updated,
     this.aDOrgID,
     this.mProductID,
-    this.mPOTResourceUU,
     this.discount,
+    this.value,
+    this.name,
+    this.description,
+    this.serNo,
+    this.lITControl3DateFrom,
+    this.lITControl3DateNext,
+    this.lITControl2DateFrom,
+    this.lITControl2DateNext,
+    this.lITControl1DateFrom,
+    this.lITControl1DateNext,
     this.modelname,
   });
 
@@ -80,11 +92,6 @@ class Records {
       : id = json['id'] as int?,
         mpOtDocumentno = json['mp_ot_documentno'] as String?,
         mpDateworkstart = json['mp_dateworkstart'] as String?,
-        mPOTResourceID =
-            (json['MP_OT_Resource_ID'] as Map<String, dynamic>?) != null
-                ? MPOTResourceID.fromJson(
-                    json['MP_OT_Resource_ID'] as Map<String, dynamic>)
-                : null,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
@@ -97,10 +104,6 @@ class Records {
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
         isActive = json['IsActive'] as bool?,
-        mPOTTaskID = (json['MP_OT_Task_ID'] as Map<String, dynamic>?) != null
-            ? MPOTTaskID.fromJson(json['MP_OT_Task_ID'] as Map<String, dynamic>)
-            : null,
-        processed = json['Processed'] as bool?,
         resourceQty = json['ResourceQty'] as int?,
         resourceType = (json['ResourceType'] as Map<String, dynamic>?) != null
             ? ResourceType.fromJson(
@@ -113,57 +116,45 @@ class Records {
         mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
             ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
             : null,
-        mPOTResourceUU = json['MP_OT_Resource_UU'] as String?,
         discount = json['Discount'] as int?,
+        value = json['Value'] as String?,
+        name = json['Name'] as String?,
+        description = json['Description'] as String?,
+        serNo = json['SerNo'] as String?,
+        lITControl3DateFrom = json['LIT_Control3DateFrom'] as String?,
+        lITControl3DateNext = json['LIT_Control3DateNext'] as String?,
+        lITControl2DateFrom = json['LIT_Control2DateFrom'] as String?,
+        lITControl2DateNext = json['LIT_Control2DateNext'] as String?,
+        lITControl1DateFrom = json['LIT_Control1DateFrom'] as String?,
+        lITControl1DateNext = json['LIT_Control1DateNext'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'mp_ot_documentno': mpOtDocumentno,
         'mp_dateworkstart': mpDateworkstart,
-        'MP_OT_Resource_ID': mPOTResourceID?.toJson(),
         'AD_Client_ID': aDClientID?.toJson(),
         'UpdatedBy': updatedBy?.toJson(),
         'CostAmt': costAmt,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
         'IsActive': isActive,
-        'MP_OT_Task_ID': mPOTTaskID?.toJson(),
-        'Processed': processed,
         'ResourceQty': resourceQty,
         'ResourceType': resourceType?.toJson(),
         'Updated': updated,
         'AD_Org_ID': aDOrgID?.toJson(),
         'M_Product_ID': mProductID?.toJson(),
-        'MP_OT_Resource_UU': mPOTResourceUU,
         'Discount': discount,
-        'model-name': modelname
-      };
-}
-
-class MPOTResourceID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MPOTResourceID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MPOTResourceID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
+        'Value': value,
+        'Name': name,
+        'Description': description,
+        'SerNo': serNo,
+        'LIT_Control3DateFrom': lITControl3DateFrom,
+        'LIT_Control3DateNext': lITControl3DateNext,
+        'LIT_Control2DateFrom': lITControl2DateFrom,
+        'LIT_Control2DateNext': lITControl2DateNext,
+        'LIT_Control1DateFrom': lITControl1DateFrom,
+        'LIT_Control1DateNext': lITControl1DateNext,
         'model-name': modelname
       };
 }
@@ -236,33 +227,6 @@ class CreatedBy {
   });
 
   CreatedBy.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class MPOTTaskID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MPOTTaskID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MPOTTaskID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

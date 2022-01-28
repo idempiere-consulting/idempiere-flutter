@@ -8,10 +8,8 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/workorder_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_create_mptask_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_edit_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -104,6 +102,10 @@ class MaintenanceMptaskLineScreen
                                           controller.trx.records![index]
                                                   .cBPartnerID?.identifier ??
                                               "");
+                                      GetStorage().write(
+                                          'selectedTaskId',
+                                          controller.trx.records![index]
+                                              .mPMaintainTaskID!.id);
                                       Get.offNamed('/MaintenanceMpResource');
                                     },
                                     icon: const Icon(
@@ -128,6 +130,20 @@ class MaintenanceMptaskLineScreen
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
                                         //log("info button pressed");
+                                        Get.to(
+                                            const EditMaintenanceMptaskLine(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mPOTTaskID!
+                                                  .id,
+                                              "completed": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mpOtTaskStatus,
+                                              "index": index,
+                                            });
                                       },
                                     ),
                                   ),

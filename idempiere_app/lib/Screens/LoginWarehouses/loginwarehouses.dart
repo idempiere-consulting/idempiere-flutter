@@ -147,8 +147,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_mp_ot_resource_v');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
 
     var response = await http.get(
       url,

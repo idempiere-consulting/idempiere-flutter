@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:get_storage/get_storage.dart';
 
 //colors
 const kPrimaryColor = Color(0xFF6F35A5);
@@ -18,3 +22,50 @@ const kTabletBreakPoint = 768.0;
 const kDesktopBreakPoint = 1050.0;
 const kPhoneBreakPoint = 514.0;
 const kSideMenuWidth = 300.0;
+
+Future<bool> checkConnection() async {
+  try {
+    final result = await InternetAddress.lookup('example.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
+    }
+  } on SocketException catch (_) {
+    return false;
+  }
+  return false;
+}
+
+emptyAPICallStak() {
+  emptyEditAPICallStack();
+}
+
+emptyEditAPICallStack() {
+  if (GetStorage().read('storedEditAPICalls') != null &&
+      (GetStorage().read('storedEditAPICalls')).isEmpty == false) {
+    Map calls = GetStorage().read('storedEditAPICalls');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    calls.forEach((call, msg) async {
+      var url = Uri.parse(call);
+      var response = await http.put(
+        url,
+        body: msg,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      calls.remove(call);
+    });
+
+    GetStorage().write('storedEditAPICalls', calls);
+
+    Get.snackbar(
+      "Fatto!",
+      "I record salvati localmente sono stati sincronizzati!",
+      icon: const Icon(
+        Icons.cloud_upload,
+        color: Colors.green,
+      ),
+    );
+  }
+}
