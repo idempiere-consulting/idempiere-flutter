@@ -479,7 +479,7 @@ get API :
 * Stato/note : Definito / 10%
 * Descrizione :
 * Nome Oggetto : calendar
-* API model :   .. Filtro fisso :
+* API model :  lit_mp_ot_v .. Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
@@ -490,12 +490,12 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 * [ ] 
-### -  Intervento Manutenzione
+### -  Intervento Manutenzione [OFFLINE]
 
-* Stato/note : Definito / 10%
+* Stato/note : 
 * Descrizione :
 * Nome Oggetto : mptask
-* API model :  mp_task  Filtro fisso :
+* API model :    Filtro fisso :
 
 * [ ] Filtro Base = ???
 * [ ] Filtri Avanzata: ???
