@@ -57,7 +57,7 @@ emptyAPICallStak() {
 emptyPostCallStack() {
   if (GetStorage().read('postCallList') != null &&
       (GetStorage().read('postCallList')).isEmpty == false) {
-    List<String> list = GetStorage().read('postCallList');
+    List<dynamic> list = GetStorage().read('postCallList');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
     list.forEach((element) async {
@@ -76,7 +76,7 @@ emptyPostCallStack() {
       );
       list.remove(element);
     });
-    //GetStorage().write('postCallList', list);
+    GetStorage().write('postCallList', list);
     Get.snackbar(
       "Fatto!",
       "I record salvati localmente sono stati sincronizzati!",

@@ -13,6 +13,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/scre
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_mptask_resource_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_edit_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
@@ -165,9 +166,45 @@ class MaintenanceMpResourceScreen
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Task',
+                                      tooltip: 'Edit Resource',
                                       onPressed: () {
-                                        //log("info button pressed");
+                                        Get.to(
+                                            const EditMaintenanceMpResource(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "productName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mProductID!
+                                                  .identifier,
+                                              "productId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mProductID!
+                                                  .id,
+                                              "name": controller
+                                                  .trx.records![index].name,
+                                              "SerNo": controller
+                                                  .trx.records![index].serNo,
+                                              "Description": controller.trx
+                                                  .records![index].description,
+                                              "date3": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl3DateFrom,
+                                              "date2": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl2DateFrom,
+                                              "date1": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl1DateFrom,
+                                              "offlineid": controller.trx
+                                                  .records![index].offlineId,
+                                              "index": index,
+                                            });
                                       },
                                     ),
                                   ),
@@ -269,6 +306,11 @@ class MaintenanceMpResourceScreen
                                                   .lITControl1DateNext ??
                                               "??"),
                                         ]),
+                                        /* Row(children: [
+                                          const Text('offline id: '),
+                                          Text(
+                                              "${controller.trx.records![index].offlineId}"),
+                                        ]), */
                                       ],
                                     ),
                                   ],

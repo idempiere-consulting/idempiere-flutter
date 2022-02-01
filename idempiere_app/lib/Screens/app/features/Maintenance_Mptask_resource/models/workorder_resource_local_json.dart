@@ -45,19 +45,20 @@ class RRecords {
   final ResourceType? resourceType;
   final String? updated;
   final ADOrgID? aDOrgID;
-  final MProductID? mProductID;
+  MProductID? mProductID;
   final int? discount;
   final String? value;
-  final String? name;
-  final String? description;
-  final String? serNo;
-  final String? lITControl3DateFrom;
-  final String? lITControl3DateNext;
-  final String? lITControl2DateFrom;
-  final String? lITControl2DateNext;
-  final String? lITControl1DateFrom;
-  final String? lITControl1DateNext;
+  String? name;
+  String? description;
+  String? serNo;
+  String? lITControl3DateFrom;
+  String? lITControl3DateNext;
+  String? lITControl2DateFrom;
+  String? lITControl2DateNext;
+  String? lITControl1DateFrom;
+  String? lITControl1DateNext;
   final String? modelname;
+  int? offlineId;
 
   RRecords({
     this.id,
@@ -86,6 +87,7 @@ class RRecords {
     this.lITControl1DateFrom,
     this.lITControl1DateNext,
     this.modelname,
+    this.offlineId,
   });
 
   RRecords.fromJson(Map<String, dynamic> json)
@@ -127,7 +129,8 @@ class RRecords {
         lITControl2DateNext = json['LIT_Control2DateNext'] as String?,
         lITControl1DateFrom = json['LIT_Control1DateFrom'] as String?,
         lITControl1DateNext = json['LIT_Control1DateNext'] as String?,
-        modelname = json['model-name'] as String?;
+        modelname = json['model-name'] as String?,
+        offlineId = json['offlineId'] as int?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -155,7 +158,8 @@ class RRecords {
         'LIT_Control2DateNext': lITControl2DateNext,
         'LIT_Control1DateFrom': lITControl1DateFrom,
         'LIT_Control1DateNext': lITControl1DateNext,
-        'model-name': modelname
+        'model-name': modelname,
+        'offlineId': offlineId,
       };
 }
 
@@ -296,8 +300,8 @@ class ADOrgID {
 
 class MProductID {
   final String? propertyLabel;
-  final int? id;
-  final String? identifier;
+  int? id;
+  String? identifier;
   final String? modelname;
 
   MProductID({

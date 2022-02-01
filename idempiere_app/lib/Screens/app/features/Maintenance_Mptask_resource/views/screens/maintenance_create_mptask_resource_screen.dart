@@ -45,6 +45,9 @@ class _CreateMaintenanceMpResourceState
       "LIT_Control3DateFrom": date3,
       "LIT_Control2DateFrom": date2,
       "LIT_Control1DateFrom": date1,
+      "Name": nameFieldController.text,
+      "SerNo": sernoFieldController.text,
+      "Description": descriptionFieldController.text
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -53,28 +56,22 @@ class _CreateMaintenanceMpResourceState
     ResourceType res =
         ResourceType(id: "BP", identifier: "Parti Scheda Prodotto");
     RRecords record = RRecords(
-        mProductID: prod,
-        mpOtDocumentno: GetStorage().read('selectedTaskDocNo'),
-        resourceType: res,
-        resourceQty: 1,
-        lITControl3DateFrom: date3,
-        lITControl2DateFrom: date2,
-        lITControl1DateFrom: date1,
-        name: nameFieldController.text,
-        serNo: sernoFieldController.text,
-        description: descriptionFieldController.text);
+      mProductID: prod,
+      mpOtDocumentno: GetStorage().read('selectedTaskDocNo'),
+      resourceType: res,
+      resourceQty: 1,
+      lITControl3DateFrom: date3,
+      lITControl2DateFrom: date2,
+      lITControl1DateFrom: date1,
+      name: nameFieldController.text,
+      serNo: sernoFieldController.text,
+      description: descriptionFieldController.text,
+    );
 
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/windows/preventive-maintenance/tabs/tasks/${GetStorage().read('selectedTaskId')}/resources');
     //print(msg);
-
-    trx.records!.add(record);
-    trx.rowcount = trx.rowcount! + 1;
-    var data = jsonEncode(trx.toJson());
-    GetStorage().write('workOrderResourceSync', data);
-
-    Get.find<MaintenanceMpResourceController>().getWorkOrders();
 
     if (isConnected) {
       emptyAPICallStak();
@@ -108,7 +105,8 @@ class _CreateMaintenanceMpResourceState
         );
       }
     } else {
-      List<String> list = [];
+      record.offlineId = GetStorage().read('postCallId');
+      List<dynamic> list = [];
       if (GetStorage().read('postCallList') == null) {
         var call = jsonEncode({
           "offlineid": GetStorage().read('postCallId'),
@@ -127,6 +125,9 @@ class _CreateMaintenanceMpResourceState
           "LIT_Control3DateFrom": date3,
           "LIT_Control2DateFrom": date2,
           "LIT_Control1DateFrom": date1,
+          "Name": nameFieldController.text,
+          "SerNo": sernoFieldController.text,
+          "Description": descriptionFieldController.text
         });
 
         list.add(call);
@@ -163,6 +164,11 @@ class _CreateMaintenanceMpResourceState
         ),
       );
     }
+    trx.records!.add(record);
+    trx.rowcount = trx.rowcount! + 1;
+    var data = jsonEncode(trx.toJson());
+    GetStorage().write('workOrderResourceSync', data);
+    Get.find<MaintenanceMpResourceController>().getWorkOrders();
   }
 
   Future<List<Records>> getAllProducts() async {
