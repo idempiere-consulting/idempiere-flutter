@@ -50,10 +50,11 @@ class _Sidebar extends StatelessWidget {
                   label: "Email".tr,
                   totalNotif: 20,
                   visible: int.parse(list[1], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
                       ? true
                       : false,
                 ),
@@ -74,10 +75,11 @@ class _Sidebar extends StatelessWidget {
                   icon: Icons.sell_outlined,
                   label: "Ticket".tr,
                   visible: int.parse(list[16], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
                       ? true
                       : false,
                 ),
@@ -102,7 +104,7 @@ class _Sidebar extends StatelessWidget {
                               .padLeft(4, "0")
                               .toString()[1] ==
                           "1"
-                      ? true
+                      ? true && GetStorage().read("isOffline") == false
                       : false,
                 ),
                 SelectionButtonData(
@@ -110,10 +112,11 @@ class _Sidebar extends StatelessWidget {
                   icon: Icons.shopping_cart_outlined,
                   label: "Purchase".tr,
                   visible: int.parse(list[58], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
                       ? true
                       : false,
                 ),
@@ -122,10 +125,11 @@ class _Sidebar extends StatelessWidget {
                   icon: Icons.local_convenience_store_outlined,
                   label: "Supplychain".tr,
                   visible: int.parse(list[63], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
                       ? true
                       : false,
                 ),
@@ -134,10 +138,11 @@ class _Sidebar extends StatelessWidget {
                   icon: Icons.emoji_transportation_outlined,
                   label: "VehicleEquipment".tr,
                   visible: int.parse(list[68], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
                       ? true
                       : false,
                 ),
@@ -146,10 +151,11 @@ class _Sidebar extends StatelessWidget {
                   icon: Icons.real_estate_agent_outlined,
                   label: "DashboardAssetresource".tr,
                   visible: int.parse(list[2], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
                       ? false
                       : false,
                 ),
@@ -158,10 +164,11 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.personOutline,
                   label: "Profil".tr,
                   visible: int.parse(list[2], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
                       ? true
                       : false,
                 ),
@@ -170,10 +177,11 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.settingsOutline,
                   label: "Setting".tr,
                   visible: int.parse(list[2], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
                       ? true
                       : false,
                 ),

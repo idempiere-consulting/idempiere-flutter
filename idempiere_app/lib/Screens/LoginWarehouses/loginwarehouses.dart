@@ -171,6 +171,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         productSync == false &&
         jpTODOSync == false &&
         workOrderSync == false) {
+      DateTime now = DateTime.now();
+      DateTime date = DateTime(now.year, now.month, now.day);
+      GetStorage().write('lastLoginDate', date.toString());
       Get.offAllNamed("/Dashboard");
     }
   }

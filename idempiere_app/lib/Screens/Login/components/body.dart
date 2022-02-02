@@ -66,6 +66,9 @@ class _BodyState extends State<Body> {
             .padLeft(4, "0")
             .toString()); */
         GetStorage().write('permission', list);
+        DateTime now = DateTime.now();
+        DateTime date = DateTime(now.year, now.month, now.day);
+        GetStorage().write('lastLoginDate', date.toString());
         Get.offAllNamed('/Dashboard');
       } else {
         Get.snackbar(
@@ -89,81 +92,112 @@ class _BodyState extends State<Body> {
   }
 
   postUserData(context, checkboxState, ip) async {
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/auth/tokens');
-    final msg = jsonEncode({
-      "userName": userFieldController.text,
-      "password": passwordFieldController.text
-    }); //"userName": "Flavia Lonardi", "password": "Fl@via2021"
-    var response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: msg,
-    );
-    var jsonFinal = LoginAuthentication.fromJson(jsonDecode(response.body));
-    if (response.statusCode == 200) {
-      jsonFinal = LoginAuthentication.fromJson(jsonDecode(response.body));
-      GetStorage().write('user', userFieldController.text);
-      GetStorage().write('password', passwordFieldController.text);
+    var isConnected = await checkLoginConnection();
 
-      int intValue = jsonFinal.clients[0].id;
-      String stringValue = intValue.toString();
-      GetStorage().write('clientid', stringValue);
-      GetStorage().write('token1', jsonFinal.token);
-      if (checkboxState == false &&
-          GetStorage().read('ip') != null &&
-          GetStorage().read('token1') != null &&
-          GetStorage().read('roleid') != null &&
-          GetStorage().read('organizationid') != null &&
-          GetStorage().read('warehouseid') != null &&
-          GetStorage().read('clientid') != null) {
-        String ip = GetStorage().read('ip');
-        String clientid = GetStorage().read('clientid');
-        String roleid = GetStorage().read('roleid');
-        String organizationid = GetStorage().read('organizationid');
-        String warehouseid = GetStorage().read('warehouseid');
-        String authorization = 'Bearer ' + GetStorage().read('token1');
+    if (isConnected) {
+      GetStorage().write("isOffline", false);
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse('$protocol://' + ip + '/api/v1/auth/tokens');
+      final msg = jsonEncode({
+        "userName": userFieldController.text,
+        "password": passwordFieldController.text
+      }); //"userName": "Flavia Lonardi", "password": "Fl@via2021"
+      var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: msg,
+      );
+      var jsonFinal = LoginAuthentication.fromJson(jsonDecode(response.body));
+      if (response.statusCode == 200) {
+        jsonFinal = LoginAuthentication.fromJson(jsonDecode(response.body));
+        GetStorage().write('user', userFieldController.text);
+        GetStorage().write('password', passwordFieldController.text);
 
-        var url = Uri.parse('$protocol://' + ip + '/api/v1/auth/tokens');
-        final msg = jsonEncode({
-          "clientId": clientid,
-          "roleId": roleid,
-          "organizationId": organizationid,
-          "warehouseId": warehouseid,
-          "language": GetStorage().read('language') ?? "it_IT"
-        });
-        var response = await http.put(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Authorization': authorization,
-          },
-          body: msg,
-        );
+        int intValue = jsonFinal.clients[0].id;
+        String stringValue = intValue.toString();
+        GetStorage().write('clientid', stringValue);
+        GetStorage().write('token1', jsonFinal.token);
+        if (checkboxState == false &&
+            GetStorage().read('ip') != null &&
+            GetStorage().read('token1') != null &&
+            GetStorage().read('roleid') != null &&
+            GetStorage().read('organizationid') != null &&
+            GetStorage().read('warehouseid') != null &&
+            GetStorage().read('clientid') != null) {
+          String ip = GetStorage().read('ip');
+          String clientid = GetStorage().read('clientid');
+          String roleid = GetStorage().read('roleid');
+          String organizationid = GetStorage().read('organizationid');
+          String warehouseid = GetStorage().read('warehouseid');
+          String authorization = 'Bearer ' + GetStorage().read('token1');
 
-        if (response.statusCode == 200) {
-          // If the server did return a 200 OK response,
-          // then parse the JSON.
-          // ignore: unused_local_variable
-          var json = jsonDecode(response.body);
-          //print(json);
-          GetStorage().write("token", json["token"]);
-          GetStorage().write("userId", json["userId"]);
-          //Get.offAndToNamed("/Dashboard");
-          getLoginPermission();
+          var url = Uri.parse('$protocol://' + ip + '/api/v1/auth/tokens');
+          final msg = jsonEncode({
+            "clientId": clientid,
+            "roleId": roleid,
+            "organizationId": organizationid,
+            "warehouseId": warehouseid,
+            "language": GetStorage().read('language') ?? "it_IT"
+          });
+          var response = await http.put(
+            url,
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': authorization,
+            },
+            body: msg,
+          );
+
+          if (response.statusCode == 200) {
+            // If the server did return a 200 OK response,
+            // then parse the JSON.
+            // ignore: unused_local_variable
+            var json = jsonDecode(response.body);
+            //print(json);
+            GetStorage().write("token", json["token"]);
+            GetStorage().write("userId", json["userId"]);
+            //Get.offAndToNamed("/Dashboard");
+            getLoginPermission();
+          } else {
+            // If the server did not return a 200 OK response,
+            // then throw an exception.
+            throw Exception('Failed to load Token');
+          }
         } else {
-          // If the server did not return a 200 OK response,
-          // then throw an exception.
-          throw Exception('Failed to load Token');
-        }
-      } else {
-        /* Navigator.pushNamed(
+          /* Navigator.pushNamed(
           context,
           '/loginroles',
         ); */
-        Get.to(() => const LoginRoles());
+          Get.to(() => const LoginRoles());
+        }
+      }
+    } else {
+      DateTime now = DateTime.now();
+      DateTime date = DateTime(now.year, now.month, now.day);
+      var lastdate = GetStorage().read('lastLoginDate');
+
+      if (date.toString() == lastdate) {
+        GetStorage().write("isOffline", true);
+        Get.offAllNamed('/Dashboard');
+        Get.snackbar(
+          "Offline!",
+          "Sei in offline a causa di mancata connessione Internet, saranno presenti delle limitazioni.",
+          icon: const Icon(
+            Icons.wifi_lock,
+            color: Colors.red,
+          ),
+        );
+      } else {
+        Get.snackbar(
+          "Offline!",
+          "Sei in offline a causa di mancata connessione Internet e non il tuo ultimo login non è abbastanza recente.",
+          icon: const Icon(
+            Icons.lock,
+            color: Colors.red,
+          ),
+        );
       }
     }
   }
