@@ -37,7 +37,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person_add,
                   icon: EvaIcons.personOutline,
                   label: "Lead".tr,
-                  visible: int.parse(list[3][0], radix: 16)
+                  visible: int.parse(list[3], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
                               .toString()[1] ==
@@ -49,60 +49,130 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.paid,
                   icon: Icons.paid_outlined,
                   label: "Opportunity".tr,
+                  visible: int.parse(list[7], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.contact_mail,
                   icon: Icons.contact_mail_outlined,
                   label: "ContactBP".tr,
                   totalNotif: 20,
+                  visible: int.parse(list[4], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.domain,
                   icon: Icons.domain_outlined,
                   label: "CustomerBP".tr,
                   totalNotif: 20,
+                  visible: int.parse(list[5], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.task,
                   icon: Icons.task_outlined,
                   label: "Task".tr,
                   totalNotif: 20,
+                  visible: int.parse(list[6], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.description,
                   icon: Icons.description_outlined,
                   label: "SalesOrder".tr,
                   totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.local_shipping,
-                  icon: Icons.local_shipping_outlined,
-                  label: "Shipment".tr,
-                  totalNotif: 20,
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.ballot,
                   icon: Icons.ballot_outlined,
                   label: "ProductList".tr,
                   totalNotif: 20,
+                  visible: int.parse(list[9], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.receipt,
                   icon: Icons.receipt_outlined,
                   label: "Invoice".tr,
                   totalNotif: 20,
+                  visible: int.parse(list[11], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.payments,
                   icon: Icons.payments_outlined,
                   label: "Payment".tr,
                   totalNotif: 20,
+                  visible: int.parse(list[12], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.request_quote,
                   icon: Icons.request_quote_outlined,
                   label: "Commission".tr,
                   totalNotif: 20,
+                  visible: int.parse(list[13], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.local_shipping,
+                  icon: Icons.local_shipping_outlined,
+                  label: "Shipment".tr,
+                  totalNotif: 20,
+                  visible: int.parse(list[10], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
               ],
               onSelected: (index, value) {

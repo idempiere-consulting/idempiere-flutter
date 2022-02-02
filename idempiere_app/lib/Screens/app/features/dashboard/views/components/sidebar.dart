@@ -150,7 +150,7 @@ class _Sidebar extends StatelessWidget {
                               .padLeft(4, "0")
                               .toString()[1] ==
                           "1"
-                      ? true
+                      ? false
                       : false,
                 ),
                 SelectionButtonData(
