@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:idempiere_app/Json_Classes/Authentication/get_1st_token_json.dart';
 import 'package:idempiere_app/Screens/Login/components/background.dart';
+import 'package:idempiere_app/Screens/LoginClient/loginclient_screen.dart';
 import 'package:idempiere_app/Screens/LoginRoles/loginroles_screen.dart';
 //import 'package:idempiere_app/Screens/LoginRoles/loginroles_screen.dart';
 import 'package:idempiere_app/components/rounded_button.dart';
@@ -115,9 +116,9 @@ class _BodyState extends State<Body> {
         GetStorage().write('user', userFieldController.text);
         GetStorage().write('password', passwordFieldController.text);
 
-        int intValue = jsonFinal.clients[0].id;
-        String stringValue = intValue.toString();
-        GetStorage().write('clientid', stringValue);
+        //int intValue = jsonFinal.clients[0].id;
+        //String stringValue = intValue.toString();
+        //GetStorage().write('clientid', stringValue);
         GetStorage().write('token1', jsonFinal.token);
         if (checkboxState == false &&
             GetStorage().read('ip') != null &&
@@ -170,7 +171,8 @@ class _BodyState extends State<Body> {
           context,
           '/loginroles',
         ); */
-          Get.to(() => const LoginRoles());
+          GetStorage().write('clientlist', response.body);
+          Get.to(() => const LoginClient());
         }
       }
     } else {
