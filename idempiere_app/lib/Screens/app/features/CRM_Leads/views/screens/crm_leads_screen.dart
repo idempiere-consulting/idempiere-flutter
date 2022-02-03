@@ -200,7 +200,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                         color: Colors.yellowAccent),
                                     Text(
                                       controller.trx.windowrecords![index]
-                                              .leadStatus!.identifier ??
+                                              .leadStatus?.identifier ??
                                           "??",
                                       style:
                                           const TextStyle(color: Colors.white),
