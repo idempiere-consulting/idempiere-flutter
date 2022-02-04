@@ -489,7 +489,8 @@ get API :
 * [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
 * [ ] (U)Modificare ...
 * [ ] (P)...
-* [ ] 
+
+
 ### -  Intervento Manutenzione [OFFLINE]
 
 * Stato/note : 
@@ -505,6 +506,7 @@ get API :
 * [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
 * [ ] (U)Modificare ...
 * [ ] (P)...
+  
 ### -  Anomalia Manutenzione
 
 * Stato/note : Definito / 10%
@@ -520,6 +522,7 @@ get API :
 * [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
 * [ ] (U)Modificare ...
 * [ ] (P)...
+* [ ] 
 ### -  Magazzino Furgone
 
 * Stato/note : Definito / 10%
@@ -675,22 +678,31 @@ get API :
 ### Ticket (portale) TBD
 
 
-#### Ticket (portale) [](CRUD)
+#### Ticket (portale) [](CRD)
 
 * Stato/note : Definito / 10%
 * Descrizione :
 * Nome Oggetto : CustomerTicket
-* API model :  r_request  Filtro fisso :
+* API model :  r_request  Filtro fisso : Bpartner 
 
-* [ ] Filtro Base = ???
-* [ ] Filtri Avanzata: ???
-* [ ] * [ ] Ricerca : 
-* [ ] (R)Visualizzare Pagamento
+* [ ] Filtro Base = C_Partner_ID (login)
+* [ ] Filtri Avanzata: APERTI / TUTTI
+* [ ] * [ ] Ricerca :  NESSUNO
+* [ ] (R)Visualizzare Ticket 
     [ ] Nr Documento
+    [ ] Stato  (R_Status_ID) 
+    [ ] Descrizione Richiesta (Summary)
+    [ ] Priorità
+
 * [ ] (C)Crea Ticket + allega foto
-  
-* [ ] (U)Modificare ...
-* [ ] (P)...
+    [ ] Descrizione Richiesta (Summary)
+    [ ] Priorità   
+    ..AUTO -> C_Partner_ID - USer - Stato : Nuovo/Da Assegnat (**??)
+              Salesrep vuoto (Da Assegnare)
+    + Allegato
+* [ ] (U) Ticket ADD commento/richiesta su ticket esistente
+    [Result] 
+* [ ] (P) Chiudere il ticket  EDIT cambio STATO TICKET in CHIUSO
   
 ### - Manutenzione
 
@@ -759,7 +771,7 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
-##   Formazione Portale
+##  5 Formazione Portale
 
 #### - Corsi di Formazione 
 
@@ -808,7 +820,7 @@ get API :
 * [ ] (P)...
 
 
-##  5 Formazione Corsista
+##  6 Formazione Corsista
 
 #### - Presenza Corso
 
@@ -842,7 +854,7 @@ get API :
 * [ ] (P)...
 
 <<<<<<< HEAD
-##  6 Acquisti 
+##  7 Acquisti 
 =======
 ##  8 Acquisti 
 Purchase
