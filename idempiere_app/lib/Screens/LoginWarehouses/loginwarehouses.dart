@@ -144,7 +144,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
-    var userId = GetStorage().read('userId');
+    //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(

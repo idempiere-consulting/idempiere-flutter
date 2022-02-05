@@ -213,7 +213,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                                     horizontal: 20.0, vertical: 10.0),
                                 children: [
                                   Column(
-                                    children: [
+                                    children: const [
                                       /* Row(
                                         children: [
                                           const Text(

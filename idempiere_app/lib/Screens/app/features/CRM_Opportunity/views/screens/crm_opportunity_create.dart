@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
@@ -56,9 +55,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       },
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(response.body);
+      //print(response.body);
     } else {
-      print(response.body);
+      //print(response.body);
     }
   }
 
@@ -82,8 +81,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       'Probability': 50,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/c_opportunity/');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_opportunity/');
     //print(msg);
     var response = await http.post(
       url,
@@ -110,7 +108,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
         ),
       );
     } else {
-      print(response.body);
+      //print(response.body);
       Get.snackbar(
         "Errore!",
         "Record non creato",
@@ -126,8 +124,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/C_SalesStage/');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/C_SalesStage/');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -151,8 +148,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/c_bpartner?\$filter= IsCustomer eq Y and AD_Client_ID eq 1000000');
     var response = await http.get(
@@ -175,8 +171,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -216,6 +211,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
   // ignore: prefer_typing_uninitialized_variables
   var amtFieldController;
 
+  // ignore: prefer_typing_uninitialized_variables
   var bPartnerFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var phoneFieldController;
@@ -377,9 +373,10 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),

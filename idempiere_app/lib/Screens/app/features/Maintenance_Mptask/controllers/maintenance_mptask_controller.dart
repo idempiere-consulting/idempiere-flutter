@@ -73,6 +73,7 @@ class MaintenanceMptaskController extends GetxController {
     if (GetStorage().read('workOrderSync') != null) {
       _trx = WorkOrderLocalJson.fromJson(
           jsonDecode(GetStorage().read('workOrderSync')));
+      // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     }
   }
@@ -80,7 +81,7 @@ class MaintenanceMptaskController extends GetxController {
   Future<void> syncWorkOrder() async {
     var isConnected = await checkConnection();
 
-    print(isConnected);
+    //print(isConnected);
 
     if (isConnected) {
       emptyAPICallStak();
@@ -121,7 +122,7 @@ class MaintenanceMptaskController extends GetxController {
 
   Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
-    var userId = GetStorage().read('userId');
+    //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(

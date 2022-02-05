@@ -8,9 +8,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/shipment_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
@@ -80,7 +78,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("Documento di Trasporto: ${controller.trx.rowcount}")
+                        ? Text(
+                            "Documento di Trasporto: ${controller.trx.rowcount}")
                         : const Text("Documento di Trasporto: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),

@@ -194,9 +194,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),
@@ -223,9 +224,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                       });
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),
@@ -252,9 +254,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                       });
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),
@@ -275,7 +278,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                       setState(() {
                         dropdownValue = newValue!;
                       });
-                      print(dropdownValue);
+                      //print(dropdownValue);
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(

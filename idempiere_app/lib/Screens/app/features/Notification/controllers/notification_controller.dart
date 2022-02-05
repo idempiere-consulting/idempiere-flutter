@@ -22,6 +22,7 @@ class NotificationController extends GetxController {
   sendReadNotification(int index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    // ignore: prefer_typing_uninitialized_variables
     var msg;
     switch (_trx.records![index].docType) {
       case "LEAD":
@@ -49,8 +50,8 @@ class NotificationController extends GetxController {
       default:
     }
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/lit_mobile_isread/');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_mobile_isread/');
     var response = await http.post(
       url,
       body: msg,
@@ -60,7 +61,7 @@ class NotificationController extends GetxController {
       },
     );
     if (response.statusCode == 201) {
-      print(response.body);
+      //print(response.body);
     } else {
       response.body;
       throw Exception('Failed to send notification');
@@ -106,8 +107,7 @@ class NotificationController extends GetxController {
     final userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userId and AD_Client_ID eq 1000000');
     var response = await http.get(
@@ -290,8 +290,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

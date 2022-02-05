@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 //import 'dart:developer';
 
@@ -12,7 +14,6 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/v
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
-import 'package:intl/intl.dart';
 
 class CreateMaintenanceMpResource extends StatefulWidget {
   const CreateMaintenanceMpResource({Key? key}) : super(key: key);
@@ -25,9 +26,6 @@ class CreateMaintenanceMpResource extends StatefulWidget {
 class _CreateMaintenanceMpResourceState
     extends State<CreateMaintenanceMpResource> {
   createWorkOrderResource(bool isConnected) async {
-    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-    String now = dateFormat.format(DateTime.now());
-
     //print(now);
 
     final ip = GetStorage().read('ip');
@@ -195,7 +193,6 @@ class _CreateMaintenanceMpResourceState
   } */
 
   //dynamic args = Get.arguments;
-  // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
   var valueFieldController;
   var descriptionFieldController;
@@ -392,9 +389,10 @@ class _CreateMaintenanceMpResourceState
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),
@@ -424,9 +422,10 @@ class _CreateMaintenanceMpResourceState
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),
@@ -456,9 +455,10 @@ class _CreateMaintenanceMpResourceState
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),

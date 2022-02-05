@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 //import 'dart:developer';
 
@@ -87,8 +89,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             ),
           );
         } else {
-          print(response.body);
-          print(response.statusCode);
+          //print(response.body);
+          //print(response.statusCode);
           Get.snackbar(
             "Errore!",
             "Il record non è stato modificato",
@@ -198,7 +200,6 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   } */
 
   //dynamic args = Get.arguments;
-  // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
   var valueFieldController;
   var descriptionFieldController;
@@ -232,7 +233,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     date1 = Get.arguments["date1"] ?? "";
     dateCalc3 = 0;
     offline = Get.arguments["offlineid"] ?? -1;
-    print(Get.arguments["offlineid"]);
+    //print(Get.arguments["offlineid"]);
 
     //getAllProducts();
   }
@@ -403,9 +404,10 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),
@@ -435,9 +437,10 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),
@@ -467,9 +470,10 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),

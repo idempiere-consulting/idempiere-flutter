@@ -1,22 +1,17 @@
 import 'dart:convert';
 //import 'dart:developer';
 
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
+
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/business_partner_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/resource_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
-import 'package:intl/intl.dart';
-import 'dart:convert';
 
 class EditMaintenanceMptaskLine extends StatefulWidget {
   const EditMaintenanceMptaskLine({Key? key}) : super(key: key);
@@ -65,9 +60,6 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
   }
 
   editWorkOrder(bool isConnected) async {
-    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-    String now = dateFormat.format(DateTime.now());
-
     //print(now);
 
     final ip = GetStorage().read('ip');
@@ -86,8 +78,6 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
 
     //print(trx.records![args["index"]].mpOtTaskStatus = dropdownValue);
     var data = jsonEncode(trx.toJson());
-
-    print(data);
 
     GetStorage().write('workOrderSync', data);
 
@@ -118,7 +108,7 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
           ),
         );
       } else {
-        print(response.body);
+        //print(response.body);
         Get.snackbar(
           "Errore!",
           "Il record non è stato modificato",

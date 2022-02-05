@@ -81,7 +81,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
         ),
       );
     } else {
-      print(response.body);
+      //print(response.body);
       Get.snackbar(
         "Errore!",
         "Il record non è stato completato",
@@ -295,7 +295,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                 //print("done!");
                                                 completeOrder(index);
                                               } else {
-                                                print(response.body);
+                                                //print(response.body);
                                                 Get.snackbar(
                                                   "Errore!",
                                                   "Il record non è stato completato",

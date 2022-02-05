@@ -122,7 +122,7 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       GetStorage().write('workOrderSync', response.body);
       //isWorkOrderSyncing.value = false;
       syncWorkOrderResource();
@@ -131,7 +131,7 @@ class SettingsController extends GetxController {
 
   Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
-    var userId = GetStorage().read('userId');
+    //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
@@ -146,7 +146,7 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       GetStorage().write('workOrderResourceSync', response.body);
       isWorkOrderSyncing.value = false;
     }

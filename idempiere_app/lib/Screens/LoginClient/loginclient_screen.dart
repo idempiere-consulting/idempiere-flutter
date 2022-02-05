@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:idempiere_app/Screens/LoginOrganizations/loginorganizations_screen.dart';
 import 'package:idempiere_app/Screens/LoginRoles/loginroles_screen.dart';
 import 'package:idempiere_app/constants.dart';
 

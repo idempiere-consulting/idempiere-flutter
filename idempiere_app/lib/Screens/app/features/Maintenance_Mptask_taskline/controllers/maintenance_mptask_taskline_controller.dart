@@ -121,6 +121,7 @@ class MaintenanceMptaskLineController extends GetxController {
     if (GetStorage().read('workOrderSync') != null) {
       _trx = WorkOrderLocalJson.fromJson(
           jsonDecode(GetStorage().read('workOrderSync')));
+      // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     }
   }

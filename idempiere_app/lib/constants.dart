@@ -72,12 +72,14 @@ emptyPostCallStack() {
     List<dynamic> list = GetStorage().read('postCallList');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
+    // ignore: avoid_function_literals_in_foreach_calls
     list.forEach((element) async {
       var json = jsonDecode(element);
       var url = Uri.parse(json["url"]);
       //print(element);
       //print(json["url"]);
 
+      // ignore: unused_local_variable
       var response = await http.post(
         url,
         body: element,
@@ -107,6 +109,7 @@ emptyEditAPICallStack() {
     String authorization = 'Bearer ' + GetStorage().read('token');
     calls.forEach((call, msg) async {
       var url = Uri.parse(call);
+      // ignore: unused_local_variable
       var response = await http.put(
         url,
         body: msg,

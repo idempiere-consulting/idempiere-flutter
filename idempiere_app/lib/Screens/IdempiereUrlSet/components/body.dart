@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/components/rounded_button.dart';
 import 'package:idempiere_app/components/rounded_input_field.dart';
-import 'package:http/http.dart' as http;
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);

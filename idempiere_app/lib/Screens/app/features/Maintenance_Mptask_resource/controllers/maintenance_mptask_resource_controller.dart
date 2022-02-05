@@ -97,6 +97,7 @@ class MaintenanceMpResourceController extends GetxController {
     if (GetStorage().read('workOrderSync') != null) {
       _trx = WorkOrderResourceLocalJson.fromJson(
           jsonDecode(GetStorage().read('workOrderResourceSync')));
+      // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     }
   }

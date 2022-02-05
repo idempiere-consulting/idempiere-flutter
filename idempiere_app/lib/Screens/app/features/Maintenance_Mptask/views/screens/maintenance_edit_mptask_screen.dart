@@ -11,7 +11,6 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/res
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 class EditMaintenanceMptask extends StatefulWidget {
   const EditMaintenanceMptask({Key? key}) : super(key: key);
@@ -61,9 +60,6 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
   }
 
   editWorkOrder() async {
-    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-    String now = dateFormat.format(DateTime.now());
-
     //print(now);
 
     final ip = GetStorage().read('ip');
@@ -405,9 +401,10 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),

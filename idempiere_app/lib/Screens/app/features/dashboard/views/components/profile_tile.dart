@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: must_be_immutable
 class _ProfilTile extends StatelessWidget {
   _ProfilTile(
       {required this.data,

@@ -260,6 +260,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   // ignore: prefer_typing_uninitialized_variables
   var mailFieldController;
 
+  // ignore: prefer_typing_uninitialized_variables
   var resourceFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
@@ -287,8 +288,6 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     getResourceName();
     getAllResources();
   }
-
-  static String _displayStringForOption(Records option) => option.name!;
 
   static String _bPdisplayStringForOption(BPRecords option) => option.name!;
 
@@ -351,9 +350,10 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                       //print(date);
                     },
                     validator: (val) {
-                      print(val);
+                      //print(val);
                       return null;
                     },
+                    // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
                 ),
