@@ -102,7 +102,7 @@ class PurchaseLeadController extends GetxController {
     var url = Uri.parse(
         '$protocol://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= IsVendorLead eq Y and AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+        '/api/v1/models/ad_user?\$filter= IsVendorLead eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{

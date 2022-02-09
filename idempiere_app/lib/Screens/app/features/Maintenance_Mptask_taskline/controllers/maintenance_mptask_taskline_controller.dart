@@ -99,7 +99,7 @@ class MaintenanceMptaskLineController extends GetxController {
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/mp_ot?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+        '/api/v1/models/mp_ot?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{

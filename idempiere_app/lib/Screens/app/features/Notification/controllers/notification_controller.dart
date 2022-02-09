@@ -109,7 +109,7 @@ class NotificationController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userId and AD_Client_ID eq 1000000');
+        '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{

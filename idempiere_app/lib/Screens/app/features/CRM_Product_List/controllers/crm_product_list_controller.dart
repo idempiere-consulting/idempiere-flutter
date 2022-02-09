@@ -46,8 +46,9 @@ class CRMProductListController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -99,10 +100,9 @@ class CRMProductListController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
+    var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_Product?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}');
+        '/api/v1/models/M_Product?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -289,8 +289,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

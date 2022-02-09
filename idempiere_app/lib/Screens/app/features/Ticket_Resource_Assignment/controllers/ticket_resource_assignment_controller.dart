@@ -110,7 +110,7 @@ class TicketResourceAssignmentController extends GetxController {
     var url = Uri.parse(
         '$protocol://' +
         ip +
-        '/api/v1/models/S_ResourceAssignment?\$filter=AD_Client_ID eq 1000000${apiUrlFilter[filterCount]}$notificationFilter');
+        '/api/v1/models/S_ResourceAssignment?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(
       url,
       headers: <String, String>{
