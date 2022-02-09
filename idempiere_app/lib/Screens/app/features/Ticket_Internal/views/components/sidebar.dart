@@ -47,7 +47,7 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/Dashboard');
                     break;
                   case 1:
-                    Get.offNamed('/TicketClientTicket');
+                    Get.offNamed('/TicketInternalTicket');
                     break;
                   default:
                 }

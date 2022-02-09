@@ -45,6 +45,10 @@ import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/s
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Productwarehouse/views/screens/supplychain_productwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client/views/screens/ticketclient_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketclient_ticket_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Internal/views/screens/ticketinternal_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Task_ToDo/views/screens/ticket_task_todo_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Ticket_New/views/screens/ticket_ticket_new_screen.dart';
@@ -157,6 +161,26 @@ class MyApp extends StatelessWidget {
           name: '/Shipment',
           page: () => const CRMShipmentScreen(),
           binding: CRMShipmentBinding(),
+        ),
+        GetPage(
+          name: '/TicketClient',
+          page: () => const TicketClientScreen(),
+          binding: TicketClientBinding(),
+        ),
+        GetPage(
+          name: '/TicketClientTicket',
+          page: () => const TicketClientTicketScreen(),
+          binding: TicketClientTicketBinding(),
+        ),
+        GetPage(
+          name: '/TicketInternal',
+          page: () => const TicketInternalScreen(),
+          binding: TicketInternalBinding(),
+        ),
+        GetPage(
+          name: '/TicketInternalTicket',
+          page: () => const TicketInternalTicketScreen(),
+          binding: TicketInternalTicketBinding(),
         ),
         GetPage(
           name: '/Ticket',

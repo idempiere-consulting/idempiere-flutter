@@ -62,7 +62,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -72,7 +74,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
 
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       var json = EventJson.fromJson(jsonDecode(response.body));
       List<EventRecords>? list = json.records;
 

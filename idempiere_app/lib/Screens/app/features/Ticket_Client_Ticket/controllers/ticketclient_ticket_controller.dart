@@ -1,13 +1,18 @@
 part of dashboard;
 
-class CRMTaskController extends GetxController {
+class TicketClientTicketController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late TaskJson _trx;
+  late TicketsJson _trx;
+  late TicketTypeJson _tt;
   var _hasCallSupport = false;
+
+  String dropdownValue = "";
   //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
+  // ignore: prefer_typing_uninitialized_variables
+  var businessPartnerId;
 
   var value = "Tutti".obs;
 
@@ -22,14 +27,48 @@ class CRMTaskController extends GetxController {
     canLaunch('tel:123').then((bool result) {
       _hasCallSupport = result;
     });
-
-    getTasks();
-    getADUserID();
+    getTicketTypes();
+    getBusinessPartner();
+    //getTickets();
+    //getADUserID();
+    adUserId = GetStorage().read('userId');
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  TaskJson get trx => _trx;
+  TicketsJson get trx => _trx;
+  TicketTypeJson get tt => _tt;
   //String get value => _value.toString();
+
+  openTicketType() {
+    Get.defaultDialog(
+        title: "Ticket Type",
+        //middleText: "Choose the type of Ticket you want to create",
+        //contentPadding: const EdgeInsets.all(2.0),
+        content: DropdownButton(
+          value: dropdownValue,
+          style: const TextStyle(fontSize: 12.0),
+          elevation: 16,
+          onChanged: (String? newValue) {
+            dropdownValue = newValue!;
+          },
+          items: _tt.records!.map((list) {
+            return DropdownMenuItem<String>(
+              child: Text(
+                list.name.toString(),
+              ),
+              value: list.id.toString(),
+            );
+          }).toList(),
+        ),
+        barrierDismissible: true,
+        textCancel: "Cancel",
+        textConfirm: "Confirm",
+        onConfirm: () {
+          Get.back();
+          Get.to(const CreateTicketClientTicket(),
+              arguments: {"id": dropdownValue});
+        });
+  }
 
   changeFilter() {
     filterCount++;
@@ -38,17 +77,16 @@ class CRMTaskController extends GetxController {
     }
 
     value.value = filters[filterCount];
-    getTasks();
+    getTickets();
   }
 
-  Future<void> getADUserID() async {
+  Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
+    var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -60,11 +98,47 @@ class CRMTaskController extends GetxController {
       //print(response.body);
       var json = jsonDecode(response.body);
 
-      adUserId = json["records"][0]["id"];
-
+      businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+      getTickets();
+      //print(businessPartnerId);
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> getTicketTypes() async {
+    //var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/R_RequestType?\$filter=startswith(LIT_RequestSubType,\'TK\') and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //var json = jsonDecode(response.body);
+      _tt = TicketTypeJson.fromJson(jsonDecode(response.body));
+
+      dropdownValue = _tt.records![0].id.toString();
+
+      //businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+      //getTickets();
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
     }
   }
 
@@ -94,15 +168,23 @@ class CRMTaskController extends GetxController {
     await launch(launchUri.toString());
   }
 
-  Future<void> getTasks() async {
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+  Future<void> getTickets() async {
+    var apiUrlFilter = ["", " and AD_User_ID eq $adUserId"];
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and AD_User_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/JP_ToDo?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq 1000024 and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -112,7 +194,7 @@ class CRMTaskController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = TaskJson.fromJson(jsonDecode(response.body));
+      _trx = TicketsJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
