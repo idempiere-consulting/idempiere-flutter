@@ -81,14 +81,14 @@ class Records {
   final BillLocationID? billLocationID;
   final bool? isSelfService;
   final bool? isDropShip;
-  final int? volume;
-  final int? weight;
-  final double? processedOn;
+  final num? volume;
+  final num? weight;
+  final num? processedOn;
   final bool? isPayScheduleValid;
   final bool? isPriviledgedRate;
   final bool? lITIsNoCheckPaymentTerm;
   final bool? isOrderTemplate;
-  final int? qtyReserved;
+  final num? qtyReserved;
   final Status? status;
   final LITLastOrderID? lITLastOrderID;
   final String? lITLastDateOrdered;
@@ -228,7 +228,7 @@ class Records {
             ? PriorityRule.fromJson(
                 json['PriorityRule'] as Map<String, dynamic>)
             : null,
-        totalLines = json['TotalLines'] as int?,
+        totalLines = json['TotalLines'] as num?,
         grandTotal = json['GrandTotal'] as num?,
         mWarehouseID = (json['M_Warehouse_ID'] as Map<String, dynamic>?) != null
             ? MWarehouseID.fromJson(
@@ -278,14 +278,14 @@ class Records {
                 : null,
         isSelfService = json['IsSelfService'] as bool?,
         isDropShip = json['IsDropShip'] as bool?,
-        volume = json['Volume'] as int?,
-        weight = json['Weight'] as int?,
-        processedOn = json['ProcessedOn'] as double?,
+        volume = json['Volume'] as num?,
+        weight = json['Weight'] as num?,
+        processedOn = json['ProcessedOn'] as num?,
         isPayScheduleValid = json['IsPayScheduleValid'] as bool?,
         isPriviledgedRate = json['IsPriviledgedRate'] as bool?,
         lITIsNoCheckPaymentTerm = json['LIT_isNoCheckPaymentTerm'] as bool?,
         isOrderTemplate = json['isOrderTemplate'] as bool?,
-        qtyReserved = json['QtyReserved'] as int?,
+        qtyReserved = json['QtyReserved'] as num?,
         status = (json['Status'] as Map<String, dynamic>?) != null
             ? Status.fromJson(json['Status'] as Map<String, dynamic>)
             : null,
