@@ -160,18 +160,6 @@ class _Sidebar extends StatelessWidget {
                       : false,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.sell,
-                  icon: Icons.sell_outlined,
-                  label: "Ticket Client".tr,
-                  visible: true,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.sell,
-                  icon: Icons.sell_outlined,
-                  label: "Ticket Internal".tr,
-                  visible: true,
-                ),
-                SelectionButtonData(
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,
                   label: "Profil".tr,
@@ -215,13 +203,13 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/CRM');
                     break;
                   case 4:
-                    Get.offNamed('/Ticket');
+                    Get.offNamed('/TicketInternal');
                     break;
                   case 5:
                     Get.offNamed('/Maintenance');
                     break;
                   case 6:
-                    Get.offNamed('/PortalMp');
+                    Get.offNamed('/TicketClient');
                     break;
                   case 7:
                     Get.offNamed('/Purchase');
@@ -236,15 +224,9 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/DashboardAssetresource');
                     break;
                   case 11:
-                    Get.offNamed('/TicketClient');
-                    break;
-                  case 12:
-                    Get.offNamed('/TicketInternal');
-                    break;
-                  case 13:
                     Get.offNamed('/Profil');
                     break;
-                  case 14:
+                  case 12:
                     Get.offNamed('/Settings');
                     break;
                   default:

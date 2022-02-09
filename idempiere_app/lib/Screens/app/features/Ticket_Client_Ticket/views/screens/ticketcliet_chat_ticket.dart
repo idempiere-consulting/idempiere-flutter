@@ -51,7 +51,7 @@ class _MyHomePageState extends State<TicketClientChat> {
       var json = ChatLogJson.fromJson(jsonDecode(response.body));
       for (var i = 0; i < json.rowcount!; i++) {
         var msg = types.TextMessage(
-            author: GetStorage().read('username') ==
+            author: GetStorage().read('user') ==
                     json.records![i].createdBy?.identifier
                 ? _user
                 : types.User(
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<TicketClientChat> {
     });
   }
 
-  void _handleSendPressed(types.PartialText message) {
+  Future<void> _handleSendPressed(types.PartialText message) async {
     final textMessage = types.TextMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -89,7 +89,30 @@ class _MyHomePageState extends State<TicketClientChat> {
       text: message.text,
     );
 
-    _addMessage(textMessage);
+    final msg = jsonEncode({"Result": message.text});
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/windows/request/${Get.arguments["ticketid"]}');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      _addMessage(textMessage);
+    } else {
+      print(response.body);
+    }
   }
 
   @override
