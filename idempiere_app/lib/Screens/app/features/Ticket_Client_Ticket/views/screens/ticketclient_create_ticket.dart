@@ -1,16 +1,18 @@
 import 'dart:convert';
 //import 'dart:developer';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/freeslotjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketclient_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class CreateTicketClientTicket extends StatefulWidget {
   const CreateTicketClientTicket({Key? key}) : super(key: key);
@@ -21,6 +23,46 @@ class CreateTicketClientTicket extends StatefulWidget {
 }
 
 class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
+  attachImage() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
+
+    if (result != null) {
+      //File file = File(result.files.first.bytes!);
+      setState(() {
+        image64 = base64.encode(result.files.first.bytes!);
+        imageName = result.files.first.name;
+      });
+      //print(image64);
+      //print(imageName);
+    }
+  }
+
+  sendTicketAttachedImage(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final msg = jsonEncode({"name": imageName, "data": image64});
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/r_request/$id/attachments');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      //print(response.body);
+    } else {
+      //print(response.body);
+    }
+  }
+
   createTicket() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -29,16 +71,17 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "R_RequestType_ID": Get.arguments["id"],
       "DueType": {"id": 5},
-      "R_Status_ID": {"id": 1000023},
+      "R_Status_ID": {"id": rStatusId},
       "PriorityUser": {"id": dropdownValue},
       "Priority": {"id": dropdownValue},
       "ConfidentialType": {"id": "C"},
-      "SalesRep_ID": {"id": 1000471},
+      "SalesRep_ID": {"id": salesRepId},
       "ConfidentialTypeEntry": {"id": "C"},
       "Summary": nameFieldController.text,
       //"AD_User_ID": GetStorage().read('userid'),
       "C_BPartner_ID": {"id": businessPartnerId}
     });
+    //print(msg);
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/R_Request');
     //print(msg);
@@ -51,6 +94,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       },
     );
     if (response.statusCode == 201) {
+      var json = jsonDecode(response.body);
+      if (imageName != "" && image64 != "") {
+        sendTicketAttachedImage(json["id"]);
+        //print(response.body);
+      }
       Get.find<TicketClientTicketController>().getTickets();
       //print("done!");
       Get.snackbar(
@@ -63,9 +111,70 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       );
     } else {
       //print(response.statusCode);
+      //print(response.body);
+      //print(response.statusCode);
       Get.snackbar(
         "Errore!",
         "Record non creato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  createEvent() async {
+    var formatter = DateFormat('yyyy-MM-dd');
+    var date = DateTime.parse(slotDropdownValue);
+    String formattedDate = formatter.format(date);
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "AD_User_ID": {"id": salesRepId},
+      "Name": nameFieldController.text,
+      "Description": nameFieldController.text,
+      "JP_ToDo_ScheduledStartDate": formattedDate,
+      "JP_ToDo_ScheduledEndDate": formattedDate,
+      "JP_ToDo_ScheduledStartTime": '${date.hour}:00:00Z',
+      "JP_ToDo_ScheduledEndTime": '${date.hour + 1}:00:00Z',
+      "JP_ToDo_Status": {"id": "NY"},
+      "IsOpenToDoJP": true,
+      "JP_ToDo_Type": {"id": "S"},
+    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
+
+    //print(msg);
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      //print("done!");
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato creato",
+        isDismissible: true,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      //print(response.body);
+      //print(response.statusCode);
+      Get.snackbar(
+        "Errore!",
+        "Record non creato",
+        isDismissible: true,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -119,6 +228,62 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     }
   }
 
+  Future<void> getRStatus() async {
+    //var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/R_Status?\$filter= Value eq \'R00\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      rStatusId = json["records"][0]["id"];
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> getSalesRep() async {
+    //var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/AD_User?\$filter= Value eq \'tba\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      salesRepId = json["records"][0]["id"];
+      //print(rStatusId);
+      //getTickets();
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
   getTicketTypeInfo() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -146,13 +311,14 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     }
   }
 
-  Future<List<LSRecords>> getAllLeadStatuses() async {
+  Future<List<Types>> getFreeSlots() async {
+    List<Types> list = [];
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+        '/api/v1/models/lit_resourcefreeslot_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -161,23 +327,65 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       },
     );
     if (response.statusCode == 200) {
-      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
-      //print(json.rowcount);
+      //print(response.body);
+      var slots = FreeSlotJson.fromJson(jsonDecode(response.body));
 
-      return json.records!;
+      for (var i = 0; i < slots.rowcount!; i++) {
+        // ignore: unused_local_variable
+        var flag = true;
+
+        DateTime slot = DateTime.parse(slots.records![i].dateSlot!);
+
+        //print(slots.records![i].dateSlot);
+        for (var j = 0; j < eventJson.rowcount!; j++) {
+          DateTime dateTimeStart = DateTime.parse(
+              '${eventJson.records![j].jPToDoScheduledStartDate}T${eventJson.records![j].jPToDoScheduledStartTime}');
+          DateTime dateTimeEnd = DateTime.parse(
+              '${eventJson.records![j].jPToDoScheduledEndDate}T${eventJson.records![j].jPToDoScheduledEndTime}');
+
+          if ((slot.isAtSameMomentAs(dateTimeStart) ||
+                  slot.isAfter(dateTimeStart)) &&
+              (slot.isAtSameMomentAs(dateTimeEnd) ||
+                  slot.isBefore(dateTimeEnd))) {
+            flag = false;
+            break;
+          }
+        }
+
+        if (true) {
+          //flag
+          Types freeSlot = Types(
+              id: slot.toString(),
+              name:
+                  "${slot.day}/${slot.month}/${slot.year}  Ore ${slot.hour}:00");
+          //print(freeSlot.name);
+          list.add(freeSlot);
+        }
+      }
+
+      return list;
+      //print(slots.rowcount);
+      //print(ticketTypeValue);
     } else {
-      throw Exception("Failed to load lead statuses");
+      throw Exception("Failed to load free slots");
     }
-
-    //print(response.body);
   }
 
-  /* Future<List<Records>> */ getAllResourceAssignments() async {
+  Future<List<Types>> getAllScheduledEvents() async {
+    var now = DateTime.now();
+    DateTime fourteenDayslater = now.add(const Duration(days: 14));
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    String formattedfourteenDayslater = formatter.format(fourteenDayslater);
+    //print(formattedDate);
+    //print(formattedFiftyDaysAgo);
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/S_ResourceAssignment');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and JP_ToDo_ScheduledStartDate ge \'$formattedDate\' and JP_ToDo_ScheduledStartDate le \'$formattedfourteenDayslater 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -187,14 +395,15 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
-      // var jsondecoded = jsonDecode(response.body);
+      //print(response.body);
 
-      // var jsonContacts = ContactsJson.fromJson(jsondecoded);
+      eventJson = EventJson.fromJson(jsonDecode(response.body));
 
-      //return jsonContacts.records!;
+      //print(eventJson.records![0].jPToDoScheduledStartDate);
+      //print(eventJson.records![0].jPToDoScheduledStartTime);
+      return getFreeSlots();
     } else {
-      throw Exception("Failed to load resource assignments");
+      throw Exception("Failed to load scheduled events");
     }
 
     //print(list[0].eMail);
@@ -222,9 +431,18 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   // ignore: prefer_typing_uninitialized_variables
   var mailFieldController;
   String dropdownValue = "";
+  String slotDropdownValue = "";
   String salesrepValue = "";
   String ticketTypeValue = "";
+  String image64 = "";
+  String imageName = "";
+  // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
+  late EventJson eventJson;
+  // ignore: prefer_typing_uninitialized_variables
+  var rStatusId;
+  // ignore: prefer_typing_uninitialized_variables
+  var salesRepId;
   late List<Types> dropDownList;
 
   @override
@@ -235,16 +453,20 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
     dropdownValue = "9";
+    slotDropdownValue = "";
     ticketTypeValue = "";
+    image64 = "";
+    imageName = "";
     dropDownList = getTypes()!;
     getBusinessPartner();
-    getAllResourceAssignments();
+    getAllScheduledEvents();
     getTicketTypeInfo();
+    getRStatus();
+    getSalesRep();
     //fillFields();
-    getAllLeadStatuses();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  //static String _displayStringForOption(Records option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 
@@ -262,7 +484,16 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createTicket();
+                switch (ticketTypeValue) {
+                  case "TKG":
+                    createTicket();
+                    break;
+                  case "TKC":
+                    createEvent();
+                    break;
+                  default:
+                }
+                //createTicket();
               },
               icon: const Icon(
                 Icons.save,
@@ -349,6 +580,68 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       );
                     }).toList(),
                   ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Session slots currently free",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllScheduledEvents(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Types>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  value: snapshot.data![0].id,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      slotDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                      value: list.id.toString(),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKG",
+                  child: IconButton(
+                      onPressed: () {
+                        attachImage();
+                      },
+                      icon: const Icon(Icons.attach_file)),
                 ),
               ],
             );

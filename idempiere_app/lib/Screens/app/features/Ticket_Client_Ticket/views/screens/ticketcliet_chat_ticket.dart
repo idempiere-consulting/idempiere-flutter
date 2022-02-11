@@ -46,7 +46,7 @@ class _MyHomePageState extends State<TicketClientChat> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
 
       var json = ChatLogJson.fromJson(jsonDecode(response.body));
       for (var i = 0; i < json.rowcount!; i++) {
@@ -63,13 +63,12 @@ class _MyHomePageState extends State<TicketClientChat> {
         _addMessage(msg);
       }
     } else {
-      print(response.body);
+      //print(response.body);
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _messages = [];
     getLog();
@@ -111,7 +110,7 @@ class _MyHomePageState extends State<TicketClientChat> {
     if (response.statusCode == 200) {
       _addMessage(textMessage);
     } else {
-      print(response.body);
+      //print(response.body);
     }
   }
 

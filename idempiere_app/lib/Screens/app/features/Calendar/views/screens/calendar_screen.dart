@@ -10,6 +10,7 @@ import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.da
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/create_calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/edit_calendar_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -59,12 +60,18 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   Future<void> getAllEvents() async {
+    var now = DateTime.now();
+    DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\'');
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and Created ge \'$formattedFiftyDaysAgo\' and Created le \'$formattedDate 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -74,7 +81,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var json = EventJson.fromJson(jsonDecode(response.body));
       List<EventRecords>? list = json.records;
 
