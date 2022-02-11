@@ -13,6 +13,8 @@ class TicketClientTicketController extends GetxController {
   var adUserId;
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
+  // ignore: prefer_typing_uninitialized_variables
+  var closedTicketId;
 
   var value = "Tutti".obs;
 
@@ -28,7 +30,8 @@ class TicketClientTicketController extends GetxController {
       _hasCallSupport = result;
     });
     getTicketTypes();
-    getBusinessPartner();
+    getClosedTicketsID();
+    //getBusinessPartner();
     //getTickets();
     //getADUserID();
     adUserId = GetStorage().read('userId');
@@ -100,6 +103,34 @@ class TicketClientTicketController extends GetxController {
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
       getTickets();
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> getClosedTicketsID() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/R_Status?\$filter= IsClosed eq \'Y\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      closedTicketId = json["records"][0]["C_BPartner_ID"]["id"];
+      getBusinessPartner();
       //print(businessPartnerId);
       //print(trx.rowcount);
       //print(response.body);
