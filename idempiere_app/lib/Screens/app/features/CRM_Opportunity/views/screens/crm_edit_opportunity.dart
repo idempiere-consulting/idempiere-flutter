@@ -1,69 +1,26 @@
 import 'dart:convert';
 //import 'dart:developer';
 
-import 'package:date_time_picker/date_time_picker.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity_status_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/business_partner_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
-class CreateOpportunity extends StatefulWidget {
-  const CreateOpportunity({Key? key}) : super(key: key);
+class EditOpportunity extends StatefulWidget {
+  const EditOpportunity({Key? key}) : super(key: key);
 
   @override
-  State<CreateOpportunity> createState() => _CreateOpportunityState();
+  State<EditOpportunity> createState() => _EditOpportunityState();
 }
 
-class _CreateOpportunityState extends State<CreateOpportunity> {
-  attachImage() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.any);
-
-    if (result != null) {
-      //File file = File(result.files.first.bytes!);
-      setState(() {
-        image64 = base64.encode(result.files.first.bytes!);
-        imageName = result.files.first.name;
-      });
-
-      //print(image64);
-    }
-  }
-
-  sendOpportunityAttachedImage(int id) async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-
-    final msg = jsonEncode({"name": imageName, "data": image64});
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/c_opportunity/$id/attachments');
-
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      //print(response.body);
-    } else {
-      //print(response.body);
-    }
-  }
-
-  static String _bPdisplayStringForOption(BPRecords option) => option.name!;
-
-  createOpportunity() async {
+class _EditOpportunityState extends State<EditOpportunity> {
+  editOpportunity() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
@@ -81,9 +38,10 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       'Probability': 50,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_opportunity/');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
-    var response = await http.post(
+    var response = await http.put(
       url,
       body: msg,
       headers: <String, String>{
@@ -91,27 +49,60 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 201) {
-      var json = jsonDecode(response.body);
-      if (imageName != "" && image64 != "") {
-        sendOpportunityAttachedImage(json["id"]);
-        //print(response.body);
-      }
+    if (response.statusCode == 200) {
       Get.find<CRMOpportunityController>().getOpportunities();
       //print("done!");
       Get.snackbar(
         "Fatto!",
-        "Il record è stato creato",
+        "Il record è stato aggiornato",
         icon: const Icon(
           Icons.done,
           color: Colors.green,
         ),
       );
     } else {
-      //print(response.body);
       Get.snackbar(
         "Errore!",
-        "Record non creato",
+        "Record non aggiornato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  deleteOpportunity() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    //print(msg);
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.find<CRMOpportunityController>().getOpportunities();
+      //print("done!");
+      Get.back();
+      Get.back();
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato cancellato",
+        icon: const Icon(
+          Icons.delete,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Errore!",
+        "Record non aggiornato",
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -124,7 +115,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/C_SalesStage/');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -134,7 +127,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     );
     if (response.statusCode == 200) {
       var json = OppurtunityStatusJson.fromJson(jsonDecode(response.body));
-      //print(response.body);
+      //print(json.rowcount);
 
       return json.records!;
     } else {
@@ -142,29 +135,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     }
 
     //print(response.body);
-  }
-
-  Future<List<BPRecords>> getAllBusinessPartners() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_bpartner?\$filter= IsCustomer eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-      var jsonBPs = BPJson.fromJson(jsondecoded);
-      return jsonBPs.records!;
-    } else {
-      throw Exception("Failed to load sales reps");
-    }
   }
 
   Future<List<Records>> getAllSalesRep() async {
@@ -195,19 +165,19 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     //print(json.);
   }
 
-  /* void fillFields() {
-    nameFieldController.text = args["name"];
-    bPartnerFieldController.text = args["bpName"];
-    phoneFieldController.text = args["Tel"];
-    mailFieldController.text = args["eMail"];
+  void fillFields() {
+    nameFieldController.text = "";
+    bPartnerFieldController.text = "";
+    phoneFieldController.text = "";
+    mailFieldController.text = "";
     //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"];
+    salesrepValue = args["salesRep"] ?? "";
     //salesRepFieldController.text = args["salesRep"];
-  } */
+  }
 
-  //dynamic args = Get.arguments;
+  dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
-  var nameFieldController;
+ var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var amtFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -237,8 +207,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     amtFieldController = TextEditingController();
     image64 = "";
     imageName = "";
-
-    //fillFields();
+    fillFields();
     getAllOpportunityStatuses();
   }
 
@@ -253,14 +222,43 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Add Opportunity'),
+          child: Text('Edit Opportunity'),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createOpportunity();
+                Get.defaultDialog(
+                  title: "Eliminazione record",
+                  middleText: "Sicuro di voler eliminare il record?",
+                  backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
+                  //titleStyle: TextStyle(color: Colors.white),
+                  //middleTextStyle: TextStyle(color: Colors.white),
+                  textConfirm: "Elimina",
+                  textCancel: "Annulla",
+                  cancelTextColor: Colors.white,
+                  confirmTextColor: Colors.white,
+                  buttonColor: const Color.fromRGBO(31, 29, 44, 1),
+                  barrierDismissible: false,
+                  onConfirm: () {
+                    deleteOpportunity();
+                  },
+                  //radius: 50,
+                );
+                //editLead();
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
+                editOpportunity();
               },
               icon: const Icon(
                 Icons.save,
@@ -278,63 +276,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   height: 10,
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Business Partner",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllBusinessPartners(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<BPRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<BPRecords>(
-                                displayStringForOption:
-                                    _bPdisplayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<BPRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (BPRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  setState(() {
-                                    businessPartnerValue =
-                                        _bPdisplayStringForOption(selection);
-                                  });
-
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
@@ -348,35 +289,14 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                  child: TextField(
+                    controller: bPartnerFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Business Partner',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
                   ),
                 ),
                 Container(
@@ -387,18 +307,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                       prefixIcon: Icon(Icons.person_outlined),
                       border: OutlineInputBorder(),
                       labelText: 'Importo Atteso',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -440,6 +348,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: args["salesRep"]),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -474,49 +384,12 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
                     child: Text(
-                      "Stato Lead",
+                      "Stato di Vendita",
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
-                /* Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    //icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    //style: const TextStyle(color: Colors.deepPurple),
-                    /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: <String>[
-                      'Chiuso',
-                      'Convertito',
-                      'In Lavoro',
-                      'Nuovo'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ), */
                 Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -533,32 +406,15 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                             AsyncSnapshot<List<OSRecords>> snapshot) =>
                         snapshot.hasData
                             ? DropdownButton(
-                                value: dropdownOpportunityValue,
-                                //icon: const Icon(Icons.arrow_downward),
+                                //value: dropdownValue,
                                 elevation: 16,
-                                //style: const TextStyle(color: Colors.deepPurple),
-                                /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     dropdownOpportunityValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },
-                                items: /* <String>[
-                                  'Chiuso',
-                                  'Convertito',
-                                  'In Lavoro',
-                                  'Nuovo'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList()*/
-                                    snapshot.data!.map((list) {
+                                items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     child: Text(
                                       list.name.toString(),
@@ -572,11 +428,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                               ),
                   ),
                 ),
-                IconButton(
-                    onPressed: () {
-                      attachImage();
-                    },
-                    icon: const Icon(Icons.attach_file)),
               ],
             );
           },

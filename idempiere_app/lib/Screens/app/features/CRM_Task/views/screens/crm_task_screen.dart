@@ -78,8 +78,8 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("LEAD: ${controller.trx.rowcount}")
-                        : const Text("LEAD: ")),
+                        ? Text("TASK: ${controller.trx.rowcount}")
+                        : const Text("TASK: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(

@@ -42,7 +42,7 @@ class OSRecords {
   final String? updated;
   final UpdatedBy? updatedBy;
   final String? name;
-  final int? probability;
+  final num? probability;
   final String? value;
   final bool? isClosed;
   final bool? isWon;
@@ -85,7 +85,7 @@ class OSRecords {
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
         name = json['Name'] as String?,
-        probability = json['Probability'] as int?,
+        probability = json['Probability'] as num?,
         value = json['Value'] as String?,
         isClosed = json['IsClosed'] as bool?,
         isWon = json['IsWon'] as bool?,

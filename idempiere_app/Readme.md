@@ -245,7 +245,7 @@ Select count(*),
 * [ ] Invio Email
 * [ ] Promemoria / Notifica per Data/ora
 
-### Opportunità Lead / BP [R] (CUD)
+### Opportunità Lead / BP [CR] (UD)
 
 * Stato/note :
 * Descrizione : Gestione completa Opportunità 

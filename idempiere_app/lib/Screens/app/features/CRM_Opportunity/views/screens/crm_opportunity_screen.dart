@@ -9,6 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_edit_opportunity.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_create.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
@@ -150,7 +151,26 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                   ),
                                   tooltip: 'Lead Info',
                                   onPressed: () {
-                                    log("info button pressed");
+                                    Get.to(const EditOpportunity(), arguments: {
+                                      "id": controller.trx.records![index].id,
+                                      "name": controller
+                                              .trx.records![index].aDClientID ??
+                                          "",
+                                      "leadStatus": controller.trx
+                                              .records![index].aDClientID?.id ??
+                                          "",
+                                      "bpName": controller
+                                          .trx.records![index].aDClientID,
+                                      "Tel": controller
+                                              .trx.records![index].aDClientID ??
+                                          "",
+                                      "eMail": controller
+                                              .trx.records![index].aDClientID ??
+                                          "",
+                                      "salesRep": controller.trx.records![index]
+                                              .salesRepID?.identifier ??
+                                          ""
+                                    });
                                   },
                                 ),
                               ),
