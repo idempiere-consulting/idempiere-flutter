@@ -162,6 +162,32 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,
+                  label: "HumanResource".tr,
+                  visible: int.parse(list[92], radix: 16)
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.personAdd,
+                  icon: EvaIcons.personOutline,
+                  label: "Employee".tr,
+                  visible: int.parse(list[93], radix: 16)
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.personAdd,
+                  icon: EvaIcons.personOutline,
                   label: "Profil".tr,
                   visible: int.parse(list[2], radix: 16)
                                   .toRadixString(2)
@@ -224,9 +250,15 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/DashboardAssetresource');
                     break;
                   case 11:
-                    Get.offNamed('/Profil');
+                    Get.offNamed('/HumanResource');
                     break;
                   case 12:
+                    Get.offNamed('/Employee');
+                    break;
+                  case 13:
+                    Get.offNamed('/Profil');
+                    break;
+                  case 14:
                     Get.offNamed('/Settings');
                     break;
                   default:

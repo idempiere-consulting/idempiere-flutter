@@ -22,6 +22,8 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/calendar_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Employee/views/screens/employee_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Human_Resource/views/screens/human_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance/views/screens/maintenance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/maintenance_calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Internaluseinventory/views/screens/maintenance_internaluseinventory_screen.dart';
@@ -321,6 +323,16 @@ class MyApp extends StatelessWidget {
           name: '/DashboardAssetresource',
           page: () => const DashboardAssetresourceScreen(),
           binding: DashboardAssetresourceBinding(),
+        ),
+        GetPage(
+          name: '/HumanResource',
+          page: () => const HumanResourceScreen(),
+          binding: HumanResourceBinding(),
+        ),
+        GetPage(
+          name: '/Employee',
+          page: () => const EmployeeScreen(),
+          binding: EmployeeBinding(),
         ),
         GetPage(
           name: '/Settings',
