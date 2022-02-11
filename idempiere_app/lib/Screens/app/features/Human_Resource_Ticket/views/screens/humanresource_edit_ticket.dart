@@ -5,35 +5,32 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity_status_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
-class EditOpportunity extends StatefulWidget {
-  const EditOpportunity({Key? key}) : super(key: key);
+class EditHumanResourceTicket extends StatefulWidget {
+  const EditHumanResourceTicket({Key? key}) : super(key: key);
 
   @override
-  State<EditOpportunity> createState() => _EditOpportunityState();
+  State<EditHumanResourceTicket> createState() =>
+      _EditHumanResourceTicketState();
 }
 
-class _EditOpportunityState extends State<EditOpportunity> {
-  editOpportunity() async {
+class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
+  editLead() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "Name": nameFieldController.text,
-      "C_BPartner_ID": {"identifier": businessPartnerValue},
+      "BPName": bPartnerFieldController.text,
       "Phone": phoneFieldController.text,
       "EMail": mailFieldController.text,
       "SalesRep_ID": {"identifier": salesrepValue},
-      'C_SalesStage_ID': {"id": dropdownOpportunityValue},
-      'ExpectedCloseDate': date,
-      'OpportunityAmt': int.parse(amtFieldController.text),
-      'C_Currency_ID': {'id': 102},
-      'Probability': 50,
+      "LeadStatus": {"id": dropdownValue}
     });
     final protocol = GetStorage().read('protocol');
     var url =
@@ -48,7 +45,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
       },
     );
     if (response.statusCode == 200) {
-      Get.find<CRMOpportunityController>().getOpportunities();
+      Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
         "Fatto!",
@@ -70,7 +67,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
     }
   }
 
-  deleteOpportunity() async {
+  deleteLead() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
@@ -85,7 +82,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
       },
     );
     if (response.statusCode == 200) {
-      Get.find<CRMOpportunityController>().getOpportunities();
+      Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.back();
       Get.back();
@@ -109,7 +106,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
     }
   }
 
-  Future<List<OSRecords>> getAllOpportunityStatuses() async {
+  Future<List<LSRecords>> getAllLeadStatuses() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
@@ -124,7 +121,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
       },
     );
     if (response.statusCode == 200) {
-      var json = OppurtunityStatusJson.fromJson(jsonDecode(response.body));
+      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
       //print(json.rowcount);
 
       return json.records!;
@@ -164,10 +161,10 @@ class _EditOpportunityState extends State<EditOpportunity> {
   }
 
   void fillFields() {
-    nameFieldController.text = "";
-    bPartnerFieldController.text = "";
-    phoneFieldController.text = "";
-    mailFieldController.text = "";
+    nameFieldController.text = args["name"] ?? "";
+    bPartnerFieldController.text = args["bpName"] ?? "";
+    phoneFieldController.text = args["Tel"] ?? "";
+    mailFieldController.text = args["eMail"] ?? "";
     //dropdownValue = args["leadStatus"];
     salesrepValue = args["salesRep"] ?? "";
     //salesRepFieldController.text = args["salesRep"];
@@ -177,20 +174,13 @@ class _EditOpportunityState extends State<EditOpportunity> {
   // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
-  var amtFieldController;
-  // ignore: prefer_typing_uninitialized_variables
   var bPartnerFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var phoneFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var mailFieldController;
-  String dropdownOpportunityValuedropdownValue = "";
+  String dropdownValue = "";
   String salesrepValue = "";
-  String businessPartnerValue = "";
-  String dropdownOpportunityValue = "";
-  String date = "";
-  String image64 = "";
-  String imageName = "";
 
   @override
   void initState() {
@@ -199,14 +189,9 @@ class _EditOpportunityState extends State<EditOpportunity> {
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
-    businessPartnerValue = "";
-    dropdownOpportunityValue = "1000001";
-    date = "";
-    amtFieldController = TextEditingController();
-    image64 = "";
-    imageName = "";
+    dropdownValue = Get.arguments["leadStatus"];
     fillFields();
-    getAllOpportunityStatuses();
+    getAllLeadStatuses();
   }
 
   static String _displayStringForOption(Records option) => option.name!;
@@ -220,7 +205,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Edit Opportunity'),
+          child: Text('Edit Lead'),
         ),
         actions: [
           Padding(
@@ -240,7 +225,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   buttonColor: const Color.fromRGBO(31, 29, 44, 1),
                   barrierDismissible: false,
                   onConfirm: () {
-                    deleteOpportunity();
+                    deleteLead();
                   },
                   //radius: 50,
                 );
@@ -256,7 +241,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                editOpportunity();
+                editLead();
               },
               icon: const Icon(
                 Icons.save,
@@ -300,11 +285,11 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: amtFieldController,
+                    controller: phoneFieldController,
                     decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
+                      prefixIcon: Icon(Icons.phone_outlined),
                       border: OutlineInputBorder(),
-                      labelText: 'Importo Atteso',
+                      labelText: 'Telefono',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -382,7 +367,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
                     child: Text(
-                      "Stato di Vendita",
+                      "Stato Lead",
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -399,16 +384,16 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
-                    future: getAllOpportunityStatuses(),
+                    future: getAllLeadStatuses(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<OSRecords>> snapshot) =>
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
                         snapshot.hasData
                             ? DropdownButton(
-                                //value: dropdownValue,
+                                value: dropdownValue,
                                 elevation: 16,
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    dropdownOpportunityValue = newValue!;
+                                    dropdownValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },

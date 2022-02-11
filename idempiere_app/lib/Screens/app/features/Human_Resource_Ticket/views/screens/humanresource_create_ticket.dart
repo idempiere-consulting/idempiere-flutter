@@ -14,15 +14,15 @@ import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.d
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-class CreateTicketClientTicket extends StatefulWidget {
-  const CreateTicketClientTicket({Key? key}) : super(key: key);
+class CreateHumanResourceTicket extends StatefulWidget {
+  const CreateHumanResourceTicket({Key? key}) : super(key: key);
 
   @override
-  State<CreateTicketClientTicket> createState() =>
-      _CreateTicketClientTicketState();
+  State<CreateHumanResourceTicket> createState() =>
+      _CreateHumanResourceTicketState();
 }
 
-class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
+class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
   attachImage() async {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
@@ -200,12 +200,12 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   }
 
   Future<void> getBusinessPartner() async {
-    var userId = GetStorage().read("userId");
+    var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= AD_User_ID eq \'$userId\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
