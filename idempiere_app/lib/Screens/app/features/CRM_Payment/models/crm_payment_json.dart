@@ -48,15 +48,15 @@ class Records {
   final bool? processed;
   final bool? isReconciled;
   final CBankAccountID? cBankAccountID;
-  final int? taxAmt;
+  final num? taxAmt;
   final RAvsAddr? rAvsAddr;
   final RAvsZip? rAvsZip;
   final TrxType? trxType;
   final TenderType? tenderType;
   final CCurrencyID? cCurrencyID;
-  final int? discountAmt;
+  final num? discountAmt;
   final CDocTypeID? cDocTypeID;
-  final int? payAmt;
+  final num? payAmt;
   final CBPartnerID? cBPartnerID;
   final String? dateTrx;
   final bool? isAllocated;
@@ -64,8 +64,8 @@ class Records {
   final bool? isOnline;
   final DocStatus? docStatus;
   final bool? isReceipt;
-  final int? writeOffAmt;
-  final int? overUnderAmt;
+  final num? writeOffAmt;
+  final num? overUnderAmt;
   final bool? isOverUnderPayment;
   final bool? isSelfService;
   final bool? isDelayedCapture;
@@ -74,7 +74,7 @@ class Records {
   final CConversionTypeID? cConversionTypeID;
   final String? dateAcct;
   final bool? isPrepayment;
-  final int? processedOn;
+  final num? processedOn;
   final bool? isVoided;
   final bool? isOverrideCurrencyRate;
   final String? modelname;
@@ -163,7 +163,7 @@ class Records {
                 ? CBankAccountID.fromJson(
                     json['C_BankAccount_ID'] as Map<String, dynamic>)
                 : null,
-        taxAmt = json['TaxAmt'] as int?,
+        taxAmt = json['TaxAmt'] as num?,
         rAvsAddr = (json['R_AvsAddr'] as Map<String, dynamic>?) != null
             ? RAvsAddr.fromJson(json['R_AvsAddr'] as Map<String, dynamic>)
             : null,
@@ -180,11 +180,11 @@ class Records {
             ? CCurrencyID.fromJson(
                 json['C_Currency_ID'] as Map<String, dynamic>)
             : null,
-        discountAmt = json['DiscountAmt'] as int?,
+        discountAmt = json['DiscountAmt'] as num?,
         cDocTypeID = (json['C_DocType_ID'] as Map<String, dynamic>?) != null
             ? CDocTypeID.fromJson(json['C_DocType_ID'] as Map<String, dynamic>)
             : null,
-        payAmt = json['PayAmt'] as int?,
+        payAmt = json['PayAmt'] as num?,
         cBPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
             ? CBPartnerID.fromJson(
                 json['C_BPartner_ID'] as Map<String, dynamic>)
@@ -200,8 +200,8 @@ class Records {
             ? DocStatus.fromJson(json['DocStatus'] as Map<String, dynamic>)
             : null,
         isReceipt = json['IsReceipt'] as bool?,
-        writeOffAmt = json['WriteOffAmt'] as int?,
-        overUnderAmt = json['OverUnderAmt'] as int?,
+        writeOffAmt = json['WriteOffAmt'] as num?,
+        overUnderAmt = json['OverUnderAmt'] as num?,
         isOverUnderPayment = json['IsOverUnderPayment'] as bool?,
         isSelfService = json['IsSelfService'] as bool?,
         isDelayedCapture = json['IsDelayedCapture'] as bool?,
@@ -214,7 +214,7 @@ class Records {
                 : null,
         dateAcct = json['DateAcct'] as String?,
         isPrepayment = json['IsPrepayment'] as bool?,
-        processedOn = json['ProcessedOn'] as int?,
+        processedOn = json['ProcessedOn'] as num?,
         isVoided = json['IsVoided'] as bool?,
         isOverrideCurrencyRate = json['IsOverrideCurrencyRate'] as bool?,
         modelname = json['model-name'] as String?;

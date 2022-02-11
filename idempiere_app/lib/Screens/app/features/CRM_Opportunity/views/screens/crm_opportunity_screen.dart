@@ -153,23 +153,32 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                   onPressed: () {
                                     Get.to(const EditOpportunity(), arguments: {
                                       "id": controller.trx.records![index].id,
-                                      "name": controller
-                                              .trx.records![index].aDClientID ??
+                                      "name": controller.trx.records![index]
+                                              .aDClientID?.identifier ??
                                           "",
-                                      "leadStatus": controller.trx
-                                              .records![index].aDClientID?.id ??
+                                      "leadStatus": controller
+                                              .trx
+                                              .records![index]
+                                              .aDClientID
+                                              ?.identifier ??
                                           "",
-                                      "bpName": controller
-                                          .trx.records![index].aDClientID,
-                                      "Tel": controller
-                                              .trx.records![index].aDClientID ??
+                                      "bpName": controller.trx.records![index]
+                                          .aDClientID!.identifier,
+                                      "Tel": controller.trx.records![index]
+                                              .aDClientID?.identifier ??
                                           "",
-                                      "eMail": controller
-                                              .trx.records![index].aDClientID ??
+                                      "eMail": controller.trx.records![index]
+                                              .aDClientID?.identifier ??
                                           "",
                                       "salesRep": controller.trx.records![index]
                                               .salesRepID?.identifier ??
-                                          ""
+                                          "",
+                                      "salesStageValue": controller
+                                              .trx
+                                              .records![index]
+                                              .cSalesStageID
+                                              ?.id ??
+                                          "",
                                     });
                                   },
                                 ),

@@ -7,7 +7,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity_status_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunitystatus.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salestagejson.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -111,13 +112,13 @@ class _EditOpportunityState extends State<EditOpportunity> {
     }
   }
 
-  Future<List<OSRecords>> getAllOpportunityStatuses() async {
+  Future<List<SSRecords>> getAllOpportunityStatuses() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+        '/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -126,9 +127,12 @@ class _EditOpportunityState extends State<EditOpportunity> {
       },
     );
     if (response.statusCode == 200) {
-      var json = OppurtunityStatusJson.fromJson(jsonDecode(response.body));
+      var json = SalesStageJson.fromJson(jsonDecode(response.body));
+      for (var i = 0; i < json.rowcount!; i++) {
+        print(json.records![i].id);
+      }
       //print(json.rowcount);
-
+      //print(response.body);
       return json.records!;
     } else {
       throw Exception("Failed to load lead statuses");
@@ -166,18 +170,18 @@ class _EditOpportunityState extends State<EditOpportunity> {
   }
 
   void fillFields() {
-    nameFieldController.text = "";
-    bPartnerFieldController.text = "";
-    phoneFieldController.text = "";
-    mailFieldController.text = "";
+    nameFieldController.text = args["name"] ?? "";
+    bPartnerFieldController.text = args["bpName"] ?? "";
+    phoneFieldController.text = args["Tel"] ?? "";
+    mailFieldController.text = args["eMail"] ?? "";
     //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"] ?? "";
+    dropdownOpportunityValue = args["salesStageValue"].toString();
     //salesRepFieldController.text = args["salesRep"];
   }
 
   dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
- var nameFieldController;
+  var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var amtFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -186,10 +190,10 @@ class _EditOpportunityState extends State<EditOpportunity> {
   var phoneFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var mailFieldController;
-  String dropdownOpportunityValuedropdownValue = "";
+  String dropdownOpportunityValue = "";
   String salesrepValue = "";
   String businessPartnerValue = "";
-  String dropdownOpportunityValue = "";
+
   String date = "";
   String image64 = "";
   String imageName = "";
@@ -403,10 +407,10 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   child: FutureBuilder(
                     future: getAllOpportunityStatuses(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<OSRecords>> snapshot) =>
+                            AsyncSnapshot<List<SSRecords>> snapshot) =>
                         snapshot.hasData
                             ? DropdownButton(
-                                //value: dropdownValue,
+                                value: dropdownOpportunityValue,
                                 elevation: 16,
                                 onChanged: (String? newValue) {
                                   setState(() {

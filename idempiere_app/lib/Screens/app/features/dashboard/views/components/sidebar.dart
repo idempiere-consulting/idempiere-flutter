@@ -189,27 +189,15 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,
                   label: "Profil".tr,
-                  visible: int.parse(list[2], radix: 16)
-                                  .toRadixString(2)
-                                  .padLeft(4, "0")
-                                  .toString()[1] ==
-                              "1" &&
-                          GetStorage().read("isOffline") == false
-                      ? true
-                      : false,
+                  visible:
+                      GetStorage().read("isOffline") == false ? true : false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.settings,
                   icon: EvaIcons.settingsOutline,
                   label: "Setting".tr,
-                  visible: int.parse(list[2], radix: 16)
-                                  .toRadixString(2)
-                                  .padLeft(4, "0")
-                                  .toString()[1] ==
-                              "1" &&
-                          GetStorage().read("isOffline") == false
-                      ? true
-                      : false,
+                  visible:
+                      GetStorage().read("isOffline") == false ? true : false,
                 ),
               ],
               onSelected: (index, value) {
