@@ -3,13 +3,18 @@ part of dashboard;
 class TicketInternalTicketController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late TicketsJson _trx;
+  late TicketTypeJson _tt;
   var _hasCallSupport = false;
+
+  String dropdownValue = "";
   //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
+  // ignore: prefer_typing_uninitialized_variables
+  var closedTicketId;
 
   var value = "Tutti".obs;
 
@@ -24,7 +29,9 @@ class TicketInternalTicketController extends GetxController {
     canLaunch('tel:123').then((bool result) {
       _hasCallSupport = result;
     });
-    getBusinessPartner();
+    getTicketTypes();
+    getClosedTicketsID();
+    //getBusinessPartner();
     //getTickets();
     //getADUserID();
     adUserId = GetStorage().read('userId');
@@ -32,7 +39,46 @@ class TicketInternalTicketController extends GetxController {
 
   bool get dataAvailable => _dataAvailable.value;
   TicketsJson get trx => _trx;
+  TicketTypeJson get tt => _tt;
   //String get value => _value.toString();
+
+  getTicketAttachment(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/r_request/${trx.records![index].id}/attachments/grapefruit-slice-332-332.jpg');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var image64 = base64.encode(response.bodyBytes);
+      Get.to(const TicketInternalImage(), arguments: {"base64": image64});
+    }
+  }
+
+  checkcloseTicket(int index) {
+    Get.defaultDialog(
+        title: "Close Ticket",
+        middleText: "Are you sure you want to close the Ticket?",
+        //contentPadding: const EdgeInsets.all(2.0),
+        barrierDismissible: true,
+        textCancel: "Cancel",
+        textConfirm: "Confirm",
+        onConfirm: () {
+          Get.back();
+          closeTicket(index);
+        });
+  }
 
   changeFilter() {
     filterCount++;
@@ -68,6 +114,70 @@ class TicketInternalTicketController extends GetxController {
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> getClosedTicketsID() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/R_Status?\$filter= Value eq \'R101\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      closedTicketId = json["records"][0]["id"];
+      print(closedTicketId);
+      getBusinessPartner();
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> getTicketTypes() async {
+    //var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/R_RequestType?\$filter=startswith(LIT_RequestSubType,\'TK\') and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //var json = jsonDecode(response.body);
+      _tt = TicketTypeJson.fromJson(jsonDecode(response.body));
+
+      dropdownValue = _tt.records![0].id.toString();
+
+      //businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+      //getTickets();
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
     }
   }
 
@@ -113,7 +223,7 @@ class TicketInternalTicketController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq 1000024 and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -128,6 +238,42 @@ class TicketInternalTicketController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    }
+  }
+
+  Future<void> closeTicket(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "R_Status_ID": 1000024,
+    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/r_request/${trx.records![index].id}');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      getTickets();
+      //print("done!");
+      //completeOrder(index);
+    } else {
+      //print(response.body);
+      Get.snackbar(
+        "Errore!",
+        "Il Ticket non è stato chiuso",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
     }
   }
 

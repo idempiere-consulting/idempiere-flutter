@@ -40,10 +40,18 @@ class SettingsController extends GetxController {
   }
 
   syncJPTODO() async {
+    var now = DateTime.now();
+    DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and Created ge \'$formattedFiftyDaysAgo\' and Created le \'$formattedDate 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{

@@ -9,6 +9,9 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/ticketsjson.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_chat_ticket.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_image_ticket.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -153,39 +156,17 @@ class TicketInternalTicketScreen
                                     ),
                                     tooltip: 'Edit Lead',
                                     onPressed: () {
-                                      //log("info button pressed");
-                                      /* Get.to(const EditLead(), arguments: {
-                                        "id": controller
-                                            .trx.windowrecords![index].id,
-                                        "name": controller.trx
-                                                .windowrecords![index].name ??
-                                            "",
-                                        "leadStatus": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .leadStatus
-                                                ?.id ??
-                                            "",
-                                        "bpName": controller
-                                            .trx.windowrecords![index].bPName,
-                                        "Tel": controller.trx
-                                                .windowrecords![index].phone ??
-                                            "",
-                                        "eMail": controller.trx
-                                                .windowrecords![index].eMail ??
-                                            "",
-                                        "salesRep": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .salesRepID
-                                                ?.identifier ??
-                                            ""
-                                      }); */
+                                      Get.to(const TicketInternalChat(),
+                                          arguments: {
+                                            "ticketid": controller
+                                                .trx.records![index].id
+                                          });
                                     },
                                   ),
                                 ),
                                 title: Text(
-                                  controller.trx.records![index].documentNo ??
+                                  controller.trx.records![index].rRequestTypeID
+                                          ?.identifier ??
                                       "???",
                                   style: const TextStyle(
                                       color: Colors.white,
@@ -195,14 +176,16 @@ class TicketInternalTicketScreen
 
                                 subtitle: Row(
                                   children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index].rStatusID
-                                              ?.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                    const Icon(Icons.description),
+                                    Expanded(
+                                      child: Text(
+                                        controller
+                                                .trx.records![index].summary ??
+                                            "??",
+                                        maxLines: 1,
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -216,6 +199,23 @@ class TicketInternalTicketScreen
                                 children: [
                                   Column(
                                     children: [
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Status: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .rStatusID
+                                                    ?.identifier ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
                                       Row(
                                         children: [
                                           const Text(
@@ -244,6 +244,26 @@ class TicketInternalTicketScreen
                                                     .priority
                                                     ?.identifier ??
                                                 ""),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.check),
+                                            onPressed: () {
+                                              controller
+                                                  .checkcloseTicket(index);
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.attach_file),
+                                            onPressed: () {
+                                              controller
+                                                  .getTicketAttachment(index);
+                                            },
                                           ),
                                         ],
                                       ),

@@ -12,6 +12,7 @@ import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/t
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketclient_create_ticket.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketcliet_chat_ticket.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_image_ticket.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -252,6 +253,19 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                                     .priority
                                                     ?.identifier ??
                                                 ""),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.attach_file),
+                                            onPressed: () {
+                                              controller
+                                                  .getTicketAttachment(index);
+                                            },
                                           ),
                                         ],
                                       ),

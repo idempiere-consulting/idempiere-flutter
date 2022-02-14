@@ -59,6 +59,53 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  Future<void> getAllEventsOffline() async {
+    var json = EventJson.fromJson(jsonDecode(GetStorage().read('')));
+    List<EventRecords>? list = json.records;
+
+    for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
+      //print(list![i].jPToDoScheduledStartTime);
+      if (selectedEvents[DateTime.parse(
+              '${list![i].jPToDoScheduledStartDate} 00:00:00.000Z')] !=
+          null) {
+        selectedEvents[DateTime.parse(
+                '${list[i].jPToDoScheduledStartDate} 00:00:00.000Z')]!
+            .add(
+          Event(
+              id: list[i].id!,
+              type: list[i].jPToDoType!.identifier ?? "???",
+              typeId: list[i].jPToDoType!.id!,
+              status: list[i].jPToDoStatus!.identifier ?? "???",
+              statusId: list[i].jPToDoStatus!.id!,
+              title: list[i].name ?? "???",
+              description: list[i].description ?? "",
+              scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
+              scheduledStartTime:
+                  list[i].jPToDoScheduledStartTime!.substring(0, 5),
+              scheduledEndTime:
+                  list[i].jPToDoScheduledEndTime!.substring(0, 5)),
+        );
+      } else {
+        selectedEvents[DateTime.parse(
+            '${list[i].jPToDoScheduledStartDate} 00:00:00.000Z')] = [
+          Event(
+              id: list[i].id!,
+              type: list[i].jPToDoType!.identifier ?? "???",
+              typeId: list[i].jPToDoType!.id!,
+              status: list[i].jPToDoStatus!.identifier ?? "???",
+              statusId: list[i].jPToDoStatus!.id!,
+              title: list[i].name ?? "???",
+              description: list[i].description ?? "",
+              scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "???",
+              scheduledStartTime:
+                  list[i].jPToDoScheduledStartTime!.substring(0, 5),
+              scheduledEndTime: list[i].jPToDoScheduledEndTime!.substring(0, 5))
+        ];
+      }
+    }
+    setState(() {});
+  }
+
   Future<void> getAllEvents() async {
     var now = DateTime.now();
     DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
@@ -71,7 +118,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and Created ge \'$formattedFiftyDaysAgo\' and Created le \'$formattedDate 23:59:59\'');
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and Created ge \'$formattedFiftyDaysAgo\' and Created le \'$formattedDate 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{

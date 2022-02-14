@@ -52,6 +52,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   flutter_chat_ui: ^1.5.5
   flutter_chat_types: ^3.2.2
+  photo_view: ^0.13.0
 
 dev_dependencies:
   flutter_test:

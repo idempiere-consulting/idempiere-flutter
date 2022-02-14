@@ -42,6 +42,30 @@ class TicketClientTicketController extends GetxController {
   TicketTypeJson get tt => _tt;
   //String get value => _value.toString();
 
+  getTicketAttachment(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/r_request/${trx.records![index].id}/attachments/grapefruit-slice-332-332.jpg');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var image64 = base64.encode(response.bodyBytes);
+      Get.to(const TicketInternalImage(), arguments: {"base64": image64});
+    }
+  }
+
   openTicketType() {
     Get.defaultDialog(
         title: "Ticket Type",
@@ -117,7 +141,7 @@ class TicketClientTicketController extends GetxController {
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/R_Status?\$filter= IsClosed eq \'Y\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/R_Status?\$filter= Value eq \'R101\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -215,7 +239,7 @@ class TicketClientTicketController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq 1000024 and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(
       url,
       headers: <String, String>{
