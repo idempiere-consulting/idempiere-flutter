@@ -129,7 +129,7 @@ class TicketClientTicketController extends GetxController {
       //print(response.body);
       var json = jsonDecode(response.body);
 
-      closedTicketId = json["records"][0]["C_BPartner_ID"]["id"];
+      closedTicketId = json["records"][0]["id"];
       getBusinessPartner();
       //print(businessPartnerId);
       //print(trx.rowcount);

@@ -19,10 +19,10 @@ class TicketClientChat extends StatefulWidget {
   const TicketClientChat({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<TicketClientChat> createState() => TicketClientChatState();
 }
 
-class _MyHomePageState extends State<TicketClientChat> {
+class TicketClientChatState extends State<TicketClientChat> {
   List<types.Message> _messages = [];
   final _user = types.User(
       id: '06c33e8b-e835-4736-80f4-63f44b66666c',
@@ -118,8 +118,7 @@ class _MyHomePageState extends State<TicketClientChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Expanded(child: Text("Ticket ${Get.arguments["ticketid"]} Chat")),
+        title: Text("Ticket ${Get.arguments["ticketid"]} Chat"),
       ),
       body: SafeArea(
         bottom: false,
