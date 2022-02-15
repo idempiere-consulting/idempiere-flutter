@@ -1,7 +1,6 @@
 part of dashboard;
 
 class HumanResourceTicketController extends GetxController {
-  //final scaffoldKey = GlobalKey<ScaffoldState>();
   late TicketsJson _trx;
   late TicketTypeJson _tt;
   var _hasCallSupport = false;
@@ -13,6 +12,10 @@ class HumanResourceTicketController extends GetxController {
   var adUserId;
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
+  // ignore: prefer_typing_uninitialized_variables
+  var closedTicketId;
+
+  String ticketFilter = "";
 
   var value = "Tutti".obs;
 
@@ -28,7 +31,8 @@ class HumanResourceTicketController extends GetxController {
       _hasCallSupport = result;
     });
     getTicketTypes();
-    getBusinessPartner();
+    getClosedTicketsID();
+    //getBusinessPartner();
     //getTickets();
     //getADUserID();
     adUserId = GetStorage().read('userId');
@@ -65,8 +69,82 @@ class HumanResourceTicketController extends GetxController {
         textConfirm: "Confirm",
         onConfirm: () {
           Get.back();
-          Get.to(const CreateTicketClientTicket(),
+          Get.to(const CreateHumanResourceTicket(),
               arguments: {"id": dropdownValue});
+        });
+  }
+
+  getAllticketTypeID() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/R_RequestType?\$filter= Description eq \'HR\'');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = TicketTypeJson.fromJson(jsonDecode(response.body));
+
+      for (var i = 0; i < json.rowcount!; i++) {
+        ticketFilter =
+            ticketFilter + "R_RequestType_ID eq ${json.records![i].id}";
+
+        if (i != json.rowcount! - 1) {
+          ticketFilter = ticketFilter + " OR ";
+        }
+        print(ticketFilter);
+      }
+      //print(ticketFilter);
+      getTickets();
+    }
+  }
+
+  getTicketAttachment(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/r_request/${trx.records![index].id}/attachments/ticketimage.jpg');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var image64 = base64.encode(response.bodyBytes);
+      Get.to(const TicketInternalImage(), arguments: {"base64": image64});
+    }
+  }
+
+  checkcloseTicket(int index) {
+    Get.defaultDialog(
+        title: "Close Ticket",
+        middleText: "Are you sure you want to close the Ticket?",
+        //contentPadding: const EdgeInsets.all(2.0),
+        barrierDismissible: true,
+        textCancel: "Cancel",
+        textConfirm: "Confirm",
+        onConfirm: () {
+          Get.back();
+          closeTicket(index);
         });
   }
 
@@ -99,7 +177,37 @@ class HumanResourceTicketController extends GetxController {
       var json = jsonDecode(response.body);
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
-      getTickets();
+      //getTickets();
+      getAllticketTypeID();
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> getClosedTicketsID() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/R_Status?\$filter= Value eq \'R101\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      closedTicketId = json["records"][0]["id"];
+      print(closedTicketId);
+      getBusinessPartner();
       //print(businessPartnerId);
       //print(trx.rowcount);
       //print(response.body);
@@ -116,7 +224,7 @@ class HumanResourceTicketController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/R_RequestType?\$filter=startswith(LIT_RequestSubType,\'TK\') and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/R_RequestType?\$filter=startswith(LIT_RequestSubType,\'HR\') and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -169,7 +277,7 @@ class HumanResourceTicketController extends GetxController {
   }
 
   Future<void> getTickets() async {
-    var apiUrlFilter = ["", " and AD_User_ID eq $adUserId"];
+    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     var notificationFilter = "";
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
@@ -184,7 +292,7 @@ class HumanResourceTicketController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq 1000024 and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -199,6 +307,42 @@ class HumanResourceTicketController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    }
+  }
+
+  Future<void> closeTicket(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "R_Status_ID": 1000024,
+    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/r_request/${trx.records![index].id}');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      getTickets();
+      //print("done!");
+      //completeOrder(index);
+    } else {
+      //print(response.body);
+      Get.snackbar(
+        "Errore!",
+        "Il Ticket non è stato chiuso",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
     }
   }
 

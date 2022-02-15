@@ -16,6 +16,8 @@ class TicketInternalTicketController extends GetxController {
   // ignore: prefer_typing_uninitialized_variables
   var closedTicketId;
 
+  String ticketFilter = "";
+
   var value = "Tutti".obs;
 
   var filters = ["Tutti", "Miei" /* , "Team" */];
@@ -42,6 +44,42 @@ class TicketInternalTicketController extends GetxController {
   TicketTypeJson get tt => _tt;
   //String get value => _value.toString();
 
+  getAllticketTypeID() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/R_RequestType?\$filter= Description eq \'TK\'');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = TicketTypeJson.fromJson(jsonDecode(response.body));
+
+      for (var i = 0; i < json.rowcount!; i++) {
+        ticketFilter =
+            ticketFilter + "R_RequestType_ID eq ${json.records![i].id}";
+
+        if (i != json.rowcount! - 1) {
+          ticketFilter = ticketFilter + " OR ";
+        }
+        print(ticketFilter);
+      }
+      //print(ticketFilter);
+      getTickets();
+    }
+  }
+
   getTicketAttachment(int index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -49,7 +87,7 @@ class TicketInternalTicketController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request/${trx.records![index].id}/attachments/grapefruit-slice-332-332.jpg');
+        '/api/v1/models/r_request/${trx.records![index].id}/attachments/ticketimage.jpg');
 
     var response = await http.get(
       url,
@@ -109,7 +147,8 @@ class TicketInternalTicketController extends GetxController {
       var json = jsonDecode(response.body);
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
-      getTickets();
+      //getTickets();
+      getAllticketTypeID();
       //print(businessPartnerId);
       //print(trx.rowcount);
       //print(response.body);
@@ -223,7 +262,7 @@ class TicketInternalTicketController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)');
     var response = await http.get(
       url,
       headers: <String, String>{

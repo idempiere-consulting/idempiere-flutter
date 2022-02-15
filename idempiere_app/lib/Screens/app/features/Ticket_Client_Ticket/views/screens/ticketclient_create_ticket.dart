@@ -42,7 +42,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
-    final msg = jsonEncode({"name": imageName, "data": image64});
+    final msg = jsonEncode({"name": "ticketimage.jpg", "data": image64});
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(

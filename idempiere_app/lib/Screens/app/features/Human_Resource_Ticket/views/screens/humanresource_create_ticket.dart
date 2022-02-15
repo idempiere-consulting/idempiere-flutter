@@ -1,15 +1,16 @@
 import 'dart:convert';
 //import 'dart:developer';
 
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/freeslotjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
-import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketclient_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -42,7 +43,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
-    final msg = jsonEncode({"name": imageName, "data": image64});
+    final msg = jsonEncode({"name": "ticketimage.jpg", "data": image64});
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
@@ -64,6 +65,12 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
   }
 
   createTicket() async {
+    var formatter = DateFormat('yyyy-MM-dd');
+    var dateF = DateTime.parse(dateFrom);
+    var dateT = DateTime.parse(dateTo);
+    String formattedDateFrom = formatter.format(dateF);
+    String formattedDateTo = formatter.format(dateT);
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
@@ -72,14 +79,15 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       "R_RequestType_ID": Get.arguments["id"],
       "DueType": {"id": 5},
       "R_Status_ID": {"id": rStatusId},
-      "PriorityUser": {"id": dropdownValue},
-      "Priority": {"id": dropdownValue},
+      "PriorityUser": {"id": "5"},
+      "Priority": {"id": "5"},
       "ConfidentialType": {"id": "C"},
       "SalesRep_ID": {"id": salesRepId},
+      "Summary": " ",
       "ConfidentialTypeEntry": {"id": "C"},
-      "Summary": nameFieldController.text,
-      //"AD_User_ID": GetStorage().read('userid'),
-      "C_BPartner_ID": {"id": businessPartnerId}
+      "C_BPartner_ID": {"id": businessPartnerId},
+      "StartDate": "${formattedDateFrom}T00:00:00Z",
+      "CloseDate": "${formattedDateTo}T00:00:00Z",
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
@@ -99,7 +107,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
         sendTicketAttachedImage(json["id"]);
         //print(response.body);
       }
-      Get.find<TicketClientTicketController>().getTickets();
+      Get.find<HumanResourceTicketController>().getTickets();
       //print("done!");
       Get.snackbar(
         "Fatto!",
@@ -111,7 +119,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       );
     } else {
       //print(response.statusCode);
-      //print(response.body);
+      print(response.body);
       //print(response.statusCode);
       Get.snackbar(
         "Errore!",
@@ -436,6 +444,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
   String ticketTypeValue = "";
   String image64 = "";
   String imageName = "";
+  String dateFrom = "";
+  String dateTo = "";
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
   late EventJson eventJson;
@@ -453,6 +463,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
     dropdownValue = "9";
+    dateFrom = "";
+    dateTo = "";
     slotDropdownValue = "";
     ticketTypeValue = "";
     image64 = "";
@@ -485,11 +497,11 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
             child: IconButton(
               onPressed: () {
                 switch (ticketTypeValue) {
-                  case "TKG":
+                  case "HRH":
                     createTicket();
                     break;
-                  case "TKC":
-                    createEvent();
+                  case "HRI":
+                    createTicket();
                     break;
                   default:
                 }
@@ -507,7 +519,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
           mobileBuilder: (context, constraints) {
             return Column(
               children: [
-                const SizedBox(
+                /* const SizedBox(
                   height: 10,
                 ),
                 Visibility(
@@ -634,9 +646,81 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                                 ),
                     ),
                   ),
+                ), */
+                Visibility(
+                  visible: ticketTypeValue == "HRH" || ticketTypeValue == "HRI",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'From',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateFrom = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
                 ),
                 Visibility(
-                  visible: ticketTypeValue == "TKG",
+                  visible: ticketTypeValue == "HRH" || ticketTypeValue == "HRI",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'To',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateTo = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: true,
                   child: IconButton(
                       onPressed: () {
                         attachImage();

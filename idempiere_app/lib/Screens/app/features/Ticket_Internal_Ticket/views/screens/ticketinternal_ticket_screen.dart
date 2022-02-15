@@ -174,21 +174,36 @@ class TicketInternalTicketScreen
                                 ),
                                 // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.description),
+                                subtitle: Column(children: [
+                                  Row(children: [
                                     Expanded(
                                       child: Text(
-                                        controller
-                                                .trx.records![index].summary ??
+                                        controller.trx.records![index]
+                                                .cBPartnerID?.identifier ??
                                             "??",
                                         maxLines: 1,
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ]),
+                                  Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.description),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .summary ??
+                                              "??",
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ]),
+
                                 /* trailing: const Icon(
                                     Icons.keyboard_arrow_right,
                                     color: Colors.white,

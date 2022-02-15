@@ -8,6 +8,7 @@ class TicketClientTicketController extends GetxController {
 
   String dropdownValue = "";
   //var _hasMailSupport = false;
+  String ticketFilter = "";
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -31,6 +32,7 @@ class TicketClientTicketController extends GetxController {
     });
     getTicketTypes();
     getClosedTicketsID();
+    //getAllticketTypeID();
     //getBusinessPartner();
     //getTickets();
     //getADUserID();
@@ -42,6 +44,42 @@ class TicketClientTicketController extends GetxController {
   TicketTypeJson get tt => _tt;
   //String get value => _value.toString();
 
+  getAllticketTypeID() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/R_RequestType?\$filter= Description eq \'TK\'');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = TicketTypeJson.fromJson(jsonDecode(response.body));
+
+      for (var i = 0; i < json.rowcount!; i++) {
+        ticketFilter =
+            ticketFilter + "R_RequestType_ID eq ${json.records![i].id}";
+
+        if (i != json.rowcount! - 1) {
+          ticketFilter = ticketFilter + " OR ";
+        }
+        print(ticketFilter);
+      }
+      //print(ticketFilter);
+      getTickets();
+    }
+  }
+
   getTicketAttachment(int index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -49,7 +87,7 @@ class TicketClientTicketController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request/${trx.records![index].id}/attachments/grapefruit-slice-332-332.jpg');
+        '/api/v1/models/r_request/${trx.records![index].id}/attachments/ticketimage.jpg');
 
     var response = await http.get(
       url,
@@ -126,7 +164,7 @@ class TicketClientTicketController extends GetxController {
       var json = jsonDecode(response.body);
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
-      getTickets();
+      getAllticketTypeID();
       //print(businessPartnerId);
       //print(trx.rowcount);
       //print(response.body);
@@ -237,9 +275,12 @@ class TicketClientTicketController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
+    /* print('$protocol://' +
+        ip +
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)'); */
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -254,6 +295,8 @@ class TicketClientTicketController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      print(response.body);
     }
   }
 
