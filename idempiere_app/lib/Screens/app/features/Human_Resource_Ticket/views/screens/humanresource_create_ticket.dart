@@ -86,8 +86,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       "Summary": " ",
       "ConfidentialTypeEntry": {"id": "C"},
       "C_BPartner_ID": {"id": businessPartnerId},
-      "StartDate": "${formattedDateFrom}T00:00:00Z",
-      "CloseDate": "${formattedDateTo}T00:00:00Z",
+      "StartTime": "${formattedDateFrom}T00:00:00Z",
+      "EndTime": "${formattedDateTo}T00:00:00Z",
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
@@ -132,30 +132,34 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     }
   }
 
-  createEvent() async {
+  createTicketPermission() async {
     var formatter = DateFormat('yyyy-MM-dd');
-    var date = DateTime.parse(slotDropdownValue);
-    String formattedDate = formatter.format(date);
+    var dateF = DateTime.parse(dateFrom);
+    //var dateT = DateTime.parse(dateTo);
+    String formattedDateFrom = formatter.format(dateF);
+    //String formattedDateTo = formatter.format(dateT);
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "AD_User_ID": {"id": salesRepId},
-      "Name": nameFieldController.text,
-      "Description": nameFieldController.text,
-      "JP_ToDo_ScheduledStartDate": formattedDate,
-      "JP_ToDo_ScheduledEndDate": formattedDate,
-      "JP_ToDo_ScheduledStartTime": '${date.hour}:00:00Z',
-      "JP_ToDo_ScheduledEndTime": '${date.hour + 1}:00:00Z',
-      "JP_ToDo_Status": {"id": "NY"},
-      "IsOpenToDoJP": true,
-      "JP_ToDo_Type": {"id": "S"},
+      "R_RequestType_ID": Get.arguments["id"],
+      "DueType": {"id": 5},
+      "R_Status_ID": {"id": rStatusId},
+      "PriorityUser": {"id": "5"},
+      "Priority": {"id": "5"},
+      "ConfidentialType": {"id": "C"},
+      "SalesRep_ID": {"id": salesRepId},
+      "Summary": " ",
+      "ConfidentialTypeEntry": {"id": "C"},
+      "C_BPartner_ID": {"id": businessPartnerId},
+      "StartTime": "${formattedDateFrom}T$timeStart:00Z",
+      "EndTime": "${formattedDateFrom}T$timeEnd:00Z",
     });
+    //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
-
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/R_Request');
     //print(msg);
     var response = await http.post(
       url,
@@ -166,23 +170,88 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       },
     );
     if (response.statusCode == 201) {
+      var json = jsonDecode(response.body);
+      if (imageName != "" && image64 != "") {
+        sendTicketAttachedImage(json["id"]);
+        //print(response.body);
+      }
+      Get.find<HumanResourceTicketController>().getTickets();
       //print("done!");
       Get.snackbar(
         "Fatto!",
         "Il record è stato creato",
-        isDismissible: true,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
         ),
       );
     } else {
-      //print(response.body);
+      //print(response.statusCode);
+      print(response.body);
       //print(response.statusCode);
       Get.snackbar(
         "Errore!",
         "Record non creato",
-        isDismissible: true,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  createTicketGeneric() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "R_RequestType_ID": Get.arguments["id"],
+      "DueType": {"id": 5},
+      "R_Status_ID": {"id": rStatusId},
+      "PriorityUser": {"id": "5"},
+      "Priority": {"id": "5"},
+      "ConfidentialType": {"id": "C"},
+      "SalesRep_ID": {"id": salesRepId},
+      "Summary": nameFieldController.text,
+      "ConfidentialTypeEntry": {"id": "C"},
+      "C_BPartner_ID": {"id": businessPartnerId},
+    });
+    //print(msg);
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/R_Request');
+    //print(msg);
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      var json = jsonDecode(response.body);
+      if (imageName != "" && image64 != "") {
+        sendTicketAttachedImage(json["id"]);
+        //print(response.body);
+      }
+      Get.find<HumanResourceTicketController>().getTickets();
+      //print("done!");
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato creato",
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      //print(response.statusCode);
+      print(response.body);
+      //print(response.statusCode);
+      Get.snackbar(
+        "Errore!",
+        "Record non creato",
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -446,6 +515,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
   String imageName = "";
   String dateFrom = "";
   String dateTo = "";
+  String timeStart = "";
+  String timeEnd = "";
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
   late EventJson eventJson;
@@ -465,6 +536,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     dropdownValue = "9";
     dateFrom = "";
     dateTo = "";
+    timeStart = "";
+    timeEnd = "";
     slotDropdownValue = "";
     ticketTypeValue = "";
     image64 = "";
@@ -502,6 +575,12 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                     break;
                   case "HRI":
                     createTicket();
+                    break;
+                  case "HRP":
+                    createTicketPermission();
+                    break;
+                  case "HRG":
+                    createTicketGeneric();
                     break;
                   default:
                 }
@@ -648,6 +727,22 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                   ),
                 ), */
                 Visibility(
+                  visible: ticketTypeValue == "HRG",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Description',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
                   visible: ticketTypeValue == "HRH" || ticketTypeValue == "HRI",
                   child: Container(
                     margin: const EdgeInsets.all(10),
@@ -673,6 +768,108 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                           dateFrom = val.substring(0, 10);
                         });
                         //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Date',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateFrom = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      timeLabelText: 'Start Time',
+                      icon: const Icon(Icons.access_time),
+                      onChanged: (val) {
+                        setState(() {
+                          timeStart = val;
+                        });
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      timeLabelText: 'End Time',
+                      icon: const Icon(Icons.access_time),
+                      onChanged: (val) {
+                        setState(() {
+                          timeEnd = val;
+                        });
                       },
                       validator: (val) {
                         //print(val);
@@ -720,7 +917,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                   ),
                 ),
                 Visibility(
-                  visible: true,
+                  visible: ticketTypeValue == "HRI",
                   child: IconButton(
                       onPressed: () {
                         attachImage();

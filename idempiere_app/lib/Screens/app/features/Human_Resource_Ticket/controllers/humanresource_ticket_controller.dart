@@ -45,33 +45,37 @@ class HumanResourceTicketController extends GetxController {
 
   openTicketType() {
     Get.defaultDialog(
-        title: "Ticket Type",
-        //middleText: "Choose the type of Ticket you want to create",
-        //contentPadding: const EdgeInsets.all(2.0),
-        content: DropdownButton(
-          value: dropdownValue,
-          style: const TextStyle(fontSize: 12.0),
-          elevation: 16,
-          onChanged: (String? newValue) {
-            dropdownValue = newValue!;
-          },
-          items: _tt.records!.map((list) {
-            return DropdownMenuItem<String>(
-              child: Text(
-                list.name.toString(),
-              ),
-              value: list.id.toString(),
-            );
-          }).toList(),
-        ),
-        barrierDismissible: true,
-        textCancel: "Cancel",
+      title: "Ticket Type",
+      //middleText: "Choose the type of Ticket you want to create",
+      //contentPadding: const EdgeInsets.all(2.0),
+      content: DropdownButton(
+        value: dropdownValue,
+        style: const TextStyle(fontSize: 12.0),
+        elevation: 16,
+        onChanged: (String? newValue) {
+          dropdownValue = newValue!;
+          Get.back();
+          Get.to(const CreateHumanResourceTicket(),
+              arguments: {"id": dropdownValue});
+        },
+        items: _tt.records!.map((list) {
+          return DropdownMenuItem<String>(
+            child: Text(
+              list.name.toString(),
+            ),
+            value: list.id.toString(),
+          );
+        }).toList(),
+      ),
+      barrierDismissible: true,
+      /* textCancel: "Cancel",
         textConfirm: "Confirm",
         onConfirm: () {
           Get.back();
           Get.to(const CreateHumanResourceTicket(),
               arguments: {"id": dropdownValue});
-        });
+        } */
+    );
   }
 
   getAllticketTypeID() async {
