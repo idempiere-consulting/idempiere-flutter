@@ -264,7 +264,6 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                                   .trx.records![index].eMail ??
                                               ""),
                                         ],
-                                        
                                       ),
                                     ],
                                   ),
@@ -454,7 +453,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                   ),
                 ),
                 const SizedBox(width: kSpacing / 2),
-                const Flexible(
+                Flexible(
                   flex: 4,
                   child: ProgressReportCard(
                     data: ProgressReportCardData(
@@ -478,7 +477,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                   onPressedCheck: () {},
                 ),
                 const SizedBox(height: kSpacing / 2),
-                const ProgressReportCard(
+                ProgressReportCard(
                   data: ProgressReportCardData(
                     title: "1st Sprint",
                     doneTask: 5,

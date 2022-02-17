@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 
 class ProgressCardData {
   final int totalUndone;
@@ -13,14 +16,16 @@ class ProgressCardData {
 }
 
 class ProgressCard extends StatelessWidget {
-  const ProgressCard({
+  ProgressCard({
     required this.data,
     required this.onPressedCheck,
+    this.text = "zz",
     Key? key,
   }) : super(key: key);
 
-  final ProgressCardData data;
-  final Function() onPressedCheck;
+  String text;
+  ProgressCardData data;
+  VoidCallback onPressedCheck;
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +70,18 @@ class ProgressCard extends StatelessWidget {
                 ),
                 const SizedBox(height: kSpacing),
                 ElevatedButton(
-                  onPressed: onPressedCheck,
-                  child: const Text("Check"),
+                  onPressed: () {
+                    if (Get.find<DashboardController>().filterCount == 0) {
+                      Get.find<DashboardController>().changeFilter();
+                      GetStorage().write(
+                          'signEntryDateTime', DateTime.now().toString());
+                    } else {
+                      Get.find<DashboardController>().changeFilter();
+                      GetStorage()
+                          .write('signExitDateTime', DateTime.now().toString());
+                    }
+                  },
+                  child: Text(text),
                 )
               ],
             ),

@@ -472,7 +472,7 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
                   ),
                 ),
                 const SizedBox(width: kSpacing / 2),
-                const Flexible(
+                Flexible(
                   flex: 4,
                   child: ProgressReportCard(
                     data: ProgressReportCardData(
@@ -496,7 +496,7 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
                   onPressedCheck: () {},
                 ),
                 const SizedBox(height: kSpacing / 2),
-                const ProgressReportCard(
+                ProgressReportCard(
                   data: ProgressReportCardData(
                     title: "1st Sprint",
                     doneTask: 5,

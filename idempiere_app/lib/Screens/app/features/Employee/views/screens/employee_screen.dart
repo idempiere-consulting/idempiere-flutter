@@ -67,12 +67,12 @@ class EmployeeScreen extends GetView<EmployeeController> {
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
-          //  _buildProfile(data: controller.getProfil()),
-          //  const SizedBox(height: kSpacing),
-          //  _buildProgress(axis: Axis.vertical),
-          //  const SizedBox(height: kSpacing),
-          //  _buildTeamMember(data: controller.getMember()),
-           /*  const SizedBox(height: kSpacing),
+            //  _buildProfile(data: controller.getProfil()),
+            //  const SizedBox(height: kSpacing),
+            //  _buildProgress(axis: Axis.vertical),
+            //  const SizedBox(height: kSpacing),
+            //  _buildTeamMember(data: controller.getMember()),
+            /*  const SizedBox(height: kSpacing),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kSpacing),
               child: GetPremiumCard(onPressed: () {}),
@@ -264,7 +264,7 @@ class EmployeeScreen extends GetView<EmployeeController> {
                   ),
                 ),
                 const SizedBox(width: kSpacing / 2),
-                const Flexible(
+                Flexible(
                   flex: 4,
                   child: ProgressReportCard(
                     data: ProgressReportCardData(
@@ -288,7 +288,7 @@ class EmployeeScreen extends GetView<EmployeeController> {
                   onPressedCheck: () {},
                 ),
                 const SizedBox(height: kSpacing / 2),
-                const ProgressReportCard(
+                ProgressReportCard(
                   data: ProgressReportCardData(
                     title: "1st Sprint",
                     doneTask: 5,

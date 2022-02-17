@@ -568,7 +568,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ),
                 ),
                 const SizedBox(width: kSpacing / 2),
-                const Flexible(
+                Flexible(
                   flex: 4,
                   child: ProgressReportCard(
                     data: ProgressReportCardData(
@@ -592,7 +592,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   onPressedCheck: () {},
                 ),
                 const SizedBox(height: kSpacing / 2),
-                const ProgressReportCard(
+                ProgressReportCard(
                   data: ProgressReportCardData(
                     title: "1st Sprint",
                     doneTask: 5,

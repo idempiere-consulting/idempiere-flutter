@@ -211,7 +211,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                   ), */
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                 children: [
+                                children: [
                                   Column(
                                     children: [
                                       Row(
@@ -221,20 +221,14 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text(controller
-                                                  .trx
-                                                  .records![index]
+                                          Text(controller.trx.records![index]
                                                   .cBPGroupID?.identifier ??
                                               ""),
                                         ],
                                       ),
-                                      
-                                      
-                                      
                                     ],
                                   ),
-                                ], 
-
+                                ],
                               ),
                             ),
                           );
@@ -420,7 +414,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                   ),
                 ),
                 const SizedBox(width: kSpacing / 2),
-                const Flexible(
+                Flexible(
                   flex: 4,
                   child: ProgressReportCard(
                     data: ProgressReportCardData(
@@ -444,7 +438,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                   onPressedCheck: () {},
                 ),
                 const SizedBox(height: kSpacing / 2),
-                const ProgressReportCard(
+                ProgressReportCard(
                   data: ProgressReportCardData(
                     title: "1st Sprint",
                     doneTask: 5,

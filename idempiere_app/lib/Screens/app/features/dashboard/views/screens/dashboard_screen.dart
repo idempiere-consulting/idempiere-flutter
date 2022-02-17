@@ -8,6 +8,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -26,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 // binding
 part '../../bindings/dashboard_binding.dart';
@@ -74,7 +76,14 @@ class DashboardScreen extends GetView<DashboardController> {
                 counter: controller.notificationCounter.value)),
             //_buildProfile(data: controller.getProfil(), counter: 0),
             const SizedBox(height: kSpacing),
-            //  _buildProgress(axis: Axis.vertical),
+            Obx(() => _buildProgress(
+                  axis: Axis.vertical,
+                  text: controller.value.value,
+                  function: controller.changeFilter,
+                  done: controller.doneCount.value,
+                  inprogress: controller.inProgressCount.value,
+                  notYetStarted: controller.notDoneCount.value,
+                )),
             //  const SizedBox(height: kSpacing),
             //  _buildTeamMember(data: controller.getMember()),
             //  const SizedBox(height: kSpacing),
@@ -112,9 +121,11 @@ class DashboardScreen extends GetView<DashboardController> {
                         onPressedMenu: () => Scaffold.of(context).openDrawer()),
                     const SizedBox(height: kSpacing * 2),
                     _buildProgress(
+                      text: controller.value.value,
                       axis: (constraints.maxWidth < 950)
                           ? Axis.vertical
                           : Axis.horizontal,
+                      function: () {},
                     ),
                     const SizedBox(height: kSpacing * 2),
                     _buildTaskOverview(
@@ -187,7 +198,10 @@ class DashboardScreen extends GetView<DashboardController> {
                     const SizedBox(height: kSpacing),
                     _buildHeader(),
                     const SizedBox(height: kSpacing * 2),
-                    _buildProgress(),
+                    _buildProgress(
+                      text: controller.value.value,
+                      function: () {},
+                    ),
                     const SizedBox(height: kSpacing * 2),
                     _buildTaskOverview(
                       data: controller.getAllTask(),
@@ -252,7 +266,17 @@ class DashboardScreen extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildProgress({Axis axis = Axis.horizontal}) {
+  Widget _buildProgress({
+    Axis axis = Axis.horizontal,
+    required String text,
+    required Function() function,
+    int done = 0,
+    int inprogress = 0,
+    int notYetStarted = 0,
+  }) {
+    var totTask = done + inprogress + notYetStarted;
+    var totUndone = notYetStarted + inprogress;
+    double perc = (totTask - inprogress - notYetStarted) / totTask;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
       child: (axis == Axis.horizontal)
@@ -261,23 +285,26 @@ class DashboardScreen extends GetView<DashboardController> {
                 Flexible(
                   flex: 5,
                   child: ProgressCard(
-                    data: const ProgressCardData(
-                      totalUndone: 10,
-                      totalTaskInProress: 2,
+                    data: ProgressCardData(
+                      totalUndone: notYetStarted,
+                      totalTaskInProress: inprogress,
                     ),
-                    onPressedCheck: () {},
+                    onPressedCheck: () {
+                      //print("kiao");
+                    },
+                    text: text,
                   ),
                 ),
                 const SizedBox(width: kSpacing / 2),
-                const Flexible(
+                Flexible(
                   flex: 4,
                   child: ProgressReportCard(
                     data: ProgressReportCardData(
-                      title: "1st Sprint",
-                      doneTask: 5,
-                      percent: .3,
-                      task: 3,
-                      undoneTask: 2,
+                      title: "For Today you have",
+                      doneTask: done,
+                      percent: perc,
+                      task: totTask,
+                      undoneTask: totUndone,
                     ),
                   ),
                 ),
@@ -286,22 +313,23 @@ class DashboardScreen extends GetView<DashboardController> {
           : Column(
               children: [
                 ProgressCard(
-                  data: const ProgressCardData(
-                    totalUndone: 10,
-                    totalTaskInProress: 2,
+                  data: ProgressCardData(
+                    totalUndone: notYetStarted,
+                    totalTaskInProress: inprogress,
                   ),
                   onPressedCheck: () {},
+                  text: text,
                 ),
-                const SizedBox(height: kSpacing / 2),
-                const ProgressReportCard(
+                /* const SizedBox(height: kSpacing / 2),
+                ProgressReportCard(
                   data: ProgressReportCardData(
-                    title: "1st Sprint",
-                    doneTask: 5,
-                    percent: .3,
-                    task: 3,
-                    undoneTask: 2,
+                    title: "For Today you have",
+                    doneTask: done,
+                    percent: perc,
+                    task: totTask,
+                    undoneTask: totUndone,
                   ),
-                ),
+                ), */
               ],
             ),
     );

@@ -10,10 +10,82 @@ class DashboardController extends GetxController {
 
   var notificationCounter = 0.obs;
 
+  var value = "Sign Entry".obs;
+  var notDoneCount = 0.obs;
+  var inProgressCount = 0.obs;
+  var doneCount = 0.obs;
+
+  var filters = ["Sign Entry", "Sign Exit" /* , "Team" */];
+  var filterCount = 0;
+
   @override
   void onInit() {
     super.onInit();
     getNotificationCounter();
+    getAllEvents();
+  }
+
+  Future<void> getAllEvents() async {
+    var now = DateTime.now();
+    //DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    //String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    print('$protocol://' +
+        ip +
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate eq \'$formattedDate\'');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate eq \'$formattedDate\'');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var json = EventJson.fromJson(jsonDecode(response.body));
+
+      for (var i = 0; i < json.rowcount!; i++) {
+        switch (json.records![i].jPToDoStatus!.id) {
+          case "NY":
+            notDoneCount.value++;
+            break;
+          case "WP":
+            inProgressCount.value++;
+            break;
+          case "CO":
+            doneCount.value++;
+            break;
+          default:
+        }
+      }
+
+      //print(json.rowcount);
+    } else {
+      throw Exception("Failed to load events");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  changeFilter() {
+    //print("kiao");
+    filterCount++;
+    if (filterCount == 2) {
+      filterCount = 0;
+    }
+
+    value.value = filters[filterCount];
   }
 
   Future<void> getNotificationCounter() async {
@@ -59,7 +131,9 @@ class DashboardController extends GetxController {
     return [
       TaskCardData(
         seeAllFunction: () {},
-        addFunction: () {},
+        addFunction: () {
+          notificationCounter.value = 99;
+        },
         title: "Landing page UI Design",
         dueDay: 2,
         totalComments: 50,

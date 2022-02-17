@@ -3,13 +3,13 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 
 class ProgressReportCardData {
-  final double percent;
-  final String title;
-  final int task;
-  final int doneTask;
-  final int undoneTask;
+  double percent;
+  String title;
+  int task;
+  int doneTask;
+  int undoneTask;
 
-  const ProgressReportCardData({
+  ProgressReportCardData({
     required this.percent,
     required this.title,
     required this.task,
@@ -19,12 +19,12 @@ class ProgressReportCardData {
 }
 
 class ProgressReportCard extends StatelessWidget {
-  const ProgressReportCard({
+  ProgressReportCard({
     required this.data,
     Key? key,
   }) : super(key: key);
 
-  final ProgressReportCardData data;
+  ProgressReportCardData data;
 
   @override
   Widget build(BuildContext context) {

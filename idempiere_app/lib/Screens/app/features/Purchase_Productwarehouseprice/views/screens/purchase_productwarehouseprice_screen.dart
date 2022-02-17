@@ -46,7 +46,8 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class PurchaseProductwarehousepriceScreen extends GetView<PurchaseProductwarehousepriceController> {
+class PurchaseProductwarehousepriceScreen
+    extends GetView<PurchaseProductwarehousepriceController> {
   const PurchaseProductwarehousepriceScreen({Key? key}) : super(key: key);
 
   @override
@@ -376,7 +377,7 @@ class PurchaseProductwarehousepriceScreen extends GetView<PurchaseProductwarehou
                   ),
                 ),
                 const SizedBox(width: kSpacing / 2),
-                const Flexible(
+                Flexible(
                   flex: 4,
                   child: ProgressReportCard(
                     data: ProgressReportCardData(
@@ -400,7 +401,7 @@ class PurchaseProductwarehousepriceScreen extends GetView<PurchaseProductwarehou
                   onPressedCheck: () {},
                 ),
                 const SizedBox(height: kSpacing / 2),
-                const ProgressReportCard(
+                ProgressReportCard(
                   data: ProgressReportCardData(
                     title: "1st Sprint",
                     doneTask: 5,
