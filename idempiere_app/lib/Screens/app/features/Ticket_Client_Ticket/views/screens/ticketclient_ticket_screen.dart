@@ -194,8 +194,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                   ),
                                 ),
                                 title: Text(
-                                  controller.trx.records![index].documentNo ??
-                                      "???",
+                                  controller.trx.records![index].name ?? "???",
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -225,6 +224,23 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                 children: [
                                   Column(
                                     children: [
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Type: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .rRequestTypeID
+                                                    ?.identifier ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
                                       Row(
                                         children: [
                                           const Text(
