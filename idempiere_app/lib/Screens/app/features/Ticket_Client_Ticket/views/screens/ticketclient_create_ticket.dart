@@ -214,7 +214,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var json = jsonDecode(response.body);
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
@@ -224,7 +224,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       //print(response.body);
       // ignore: unnecessary_null_comparison
     } else {
-      print(response.body);
+      //print(response.body);
     }
   }
 
