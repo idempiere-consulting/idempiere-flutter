@@ -77,6 +77,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       "ConfidentialType": {"id": "C"},
       "SalesRep_ID": {"id": salesRepId},
       "ConfidentialTypeEntry": {"id": "C"},
+      "Name": titleFieldController.text,
       "Summary": nameFieldController.text,
       //"AD_User_ID": GetStorage().read('userid'),
       "C_BPartner_ID": {"id": businessPartnerId}
@@ -135,7 +136,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "AD_User_ID": {"id": salesRepId},
-      "Name": nameFieldController.text,
+      "Name": titleFieldController.text,
       "Description": nameFieldController.text,
       "JP_ToDo_ScheduledStartDate": formattedDate,
       "JP_ToDo_ScheduledEndDate": formattedDate,
@@ -144,6 +145,8 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       "JP_ToDo_Status": {"id": "NY"},
       "IsOpenToDoJP": true,
       "JP_ToDo_Type": {"id": "S"},
+      "C_BPartner_ID": {"id": businessPartnerId},
+      "Qty": 1,
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
@@ -424,6 +427,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
+  var titleFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var bPartnerFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -449,6 +453,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   void initState() {
     super.initState();
     nameFieldController = TextEditingController();
+    titleFieldController = TextEditingController();
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
@@ -509,6 +514,22 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
               children: [
                 const SizedBox(
                   height: 10,
+                ),
+                Visibility(
+                  visible: true,
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 1,
+                      controller: titleFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Ticket Title',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
                 ),
                 Visibility(
                   visible: ticketTypeValue == "TKG",
