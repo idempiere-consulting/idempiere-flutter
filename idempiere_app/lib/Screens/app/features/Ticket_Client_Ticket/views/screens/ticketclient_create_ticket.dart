@@ -205,7 +205,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= AD_User_ID eq \'$userId\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -214,7 +214,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       var json = jsonDecode(response.body);
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
@@ -224,7 +224,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       //print(response.body);
       // ignore: unnecessary_null_comparison
     } else {
-      //print(response.body);
+      print(response.body);
     }
   }
 

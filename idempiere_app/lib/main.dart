@@ -59,6 +59,7 @@ import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment/views/scree
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Equipment/views/screens/vehicle_equipment_equipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/views/screens/vehicle_equipment_vehicle_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_tasks_screen.dart';
 import 'package:idempiere_app/components/ignoressl.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_assetresource/views/screens/dashboard_assetresource_screen.dart';
@@ -94,6 +95,11 @@ class MyApp extends StatelessWidget {
           name: '/Dashboard',
           page: () => const DashboardScreen(),
           binding: DashboardBinding(),
+        ),
+        GetPage(
+          name: '/DashboardTasks',
+          page: () => const DashboardTasksScreen(),
+          binding: DashboardTasksBinding(),
         ),
         GetPage(
           name: '/Notification',

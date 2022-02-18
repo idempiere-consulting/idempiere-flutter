@@ -1,31 +1,100 @@
 part of dashboard;
 
-class DashboardController extends GetxController {
-  /* final scaffoldKey = GlobalKey<ScaffoldState>();
-  void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
-    }
-  } */
+class DashboardTasksController extends GetxController {
+  //final scaffoldKey = GlobalKey<ScaffoldState>();
+  late EventJson _trx;
+  var _hasCallSupport = false;
+  //var _hasMailSupport = false;
 
-  var notificationCounter = 0.obs;
+  // ignore: prefer_typing_uninitialized_variables
+  var adUserId;
 
-  var value = "Sign Entry".obs;
-  var notDoneCount = 0.obs;
-  var inProgressCount = 0.obs;
-  var doneCount = 0.obs;
+  var value = "Tutti".obs;
 
-  var filters = ["Sign Entry", "Sign Exit" /* , "Team" */];
+  var filters = ["Tutti", "Miei" /* , "Team" */];
   var filterCount = 0;
+  var wpCount = 0.obs;
+  // ignore: prefer_final_fields
+  var _dataAvailable = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    getNotificationCounter();
-    getAllEvents();
+    canLaunch('tel:123').then((bool result) {
+      _hasCallSupport = result;
+    });
+
+    getLeads();
+    //getADUserID();
+    adUserId = GetStorage().read('userId');
   }
 
-  Future<void> getAllEvents() async {
+  bool get dataAvailable => _dataAvailable.value;
+  EventJson get trx => _trx;
+  //String get value => _value.toString();
+
+  changeFilter() {
+    filterCount++;
+    if (filterCount == 2) {
+      filterCount = 0;
+    }
+
+    value.value = filters[filterCount];
+    getLeads();
+  }
+
+  Future<void> getADUserID() async {
+    var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse(
+        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      adUserId = json["records"][0]["id"];
+
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    }
+  }
+
+  Future<void> makePhoneCall(String phoneNumber) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    if (_hasCallSupport) {
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: phoneNumber,
+      );
+      await launch(launchUri.toString());
+    }
+  }
+
+  Future<void> writeMailTo(String receiver) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'mailto',
+      path: receiver,
+    );
+    await launch(launchUri.toString());
+  }
+
+  Future<void> getLeads() async {
     var now = DateTime.now();
     //DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
     var formatter = DateFormat('yyyy-MM-dd');
@@ -37,7 +106,7 @@ class DashboardController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate eq \'$formattedDate\'');
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and JP_ToDo_Status neq \'CO\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate eq \'$formattedDate\'&\$orderby=JP_ToDo_Status desc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -45,70 +114,27 @@ class DashboardController extends GetxController {
         'Authorization': authorization,
       },
     );
-
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = EventJson.fromJson(jsonDecode(response.body));
+      _trx = EventJson.fromJson(jsonDecode(response.body));
 
-      for (var i = 0; i < json.rowcount!; i++) {
-        switch (json.records![i].jPToDoStatus!.id) {
-          case "NY":
-            notDoneCount.value++;
-            break;
-          case "WP":
-            inProgressCount.value++;
-            break;
-          case "CO":
-            doneCount.value++;
-            break;
-          default:
+      for (var i = 0; i < _trx.rowcount!; i++) {
+        if (_trx.records![i].jPToDoStatus!.id == "WP") {
+          wpCount.value++;
         }
       }
-
-      //print(json.rowcount);
-    } else {
-      throw Exception("Failed to load events");
-    }
-
-    //print(list[0].eMail);
-
-    //print(json.);
-  }
-
-  changeFilter() {
-    //print("kiao");
-    filterCount++;
-    if (filterCount == 2) {
-      filterCount = 0;
-    }
-
-    value.value = filters[filterCount];
-  }
-
-  Future<void> getNotificationCounter() async {
-    if (GetStorage().read("isOffline") == false) {
-      var userid = GetStorage().read("userId");
-      final ip = GetStorage().read('ip');
-      String authorization = 'Bearer ' + GetStorage().read('token');
-      final protocol = GetStorage().read('protocol');
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userid and AD_Client_ID eq ${GetStorage().read("clientid")}');
-      var response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': authorization,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        //print(response.body);
-        var json = jsonDecode(response.body);
-        notificationCounter.value = json["row-count"];
-      }
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      _dataAvailable.value = _trx != null;
     }
   }
+
+  /* void openDrawer() {
+    if (scaffoldKey.currentState != null) {
+      scaffoldKey.currentState!.openDrawer();
+    }
+  } */
 
   // Data
   _Profile getProfil() {
@@ -127,14 +153,17 @@ class DashboardController extends GetxController {
 
     return [
       TaskCardData(
-        seeAllFunction: () {},
-        addFunction: () {
-          notificationCounter.value = 99;
+        seeAllFunction: () {
+          Get.toNamed('/leads');
         },
-        title: "Landing page UI Design",
+        addFunction: () {
+          //Get.toNamed('/createLead');
+          log('hallooooo');
+        },
+        title: "Lead",
         dueDay: 2,
         totalComments: 50,
-        type: TaskType.todo,
+        type: TaskType.inProgress,
         totalContributors: 30,
         profilContributors: [
           const AssetImage(ImageRasterPath.avatar1),
@@ -246,5 +275,45 @@ class DashboardController extends GetxController {
         totalUnread: 1,
       ),
     ];
+  }
+}
+
+class Provider extends GetConnect {
+  Future<void> getLeads() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    //print(authorization);
+    //String clientid = GetStorage().read('clientid');
+    /* final response = await get(
+      'http://' + ip + '/api/v1/windows/lead',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.status.hasError) {
+      return Future.error(response.statusText!);
+    } else {
+      return response.body;
+    } */
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+      //print(json['window-records'][0]);
+      return json;
+    } else {
+      return Future.error(response.body);
+    }
   }
 }

@@ -71,7 +71,7 @@ class ProgressCard extends StatelessWidget {
                 const SizedBox(height: kSpacing),
                 ElevatedButton(
                   onPressed: () {
-                    if (Get.find<DashboardController>().filterCount == 0) {
+                    /* if (Get.find<DashboardController>().filterCount == 0) {
                       Get.find<DashboardController>().changeFilter();
                       GetStorage().write(
                           'signEntryDateTime', DateTime.now().toString());
@@ -79,7 +79,10 @@ class ProgressCard extends StatelessWidget {
                       Get.find<DashboardController>().changeFilter();
                       GetStorage()
                           .write('signExitDateTime', DateTime.now().toString());
-                    }
+                    } */
+                    GetStorage()
+                        .write('signEntryDateTime', DateTime.now().toString());
+                    Get.toNamed('DashboardTasks');
                   },
                   child: Text(text),
                 )
