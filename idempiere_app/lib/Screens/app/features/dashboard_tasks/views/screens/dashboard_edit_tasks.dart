@@ -1,39 +1,34 @@
 import 'dart:convert';
 //import 'dart:developer';
 
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_tasks_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
-class EditLead extends StatefulWidget {
-  const EditLead({Key? key}) : super(key: key);
+class DashboardTasksEdit extends StatefulWidget {
+  const DashboardTasksEdit({Key? key}) : super(key: key);
 
   @override
-  State<EditLead> createState() => _EditLeadState();
+  State<DashboardTasksEdit> createState() => _DashboardTasksEditState();
 }
 
-class _EditLeadState extends State<EditLead> {
-  editLead() async {
+class _DashboardTasksEditState extends State<DashboardTasksEdit> {
+  editTask(String statusId) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "Name": nameFieldController.text,
-      "BPName": bPartnerFieldController.text,
-      "Phone": phoneFieldController.text,
-      "EMail": mailFieldController.text,
-      "SalesRep_ID": {"identifier": salesrepValue},
-      "LeadStatus": {"id": dropdownValue}
+      "JP_ToDo_Status": {"id": statusId},
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://'  + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/${args['id']}');
     //print(msg);
     var response = await http.put(
       url,
@@ -44,7 +39,7 @@ class _EditLeadState extends State<EditLead> {
       },
     );
     if (response.statusCode == 200) {
-      Get.find<CRMLeadController>().getLeads();
+      Get.find<DashboardTasksController>().getLeads();
       //print("done!");
       Get.snackbar(
         "Fatto!",
@@ -70,8 +65,8 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -109,8 +104,7 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
@@ -136,8 +130,7 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -163,12 +156,15 @@ class _EditLeadState extends State<EditLead> {
 
   void fillFields() {
     nameFieldController.text = args["name"] ?? "";
-    bPartnerFieldController.text = args["bpName"] ?? "";
+    userFieldController.text = args["user"] ?? "";
+    statusFieldController.text = args["status"] ?? "";
+    descriptionFieldController.text = args["description"] ?? "";
+    /* bPartnerFieldController.text = args["bpName"] ?? "";
     phoneFieldController.text = args["Tel"] ?? "";
     mailFieldController.text = args["eMail"] ?? "";
     //dropdownValue = args["leadStatus"];
     salesrepValue = args["salesRep"] ?? "";
-    //salesRepFieldController.text = args["salesRep"];
+    //salesRepFieldController.text = args["salesRep"]; */
   }
 
   dynamic args = Get.arguments;
@@ -176,10 +172,11 @@ class _EditLeadState extends State<EditLead> {
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var bPartnerFieldController;
+  var statusFieldController;
   // ignore: prefer_typing_uninitialized_variables
-  var phoneFieldController;
+  var userFieldController;
   // ignore: prefer_typing_uninitialized_variables
-  var mailFieldController;
+  var descriptionFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
 
@@ -187,15 +184,16 @@ class _EditLeadState extends State<EditLead> {
   void initState() {
     super.initState();
     nameFieldController = TextEditingController();
-    phoneFieldController = TextEditingController();
+    userFieldController = TextEditingController();
+    statusFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
-    mailFieldController = TextEditingController();
-    dropdownValue = Get.arguments["leadStatus"];
+    descriptionFieldController = TextEditingController();
+    //dropdownValue = Get.arguments["leadStatus"];
     fillFields();
     getAllLeadStatuses();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  //static String _displayStringForOption(Records option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 
@@ -206,7 +204,7 @@ class _EditLeadState extends State<EditLead> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Edit Lead'),
+          child: Text('Edit Task'),
         ),
         actions: [
           Padding(
@@ -238,17 +236,6 @@ class _EditLeadState extends State<EditLead> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: IconButton(
-              onPressed: () {
-                editLead();
-              },
-              icon: const Icon(
-                Icons.save,
-              ),
-            ),
-          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -262,11 +249,12 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: nameFieldController,
+                    readOnly: true,
+                    controller: userFieldController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.person_outlined),
                       border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                      labelText: 'Assigned To',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -274,11 +262,12 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: bPartnerFieldController,
+                    readOnly: true,
+                    controller: nameFieldController,
                     decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      prefixIcon: Icon(Icons.task_alt),
                       border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                      labelText: 'Task',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -286,95 +275,32 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: phoneFieldController,
+                    readOnly: true,
+                    controller: statusFieldController,
                     decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
+                      prefixIcon: Icon(Icons.settings_applications_outlined),
                       border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                      labelText: 'Status',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
-                Container(
+                /* Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: mailFieldController,
+                    readOnly: true,
+                    maxLines: 4,
+                    controller: descriptionFieldController,
                     decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
+                      //prefixIcon: Icon(Icons.list),
                       border: OutlineInputBorder(),
-                      labelText: 'Email',
+                      labelText: 'Description',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                ),
+                ), */
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllSalesRep(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: args["salesRep"]),
-                                displayStringForOption: _displayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
-                                  }
-                                  return snapshot.data!.where((Records option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (Records selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
-                                  });
-
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
                   decoration: BoxDecoration(
@@ -383,34 +309,103 @@ class _EditLeadState extends State<EditLead> {
                     ),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllLeadStatuses(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<LSRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                    value: list.value.toString(),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: (args["startTime"]).substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'Start Time',
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      /* setState(() {
+                        //timeStart = val;
+                      }); */
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
                   ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: args["endTime"].substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'End Time',
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      /* setState(() {
+                        //timeStart = val;
+                      }); */
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  overflowDirection: VerticalDirection.down,
+                  overflowButtonSpacing: 5,
+                  /* buttonPadding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20), */
+                  children: [
+                    Visibility(
+                      visible: args["statusId"] == "NY",
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        child: const Text("Enter"),
+                        onPressed: () {
+                          editTask("WP");
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: args["statusId"] == "WP",
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                        ),
+                        child: const Text("Exit"),
+                        onPressed: () {
+                          editTask("CO");
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: args["statusId"] == "WP",
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.orange),
+                        ),
+                        child: const Text("Exit without closing the task"),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
                 ),
               ],
             );

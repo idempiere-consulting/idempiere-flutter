@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_edit_tasks.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -155,33 +156,45 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                     tooltip: 'Edit Lead',
                                     onPressed: () {
                                       //log("info button pressed");
-                                      /* Get.to(const EditLead(), arguments: {
-                                        "id": controller
-                                            .trx.records![index].id,
-                                        "name": controller.trx
-                                                .records![index].name ??
-                                            "",
-                                        "leadStatus": controller
+                                      Get.to(const DashboardTasksEdit(),
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "name": controller
+                                                    .trx.records![index].name ??
+                                                "",
+                                            "user": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .aDUserID
+                                                    ?.identifier ??
+                                                "",
+                                            "status": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .jPToDoStatus
+                                                    ?.identifier ??
+                                                "",
+                                            "statusId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .jPToDoStatus
+                                                    ?.id ??
+                                                "",
+                                            "description": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                "",
+                                            "startTime": controller
                                                 .trx
                                                 .records![index]
-                                                .leadStatus
-                                                ?.id ??
-                                            "",
-                                        "bpName": controller
-                                            .trx.records![index].bPName,
-                                        "Tel": controller.trx
-                                                .records![index].phone ?? 
-                                            "",
-                                        "eMail": controller.trx
-                                                .records![index].eMail ??
-                                            "",
-                                        "salesRep": controller
+                                                .jPToDoScheduledStartTime,
+                                            "endTime": controller
                                                 .trx
                                                 .records![index]
-                                                .salesRepID
-                                                ?.identifier ??
-                                            ""
-                                      }); */
+                                                .jPToDoScheduledEndTime,
+                                          });
                                     },
                                   ),
                                 ),
@@ -211,8 +224,12 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                     color: controller.trx.records![index]
                                                 .jPToDoStatus!.id ==
                                             "WP"
-                                        ? Colors.green
-                                        : Colors.red,
+                                        ? Colors.yellow
+                                        : controller.trx.records![index]
+                                                    .jPToDoStatus!.id ==
+                                                "CO"
+                                            ? Colors.green
+                                            : Colors.red,
                                   ),
                                   onPressed: () {},
                                 ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
@@ -662,7 +663,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       onPressed: () {
                         attachImage();
                       },
-                      icon: const Icon(Icons.attach_file)),
+                      icon: Icon(
+                        Icons.attach_file,
+                        color: image64 != "" ? Colors.green : Colors.white,
+                      )),
                 ),
               ],
             );
