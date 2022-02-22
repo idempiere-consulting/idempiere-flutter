@@ -1617,7 +1617,7 @@ CRUD=1111=F
  36 Indicatori          : 1
  37 Offerta di Vendita  : R
  -- sezione ticket
- 38 Ticket              : F
+ 38 Ticket              : FE (E = Edit bp + contatto da portale cliente > ticket)
  -- sezione contratto e manutenzione
  39 Contratto           : R
  40 Manutenzione        : R

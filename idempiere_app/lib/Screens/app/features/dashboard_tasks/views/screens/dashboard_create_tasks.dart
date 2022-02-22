@@ -1,40 +1,44 @@
 import 'dart:convert';
 //import 'dart:developer';
 
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
-import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_tasks_screen.dart';
+import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 
-class CreateLead extends StatefulWidget {
-  const CreateLead({Key? key}) : super(key: key);
+class CreateDashboardTasks extends StatefulWidget {
+  const CreateDashboardTasks({Key? key}) : super(key: key);
 
   @override
-  State<CreateLead> createState() => _CreateLeadState();
+  State<CreateDashboardTasks> createState() => _CreateDashboardTasksState();
 }
 
-class _CreateLeadState extends State<CreateLead> {
-  createLead() async {
+class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
+  createEvent() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "AD_User_ID": {"identifier": GetStorage().read('user')},
       "Name": nameFieldController.text,
-      "BPName": bPartnerFieldController.text,
-      "Phone": phoneFieldController.text,
-      "EMail": mailFieldController.text,
-      "SalesRep_ID": {"identifier": salesrepValue},
-      "LeadStatus": {"id": dropdownValue},
-      "IsSalesLead": true
+      "Description": descriptionFieldController.text,
+      "JP_ToDo_ScheduledStartDate": date,
+      "JP_ToDo_ScheduledEndDate": date,
+      "JP_ToDo_ScheduledStartTime": '$timeStart:00Z',
+      "JP_ToDo_ScheduledEndTime": '$timeEnd:00Z',
+      "JP_ToDo_Status": {"id": dropdownValue},
+      "IsOpenToDoJP": true,
+      "JP_ToDo_Type": {"id": "S"},
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user/');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
+
     //print(msg);
     var response = await http.post(
       url,
@@ -45,11 +49,14 @@ class _CreateLeadState extends State<CreateLead> {
       },
     );
     if (response.statusCode == 201) {
-      Get.find<CRMLeadController>().getLeads();
+      Get.find<DashboardTasksController>().getLeads();
+      Get.find<DashboardController>().getAllEvents();
+      Get.back();
       //print("done!");
       Get.snackbar(
         "Fatto!",
         "Il record è stato creato",
+        isDismissible: true,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -60,6 +67,7 @@ class _CreateLeadState extends State<CreateLead> {
       Get.snackbar(
         "Errore!",
         "Record non creato",
+        isDismissible: true,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -68,115 +76,63 @@ class _CreateLeadState extends State<CreateLead> {
     }
   }
 
-  Future<List<LSRecords>> getAllLeadStatuses() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
-        ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
-      //print(json.rowcount);
+  final json = {
+    "types": [
+      {"id": "CO", "name": "Completed"},
+      {"id": "NY", "name": "Not Yet Started"},
+      {"id": "WP", "name": "Work In Progress"},
+    ]
+  };
 
-      return json.records!;
-    } else {
-      throw Exception("Failed to load lead statuses");
-    }
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
 
-    //print(response.body);
+    return dJson.types;
   }
 
-  Future<List<Records>> getAllSalesRep() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-
-      var jsonContacts = ContactsJson.fromJson(jsondecoded);
-
-      return jsonContacts.records!;
-    } else {
-      throw Exception("Failed to load sales reps");
-    }
-
-    //print(list[0].eMail);
-
-    //print(json.);
-  }
-
-  /* void fillFields() {
-    nameFieldController.text = args["name"];
-    bPartnerFieldController.text = args["bpName"];
-    phoneFieldController.text = args["Tel"];
-    mailFieldController.text = args["eMail"];
-    //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"];
-    //salesRepFieldController.text = args["salesRep"];
-  } */
-
-  //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
-  var bPartnerFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var phoneFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var mailFieldController;
+  var descriptionFieldController;
+  String date = "";
+  String timeStart = "";
+  String timeEnd = "";
   String dropdownValue = "";
-  String salesrepValue = "";
+  late List<Types> dropDownList;
+  //var adUserId;
 
   @override
   void initState() {
     super.initState();
     nameFieldController = TextEditingController();
-    phoneFieldController = TextEditingController();
-    bPartnerFieldController = TextEditingController();
-    mailFieldController = TextEditingController();
-    dropdownValue = "N";
-    //fillFields();
-    getAllLeadStatuses();
+    descriptionFieldController = TextEditingController();
+    dropDownList = getTypes()!;
+    dropdownValue = "NY";
+    date = "";
+    timeStart = "";
+    timeEnd = "";
   }
-
-  static String _displayStringForOption(Records option) => option.name!;
-  //late List<Records> salesrepRecord;
-  //bool isSalesRepLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    //getSalesRepAutoComplete();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Add Lead'),
+          child: Text('Crea To Do'),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () {
+            Get.back();
+          },
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createLead();
+                createEvent();
               },
               icon: const Icon(
                 Icons.save,
@@ -208,105 +164,17 @@ class _CreateLeadState extends State<CreateLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: bPartnerFieldController,
+                    controller: descriptionFieldController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.person_pin_outlined),
                       border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                      labelText: 'Descrizione',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllSalesRep(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<Records>(
-                                displayStringForOption: _displayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
-                                  }
-                                  return snapshot.data!.where((Records option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (Records selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
-                                  });
-
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                /* Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
                   decoration: BoxDecoration(
@@ -315,87 +183,116 @@ class _CreateLeadState extends State<CreateLead> {
                     ),
                     borderRadius: BorderRadius.circular(5),
                   ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Data',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.all(10),
-                  child: DropdownButton<String>(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.time,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'Ora Inizio',
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      setState(() {
+                        timeStart = val;
+                      });
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.time,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'Ora Fine',
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      setState(() {
+                        timeEnd = val;
+                      });
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton(
                     value: dropdownValue,
-                    //icon: const Icon(Icons.arrow_downward),
                     elevation: 16,
-                    //style: const TextStyle(color: Colors.deepPurple),
-                    /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
                     onChanged: (String? newValue) {
                       setState(() {
                         dropdownValue = newValue!;
                       });
+                      //print(dropdownValue);
                     },
-                    items: <String>[
-                      'Chiuso',
-                      'Convertito',
-                      'In Lavoro',
-                      'Nuovo'
-                    ].map<DropdownMenuItem<String>>((String value) {
+                    items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.id,
                       );
                     }).toList(),
-                  ),
-                ), */
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllLeadStatuses(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<LSRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                //icon: const Icon(Icons.arrow_downward),
-                                elevation: 16,
-                                //style: const TextStyle(color: Colors.deepPurple),
-                                /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: /* <String>[
-                                  'Chiuso',
-                                  'Convertito',
-                                  'In Lavoro',
-                                  'Nuovo'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList()*/
-                                    snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                    value: list.value.toString(),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
                   ),
                 ),
               ],

@@ -8,9 +8,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_tasks_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class DashboardTasksEdit extends StatefulWidget {
   const DashboardTasksEdit({Key? key}) : super(key: key);
@@ -20,11 +22,26 @@ class DashboardTasksEdit extends StatefulWidget {
 }
 
 class _DashboardTasksEditState extends State<DashboardTasksEdit> {
-  editTask(String statusId) async {
+  Future<bool> editTask(String statusId) async {
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    var fakeDate1 = DateTime.parse('${args["startDate"]} $startTime');
+    var fakeDate2 = DateTime.parse('$formattedDate $endTime');
+
+    //var tot = fakeDate2.difference(fakeDate1).inHours;
+    var totm = fakeDate2.difference(fakeDate1).inMinutes;
+
+    double hours = totm / 60;
+    //print(tot);
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "JP_ToDo_Status": {"id": statusId},
+      "Qty": hours,
+      "JP_ToDo_ScheduledStartTime": startTime,
+      "JP_ToDo_ScheduledEndTime": endTime,
     });
     final protocol = GetStorage().read('protocol');
     var url =
@@ -40,6 +57,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
     );
     if (response.statusCode == 200) {
       Get.find<DashboardTasksController>().getLeads();
+      Get.find<DashboardController>().getAllEvents();
       //print("done!");
       Get.snackbar(
         "Fatto!",
@@ -49,6 +67,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
           color: Colors.green,
         ),
       );
+      return true;
     } else {
       Get.snackbar(
         "Errore!",
@@ -58,6 +77,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
           color: Colors.red,
         ),
       );
+      return false;
     }
   }
 
@@ -157,14 +177,102 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
   void fillFields() {
     nameFieldController.text = args["name"] ?? "";
     userFieldController.text = args["user"] ?? "";
-    statusFieldController.text = args["status"] ?? "";
+
+    switch (args["statusId"]) {
+      case "NY":
+        statusFieldController.text = "WP".tr;
+        break;
+      case "WP":
+        statusFieldController.text = "CO".tr;
+        break;
+      default:
+    }
     descriptionFieldController.text = args["description"] ?? "";
-    /* bPartnerFieldController.text = args["bpName"] ?? "";
-    phoneFieldController.text = args["Tel"] ?? "";
-    mailFieldController.text = args["eMail"] ?? "";
-    //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"] ?? "";
-    //salesRepFieldController.text = args["salesRep"]; */
+    double qty = (args["qty"]).toDouble() ?? 0.0;
+
+    int minutes = (qty * 60.0).toInt();
+
+    //print(qty);
+
+    if (args["statusId"] == "NY") {
+      DateTime now = DateTime.now();
+      var n = now.minute; // Number to match
+      var l = [0, 15, 30, 45]; // List of values
+
+      var number = l.where((e) => e <= n).toList()..sort();
+
+      //print(number[number.length - 1]);
+
+      var addminutesDate = now.add(Duration(minutes: minutes));
+      var n2 = addminutesDate.minute;
+
+      var number2 = l.where((e) => e <= n2).toList()..sort();
+
+      var hourTime = "00";
+
+      var minuteTime = "00";
+
+      var endminuteTime = "00";
+
+      var endhourTime = "00";
+
+      if (now.hour < 10) {
+        hourTime = "0${now.hour}";
+      } else {
+        hourTime = "${now.hour}";
+      }
+
+      if (addminutesDate.hour < 10) {
+        endhourTime = "0${addminutesDate.hour}";
+      } else {
+        endhourTime = "${addminutesDate.hour}";
+      }
+
+      if (number[number.length - 1] != 0) {
+        minuteTime = number[number.length - 1].toString();
+      }
+
+      if (number2[number2.length - 1] != 0) {
+        endminuteTime = number2[number2.length - 1].toString();
+      }
+
+      startTime = '$hourTime:$minuteTime:00Z';
+
+      endTime = '$endhourTime:$endminuteTime:00Z';
+    } else {
+      startTime = args["startTime"];
+    }
+
+    if (args["statusId"] == "WP") {
+      DateTime now = DateTime.now();
+      var n = now.minute; // Number to match
+      var l = [0, 15, 30, 45]; // List of values
+
+      var number = l.where((e) => e <= n).toList()..sort();
+
+      //print(number[number.length - 1]);
+
+      var hourTime = "00";
+
+      var minuteTime = "00";
+
+      if (now.hour < 10) {
+        hourTime = "0${now.hour}";
+      } else {
+        hourTime = "${now.hour}";
+      }
+
+      if (number[number.length - 1] != 0) {
+        minuteTime = number[number.length - 1].toString();
+      }
+      if (number[number.length - 1] != 0) {
+        minuteTime = number[number.length - 1].toString();
+      }
+
+      endTime = '$hourTime:$minuteTime:00Z';
+    }
+    //print(startTime);
+    //print(endTime);
   }
 
   dynamic args = Get.arguments;
@@ -179,10 +287,13 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
   var descriptionFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
+  String startTime = "";
+  String endTime = "";
 
   @override
   void initState() {
-    super.initState();
+    startTime = "";
+    endTime = "";
     nameFieldController = TextEditingController();
     userFieldController = TextEditingController();
     statusFieldController = TextEditingController();
@@ -190,6 +301,8 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
     descriptionFieldController = TextEditingController();
     //dropdownValue = Get.arguments["leadStatus"];
     fillFields();
+    super.initState();
+
     getAllLeadStatuses();
   }
 
@@ -312,7 +425,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   child: DateTimePicker(
                     readOnly: true,
                     type: DateTimePickerType.time,
-                    initialValue: (args["startTime"]).substring(0, 5),
+                    initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     timeLabelText: 'Start Time',
@@ -343,7 +456,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   child: DateTimePicker(
                     readOnly: true,
                     type: DateTimePickerType.time,
-                    initialValue: args["endTime"].substring(0, 5),
+                    initialValue: endTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     timeLabelText: 'End Time',
@@ -376,7 +489,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                               MaterialStateProperty.all(Colors.green),
                         ),
                         child: const Text("Enter"),
-                        onPressed: () {
+                        onPressed: () async {
                           editTask("WP");
                         },
                       ),
@@ -402,7 +515,9 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                               MaterialStateProperty.all(Colors.orange),
                         ),
                         child: const Text("Exit without closing the task"),
-                        onPressed: () {},
+                        onPressed: () {
+                          editTask("NY");
+                        },
                       ),
                     ),
                   ],

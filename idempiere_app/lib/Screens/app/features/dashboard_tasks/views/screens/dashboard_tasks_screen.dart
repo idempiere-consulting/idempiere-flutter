@@ -8,8 +8,8 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_create_tasks.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_edit_tasks.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
@@ -88,7 +88,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
-                        Get.to(const CreateLead());
+                        Get.to(const CreateDashboardTasks());
                       },
                       icon: const Icon(
                         Icons.add_task,
@@ -155,6 +155,15 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                     ),
                                     tooltip: 'Edit Lead',
                                     onPressed: () {
+                                      var formatter = DateFormat('yyyy-MM-dd');
+
+                                      var startDate = DateTime.parse(controller
+                                          .trx
+                                          .records![index]
+                                          .jPToDoScheduledStartDate!);
+
+                                      print(formatter.format(startDate));
+
                                       //log("info button pressed");
                                       Get.to(const DashboardTasksEdit(),
                                           arguments: {
@@ -186,6 +195,8 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                                     .records![index]
                                                     .description ??
                                                 "",
+                                            "startDate":
+                                                formatter.format(startDate),
                                             "startTime": controller
                                                 .trx
                                                 .records![index]
@@ -194,6 +205,8 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                                 .trx
                                                 .records![index]
                                                 .jPToDoScheduledEndTime,
+                                            "qty": controller
+                                                .trx.records![index].qty,
                                           });
                                     },
                                   ),
@@ -238,6 +251,23 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                 children: [
                                   Column(
                                     children: [
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Business Partner: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
                                       Row(
                                         children: [
                                           const Text(

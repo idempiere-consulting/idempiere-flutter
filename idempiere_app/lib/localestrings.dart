@@ -56,6 +56,7 @@ class LocaleString extends Translations {
           'NS': 'Not Started',
           'IP': 'In Progress',
           'ST': 'Stopped',
+          'WP': 'Work in Progress',
           'CO': 'Completed'
         },
         //ITALIAN LANGUAGE
@@ -109,6 +110,7 @@ class LocaleString extends Translations {
           'AddressIP': 'Indirizzo IP',
           'NS': 'Non Iniziato',
           'IP': 'In Corso',
+          'WP': 'In Corso',
           'ST': 'Fermato',
           'CO': 'Completato'
         },

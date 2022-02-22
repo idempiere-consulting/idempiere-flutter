@@ -42,6 +42,7 @@ class EventRecords {
   final bool? isActive;
   final String? name;
   final String? description;
+  final CBPartnerID? cBPartnerID;
   final String? updated;
   final UpdatedBy? updatedBy;
   final JPToDoType? jPToDoType;
@@ -56,6 +57,7 @@ class EventRecords {
   final bool? isStartDateAllDayJP;
   final bool? isEndDateAllDayJP;
   final int? percent;
+  final num? qty;
   final String? modelname;
 
   EventRecords({
@@ -68,6 +70,7 @@ class EventRecords {
     this.isActive,
     this.name,
     this.description,
+    this.cBPartnerID,
     this.updated,
     this.updatedBy,
     this.jPToDoType,
@@ -82,6 +85,7 @@ class EventRecords {
     this.isStartDateAllDayJP,
     this.isEndDateAllDayJP,
     this.percent,
+    this.qty,
     this.modelname,
   });
 
@@ -101,6 +105,10 @@ class EventRecords {
         isActive = json['IsActive'] as bool?,
         name = json['Name'] as String?,
         description = json['Description'] as String?,
+        cBPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
+            ? CBPartnerID.fromJson(
+                json['C_BPartner_ID'] as Map<String, dynamic>)
+            : null,
         updated = json['Updated'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
@@ -126,6 +134,7 @@ class EventRecords {
         isStartDateAllDayJP = json['IsStartDateAllDayJP'] as bool?,
         isEndDateAllDayJP = json['IsEndDateAllDayJP'] as bool?,
         percent = json['Percent'] as int?,
+        qty = json['Qty'] as num?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -138,6 +147,7 @@ class EventRecords {
         'IsActive': isActive,
         'Name': name,
         'Description': description,
+        'C_BPartner_ID': cBPartnerID?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
         'JP_ToDo_Type': jPToDoType?.toJson(),
@@ -152,6 +162,7 @@ class EventRecords {
         'IsStartDateAllDayJP': isStartDateAllDayJP,
         'IsEndDateAllDayJP': isEndDateAllDayJP,
         'Percent': percent,
+        'Qty': qty,
         'model-name': modelname
       };
 }
@@ -305,6 +316,33 @@ class ADUserID {
   });
 
   ADUserID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CBPartnerID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CBPartnerID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CBPartnerID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

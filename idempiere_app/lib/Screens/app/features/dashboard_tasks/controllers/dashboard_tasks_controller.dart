@@ -95,6 +95,7 @@ class DashboardTasksController extends GetxController {
   }
 
   Future<void> getLeads() async {
+    _dataAvailable.value = false;
     var now = DateTime.now();
     //DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
     var formatter = DateFormat('yyyy-MM-dd');
@@ -117,6 +118,7 @@ class DashboardTasksController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = EventJson.fromJson(jsonDecode(response.body));
+      wpCount.value = 0;
 
       for (var i = 0; i < _trx.rowcount!; i++) {
         if (_trx.records![i].jPToDoStatus!.id == "WP") {
