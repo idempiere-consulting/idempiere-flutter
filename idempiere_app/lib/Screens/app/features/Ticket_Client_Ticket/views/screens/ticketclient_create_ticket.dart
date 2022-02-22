@@ -3,17 +3,19 @@ import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/freeslotjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketclient_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+
+import '../../../CRM_Contact_BP/models/contact.dart';
 
 class CreateTicketClientTicket extends StatefulWidget {
   const CreateTicketClientTicket({Key? key}) : super(key: key);
@@ -80,7 +82,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       "ConfidentialTypeEntry": {"id": "C"},
       "Name": titleFieldController.text,
       "Summary": nameFieldController.text,
-      //"AD_User_ID": GetStorage().read('userid'),
+      "AD_User_ID": userId, //GetStorage().read('userid'),
       "C_BPartner_ID": {"id": businessPartnerId}
     });
     //print(msg);
@@ -220,8 +222,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     if (response.statusCode == 200) {
       //print(response.body);
       var json = jsonDecode(response.body);
-
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+      businessPartnerName = json["records"][0]["C_BPartner_ID"]["identifier"];
+
       //getTickets();
       //print(businessPartnerId);
       //print(trx.rowcount);
@@ -230,6 +233,20 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     } else {
       //print(response.body);
     }
+  }
+
+  Future<List<BPRecords>> getAllBPs() async {
+    //await getBusinessPartner();
+    //print(response.body);
+    var jsondecoded = jsonDecode(GetStorage().read('businessPartnerSync'));
+
+    var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    return jsonbps.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
   }
 
   Future<void> getRStatus() async {
@@ -415,6 +432,34 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     //print(json.);
   }
 
+  Future<List<Records>> getAllSalesRep() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonContacts = ContactsJson.fromJson(jsondecoded);
+
+      return jsonContacts.records!;
+    } else {
+      throw Exception("Failed to load sales reps");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
   /* void fillFields() {
     nameFieldController.text = args["name"];
     bPartnerFieldController.text = args["bpName"];
@@ -427,6 +472,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
 
   //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
+  final List<dynamic> list = GetStorage().read('permission');
   var nameFieldController;
   var titleFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -441,8 +487,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   String ticketTypeValue = "";
   String image64 = "";
   String imageName = "";
+  String businessPartnerName = "";
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
+  var userName = "";
+  var userId;
   late EventJson eventJson;
   // ignore: prefer_typing_uninitialized_variables
   var rStatusId;
@@ -458,19 +507,28 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
+    businessPartnerName = GetStorage().read('BusinessPartnerName');
+    businessPartnerId = GetStorage().read('BusinessPartnerId');
+    userName = GetStorage().read("user");
+    userId = GetStorage().read("userId");
     dropdownValue = "9";
     slotDropdownValue = "";
     ticketTypeValue = "";
     image64 = "";
     imageName = "";
     dropDownList = getTypes()!;
-    getBusinessPartner();
+
     getAllScheduledEvents();
     getTicketTypeInfo();
     getRStatus();
     getSalesRep();
+    getAllBPs();
     //fillFields();
   }
+
+  static String _displayStringForOption(BPRecords option) => option.name!;
+
+  static String _displayStringForOptionUser(Records option) => option.name!;
 
   //static String _displayStringForOption(Records option) => option.name!;
   //late List<Records> salesrepRecord;
@@ -515,6 +573,163 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
               children: [
                 const SizedBox(
                   height: 10,
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Business Partner",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllBPs(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<BPRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? Autocomplete<BPRecords>(
+                                  initialValue: TextEditingValue(
+                                      text: businessPartnerName),
+                                  displayStringForOption:
+                                      _displayStringForOption,
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    if (textEditingValue.text == '') {
+                                      return const Iterable<BPRecords>.empty();
+                                    }
+                                    return snapshot.data!
+                                        .where((BPRecords option) {
+                                      return option.name!
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(textEditingValue.text
+                                              .toLowerCase());
+                                    });
+                                  },
+                                  onSelected: (BPRecords selection) {
+                                    //debugPrint(
+                                    //'You just selected ${_displayStringForOption(selection)}');
+                                    setState(() {
+                                      businessPartnerName =
+                                          _displayStringForOption(selection);
+                                      businessPartnerId = selection.id;
+                                    });
+
+                                    //print(salesrepValue);
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "User",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllSalesRep(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? Autocomplete<Records>(
+                                  initialValue:
+                                      TextEditingValue(text: userName),
+                                  displayStringForOption:
+                                      _displayStringForOptionUser,
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    if (textEditingValue.text == '') {
+                                      return const Iterable<Records>.empty();
+                                    }
+                                    return snapshot.data!
+                                        .where((Records option) {
+                                      return option.name!
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(textEditingValue.text
+                                              .toLowerCase());
+                                    });
+                                  },
+                                  onSelected: (Records selection) {
+                                    //debugPrint(
+                                    //'You just selected ${_displayStringForOption(selection)}');
+                                    setState(() {
+                                      userName = _displayStringForOptionUser(
+                                          selection);
+                                    });
+
+                                    userId = selection.id;
+
+                                    //print(salesrepValue);
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
                 ),
                 Visibility(
                   visible: true,

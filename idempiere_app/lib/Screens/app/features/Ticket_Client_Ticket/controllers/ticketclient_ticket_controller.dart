@@ -37,6 +37,7 @@ class TicketClientTicketController extends GetxController {
     //getTickets();
     //getADUserID();
     adUserId = GetStorage().read('userId');
+    //getBusinessPartner();
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -167,6 +168,11 @@ class TicketClientTicketController extends GetxController {
       //print(response.body);
       var json = jsonDecode(response.body);
 
+      GetStorage().write('BusinessPartnerName',
+          json["records"][0]["C_BPartner_ID"]["identifier"]);
+      GetStorage().write(
+          'BusinessPartnerId', json["records"][0]["C_BPartner_ID"]["id"]);
+
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
       getAllticketTypeID();
       //print(businessPartnerId);
@@ -183,7 +189,7 @@ class TicketClientTicketController extends GetxController {
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/R_Status?\$filter= Value eq \'R101\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/R_Status?\$filter= Value eq \'R98\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
