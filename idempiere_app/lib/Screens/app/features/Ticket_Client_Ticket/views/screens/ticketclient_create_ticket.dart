@@ -115,7 +115,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       );
     } else {
       //print(response.statusCode);
-      //print(response.body);
+      print(response.body);
       //print(response.statusCode);
       Get.snackbar(
         "Errore!",
@@ -388,6 +388,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       //print(slots.rowcount);
       //print(ticketTypeValue);
     } else {
+      print(response.body);
       throw Exception("Failed to load free slots");
     }
   }
