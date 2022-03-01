@@ -1,8 +1,8 @@
 part of dashboard;
 
-class CRMShipmentController extends GetxController {
+class CRMShipmentlineController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late ShipmentJson _trx;
+  late ShipmentLineJson _trx;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
@@ -23,12 +23,12 @@ class CRMShipmentController extends GetxController {
       _hasCallSupport = result;
     });
 
-    getShipments();
+    getShipmentlines();
     getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  ShipmentJson get trx => _trx;
+  ShipmentLineJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -38,7 +38,7 @@ class CRMShipmentController extends GetxController {
     }
 
     value.value = filters[filterCount];
-    getShipments();
+    getShipmentlines();
   }
 
   Future<void> getADUserID() async {
@@ -94,16 +94,15 @@ class CRMShipmentController extends GetxController {
     await launch(launchUri.toString());
   }
 
-  Future<void> getShipments() async {
-    _dataAvailable.value = false;
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+  Future<void> getShipmentlines() async {
+    //var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_InOut?\$filter= IsSoTrx eq Y and DocStatus eq \'CO\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/M_InOutLine?\$filter= M_InOut_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read("clientid")}');
 
     var response = await http.get(
       url,
@@ -114,7 +113,7 @@ class CRMShipmentController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = ShipmentJson.fromJson(jsonDecode(response.body));
+      _trx = ShipmentLineJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

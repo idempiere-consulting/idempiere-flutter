@@ -201,19 +201,19 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/SalesOrder');
                     break;
                   case 7:
-                    Get.offNamed('/Shipment');
-                    break;
-                  case 8:
                     Get.offNamed('/ProductList');
                     break;
-                  case 9:
+                  case 8:
                     Get.offNamed('/Invoice');
                     break;
-                  case 10:
+                  case 9:
                     Get.offNamed('/Payment');
                     break;
-                  case 11:
+                  case 10:
                     Get.offNamed('/Commission');
+                    break;
+                  case 11:
+                    Get.offNamed('/Shipment');
                     break;
                   default:
                 }

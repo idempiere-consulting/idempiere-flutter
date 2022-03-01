@@ -11,7 +11,8 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/shipment_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_edit.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_edit.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -33,10 +34,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
-part '../../bindings/crm_shipment_binding.dart';
+part '../../bindings/crm_shipmentline_binding.dart';
 
 // controller
-part '../../controllers/crm_shipment_controller.dart';
+part '../../controllers/crm_shipmentline_controller.dart';
 
 // models
 part '../../models/profile.dart';
@@ -50,41 +51,50 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class CRMShipmentScreen extends GetView<CRMShipmentController> {
-  const CRMShipmentScreen({Key? key}) : super(key: key);
+class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
+  const CRMShipmentlineScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("DDT > DDT Lines"),
+        /* leading: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () {
+            Get.offNamed('/MaintenanceMptask');
+          },
+        ), */
+      ),
       //key: controller.scaffoldKey,
-      drawer: (ResponsiveBuilder.isDesktop(context))
+      /* drawer: (ResponsiveBuilder.isDesktop(context))
           ? null
           : Drawer(
               child: Padding(
                 padding: const EdgeInsets.only(top: kSpacing),
                 child: _Sidebar(data: controller.getSelectedProject()),
               ),
-            ),
+            ), */
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
             return Column(children: [
-              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+              /* const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
               _buildHeader(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              _buildProfile(data: controller.getProfil()),
+              _buildProfile(data: controller.getProfil()), */
               const SizedBox(height: kSpacing),
               Row(
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("DDT: ${controller.trx.rowcount}")
-                        : const Text("DDT: ")),
+                        ? Text("DDT Lines: ${controller.trx.rowcount}")
+                        : const Text("DDT Lines: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
@@ -95,12 +105,12 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ),
+                  ), */
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
                       onPressed: () {
-                        controller.getShipments();
+                        controller.getShipmentlines();
                       },
                       icon: const Icon(
                         Icons.refresh,
@@ -141,21 +151,6 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                               child: ExpansionTile(
                                 tilePadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.article,
-                                    color: controller.trx.records![index]
-                                                .docStatus?.id ==
-                                            "CO"
-                                        ? Colors.green
-                                        : Colors.yellow,
-                                  ),
-                                  onPressed: () {
-                                    Get.toNamed('/ShipmentLine', arguments: {
-                                      "id": controller.trx.records![index].id,
-                                    });
-                                  },
-                                ),
                                 leading: Container(
                                   padding: const EdgeInsets.only(right: 12.0),
                                   decoration: const BoxDecoration(
@@ -171,17 +166,49 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                     tooltip: 'Edit Lead',
                                     onPressed: () {
                                       //log("info button pressed");
-                                      Get.to(const EditShipment(), arguments: {
-                                        "id": controller.trx.records![index].id,
-                                        "note": controller.trx.records![index]
-                                                .privateNote ??
-                                            "",
-                                      });
+                                      Get.to(const EditShipmentline(),
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "qtyPlanned": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .plannedQty ??
+                                                0,
+                                            "description": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                "",
+                                            "isSelected": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .isSelected ??
+                                                false,
+                                          });
                                     },
                                   ),
                                 ),
+                                trailing: IconButton(
+                                  icon: controller.trx.records![index]
+                                                  .isSelected ==
+                                              null ||
+                                          controller.trx.records![index]
+                                                  .isSelected ==
+                                              false
+                                      ? const Icon(
+                                          Icons.check,
+                                          color: Colors.grey,
+                                        )
+                                      : const Icon(
+                                          Icons.done_all,
+                                          color: Colors.green,
+                                        ),
+                                  onPressed: () {},
+                                ),
                                 title: Text(
-                                  controller.trx.records![index].documentNo ??
+                                  controller.trx.records![index].mProductID
+                                          ?.identifier ??
                                       '',
                                   style: const TextStyle(
                                       color: Colors.white,
@@ -192,11 +219,17 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                 subtitle: Column(children: [
                                   Row(
                                     children: <Widget>[
+                                      const Text(
+                                        "- Qty Confirmed: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
                                       Expanded(
                                         child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "??",
+                                          controller
+                                              .trx.records![index].confirmedQty
+                                              .toString(),
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
@@ -205,12 +238,16 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                   ),
                                   Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
+                                      const Text(
+                                        "- Qty Planned: ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
                                       Text(
                                         controller
-                                                .trx.records![index].dateAcct ??
-                                            "??",
+                                            .trx.records![index].plannedQty
+                                            .toString(),
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
@@ -230,7 +267,7 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                       Row(
                                         children: [
                                           const Text(
-                                            "Note: ",
+                                            "Description: ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -238,7 +275,7 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             child: Text(controller
                                                     .trx
                                                     .records![index]
-                                                    .privateNote ??
+                                                    .description ??
                                                 ""),
                                           ),
                                         ],
