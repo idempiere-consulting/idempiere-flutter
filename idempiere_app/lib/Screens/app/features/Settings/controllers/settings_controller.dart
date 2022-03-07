@@ -9,6 +9,7 @@ class SettingsController extends GetxController {
   var isProductSyncing = false.obs;
   var isjpTODOSyncing = false.obs;
   var isWorkOrderSyncing = false.obs;
+  var isWorkOrderSurveyLinesSyncing = false.obs;
 
   @override
   void onInit() {
@@ -156,6 +157,29 @@ class SettingsController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       GetStorage().write('workOrderResourceSync', response.body);
+      syncWorkOrderResourceSurveyLines();
+    }
+  }
+
+  Future<void> syncWorkOrderResourceSurveyLines() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_SurveySheetsLine');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      GetStorage().write('workOrderResourceSurveyLinesSync', response.body);
       isWorkOrderSyncing.value = false;
     }
   }

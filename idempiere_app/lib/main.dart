@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
       locale: const Locale('it', 'IT'),
       title: 'iDempiereApp',
       theme: AppTheme.basic,
-      initialRoute: '/MaintenanceMpResourceSheet',
+      initialRoute: '/',
       getPages: [
         GetPage(
           name: '/',
