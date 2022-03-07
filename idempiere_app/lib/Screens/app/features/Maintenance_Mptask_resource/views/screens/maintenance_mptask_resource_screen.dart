@@ -28,7 +28,8 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+//import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:pluto_grid/pluto_grid.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -55,8 +56,23 @@ class MaintenanceMpResourceScreen
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
+                controller.handleAddRows();
+              },
+              icon: const Icon(
+                Icons.save,
+              ),
+            ),
+          ),
+        ],
+        centerTitle: true,
         title: Column(
           children: [
             Text("${GetStorage().read('selectedTaskDocNo')}"),
@@ -321,137 +337,272 @@ class MaintenanceMpResourceScreen
             ]);
           },
           tabletBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 950) ? 6 : 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                      _buildHeader(
-                          onPressedMenu: () =>
-                              Scaffold.of(context).openDrawer()),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(
-                        axis: (constraints.maxWidth < 950)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        headerAxis: (constraints.maxWidth < 850)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
+            return Column(children: [
+              const SizedBox(height: kSpacing),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("RESOURCES: ${controller.trx.rowcount}")
+                        : const Text("RESOURCES: ")),
+                    margin: const EdgeInsets.only(left: 15),
                   ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateMaintenanceMpResource());
+                      },
+                      icon: const Icon(
+                        Icons.note_add_outlined,
+                        color: Colors.lightBlue,
                       ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
+                    ),
                   ),
-                )
-              ],
-            );
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        //controller.syncWorkOrder();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ), */
+                ],
+              ),
+              const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Visibility(
+                            visible: GetStorage().read('selectedTaskDocNo') ==
+                                controller.trx.records![index].mpOtDocumentno,
+                            child: Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  trailing: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.view_list,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Resource',
+                                      onPressed: () {
+                                        Get.to(
+                                            const EditMaintenanceMpResource(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "productName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mProductID!
+                                                  .identifier,
+                                              "productId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mProductID!
+                                                  .id,
+                                              "name": controller
+                                                  .trx.records![index].name,
+                                              "SerNo": controller
+                                                  .trx.records![index].serNo,
+                                              "Description": controller.trx
+                                                  .records![index].description,
+                                              "date3": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl3DateFrom,
+                                              "date2": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl2DateFrom,
+                                              "date1": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl1DateFrom,
+                                              "offlineid": controller.trx
+                                                  .records![index].offlineId,
+                                              "index": index,
+                                            });
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.trx.records![index].mProductID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(
+                                          Icons.settings_input_component),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .resourceType?.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(children: [
+                                          const Text('Quantità: '),
+                                          Text(
+                                              "${controller.trx.records![index].resourceQty}"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Nome: '),
+                                          Text(controller
+                                                  .trx.records![index].name ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('SerNo: '),
+                                          Text(controller
+                                                  .trx.records![index].serNo ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Descrizione: '),
+                                          Text(controller.trx.records![index]
+                                                  .description ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Value: '),
+                                          Text(controller
+                                                  .trx.records![index].value ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control3DateFrom: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control3DateNext: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateNext ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control2DateFrom: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control2DateNext: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateNext ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control1DateFrom: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl1DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Control1DateNext: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl1DateNext ??
+                                              "??"),
+                                        ]),
+                                        /* Row(children: [
+                                          const Text('offline id: '),
+                                          Text(
+                                              "${controller.trx.records![index].offlineId}"),
+                                        ]), */
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);
           },
           desktopBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(kBorderRadius),
-                        bottomRight: Radius.circular(kBorderRadius),
-                      ),
-                      child: _Sidebar(data: controller.getSelectedProject())),
+            return Container(
+              height: size.height,
+              width: size.width,
+              //padding: const EdgeInsets.all(15),
+              child: PlutoGrid(
+                columns: controller.columns,
+                rows: controller.rows,
+                columnGroups: controller.columnGroups,
+                onLoaded: (PlutoGridOnLoadedEvent event) {
+                  controller.stateManager = event.stateManager;
+                },
+                onChanged: (PlutoGridOnChangedEvent event) {
+                  print(event);
+                },
+                configuration: const PlutoGridConfiguration(
+                  enableColumnBorder: true,
                 ),
-                Flexible(
-                  flex: 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing),
-                      _buildHeader(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing / 2),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             );
           },
         ),

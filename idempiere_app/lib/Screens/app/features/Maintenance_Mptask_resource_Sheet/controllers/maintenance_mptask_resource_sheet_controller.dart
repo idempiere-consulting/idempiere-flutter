@@ -1,9 +1,7 @@
 part of dashboard;
 
-class MaintenanceMpResourceController extends GetxController {
+class MaintenanceMpResourceSheetController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late WorkOrderResourceLocalJson _trx;
-  var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
@@ -12,33 +10,47 @@ class MaintenanceMpResourceController extends GetxController {
   var value = "Tutti".obs;
 
   var filters = ["Tutti", "Miei" /* , "Team" */];
-  var filterCount = 0;
+  var filterCount = 0.obs;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+  var prodFieldController = TextEditingController();
+  var nameFieldController = TextEditingController();
+  var modelFieldController = TextEditingController();
+  var lotFieldController = TextEditingController();
+  var serialNoFieldController = TextEditingController();
+  String date1 = "";
+  var expectedDurationFieldController = TextEditingController();
+  String date2 = "";
+  String date3 = "";
+  var companyFieldController = TextEditingController();
+  var userFieldController = TextEditingController();
+  var noteFieldController = TextEditingController();
+  var checkboxState = false.obs;
 
-  @override
+/*   @override
   void onInit() {
     super.onInit();
-    canLaunch('tel:123').then((bool result) {
-      _hasCallSupport = result;
-    });
-
-    getWorkOrders();
     //getADUserID();
-  }
+  } */
 
   bool get dataAvailable => _dataAvailable.value;
-  WorkOrderResourceLocalJson get trx => _trx;
   //String get value => _value.toString();
 
-  changeFilter() {
-    filterCount++;
-    if (filterCount == 2) {
-      filterCount = 0;
+  changeFilterPlus() {
+    if (filterCount < 2) {
+      filterCount.value++;
+    }
+    //print(object);
+
+    //value.value = filters[filterCount];
+  }
+
+  changeFilterMinus() {
+    if (filterCount > 0) {
+      filterCount.value--;
     }
 
-    value.value = filters[filterCount];
-    getWorkOrders();
+    //value.value = filters[filterCount];
   }
 
 /*   Future<void> getADUserID() async {
@@ -66,149 +78,7 @@ class MaintenanceMpResourceController extends GetxController {
     }
   } */
 
-  Future<void> makePhoneCall(String phoneNumber) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    if (_hasCallSupport) {
-      final Uri launchUri = Uri(
-        scheme: 'tel',
-        path: phoneNumber,
-      );
-      await launch(launchUri.toString());
-    }
-  }
-
-  Future<void> writeMailTo(String receiver) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'mailto',
-      path: receiver,
-    );
-    await launch(launchUri.toString());
-  }
-
-  Future<void> getWorkOrders() async {
-    _dataAvailable.value = false;
-    if (GetStorage().read('workOrderSync') != null) {
-      _trx = WorkOrderResourceLocalJson.fromJson(
-          jsonDecode(GetStorage().read('workOrderResourceSync')));
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
-    }
-  }
-
   //test grid
-
-  final List<PlutoColumn> columns = <PlutoColumn>[
-    PlutoColumn(
-      title: 'Id',
-      field: 'id',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Name',
-      field: 'name',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Age',
-      field: 'age',
-      type: PlutoColumnType.number(),
-    ),
-    PlutoColumn(
-      title: 'Role',
-      field: 'role',
-      type: PlutoColumnType.select(<String>[
-        'Programmer',
-        'Designer',
-        'Owner',
-      ]),
-    ),
-    PlutoColumn(
-      title: 'Joined',
-      field: 'joined',
-      type: PlutoColumnType.date(),
-    ),
-    PlutoColumn(
-      title: 'Working time',
-      field: 'working_time',
-      type: PlutoColumnType.time(),
-    ),
-  ];
-
-  final List<PlutoRow> rows = [
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user3'),
-        'name': PlutoCell(value: 'Suzi'),
-        'age': PlutoCell(value: 40),
-        'role': PlutoCell(value: 'Owner'),
-        'joined': PlutoCell(value: '2021-03-01'),
-        'working_time': PlutoCell(value: '11:00'),
-      },
-    ),
-  ];
-
-  /// columnGroups that can group columns can be omitted.
-  final List<PlutoColumnGroup> columnGroups = [
-    PlutoColumnGroup(title: 'Id', fields: ['id'], expandedColumn: true),
-    PlutoColumnGroup(title: 'User information', fields: ['name', 'age']),
-    PlutoColumnGroup(title: 'Status', children: [
-      PlutoColumnGroup(title: 'A', fields: ['role'], expandedColumn: true),
-      PlutoColumnGroup(title: 'Etc.', fields: ['joined', 'working_time']),
-    ]),
-  ];
-
-  /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
-  /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
-  late final PlutoGridStateManager stateManager;
-
-  void handleAddRows() {
-    final newRows = stateManager.getNewRows(count: 1);
-
-    /* for (var e in newRows) {
-      e.cells['status']!.value = 'created';
-    } */
-
-    stateManager.appendRows(newRows);
-
-    stateManager.setCurrentCell(
-      newRows.first.cells.entries.first.value,
-      stateManager.refRows.length - 1,
-    );
-
-    stateManager.moveScrollByRow(
-      PlutoMoveDirection.down,
-      stateManager.refRows.length - 2,
-    );
-
-    stateManager.setKeepFocus(true);
-  }
 
   //end test grid
 

@@ -34,6 +34,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/sc
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mppicking/views/screens/maintenance_mppicking_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_Sheet/views/screens/maintenance_mptask_resource_sheet_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views/screens/maintenance_mpwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Notification/views/screens/notification_screen.dart';
@@ -87,7 +88,7 @@ class MyApp extends StatelessWidget {
       locale: const Locale('it', 'IT'),
       title: 'iDempiereApp',
       theme: AppTheme.basic,
-      initialRoute: '/',
+      initialRoute: '/MaintenanceMpResourceSheet',
       getPages: [
         GetPage(
           name: '/',
@@ -242,6 +243,11 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceMpResource',
           page: () => const MaintenanceMpResourceScreen(),
           binding: MaintenanceMpResourceBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceMpResourceSheet',
+          page: () => const MaintenanceMpResourceSheetScreen(),
+          binding: MaintenanceMpResourceSheetBinding(),
         ),
         GetPage(
           name: '/MaintenanceMpanomaly',
