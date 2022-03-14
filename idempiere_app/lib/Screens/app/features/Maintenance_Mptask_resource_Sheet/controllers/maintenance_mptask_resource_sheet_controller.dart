@@ -117,6 +117,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
     } else {
       //print(response.body);
     }
+    GetStorage().write('SignatureWorkOrderResource', null);
   }
 
   sendAttachedImageOffline(int id) async {
@@ -151,6 +152,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
     }
     GetStorage().write('postCallId', GetStorage().read('postCallId') + 1);
     GetStorage().write('postCallList', list);
+    GetStorage().write('SignatureWorkOrderResource', null);
   }
 
   sendSurveyLines() async {
@@ -309,7 +311,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
             ),
           );
         } else {
-          print(response.body);
+          //print(response.body);
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",
@@ -322,7 +324,9 @@ class MaintenanceMpResourceSheetController extends GetxController {
         }
       } else {
         sendSurveyLinesOffline();
-        sendAttachedImageOffline(Get.arguments["id"]);
+        if (GetStorage().read('SignatureWorkOrderResource') != null) {
+          sendAttachedImageOffline(Get.arguments["id"]);
+        }
         var data = jsonEncode(trx.toJson());
         GetStorage().write('workOrderResourceSync', data);
         Get.find<MaintenanceMpResourceController>().getWorkOrders();

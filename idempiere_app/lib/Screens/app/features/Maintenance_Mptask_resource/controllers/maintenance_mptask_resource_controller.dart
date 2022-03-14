@@ -6,8 +6,11 @@ class MaintenanceMpResourceController extends GetxController {
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
+  var offline = -1;
+
   // ignore: prefer_typing_uninitialized_variables
   //var adUserId;
+  DateTime now = DateTime.now();
 
   var value = "Tutti".obs;
 
@@ -65,6 +68,375 @@ class MaintenanceMpResourceController extends GetxController {
       // ignore: unnecessary_null_comparison
     }
   } */
+
+  editWorkOrderResourceDateCheck(bool isConnected, int index) async {
+    offline = _trx.records![index].offlineId ?? -1;
+    //print(now);
+
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+    String date = dateFormat.format(DateTime.now());
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "id": _trx.records![index].id,
+      "LIT_Control1DateFrom": date,
+    });
+
+    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(GetStorage().read('workOrderResourceSync')));
+
+    if (_trx.records![index].id != null && offline == -1) {
+      trx.records![index].lITControl1DateFrom = date;
+
+      var url = Uri.parse('http://' +
+          ip +
+          '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}');
+      if (isConnected) {
+        emptyAPICallStak();
+        var response = await http.put(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          var data = jsonEncode(trx.toJson());
+          GetStorage().write('workOrderResourceSync', data);
+          getWorkOrders();
+          //print("done!");
+          //Get.back();
+          Get.snackbar(
+            "Fatto!",
+            "Il record è stato modificato",
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          //print(response.body);
+          //print(response.statusCode);
+          Get.snackbar(
+            "Errore!",
+            "Il record non è stato modificato",
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      } else {
+        var data = jsonEncode(trx.toJson());
+        GetStorage().write('workOrderSync', data);
+        getWorkOrders();
+        Map calls = {};
+        if (GetStorage().read('storedEditAPICalls') == null) {
+          calls['http://' +
+                  ip +
+                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+              msg;
+        } else {
+          calls = GetStorage().read('storedEditAPICalls');
+          calls['http://' +
+                  ip +
+                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+              msg;
+        }
+        GetStorage().write('storedEditAPICalls', calls);
+        Get.snackbar(
+          "Salvato!",
+          "Il record è stato salvato localmente in attesa di connessione internet.",
+          icon: const Icon(
+            Icons.save,
+            color: Colors.red,
+          ),
+        );
+      }
+    }
+
+    if (offline != -1) {
+      List<dynamic> list = GetStorage().read('postCallList');
+
+      for (var i = 0; i < list.length; i++) {
+        var json = jsonDecode(list[i]);
+        if (json["offlineid"] == _trx.records![index].offlineId) {
+          var url2 = json["url"];
+          var offlineid2 = json["offlineid"];
+
+          var call = jsonEncode({
+            "offlineid": offlineid2,
+            "url": url2,
+            "LIT_Control1DateFrom": date,
+          });
+
+          list.removeAt(i);
+          list.add(call);
+          GetStorage().write('postCallList', list);
+          Get.snackbar(
+            "Salvato!",
+            "Il record è stato salvato localmente in attesa di connessione internet.",
+            icon: const Icon(
+              Icons.save,
+              color: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  editWorkOrderResourceDateRevision(bool isConnected, int index) async {
+    offline = _trx.records![index].offlineId ?? -1;
+    //print(now);
+
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+    String date = dateFormat.format(DateTime.now());
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "id": _trx.records![index].id,
+      "LIT_Control1DateFrom": date,
+      "LIT_Control2DateFrom": date,
+    });
+
+    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(GetStorage().read('workOrderResourceSync')));
+
+    if (_trx.records![index].id != null && offline == -1) {
+      trx.records![index].lITControl1DateFrom = date;
+      trx.records![index].lITControl2DateFrom = date;
+
+      var url = Uri.parse('http://' +
+          ip +
+          '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}');
+      if (isConnected) {
+        emptyAPICallStak();
+        var response = await http.put(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          var data = jsonEncode(trx.toJson());
+          GetStorage().write('workOrderResourceSync', data);
+          getWorkOrders();
+          //print("done!");
+          //Get.back();
+          Get.snackbar(
+            "Fatto!",
+            "Il record è stato modificato",
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          //print(response.body);
+          //print(response.statusCode);
+          Get.snackbar(
+            "Errore!",
+            "Il record non è stato modificato",
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      } else {
+        var data = jsonEncode(trx.toJson());
+        GetStorage().write('workOrderSync', data);
+        getWorkOrders();
+        Map calls = {};
+        if (GetStorage().read('storedEditAPICalls') == null) {
+          calls['http://' +
+                  ip +
+                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+              msg;
+        } else {
+          calls = GetStorage().read('storedEditAPICalls');
+          calls['http://' +
+                  ip +
+                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+              msg;
+        }
+        GetStorage().write('storedEditAPICalls', calls);
+        Get.snackbar(
+          "Salvato!",
+          "Il record è stato salvato localmente in attesa di connessione internet.",
+          icon: const Icon(
+            Icons.save,
+            color: Colors.red,
+          ),
+        );
+      }
+    }
+
+    if (offline != -1) {
+      List<dynamic> list = GetStorage().read('postCallList');
+
+      for (var i = 0; i < list.length; i++) {
+        var json = jsonDecode(list[i]);
+        if (json["offlineid"] == _trx.records![index].offlineId) {
+          var url2 = json["url"];
+          var offlineid2 = json["offlineid"];
+
+          var call = jsonEncode({
+            "offlineid": offlineid2,
+            "url": url2,
+            "LIT_Control1DateFrom": date,
+            "LIT_Control2DateFrom": date,
+          });
+
+          list.removeAt(i);
+          list.add(call);
+          GetStorage().write('postCallList', list);
+          Get.snackbar(
+            "Salvato!",
+            "Il record è stato salvato localmente in attesa di connessione internet.",
+            icon: const Icon(
+              Icons.save,
+              color: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  editWorkOrderResourceDateTesting(bool isConnected, int index) async {
+    offline = _trx.records![index].offlineId ?? -1;
+    //print(now);
+
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+    String date = dateFormat.format(DateTime.now());
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "id": _trx.records![index].id,
+      "LIT_Control1DateFrom": date,
+      "LIT_Control2DateFrom": date,
+      "LIT_Control3DateFrom": date,
+    });
+
+    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(GetStorage().read('workOrderResourceSync')));
+
+    if (_trx.records![index].id != null && offline == -1) {
+      trx.records![index].lITControl1DateFrom = date;
+      trx.records![index].lITControl2DateFrom = date;
+      trx.records![index].lITControl3DateFrom = date;
+
+      var url = Uri.parse('http://' +
+          ip +
+          '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}');
+      if (isConnected) {
+        emptyAPICallStak();
+        var response = await http.put(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          var data = jsonEncode(trx.toJson());
+          GetStorage().write('workOrderResourceSync', data);
+          getWorkOrders();
+          //print("done!");
+          //Get.back();
+          Get.snackbar(
+            "Fatto!",
+            "Il record è stato modificato",
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          //print(response.body);
+          //print(response.statusCode);
+          Get.snackbar(
+            "Errore!",
+            "Il record non è stato modificato",
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      } else {
+        var data = jsonEncode(trx.toJson());
+        GetStorage().write('workOrderSync', data);
+        getWorkOrders();
+        Map calls = {};
+        if (GetStorage().read('storedEditAPICalls') == null) {
+          calls['http://' +
+                  ip +
+                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+              msg;
+        } else {
+          calls = GetStorage().read('storedEditAPICalls');
+          calls['http://' +
+                  ip +
+                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+              msg;
+        }
+        GetStorage().write('storedEditAPICalls', calls);
+        Get.snackbar(
+          "Salvato!",
+          "Il record è stato salvato localmente in attesa di connessione internet.",
+          icon: const Icon(
+            Icons.save,
+            color: Colors.red,
+          ),
+        );
+      }
+    }
+
+    if (offline != -1) {
+      List<dynamic> list = GetStorage().read('postCallList');
+
+      for (var i = 0; i < list.length; i++) {
+        var json = jsonDecode(list[i]);
+        if (json["offlineid"] == _trx.records![index].offlineId) {
+          var url2 = json["url"];
+          var offlineid2 = json["offlineid"];
+
+          var call = jsonEncode({
+            "offlineid": offlineid2,
+            "url": url2,
+            "LIT_Control1DateFrom": date,
+            "LIT_Control2DateFrom": date,
+            "LIT_Control3DateFrom": date,
+          });
+
+          list.removeAt(i);
+          list.add(call);
+          GetStorage().write('postCallList', list);
+          Get.snackbar(
+            "Salvato!",
+            "Il record è stato salvato localmente in attesa di connessione internet.",
+            icon: const Icon(
+              Icons.save,
+              color: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
 
   Future<void> makePhoneCall(String phoneNumber) async {
     // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.

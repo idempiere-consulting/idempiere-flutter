@@ -57,7 +57,10 @@ class LocaleString extends Translations {
           'IP': 'In Progress',
           'ST': 'Stopped',
           'WP': 'Work in Progress',
-          'CO': 'Completed'
+          'CO': 'Completed',
+          'Location Code': 'Location Code',
+          'Location': 'Location',
+          'Type': 'Type'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -112,7 +115,10 @@ class LocaleString extends Translations {
           'IP': 'In Corso',
           'WP': 'In Corso',
           'ST': 'Fermato',
-          'CO': 'Completato'
+          'CO': 'Completato',
+          'Location Code': 'Codice Ubicazione',
+          'Location': 'Ubicazione',
+          'Type': 'Tipo'
         },
       };
 }

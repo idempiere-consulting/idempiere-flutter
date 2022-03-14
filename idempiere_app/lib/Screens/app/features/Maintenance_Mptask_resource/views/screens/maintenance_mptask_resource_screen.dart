@@ -12,9 +12,8 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_edit_mptask_resource_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_Sheet/views/screens/maintenance_mptask_resource_sheet_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_A2_Fire_Extinguisher_Grid/views/screens/maintenance_mptask_resource_fire_extinguisher_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
@@ -29,9 +28,12 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:idempiere_app/constants.dart';
+import 'package:intl/intl.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 // binding
 part '../../bindings/maintenance_mptask_resource_binding.dart';
@@ -60,7 +62,7 @@ class MaintenanceMpResourceScreen
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        actions: [
+        /* actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
@@ -72,7 +74,7 @@ class MaintenanceMpResourceScreen
               ),
             ),
           ),
-        ],
+        ], */
         centerTitle: true,
         title: Column(
           children: [
@@ -100,7 +102,7 @@ class MaintenanceMpResourceScreen
                         : const Text("RESOURCES: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
@@ -111,7 +113,7 @@ class MaintenanceMpResourceScreen
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ),
+                  ), */
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -160,9 +162,19 @@ class MaintenanceMpResourceScreen
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.view_list,
-                                      color: Colors.green,
+                                    icon: Icon(
+                                      Icons.timer_outlined,
+                                      color: (controller.trx.records![index]
+                                                      .lITControl2DateNext)
+                                                  ?.substring(0, 4) ==
+                                              controller.now.year.toString()
+                                          ? Colors.yellow
+                                          : (controller.trx.records![index]
+                                                          .lITControl3DateNext)
+                                                      ?.substring(0, 4) ==
+                                                  controller.now.year.toString()
+                                              ? Colors.orange
+                                              : Colors.green,
                                     ),
                                   ),
                                   tilePadding: const EdgeInsets.symmetric(
@@ -175,8 +187,12 @@ class MaintenanceMpResourceScreen
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
+                                      icon: Icon(
+                                        controller.trx.records![index].eDIType
+                                                    ?.id ==
+                                                'A2'
+                                            ? Icons.grid_4x4_outlined
+                                            : Icons.edit,
                                         color: Colors.green,
                                       ),
                                       tooltip: 'Edit Resource',
@@ -262,6 +278,10 @@ class MaintenanceMpResourceScreen
                                                 });
 
                                             break;
+                                          case 'A2':
+                                            Get.toNamed(
+                                                '/MaintenanceMpResourceFireExtinguisherGrid');
+                                            break;
                                           default:
                                         }
                                         /* Get.to(
@@ -338,12 +358,12 @@ class MaintenanceMpResourceScreen
                                     Column(
                                       children: [
                                         Row(children: [
-                                          const Text('Quantità: '),
+                                          const Text('Quantity: '),
                                           Text(
                                               "${controller.trx.records![index].resourceQty}"),
                                         ]),
                                         Row(children: [
-                                          const Text('Nome: '),
+                                          const Text('Note: '),
                                           Text(controller
                                                   .trx.records![index].name ??
                                               "??"),
@@ -361,52 +381,96 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]),
                                         Row(children: [
-                                          const Text('Value: '),
+                                          const Text('Location Code: '),
                                           Text(controller
                                                   .trx.records![index].value ??
                                               "??"),
                                         ]),
                                         Row(children: [
-                                          const Text('Control3DateFrom: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl3DateFrom ??
-                                              "??"),
-                                        ]),
-                                        Row(children: [
-                                          const Text('Control3DateNext: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl3DateNext ??
-                                              "??"),
-                                        ]),
-                                        Row(children: [
-                                          const Text('Control2DateFrom: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl2DateFrom ??
-                                              "??"),
-                                        ]),
-                                        Row(children: [
-                                          const Text('Control2DateNext: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl2DateNext ??
-                                              "??"),
-                                        ]),
-                                        Row(children: [
-                                          const Text('Control1DateFrom: '),
+                                          const Text('Check Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl1DateFrom ??
                                               "??"),
                                         ]),
                                         Row(children: [
-                                          const Text('Control1DateNext: '),
+                                          const Text('Next Check Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl1DateNext ??
                                               "??"),
                                         ]),
-                                        /* Row(children: [
-                                          const Text('offline id: '),
-                                          Text(
-                                              "${controller.trx.records![index].offlineId}"),
-                                        ]), */
+                                        Row(children: [
+                                          const Text('Revision Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Next Revision Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateNext ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Testing Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Next Testing Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateNext ??
+                                              "??"),
+                                        ]),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .eDIType
+                                                  ?.id ==
+                                              "A2",
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  tooltip: 'Check',
+                                                  onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
+                                                    controller
+                                                        .editWorkOrderResourceDateCheck(
+                                                            isConnected, index);
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.content_paste),
+                                                ),
+                                                IconButton(
+                                                  tooltip: 'Revision',
+                                                  onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
+                                                    controller
+                                                        .editWorkOrderResourceDateRevision(
+                                                            isConnected, index);
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.search),
+                                                ),
+                                                IconButton(
+                                                  tooltip: 'Testing',
+                                                  onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
+                                                    controller
+                                                        .editWorkOrderResourceDateTesting(
+                                                            isConnected, index);
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.gavel_sharp),
+                                                ),
+                                              ]),
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -431,7 +495,7 @@ class MaintenanceMpResourceScreen
                         : const Text("RESOURCES: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
@@ -442,7 +506,7 @@ class MaintenanceMpResourceScreen
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ),
+                  ), */
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -491,9 +555,19 @@ class MaintenanceMpResourceScreen
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.view_list,
-                                      color: Colors.green,
+                                    icon: Icon(
+                                      Icons.timer_outlined,
+                                      color: (controller.trx.records![index]
+                                                      .lITControl2DateNext)
+                                                  ?.substring(0, 4) ==
+                                              controller.now.year.toString()
+                                          ? Colors.yellow
+                                          : (controller.trx.records![index]
+                                                          .lITControl3DateNext)
+                                                      ?.substring(0, 4) ==
+                                                  controller.now.year.toString()
+                                              ? Colors.orange
+                                              : Colors.green,
                                     ),
                                   ),
                                   tilePadding: const EdgeInsets.symmetric(
@@ -506,13 +580,104 @@ class MaintenanceMpResourceScreen
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
+                                      icon: Icon(
+                                        controller.trx.records![index].eDIType
+                                                    ?.id ==
+                                                'A2'
+                                            ? Icons.grid_4x4_outlined
+                                            : Icons.edit,
                                         color: Colors.green,
                                       ),
                                       tooltip: 'Edit Resource',
                                       onPressed: () {
-                                        Get.to(
+                                        switch (controller
+                                            .trx.records![index].eDIType?.id) {
+                                          case "A1":
+                                            Get.toNamed(
+                                                '/MaintenanceMpResourceSheet',
+                                                arguments: {
+                                                  "surveyId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITSurveySheetsID
+                                                      ?.id,
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "serNo": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .serNo ??
+                                                      "",
+                                                  "prodId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mProductID
+                                                      ?.id,
+                                                  "prodName": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mProductID
+                                                      ?.identifier,
+                                                  "lot": controller
+                                                      .trx.records![index].lot,
+                                                  "location": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .locationComment,
+                                                  "locationCode": controller.trx
+                                                      .records![index].value,
+                                                  "manYear": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .manufacturedYear,
+                                                  "userName": controller.trx
+                                                      .records![index].userName,
+                                                  "serviceDate": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .serviceDate,
+                                                  "endDate": controller.trx
+                                                      .records![index].endDate,
+                                                  "manufacturer": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .manufacturer,
+                                                  "model": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITProductModel,
+                                                  "manufacturedYear": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .manufacturedYear,
+                                                  "purchaseDate": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateOrdered,
+                                                  "note": controller
+                                                      .trx.records![index].name,
+                                                  "resTypeId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITResourceType
+                                                      ?.id,
+                                                  "valid": controller.trx
+                                                      .records![index].isValid,
+                                                  "offlineid": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .offlineId,
+                                                  "index": index,
+                                                });
+
+                                            break;
+                                          case 'A2':
+                                            Get.toNamed(
+                                                '/MaintenanceMpResourceFireExtinguisherGrid');
+                                            break;
+                                          default:
+                                        }
+                                        /* Get.to(
                                             const EditMaintenanceMpResource(),
                                             arguments: {
                                               "id": controller
@@ -548,7 +713,7 @@ class MaintenanceMpResourceScreen
                                               "offlineid": controller.trx
                                                   .records![index].offlineId,
                                               "index": index,
-                                            });
+                                            }); */
                                       },
                                     ),
                                   ),
@@ -586,12 +751,12 @@ class MaintenanceMpResourceScreen
                                     Column(
                                       children: [
                                         Row(children: [
-                                          const Text('Quantità: '),
+                                          const Text('Quantity: '),
                                           Text(
                                               "${controller.trx.records![index].resourceQty}"),
                                         ]),
                                         Row(children: [
-                                          const Text('Nome: '),
+                                          const Text('Note: '),
                                           Text(controller
                                                   .trx.records![index].name ??
                                               "??"),
@@ -609,63 +774,96 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]),
                                         Row(children: [
-                                          const Text('Value: '),
+                                          const Text('Location Code: '),
                                           Text(controller
                                                   .trx.records![index].value ??
                                               "??"),
                                         ]),
                                         Row(children: [
-                                          const Text('Control3DateFrom: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl3DateFrom ??
-                                              "??"),
-                                        ]),
-                                        Row(children: [
-                                          const Text('Control3DateNext: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl3DateNext ??
-                                              "??"),
-                                        ]),
-                                        Row(children: [
-                                          const Text('Control2DateFrom: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl2DateFrom ??
-                                              "??"),
-                                        ]),
-                                        Row(children: [
-                                          const Text('Control2DateNext: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl2DateNext ??
-                                              "??"),
-                                        ]),
-                                        Row(children: [
-                                          const Text('Control1DateFrom: '),
+                                          const Text('Check Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl1DateFrom ??
                                               "??"),
                                         ]),
                                         Row(children: [
-                                          const Text('Control1DateNext: '),
+                                          const Text('Next Check Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl1DateNext ??
                                               "??"),
                                         ]),
-                                        /* Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: const Icon(
-                                                  Icons.file_open_outlined),
-                                            ),
-                                          ],
-                                        ), */
-                                        /* Row(children: [
-                                          const Text('offline id: '),
-                                          Text(
-                                              "${controller.trx.records![index].offlineId}"),
-                                        ]), */
+                                        Row(children: [
+                                          const Text('Revision Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Next Revision Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateNext ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Testing Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Next Testing Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateNext ??
+                                              "??"),
+                                        ]),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .eDIType
+                                                  ?.id ==
+                                              "A2",
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  tooltip: 'Check',
+                                                  onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
+                                                    controller
+                                                        .editWorkOrderResourceDateCheck(
+                                                            isConnected, index);
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.content_paste),
+                                                ),
+                                                IconButton(
+                                                  tooltip: 'Revision',
+                                                  onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
+                                                    controller
+                                                        .editWorkOrderResourceDateRevision(
+                                                            isConnected, index);
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.search),
+                                                ),
+                                                IconButton(
+                                                  tooltip: 'Testing',
+                                                  onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
+                                                    controller
+                                                        .editWorkOrderResourceDateTesting(
+                                                            isConnected, index);
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.gavel_sharp),
+                                                ),
+                                              ]),
+                                        ),
                                       ],
                                     ),
                                   ],
