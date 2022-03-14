@@ -9,10 +9,12 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/reflist_resource_type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_mptask_resource_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_edit_mptask_resource_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Signature/signature_page.dart';
+import 'package:idempiere_app/Screens/app/features/Signature_WorkOrderResource/signature_page.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -29,9 +31,8 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:idempiere_app/constants.dart';
+import 'package:http/http.dart' as http;
 //import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:pluto_grid/pluto_grid.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/maintenance_mptask_resource_sheet_binding.dart';
@@ -82,8 +83,10 @@ class MaintenanceMpResourceSheetScreen
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: IconButton(
-              onPressed: () {
-                print(controller.nameFieldController.text);
+              onPressed: () async {
+                //print(controller.nameFieldController.text);
+                var isConnected = await checkConnection();
+                controller.editWorkOrderResource(isConnected);
               },
               icon: const Icon(
                 Icons.save,
@@ -92,7 +95,7 @@ class MaintenanceMpResourceSheetScreen
           ),
         ],
         //centerTitle: true,
-        title: Text('Prod'),
+        title: Obx(() => Text(controller.value.value)),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
@@ -114,11 +117,11 @@ class MaintenanceMpResourceSheetScreen
                     child: Container(
                       margin: const EdgeInsets.all(10),
                       child: TextField(
-                        controller: controller.prodFieldController,
+                        controller: controller.locationCodeFieldController,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.source),
                           border: OutlineInputBorder(),
-                          labelText: 'Type',
+                          labelText: 'Location Code',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
                       ),
@@ -131,7 +134,59 @@ class MaintenanceMpResourceSheetScreen
                     child: Container(
                       margin: const EdgeInsets.all(10),
                       child: TextField(
-                        controller: controller.nameFieldController,
+                        controller: controller.locationFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.source),
+                          border: OutlineInputBorder(),
+                          labelText: 'Location',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => controller.flagRefList.value == true
+                      ? Visibility(
+                          visible: controller.filterCount.value == 0,
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: DropdownButton(
+                              value: controller.dropDownValue.value,
+                              style: const TextStyle(fontSize: 12.0),
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                //print(newValue);
+                                controller.dropDownValue.value = newValue!;
+                              },
+                              items: controller.refList.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                  value: list.value.toString(),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.manufacturerFieldController,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.source),
                           border: OutlineInputBorder(),
@@ -198,35 +253,14 @@ class MaintenanceMpResourceSheetScreen
                     visible: controller.filterCount.value == 0,
                     child: Container(
                       margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(10),
-                      width: size.width,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
+                      child: TextField(
+                        controller: controller.manufacturedYearFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.timelapse_sharp),
+                          border: OutlineInputBorder(),
+                          labelText: 'Manufactured Year',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: DateTimePicker(
-                        type: DateTimePickerType.date,
-                        initialValue: '',
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                        dateLabelText: 'Construction Date',
-                        icon: const Icon(Icons.event),
-                        onChanged: (val) {
-                          //print(DateTime.parse(val));
-                          //print(val);
-
-                          controller.date1 = val.substring(0, 10);
-
-                          //print(date);
-                        },
-                        validator: (val) {
-                          //print(val);
-                          return null;
-                        },
-                        // ignore: avoid_print
-                        onSaved: (val) => print(val),
                       ),
                     ),
                   ),
@@ -241,7 +275,7 @@ class MaintenanceMpResourceSheetScreen
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.timelapse_sharp),
                           border: OutlineInputBorder(),
-                          labelText: 'Expected Duration (years)',
+                          labelText: 'Expected Duration (months)',
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
                       ),
@@ -263,7 +297,7 @@ class MaintenanceMpResourceSheetScreen
                       ),
                       child: DateTimePicker(
                         type: DateTimePickerType.date,
-                        initialValue: '',
+                        initialValue: controller.date2,
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2100),
                         dateLabelText: 'Purchase Date',
@@ -301,7 +335,7 @@ class MaintenanceMpResourceSheetScreen
                       ),
                       child: DateTimePicker(
                         type: DateTimePickerType.date,
-                        initialValue: '',
+                        initialValue: controller.date3,
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2100),
                         dateLabelText: 'First Use Date',
@@ -330,23 +364,6 @@ class MaintenanceMpResourceSheetScreen
                     child: Container(
                       margin: const EdgeInsets.all(10),
                       child: TextField(
-                        controller: controller.companyFieldController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.handshake),
-                          border: OutlineInputBorder(),
-                          labelText: 'Company Name',
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Obx(
-                  () => Visibility(
-                    visible: controller.filterCount.value == 0,
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      child: TextField(
                         controller: controller.userFieldController,
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.person_pin_outlined),
@@ -357,6 +374,46 @@ class MaintenanceMpResourceSheetScreen
                       ),
                     ),
                   ),
+                ),
+                Obx(
+                  () => controller.flagSurveyLines.value
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.surveyLines.records!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Obx(() => controller
+                                        .surveyLines.records![index].group1 !=
+                                    null
+                                ? Visibility(
+                                    visible: controller.filterCount.value == 1,
+                                    child: Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: CheckboxListTile(
+                                        title: Text(
+                                            '${controller.surveyLines.records![index].name}'),
+                                        value: controller.isChecked[index],
+                                        activeColor: kPrimaryColor,
+                                        onChanged: (bool? value) {
+                                          controller.isChecked[index] = value!;
+                                        },
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                      ),
+                                    ),
+                                  )
+                                : Visibility(
+                                    visible: controller.filterCount.value == 1,
+                                    child: Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: Text(
+                                          '${controller.surveyLines.records![index].name}'),
+                                    ),
+                                  ));
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
                 ),
                 Obx(
                   () => Visibility(
@@ -404,8 +461,16 @@ class MaintenanceMpResourceSheetScreen
                           children: [
                             IconButton(
                               tooltip: "Sign",
-                              onPressed: () {},
-                              icon: const Icon(EvaIcons.edit2Outline),
+                              onPressed: () {
+                                Get.to(
+                                    const SignatureWorkOrderResourceScreen());
+                              },
+                              icon: controller.flagSign.value
+                                  ? const Icon(
+                                      EvaIcons.doneAll,
+                                      color: Colors.green,
+                                    )
+                                  : const Icon(EvaIcons.edit2Outline),
                             ),
                             const Text("Sign"),
                           ]),

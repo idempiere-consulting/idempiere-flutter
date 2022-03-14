@@ -41,13 +41,14 @@ class RRecords {
   final String? created;
   final CreatedBy? createdBy;
   final bool? isActive;
+  bool? isValid;
   final int? resourceQty;
   final ResourceType? resourceType;
   final String? updated;
   final ADOrgID? aDOrgID;
   MProductID? mProductID;
   final int? discount;
-  final String? value;
+  String? value;
   String? name;
   String? description;
   String? serNo;
@@ -58,6 +59,18 @@ class RRecords {
   String? lITControl1DateFrom;
   String? lITControl1DateNext;
   final LITSurveySheetsID? lITSurveySheetsID;
+  final EDIType? eDIType;
+  String? lot;
+  String? locationComment;
+  int? manufacturedYear;
+  String? userName;
+  String? serviceDate;
+  String? endDate;
+  String? manufacturer;
+  int? useLifeYears;
+  String? lITProductModel;
+  String? dateOrdered;
+  LITResourceType? lITResourceType;
   final String? modelname;
   int? offlineId;
 
@@ -71,6 +84,7 @@ class RRecords {
     this.created,
     this.createdBy,
     this.isActive,
+    this.isValid,
     this.resourceQty,
     this.resourceType,
     this.updated,
@@ -88,6 +102,18 @@ class RRecords {
     this.lITControl1DateFrom,
     this.lITControl1DateNext,
     this.lITSurveySheetsID,
+    this.eDIType,
+    this.lot,
+    this.locationComment,
+    this.manufacturedYear,
+    this.userName,
+    this.serviceDate,
+    this.endDate,
+    this.manufacturer,
+    this.useLifeYears,
+    this.lITProductModel,
+    this.dateOrdered,
+    this.lITResourceType,
     this.modelname,
     this.offlineId,
   });
@@ -108,6 +134,7 @@ class RRecords {
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
         isActive = json['IsActive'] as bool?,
+        isValid = json['IsValid'] as bool?,
         resourceQty = json['ResourceQty'] as int?,
         resourceType = (json['ResourceType'] as Map<String, dynamic>?) != null
             ? ResourceType.fromJson(
@@ -136,6 +163,24 @@ class RRecords {
                 ? LITSurveySheetsID.fromJson(
                     json['LIT_SurveySheets_ID'] as Map<String, dynamic>)
                 : null,
+        eDIType = (json['EDIType'] as Map<String, dynamic>?) != null
+            ? EDIType.fromJson(json['EDIType'] as Map<String, dynamic>)
+            : null,
+        lot = json['Lot'] as String?,
+        locationComment = json['LocationComment'] as String?,
+        manufacturedYear = json['ManufacturedYear'] as int?,
+        userName = json['UserName'] as String?,
+        serviceDate = json['ServiceDate'] as String?,
+        endDate = json['EndDate'] as String?,
+        manufacturer = json['Manufacturer'] as String?,
+        useLifeYears = json['UseLifeYears'] as int?,
+        lITProductModel = json['LIT_ProductModel'] as String?,
+        dateOrdered = json['DateOrdered'] as String?,
+        lITResourceType =
+            (json['LIT_ResourceType'] as Map<String, dynamic>?) != null
+                ? LITResourceType.fromJson(
+                    json['LIT_ResourceType'] as Map<String, dynamic>)
+                : null,
         modelname = json['model-name'] as String?,
         offlineId = json['offlineId'] as int?;
 
@@ -149,6 +194,7 @@ class RRecords {
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
         'IsActive': isActive,
+        'IsValid': isValid,
         'ResourceQty': resourceQty,
         'ResourceType': resourceType?.toJson(),
         'Updated': updated,
@@ -167,6 +213,18 @@ class RRecords {
         'LIT_Control1DateNext': lITControl1DateNext,
         'model-name': modelname,
         'LIT_SurveySheets_ID': lITSurveySheetsID?.toJson(),
+        'EDIType': eDIType?.toJson(),
+        'Lot': lot,
+        'LocationComment': locationComment,
+        'ManufacturedYear': manufacturedYear,
+        'UserName': userName,
+        'ServiceDate': serviceDate,
+        'EndDate': endDate,
+        'Manufacturer': manufacturer,
+        'UseLifeYears': useLifeYears,
+        'LIT_ProductModel': lITProductModel,
+        'DateOrdered': dateOrdered,
+        'LIT_ResourceType': lITResourceType?.toJson(),
         'offlineId': offlineId,
       };
 }
@@ -349,6 +407,60 @@ class LITSurveySheetsID {
   LITSurveySheetsID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class EDIType {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  EDIType({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  EDIType.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITResourceType {
+  final String? propertyLabel;
+  String? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITResourceType({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITResourceType.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

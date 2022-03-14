@@ -12,6 +12,7 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_edit_mptask_resource_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_Sheet/views/screens/maintenance_mptask_resource_sheet_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -180,7 +181,90 @@ class MaintenanceMpResourceScreen
                                       ),
                                       tooltip: 'Edit Resource',
                                       onPressed: () {
-                                        Get.to(
+                                        switch (controller
+                                            .trx.records![index].eDIType?.id) {
+                                          case "A1":
+                                            Get.toNamed(
+                                                '/MaintenanceMpResourceSheet',
+                                                arguments: {
+                                                  "surveyId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITSurveySheetsID
+                                                      ?.id,
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "serNo": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .serNo ??
+                                                      "",
+                                                  "prodId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mProductID
+                                                      ?.id,
+                                                  "prodName": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mProductID
+                                                      ?.identifier,
+                                                  "lot": controller
+                                                      .trx.records![index].lot,
+                                                  "location": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .locationComment,
+                                                  "locationCode": controller.trx
+                                                      .records![index].value,
+                                                  "manYear": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .manufacturedYear,
+                                                  "userName": controller.trx
+                                                      .records![index].userName,
+                                                  "serviceDate": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .serviceDate,
+                                                  "endDate": controller.trx
+                                                      .records![index].endDate,
+                                                  "manufacturer": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .manufacturer,
+                                                  "model": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITProductModel,
+                                                  "manufacturedYear": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .manufacturedYear,
+                                                  "purchaseDate": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateOrdered,
+                                                  "note": controller
+                                                      .trx.records![index].name,
+                                                  "resTypeId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITResourceType
+                                                      ?.id,
+                                                  "valid": controller.trx
+                                                      .records![index].isValid,
+                                                  "offlineid": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .offlineId,
+                                                  "index": index,
+                                                });
+
+                                            break;
+                                          default:
+                                        }
+                                        /* Get.to(
                                             const EditMaintenanceMpResource(),
                                             arguments: {
                                               "id": controller
@@ -216,7 +300,7 @@ class MaintenanceMpResourceScreen
                                               "offlineid": controller.trx
                                                   .records![index].offlineId,
                                               "index": index,
-                                            });
+                                            }); */
                                       },
                                     ),
                                   ),
@@ -566,6 +650,17 @@ class MaintenanceMpResourceScreen
                                                   .lITControl1DateNext ??
                                               "??"),
                                         ]),
+                                        /* Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(
+                                                  Icons.file_open_outlined),
+                                            ),
+                                          ],
+                                        ), */
                                         /* Row(children: [
                                           const Text('offline id: '),
                                           Text(

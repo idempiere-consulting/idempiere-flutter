@@ -12,12 +12,14 @@ class TypeJson {
 class Types {
   final String? id;
   final String? name;
+  final String? value;
 
-  Types({this.id, this.name});
+  Types({this.id, this.name, this.value});
 
   Types.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String?,
-        name = json['name'] as String?;
+        name = json['name'] as String?,
+        value = json['value'] as String?;
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name};
+  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'value': value};
 }

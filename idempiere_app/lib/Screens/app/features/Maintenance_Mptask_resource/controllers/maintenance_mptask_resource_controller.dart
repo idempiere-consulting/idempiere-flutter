@@ -94,7 +94,7 @@ class MaintenanceMpResourceController extends GetxController {
 
   Future<void> getWorkOrders() async {
     _dataAvailable.value = false;
-    print(GetStorage().read('workOrderResourceSync'));
+    //print(GetStorage().read('workOrderResourceSync'));
     if (GetStorage().read('workOrderSync') != null) {
       _trx = WorkOrderResourceLocalJson.fromJson(
           jsonDecode(GetStorage().read('workOrderResourceSync')));

@@ -92,6 +92,8 @@ class MaintenanceMptaskLineScreen
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
+                                      print(controller
+                                          .trx.records![index].documentNo);
                                       GetStorage().write(
                                           'selectedTaskDocNo',
                                           controller

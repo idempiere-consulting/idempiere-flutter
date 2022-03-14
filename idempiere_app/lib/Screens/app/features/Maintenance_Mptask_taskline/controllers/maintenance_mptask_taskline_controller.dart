@@ -22,7 +22,7 @@ class MaintenanceMptaskLineController extends GetxController {
     canLaunch('tel:123').then((bool result) {
       _hasCallSupport = result;
     });
-
+    //print(GetStorage().read('workOrderSync'));
     getWorkOrders();
     //getADUserID();
   }

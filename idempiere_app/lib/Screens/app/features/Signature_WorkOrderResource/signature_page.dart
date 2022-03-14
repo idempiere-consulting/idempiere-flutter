@@ -4,17 +4,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_Sheet/views/screens/maintenance_mptask_resource_sheet_screen.dart';
 import 'package:signature/signature.dart';
 
 /// example widget showing how to use signature widget
-class SignatureScreen extends StatefulWidget {
-  const SignatureScreen({Key? key}) : super(key: key);
+class SignatureWorkOrderResourceScreen extends StatefulWidget {
+  const SignatureWorkOrderResourceScreen({Key? key}) : super(key: key);
 
   @override
-  SignatureState createState() => SignatureState();
+  SignatureWorkOrderResourceState createState() =>
+      SignatureWorkOrderResourceState();
 }
 
-class SignatureState extends State<SignatureScreen> {
+class SignatureWorkOrderResourceState
+    extends State<SignatureWorkOrderResourceScreen> {
   final SignatureController _controller = SignatureController(
     penStrokeWidth: 1,
     penColor: Colors.black,
@@ -53,7 +56,10 @@ class SignatureState extends State<SignatureScreen> {
               onPressed: () async {
                 var data = await _controller.toPngBytes();
                 var image64 = base64.encode(data!);
-                GetStorage().write('Signature', image64);
+                GetStorage().write('SignatureWorkOrderResource', image64);
+                Get.find<MaintenanceMpResourceSheetController>()
+                    .flagSign
+                    .value = true;
                 Get.back();
               },
               icon: const Icon(
