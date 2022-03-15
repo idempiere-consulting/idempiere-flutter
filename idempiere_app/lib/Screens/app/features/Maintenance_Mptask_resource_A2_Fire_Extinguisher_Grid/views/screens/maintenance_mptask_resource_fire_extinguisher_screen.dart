@@ -5,15 +5,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
-import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/project_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:idempiere_app/Screens/app/shared_components/search_field.dart';
@@ -29,7 +25,6 @@ import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:pluto_grid/pluto_grid.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 // binding
@@ -65,7 +60,27 @@ class MaintenanceMpResourceFireExtinguisherScreen
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                controller.handleAddRows();
+                /* List<PlutoRow> newRows = [];
+                //controller.handleAddRows();
+                PlutoRow row = PlutoRow(cells: {
+                  'N°': PlutoCell(value: '1'),
+                  'Location': PlutoCell(value: 'tetto'),
+                  'Barcode': PlutoCell(value: '1238121039'),
+                  'SerialNo': PlutoCell(value: 'm23456nv'),
+                  'Cartel': PlutoCell(value: 'cartello n 25 x estintori'),
+                  'Manufacturer': PlutoCell(value: 'Colombini'),
+                  'Year': PlutoCell(value: 2015),
+                  'ShutDownType': PlutoCell(value: 'A'),
+                  'Type': PlutoCell(value: 'INOX'),
+                  'Check': PlutoCell(value: '2022-12-24'),
+                  'Revision': PlutoCell(value: '2022-12-25'),
+                  'Testing': PlutoCell(value: '2022-12-26'),
+                  'Observations': PlutoCell(value: 'non funziona niente :c'),
+                });
+
+                newRows.add(row);
+
+                controller.stateManager.appendRows(newRows); */
               },
               icon: const Icon(
                 Icons.save,
@@ -100,6 +115,7 @@ class MaintenanceMpResourceFireExtinguisherScreen
                 columnGroups: controller.columnGroups,
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   controller.stateManager = event.stateManager;
+                  controller.getWorkOrders();
                 },
                 onChanged: (PlutoGridOnChangedEvent event) {
                   print(event);
@@ -121,9 +137,11 @@ class MaintenanceMpResourceFireExtinguisherScreen
                 columnGroups: controller.columnGroups,
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   controller.stateManager = event.stateManager;
+                  controller.getWorkOrders();
                 },
                 onChanged: (PlutoGridOnChangedEvent event) {
-                  print(event);
+                  controller.handleEditTextRows(event.row?.cells['id']?.value,
+                      event.value, event.column!.field);
                 },
                 configuration: const PlutoGridConfiguration(
                   enableColumnBorder: true,
@@ -142,6 +160,7 @@ class MaintenanceMpResourceFireExtinguisherScreen
                 columnGroups: controller.columnGroups,
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   controller.stateManager = event.stateManager;
+                  controller.getWorkOrders();
                 },
                 onChanged: (PlutoGridOnChangedEvent event) {
                   print(event);
@@ -175,164 +194,5 @@ class MaintenanceMpResourceFireExtinguisherScreen
         ],
       ),
     );
-  }
-
-  Widget _buildProgress({Axis axis = Axis.horizontal}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: (axis == Axis.horizontal)
-          ? Row(
-              children: [
-                Flexible(
-                  flex: 5,
-                  child: ProgressCard(
-                    data: const ProgressCardData(
-                      totalUndone: 10,
-                      totalTaskInProress: 2,
-                    ),
-                    onPressedCheck: () {},
-                  ),
-                ),
-                const SizedBox(width: kSpacing / 2),
-                Flexible(
-                  flex: 4,
-                  child: ProgressReportCard(
-                    data: ProgressReportCardData(
-                      title: "1st Sprint",
-                      doneTask: 5,
-                      percent: .3,
-                      task: 3,
-                      undoneTask: 2,
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : Column(
-              children: [
-                ProgressCard(
-                  data: const ProgressCardData(
-                    totalUndone: 10,
-                    totalTaskInProress: 2,
-                  ),
-                  onPressedCheck: () {},
-                ),
-                const SizedBox(height: kSpacing / 2),
-                ProgressReportCard(
-                  data: ProgressReportCardData(
-                    title: "1st Sprint",
-                    doneTask: 5,
-                    percent: .3,
-                    task: 3,
-                    undoneTask: 2,
-                  ),
-                ),
-              ],
-            ),
-    );
-  }
-
-  Widget _buildTaskOverview({
-    required List<TaskCardData> data,
-    int crossAxisCount = 6,
-    int crossAxisCellCount = 2,
-    Axis headerAxis = Axis.horizontal,
-  }) {
-    return StaggeredGridView.countBuilder(
-      crossAxisCount: crossAxisCount,
-      itemCount: data.length + 1,
-      addAutomaticKeepAlives: false,
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return (index == 0)
-            ? Padding(
-                padding: const EdgeInsets.only(bottom: kSpacing),
-                child: _OverviewHeader(
-                  axis: headerAxis,
-                  onSelected: (task) {},
-                ),
-              )
-            : TaskCard(
-                data: data[index - 1],
-                onPressedMore: () {},
-                onPressedTask: () {},
-                onPressedContributors: () {},
-                onPressedComments: () {},
-              );
-      },
-      staggeredTileBuilder: (int index) =>
-          StaggeredTile.fit((index == 0) ? crossAxisCount : crossAxisCellCount),
-    );
-  }
-
-  Widget _buildActiveProject({
-    required List<ProjectCardData> data,
-    int crossAxisCount = 6,
-    int crossAxisCellCount = 2,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: _ActiveProjectCard(
-        onPressedSeeAll: () {},
-        child: StaggeredGridView.countBuilder(
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: crossAxisCount,
-          itemCount: data.length,
-          addAutomaticKeepAlives: false,
-          mainAxisSpacing: kSpacing,
-          crossAxisSpacing: kSpacing,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return ProjectCard(data: data[index]);
-          },
-          staggeredTileBuilder: (int index) =>
-              StaggeredTile.fit(crossAxisCellCount),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfile({required _Profile data}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: _ProfilTile(
-        data: data,
-        onPressedNotification: () {},
-      ),
-    );
-  }
-
-  Widget _buildTeamMember({required List<ImageProvider> data}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TeamMember(
-            totalMember: data.length,
-            onPressedAdd: () {},
-          ),
-          const SizedBox(height: kSpacing / 2),
-          ListProfilImage(maxImages: 6, images: data),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecentMessages({required List<ChattingCardData> data}) {
-    return Column(children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-        child: _RecentMessages(onPressedMore: () {}),
-      ),
-      const SizedBox(height: kSpacing / 2),
-      ...data
-          .map(
-            (e) => ChattingCard(data: e, onPressed: () {}),
-          )
-          .toList(),
-    ]);
   }
 }
