@@ -7,8 +7,10 @@ import 'dart:developer';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/project_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -82,9 +84,7 @@ class MaintenanceMpResourceFireExtinguisherScreen
 
                 controller.stateManager.appendRows(newRows); */
               },
-              icon: const Icon(
-                Icons.save,
-              ),
+              icon: const Icon(Icons.post_add_rounded),
             ),
           ),
         ],
@@ -118,7 +118,11 @@ class MaintenanceMpResourceFireExtinguisherScreen
                   controller.getWorkOrders();
                 },
                 onChanged: (PlutoGridOnChangedEvent event) {
-                  print(event);
+                  controller.handleEditTextRows(
+                      event.row?.cells['id']?.value,
+                      event.value,
+                      event.column!.field,
+                      event.row?.cells['index']?.value);
                 },
                 configuration: const PlutoGridConfiguration(
                   enableColumnBorder: true,
@@ -140,8 +144,11 @@ class MaintenanceMpResourceFireExtinguisherScreen
                   controller.getWorkOrders();
                 },
                 onChanged: (PlutoGridOnChangedEvent event) {
-                  controller.handleEditTextRows(event.row?.cells['id']?.value,
-                      event.value, event.column!.field);
+                  controller.handleEditTextRows(
+                      event.row?.cells['id']?.value,
+                      event.value,
+                      event.column!.field,
+                      event.row?.cells['index']?.value);
                 },
                 configuration: const PlutoGridConfiguration(
                   enableColumnBorder: true,
@@ -163,7 +170,11 @@ class MaintenanceMpResourceFireExtinguisherScreen
                   controller.getWorkOrders();
                 },
                 onChanged: (PlutoGridOnChangedEvent event) {
-                  print(event);
+                  controller.handleEditTextRows(
+                      event.row?.cells['id']?.value,
+                      event.value,
+                      event.column!.field,
+                      event.row?.cells['index']?.value);
                 },
                 configuration: const PlutoGridConfiguration(
                   enableColumnBorder: true,

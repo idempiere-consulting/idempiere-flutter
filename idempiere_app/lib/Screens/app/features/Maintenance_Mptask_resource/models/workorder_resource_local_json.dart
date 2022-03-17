@@ -72,6 +72,8 @@ class RRecords {
   String? dateOrdered;
   LITResourceType? lITResourceType;
   final String? modelname;
+  String? prodCode;
+  String? textDetails;
   int? offlineId;
 
   RRecords({
@@ -115,6 +117,8 @@ class RRecords {
     this.dateOrdered,
     this.lITResourceType,
     this.modelname,
+    this.prodCode,
+    this.textDetails,
     this.offlineId,
   });
 
@@ -182,6 +186,8 @@ class RRecords {
                     json['LIT_ResourceType'] as Map<String, dynamic>)
                 : null,
         modelname = json['model-name'] as String?,
+        prodCode = json['ProdCode'] as String?,
+        textDetails = json['TextDetails'] as String?,
         offlineId = json['offlineId'] as int?;
 
   Map<String, dynamic> toJson() => {
@@ -226,6 +232,8 @@ class RRecords {
         'DateOrdered': dateOrdered,
         'LIT_ResourceType': lITResourceType?.toJson(),
         'offlineId': offlineId,
+        'ProdCode': prodCode,
+        'TextDetails': textDetails
       };
 }
 

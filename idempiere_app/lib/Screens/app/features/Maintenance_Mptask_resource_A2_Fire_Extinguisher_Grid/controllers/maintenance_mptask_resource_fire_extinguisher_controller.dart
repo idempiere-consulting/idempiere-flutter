@@ -37,22 +37,25 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
             'id': PlutoCell(value: _trx.records![i].id),
             'N°': PlutoCell(value: count.toString()),
             'LocationComment':
-                PlutoCell(value: _trx.records![i].locationComment),
-            'Barcode': PlutoCell(value: ''),
-            'SerNo': PlutoCell(value: _trx.records![i].serNo),
-            'Cartel': PlutoCell(value: ''),
-            'Manufacturer': PlutoCell(value: _trx.records![i].manufacturer),
+                PlutoCell(value: _trx.records![i].locationComment ?? ''),
+            'ProdCode': PlutoCell(value: _trx.records![i].prodCode ?? ''),
+            'SerNo': PlutoCell(value: _trx.records![i].serNo ?? ''),
+            'TextDetails': PlutoCell(value: _trx.records![i].textDetails ?? ''),
+            'Manufacturer':
+                PlutoCell(value: _trx.records![i].manufacturer ?? ''),
             'ManufacturedYear':
                 PlutoCell(value: _trx.records![i].manufacturedYear),
             'ShutDownType': PlutoCell(value: ''),
             'Type': PlutoCell(value: ''),
             'LIT_Control1DateFrom':
-                PlutoCell(value: _trx.records![i].lITControl1DateNext),
+                PlutoCell(value: _trx.records![i].lITControl1DateNext ?? ''),
             'LIT_Control2DateFrom':
-                PlutoCell(value: _trx.records![i].lITControl2DateNext),
+                PlutoCell(value: _trx.records![i].lITControl2DateNext ?? ''),
             'LIT_Control3DateFrom':
-                PlutoCell(value: _trx.records![i].lITControl3DateNext),
-            'Name': PlutoCell(value: _trx.records![i].name),
+                PlutoCell(value: _trx.records![i].lITControl3DateNext ?? ''),
+            'Name': PlutoCell(value: _trx.records![i].name ?? ''),
+            'M_Product_ID':
+                PlutoCell(value: _trx.records![i].mProductID?.identifier ?? ''),
           });
           newRows.add(row);
         }
@@ -68,6 +71,9 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
   }
 
   //test grid
+
+  ProductJson prod =
+      ProductJson.fromJson(jsonDecode(GetStorage().read('productSync')));
 
   final List<PlutoColumn> columns = <PlutoColumn>[
     PlutoColumn(
@@ -98,13 +104,26 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
+      //readOnly: true,
+      title: 'Resource',
+      field: 'M_Product_ID',
+      type: PlutoColumnType.select(
+          ((ProductJson.fromJson(jsonDecode(GetStorage().read('productSync'))))
+                  .records!
+                  .map((e) {
+        return e.name!;
+      }).toList())
+              .where((element) => element.startsWith('EST.'))
+              .toList()),
+    ),
+    PlutoColumn(
       title: 'Location',
       field: 'LocationComment',
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
       title: 'Barcode',
-      field: 'Barcode',
+      field: 'ProdCode',
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
@@ -114,7 +133,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     ),
     PlutoColumn(
       title: 'Cartel',
-      field: 'Cartel',
+      field: 'TextDetails',
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
@@ -175,10 +194,11 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
   final List<PlutoColumnGroup> columnGroups = [
     PlutoColumnGroup(title: 'Identification', fields: [
       'N°',
-      'LocationComment',
-      'Barcode',
+      'M_Product_ID'
+          'LocationComment',
+      'ProdCode',
       'SerNo',
-      'Cartel',
+      'TextDetails',
       'Manufacturer',
       'ManufacturedYear'
     ]),
@@ -196,18 +216,65 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
   late final PlutoGridStateManager stateManager;
   var offline = -1;
 
-  Future<void> handleEditTextRows(int id, dynamic value, String field) async {
+  Future<void> handleEditTextRows(
+      int id, dynamic value, String field, int index) async {
     var isConnected = await checkConnection();
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
-    final msg = jsonEncode({"id": id, field: value});
+    var msg = jsonEncode({"id": id, field: value});
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(GetStorage().read('workOrderResourceSync')));
 
     if (id != null && offline == -1) {
-      //trx.records![index].lITControl1DateFrom = date;
+      //trx.records![index]. = value;
+
+      switch (field) {
+        case 'LocationComment':
+          trx.records![index].locationComment = value;
+          break;
+        case 'SerNo':
+          trx.records![index].serNo = value;
+          break;
+        case 'ManufacturedYear':
+          trx.records![index].manufacturedYear = value;
+          break;
+        case 'LIT_Control1DateFrom':
+          trx.records![index].lITControl1DateFrom = value;
+          break;
+        case 'LIT_Control2DateFrom':
+          trx.records![index].lITControl2DateFrom = value;
+          break;
+        case 'LIT_Control3DateFrom':
+          trx.records![index].lITControl3DateFrom = value;
+          break;
+        case 'Name':
+          trx.records![index].name = value;
+          break;
+        case 'ProdCode':
+          trx.records![index].prodCode = value;
+          break;
+        case 'TextDetails':
+          trx.records![index].textDetails = value;
+          break;
+        case 'M_Product_ID':
+          for (var i = 0; i < prod.records!.length; i++) {
+            if (prod.records![i].name == value) {
+              msg = jsonEncode({
+                "id": id,
+                field: {"id": prod.records![i].id}
+              });
+
+              trx.records![index].mProductID?.id = prod.records![i].id;
+              trx.records![index].mProductID?.identifier =
+                  prod.records![i].name;
+            }
+          }
+
+          break;
+        default:
+      }
 
       var url = Uri.parse('http://' +
           ip +
@@ -226,6 +293,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
           var data = jsonEncode(trx.toJson());
           GetStorage().write('workOrderResourceSync', data);
           //getWorkOrders();
+          Get.find<MaintenanceMpResourceController>().getWorkOrders();
           //print("done!");
           //Get.back();
           Get.snackbar(
@@ -252,6 +320,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
         var data = jsonEncode(trx.toJson());
         GetStorage().write('workOrderSync', data);
         //getWorkOrders();
+        Get.find<MaintenanceMpResourceController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['http://' +
