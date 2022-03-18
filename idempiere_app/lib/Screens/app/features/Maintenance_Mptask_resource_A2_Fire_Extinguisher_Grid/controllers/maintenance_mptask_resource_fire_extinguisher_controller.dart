@@ -222,6 +222,8 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
+    offline = _trx.records![index].offlineId ?? -1;
+
     var msg = jsonEncode({"id": id, field: value});
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -346,7 +348,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       }
     }
 
-    /* if (offline != -1) {
+    if (offline != -1) {
       List<dynamic> list = GetStorage().read('postCallList');
 
       for (var i = 0; i < list.length; i++) {
@@ -354,12 +356,17 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
         if (json["offlineid"] == _trx.records![index].offlineId) {
           var url2 = json["url"];
           var offlineid2 = json["offlineid"];
-
-          var call = jsonEncode({
-            "offlineid": offlineid2,
-            "url": url2,
-            field: value
-          });
+          var call;
+          if (field != 'M_Product_ID') {
+            var call = jsonEncode(
+                {"offlineid": offlineid2, "url": url2, field: value});
+          } else {
+            var call = jsonEncode({
+              "offlineid": offlineid2,
+              "url": url2,
+              field: {"id": value}
+            });
+          }
 
           list.removeAt(i);
           list.add(call);
@@ -374,9 +381,26 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
           );
         }
       }
-    } */
+    }
 
     //print(msg);
+  }
+
+  Future<void> handleRemoveCurrentRowButton(int index) async {
+    int id = stateManager.currentRow!.cells['id']!.value;
+    stateManager.removeCurrentRow();
+
+    var isConnected = await checkConnection();
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(GetStorage().read('workOrderResourceSync')));
+
+    if (trx.records![index].id != null && offline == -1) {
+      var url =
+          Uri.parse('http://' + ip + '/api/v1/models/MP_Maintain_Resource/$id');
+    }
   }
 
   //end test grid

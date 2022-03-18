@@ -64,6 +64,7 @@ Future<bool> checkLoginConnection() async {
 emptyAPICallStak() {
   emptyEditAPICallStack();
   emptyPostCallStack();
+  emptyDeleteCallStack();
 }
 
 emptyPostCallStack() {
@@ -123,6 +124,41 @@ emptyEditAPICallStack() {
 
     GetStorage().write('storedEditAPICalls', calls);
 
+    Get.snackbar(
+      "Fatto!",
+      "I record salvati localmente sono stati sincronizzati!",
+      icon: const Icon(
+        Icons.cloud_upload,
+        color: Colors.green,
+      ),
+    );
+  }
+}
+
+emptyDeleteCallStack() {
+  if (GetStorage().read('deleteCallList') != null &&
+      (GetStorage().read('deleteCallList')).isEmpty == false) {
+    List<dynamic> list = GetStorage().read('deleteCallList');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    // ignore: avoid_function_literals_in_foreach_calls
+    list.forEach((element) async {
+      var json = jsonDecode(element);
+      var url = Uri.parse(json["url"]);
+      //print(element);
+      //print(json["url"]);
+
+      // ignore: unused_local_variable
+      var response = await http.delete(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      list.remove(element);
+    });
+    GetStorage().write('deleteCallList', list);
     Get.snackbar(
       "Fatto!",
       "I record salvati localmente sono stati sincronizzati!",

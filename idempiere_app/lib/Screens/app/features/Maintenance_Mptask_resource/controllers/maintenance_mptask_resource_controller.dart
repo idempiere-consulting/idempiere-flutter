@@ -3,10 +3,14 @@ part of dashboard;
 class MaintenanceMpResourceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late WorkOrderResourceLocalJson _trx;
+  final RefListResourceTypeJson _tt = RefListResourceTypeJson.fromJson(
+      jsonDecode(GetStorage().read('refListResourceTypeCategory')));
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
   var offline = -1;
+
+  var dropDownValue = "A1";
 
   // ignore: prefer_typing_uninitialized_variables
   //var adUserId;
@@ -32,6 +36,7 @@ class MaintenanceMpResourceController extends GetxController {
 
   bool get dataAvailable => _dataAvailable.value;
   WorkOrderResourceLocalJson get trx => _trx;
+  RefListResourceTypeJson get tt => _tt;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -68,6 +73,41 @@ class MaintenanceMpResourceController extends GetxController {
       // ignore: unnecessary_null_comparison
     }
   } */
+
+  openResourceType() {
+    Get.defaultDialog(
+      title: "Resource Type",
+      //middleText: "Choose the type of Ticket you want to create",
+      //contentPadding: const EdgeInsets.all(2.0),
+      content: DropdownButton(
+        value: dropDownValue,
+        style: const TextStyle(fontSize: 12.0),
+        elevation: 16,
+        onChanged: (String? newValue) {
+          dropDownValue = newValue!;
+          Get.back();
+          Get.to(const CreateMaintenanceMpResource(),
+              arguments: {"id": dropDownValue});
+        },
+        items: _tt.records!.map((list) {
+          return DropdownMenuItem<String>(
+            child: Text(
+              list.name.toString(),
+            ),
+            value: list.value,
+          );
+        }).toList(),
+      ),
+      barrierDismissible: true,
+      /* textCancel: "Cancel",
+        textConfirm: "Confirm",
+        onConfirm: () {
+          Get.back();
+          Get.to(const CreateTicketClientTicket(),
+              arguments: {"id": dropdownValue});
+        } */
+    );
+  }
 
   editWorkOrderResourceDateCheck(bool isConnected, int index) async {
     offline = _trx.records![index].offlineId ?? -1;

@@ -45,6 +45,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       workOrderSync = true;
       syncWorkOrder();
       syncWorkOrderRefListResource();
+      syncWorkOrderRefListResourceCategory();
     }
   }
 
@@ -214,6 +215,54 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       }
     } else {
       //print(response.body);
+    }
+  }
+
+  Future<void> syncWorkOrderRefListResourceCategory() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/AD_Reference?\$filter= Name eq \'C_BP_EDI EDI Type\'');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+
+      var json = jsonDecode(response.body);
+      var id = json["records"][0]["id"];
+      var url2 = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+
+      var response2 = await http.get(
+        url2,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+
+      if (response2.statusCode == 200) {
+        //print(response2.body);
+        GetStorage().write('refListResourceTypeCategory', response2.body);
+
+        /* var json = jsonDecode(response.body);
+      var id = json["records"][0]["id"]; */
+      } else {
+        print(response2.body);
+      }
+    } else {
+      //print(response.body); &\$orderby=
     }
   }
 

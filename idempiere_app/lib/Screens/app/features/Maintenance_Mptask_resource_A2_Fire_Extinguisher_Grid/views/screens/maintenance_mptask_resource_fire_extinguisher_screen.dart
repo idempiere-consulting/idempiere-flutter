@@ -84,7 +84,7 @@ class MaintenanceMpResourceFireExtinguisherScreen
 
                 controller.stateManager.appendRows(newRows); */
               },
-              icon: const Icon(Icons.post_add_rounded),
+              icon: const Icon(Icons.delete_sweep_rounded),
             ),
           ),
         ],
