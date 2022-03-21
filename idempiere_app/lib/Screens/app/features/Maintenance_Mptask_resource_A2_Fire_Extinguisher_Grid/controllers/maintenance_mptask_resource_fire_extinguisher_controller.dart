@@ -386,8 +386,9 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     //print(msg);
   }
 
-  Future<void> handleRemoveCurrentRowButton(int index) async {
+  Future<void> handleRemoveCurrentRowButton() async {
     int id = stateManager.currentRow!.cells['id']!.value;
+    int index = stateManager.currentRow!.cells['index']!.value;
     stateManager.removeCurrentRow();
 
     var isConnected = await checkConnection();
@@ -397,10 +398,84 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(GetStorage().read('workOrderResourceSync')));
 
-    if (trx.records![index].id != null && offline == -1) {
-      var url =
-          Uri.parse('http://' + ip + '/api/v1/models/MP_Maintain_Resource/$id');
+    var url =
+        Uri.parse('http://' + ip + '/api/v1/models/MP_Maintain_Resource/$id');
+
+    if (isConnected) {
+      emptyAPICallStak();
+      var response = await http.delete(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        //print("done!");
+        Get.snackbar(
+          "Fatto!",
+          "Il record è stato eliminato",
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        print(response.body);
+        Get.snackbar(
+          "Errore!",
+          "Record non eliminato",
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
+      }
+    } else {
+      List<dynamic> list = [];
+      if (GetStorage().read('deleteCallList') == null) {
+        var call = jsonEncode({
+          "url": 'http://' + ip + '/api/v1/models/MP_Maintain_Resource/$id',
+        });
+
+        list.add(call);
+      } else {
+        list = GetStorage().read('deleteCallList');
+        var call = jsonEncode({
+          "url": 'http://' + ip + '/api/v1/models/MP_Maintain_Resource/$id',
+        });
+        list.add(call);
+      }
+      GetStorage().write('deleteCallList', list);
+      Get.snackbar(
+        "Salvato!",
+        "Il record è stato salvato localmente in attesa di connessione internet.",
+        icon: const Icon(
+          Icons.save,
+          color: Colors.red,
+        ),
+      );
     }
+    if (GetStorage().read('postCallList') != null &&
+        (GetStorage().read('postCallList')).isEmpty == false) {
+      List<dynamic> list2 = GetStorage().read('postCallList');
+
+      for (var element in list2) {
+        var json = jsonDecode(element);
+        if (json["offlineid"] == trx.records![index].offlineId) {
+          list2.remove(element);
+        }
+        //print(element);
+        //print(json["url"]);
+      }
+      GetStorage().write('postCallList', list2);
+    }
+
+    trx.records!.removeAt(index);
+    trx.rowcount = trx.rowcount! - 1;
+    var data = jsonEncode(trx.toJson());
+    GetStorage().write('workOrderResourceSync', data);
+    Get.find<MaintenanceMpResourceController>().getWorkOrders();
   }
 
   //end test grid

@@ -62,27 +62,9 @@ class MaintenanceMpResourceFireExtinguisherScreen
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                /* List<PlutoRow> newRows = [];
-                //controller.handleAddRows();
-                PlutoRow row = PlutoRow(cells: {
-                  'N°': PlutoCell(value: '1'),
-                  'Location': PlutoCell(value: 'tetto'),
-                  'Barcode': PlutoCell(value: '1238121039'),
-                  'SerialNo': PlutoCell(value: 'm23456nv'),
-                  'Cartel': PlutoCell(value: 'cartello n 25 x estintori'),
-                  'Manufacturer': PlutoCell(value: 'Colombini'),
-                  'Year': PlutoCell(value: 2015),
-                  'ShutDownType': PlutoCell(value: 'A'),
-                  'Type': PlutoCell(value: 'INOX'),
-                  'Check': PlutoCell(value: '2022-12-24'),
-                  'Revision': PlutoCell(value: '2022-12-25'),
-                  'Testing': PlutoCell(value: '2022-12-26'),
-                  'Observations': PlutoCell(value: 'non funziona niente :c'),
-                });
-
-                newRows.add(row);
-
-                controller.stateManager.appendRows(newRows); */
+                if (controller.stateManager.currentRow != null) {
+                  controller.handleRemoveCurrentRowButton();
+                }
               },
               icon: const Icon(Icons.delete_sweep_rounded),
             ),
