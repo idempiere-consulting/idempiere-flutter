@@ -38,6 +38,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_A
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_Sheet/views/screens/maintenance_mptask_resource_sheet_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views/screens/maintenance_mpwarehouse_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maps/maps_page.dart';
 import 'package:idempiere_app/Screens/app/features/Notification/views/screens/notification_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/portal_mp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoicepo/views/screens/portal_mp_invoicepo_screen.dart';
@@ -279,6 +280,10 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceMpimportitem',
           page: () => const MaintenanceMpimportitemScreen(),
           binding: MaintenanceMpimportitemBinding(),
+        ),
+        GetPage(
+          name: '/MapsScreen',
+          page: () => const MobileMapsScreen(),
         ),
         GetPage(
           name: '/PortalMp',
