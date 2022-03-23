@@ -9,7 +9,6 @@ pre: "<b>90. </b>"
 
  ## Funzionalità da vedere !!! (Vincenzo)
 
-
 * [ ] Eseguire processo idempiere con parametri APIREST
 * [ ] Attivare Acquisizione Fotocamera 
 * [ ] Visualizzare Allegato (vedere ticket desktop app) (S2)
@@ -1636,8 +1635,8 @@ CRUD=1111=F
  52
  53 Formazione Corsita***: 1 *** 5 Formazione Corsista
  54 Presenza Corso       : F3
- 55 Attestato
- 56 
+ 55 Attestato            :
+ 56 Questionario         +:
  57
  58
  59 Acquisti ************: 1 *** 6 Acquisti
