@@ -1635,8 +1635,8 @@ CRUD=1111=F
  52
  53 Formazione Corsita***: 1 *** 5 Formazione Corsista
  54 Presenza Corso       : F3
- 55 Attestato            :
- 56 Questionario         +:
+ 55 Questionario         :
+ 56 Valutazione          :
  57
  58
  59 Acquisti ************: 1 *** 6 Acquisti
