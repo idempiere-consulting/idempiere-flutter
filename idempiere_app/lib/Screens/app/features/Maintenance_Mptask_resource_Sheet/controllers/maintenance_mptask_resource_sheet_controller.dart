@@ -46,7 +46,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
     checkboxState.value = Get.arguments["valid"] ?? false;
     getSurveyLines();
     super.onInit();
-    dropDownValue.value = Get.arguments['resTypeId'];
+    dropDownValue.value = Get.arguments['resTypeId'] ?? "1.1.2";
     getRefListResourceType();
     //getSurveyLines();
     offline = Get.arguments["offlineid"] ?? -1;

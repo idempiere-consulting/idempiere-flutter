@@ -1,11 +1,11 @@
-class WorkOrderResourceSurveyLinesJson {
+class BPJson {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
-  int? rowcount;
-  List<Records>? records;
+  final int? rowcount;
+  final List<BPRecords>? records;
 
-  WorkOrderResourceSurveyLinesJson({
+  BPJson({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
@@ -13,13 +13,13 @@ class WorkOrderResourceSurveyLinesJson {
     this.records,
   });
 
-  WorkOrderResourceSurveyLinesJson.fromJson(Map<String, dynamic> json)
+  BPJson.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => BPRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,62 +31,92 @@ class WorkOrderResourceSurveyLinesJson {
       };
 }
 
-class Records {
+class BPRecords {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
+  final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
-  final bool? isActive;
-  final String? name;
   final String? updated;
   final UpdatedBy? updatedBy;
-  final LITSurveySheetsID? lITSurveySheetsID;
-  final bool? lITIsField1;
-  final int? lineNo;
+  final String? value;
+  final String? name;
+  final num? salesVolume;
+  final bool? isSummary;
+  final bool? isVendor;
+  final bool? isCustomer;
+  final bool? isProspect;
+  final num? sOCreditLimit;
+  final num? sOCreditUsed;
+  final num? acqusitionCost;
+  final num? potentialLifeTimeValue;
+  final num? actualLifeTimeValue;
+  final num? shareOfCustomer;
+  final bool? isEmployee;
+  final bool? isSalesRep;
+  final bool? isOneTime;
+  final bool? isTaxExempt;
+  final bool? isDiscountPrinted;
+  final InvoiceRule? invoiceRule;
+  final DeliveryRule? deliveryRule;
+  final CBPGroupID? cBPGroupID;
+  final bool? sendEMail;
+  final SOCreditStatus? sOCreditStatus;
+  final num? totalOpenBalance;
+  final bool? isPOTaxExempt;
+  final bool? isManufacturer;
+  final bool? is1099Vendor;
+  final bool? lITIsPriceListUpdatable;
+  final bool? lITNoInvoiceXMLVendor;
   final bool? isValid;
-  final String? group1;
-  final String? dateValue;
-  final num? valueNumber;
-  final String? lITText1;
-  final String? lITText2;
-  final String? lITText3;
-  final String? lITText4;
-  final String? lITText5;
-  final num? lITCorrectAnswerValue;
-  final MPMaintainResourceID? mPMaintainResourceID;
   final String? modelname;
 
-  Records({
+  BPRecords({
     this.id,
     this.uid,
     this.aDClientID,
     this.aDOrgID,
+    this.isActive,
     this.created,
     this.createdBy,
-    this.isActive,
-    this.name,
     this.updated,
     this.updatedBy,
-    this.lITSurveySheetsID,
-    this.lITIsField1,
-    this.lineNo,
+    this.value,
+    this.name,
+    this.salesVolume,
+    this.isSummary,
+    this.isVendor,
+    this.isCustomer,
+    this.isProspect,
+    this.sOCreditLimit,
+    this.sOCreditUsed,
+    this.acqusitionCost,
+    this.potentialLifeTimeValue,
+    this.actualLifeTimeValue,
+    this.shareOfCustomer,
+    this.isEmployee,
+    this.isSalesRep,
+    this.isOneTime,
+    this.isTaxExempt,
+    this.isDiscountPrinted,
+    this.invoiceRule,
+    this.deliveryRule,
+    this.cBPGroupID,
+    this.sendEMail,
+    this.sOCreditStatus,
+    this.totalOpenBalance,
+    this.isPOTaxExempt,
+    this.isManufacturer,
+    this.is1099Vendor,
+    this.lITIsPriceListUpdatable,
+    this.lITNoInvoiceXMLVendor,
     this.isValid,
-    this.group1,
-    this.dateValue,
-    this.valueNumber,
-    this.lITText1,
-    this.lITText2,
-    this.lITText3,
-    this.lITText4,
-    this.lITText5,
-    this.lITCorrectAnswerValue,
-    this.mPMaintainResourceID,
     this.modelname,
   });
 
-  Records.fromJson(Map<String, dynamic> json)
+  BPRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
@@ -95,38 +125,56 @@ class Records {
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
+        isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
-        isActive = json['IsActive'] as bool?,
-        name = json['Name'] as String?,
         updated = json['Updated'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        lITSurveySheetsID =
-            (json['LIT_SurveySheets_ID'] as Map<String, dynamic>?) != null
-                ? LITSurveySheetsID.fromJson(
-                    json['LIT_SurveySheets_ID'] as Map<String, dynamic>)
+        value = json['Value'] as String?,
+        name = json['Name'] as String?,
+        salesVolume = json['SalesVolume'] as num?,
+        isSummary = json['IsSummary'] as bool?,
+        isVendor = json['IsVendor'] as bool?,
+        isCustomer = json['IsCustomer'] as bool?,
+        isProspect = json['IsProspect'] as bool?,
+        sOCreditLimit = json['SO_CreditLimit'] as num?,
+        sOCreditUsed = json['SO_CreditUsed'] as num?,
+        acqusitionCost = json['AcqusitionCost'] as num?,
+        potentialLifeTimeValue = json['PotentialLifeTimeValue'] as num?,
+        actualLifeTimeValue = json['ActualLifeTimeValue'] as num?,
+        shareOfCustomer = json['ShareOfCustomer'] as num?,
+        isEmployee = json['IsEmployee'] as bool?,
+        isSalesRep = json['IsSalesRep'] as bool?,
+        isOneTime = json['IsOneTime'] as bool?,
+        isTaxExempt = json['IsTaxExempt'] as bool?,
+        isDiscountPrinted = json['IsDiscountPrinted'] as bool?,
+        invoiceRule = (json['InvoiceRule'] as Map<String, dynamic>?) != null
+            ? InvoiceRule.fromJson(json['InvoiceRule'] as Map<String, dynamic>)
+            : null,
+        deliveryRule = (json['DeliveryRule'] as Map<String, dynamic>?) != null
+            ? DeliveryRule.fromJson(
+                json['DeliveryRule'] as Map<String, dynamic>)
+            : null,
+        cBPGroupID = (json['C_BP_Group_ID'] as Map<String, dynamic>?) != null
+            ? CBPGroupID.fromJson(json['C_BP_Group_ID'] as Map<String, dynamic>)
+            : null,
+        sendEMail = json['SendEMail'] as bool?,
+        sOCreditStatus =
+            (json['SOCreditStatus'] as Map<String, dynamic>?) != null
+                ? SOCreditStatus.fromJson(
+                    json['SOCreditStatus'] as Map<String, dynamic>)
                 : null,
-        lITIsField1 = json['LIT_IsField1'] as bool?,
-        lineNo = json['LineNo'] as int?,
+        totalOpenBalance = json['TotalOpenBalance'] as num?,
+        isPOTaxExempt = json['IsPOTaxExempt'] as bool?,
+        isManufacturer = json['IsManufacturer'] as bool?,
+        is1099Vendor = json['Is1099Vendor'] as bool?,
+        lITIsPriceListUpdatable = json['LIT_isPriceListUpdatable'] as bool?,
+        lITNoInvoiceXMLVendor = json['LIT_NoInvoiceXMLVendor'] as bool?,
         isValid = json['IsValid'] as bool?,
-        group1 = json['Group1'] as String?,
-        dateValue = json['DateValue'] as String?,
-        valueNumber = json['ValueNumber'] as num?,
-        lITText1 = json['LIT_Text1'] as String?,
-        lITText2 = json['LIT_Text2'] as String?,
-        lITText3 = json['LIT_Text3'] as String?,
-        lITText4 = json['LIT_Text4'] as String?,
-        lITText5 = json['LIT_Text5'] as String?,
-        lITCorrectAnswerValue = json['LIT_CorrectAnswerValue'] as num?,
-        mPMaintainResourceID =
-            (json['MP_Maintain_Resource_ID'] as Map<String, dynamic>?) != null
-                ? MPMaintainResourceID.fromJson(
-                    json['MP_Maintain_Resource_ID'] as Map<String, dynamic>)
-                : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -134,25 +182,41 @@ class Records {
         'uid': uid,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
+        'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
-        'IsActive': isActive,
-        'Name': name,
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'LIT_SurveySheets_ID': lITSurveySheetsID?.toJson(),
-        'LIT_IsField1': lITIsField1,
-        'LineNo': lineNo,
+        'Value': value,
+        'Name': name,
+        'SalesVolume': salesVolume,
+        'IsSummary': isSummary,
+        'IsVendor': isVendor,
+        'IsCustomer': isCustomer,
+        'IsProspect': isProspect,
+        'SO_CreditLimit': sOCreditLimit,
+        'SO_CreditUsed': sOCreditUsed,
+        'AcqusitionCost': acqusitionCost,
+        'PotentialLifeTimeValue': potentialLifeTimeValue,
+        'ActualLifeTimeValue': actualLifeTimeValue,
+        'ShareOfCustomer': shareOfCustomer,
+        'IsEmployee': isEmployee,
+        'IsSalesRep': isSalesRep,
+        'IsOneTime': isOneTime,
+        'IsTaxExempt': isTaxExempt,
+        'IsDiscountPrinted': isDiscountPrinted,
+        'InvoiceRule': invoiceRule?.toJson(),
+        'DeliveryRule': deliveryRule?.toJson(),
+        'C_BP_Group_ID': cBPGroupID?.toJson(),
+        'SendEMail': sendEMail,
+        'SOCreditStatus': sOCreditStatus?.toJson(),
+        'TotalOpenBalance': totalOpenBalance,
+        'IsPOTaxExempt': isPOTaxExempt,
+        'IsManufacturer': isManufacturer,
+        'Is1099Vendor': is1099Vendor,
+        'LIT_isPriceListUpdatable': lITIsPriceListUpdatable,
+        'LIT_NoInvoiceXMLVendor': lITNoInvoiceXMLVendor,
         'IsValid': isValid,
-        'Group1': group1,
-        'DateValue': dateValue,
-        'ValueNumber': valueNumber,
-        'LIT_Text1': lITText1,
-        'LIT_Text2': lITText2,
-        'LIT_Text3': lITText3,
-        'LIT_Text4': lITText4,
-        'LIT_Text5': lITText5,
-        'MP_Maintain_Resource_ID': mPMaintainResourceID?.toJson(),
         'model-name': modelname
       };
 }
@@ -265,47 +329,20 @@ class UpdatedBy {
       };
 }
 
-class LITSurveySheetsID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  LITSurveySheetsID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  LITSurveySheetsID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class LITIsField1 {
+class InvoiceRule {
   final String? propertyLabel;
   final String? id;
   final String? identifier;
   final String? modelname;
 
-  LITIsField1({
+  InvoiceRule({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  LITIsField1.fromJson(Map<String, dynamic> json)
+  InvoiceRule.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
         identifier = json['identifier'] as String?,
@@ -319,22 +356,76 @@ class LITIsField1 {
       };
 }
 
-class MPMaintainResourceID {
+class DeliveryRule {
   final String? propertyLabel;
-  final int? id;
+  final String? id;
   final String? identifier;
   final String? modelname;
 
-  MPMaintainResourceID({
+  DeliveryRule({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  MPMaintainResourceID.fromJson(Map<String, dynamic> json)
+  DeliveryRule.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CBPGroupID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CBPGroupID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CBPGroupID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class SOCreditStatus {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  SOCreditStatus({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  SOCreditStatus.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

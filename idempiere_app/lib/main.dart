@@ -23,6 +23,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/cr
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/calendar_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Course_Quiz/views/screens/course_quiz_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Employee/views/screens/employee_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource/views/screens/human_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_ticket_screen.dart';
@@ -60,6 +61,10 @@ import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/views/screens/ticket_resource_assignment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Task_ToDo/views/screens/ticket_task_todo_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Ticket_New/views/screens/ticket_ticket_new_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Training_and_Course/views/screens/training_course_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Training_and_Course_Presence/views/screens/training_course_presence_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Training_and_Course_Score/views/screens/training_course_score_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Training_and_Course_Survey/views/screens/training_course_survey_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment/views/screens/vehicle_equipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Equipment/views/screens/vehicle_equipment_equipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/views/screens/vehicle_equipment_vehicle_screen.dart';
@@ -220,6 +225,31 @@ class MyApp extends StatelessWidget {
           name: '/TicketResourceAssignment',
           page: () => const TicketResourceAssignmentScreen(),
           binding: TicketResourceAssignmentBinding(),
+        ),
+        GetPage(
+          name: '/TrainingCourse',
+          page: () => const TrainingCourseScreen(),
+          binding: TrainingCourseBinding(),
+        ),
+        GetPage(
+          name: '/TrainingCoursePresence',
+          page: () => const TrainingCoursePresenceScreen(),
+          binding: TrainingCoursePresenceBinding(),
+        ),
+        GetPage(
+          name: '/TrainingCourseScore',
+          page: () => const TrainingCourseScoreScreen(),
+          binding: TrainingCourseScoreBinding(),
+        ),
+        GetPage(
+          name: '/TrainingCourseSurvey',
+          page: () => const TrainingCourseSurveyScreen(),
+          binding: TrainingCourseSurveyBinding(),
+        ),
+        GetPage(
+          name: '/QuizCourse',
+          page: () => const CourseQuizScreen(),
+          binding: CourseQuizBinding(),
         ),
         GetPage(
           name: '/Maintenance',

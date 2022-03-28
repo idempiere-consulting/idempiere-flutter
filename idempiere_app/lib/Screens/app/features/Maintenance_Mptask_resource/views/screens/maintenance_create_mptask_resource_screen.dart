@@ -25,6 +25,181 @@ class CreateMaintenanceMpResource extends StatefulWidget {
 
 class _CreateMaintenanceMpResourceState
     extends State<CreateMaintenanceMpResource> {
+  Future<void> syncWorkOrder() async {
+    String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      GetStorage().write('workOrderSync', response.body);
+      syncWorkOrderResource();
+    }
+  }
+
+  Future<void> syncWorkOrderResource() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      GetStorage().write('workOrderResourceSync', response.body);
+      //syncWorkOrderResourceSurveyLines();
+      syncWorkOrderRefListResource();
+    }
+  }
+
+  Future<void> syncWorkOrderRefListResource() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/AD_Reference?\$filter= Name eq \'LIT_ResourceType\'');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+
+      var json = jsonDecode(response.body);
+      var id = json["records"][0]["id"];
+      var url2 = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+
+      var response2 = await http.get(
+        url2,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+
+      if (response2.statusCode == 200) {
+        //print(response2.body);
+        GetStorage().write('refListResourceType', response2.body);
+        syncWorkOrderRefListResourceCategory();
+        /* var json = jsonDecode(response.body);
+      var id = json["records"][0]["id"]; */
+      } else {
+        print(response2.body);
+      }
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> syncWorkOrderRefListResourceCategory() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/AD_Reference?\$filter= Name eq \'C_BP_EDI EDI Type\'');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+
+      var json = jsonDecode(response.body);
+      var id = json["records"][0]["id"];
+      var url2 = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+
+      var response2 = await http.get(
+        url2,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+
+      if (response2.statusCode == 200) {
+        //print(response2.body);
+        GetStorage().write('refListResourceTypeCategory', response2.body);
+        syncWorkOrderResourceSurveyLines();
+        /* var json = jsonDecode(response.body);
+      var id = json["records"][0]["id"]; */
+      } else {
+        print(response2.body);
+      }
+    } else {
+      //print(response.body); &\$orderby=
+    }
+  }
+
+  Future<void> syncWorkOrderResourceSurveyLines() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/mp_resource_survey_line?\$orderby= LineNo asc');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      GetStorage().write('workOrderResourceSurveyLinesSync', response.body);
+      Get.find<MaintenanceMpResourceController>().getWorkOrders();
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato creato",
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    }
+  }
+
   createWorkOrderResource(bool isConnected) async {
     //print(now);
 
@@ -106,14 +281,7 @@ class _CreateMaintenanceMpResourceState
       );
       if (response.statusCode == 201) {
         //print("done!");
-        Get.snackbar(
-          "Fatto!",
-          "Il record è stato creato",
-          icon: const Icon(
-            Icons.done,
-            color: Colors.green,
-          ),
-        );
+        syncWorkOrder();
       } else {
         print(response.body);
         Get.snackbar(
@@ -202,12 +370,12 @@ class _CreateMaintenanceMpResourceState
           color: Colors.red,
         ),
       );
+      trx.records!.add(record);
+      trx.rowcount = trx.rowcount! + 1;
+      var data = jsonEncode(trx.toJson());
+      GetStorage().write('workOrderResourceSync', data);
+      Get.find<MaintenanceMpResourceController>().getWorkOrders();
     }
-    trx.records!.add(record);
-    trx.rowcount = trx.rowcount! + 1;
-    var data = jsonEncode(trx.toJson());
-    GetStorage().write('workOrderResourceSync', data);
-    Get.find<MaintenanceMpResourceController>().getWorkOrders();
   }
 
   Future<List<Records>> getAllProducts() async {

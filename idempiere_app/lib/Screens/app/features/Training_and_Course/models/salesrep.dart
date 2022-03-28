@@ -1,11 +1,11 @@
-class WorkOrderResourceSurveyLinesJson {
+class ContactsJson {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
-  int? rowcount;
-  List<Records>? records;
+  final int? rowcount;
+  final List<Records>? records;
 
-  WorkOrderResourceSurveyLinesJson({
+  ContactsJson({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
@@ -13,7 +13,7 @@ class WorkOrderResourceSurveyLinesJson {
     this.records,
   });
 
-  WorkOrderResourceSurveyLinesJson.fromJson(Map<String, dynamic> json)
+  ContactsJson.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
@@ -34,125 +34,180 @@ class WorkOrderResourceSurveyLinesJson {
 class Records {
   final int? id;
   final String? uid;
+  final String? name;
+  final String? description;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
+  final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
-  final bool? isActive;
-  final String? name;
   final String? updated;
   final UpdatedBy? updatedBy;
-  final LITSurveySheetsID? lITSurveySheetsID;
-  final bool? lITIsField1;
-  final int? lineNo;
-  final bool? isValid;
-  final String? group1;
-  final String? dateValue;
-  final num? valueNumber;
-  final String? lITText1;
-  final String? lITText2;
-  final String? lITText3;
-  final String? lITText4;
-  final String? lITText5;
-  final num? lITCorrectAnswerValue;
-  final MPMaintainResourceID? mPMaintainResourceID;
+  final String? eMail;
+  final SupervisorID? supervisorID;
+  final NotificationType? notificationType;
+  final bool? isFullBPAccess;
+  final String? value;
+  final bool? isInPayroll;
+  final bool? isSalesLead;
+  final bool? isLocked;
+  final int? failedLoginCount;
+  final String? dateLastLogin;
+  final bool? isNoPasswordReset;
+  final bool? isExpired;
+  final bool? isAddMailTextAutomatically;
+  final bool? isNoExpire;
+  final bool? isSupportUser;
+  final bool? isShipTo;
+  final bool? isBillTo;
+  final bool? isVendorLead;
+  final bool? isLegalUser;
+  final bool? lITIsWebTicket;
+  final bool? lITIsMailReader;
+  final bool? lITIsPartner;
+  final bool? isPublic;
+  final bool? isFavourite;
   final String? modelname;
+  final CBPartnerID? cbPartnerID;
 
   Records({
     this.id,
     this.uid,
+    this.name,
+    this.description,
     this.aDClientID,
     this.aDOrgID,
+    this.isActive,
     this.created,
     this.createdBy,
-    this.isActive,
-    this.name,
     this.updated,
     this.updatedBy,
-    this.lITSurveySheetsID,
-    this.lITIsField1,
-    this.lineNo,
-    this.isValid,
-    this.group1,
-    this.dateValue,
-    this.valueNumber,
-    this.lITText1,
-    this.lITText2,
-    this.lITText3,
-    this.lITText4,
-    this.lITText5,
-    this.lITCorrectAnswerValue,
-    this.mPMaintainResourceID,
+    this.eMail,
+    this.supervisorID,
+    this.notificationType,
+    this.isFullBPAccess,
+    this.value,
+    this.isInPayroll,
+    this.isSalesLead,
+    this.isLocked,
+    this.failedLoginCount,
+    this.dateLastLogin,
+    this.isNoPasswordReset,
+    this.isExpired,
+    this.isAddMailTextAutomatically,
+    this.isNoExpire,
+    this.isSupportUser,
+    this.isShipTo,
+    this.isBillTo,
+    this.isVendorLead,
+    this.isLegalUser,
+    this.lITIsWebTicket,
+    this.lITIsMailReader,
+    this.lITIsPartner,
+    this.isPublic,
+    this.isFavourite,
     this.modelname,
+    this.cbPartnerID,
   });
+
+  String get getname => name as String;
+
+  /*  @override
+  int get hashCode => hashValues(name); */
 
   Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
+        name = json['Name'] as String?,
+        description = json['Description'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
+        isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
-        isActive = json['IsActive'] as bool?,
-        name = json['Name'] as String?,
         updated = json['Updated'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        lITSurveySheetsID =
-            (json['LIT_SurveySheets_ID'] as Map<String, dynamic>?) != null
-                ? LITSurveySheetsID.fromJson(
-                    json['LIT_SurveySheets_ID'] as Map<String, dynamic>)
+        eMail = json['EMail'] as String?,
+        supervisorID = (json['Supervisor_ID'] as Map<String, dynamic>?) != null
+            ? SupervisorID.fromJson(
+                json['Supervisor_ID'] as Map<String, dynamic>)
+            : null,
+        notificationType =
+            (json['NotificationType'] as Map<String, dynamic>?) != null
+                ? NotificationType.fromJson(
+                    json['NotificationType'] as Map<String, dynamic>)
                 : null,
-        lITIsField1 = json['LIT_IsField1'] as bool?,
-        lineNo = json['LineNo'] as int?,
-        isValid = json['IsValid'] as bool?,
-        group1 = json['Group1'] as String?,
-        dateValue = json['DateValue'] as String?,
-        valueNumber = json['ValueNumber'] as num?,
-        lITText1 = json['LIT_Text1'] as String?,
-        lITText2 = json['LIT_Text2'] as String?,
-        lITText3 = json['LIT_Text3'] as String?,
-        lITText4 = json['LIT_Text4'] as String?,
-        lITText5 = json['LIT_Text5'] as String?,
-        lITCorrectAnswerValue = json['LIT_CorrectAnswerValue'] as num?,
-        mPMaintainResourceID =
-            (json['MP_Maintain_Resource_ID'] as Map<String, dynamic>?) != null
-                ? MPMaintainResourceID.fromJson(
-                    json['MP_Maintain_Resource_ID'] as Map<String, dynamic>)
-                : null,
+        isFullBPAccess = json['IsFullBPAccess'] as bool?,
+        value = json['Value'] as String?,
+        isInPayroll = json['IsInPayroll'] as bool?,
+        isSalesLead = json['IsSalesLead'] as bool?,
+        isLocked = json['IsLocked'] as bool?,
+        failedLoginCount = json['FailedLoginCount'] as int?,
+        dateLastLogin = json['DateLastLogin'] as String?,
+        isNoPasswordReset = json['IsNoPasswordReset'] as bool?,
+        isExpired = json['IsExpired'] as bool?,
+        isAddMailTextAutomatically =
+            json['IsAddMailTextAutomatically'] as bool?,
+        isNoExpire = json['IsNoExpire'] as bool?,
+        isSupportUser = json['IsSupportUser'] as bool?,
+        isShipTo = json['IsShipTo'] as bool?,
+        isBillTo = json['IsBillTo'] as bool?,
+        isVendorLead = json['IsVendorLead'] as bool?,
+        isLegalUser = json['isLegalUser'] as bool?,
+        lITIsWebTicket = json['LIT_isWebTicket'] as bool?,
+        lITIsMailReader = json['LIT_isMailReader'] as bool?,
+        lITIsPartner = json['LIT_IsPartner'] as bool?,
+        isPublic = json['IsPublic'] as bool?,
+        isFavourite = json['IsFavourite'] as bool?,
+        cbPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
+            ? CBPartnerID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
+            : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'uid': uid,
+        'Name': name,
+        'Description': description,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
+        'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
-        'IsActive': isActive,
-        'Name': name,
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'LIT_SurveySheets_ID': lITSurveySheetsID?.toJson(),
-        'LIT_IsField1': lITIsField1,
-        'LineNo': lineNo,
-        'IsValid': isValid,
-        'Group1': group1,
-        'DateValue': dateValue,
-        'ValueNumber': valueNumber,
-        'LIT_Text1': lITText1,
-        'LIT_Text2': lITText2,
-        'LIT_Text3': lITText3,
-        'LIT_Text4': lITText4,
-        'LIT_Text5': lITText5,
-        'MP_Maintain_Resource_ID': mPMaintainResourceID?.toJson(),
+        'EMail': eMail,
+        'Supervisor_ID': supervisorID?.toJson(),
+        'NotificationType': notificationType?.toJson(),
+        'IsFullBPAccess': isFullBPAccess,
+        'Value': value,
+        'IsInPayroll': isInPayroll,
+        'IsSalesLead': isSalesLead,
+        'IsLocked': isLocked,
+        'FailedLoginCount': failedLoginCount,
+        'DateLastLogin': dateLastLogin,
+        'IsNoPasswordReset': isNoPasswordReset,
+        'IsExpired': isExpired,
+        'IsAddMailTextAutomatically': isAddMailTextAutomatically,
+        'IsNoExpire': isNoExpire,
+        'IsSupportUser': isSupportUser,
+        'IsShipTo': isShipTo,
+        'IsBillTo': isBillTo,
+        'IsVendorLead': isVendorLead,
+        'isLegalUser': isLegalUser,
+        'LIT_isWebTicket': lITIsWebTicket,
+        'LIT_isMailReader': lITIsMailReader,
+        'LIT_IsPartner': lITIsPartner,
+        'IsPublic': isPublic,
+        'IsFavourite': isFavourite,
         'model-name': modelname
       };
 }
@@ -265,20 +320,20 @@ class UpdatedBy {
       };
 }
 
-class LITSurveySheetsID {
+class SupervisorID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  LITSurveySheetsID({
+  SupervisorID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  LITSurveySheetsID.fromJson(Map<String, dynamic> json)
+  SupervisorID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -292,20 +347,20 @@ class LITSurveySheetsID {
       };
 }
 
-class LITIsField1 {
+class NotificationType {
   final String? propertyLabel;
   final String? id;
   final String? identifier;
   final String? modelname;
 
-  LITIsField1({
+  NotificationType({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  LITIsField1.fromJson(Map<String, dynamic> json)
+  NotificationType.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
         identifier = json['identifier'] as String?,
@@ -319,20 +374,20 @@ class LITIsField1 {
       };
 }
 
-class MPMaintainResourceID {
+class CBPartnerID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  MPMaintainResourceID({
+  CBPartnerID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  MPMaintainResourceID.fromJson(Map<String, dynamic> json)
+  CBPartnerID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
