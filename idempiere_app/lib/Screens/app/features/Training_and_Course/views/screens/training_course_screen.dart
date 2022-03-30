@@ -29,8 +29,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:idempiere_app/components/rounded_password_field.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/training_course_binding.dart';

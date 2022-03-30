@@ -81,6 +81,7 @@ class _BodyState extends State<Body> {
     dropDownList = getTypes()!;
     protocolDropDownList = getProtocolTypes()!;
     myController = TextEditingController();
+    myController.text = GetStorage().read('ip') ?? "";
     dropdownValue = GetStorage().read('language') ?? "it_IT";
     protocolDropdownValue = GetStorage().read('protocol') ?? "http";
   }
