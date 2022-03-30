@@ -23,8 +23,10 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   // ignore: prefer_typing_uninitialized_variables
   var checkboxState;
-  final userFieldController = TextEditingController();
-  final passwordFieldController = TextEditingController();
+  // ignore: prefer_typing_uninitialized_variables
+  var userFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var passwordFieldController;
   final ip = GetStorage().read('ip');
   final user = GetStorage().read('user');
   final password = GetStorage().read('password');
@@ -32,6 +34,9 @@ class _BodyState extends State<Body> {
   @override
   void initState() {
     super.initState();
+    userFieldController = TextEditingController();
+    passwordFieldController = TextEditingController();
+    checkSavedLogin();
     checkboxState = GetStorage().read('checkboxLogin') ?? false;
     if (GetStorage().read('postCallId') == null) {
       GetStorage().write('postCallId', 1);
@@ -86,8 +91,10 @@ class _BodyState extends State<Body> {
   checkSavedLogin() {
     //print(GetStorage().read("maial"));
     if (user != null && password != null) {
-      userFieldController.text = user;
-      passwordFieldController.text = password;
+      setState(() {
+        userFieldController.text = user;
+        passwordFieldController.text = password;
+      });
     }
   }
 
@@ -206,7 +213,6 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    checkSavedLogin();
     return Background(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -7,6 +7,15 @@ class CourseQuizController extends GetxController {
   //var _hasMailSupport = false;
   late RxList<int> selectedValue;
 
+  late RxList<int> checkValue;
+
+  late RxList<String> dateValue;
+
+  late List<TextEditingController> numberfieldController;
+  late List<TextEditingController> textfieldController;
+
+  //final List<TextInputFormatter>? inputFormatters;
+
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
@@ -36,6 +45,139 @@ class CourseQuizController extends GetxController {
 
     value.value = filters[filterCount];
     //getWorkOrders();
+  }
+
+  Future<void> sendQuizLines() async {
+    var isConnected = await checkConnection();
+
+    if (isConnected) {
+      String ip = GetStorage().read('ip');
+      var userId = GetStorage().read('userId');
+      String authorization = 'Bearer ' + GetStorage().read('token');
+      final protocol = GetStorage().read('protocol');
+
+      for (var i = 0; i < _trx.records!.length; i++) {
+        switch (_trx.records![i].lITSurveyType?.id) {
+          case 'N':
+            if (numberfieldController[i].text != "") {
+              var url = Uri.parse('$protocol://' +
+                  ip +
+                  '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+              var msg = jsonEncode({
+                "ValueNumber": double.parse(numberfieldController[i].text),
+              });
+
+              var response = await http.put(
+                url,
+                body: msg,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Authorization': authorization,
+                },
+              );
+            }
+
+            break;
+          case 'T':
+            var url = Uri.parse('$protocol://' +
+                ip +
+                '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+            var msg = jsonEncode({
+              "LIT_Text1": textfieldController[i].text,
+            });
+
+            var response = await http.put(
+              url,
+              body: msg,
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': authorization,
+              },
+            );
+            break;
+          case 'D':
+            var url = Uri.parse('$protocol://' +
+                ip +
+                '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+            var msg = jsonEncode({
+              "DateValue": dateValue[i],
+            });
+
+            var response = await http.put(
+              url,
+              body: msg,
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': authorization,
+              },
+            );
+            break;
+          case 'M':
+            var url = Uri.parse('$protocol://' +
+                ip +
+                '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+            var msg = jsonEncode({
+              "ValueNumber": selectedValue[i],
+            });
+
+            var response = await http.put(
+              url,
+              body: msg,
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': authorization,
+              },
+            );
+            break;
+          case 'Y':
+            if (checkValue[i] != 2) {
+              var url = Uri.parse('$protocol://' +
+                  ip +
+                  '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+              var msg = jsonEncode({
+                "LIT_IsField1": checkValue[i] == 1 ? true : false,
+              });
+
+              var response = await http.put(
+                url,
+                body: msg,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Authorization': authorization,
+                },
+              );
+            }
+
+            break;
+          default:
+        }
+      }
+      Get.back();
+      Get.snackbar(
+        "Done!",
+        "You've completed the Quiz",
+        isDismissible: true,
+        icon: const Icon(
+          Icons.done_all,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Error!",
+        "Internet connection unavailable",
+        isDismissible: true,
+        icon: const Icon(
+          Icons.wifi_off_outlined,
+          color: Colors.red,
+        ),
+      );
+    }
   }
 
   Future<void> getQuiz() async {
@@ -104,7 +246,13 @@ class CourseQuizController extends GetxController {
 
       _trx =
           WorkOrderResourceSurveyLinesJson.fromJson(jsonDecode(response.body));
-      selectedValue = RxList<int>.filled(_trx.records!.length, 1);
+      selectedValue = RxList<int>.filled(_trx.records!.length, 0);
+      checkValue = RxList<int>.filled(_trx.records!.length, 2);
+      dateValue = RxList<String>.filled(_trx.records!.length, "");
+      numberfieldController = List<TextEditingController>.filled(
+          _trx.records!.length, TextEditingController());
+      textfieldController = List<TextEditingController>.filled(
+          _trx.records!.length, TextEditingController());
 
       _dataAvailable.value = true;
     }

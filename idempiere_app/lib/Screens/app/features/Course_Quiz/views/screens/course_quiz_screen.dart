@@ -4,12 +4,13 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -29,7 +30,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:idempiere_app/constants.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/course_quiz_binding.dart';
@@ -61,9 +61,34 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
-            Get.offNamed('/TrainingCourseSurvey');
+            Get.back();
           },
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
+                Get.defaultDialog(
+                  title: "Are you sure you want to save and quit?",
+                  content:
+                      const Text("You won't be able to take the quiz again"),
+                  barrierDismissible: true,
+                  textConfirm: 'Confirm',
+                  textCancel: 'Cancel',
+                  buttonColor: kNotifColor,
+                  onConfirm: () async {
+                    Get.back();
+                    controller.sendQuizLines();
+                  },
+                );
+              },
+              icon: const Icon(
+                Icons.save,
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
@@ -138,80 +163,205 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                 children: [
                                   Column(
                                     children: [
-                                      Visibility(
-                                        visible: controller
-                                                .trx.records![index].lITText1 !=
-                                            null,
-                                        child: RadioListTile<int>(
-                                            title: Text(
-                                                "${controller.trx.records![index].lITText1}"),
-                                            value: 1,
-                                            groupValue:
-                                                controller.selectedValue[index],
-                                            onChanged: (value) {
-                                              controller.selectedValue[index] =
-                                                  1;
-                                            }),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITSurveyType
+                                                  ?.id ==
+                                              'Y',
+                                          child: RadioListTile<int>(
+                                              title: const Text("True"),
+                                              value: 1,
+                                              groupValue:
+                                                  controller.checkValue[index],
+                                              onChanged: (value) {
+                                                controller.checkValue[index] =
+                                                    1;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITSurveyType
+                                                  ?.id ==
+                                              'Y',
+                                          child: RadioListTile<int>(
+                                              title: const Text("False"),
+                                              value: 0,
+                                              groupValue:
+                                                  controller.checkValue[index],
+                                              onChanged: (value) {
+                                                controller.checkValue[index] =
+                                                    0;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText1 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText1}"),
+                                              value: 1,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 1;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText2 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText2}"),
+                                              value: 2,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 2;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText3 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText3}"),
+                                              value: 3,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 3;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText4 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText4}"),
+                                              value: 4,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 4;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText5 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText5}"),
+                                              value: 5,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 5;
+                                              }),
+                                        ),
                                       ),
                                       Visibility(
-                                        visible: controller
-                                                .trx.records![index].lITText2 !=
-                                            null,
-                                        child: RadioListTile<int>(
-                                            title: Text(
-                                                "${controller.trx.records![index].lITText2}"),
-                                            value: 2,
-                                            groupValue:
-                                                controller.selectedValue[index],
-                                            onChanged: (value) {
-                                              controller.selectedValue[index] =
-                                                  2;
-                                            }),
+                                        visible: controller.trx.records![index]
+                                                .lITSurveyType?.id ==
+                                            'N',
+                                        child: TextField(
+                                          controller: controller
+                                              .numberfieldController[index],
+                                          keyboardType: const TextInputType
+                                                  .numberWithOptions(
+                                              signed: true, decimal: true),
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp("[0-9.-]"))
+                                          ],
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Answer',
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
                                       ),
                                       Visibility(
-                                        visible: controller
-                                                .trx.records![index].lITText3 !=
-                                            null,
-                                        child: RadioListTile<int>(
-                                            title: Text(
-                                                "${controller.trx.records![index].lITText3}"),
-                                            value: 3,
-                                            groupValue:
-                                                controller.selectedValue[index],
-                                            onChanged: (value) {
-                                              controller.selectedValue[index] =
-                                                  3;
-                                            }),
+                                        visible: controller.trx.records![index]
+                                                .lITSurveyType?.id ==
+                                            'T',
+                                        child: TextField(
+                                          maxLines: 7,
+                                          controller: controller
+                                              .textfieldController[index],
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Answer',
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
                                       ),
-                                      Visibility(
-                                        visible: controller
-                                                .trx.records![index].lITText4 !=
-                                            null,
-                                        child: RadioListTile<int>(
-                                            title: Text(
-                                                "${controller.trx.records![index].lITText4}"),
-                                            value: 4,
-                                            groupValue:
-                                                controller.selectedValue[index],
-                                            onChanged: (value) {
-                                              controller.selectedValue[index] =
-                                                  4;
-                                            }),
-                                      ),
-                                      Visibility(
-                                        visible: controller
-                                                .trx.records![index].lITText5 !=
-                                            null,
-                                        child: RadioListTile<int>(
-                                            title: Text(
-                                                "${controller.trx.records![index].lITText5}"),
-                                            value: 5,
-                                            groupValue:
-                                                controller.selectedValue[index],
-                                            onChanged: (value) {
-                                              controller.selectedValue[index] =
-                                                  5;
-                                            }),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITSurveyType
+                                                  ?.id ==
+                                              'D',
+                                          child: DateTimePicker(
+                                            type: DateTimePickerType.date,
+                                            initialValue:
+                                                controller.dateValue[index],
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime(2100),
+                                            dateLabelText: 'Date',
+                                            icon: const Icon(Icons.event),
+                                            onChanged: (val) {
+                                              //print(DateTime.parse(val));
+                                              //print(val);
+
+                                              controller.dateValue[index] =
+                                                  val.substring(0, 10);
+
+                                              //print(controller.dateValue[index]);
+                                            },
+                                            validator: (val) {
+                                              //print(val);
+                                              return null;
+                                            },
+                                            // ignore: avoid_print
+                                            onSaved: (val) => print(val),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),

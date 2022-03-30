@@ -56,6 +56,7 @@ class Records {
   final String? lITText5;
   final num? lITCorrectAnswerValue;
   final MPMaintainResourceID? mPMaintainResourceID;
+  final LITSurveyType? lITSurveyType;
   final String? modelname;
 
   Records({
@@ -83,6 +84,7 @@ class Records {
     this.lITText5,
     this.lITCorrectAnswerValue,
     this.mPMaintainResourceID,
+    this.lITSurveyType,
     this.modelname,
   });
 
@@ -127,6 +129,11 @@ class Records {
                 ? MPMaintainResourceID.fromJson(
                     json['MP_Maintain_Resource_ID'] as Map<String, dynamic>)
                 : null,
+        lITSurveyType =
+            (json['LIT_SurveyType'] as Map<String, dynamic>?) != null
+                ? LITSurveyType.fromJson(
+                    json['LIT_SurveyType'] as Map<String, dynamic>)
+                : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -153,6 +160,7 @@ class Records {
         'LIT_Text4': lITText4,
         'LIT_Text5': lITText5,
         'MP_Maintain_Resource_ID': mPMaintainResourceID?.toJson(),
+        'LIT_SurveyType': lITSurveyType?.toJson(),
         'model-name': modelname
       };
 }
@@ -281,6 +289,33 @@ class LITSurveySheetsID {
   LITSurveySheetsID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITSurveyType {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITSurveyType({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITSurveyType.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
