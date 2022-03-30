@@ -52,386 +52,393 @@ class TrainingCourseSurveyScreen
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //key: controller.scaffoldKey,
-      drawer: (ResponsiveBuilder.isDesktop(context))
-          ? null
-          : Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
+    return WillPopScope(
+      onWillPop: () async {
+        Get.offNamed('/Dashboard');
+        return false;
+      },
+      child: Scaffold(
+        //key: controller.scaffoldKey,
+        drawer: (ResponsiveBuilder.isDesktop(context))
+            ? null
+            : Drawer(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: kSpacing),
+                  child: _Sidebar(data: controller.getSelectedProject()),
+                ),
               ),
-            ),
-      body: SingleChildScrollView(
-        child: ResponsiveBuilder(
-          mobileBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
-                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
-              const SizedBox(height: kSpacing / 2),
-              const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Row(
-                children: [
-                  Container(
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("COURSES: ${controller.trx.rowcount}")
-                        : const Text("COURSES: ")),
-                    margin: const EdgeInsets.only(left: 15),
-                  ),
-                  /* Container(
-                    margin: const EdgeInsets.only(left: 40),
-                    child: IconButton(
-                      onPressed: () {
-                        //Get.to(const CreateLead());
-                      },
-                      icon: const Icon(
-                        Icons.person_add,
-                        color: Colors.lightBlue,
+        body: SingleChildScrollView(
+          child: ResponsiveBuilder(
+            mobileBuilder: (context, constraints) {
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
+                  children: [
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("COURSES: ${controller.trx.rowcount}")
+                          : const Text("COURSES: ")),
+                      margin: const EdgeInsets.only(left: 15),
+                    ),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        onPressed: () {
+                          //Get.to(const CreateLead());
+                        },
+                        icon: const Icon(
+                          Icons.person_add,
+                          color: Colors.lightBlue,
+                        ),
+                      ),
+                    ), */
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getCourseSurveys();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
                       ),
                     ),
-                  ), */
-                  Container(
-                    margin: const EdgeInsets.only(left: 20),
-                    child: IconButton(
-                      onPressed: () {
-                        controller.getCourseSurveys();
-                      },
-                      icon: const Icon(
-                        Icons.refresh,
-                        color: Colors.yellow,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: kSpacing),
-              Obx(
-                () => controller.dataAvailable
-                    ? ListView.builder(
-                        primary: false,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 6.0),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(64, 75, 96, .9)),
-                              child: ExpansionTile(
-                                tilePadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                leading: Container(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  decoration: const BoxDecoration(
-                                      border: Border(
-                                          right: BorderSide(
-                                              width: 1.0,
-                                              color: Colors.white24))),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.auto_stories,
-                                      color: Colors.green,
+                  ],
+                ),
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.auto_stories,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Take the Quiz',
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        Get.toNamed('/QuizCourse', arguments: {
+                                          "id":
+                                              controller.trx.records![index].id,
+                                        });
+                                      },
                                     ),
-                                    tooltip: 'Take the Quiz',
-                                    onPressed: () {
-                                      //log("info button pressed");
-                                      Get.toNamed('/QuizCourse', arguments: {
-                                        "id": controller.trx.records![index].id,
-                                      });
-                                    },
                                   ),
-                                ),
-                                title: Text(
-                                  controller.trx.records![index].mProductID
-                                          ?.identifier ??
-                                      "???",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                  title: Text(
+                                    controller.trx.records![index].mProductID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index].cBPartnerID
-                                              ?.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                                /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
-                                childrenPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                children: [
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Description: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .description ??
-                                              ""),
-                                        ],
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .cBPartnerID?.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ),
-            ]);
-          },
-          tabletBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
-                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
-              const SizedBox(height: kSpacing / 2),
-              const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Row(
-                children: [
-                  Container(
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("COURSES: ${controller.trx.rowcount}")
-                        : const Text("COURSES: ")),
-                    margin: const EdgeInsets.only(left: 15),
-                  ),
-                  /* Container(
-                    margin: const EdgeInsets.only(left: 40),
-                    child: IconButton(
-                      onPressed: () {
-                        //Get.to(const CreateLead());
-                      },
-                      icon: const Icon(
-                        Icons.person_add,
-                        color: Colors.lightBlue,
-                      ),
-                    ),
-                  ), */
-                  Container(
-                    margin: const EdgeInsets.only(left: 20),
-                    child: IconButton(
-                      onPressed: () {
-                        controller.getCourseSurveys();
-                      },
-                      icon: const Icon(
-                        Icons.refresh,
-                        color: Colors.yellow,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: kSpacing),
-              Obx(
-                () => controller.dataAvailable
-                    ? ListView.builder(
-                        primary: false,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 6.0),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(64, 75, 96, .9)),
-                              child: ExpansionTile(
-                                tilePadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                leading: Container(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  decoration: const BoxDecoration(
-                                      border: Border(
-                                          right: BorderSide(
-                                              width: 1.0,
-                                              color: Colors.white24))),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.auto_stories,
-                                      color: Colors.green,
-                                    ),
-                                    tooltip: 'Take the Quiz',
-                                    onPressed: () {
-                                      //log("info button pressed");
-                                      /* Get.to(const EditLead(), arguments: {
-                                        "id": controller
-                                            .trx.windowrecords![index].id,
-                                        "name": controller.trx
-                                                .windowrecords![index].name ??
-                                            "",
-                                        "leadStatus": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .leadStatus
-                                                ?.id ??
-                                            "",
-                                        "bpName": controller
-                                            .trx.windowrecords![index].bPName,
-                                        "Tel": controller.trx
-                                                .windowrecords![index].phone ??
-                                            "",
-                                        "eMail": controller.trx
-                                                .windowrecords![index].eMail ??
-                                            "",
-                                        "salesRep": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .salesRepID
-                                                ?.identifier ??
-                                            ""
-                                      }); */
-                                    },
-                                  ),
-                                ),
-                                title: Text(
-                                  controller.trx.records![index].mProductID
-                                          ?.identifier ??
-                                      "???",
-                                  style: const TextStyle(
+                                  /* trailing: const Icon(
+                                      Icons.keyboard_arrow_right,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index].cBPartnerID
-                                              ?.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                      size: 30.0,
+                                    ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Description: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .description ??
+                                                ""),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                                /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
-                                childrenPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                children: [
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Description: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .description ??
-                                              ""),
-                                        ],
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
+            },
+            tabletBuilder: (context, constraints) {
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
+                  children: [
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("COURSES: ${controller.trx.rowcount}")
+                          : const Text("COURSES: ")),
+                      margin: const EdgeInsets.only(left: 15),
+                    ),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        onPressed: () {
+                          //Get.to(const CreateLead());
+                        },
+                        icon: const Icon(
+                          Icons.person_add,
+                          color: Colors.lightBlue,
+                        ),
+                      ),
+                    ), */
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getCourseSurveys();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.auto_stories,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Take the Quiz',
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        /* Get.to(const EditLead(), arguments: {
+                                          "id": controller
+                                              .trx.windowrecords![index].id,
+                                          "name": controller.trx
+                                                  .windowrecords![index].name ??
+                                              "",
+                                          "leadStatus": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .leadStatus
+                                                  ?.id ??
+                                              "",
+                                          "bpName": controller
+                                              .trx.windowrecords![index].bPName,
+                                          "Tel": controller.trx
+                                                  .windowrecords![index].phone ??
+                                              "",
+                                          "eMail": controller.trx
+                                                  .windowrecords![index].eMail ??
+                                              "",
+                                          "salesRep": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .salesRepID
+                                                  ?.identifier ??
+                                              ""
+                                        }); */
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.trx.records![index].mProductID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .cBPartnerID?.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       ),
                                     ],
                                   ),
-                                ],
+                                  /* trailing: const Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: Colors.white,
+                                      size: 30.0,
+                                    ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Description: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .description ??
+                                                ""),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ),
-            ]);
-          },
-          desktopBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(kBorderRadius),
-                        bottomRight: Radius.circular(kBorderRadius),
-                      ),
-                      child: _Sidebar(data: controller.getSelectedProject())),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
                 ),
-                Flexible(
-                  flex: 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing),
-                      _buildHeader(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
+              ]);
+            },
+            desktopBuilder: (context, constraints) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(kBorderRadius),
+                          bottomRight: Radius.circular(kBorderRadius),
+                        ),
+                        child: _Sidebar(data: controller.getSelectedProject())),
                   ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing / 2),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
+                  Flexible(
+                    flex: 9,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing),
+                        _buildHeader(),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildProgress(),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildTaskOverview(
+                          data: controller.getAllTask(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount:
+                              (constraints.maxWidth < 1360) ? 3 : 2,
+                        ),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildActiveProject(
+                          data: controller.getActiveProject(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount:
+                              (constraints.maxWidth < 1360) ? 3 : 2,
+                        ),
+                        const SizedBox(height: kSpacing),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing / 2),
+                        _buildProfile(data: controller.getProfil()),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildTeamMember(data: controller.getMember()),
+                        const SizedBox(height: kSpacing),
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: kSpacing),
+                          child: GetPremiumCard(onPressed: () {}),
+                        ),
+                        const SizedBox(height: kSpacing),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildRecentMessages(data: controller.getChatting()),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

@@ -8,9 +8,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -29,7 +26,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/training_course_score_binding.dart';
@@ -54,186 +50,192 @@ class TrainingCourseScoreScreen extends GetView<TrainingCourseScoreController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //key: controller.scaffoldKey,
-      drawer: (ResponsiveBuilder.isDesktop(context))
-          ? null
-          : Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
+    return WillPopScope(
+      onWillPop: () async {
+        Get.offNamed('/Dashboard');
+        return false;
+      },
+      child: Scaffold(
+        //key: controller.scaffoldKey,
+        drawer: (ResponsiveBuilder.isDesktop(context))
+            ? null
+            : Drawer(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: kSpacing),
+                  child: _Sidebar(data: controller.getSelectedProject()),
+                ),
               ),
-            ),
-      body: SingleChildScrollView(
-        child: ResponsiveBuilder(
-          mobileBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
-                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
-              const SizedBox(height: kSpacing / 2),
-              const Divider(),
-              //  _buildProfile(data: controller.getProfil()),
-              //  const SizedBox(height: kSpacing),
-              //  _buildProgress(axis: Axis.vertical),
-              //  const SizedBox(height: kSpacing),
-              //  _buildTeamMember(data: controller.getMember()),
-              /*  const SizedBox(height: kSpacing),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-              child: GetPremiumCard(onPressed: () {}),
-            ), */
-              const SizedBox(height: kSpacing * 2),
-              _buildTaskOverview(
-                data: controller.getAllTask(),
-                headerAxis: Axis.vertical,
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing * 2),
-              _buildActiveProject(
-                data: controller.getActiveProject(),
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
-            ]);
-          },
-          tabletBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 950) ? 6 : 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                      _buildHeader(
-                          onPressedMenu: () =>
-                              Scaffold.of(context).openDrawer()),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(
-                        axis: (constraints.maxWidth < 950)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        headerAxis: (constraints.maxWidth < 850)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
-                  ),
+        body: SingleChildScrollView(
+          child: ResponsiveBuilder(
+            mobileBuilder: (context, constraints) {
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                //  _buildProfile(data: controller.getProfil()),
+                //  const SizedBox(height: kSpacing),
+                //  _buildProgress(axis: Axis.vertical),
+                //  const SizedBox(height: kSpacing),
+                //  _buildTeamMember(data: controller.getMember()),
+                /*  const SizedBox(height: kSpacing),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+                child: GetPremiumCard(onPressed: () {}),
+              ), */
+                const SizedBox(height: kSpacing * 2),
+                _buildTaskOverview(
+                  data: controller.getAllTask(),
+                  headerAxis: Axis.vertical,
+                  crossAxisCount: 6,
+                  crossAxisCellCount: 6,
                 ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
-                  ),
-                )
-              ],
-            );
-          },
-          desktopBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(kBorderRadius),
-                        bottomRight: Radius.circular(kBorderRadius),
-                      ),
-                      child: _Sidebar(data: controller.getSelectedProject())),
+                const SizedBox(height: kSpacing * 2),
+                _buildActiveProject(
+                  data: controller.getActiveProject(),
+                  crossAxisCount: 6,
+                  crossAxisCellCount: 6,
                 ),
-                Flexible(
-                  flex: 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing),
-                      _buildHeader(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
+                const SizedBox(height: kSpacing),
+                _buildRecentMessages(data: controller.getChatting()),
+              ]);
+            },
+            tabletBuilder: (context, constraints) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: (constraints.maxWidth < 950) ? 6 : 9,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                        _buildHeader(
+                            onPressedMenu: () =>
+                                Scaffold.of(context).openDrawer()),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildProgress(
+                          axis: (constraints.maxWidth < 950)
+                              ? Axis.vertical
+                              : Axis.horizontal,
+                        ),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildTaskOverview(
+                          data: controller.getAllTask(),
+                          headerAxis: (constraints.maxWidth < 850)
+                              ? Axis.vertical
+                              : Axis.horizontal,
+                          crossAxisCount: 6,
+                          crossAxisCellCount: (constraints.maxWidth < 950)
+                              ? 6
+                              : (constraints.maxWidth < 1100)
+                                  ? 3
+                                  : 2,
+                        ),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildActiveProject(
+                          data: controller.getActiveProject(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount: (constraints.maxWidth < 950)
+                              ? 6
+                              : (constraints.maxWidth < 1100)
+                                  ? 3
+                                  : 2,
+                        ),
+                        const SizedBox(height: kSpacing),
+                      ],
+                    ),
                   ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing / 2),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
+                        _buildProfile(data: controller.getProfil()),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildTeamMember(data: controller.getMember()),
+                        const SizedBox(height: kSpacing),
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: kSpacing),
+                          child: GetPremiumCard(onPressed: () {}),
+                        ),
+                        const SizedBox(height: kSpacing),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildRecentMessages(data: controller.getChatting()),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
+            desktopBuilder: (context, constraints) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(kBorderRadius),
+                          bottomRight: Radius.circular(kBorderRadius),
+                        ),
+                        child: _Sidebar(data: controller.getSelectedProject())),
                   ),
-                ),
-              ],
-            );
-          },
+                  Flexible(
+                    flex: 9,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing),
+                        _buildHeader(),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildProgress(),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildTaskOverview(
+                          data: controller.getAllTask(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount:
+                              (constraints.maxWidth < 1360) ? 3 : 2,
+                        ),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildActiveProject(
+                          data: controller.getActiveProject(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount:
+                              (constraints.maxWidth < 1360) ? 3 : 2,
+                        ),
+                        const SizedBox(height: kSpacing),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing / 2),
+                        _buildProfile(data: controller.getProfil()),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildTeamMember(data: controller.getMember()),
+                        const SizedBox(height: kSpacing),
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: kSpacing),
+                          child: GetPremiumCard(onPressed: () {}),
+                        ),
+                        const SizedBox(height: kSpacing),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildRecentMessages(data: controller.getChatting()),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

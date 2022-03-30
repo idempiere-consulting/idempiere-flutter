@@ -95,366 +95,375 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //key: controller.scaffoldKey,
-      drawer: (ResponsiveBuilder.isDesktop(context))
-          ? null
-          : Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
+    return WillPopScope(
+      onWillPop: () async {
+        Get.offNamed('/Dashboard');
+        return false;
+      },
+      child: Scaffold(
+        //key: controller.scaffoldKey,
+        drawer: (ResponsiveBuilder.isDesktop(context))
+            ? null
+            : Drawer(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: kSpacing),
+                  child: _Sidebar(data: controller.getSelectedProject()),
+                ),
               ),
-            ),
-      body: SingleChildScrollView(
-        child: ResponsiveBuilder(
-          mobileBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
-                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
-              const SizedBox(height: kSpacing / 2),
-              const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Row(
-                children: [
-                  Container(
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("ORDINI: ${controller.trx.rowcount}")
-                        : const Text("ORDINI: ")),
-                    margin: const EdgeInsets.only(left: 15),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 20),
-                    child: IconButton(
-                      onPressed: () {
-                        controller.getSalesOrders();
-                      },
-                      icon: const Icon(
-                        Icons.refresh,
-                        color: Colors.yellow,
-                      ),
+        body: SingleChildScrollView(
+          child: ResponsiveBuilder(
+            mobileBuilder: (context, constraints) {
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
+                  children: [
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("ORDINI: ${controller.trx.rowcount}")
+                          : const Text("ORDINI: ")),
+                      margin: const EdgeInsets.only(left: 15),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 30),
-                    child: Obx(
-                      () => TextButton(
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
                         onPressed: () {
-                          controller.changeFilter();
-                          //print("hello");
+                          controller.getSalesOrders();
                         },
-                        child: Text(controller.value.value),
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: kSpacing),
-              Obx(
-                () => controller.dataAvailable
-                    ? ListView.builder(
-                        primary: false,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 6.0),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(64, 75, 96, .9)),
-                              child: ExpansionTile(
-                                trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.article,
-                                    color: controller.trx.records![index]
-                                                .docStatus?.id ==
-                                            "CO"
-                                        ? Colors.green
-                                        : Colors.yellow,
-                                  ),
-                                  onPressed: () {},
-                                ),
-                                tilePadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                leading: Container(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  decoration: const BoxDecoration(
-                                      border: Border(
-                                          right: BorderSide(
-                                              width: 1.0,
-                                              color: Colors.white24))),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.edit,
+                    Container(
+                      margin: const EdgeInsets.only(left: 30),
+                      child: Obx(
+                        () => TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.article,
+                                      color: controller.trx.records![index]
+                                                  .docStatus?.id ==
+                                              "CO"
+                                          ? Colors.green
+                                          : Colors.yellow,
                                     ),
-                                    tooltip: 'Edit Lead',
-                                    onPressed: () {
-                                      //log("info button pressed");
-                                      /* Get.to(const EditLead(), arguments: {
-                                        "id": controller
-                                            .trx.records![index].id,
-                                        "name": controller
-                                            .trx.records![index].name,
-                                        "leadStatus": controller
-                                                .trx
-                                                .records![index]
-                                                .Status
-                                                ?.id ??
-                                            "",
-                                        "bpName": controller
-                                            .trx.records![index].bPName,
-                                        "Tel": controller
-                                            .trx.records![index].phone,
-                                        "eMail": controller
-                                            .trx.records![index].eMail,
-                                        "salesRep": controller
-                                                .trx
-                                                .records![index]
-                                                .salesRepID
-                                                ?.identifier ??
-                                            ""
-                                      }); */
-                                    },
+                                    onPressed: () {},
                                   ),
-                                ),
-                                title: Text(
-                                  "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index]
-                                              .cBPartnerID!.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-
-                                childrenPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                children: [
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Importo: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                              "€${controller.trx.records![index].grandTotal}"),
-                                        ],
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.settings,
-                                            ),
-                                            onPressed: () async {
-                                              final ip =
-                                                  GetStorage().read('ip');
-                                              String authorization = 'Bearer ' +
-                                                  GetStorage().read('token');
-                                              final msg = jsonEncode({
-                                                "DocAction": "CO",
-                                              });
-                                              final protocol =
-                                                  GetStorage().read('protocol');
-                                              var url = Uri.parse('$protocol://' +
-                                                  ip +
-                                                  '/api/v1/models/c_order/${controller.trx.records![index].id}');
+                                      tooltip: 'Edit Lead',
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        /* Get.to(const EditLead(), arguments: {
+                                          "id": controller
+                                              .trx.records![index].id,
+                                          "name": controller
+                                              .trx.records![index].name,
+                                          "leadStatus": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .Status
+                                                  ?.id ??
+                                              "",
+                                          "bpName": controller
+                                              .trx.records![index].bPName,
+                                          "Tel": controller
+                                              .trx.records![index].phone,
+                                          "eMail": controller
+                                              .trx.records![index].eMail,
+                                          "salesRep": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .salesRepID
+                                                  ?.identifier ??
+                                              ""
+                                        }); */
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                              var response = await http.put(
-                                                url,
-                                                body: msg,
-                                                headers: <String, String>{
-                                                  'Content-Type':
-                                                      'application/json',
-                                                  'Authorization':
-                                                      authorization,
-                                                },
-                                              );
-                                              if (response.statusCode == 200) {
-                                                //print("done!");
-                                                completeOrder(index);
-                                              } else {
-                                                //print(response.body);
-                                                Get.snackbar(
-                                                  "Errore!",
-                                                  "Il record non è stato completato",
-                                                  icon: const Icon(
-                                                    Icons.error,
-                                                    color: Colors.red,
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ],
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .cBPartnerID!.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       ),
                                     ],
                                   ),
-                                ],
+
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Importo: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "€${controller.trx.records![index].grandTotal}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.settings,
+                                              ),
+                                              onPressed: () async {
+                                                final ip =
+                                                    GetStorage().read('ip');
+                                                String authorization =
+                                                    'Bearer ' +
+                                                        GetStorage()
+                                                            .read('token');
+                                                final msg = jsonEncode({
+                                                  "DocAction": "CO",
+                                                });
+                                                final protocol = GetStorage()
+                                                    .read('protocol');
+                                                var url = Uri.parse('$protocol://' +
+                                                    ip +
+                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
+
+                                                var response = await http.put(
+                                                  url,
+                                                  body: msg,
+                                                  headers: <String, String>{
+                                                    'Content-Type':
+                                                        'application/json',
+                                                    'Authorization':
+                                                        authorization,
+                                                  },
+                                                );
+                                                if (response.statusCode ==
+                                                    200) {
+                                                  //print("done!");
+                                                  completeOrder(index);
+                                                } else {
+                                                  //print(response.body);
+                                                  Get.snackbar(
+                                                    "Errore!",
+                                                    "Il record non è stato completato",
+                                                    icon: const Icon(
+                                                      Icons.error,
+                                                      color: Colors.red,
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ),
-            ]);
-          },
-          tabletBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 950) ? 6 : 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                      _buildHeader(
-                          onPressedMenu: () =>
-                              Scaffold.of(context).openDrawer()),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(
-                        axis: (constraints.maxWidth < 950)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        headerAxis: (constraints.maxWidth < 850)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
-                  ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
                 ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
+              ]);
+            },
+            tabletBuilder: (context, constraints) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: (constraints.maxWidth < 950) ? 6 : 9,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                        _buildHeader(
+                            onPressedMenu: () =>
+                                Scaffold.of(context).openDrawer()),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildProgress(
+                          axis: (constraints.maxWidth < 950)
+                              ? Axis.vertical
+                              : Axis.horizontal,
+                        ),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildTaskOverview(
+                          data: controller.getAllTask(),
+                          headerAxis: (constraints.maxWidth < 850)
+                              ? Axis.vertical
+                              : Axis.horizontal,
+                          crossAxisCount: 6,
+                          crossAxisCellCount: (constraints.maxWidth < 950)
+                              ? 6
+                              : (constraints.maxWidth < 1100)
+                                  ? 3
+                                  : 2,
+                        ),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildActiveProject(
+                          data: controller.getActiveProject(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount: (constraints.maxWidth < 950)
+                              ? 6
+                              : (constraints.maxWidth < 1100)
+                                  ? 3
+                                  : 2,
+                        ),
+                        const SizedBox(height: kSpacing),
+                      ],
+                    ),
                   ),
-                )
-              ],
-            );
-          },
-          desktopBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(kBorderRadius),
-                        bottomRight: Radius.circular(kBorderRadius),
-                      ),
-                      child: _Sidebar(data: controller.getSelectedProject())),
-                ),
-                Flexible(
-                  flex: 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing),
-                      _buildHeader(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
+                        _buildProfile(data: controller.getProfil()),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildTeamMember(data: controller.getMember()),
+                        const SizedBox(height: kSpacing),
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: kSpacing),
+                          child: GetPremiumCard(onPressed: () {}),
+                        ),
+                        const SizedBox(height: kSpacing),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildRecentMessages(data: controller.getChatting()),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
+            desktopBuilder: (context, constraints) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(kBorderRadius),
+                          bottomRight: Radius.circular(kBorderRadius),
+                        ),
+                        child: _Sidebar(data: controller.getSelectedProject())),
                   ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing / 2),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
+                  Flexible(
+                    flex: 9,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing),
+                        _buildHeader(),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildProgress(),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildTaskOverview(
+                          data: controller.getAllTask(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount:
+                              (constraints.maxWidth < 1360) ? 3 : 2,
+                        ),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildActiveProject(
+                          data: controller.getActiveProject(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount:
+                              (constraints.maxWidth < 1360) ? 3 : 2,
+                        ),
+                        const SizedBox(height: kSpacing),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing / 2),
+                        _buildProfile(data: controller.getProfil()),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildTeamMember(data: controller.getMember()),
+                        const SizedBox(height: kSpacing),
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: kSpacing),
+                          child: GetPremiumCard(onPressed: () {}),
+                        ),
+                        const SizedBox(height: kSpacing),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildRecentMessages(data: controller.getChatting()),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

@@ -158,222 +158,228 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text('Edit To Do'),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () {
-            Get.offNamed('/Calendar');
-          },
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: IconButton(
-              onPressed: () {
-                Get.defaultDialog(
-                  title: "Eliminazione record",
-                  middleText: "Sicuro di voler eliminare il record?",
-                  backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
-                  //titleStyle: TextStyle(color: Colors.white),
-                  //middleTextStyle: TextStyle(color: Colors.white),
-                  textConfirm: "Elimina",
-                  textCancel: "Annulla",
-                  cancelTextColor: Colors.white,
-                  confirmTextColor: Colors.white,
-                  buttonColor: const Color.fromRGBO(31, 29, 44, 1),
-                  barrierDismissible: false,
-                  onConfirm: () {
-                    deleteEvent();
-                  },
-                  //radius: 50,
-                );
-                //editLead();
-              },
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.red,
+    return WillPopScope(
+      onWillPop: () async {
+        Get.offNamed('/Dashboard');
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Center(
+            child: Text('Edit To Do'),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.chevron_left),
+            onPressed: () {
+              Get.offNamed('/Calendar');
+            },
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                onPressed: () {
+                  Get.defaultDialog(
+                    title: "Eliminazione record",
+                    middleText: "Sicuro di voler eliminare il record?",
+                    backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
+                    //titleStyle: TextStyle(color: Colors.white),
+                    //middleTextStyle: TextStyle(color: Colors.white),
+                    textConfirm: "Elimina",
+                    textCancel: "Annulla",
+                    cancelTextColor: Colors.white,
+                    confirmTextColor: Colors.white,
+                    buttonColor: const Color.fromRGBO(31, 29, 44, 1),
+                    barrierDismissible: false,
+                    onConfirm: () {
+                      deleteEvent();
+                    },
+                    //radius: 50,
+                  );
+                  //editLead();
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: IconButton(
-              onPressed: () {
-                editEvent();
-              },
-              icon: const Icon(
-                Icons.save,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                onPressed: () {
+                  editEvent();
+                },
+                icon: const Icon(
+                  Icons.save,
+                ),
               ),
             ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: ResponsiveBuilder(
+            mobileBuilder: (context, constraints) {
+              return Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Nome',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: descriptionFieldController,
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.person_pin_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Descrizione',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: date,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Data',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          date = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      //onSaved: (val) => print(val),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      initialValue: timeStart,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      timeLabelText: 'Ora Inizio',
+                      icon: const Icon(Icons.access_time),
+                      onChanged: (val) {
+                        setState(() {
+                          timeStart = val;
+                        });
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      initialValue: timeEnd,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      timeLabelText: 'Ora Fine',
+                      icon: const Icon(Icons.access_time),
+                      onChanged: (val) {
+                        setState(() {
+                          timeEnd = val;
+                        });
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DropdownButton(
+                      value: dropdownValue,
+                      elevation: 16,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                        //print(dropdownValue);
+                      },
+                      items: dropDownList.map((list) {
+                        return DropdownMenuItem<String>(
+                          child: Text(
+                            list.name.toString(),
+                          ),
+                          value: list.id,
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              );
+            },
+            tabletBuilder: (context, constraints) {
+              return const Text("desktop visual WIP");
+            },
+            desktopBuilder: (context, constraints) {
+              return const Text("tablet visual WIP");
+            },
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: ResponsiveBuilder(
-          mobileBuilder: (context, constraints) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Descrizione',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: date,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    //onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.time,
-                    initialValue: timeStart,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Inizio',
-                    icon: const Icon(Icons.access_time),
-                    onChanged: (val) {
-                      setState(() {
-                        timeStart = val;
-                      });
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.time,
-                    initialValue: timeEnd,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Fine',
-                    icon: const Icon(Icons.access_time),
-                    onChanged: (val) {
-                      setState(() {
-                        timeEnd = val;
-                      });
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DropdownButton(
-                    value: dropdownValue,
-                    elevation: 16,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                      //print(dropdownValue);
-                    },
-                    items: dropDownList.map((list) {
-                      return DropdownMenuItem<String>(
-                        child: Text(
-                          list.name.toString(),
-                        ),
-                        value: list.id,
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            );
-          },
-          tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
-          },
-          desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
-          },
         ),
       ),
     );
