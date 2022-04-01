@@ -68,21 +68,7 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
-              onPressed: () {
-                Get.defaultDialog(
-                  title: "Are you sure you want to save and quit?",
-                  content:
-                      const Text("You won't be able to take the quiz again"),
-                  barrierDismissible: true,
-                  textConfirm: 'Confirm',
-                  textCancel: 'Cancel',
-                  buttonColor: kNotifColor,
-                  onConfirm: () async {
-                    Get.back();
-                    controller.sendQuizLines();
-                  },
-                );
-              },
+              onPressed: () {},
               icon: const Icon(
                 Icons.save,
               ),

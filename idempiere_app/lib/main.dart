@@ -27,6 +27,7 @@ import 'package:idempiere_app/Screens/app/features/Course_Quiz/views/screens/cou
 import 'package:idempiere_app/Screens/app/features/Employee/views/screens/employee_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource/views/screens/human_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_ticket_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Human_Resource_Work_Hours/views/screens/human_resource_work_hours_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance/views/screens/maintenance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/maintenance_calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Internaluseinventory/views/screens/maintenance_internaluseinventory_screen.dart';
@@ -398,6 +399,11 @@ class MyApp extends StatelessWidget {
           name: '/HumanResourceTicket',
           page: () => const HumanResourceTicketScreen(),
           binding: HumanResourceTicketBinding(),
+        ),
+        GetPage(
+          name: '/HumanResourceWorkHours',
+          page: () => const HumanResourceWorkHoursScreen(),
+          binding: HumanResourceWorkHoursBinding(),
         ),
         GetPage(
           name: '/Employee',

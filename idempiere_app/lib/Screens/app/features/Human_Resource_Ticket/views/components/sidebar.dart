@@ -38,6 +38,12 @@ class _Sidebar extends StatelessWidget {
                     icon: EvaIcons.personOutline,
                     label: "Ticket",
                     visible: true),
+                SelectionButtonData(
+                  activeIcon: Icons.punch_clock,
+                  icon: EvaIcons.personOutline,
+                  label: "Work Hours",
+                  visible: GetPlatform.isAndroid || GetPlatform.isIOS,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -48,6 +54,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 1:
                     Get.offNamed('/TicketClientTicket');
+                    break;
+                  case 2:
+                    Get.offNamed('/HumanResourceWorkHours');
                     break;
                   default:
                 }

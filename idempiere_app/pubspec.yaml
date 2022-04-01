@@ -61,6 +61,8 @@ dependencies:
   flutter_map_location_marker: ^3.1.0
   flutter_compass: ^0.7.0
   geolocator: ^8.2.0
+  nfc_manager: ^3.1.1
+  analog_clock: ^0.1.0
 
 dev_dependencies:
   flutter_test:
