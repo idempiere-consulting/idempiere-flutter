@@ -68,7 +68,9 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                controller.sendQuizLines();
+              },
               icon: const Icon(
                 Icons.save,
               ),

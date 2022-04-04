@@ -42,9 +42,20 @@ class HumanResourceWorkHoursController extends GetxController {
           final protocol = GetStorage().read('protocol');
           var text =
               String.fromCharCodes(ndef.cachedMessage!.records[0].payload);
+
+          var text2 = text.substring(1);
+
+          //String value = text2.replaceAll(' ', '');
+
+          /* Get.defaultDialog(
+            title: "Welcome",
+            content: Text('\'$text2\''),
+            barrierDismissible: false,
+            buttonColor: kNotifColor,
+          ); */
           var url = Uri.parse('$protocol://' +
               ip +
-              '/api/v1/models/ad_user?\$filter= DocumentNo eq \'$text\'');
+              '/api/v1/models/ad_user?\$filter= DocumentNo eq \'$text2\'');
           var response = await http.get(
             url,
             headers: <String, String>{
@@ -53,7 +64,7 @@ class HumanResourceWorkHoursController extends GetxController {
             },
           );
           if (response.statusCode == 200) {
-            print(response.body);
+            //print(response.body);
             var json = jsonDecode(response.body);
             if (json["row-count"] > 0) {
               Get.defaultDialog(
@@ -78,6 +89,14 @@ class HumanResourceWorkHoursController extends GetxController {
               Get.back();
             });
           }
+        } else {
+          Get.defaultDialog(
+            title: 'Error!',
+            content: Text('nfc tag invalid'),
+            barrierDismissible: false,
+            //textConfirm: 'Confirm',
+            buttonColor: kNotifColor,
+          );
         }
 
         /* var text = String.fromCharCodes(ndef.cachedMessage!.records[0].payload);

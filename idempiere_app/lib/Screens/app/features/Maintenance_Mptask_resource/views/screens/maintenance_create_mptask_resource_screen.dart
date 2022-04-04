@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/resource_type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -203,7 +204,7 @@ class _CreateMaintenanceMpResourceState
   createWorkOrderResource(bool isConnected) async {
     //print(now);
 
-    print(GetStorage().read('selectedTaskId'));
+    //print(GetStorage().read('selectedTaskId'));
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -213,6 +214,7 @@ class _CreateMaintenanceMpResourceState
       "M_Product_ID": {"id": productId},
       "IsActive": true,
       "ResourceType": {"id": "BP"},
+      "LIT_ResourceType": {"id": dropDownValue},
       "ResourceQty": 1,
       "LIT_Control3DateFrom": date3,
       "LIT_Control2DateFrom": date2,
@@ -307,6 +309,7 @@ class _CreateMaintenanceMpResourceState
           "M_Product_ID": {"id": productId},
           "IsActive": true,
           "ResourceType": {"id": "BP"},
+          "LIT_ResourceType": {"id": dropDownValue},
           "ResourceQty": 1,
           "LIT_Control3DateFrom": date3,
           "LIT_Control2DateFrom": date2,
@@ -340,6 +343,7 @@ class _CreateMaintenanceMpResourceState
           "M_Product_ID": {"id": productId},
           "IsActive": true,
           "ResourceType": {"id": "BP"},
+          "LIT_ResourceType": {"id": dropDownValue},
           "ResourceQty": 1,
           "LIT_Control3DateFrom": date3,
           "LIT_Control2DateFrom": date2,
@@ -402,6 +406,7 @@ class _CreateMaintenanceMpResourceState
   } */
 
   //dynamic args = Get.arguments;
+
   var noteFieldController;
   var valueFieldController;
   var locationFieldController;
@@ -425,10 +430,15 @@ class _CreateMaintenanceMpResourceState
   var productName;
   String dateOrdered = "";
   String firstUseDate = "";
+  late ResourceTypeJson tt;
+  late String dropDownValue;
 
   @override
   void initState() {
     super.initState();
+    dropDownValue = "1.1.2";
+    tt = ResourceTypeJson.fromJson(
+        jsonDecode(GetStorage().read('refListResourceType')));
     noteFieldController = TextEditingController();
     valueFieldController = TextEditingController();
     locationFieldController = TextEditingController();
@@ -556,6 +566,45 @@ class _CreateMaintenanceMpResourceState
                       labelText: 'Product Model',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Type",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: DropdownButton(
+                    value: dropDownValue,
+                    style: const TextStyle(fontSize: 12.0),
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropDownValue = newValue!;
+                      });
+                    },
+                    items: tt.records!.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.value,
+                      );
+                    }).toList(),
                   ),
                 ),
                 Container(
