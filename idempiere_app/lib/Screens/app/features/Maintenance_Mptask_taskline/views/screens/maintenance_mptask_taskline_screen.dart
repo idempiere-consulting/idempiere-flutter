@@ -26,7 +26,6 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -92,8 +91,6 @@ class MaintenanceMptaskLineScreen
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
-                                      print(controller
-                                          .trx.records![index].documentNo);
                                       GetStorage().write(
                                           'selectedTaskDocNo',
                                           controller

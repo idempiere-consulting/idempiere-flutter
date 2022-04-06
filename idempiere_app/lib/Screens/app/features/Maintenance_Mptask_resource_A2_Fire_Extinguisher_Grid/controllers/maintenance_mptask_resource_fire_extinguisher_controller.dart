@@ -4,13 +4,8 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late WorkOrderResourceLocalJson _trx;
 
+  // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    //getADUserID();
-  }
 
   bool get dataAvailable => _dataAvailable.value;
   WorkOrderResourceLocalJson get trx => _trx;
@@ -229,6 +224,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(GetStorage().read('workOrderResourceSync')));
 
+    // ignore: unnecessary_null_comparison
     if (id != null && offline == -1) {
       //trx.records![index]. = value;
 
@@ -356,11 +352,14 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
         if (json["offlineid"] == _trx.records![index].offlineId) {
           var url2 = json["url"];
           var offlineid2 = json["offlineid"];
+          // ignore: prefer_typing_uninitialized_variables
           var call;
           if (field != 'M_Product_ID') {
+            // ignore: unused_local_variable
             var call = jsonEncode(
                 {"offlineid": offlineid2, "url": url2, field: value});
           } else {
+            // ignore: unused_local_variable
             var call = jsonEncode({
               "offlineid": offlineid2,
               "url": url2,
@@ -421,7 +420,9 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
           ),
         );
       } else {
-        print(response.body);
+        if (kDebugMode) {
+          print(response.body);
+        }
         Get.snackbar(
           "Errore!",
           "Record non eliminato",

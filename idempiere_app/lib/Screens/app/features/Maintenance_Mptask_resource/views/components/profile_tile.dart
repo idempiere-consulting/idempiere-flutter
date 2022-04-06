@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: unused_element
 class _ProfilTile extends StatelessWidget {
   const _ProfilTile(
       {required this.data, required this.onPressedNotification, Key? key})

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -211,7 +212,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
       } else {
-        print(response2.body);
+        if (kDebugMode) {
+          print(response2.body);
+        }
       }
     } else {
       //print(response.body);
@@ -259,7 +262,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
       } else {
-        print(response2.body);
+        if (kDebugMode) {
+          print(response2.body);
+        }
       }
     } else {
       //print(response.body); &\$orderby=

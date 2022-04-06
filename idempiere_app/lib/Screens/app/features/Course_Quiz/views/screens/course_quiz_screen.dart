@@ -364,8 +364,8 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
             ]);
           },
           tabletBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+            return Column(children: const [
+              SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
             ]);
           },
           desktopBuilder: (context, constraints) {

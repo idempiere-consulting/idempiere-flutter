@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: unused_element
 class _Header extends StatelessWidget {
   const _Header({Key? key}) : super(key: key);
 

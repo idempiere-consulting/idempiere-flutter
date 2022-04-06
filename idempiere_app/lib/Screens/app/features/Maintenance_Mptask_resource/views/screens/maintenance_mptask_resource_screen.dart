@@ -5,20 +5,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/reflist_resource_type_json.dart';
 
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_mptask_resource_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_edit_mptask_resource_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_A2_Fire_Extinguisher_Grid/views/screens/maintenance_mptask_resource_fire_extinguisher_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
-import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/project_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:idempiere_app/Screens/app/shared_components/search_field.dart';
@@ -33,8 +26,6 @@ import 'package:get/get.dart';
 import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:pluto_grid/pluto_grid.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 // binding
@@ -61,7 +52,6 @@ class MaintenanceMpResourceScreen
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         /* actions: [
@@ -141,6 +131,46 @@ class MaintenanceMpResourceScreen
                       ),
                     ),
                   ), */
+                ],
+              ),
+              //const SizedBox(height: 5),
+              Row(
+                //mainAxisAlignment: MainAxisAlignment.,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => DropdownButton(
+                        value: controller.dropDownValue2.value,
+                        style: const TextStyle(fontSize: 12.0),
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          controller.dropDownValue2.value = newValue!;
+                          controller.getWorkOrders();
+                        },
+                        items: controller._tt2.records!.map((list) {
+                          return DropdownMenuItem<String>(
+                            child: Text(
+                              list.name.toString(),
+                            ),
+                            value: list.value,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: kSpacing),
@@ -894,207 +924,10 @@ class MaintenanceMpResourceScreen
             ]);
           },
           desktopBuilder: (context, constraints) {
-            return Container(
-              height: size.height,
-              width: size.width,
-              //padding: const EdgeInsets.all(15),
-              child: PlutoGrid(
-                columns: controller.columns,
-                rows: controller.rows,
-                columnGroups: controller.columnGroups,
-                onLoaded: (PlutoGridOnLoadedEvent event) {
-                  controller.stateManager = event.stateManager;
-                },
-                onChanged: (PlutoGridOnChangedEvent event) {
-                  print(event);
-                },
-                configuration: const PlutoGridConfiguration(
-                  enableColumnBorder: true,
-                ),
-              ),
-            );
+            return const Text("WIP");
           },
         ),
       ),
     );
-  }
-
-  Widget _buildHeader({Function()? onPressedMenu}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: Row(
-        children: [
-          if (onPressedMenu != null)
-            Padding(
-              padding: const EdgeInsets.only(right: kSpacing),
-              child: IconButton(
-                onPressed: onPressedMenu,
-                icon: const Icon(EvaIcons.menu),
-                tooltip: "menu",
-              ),
-            ),
-          const Expanded(child: _Header()),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProgress({Axis axis = Axis.horizontal}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: (axis == Axis.horizontal)
-          ? Row(
-              children: [
-                Flexible(
-                  flex: 5,
-                  child: ProgressCard(
-                    data: const ProgressCardData(
-                      totalUndone: 10,
-                      totalTaskInProress: 2,
-                    ),
-                    onPressedCheck: () {},
-                  ),
-                ),
-                const SizedBox(width: kSpacing / 2),
-                Flexible(
-                  flex: 4,
-                  child: ProgressReportCard(
-                    data: ProgressReportCardData(
-                      title: "1st Sprint",
-                      doneTask: 5,
-                      percent: .3,
-                      task: 3,
-                      undoneTask: 2,
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : Column(
-              children: [
-                ProgressCard(
-                  data: const ProgressCardData(
-                    totalUndone: 10,
-                    totalTaskInProress: 2,
-                  ),
-                  onPressedCheck: () {},
-                ),
-                const SizedBox(height: kSpacing / 2),
-                ProgressReportCard(
-                  data: ProgressReportCardData(
-                    title: "1st Sprint",
-                    doneTask: 5,
-                    percent: .3,
-                    task: 3,
-                    undoneTask: 2,
-                  ),
-                ),
-              ],
-            ),
-    );
-  }
-
-  Widget _buildTaskOverview({
-    required List<TaskCardData> data,
-    int crossAxisCount = 6,
-    int crossAxisCellCount = 2,
-    Axis headerAxis = Axis.horizontal,
-  }) {
-    return StaggeredGridView.countBuilder(
-      crossAxisCount: crossAxisCount,
-      itemCount: data.length + 1,
-      addAutomaticKeepAlives: false,
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return (index == 0)
-            ? Padding(
-                padding: const EdgeInsets.only(bottom: kSpacing),
-                child: _OverviewHeader(
-                  axis: headerAxis,
-                  onSelected: (task) {},
-                ),
-              )
-            : TaskCard(
-                data: data[index - 1],
-                onPressedMore: () {},
-                onPressedTask: () {},
-                onPressedContributors: () {},
-                onPressedComments: () {},
-              );
-      },
-      staggeredTileBuilder: (int index) =>
-          StaggeredTile.fit((index == 0) ? crossAxisCount : crossAxisCellCount),
-    );
-  }
-
-  Widget _buildActiveProject({
-    required List<ProjectCardData> data,
-    int crossAxisCount = 6,
-    int crossAxisCellCount = 2,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: _ActiveProjectCard(
-        onPressedSeeAll: () {},
-        child: StaggeredGridView.countBuilder(
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: crossAxisCount,
-          itemCount: data.length,
-          addAutomaticKeepAlives: false,
-          mainAxisSpacing: kSpacing,
-          crossAxisSpacing: kSpacing,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return ProjectCard(data: data[index]);
-          },
-          staggeredTileBuilder: (int index) =>
-              StaggeredTile.fit(crossAxisCellCount),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfile({required _Profile data}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: _ProfilTile(
-        data: data,
-        onPressedNotification: () {},
-      ),
-    );
-  }
-
-  Widget _buildTeamMember({required List<ImageProvider> data}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _TeamMember(
-            totalMember: data.length,
-            onPressedAdd: () {},
-          ),
-          const SizedBox(height: kSpacing / 2),
-          ListProfilImage(maxImages: 6, images: data),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecentMessages({required List<ChattingCardData> data}) {
-    return Column(children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-        child: _RecentMessages(onPressedMore: () {}),
-      ),
-      const SizedBox(height: kSpacing / 2),
-      ...data
-          .map(
-            (e) => ChattingCard(data: e, onPressed: () {}),
-          )
-          .toList(),
-    ]);
   }
 }

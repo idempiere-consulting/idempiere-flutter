@@ -18,6 +18,7 @@ class ProgressReportCardData {
   });
 }
 
+// ignore: must_be_immutable
 class ProgressReportCard extends StatelessWidget {
   ProgressReportCard({
     required this.data,

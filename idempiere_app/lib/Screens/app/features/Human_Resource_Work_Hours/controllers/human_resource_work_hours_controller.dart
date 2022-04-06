@@ -73,26 +73,26 @@ class HumanResourceWorkHoursController extends GetxController {
                 barrierDismissible: false,
                 buttonColor: kNotifColor,
               );
+              Future.delayed(const Duration(seconds: 2), () {
+                Get.back();
+              });
             }
-            Future.delayed(Duration(seconds: 2), () {
-              Get.back();
-            });
           } else {
             Get.defaultDialog(
               title: 'Error!',
-              content: Text('${response.body}'),
+              content: Text(response.body),
               barrierDismissible: false,
               //textConfirm: 'Confirm',
               buttonColor: kNotifColor,
             );
-            Future.delayed(Duration(seconds: 2), () {
+            Future.delayed(const Duration(seconds: 2), () {
               Get.back();
             });
           }
         } else {
           Get.defaultDialog(
             title: 'Error!',
-            content: Text('nfc tag invalid'),
+            content: const Text('nfc tag invalid'),
             barrierDismissible: false,
             //textConfirm: 'Confirm',
             buttonColor: kNotifColor,

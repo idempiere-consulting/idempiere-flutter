@@ -357,8 +357,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
-                                      print(controller
-                                          .trx.records![index].mPOTID!.id);
                                       GetStorage().write(
                                           'selectedWorkOrderId',
                                           controller

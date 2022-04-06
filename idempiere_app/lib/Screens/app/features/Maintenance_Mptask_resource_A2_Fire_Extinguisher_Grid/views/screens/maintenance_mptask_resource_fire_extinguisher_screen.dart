@@ -2,21 +2,19 @@ library dashboard;
 
 //import 'dart:convert';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
-import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/project_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:idempiere_app/Screens/app/shared_components/search_field.dart';
 import 'package:idempiere_app/Screens/app/shared_components/selection_button.dart';
-import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -24,7 +22,6 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:idempiere_app/constants.dart';
-import 'package:intl/intl.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:http/http.dart' as http;
@@ -87,7 +84,7 @@ class MaintenanceMpResourceFireExtinguisherScreen
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
-            return Container(
+            return SizedBox(
               height: size.height,
               width: size.width,
               //padding: const EdgeInsets.all(15),
@@ -113,7 +110,7 @@ class MaintenanceMpResourceFireExtinguisherScreen
             );
           },
           tabletBuilder: (context, constraints) {
-            return Container(
+            return SizedBox(
               height: size.height,
               width: size.width,
               //padding: const EdgeInsets.all(15),
@@ -139,7 +136,7 @@ class MaintenanceMpResourceFireExtinguisherScreen
             );
           },
           desktopBuilder: (context, constraints) {
-            return Container(
+            return SizedBox(
               height: size.height,
               width: size.width,
               //padding: const EdgeInsets.all(15),
@@ -165,26 +162,6 @@ class MaintenanceMpResourceFireExtinguisherScreen
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader({Function()? onPressedMenu}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: Row(
-        children: [
-          if (onPressedMenu != null)
-            Padding(
-              padding: const EdgeInsets.only(right: kSpacing),
-              child: IconButton(
-                onPressed: onPressedMenu,
-                icon: const Icon(EvaIcons.menu),
-                tooltip: "menu",
-              ),
-            ),
-          const Expanded(child: _Header()),
-        ],
       ),
     );
   }

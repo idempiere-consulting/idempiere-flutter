@@ -280,6 +280,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var bPartnerFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var statusFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var userFieldController;

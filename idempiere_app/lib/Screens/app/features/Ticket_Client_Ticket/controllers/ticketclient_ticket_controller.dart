@@ -74,7 +74,6 @@ class TicketClientTicketController extends GetxController {
         if (i != json.rowcount! - 1) {
           ticketFilter = ticketFilter + " OR ";
         }
-        print(ticketFilter);
       }
       //print(ticketFilter);
       getTickets();
@@ -306,7 +305,9 @@ class TicketClientTicketController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

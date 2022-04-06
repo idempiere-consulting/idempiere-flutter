@@ -68,6 +68,7 @@ class _EditShipmentlineState extends State<EditShipmentline> {
   // ignore: prefer_typing_uninitialized_variables
   var descriptionFieldController;
 
+  // ignore: prefer_typing_uninitialized_variables
   var checkboxState;
 
   @override

@@ -162,8 +162,6 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                           .records![index]
                                           .jPToDoScheduledStartDate!);
 
-                                      print(formatter.format(startDate));
-
                                       //log("info button pressed");
                                       Get.to(const DashboardTasksEdit(),
                                           arguments: {

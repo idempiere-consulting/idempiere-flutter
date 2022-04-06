@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: unused_element
 class _RecentMessages extends StatelessWidget {
   const _RecentMessages({
     required this.onPressedMore,

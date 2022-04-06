@@ -4,6 +4,7 @@ import 'dart:convert';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -114,7 +115,9 @@ class _CreateMaintenanceMpResourceState
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
       } else {
-        print(response2.body);
+        if (kDebugMode) {
+          print(response2.body);
+        }
       }
     } else {
       //print(response.body);
@@ -162,7 +165,9 @@ class _CreateMaintenanceMpResourceState
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
       } else {
-        print(response2.body);
+        if (kDebugMode) {
+          print(response2.body);
+        }
       }
     } else {
       //print(response.body); &\$orderby=
@@ -269,7 +274,6 @@ class _CreateMaintenanceMpResourceState
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/windows/preventive-maintenance/tabs/tasks/${GetStorage().read('selectedTaskId')}/resources');
-    print(msg);
 
     if (isConnected) {
       emptyAPICallStak();
@@ -285,7 +289,9 @@ class _CreateMaintenanceMpResourceState
         //print("done!");
         syncWorkOrder();
       } else {
-        print(response.body);
+        if (kDebugMode) {
+          print(response.body);
+        }
         Get.snackbar(
           "Errore!",
           "Record non creato",

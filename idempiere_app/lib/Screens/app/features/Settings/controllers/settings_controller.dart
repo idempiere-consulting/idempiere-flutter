@@ -205,7 +205,9 @@ class SettingsController extends GetxController {
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
       } else {
-        print(response2.body);
+        if (kDebugMode) {
+          print(response2.body);
+        }
       }
     } else {
       //print(response.body); &\$orderby=
@@ -253,7 +255,9 @@ class SettingsController extends GetxController {
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
       } else {
-        print(response2.body);
+        if (kDebugMode) {
+          print(response2.body);
+        }
       }
     } else {
       //print(response.body); &\$orderby=
@@ -325,7 +329,9 @@ class SettingsController extends GetxController {
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
       } else {
-        print(response2.body);
+        if (kDebugMode) {
+          print(response2.body);
+        }
       }
     } else {
       //print(response.body); &\$orderby=

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -119,7 +120,9 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       );
     } else {
       //print(response.statusCode);
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       //print(response.statusCode);
       Get.snackbar(
         "Errore!",
@@ -187,7 +190,9 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       );
     } else {
       //print(response.statusCode);
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       //print(response.statusCode);
       Get.snackbar(
         "Errore!",
@@ -247,7 +252,9 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       );
     } else {
       //print(response.statusCode);
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       //print(response.statusCode);
       Get.snackbar(
         "Errore!",

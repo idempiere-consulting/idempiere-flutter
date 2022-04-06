@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: must_be_immutable
 class _Sidebar extends StatelessWidget {
   _Sidebar({
     required this.data,

@@ -34,13 +34,13 @@ class TrainingCourseSurveyController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
-
       _trx = TrainingCourseJson.fromJson(jsonDecode(response.body));
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

@@ -75,6 +75,8 @@ class RRecords {
   String? prodCode;
   String? textDetails;
   int? offlineId;
+  bool? filtered;
+  bool? checked;
 
   RRecords({
     this.id,
@@ -120,6 +122,7 @@ class RRecords {
     this.prodCode,
     this.textDetails,
     this.offlineId,
+    this.checked,
   });
 
   RRecords.fromJson(Map<String, dynamic> json)
@@ -188,7 +191,9 @@ class RRecords {
         modelname = json['model-name'] as String?,
         prodCode = json['ProdCode'] as String?,
         textDetails = json['TextDetails'] as String?,
-        offlineId = json['offlineId'] as int?;
+        offlineId = json['offlineId'] as int?,
+        checked = false,
+        filtered = false;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -233,7 +238,9 @@ class RRecords {
         'LIT_ResourceType': lITResourceType?.toJson(),
         'offlineId': offlineId,
         'ProdCode': prodCode,
-        'TextDetails': textDetails
+        'TextDetails': textDetails,
+        'Checked': checked,
+        'Filtered': filtered
       };
 }
 

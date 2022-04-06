@@ -4,9 +4,6 @@ library dashboard;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
-
-import 'package:analog_clock/analog_clock.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -31,7 +28,6 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:intl/intl.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:nfc_manager/platform_tags.dart';
 
 // binding
 part '../../bindings/human_resource_work_hours_binding.dart';
@@ -69,7 +65,7 @@ class HumanResourceWorkHoursScreen
         body: SingleChildScrollView(
             child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
-            return Container(
+            return SizedBox(
               width: size.width,
               height: size.height,
               child: Column(
@@ -82,7 +78,7 @@ class HumanResourceWorkHoursScreen
                       Obx(
                         () => Text(
                           controller.date.value,
-                          style: TextStyle(fontSize: 40),
+                          style: const TextStyle(fontSize: 40),
                         ),
                       ),
                     ],
@@ -93,7 +89,7 @@ class HumanResourceWorkHoursScreen
                       Obx(
                         () => Text(
                           controller.time.value,
-                          style: TextStyle(fontSize: 40),
+                          style: const TextStyle(fontSize: 40),
                         ),
                       ),
                     ],

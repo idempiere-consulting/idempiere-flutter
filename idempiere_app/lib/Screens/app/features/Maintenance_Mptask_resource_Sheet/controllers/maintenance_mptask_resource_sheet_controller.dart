@@ -165,6 +165,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
       var url = Uri.parse('http://' +
           ip +
           '/api/v1/models/mp_resource_survey_line/${surveyLines.records![i].id}');
+      // ignore: unused_local_variable
       var response = await http.put(
         url,
         body: msg,

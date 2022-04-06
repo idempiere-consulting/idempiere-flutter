@@ -3,7 +3,6 @@ part of dashboard;
 class CourseQuizController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late WorkOrderResourceSurveyLinesJson _trx;
-  var _hasCallSupport = false;
   //var _hasMailSupport = false;
   late RxList<int> selectedValue;
 
@@ -52,7 +51,6 @@ class CourseQuizController extends GetxController {
 
     if (isConnected) {
       String ip = GetStorage().read('ip');
-      var userId = GetStorage().read('userId');
       String authorization = 'Bearer ' + GetStorage().read('token');
       final protocol = GetStorage().read('protocol');
 
@@ -68,6 +66,7 @@ class CourseQuizController extends GetxController {
                 "ValueNumber": double.parse(numberfieldController[i].text),
               });
 
+              // ignore: unused_local_variable
               var response = await http.put(
                 url,
                 body: msg,
@@ -88,6 +87,7 @@ class CourseQuizController extends GetxController {
               "LIT_Text1": textfieldController[i].text,
             });
 
+            // ignore: unused_local_variable
             var response = await http.put(
               url,
               body: msg,
@@ -106,6 +106,7 @@ class CourseQuizController extends GetxController {
               "DateValue": dateValue[i],
             });
 
+            // ignore: unused_local_variable
             var response = await http.put(
               url,
               body: msg,
@@ -124,6 +125,7 @@ class CourseQuizController extends GetxController {
               "ValueNumber": selectedValue[i],
             });
 
+            // ignore: unused_local_variable
             var response = await http.put(
               url,
               body: msg,
@@ -143,6 +145,7 @@ class CourseQuizController extends GetxController {
                 "LIT_IsField1": checkValue[i] == 1 ? true : false,
               });
 
+              // ignore: unused_local_variable
               var response = await http.put(
                 url,
                 body: msg,
@@ -189,10 +192,8 @@ class CourseQuizController extends GetxController {
       emptyAPICallStak();
       _dataAvailable.value = false;
       String ip = GetStorage().read('ip');
-      var userId = GetStorage().read('userId');
       String authorization = 'Bearer ' + GetStorage().read('token');
       final protocol = GetStorage().read('protocol');
-      print(Get.arguments["id"]);
       var url = Uri.parse('$protocol://' +
           ip +
           '/api/v1/models/mp_resource_survey?\$filter= MP_Maintain_Resource_ID eq ${Get.arguments["id"]} and LIT_SurveyCategory eq \'SU\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -242,8 +243,6 @@ class CourseQuizController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
-
       _trx =
           WorkOrderResourceSurveyLinesJson.fromJson(jsonDecode(response.body));
       selectedValue = RxList<int>.filled(_trx.records!.length, 0);

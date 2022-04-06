@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 
 class ProgressCardData {
   final int totalUndone;
@@ -15,6 +14,7 @@ class ProgressCardData {
   });
 }
 
+// ignore: must_be_immutable
 class ProgressCard extends StatelessWidget {
   ProgressCard({
     required this.data,

@@ -3,45 +3,48 @@ part of dashboard;
 class MaintenanceMpResourceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late WorkOrderResourceLocalJson _trx;
+  late WorkOrderResourceLocalJson _trx2;
   final RefListResourceTypeJson _tt = RefListResourceTypeJson.fromJson(
       jsonDecode(GetStorage().read('refListResourceTypeCategory')));
-  var _hasCallSupport = false;
+  final RefListResourceTypeJson _tt2 = RefListResourceTypeJson.fromJson(
+      jsonDecode(GetStorage().read('refListResourceTypeCategory')));
   //var _hasMailSupport = false;
 
   var offline = -1;
 
   var dropDownValue = "A1";
+  var dropDownValue2 = "0".obs;
 
   // ignore: prefer_typing_uninitialized_variables
   //var adUserId;
   DateTime now = DateTime.now();
 
-  var value = "Tutti".obs;
+  var value = "All".obs;
 
-  var filters = ["Tutti", "Miei" /* , "Team" */];
+  var filters = ["All", "Unchecked", "Checked"];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
   @override
   void onInit() {
+    _tt2.records?.add(Records(value: "0", name: "All"));
     super.onInit();
-    canLaunch('tel:123').then((bool result) {
-      _hasCallSupport = result;
-    });
 
     getWorkOrders();
+
     //getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
   WorkOrderResourceLocalJson get trx => _trx;
   RefListResourceTypeJson get tt => _tt;
+  RefListResourceTypeJson get tt2 => _tt2;
   //String get value => _value.toString();
 
   changeFilter() {
     filterCount++;
-    if (filterCount == 2) {
+    if (filterCount == 3) {
       filterCount = 0;
     }
 
@@ -124,11 +127,15 @@ class MaintenanceMpResourceController extends GetxController {
       "LIT_Control1DateFrom": date,
     });
 
-    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
-        jsonDecode(GetStorage().read('workOrderResourceSync')));
+    /*  WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(GetStorage().read('workOrderResourceSync'))); */
 
     if (_trx.records![index].id != null && offline == -1) {
-      trx.records![index].lITControl1DateFrom = date;
+      for (var i = 0; i < _trx2.records!.length; i++) {
+        if (_trx.records![index].id == _trx2.records![i].id) {
+          _trx2.records![i].lITControl1DateFrom = date;
+        }
+      }
 
       var url = Uri.parse('http://' +
           ip +
@@ -144,7 +151,8 @@ class MaintenanceMpResourceController extends GetxController {
           },
         );
         if (response.statusCode == 200) {
-          var data = jsonEncode(trx.toJson());
+          _dataAvailable.value = false;
+          var data = jsonEncode(_trx2.toJson());
           GetStorage().write('workOrderResourceSync', data);
           getWorkOrders();
           //print("done!");
@@ -170,7 +178,7 @@ class MaintenanceMpResourceController extends GetxController {
           );
         }
       } else {
-        var data = jsonEncode(trx.toJson());
+        var data = jsonEncode(_trx2.toJson());
         GetStorage().write('workOrderSync', data);
         getWorkOrders();
         Map calls = {};
@@ -245,12 +253,16 @@ class MaintenanceMpResourceController extends GetxController {
       "LIT_Control2DateFrom": date,
     });
 
-    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
-        jsonDecode(GetStorage().read('workOrderResourceSync')));
+    /* WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(GetStorage().read('workOrderResourceSync'))); */
 
     if (_trx.records![index].id != null && offline == -1) {
-      trx.records![index].lITControl1DateFrom = date;
-      trx.records![index].lITControl2DateFrom = date;
+      for (var i = 0; i < _trx2.records!.length; i++) {
+        if (_trx.records![index].id == _trx2.records![i].id) {
+          _trx2.records![i].lITControl1DateFrom = date;
+          _trx2.records![i].lITControl2DateFrom = date;
+        }
+      }
 
       var url = Uri.parse('http://' +
           ip +
@@ -266,7 +278,7 @@ class MaintenanceMpResourceController extends GetxController {
           },
         );
         if (response.statusCode == 200) {
-          var data = jsonEncode(trx.toJson());
+          var data = jsonEncode(_trx2.toJson());
           GetStorage().write('workOrderResourceSync', data);
           getWorkOrders();
           //print("done!");
@@ -292,7 +304,7 @@ class MaintenanceMpResourceController extends GetxController {
           );
         }
       } else {
-        var data = jsonEncode(trx.toJson());
+        var data = jsonEncode(_trx2.toJson());
         GetStorage().write('workOrderSync', data);
         getWorkOrders();
         Map calls = {};
@@ -369,13 +381,17 @@ class MaintenanceMpResourceController extends GetxController {
       "LIT_Control3DateFrom": date,
     });
 
-    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
-        jsonDecode(GetStorage().read('workOrderResourceSync')));
+    /*  WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(GetStorage().read('workOrderResourceSync'))); */
 
     if (_trx.records![index].id != null && offline == -1) {
-      trx.records![index].lITControl1DateFrom = date;
-      trx.records![index].lITControl2DateFrom = date;
-      trx.records![index].lITControl3DateFrom = date;
+      for (var i = 0; i < _trx2.records!.length; i++) {
+        if (_trx.records![index].id == _trx2.records![i].id) {
+          _trx2.records![i].lITControl1DateFrom = date;
+          _trx2.records![i].lITControl2DateFrom = date;
+          _trx2.records![i].lITControl3DateFrom = date;
+        }
+      }
 
       var url = Uri.parse('http://' +
           ip +
@@ -391,7 +407,7 @@ class MaintenanceMpResourceController extends GetxController {
           },
         );
         if (response.statusCode == 200) {
-          var data = jsonEncode(trx.toJson());
+          var data = jsonEncode(_trx2.toJson());
           GetStorage().write('workOrderResourceSync', data);
           getWorkOrders();
           //print("done!");
@@ -417,7 +433,7 @@ class MaintenanceMpResourceController extends GetxController {
           );
         }
       } else {
-        var data = jsonEncode(trx.toJson());
+        var data = jsonEncode(_trx2.toJson());
         GetStorage().write('workOrderSync', data);
         getWorkOrders();
         Map calls = {};
@@ -478,152 +494,68 @@ class MaintenanceMpResourceController extends GetxController {
     }
   }
 
-  Future<void> makePhoneCall(String phoneNumber) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    if (_hasCallSupport) {
-      final Uri launchUri = Uri(
-        scheme: 'tel',
-        path: phoneNumber,
-      );
-      await launch(launchUri.toString());
-    }
-  }
-
-  Future<void> writeMailTo(String receiver) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'mailto',
-      path: receiver,
-    );
-    await launch(launchUri.toString());
-  }
-
   Future<void> getWorkOrders() async {
     _dataAvailable.value = false;
+    late List<RRecords> temp;
+    var flag = true;
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
     //print(GetStorage().read('workOrderResourceSync'));
     if (GetStorage().read('workOrderSync') != null) {
       _trx = WorkOrderResourceLocalJson.fromJson(
           jsonDecode(GetStorage().read('workOrderResourceSync')));
+      _trx2 = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(GetStorage().read('workOrderResourceSync')));
+
+      if (dropDownValue2.value != "0") {
+        temp = (_trx.records!.where((element) =>
+            element.eDIType?.id == dropDownValue2.value &&
+            element.mpOtDocumentno ==
+                GetStorage().read('selectedTaskDocNo'))).toList();
+        //print(temp);
+        _trx.records = temp;
+        _trx.rowcount = _trx.records?.length;
+        flag = false;
+      }
+      if (filterCount != 0) {
+        switch (filterCount) {
+          case 1:
+            temp = (_trx.records!.where((element) =>
+                element.lITControl1DateFrom != formattedDate &&
+                element.mpOtDocumentno ==
+                    GetStorage().read('selectedTaskDocNo'))).toList();
+            //print(temp);
+            _trx.records = temp;
+            _trx.rowcount = _trx.records?.length;
+            flag = false;
+            break;
+          case 2:
+            temp = (_trx.records!.where((element) =>
+                element.lITControl1DateFrom == formattedDate &&
+                element.mpOtDocumentno ==
+                    GetStorage().read('selectedTaskDocNo'))).toList();
+            //print(temp);
+            _trx.records = temp;
+            _trx.rowcount = _trx.records?.length;
+            flag = false;
+            break;
+          default:
+        }
+      }
+      if (flag) {
+        temp = (_trx.records!.where((element) =>
+            element.mpOtDocumentno ==
+            GetStorage().read('selectedTaskDocNo'))).toList();
+        //print(temp);
+        _trx.records = temp;
+        _trx.rowcount = _trx.records?.length;
+      }
+
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     }
   }
-
-  //test grid
-
-  final List<PlutoColumn> columns = <PlutoColumn>[
-    PlutoColumn(
-      title: 'Id',
-      field: 'id',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Name',
-      field: 'name',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Age',
-      field: 'age',
-      type: PlutoColumnType.number(),
-    ),
-    PlutoColumn(
-      title: 'Role',
-      field: 'role',
-      type: PlutoColumnType.select(<String>[
-        'Programmer',
-        'Designer',
-        'Owner',
-      ]),
-    ),
-    PlutoColumn(
-      title: 'Joined',
-      field: 'joined',
-      type: PlutoColumnType.date(),
-    ),
-    PlutoColumn(
-      title: 'Working time',
-      field: 'working_time',
-      type: PlutoColumnType.time(),
-    ),
-  ];
-
-  final List<PlutoRow> rows = [
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
-        'role': PlutoCell(value: 'Programmer'),
-        'joined': PlutoCell(value: '2021-01-01'),
-        'working_time': PlutoCell(value: '09:00'),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: 25),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user3'),
-        'name': PlutoCell(value: 'Suzi'),
-        'age': PlutoCell(value: 40),
-        'role': PlutoCell(value: 'Owner'),
-        'joined': PlutoCell(value: '2021-03-01'),
-        'working_time': PlutoCell(value: '11:00'),
-      },
-    ),
-  ];
-
-  /// columnGroups that can group columns can be omitted.
-  final List<PlutoColumnGroup> columnGroups = [
-    PlutoColumnGroup(title: 'Id', fields: ['id'], expandedColumn: true),
-    PlutoColumnGroup(title: 'User information', fields: ['name', 'age']),
-    PlutoColumnGroup(title: 'Status', children: [
-      PlutoColumnGroup(title: 'A', fields: ['role'], expandedColumn: true),
-      PlutoColumnGroup(title: 'Etc.', fields: ['joined', 'working_time']),
-    ]),
-  ];
-
-  /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
-  /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
-  late final PlutoGridStateManager stateManager;
-
-  void handleAddRows() {
-    final newRows = stateManager.getNewRows(count: 1);
-
-    /* for (var e in newRows) {
-      e.cells['status']!.value = 'created';
-    } */
-
-    stateManager.appendRows(newRows);
-
-    stateManager.setCurrentCell(
-      newRows.first.cells.entries.first.value,
-      stateManager.refRows.length - 1,
-    );
-
-    stateManager.moveScrollByRow(
-      PlutoMoveDirection.down,
-      stateManager.refRows.length - 2,
-    );
-
-    stateManager.setKeepFocus(true);
-  }
-
-  //end test grid
 
   // Data
   _Profile getProfil() {

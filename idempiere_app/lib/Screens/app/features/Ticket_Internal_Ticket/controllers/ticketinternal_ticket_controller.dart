@@ -73,7 +73,6 @@ class TicketInternalTicketController extends GetxController {
         if (i != json.rowcount! - 1) {
           ticketFilter = ticketFilter + " OR ";
         }
-        print(ticketFilter);
       }
       //print(ticketFilter);
       getTickets();
@@ -176,7 +175,6 @@ class TicketInternalTicketController extends GetxController {
       var json = jsonDecode(response.body);
 
       closedTicketId = json["records"][0]["id"];
-      print(closedTicketId);
       getBusinessPartner();
       //print(businessPartnerId);
       //print(trx.rowcount);

@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -19,13 +18,16 @@ class SignatureState extends State<SignatureScreen> {
     penStrokeWidth: 1,
     penColor: Colors.black,
     exportBackgroundColor: Colors.white,
+    // ignore: avoid_print
     onDrawStart: () => print('onDrawStart called!'),
+    // ignore: avoid_print
     onDrawEnd: () => print('onDrawEnd called!'),
   );
 
   @override
   void initState() {
     super.initState();
+    // ignore: avoid_print
     _controller.addListener(() => print('Value changed'));
   }
 

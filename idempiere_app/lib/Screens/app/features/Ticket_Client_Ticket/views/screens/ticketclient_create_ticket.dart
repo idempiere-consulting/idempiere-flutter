@@ -2,6 +2,7 @@ import 'dart:convert';
 //import 'dart:developer';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -115,7 +116,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       );
     } else {
       //print(response.statusCode);
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       //print(response.statusCode);
       Get.snackbar(
         "Errore!",
@@ -388,7 +391,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       //print(slots.rowcount);
       //print(ticketTypeValue);
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       throw Exception("Failed to load free slots");
     }
   }
@@ -474,7 +479,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   final List<dynamic> list = GetStorage().read('permission');
+  // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var titleFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var bPartnerFieldController;
@@ -492,6 +499,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
   var userName = "";
+  // ignore: prefer_typing_uninitialized_variables
   var userId;
   late EventJson eventJson;
   // ignore: prefer_typing_uninitialized_variables

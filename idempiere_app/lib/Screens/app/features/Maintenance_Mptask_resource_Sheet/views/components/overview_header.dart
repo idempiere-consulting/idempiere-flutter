@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: unused_element
 class _OverviewHeader extends StatelessWidget {
   const _OverviewHeader({
     required this.onSelected,
