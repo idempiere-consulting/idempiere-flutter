@@ -11,6 +11,8 @@ class HumanResourceWorkHoursController extends GetxController {
 
   late bool isAvailable;
 
+  DateTime savedDate = DateTime.now();
+
   var date = (DateFormat.yMMMEd().format(DateTime.now())).obs;
 
   var time = (DateFormat('hh:mm:ss').format(DateTime.now())).obs;
@@ -36,7 +38,9 @@ class HumanResourceWorkHoursController extends GetxController {
       onDiscovered: (NfcTag tag) async {
         Ndef? ndef = Ndef.from(tag);
 
-        if (ndef!.cachedMessage?.records[0].payload != null) {
+        if (ndef!.cachedMessage?.records[0].payload != null &&
+            (DateTime.now()).difference(savedDate).inSeconds > 3) {
+          savedDate = DateTime.now();
           final ip = GetStorage().read('ip');
           String authorization = 'Bearer ' + GetStorage().read('token');
           final protocol = GetStorage().read('protocol');
@@ -44,18 +48,10 @@ class HumanResourceWorkHoursController extends GetxController {
               String.fromCharCodes(ndef.cachedMessage!.records[0].payload);
 
           var text2 = text.substring(1);
-
-          //String value = text2.replaceAll(' ', '');
-
-          /* Get.defaultDialog(
-            title: "Welcome",
-            content: Text('\'$text2\''),
-            barrierDismissible: false,
-            buttonColor: kNotifColor,
-          ); */
           var url = Uri.parse('$protocol://' +
               ip +
               '/api/v1/models/ad_user?\$filter= DocumentNo eq \'$text2\'');
+
           var response = await http.get(
             url,
             headers: <String, String>{
@@ -73,6 +69,8 @@ class HumanResourceWorkHoursController extends GetxController {
                 barrierDismissible: false,
                 buttonColor: kNotifColor,
               );
+
+              sendNfcTriggerInfo(savedDate, json["records"][0]["id"], text2);
               Future.delayed(const Duration(seconds: 2), () {
                 Get.back();
               });
@@ -89,14 +87,6 @@ class HumanResourceWorkHoursController extends GetxController {
               Get.back();
             });
           }
-        } else {
-          Get.defaultDialog(
-            title: 'Error!',
-            content: const Text('nfc tag invalid'),
-            barrierDismissible: false,
-            //textConfirm: 'Confirm',
-            buttonColor: kNotifColor,
-          );
         }
 
         /* var text = String.fromCharCodes(ndef.cachedMessage!.records[0].payload);
@@ -110,6 +100,65 @@ class HumanResourceWorkHoursController extends GetxController {
         ); */
       },
     );
+  }
+
+  Future<void> sendNfcTriggerInfo(
+      DateTime triggerDate, int userId, String nfcCode) async {
+    var hourTime = "00";
+
+    var minuteTime = "00";
+
+    var formatter = DateFormat('yyyy-MM-dd');
+
+    if (triggerDate.hour < 10) {
+      hourTime = "0${triggerDate.hour}";
+    } else {
+      hourTime = "${triggerDate.hour}";
+    }
+
+    if (triggerDate.minute < 10) {
+      minuteTime = "0${triggerDate.minute}";
+    } else {
+      minuteTime = "${triggerDate.minute}";
+    }
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/lit_workhour/');
+
+    var msg = jsonEncode({
+      "AD_User_ID": {"id": userId},
+      "DocumentNo": nfcCode,
+      "DateStart": '${formatter.format(triggerDate)}T$hourTime:$minuteTime:00Z',
+    });
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Error!",
+        response.body,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
   }
 
   void _getTime() {

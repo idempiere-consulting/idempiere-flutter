@@ -52,6 +52,8 @@ import 'package:idempiere_app/Screens/app/features/Settings/views/screens/settin
 import 'package:idempiere_app/Screens/app/features/Signature/signature_page.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain/views/screens/supplychain_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_inventory_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/views/screens/supplychain_load_unload_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/views/screens/supplychain_load_unload_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Productwarehouse/views/screens/supplychain_productwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
@@ -350,6 +352,16 @@ class MyApp extends StatelessWidget {
           name: '/Supplychain',
           page: () => const SupplychainScreen(),
           binding: SupplychainBinding(),
+        ),
+        GetPage(
+          name: '/SupplychainLoadUnload',
+          page: () => const SupplychainLoadUnloadScreen(),
+          binding: SupplychainLoadUnloadBinding(),
+        ),
+        GetPage(
+          name: '/SupplychainLoadUnloadLine',
+          page: () => const SupplychainLoadUnloadLineScreen(),
+          binding: SupplychainLoadUnloadLineBinding(),
         ),
         GetPage(
           name: '/Signature',

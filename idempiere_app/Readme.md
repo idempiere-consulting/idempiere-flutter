@@ -852,12 +852,8 @@ get API :
 * [ ] (U)Modificare ...
 * [ ] (P)...
 
-<<<<<<< HEAD
-##  7 Acquisti 
-=======
 ##  8 Acquisti 
 Purchase
->>>>>>> redme
 
 #### - Lead Fornitore [R] (CUD)
 
@@ -940,13 +936,9 @@ Purchase
 
 
 
-<<<<<<< HEAD
-## 7  Logistica
-=======
 ## 9  Logistica  
     Supplychain
 
->>>>>>> redme
 
 #### - Prodotto / Giacenza
 
@@ -1045,14 +1037,8 @@ Purchase
 
 
 
-<<<<<<< HEAD
-
-##  8 Mezzi e Attrezzature
-
-=======
 ##  10 Mezzi e Attrezzature
 Vehicle Equipment
->>>>>>> redme
 #### - Mezzi
 
 * Stato/note :  Definito/ 10%
@@ -1651,7 +1637,7 @@ CRUD=1111=F
  68 Trasferimento        :
  69 Consumo              :
  66 Inventario           :
- 67
+ 67 Carico Scarico
  68
  69 Mezzi ***************: 1 *** 8 Mezzi e Attrezzatura
  70 Mezzi

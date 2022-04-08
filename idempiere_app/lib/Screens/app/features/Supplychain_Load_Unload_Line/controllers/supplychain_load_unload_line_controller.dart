@@ -1,116 +1,33 @@
 part of dashboard;
 
-class CRMLeadController extends GetxController {
+class SupplychainLoadUnloadLineController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late LeadJson _trx;
-  var _hasCallSupport = false;
+  late LoadUnloadLineJson _trx;
   //var _hasMailSupport = false;
-
+  late int idDoc;
   // ignore: prefer_typing_uninitialized_variables
-  var adUserId;
-
-  var value = "Tutti".obs;
-
-  var filters = ["Tutti", "Miei" /* , "Team" */];
-  var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    canLaunch('tel:123').then((bool result) {
-      _hasCallSupport = result;
-    });
-
-    getLeads();
+    getLoadUnloadsLine();
     //getADUserID();
-    adUserId = GetStorage().read('userId');
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  LeadJson get trx => _trx;
+  LoadUnloadLineJson get trx => _trx;
   //String get value => _value.toString();
 
-  changeFilter() {
-    filterCount++;
-    if (filterCount == 2) {
-      filterCount = 0;
-    }
-
-    value.value = filters[filterCount];
-    getLeads();
-  }
-
-  Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-
-      adUserId = json["records"][0]["id"];
-
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-    }
-  }
-
-  Future<void> makePhoneCall(String phoneNumber) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    if (_hasCallSupport) {
-      final Uri launchUri = Uri(
-        scheme: 'tel',
-        path: phoneNumber,
-      );
-      await launch(launchUri.toString());
-    }
-  }
-
-  Future<void> writeMailTo(String receiver) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'mailto',
-      path: receiver,
-    );
-    await launch(launchUri.toString());
-  }
-
-  Future<void> getLeads() async {
-    _dataAvailable.value = false;
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
-    var notificationFilter = "";
-    if (Get.arguments != null) {
-      if (Get.arguments['notificationId'] != null) {
-        notificationFilter =
-            " and AD_User_ID eq ${Get.arguments['notificationId']}";
-        Get.arguments['notificationId'] = null;
-      }
-    }
+  Future<void> getLoadUnloadsLine() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
+        '/api/v1/models/M_InventoryLine?\$filter= M_Inventory_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -120,7 +37,7 @@ class CRMLeadController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = LeadJson.fromJson(jsonDecode(response.body));
+      _trx = LoadUnloadLineJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
