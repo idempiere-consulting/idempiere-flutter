@@ -152,7 +152,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                                 color: Colors.white24))),
                                     child: IconButton(
                                       icon: const Icon(
-                                        Icons.article,
+                                        Icons.edit,
                                         color: Colors.green,
                                       ),
                                       tooltip: 'Edit Lead',
@@ -185,6 +185,32 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                       },
                                     ),
                                   ),
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.article,
+                                      color: controller.trx.records![index]
+                                                  .docStatus?.id ==
+                                              "CO"
+                                          ? Colors.green
+                                          : Colors.yellow,
+                                    ),
+                                    onPressed: () {
+                                      Get.offNamed('/InvoiceLine', arguments: {
+                                        "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "bPartner": controller
+                                            .trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                        "priceListId": controller
+                                            .trx.records![index].mPriceListID,
+                                        "dateOrdered": controller
+                                            .trx.records![index].dateInvoiced,
+                                      });
+                                    },
+                                  ),
                                   title: Text(
                                     "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
                                     style: const TextStyle(
@@ -197,12 +223,14 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID!.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID!.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),

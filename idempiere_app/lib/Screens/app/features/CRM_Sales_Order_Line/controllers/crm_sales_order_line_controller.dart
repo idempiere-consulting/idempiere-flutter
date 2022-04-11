@@ -1,58 +1,37 @@
 part of dashboard;
 
-class SupplychainLoadUnloadController extends GetxController {
+class CRMSalesOrderLineController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late LoadUnloadJson _trx;
-  //var _hasMailSupport = false;
-  late int idDoc;
+  late SalesOrderLineJson _trx;
+
   // ignore: prefer_typing_uninitialized_variables
+  var adUserId;
+
+  var value = "Tutti".obs;
+
+  var filters = ["Tutti", "Miei" /* , "Team" */];
+  var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
   @override
   void onInit() {
-    getDocType();
     super.onInit();
-
-    //getLoadUnloads();
-    //getADUserID();
+    getSalesOrderLines();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  LoadUnloadJson get trx => _trx;
+  SalesOrderLineJson get trx => _trx;
   //String get value => _value.toString();
 
-  Future<void> getDocType() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_DocType?\$filter= Name eq \'Internal Use Inventory\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-
-      idDoc = json["records"][0]["id"];
-      getLoadUnloads();
-    }
-  }
-
-  Future<void> getLoadUnloads() async {
+  Future<void> getSalesOrderLines() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_Inventory?\$filter= C_DocType_ID eq $idDoc and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/c_orderline?\$filter= C_Order_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -62,7 +41,7 @@ class SupplychainLoadUnloadController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = LoadUnloadJson.fromJson(jsonDecode(response.body));
+      _trx = SalesOrderLineJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

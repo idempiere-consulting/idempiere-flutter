@@ -14,11 +14,13 @@ import 'package:idempiere_app/Screens/app/features/CRM_Commission/views/screens/
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_customer_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice_Line/views/screens/crm_invoice_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm_payment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_sales_order_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
@@ -160,6 +162,11 @@ class MyApp extends StatelessWidget {
           binding: CRMSalesOrderBinding(),
         ),
         GetPage(
+          name: '/SalesOrderLine',
+          page: () => const CRMSalesOrderLineScreen(),
+          binding: CRMSalesOrderLineBinding(),
+        ),
+        GetPage(
           name: '/ProductList',
           page: () => const CRMProductListScreen(),
           binding: CRMProductListBinding(),
@@ -168,6 +175,11 @@ class MyApp extends StatelessWidget {
           name: '/Invoice',
           page: () => const CRMInvoiceScreen(),
           binding: CRMInvoiceBinding(),
+        ),
+        GetPage(
+          name: '/InvoiceLine',
+          page: () => const CRMInvoiceLineScreen(),
+          binding: CRMInvoiceLineBinding(),
         ),
         GetPage(
           name: '/Payment',

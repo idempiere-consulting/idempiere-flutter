@@ -8,7 +8,11 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/invoice_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice_Line/models/invoiceline_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_create_sales_orderline.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_edit_sales_orderline.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -30,10 +34,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
-part '../../bindings/crm_sales_order_binding.dart';
+part '../../bindings/crm_sales_order_line_binding.dart';
 
 // controller
-part '../../controllers/crm_sales_order_controller.dart';
+part '../../controllers/crm_sales_order_line_controller.dart';
 
 // models
 part '../../models/profile.dart';
@@ -47,51 +51,8 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
-  const CRMSalesOrderScreen({Key? key}) : super(key: key);
-
-  completeOrder(int index) async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final msg = jsonEncode({
-      "record-id": controller.trx.records![index].id,
-    });
-    final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/processes/c-order-process');
-
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      controller.getSalesOrders();
-      //print("done!");
-
-      Get.snackbar(
-        "Fatto!",
-        "Il record è stato completato",
-        icon: const Icon(
-          Icons.done,
-          color: Colors.green,
-        ),
-      );
-    } else {
-      //print(response.body);
-      Get.snackbar(
-        "Errore!",
-        "Il record non è stato completato",
-        icon: const Icon(
-          Icons.error,
-          color: Colors.red,
-        ),
-      );
-    }
-  }
+class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
+  const CRMSalesOrderLineScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -102,59 +63,40 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
       },
       child: Scaffold(
         //key: controller.scaffoldKey,
-        drawer: (ResponsiveBuilder.isDesktop(context))
-            ? null
-            : Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('${Get.arguments["bPartner"]} ${Get.arguments["docNo"]}'),
+          leading: IconButton(
+            icon: const Icon(Icons.chevron_left),
+            onPressed: () {
+              Get.offNamed('/SalesOrder');
+            },
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                onPressed: () {
+                  /* Get.to(const CreateSupplychainLoadUnloadLine(), arguments: {
+                    "id": Get.arguments["id"],
+                  }); */
+                  Get.to(const CreateSalesOrderLine(), arguments: {
+                    "id": Get.arguments["id"],
+                    "priceListId": Get.arguments["priceListId"],
+                    "dateOrdered": Get.arguments["dateOrdered"],
+                  });
+                },
+                icon: const Icon(
+                  Icons.add,
                 ),
               ),
+            ),
+          ],
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
               return Column(children: [
-                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
-                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
-                const SizedBox(height: kSpacing / 2),
-                const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("ORDINI: ${controller.trx.rowcount}")
-                          : const Text("ORDINI: ")),
-                      margin: const EdgeInsets.only(left: 15),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getSalesOrders();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
@@ -172,37 +114,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ExpansionTile(
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.article,
-                                      color: controller.trx.records![index]
-                                                  .docStatus?.id ==
-                                              "CO"
-                                          ? Colors.green
-                                          : Colors.yellow,
-                                    ),
-                                    onPressed: () {
-                                      Get.offNamed('/SalesOrderLine',
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "bPartner": controller
-                                                .trx
-                                                .records![index]
-                                                .cBPartnerID
-                                                ?.identifier,
-                                            "docNo": controller
-                                                .trx.records![index].documentNo,
-                                            "priceListId": controller
-                                                .trx
-                                                .records![index]
-                                                .mPriceListID
-                                                ?.id,
-                                            "dateOrdered": controller.trx
-                                                .records![index].dateOrdered,
-                                          });
-                                    },
-                                  ),
                                   tilePadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   leading: Container(
@@ -215,61 +126,76 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                     child: IconButton(
                                       icon: const Icon(
                                         Icons.edit,
+                                        color: Colors.green,
                                       ),
                                       tooltip: 'Edit Lead',
                                       onPressed: () {
-                                        //log("info button pressed");
-                                        /* Get.to(const EditLead(), arguments: {
-                                          "id": controller
-                                              .trx.records![index].id,
-                                          "name": controller
-                                              .trx.records![index].name,
-                                          "leadStatus": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .Status
-                                                  ?.id ??
-                                              "",
-                                          "bpName": controller
-                                              .trx.records![index].bPName,
-                                          "Tel": controller
-                                              .trx.records![index].phone,
-                                          "eMail": controller
-                                              .trx.records![index].eMail,
-                                          "salesRep": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""
-                                        }); */
+                                        Get.to(const EditSalesOrderLine(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "qty": controller.trx
+                                                  .records![index].qtyEntered,
+                                              "date": controller.trx
+                                                  .records![index].datePromised,
+                                              "price": controller.trx
+                                                  .records![index].priceEntered,
+                                            });
                                       },
                                     ),
                                   ),
+
                                   title: Text(
-                                    "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
+                                    controller.trx.records![index].mProductID
+                                            ?.identifier ??
+                                        "???",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.handshake,
-                                          color: Colors.yellowAccent),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID!.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Total Row: ",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Text(
+                                            "€${controller.trx.records![index].lineNetAmt}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.lightbulb,
+                                              color: Colors.yellowAccent),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cActivityID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-
+                                  /* trailing: const Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: Colors.white,
+                                      size: 30.0,
+                                    ), */
                                   childrenPadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   children: [
@@ -278,65 +204,34 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                         Row(
                                           children: [
                                             const Text(
-                                              "Importo: ",
+                                              "Listed Price: ",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                                "€${controller.trx.records![index].grandTotal}"),
+                                                "€${controller.trx.records![index].priceList}"),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
                                           children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.settings,
-                                              ),
-                                              onPressed: () async {
-                                                final ip =
-                                                    GetStorage().read('ip');
-                                                String authorization =
-                                                    'Bearer ' +
-                                                        GetStorage()
-                                                            .read('token');
-                                                final msg = jsonEncode({
-                                                  "DocAction": "CO",
-                                                });
-                                                final protocol = GetStorage()
-                                                    .read('protocol');
-                                                var url = Uri.parse('$protocol://' +
-                                                    ip +
-                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
-
-                                                var response = await http.put(
-                                                  url,
-                                                  body: msg,
-                                                  headers: <String, String>{
-                                                    'Content-Type':
-                                                        'application/json',
-                                                    'Authorization':
-                                                        authorization,
-                                                  },
-                                                );
-                                                if (response.statusCode ==
-                                                    200) {
-                                                  //print("done!");
-                                                  completeOrder(index);
-                                                } else {
-                                                  //print(response.body);
-                                                  Get.snackbar(
-                                                    "Errore!",
-                                                    "Il record non è stato completato",
-                                                    icon: const Icon(
-                                                      Icons.error,
-                                                      color: Colors.red,
-                                                    ),
-                                                  );
-                                                }
-                                              },
+                                            const Text(
+                                              "Entered Price: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
                                             ),
+                                            Text(
+                                                "€${controller.trx.records![index].priceEntered}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Quantity: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].qtyEntered}"),
                                           ],
                                         ),
                                       ],
