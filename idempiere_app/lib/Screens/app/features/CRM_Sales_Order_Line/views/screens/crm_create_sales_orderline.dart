@@ -2,6 +2,7 @@ import 'dart:convert';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,7 +11,6 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/sc
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 class CreateSalesOrderLine extends StatefulWidget {
   const CreateSalesOrderLine({Key? key}) : super(key: key);
@@ -23,7 +23,6 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
   createSalesOrderLine() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var formatter = DateFormat('yyyy-MM-dd');
 
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
@@ -66,7 +65,9 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Errore!",
         "Record non creato",
@@ -101,7 +102,9 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
       priceListVersionID = json["records"][0]["id"];
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -128,7 +131,9 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
         productPriceList = json["records"][0]["PriceList"];
       }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -149,12 +154,13 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
       var json = ProductJson.fromJson(jsonDecode(response.body));
       uomID = json.records![0].cUOMID?.id;
       cattaxID = json.records![0].cTaxCategoryID?.id;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -196,12 +202,18 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
   // ignore: prefer_typing_uninitialized_variables
   var priceFieldController;
 
+  // ignore: prefer_typing_uninitialized_variables
   var productId;
+  // ignore: prefer_typing_uninitialized_variables
   var productName;
+  // ignore: prefer_typing_uninitialized_variables
   var productPriceList;
+  // ignore: prefer_typing_uninitialized_variables
   var uomID;
+  // ignore: prefer_typing_uninitialized_variables
   var cattaxID;
   //var productPriceStd;
+  // ignore: prefer_typing_uninitialized_variables
   var initialValue;
 
   var priceListVersionID = 0;
@@ -225,7 +237,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
     priceFieldController = TextEditingController();
     qtyFieldController.text = "1";
     priceFieldController.text = "0";
-    initialValue = TextEditingValue(text: '');
+    initialValue = const TextEditingValue(text: '');
     //fillFields();
   }
 

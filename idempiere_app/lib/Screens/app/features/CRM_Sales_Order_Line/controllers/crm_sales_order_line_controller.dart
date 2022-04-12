@@ -7,6 +7,7 @@ class CRMSalesOrderLineController extends GetxController {
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
+  // ignore: prefer_typing_uninitialized_variables
   var lineId;
 
   var value = "Tutti".obs;

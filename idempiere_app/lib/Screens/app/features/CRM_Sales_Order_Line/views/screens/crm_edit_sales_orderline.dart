@@ -2,6 +2,7 @@ import 'dart:convert';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_sales_order_line_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 class EditSalesOrderLine extends StatefulWidget {
   const EditSalesOrderLine({Key? key}) : super(key: key);
@@ -53,7 +53,9 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Errore!",
         "Record non modificato",
@@ -93,7 +95,9 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Errore!",
         "Record non eliminato",
@@ -125,6 +129,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
   var priceFieldController;
   //var productPriceStd;
 
+  // ignore: prefer_typing_uninitialized_variables
   var id;
 
   var priceListVersionID = 0;

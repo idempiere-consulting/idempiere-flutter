@@ -8,8 +8,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/invoice_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice_Line/models/invoiceline_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_create_sales_orderline.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_edit_sales_orderline.dart';
@@ -31,7 +29,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/crm_sales_order_line_binding.dart';
@@ -130,8 +127,6 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                       ),
                                       tooltip: 'Edit Lead',
                                       onPressed: () {
-                                        print(
-                                            controller.trx.records![index].id);
                                         Get.to(const EditSalesOrderLine(),
                                             arguments: {
                                               "ID": controller

@@ -1,6 +1,7 @@
 import 'dart:convert';
 //import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -53,7 +54,9 @@ class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Errore!",
         "Record non creato",
@@ -96,7 +99,6 @@ class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Center(

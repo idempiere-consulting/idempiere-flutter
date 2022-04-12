@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/views/screens/supplychain_load_unload_line_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -59,7 +58,9 @@ class _CreateSupplychainLoadUnloadLineState
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Errore!",
         "Record non creato",
@@ -141,7 +142,9 @@ class _CreateSupplychainLoadUnloadLineState
         isready = true;
       }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -170,13 +173,19 @@ class _CreateSupplychainLoadUnloadLineState
 
   bool isready = true;
 
+  // ignore: prefer_typing_uninitialized_variables
   var productId;
+  // ignore: prefer_typing_uninitialized_variables
   var productName;
+  // ignore: prefer_typing_uninitialized_variables
   var locatorId;
+  // ignore: prefer_typing_uninitialized_variables
   var locatorName;
 
+  // ignore: prefer_typing_uninitialized_variables
   var dropdownValue;
 
+  // ignore: prefer_typing_uninitialized_variables
   var initialValue;
 
   static String _displayStringForOption(Records option) => option.name!;
@@ -196,7 +205,7 @@ class _CreateSupplychainLoadUnloadLineState
     descriptionFieldController = TextEditingController();
     qtyFieldController.text = "1";
     bycodeFieldController = TextEditingController();
-    initialValue = TextEditingValue(text: '');
+    initialValue = const TextEditingValue(text: '');
     //fillFields();
   }
 
@@ -207,7 +216,6 @@ class _CreateSupplychainLoadUnloadLineState
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Center(
