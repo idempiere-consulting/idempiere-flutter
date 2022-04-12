@@ -130,9 +130,11 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                       ),
                                       tooltip: 'Edit Lead',
                                       onPressed: () {
+                                        print(
+                                            controller.trx.records![index].id);
                                         Get.to(const EditSalesOrderLine(),
                                             arguments: {
-                                              "id": controller
+                                              "ID": controller
                                                   .trx.records![index].id,
                                               "qty": controller.trx
                                                   .records![index].qtyEntered,

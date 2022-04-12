@@ -22,7 +22,6 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
   editSalesOrderLine() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var formatter = DateFormat('yyyy-MM-dd');
 
     final msg = jsonEncode({
       "QtyEntered": double.parse(qtyFieldController.text),
@@ -32,9 +31,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
       "DatePromised": date,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_orderline/${Get.arguments["id"]}');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_orderline/$id');
     //print(msg);
     var response = await http.put(
       url,
@@ -68,6 +65,46 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
     }
   }
 
+  deleteSalesOrderLine() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_orderline/$id');
+    //print(msg);
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.find<CRMSalesOrderLineController>().getSalesOrderLines();
+      Get.back();
+      Get.back();
+      //print("done!");
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato eliminato",
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      print(response.body);
+      Get.snackbar(
+        "Errore!",
+        "Record non eliminato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   /* void fillFields() {
     nameFieldController.text = args["name"];
     bPartnerFieldController.text = args["bpName"];
@@ -88,6 +125,8 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
   var priceFieldController;
   //var productPriceStd;
 
+  var id;
+
   var priceListVersionID = 0;
 
   String date = Get.arguments["date"];
@@ -95,13 +134,13 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
   @override
   void initState() {
     super.initState();
+    id = Get.arguments["ID"];
     valueFieldController = TextEditingController();
     nameFieldController = TextEditingController();
     qtyFieldController = TextEditingController();
     priceFieldController = TextEditingController();
     qtyFieldController.text = (Get.arguments["qty"] ?? 1).toString();
     priceFieldController.text = (Get.arguments["price"] ?? 0).toString();
-    print(Get.arguments["date"]);
     //fillFields();
   }
 
@@ -119,6 +158,26 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
           child: Text('Edit Sales Order Line'),
         ),
         actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
+                //deleteSalesOrderLine();
+                Get.defaultDialog(
+                    title: "Delete",
+                    content: const Text(
+                        "Are you sure you want to delete the record?"),
+                    onConfirm: () {
+                      deleteSalesOrderLine();
+                    },
+                    onCancel: () {});
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(

@@ -7,6 +7,8 @@ class CRMSalesOrderLineController extends GetxController {
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
+  var lineId;
+
   var value = "Tutti".obs;
 
   var filters = ["Tutti", "Miei" /* , "Team" */];
@@ -17,6 +19,7 @@ class CRMSalesOrderLineController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    lineId = Get.arguments["id"];
     getSalesOrderLines();
   }
 
@@ -31,7 +34,8 @@ class CRMSalesOrderLineController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_orderline?\$filter= C_Order_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '/api/v1/models/c_orderline?\$filter= C_Order_ID eq $lineId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    //print(Get.arguments["id"]);
     var response = await http.get(
       url,
       headers: <String, String>{
