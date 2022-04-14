@@ -147,6 +147,19 @@ class _Sidebar extends StatelessWidget {
                       : false,
                 ),
                 SelectionButtonData(
+                  activeIcon: Icons.emoji_transportation,
+                  icon: Icons.emoji_transportation_outlined,
+                  label: "Production",
+                  visible: int.parse(list[75], radix: 16)
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
                   activeIcon: Icons.real_estate_agent,
                   icon: Icons.real_estate_agent_outlined,
                   label: "DashboardAssetresource".tr,
@@ -248,21 +261,24 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/VehicleEquipment');
                     break;
                   case 10:
-                    Get.offNamed('/DashboardAssetresource');
+                    Get.offNamed('/Production');
                     break;
                   case 11:
-                    Get.offNamed('/HumanResource');
+                    Get.offNamed('/DashboardAssetresource');
                     break;
                   case 12:
-                    Get.offNamed('/Employee');
+                    Get.offNamed('/HumanResource');
                     break;
                   case 13:
-                    Get.offNamed('/TrainingCourse');
+                    Get.offNamed('/Employee');
                     break;
                   case 14:
-                    Get.offNamed('/Profil');
+                    Get.offNamed('/TrainingCourse');
                     break;
                   case 15:
+                    Get.offNamed('/Profil');
+                    break;
+                  case 16:
                     Get.offNamed('/Settings');
                     break;
                   default:

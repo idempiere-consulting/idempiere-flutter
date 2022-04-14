@@ -34,6 +34,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       jpTODOSync = true;
       syncJPTODO();
     }
+    if (GetStorage().read('isUserPreferencesSync') ?? true) {
+      userPreferencesSync = true;
+      syncUserPreferences();
+    }
     if (GetStorage().read('isBusinessPartnerSync') ?? true) {
       businessPartnerSync = true;
       syncBusinessPartner();
@@ -69,6 +73,28 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       checkSyncData();
     } else {
       jpTODOSync = false;
+      checkSyncData();
+    }
+  }
+
+  syncUserPreferences() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/AD_UserPreference?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      GetStorage().write('userPreferencesSync', response.body);
+      userPreferencesSync = false;
       checkSyncData();
     }
   }
@@ -298,6 +324,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   checkSyncData() {
     if (businessPartnerSync == false &&
+        userPreferencesSync == false &&
         productSync == false &&
         jpTODOSync == false &&
         workOrderSync == false) {
@@ -433,6 +460,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     }
   }
 
+  bool userPreferencesSync = false;
   bool businessPartnerSync = false;
   bool productSync = false;
   bool jpTODOSync = false;

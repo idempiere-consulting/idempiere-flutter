@@ -4,8 +4,10 @@ class SettingsController extends GetxController {
   var isBusinessPartnerSync = true.obs;
   var isProductSync = true.obs;
   var isjpTODOSync = true.obs;
+  var isUserPreferencesSync = true.obs;
   var isWorkOrderSync = true.obs;
   var isBusinessPartnerSyncing = false.obs;
+  var isUserPreferencesSyncing = false.obs;
   var isProductSyncing = false.obs;
   var isjpTODOSyncing = false.obs;
   var isWorkOrderSyncing = false.obs;
@@ -14,6 +16,8 @@ class SettingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    isUserPreferencesSync.value =
+        GetStorage().read('isUserPreferencesSync') ?? true;
     isBusinessPartnerSync.value =
         GetStorage().read('isBusinessPartnerSync') ?? true;
     isProductSync.value = GetStorage().read('isProductSync') ?? true;
@@ -22,6 +26,10 @@ class SettingsController extends GetxController {
   }
 
   Future<void> reSyncAll() async {
+    if (isUserPreferencesSync.value == true) {
+      isUserPreferencesSyncing.value = true;
+      syncUserPreferences();
+    }
     if (isjpTODOSync.value == true) {
       isjpTODOSyncing.value = true;
       syncJPTODO();
@@ -64,6 +72,27 @@ class SettingsController extends GetxController {
     if (response.statusCode == 200) {
       GetStorage().write('jpTODOSync', response.body);
       isjpTODOSyncing.value = false;
+    }
+  }
+
+  syncUserPreferences() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/AD_UserPreference?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      GetStorage().write('userPreferencesSync', response.body);
+      isUserPreferencesSyncing.value = false;
     }
   }
 

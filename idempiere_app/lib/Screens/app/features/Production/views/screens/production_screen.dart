@@ -1,7 +1,6 @@
 library dashboard;
 
 //import 'dart:convert';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -20,20 +19,17 @@ import 'package:idempiere_app/Screens/app/shared_components/selection_button.dar
 import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
-import 'package:intl/intl.dart';
-import 'package:settings_ui/settings_ui.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 // binding
-part '../../bindings/settings_binding.dart';
+part '../../bindings/production_binding.dart';
 
 // controller
-part '../../controllers/settings_controller.dart';
+part '../../controllers/production_controller.dart';
 
 // models
 part '../../models/profile.dart';
@@ -47,125 +43,62 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class SettingsScreen extends GetView<SettingsController> {
-  const SettingsScreen({Key? key}) : super(key: key);
+class ProductionScreen extends GetView<ProductionController> {
+  const ProductionScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () {
-            Get.offNamed('/Dashboard');
-          },
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: ResponsiveBuilder(
+    return WillPopScope(
+      onWillPop: () async {
+        Get.offNamed('/Dashboard');
+
+        return false;
+      },
+      child: Scaffold(
+        //key: controller.scaffoldKey,
+        drawer: (ResponsiveBuilder.isDesktop(context))
+            ? null
+            : Drawer(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: kSpacing),
+                  child: _Sidebar(data: controller.getSelectedProject()),
+                ),
+              ),
+        body: SingleChildScrollView(
+            child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
-            return Column(
-              children: [
-                Obx(() => SettingsList(
-                      shrinkWrap: true,
-                      sections: [
-                        SettingsSection(
-                          margin: const EdgeInsetsDirectional.all(8.0),
-                          title: const Text('Sync Data'),
-                          tiles: <SettingsTile>[
-                            SettingsTile(
-                              title: const Text('Re-Sync All'),
-                              leading: const Icon(Icons.sync),
-                              onPressed: (context) {
-                                controller.reSyncAll();
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('User Preferences'),
-                              // ignore: prefer_const_constructors
-                              leading:
-                                  controller.isUserPreferencesSyncing.value ==
-                                          false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue:
-                                  controller.isUserPreferencesSync.value,
-                              onToggle: (bool value) {
-                                controller.isUserPreferencesSync.value = value;
-                                GetStorage()
-                                    .write('isUserPreferencesSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Business Partners'),
-                              // ignore: prefer_const_constructors
-                              leading:
-                                  controller.isBusinessPartnerSyncing.value ==
-                                          false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue:
-                                  controller.isBusinessPartnerSync.value,
-                              onToggle: (bool value) {
-                                controller.isBusinessPartnerSync.value = value;
-                                GetStorage()
-                                    .write('isBusinessPartnerSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Event Calendar'),
-                              leading: controller.isjpTODOSyncing.value == false
-                                  ? const Icon(Icons.cloud_download)
-                                  : const CircularProgressIndicator(),
-                              initialValue: controller.isjpTODOSync.value,
-                              onToggle: (bool value) {
-                                controller.isjpTODOSync.value = value;
-                                GetStorage().write('isjpTODOSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Products'),
-                              leading:
-                                  controller.isProductSyncing.value == false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue: controller.isProductSync.value,
-                              onToggle: (bool value) {
-                                controller.isProductSync.value = value;
-                                GetStorage().write('isProductSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Work Orders'),
-                              // ignore: prefer_const_constructors
-                              leading:
-                                  controller.isWorkOrderSyncing.value == false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue: controller.isWorkOrderSync.value,
-                              onToggle: (bool value) {
-                                controller.isWorkOrderSync.value = value;
-                                GetStorage().write('isWorkOrderSync', value);
-                              },
-                            ),
-                          ],
-                        ),
-                        SettingsSection(
-                          margin: const EdgeInsetsDirectional.all(8.0),
-                          title: const Text('Language'),
-                          tiles: <SettingsTile>[
-                            SettingsTile.navigation(
-                              leading: const Icon(Icons.language),
-                              title: const Text('Language'),
-                              value: const Text('Italian'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
-              ],
-            );
+            return Column(children: [
+              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+              _buildHeader(
+                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
+              const SizedBox(height: kSpacing / 2),
+              const Divider(),
+              //  _buildProfile(data: controller.getProfil()),
+              //  const SizedBox(height: kSpacing),
+              //  _buildProgress(axis: Axis.vertical),
+              //  const SizedBox(height: kSpacing),
+              //  _buildTeamMember(data: controller.getMember()),
+              /*  const SizedBox(height: kSpacing),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+                child: GetPremiumCard(onPressed: () {}),
+              ), */
+              const SizedBox(height: kSpacing * 2),
+              _buildTaskOverview(
+                data: controller.getAllTask(),
+                headerAxis: Axis.vertical,
+                crossAxisCount: 6,
+                crossAxisCellCount: 6,
+              ),
+              const SizedBox(height: kSpacing * 2),
+              _buildActiveProject(
+                data: controller.getActiveProject(),
+                crossAxisCount: 6,
+                crossAxisCellCount: 6,
+              ),
+              const SizedBox(height: kSpacing),
+              _buildRecentMessages(data: controller.getChatting()),
+            ]);
           },
           tabletBuilder: (context, constraints) {
             return Row(
@@ -297,11 +230,11 @@ class SettingsScreen extends GetView<SettingsController> {
                       _buildRecentMessages(data: controller.getChatting()),
                     ],
                   ),
-                ),
+                )
               ],
             );
           },
-        ),
+        )),
       ),
     );
   }
