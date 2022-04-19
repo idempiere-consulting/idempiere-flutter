@@ -87,7 +87,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                           : const Text("Listino Prodotto: ")),
                       margin: const EdgeInsets.only(left: 15),
                     ),
-                    Container(
+                    /* Container(
                       margin: const EdgeInsets.only(left: 40),
                       child: IconButton(
                         onPressed: () {
@@ -98,7 +98,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                           color: Colors.lightBlue,
                         ),
                       ),
-                    ),
+                    ), */
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
@@ -111,7 +111,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                         ),
                       ),
                     ),
-                    Container(
+                    /* Container(
                       margin: const EdgeInsets.only(left: 30),
                       child: Obx(
                         () => TextButton(
@@ -122,7 +122,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                           child: Text(controller.value.value),
                         ),
                       ),
-                    ),
+                    ), */
                   ],
                 ),
                 const SizedBox(height: kSpacing),
@@ -132,191 +132,99 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records?.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
+                            return GestureDetector(
+                              onTap: () {
+                                print("card tapped");
+                              },
+                              child: Card(
+                                elevation: 8.0,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 6.0),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(64, 75, 96, .9)),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 1),
+                                        child: controller.trx.records![index]
+                                                    .imageData !=
+                                                null
+                                            ? Image.memory(const Base64Codec()
+                                                .decode((controller
+                                                        .trx
+                                                        .records![index]
+                                                        .imageData!)
+                                                    .replaceAll(
+                                                        RegExp(r'\n'), '')))
+                                            : const Text("no image"),
                                       ),
-                                      tooltip: 'Edit Lead',
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        /* Get.to(const EditLead(), arguments: {
-                                          "id": controller
-                                              .trx.windowrecords![index].id,
-                                          "name": controller.trx
-                                                  .windowrecords![index].name ??
-                                              "",
-                                          "leadStatus": controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .leadStatus
-                                                  ?.id ??
-                                              "",
-                                          "bpName": controller
-                                              .trx.windowrecords![index].bPName,
-                                          "Tel": controller.trx
-                                                  .windowrecords![index].phone ??
-                                              "",
-                                          "eMail": controller.trx
-                                                  .windowrecords![index].eMail ??
-                                              "",
-                                          "salesRep": controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""
-                                        }); */
-                                      },
-                                    ),
-                                  ),
-                                  title: Text(
-                                    controller.trx.records![index].name ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                      ListTile(
+                                        /* tilePadding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0), */
+                                        /* leading: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: controller.trx.records![index]
+                                                      .imageData !=
+                                                  null
+                                              ? Image.memory(const Base64Codec()
+                                                  .decode((controller
+                                                          .trx
+                                                          .records![index]
+                                                          .imageData!)
+                                                      .replaceAll(
+                                                          RegExp(r'\n'), '')))
+                                              : Text("no image"),
+                                        ), */
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index].value ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                        title: Text(
+                                          "  €" +
+                                              controller
+                                                  .trx.records![index].price
+                                                  .toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Column(
+                                          children: [
+                                            Row(
+                                              children: <Widget>[
+                                                /* const Icon(Icons.,
+                                                    color: Colors.yellowAccent), */
+                                                Expanded(
+                                                  child: Text(
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name ??
+                                                        "??",
+                                                    style: const TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
                                       ),
                                     ],
                                   ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
-                                      children: const [
-                                        /* Row(
-                                          children: [
-                                            const Text(
-                                              "Business Partner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller
-                                                    .trx
-                                                    .windowrecords![index]
-                                                    .bPName ??
-                                                ""),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.call,
-                                                color: Colors.green,
-                                              ),
-                                              tooltip: 'Call',
-                                              onPressed: () {
-                                                //log("info button pressed");
-                                                if (controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .phone ==
-                                                    null) {
-                                                  log("info button pressed");
-                                                } else {
-                                                  controller.makePhoneCall(
-                                                      controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .phone
-                                                          .toString());
-                                                }
-                                              },
-                                            ),
-                                            Text(controller
-                                                    .trx
-                                                    .windowrecords![index]
-                                                    .phone ??
-                                                ""),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.mail,
-                                                color: Colors.white,
-                                              ),
-                                              tooltip: 'EMail',
-                                              onPressed: () {
-                                                if (controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .eMail ==
-                                                    null) {
-                                                  log("mail button pressed");
-                                                } else {
-                                                  controller.writeMailTo(
-                                                      controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .eMail
-                                                          .toString());
-                                                }
-                                              },
-                                            ),
-                                            Text(controller
-                                                    .trx
-                                                    .windowrecords![index]
-                                                    .eMail ??
-                                                ""),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Agente: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller
-                                                    .trx
-                                                    .windowrecords![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""),
-                                          ],
-                                        ), */
-                                      ],
-                                    ),
-                                  ],
                                 ),
                               ),
                             );
