@@ -105,9 +105,9 @@ class ProductionOrderScreen extends GetView<ProductionOrderController> {
                           controller: controller.searchFieldController,
                           onSubmitted: (String? value) {
                             for (var i = 0; i < controller.trx.rowcount!; i++) {
-                              if (value.toString().toLowerCase().contains(
+                              if (value.toString().toLowerCase() ==
                                   controller.trx.records![i].documentNo!
-                                      .toLowerCase())) {
+                                      .toLowerCase()) {
                                 Get.to(const EditProdutionOrder(), arguments: {
                                   "id": controller.trx.records![i].id,
                                   "docType":

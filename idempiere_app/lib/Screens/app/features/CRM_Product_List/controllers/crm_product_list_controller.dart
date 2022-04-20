@@ -8,6 +8,8 @@ class CRMProductListController extends GetxController {
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
+  var searchFieldController = TextEditingController();
+
   var value = "Tutti".obs;
 
   var filters = ["Tutti", "Miei" /* , "Team" */];
@@ -52,7 +54,7 @@ class CRMProductListController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       _trx = ProductListJson.fromJson(jsonDecode(response.body));
       //print(trx.rowcount);
       //print(response.body);

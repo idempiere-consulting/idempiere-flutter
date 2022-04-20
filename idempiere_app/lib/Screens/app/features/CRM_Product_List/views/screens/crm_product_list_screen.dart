@@ -9,7 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/models/product_list_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -28,7 +28,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/crm_product_list_binding.dart';
@@ -83,8 +82,8 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Listino Prodotto: ${controller.trx.rowcount}")
-                          : const Text("Listino Prodotto: ")),
+                          ? Text("Product List: ${controller.trx.rowcount}")
+                          : const Text("Product List: ")),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -108,6 +107,32 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                         icon: const Icon(
                           Icons.refresh,
                           color: Colors.yellow,
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            for (var i = 0; i < controller.trx.rowcount!; i++) {
+                              if (value.toString().toLowerCase() ==
+                                  controller.trx.records![i].value!
+                                      .toLowerCase()) {
+                                Get.to(const ProductListDetail(), arguments: {
+                                  "id": controller.trx.records![i].id,
+                                });
+                              }
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Product Value',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
                         ),
                       ),
                     ),
@@ -136,7 +161,9 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
-                                print("card tapped");
+                                Get.to(const ProductListDetail(), arguments: {
+                                  "id": controller.trx.records![index].id,
+                                });
                               },
                               child: Card(
                                 elevation: 8.0,
@@ -147,8 +174,14 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                                       color: Color.fromRGBO(64, 75, 96, .9)),
                                   child: Column(
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 1),
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            top: 1, bottom: 10),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
                                         child: controller.trx.records![index]
                                                     .imageData !=
                                                 null

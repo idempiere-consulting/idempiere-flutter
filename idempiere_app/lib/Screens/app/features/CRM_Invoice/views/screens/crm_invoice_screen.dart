@@ -111,7 +111,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 30),
+                      margin: const EdgeInsets.only(left: 10),
                       child: Obx(
                         () => TextButton(
                           onPressed: () {
@@ -119,6 +119,40 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                             //print("hello");
                           },
                           child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            for (var i = 0; i < controller.trx.rowcount!; i++) {
+                              if (value.toString().toLowerCase() ==
+                                  controller.trx.records![i].documentNo!
+                                      .toLowerCase()) {
+                                Get.offNamed('/InvoiceLine', arguments: {
+                                  "id": controller.trx.records![i].id,
+                                  "docNo":
+                                      controller.trx.records![i].documentNo,
+                                  "bPartner": controller
+                                      .trx.records![i].cBPartnerID?.identifier,
+                                  "priceListId":
+                                      controller.trx.records![i].mPriceListID,
+                                  "dateOrdered":
+                                      controller.trx.records![i].dateInvoiced,
+                                });
+                              }
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Product Value',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
                         ),
                       ),
                     ),

@@ -49,7 +49,7 @@ class Records {
   final bool? isPurchased;
   final bool? isSold;
   final int? volume;
-  final int? weight;
+  final num? weight;
   final String? value;
   final MProductCategoryID? mProductCategoryID;
   final CTaxCategoryID? cTaxCategoryID;
@@ -174,7 +174,7 @@ class Records {
         isPurchased = json['IsPurchased'] as bool?,
         isSold = json['IsSold'] as bool?,
         volume = json['Volume'] as int?,
-        weight = json['Weight'] as int?,
+        weight = json['Weight'] as num?,
         value = json['Value'] as String?,
         mProductCategoryID =
             (json['M_Product_Category_ID'] as Map<String, dynamic>?) != null

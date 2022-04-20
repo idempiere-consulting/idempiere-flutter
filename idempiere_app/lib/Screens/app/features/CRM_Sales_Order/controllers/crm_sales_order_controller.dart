@@ -14,6 +14,8 @@ class CRMSalesOrderController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var searchFieldController = TextEditingController();
+
   @override
   void onInit() {
     super.onInit();

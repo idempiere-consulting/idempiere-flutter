@@ -142,7 +142,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 30),
+                      margin: const EdgeInsets.only(left: 10),
                       child: Obx(
                         () => TextButton(
                           onPressed: () {
@@ -150,6 +150,40 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                             //print("hello");
                           },
                           child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            for (var i = 0; i < controller.trx.rowcount!; i++) {
+                              if (value.toString().toLowerCase() ==
+                                  controller.trx.records![i].documentNo!
+                                      .toLowerCase()) {
+                                Get.offNamed('/SalesOrderLine', arguments: {
+                                  "id": controller.trx.records![i].id,
+                                  "bPartner": controller
+                                      .trx.records![i].cBPartnerID?.identifier,
+                                  "docNo":
+                                      controller.trx.records![i].documentNo,
+                                  "priceListId": controller
+                                      .trx.records![i].mPriceListID?.id,
+                                  "dateOrdered":
+                                      controller.trx.records![i].dateOrdered,
+                                });
+                              }
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Doc N°',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
                         ),
                       ),
                     ),
