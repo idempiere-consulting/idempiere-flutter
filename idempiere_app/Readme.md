@@ -9,38 +9,22 @@ pre: "<b>90. </b>"
 
  ## Funzionalità da vedere !!! (Vincenzo)
 
-* [ ] Eseguire processo idempiere con parametri APIREST
-* [ ] Attivare Acquisizione Fotocamera 
-* [ ] Visualizzare Allegato (vedere ticket desktop app) (S2)
-* [ ] Gestione Barcode QRcode (vedi processi produzione)
-* [ ] Chat (wishing list)
-* [ ] Stampa report (da idempiere)  da vedere con AC (TOP)
-* [ ] Stampa Diretta Bluetooth o IP
-      https://pub.dev/packages/bluetooth_print
-* [ ] Gestione NFC - Per segnare le ore ? - controllare plugin NFC
-* [ ] Sondaggi https://github.com/quickbirdstudios/survey_kit
-* [ ] Flutter OFFLINE -
-      - Login (OK) User=isofflinenbale(OFF) 
-                  - sync/downlaod (?bp,led, !!! mp_task !!! )
-                   Locale/Cache "202101111054MARCOLVal4hr" Tokenlocal per offline (4 h 
-                   anche dei ruoli 
-                   SetupPagina di sincronizzaizone - Lead N  - MPTASK Y  [Avvio sync/Auto] (idempiere)
-       - Login [v]offline solo se l'utente è ismobilenable 
-         Bypassare Ruoli 
-         Pagine in offline (MP_Task, Lead , ...) ? quali sync , quando ?  
-         
-
-  
+* [ ] Produzione -Eseguire processo idempiere con parametri APIREST
+* [Wait ] Attivare Acquisizione Fotocamera 
+* [Wait] Stampa report (da idempiere)  da vedere con AC (TOP)
+* [Wait] Stampa Diretta Bluetooth o IP https://pub.dev/packages/bluetooth_print
+* [ ] Gestione NFC - Per segnare le ore ? - controllare plugin NFC 
+           
 
 ## Login ! (Vincenzo)
 
-* [ ] Logo App , immagini login 
+* [X] Logo App , immagini login - Video Esplicativo - (icona+3 immagini)
 * [ ] Spostare Utente in alto a Sx  
-* [ ] Accesso via https  
-* [ ] Saltare la prima pagina e andare alla Login Page 
-* [ ] Non si visualizzano i Dati Server  
+
+
+
 * [ ] Exit(Tocca ancora per uscire ) 
-* [ ] Logout (Attenzione cancella i dati di login )
+* [Wait] Su setup "Cancella dati (anche offline) e cache 
 
 ## Dashboard (Vincenzo/Matteo)
 
