@@ -9,22 +9,16 @@ pre: "<b>90. </b>"
 
  ## Funzionalità da vedere !!! (Vincenzo)
 
-* [ ] Produzione -Eseguire processo idempiere con parametri APIREST
 * [Wait ] Attivare Acquisizione Fotocamera 
 * [Wait] Stampa report (da idempiere)  da vedere con AC (TOP)
 * [Wait] Stampa Diretta Bluetooth o IP https://pub.dev/packages/bluetooth_print
-* [ ] Gestione NFC - Per segnare le ore ? - controllare plugin NFC 
-           
+          
 
 ## Login ! (Vincenzo)
 
-* [X] Logo App , immagini login - Video Esplicativo - (icona+3 immagini)
-* [ ] Spostare Utente in alto a Sx  
-
-
-
-* [ ] Exit(Tocca ancora per uscire ) 
-* [Wait] Su setup "Cancella dati (anche offline) e cache 
+* [!] Logo App , immagini login - Video Esplicativo - (icona+3 immagini)
+* [Wait] Spostare Utente in alto a Sx  
+* [Wait] Su setup "Cancella dati (anche offline) e cache e Esci
 
 ## Dashboard (Vincenzo/Matteo)
 
@@ -36,6 +30,7 @@ Union
 Select 'MP_TASK',count(*),SalesRep from MP_TASK where status
 Union
 Select 'PROJECT',count(*),SalesRep from C_Project where status
+
 ### Task : Nr Task non completati / Nr Task in Progress -> vai a Task
      model : JP_TODO filter : AND  JP_ToDo_Status='NY' AND TRUNC(JP_ToDo_ScheduledStartDate)<= TRUNC(SysDate)-1 
 ### Offerte di Vendita : Nr Offerte in bozza-mie -> vai a Offerta di Vendita
