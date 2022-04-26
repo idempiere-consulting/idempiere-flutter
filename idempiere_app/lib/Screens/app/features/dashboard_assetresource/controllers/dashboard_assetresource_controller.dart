@@ -71,7 +71,7 @@ class DashboardAssetresourceController extends GetxController {
       scheme: 'tel',
       path: phoneNumber,
     );
-    await launch(launchUri.toString());
+    await launchUrl(launchUri);
   }
 
   Future<void> writeMailTo(String receiver) async {
@@ -83,7 +83,7 @@ class DashboardAssetresourceController extends GetxController {
       scheme: 'mailto',
       path: receiver,
     );
-    await launch(launchUri.toString());
+    await launchUrl(launchUri);
   }
 
   Future<void> getLeads() async {

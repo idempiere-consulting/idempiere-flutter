@@ -19,7 +19,7 @@ class MaintenanceMptaskLineController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    canLaunch('tel:123').then((bool result) {
+    canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
     //print(GetStorage().read('workOrderSync'));
@@ -76,7 +76,7 @@ class MaintenanceMptaskLineController extends GetxController {
         scheme: 'tel',
         path: phoneNumber,
       );
-      await launch(launchUri.toString());
+      await launchUrl(launchUri);
     }
   }
 
@@ -89,7 +89,7 @@ class MaintenanceMptaskLineController extends GetxController {
       scheme: 'mailto',
       path: receiver,
     );
-    await launch(launchUri.toString());
+    await launchUrl(launchUri);
   }
 
   Future<void> getWorkOrders() async {

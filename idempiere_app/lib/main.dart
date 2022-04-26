@@ -103,7 +103,7 @@ class MyApp extends StatelessWidget {
       locale: const Locale('it', 'IT'),
       title: 'iDempiereApp',
       theme: AppTheme.basic,
-      initialRoute: GetStorage().read("ip") == null ? '/' : '/Login',
+      initialRoute: GetStorage().read("ip") == null ? '/' : '/',
       getPages: [
         GetPage(
           name: '/',

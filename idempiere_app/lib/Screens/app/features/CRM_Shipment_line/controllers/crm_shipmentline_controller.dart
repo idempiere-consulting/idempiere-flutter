@@ -19,7 +19,7 @@ class CRMShipmentlineController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    canLaunch('tel:123').then((bool result) {
+    canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
 
@@ -78,7 +78,7 @@ class CRMShipmentlineController extends GetxController {
         scheme: 'tel',
         path: phoneNumber,
       );
-      await launch(launchUri.toString());
+      await launchUrl(launchUri);
     }
   }
 
@@ -91,7 +91,7 @@ class CRMShipmentlineController extends GetxController {
       scheme: 'mailto',
       path: receiver,
     );
-    await launch(launchUri.toString());
+    await launchUrl(launchUri);
   }
 
   Future<void> getShipmentlines() async {

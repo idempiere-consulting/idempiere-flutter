@@ -27,7 +27,7 @@ class HumanResourceTicketController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    canLaunch('tel:123').then((bool result) {
+    canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
     getTicketTypes();
@@ -264,7 +264,7 @@ class HumanResourceTicketController extends GetxController {
         scheme: 'tel',
         path: phoneNumber,
       );
-      await launch(launchUri.toString());
+      await launchUrl(launchUri);
     }
   }
 
@@ -277,7 +277,7 @@ class HumanResourceTicketController extends GetxController {
       scheme: 'mailto',
       path: receiver,
     );
-    await launch(launchUri.toString());
+    await launchUrl(launchUri);
   }
 
   Future<void> getTickets() async {

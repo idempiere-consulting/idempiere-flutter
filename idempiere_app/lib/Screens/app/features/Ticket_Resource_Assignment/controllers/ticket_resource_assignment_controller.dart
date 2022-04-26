@@ -19,7 +19,7 @@ class TicketResourceAssignmentController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    canLaunch('tel:123').then((bool result) {
+    canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
 
@@ -46,8 +46,9 @@ class TicketResourceAssignmentController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -77,7 +78,7 @@ class TicketResourceAssignmentController extends GetxController {
         scheme: 'tel',
         path: phoneNumber,
       );
-      await launch(launchUri.toString());
+      await launchUrl(launchUri);
     }
   }
 
@@ -90,7 +91,7 @@ class TicketResourceAssignmentController extends GetxController {
       scheme: 'mailto',
       path: receiver,
     );
-    await launch(launchUri.toString());
+    await launchUrl(launchUri);
   }
 
   Future<void> getResourceAssignments() async {
@@ -107,8 +108,7 @@ class TicketResourceAssignmentController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/S_ResourceAssignment?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(
@@ -297,8 +297,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{
