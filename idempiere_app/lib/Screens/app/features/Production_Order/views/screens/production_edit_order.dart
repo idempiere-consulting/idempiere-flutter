@@ -201,6 +201,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
       "C_DocTypeInv_ID": {
         "id": pref.records![0].lITDocTypeProdDeclarationID?.id
       },
+      "LIT_IsPickingEndDeclaration": true,
       "Qty": qty
     });
     final protocol = GetStorage().read('protocol');
@@ -220,7 +221,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     if (response.statusCode == 200 && res["isError"] == false) {
       //controller.getSalesOrders();
       //print("done!");
-      //print(response.body);
+      print(response.body);
       Get.snackbar(
         "Done!",
         "Processed: Picking and Release",
@@ -230,10 +231,10 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
         ),
       );
     } else {
-      //print(response.body);
+      print(response.body);
       Get.snackbar(
         "Error!",
-        "Couldn't process Picking and Release",
+        res["summary"] ?? "Couldn't process Picking and Release",
         icon: const Icon(
           Icons.error,
           color: Colors.red,
