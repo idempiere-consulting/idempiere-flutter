@@ -54,7 +54,7 @@ class CRMSalesOrderController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       adUserId = json["records"][0]["id"];
 
@@ -96,7 +96,7 @@ class CRMSalesOrderController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\'  and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DocStatus asc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -106,7 +106,8 @@ class CRMSalesOrderController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = SalesOrderJson.fromJson(jsonDecode(response.body));
+      _trx =
+          SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

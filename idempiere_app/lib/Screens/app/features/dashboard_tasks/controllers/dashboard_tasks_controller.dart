@@ -58,7 +58,7 @@ class DashboardTasksController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       adUserId = json["records"][0]["id"];
 
@@ -117,7 +117,7 @@ class DashboardTasksController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = EventJson.fromJson(jsonDecode(response.body));
+      _trx = EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       wpCount.value = 0;
 
       for (var i = 0; i < _trx.rowcount!; i++) {

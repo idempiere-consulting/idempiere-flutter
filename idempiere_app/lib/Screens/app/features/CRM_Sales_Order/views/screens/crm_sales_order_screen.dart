@@ -324,52 +324,75 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.settings,
-                                              ),
-                                              onPressed: () async {
-                                                final ip =
-                                                    GetStorage().read('ip');
-                                                String authorization =
-                                                    'Bearer ' +
-                                                        GetStorage()
-                                                            .read('token');
-                                                final msg = jsonEncode({
-                                                  "DocAction": "CO",
-                                                });
-                                                final protocol = GetStorage()
-                                                    .read('protocol');
-                                                var url = Uri.parse('$protocol://' +
-                                                    ip +
-                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .docStatus
+                                                      ?.id !=
+                                                  'CO',
+                                              child: ElevatedButton(
+                                                child: const Text("Complete"),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  Get.defaultDialog(
+                                                    title: 'Complete Action',
+                                                    content: const Text(
+                                                        "Are you sure you want to complete the record?"),
+                                                    onCancel: () {},
+                                                    onConfirm: () async {
+                                                      final ip = GetStorage()
+                                                          .read('ip');
+                                                      String authorization =
+                                                          'Bearer ' +
+                                                              GetStorage().read(
+                                                                  'token');
+                                                      final msg = jsonEncode({
+                                                        "DocAction": "CO",
+                                                      });
+                                                      final protocol =
+                                                          GetStorage()
+                                                              .read('protocol');
+                                                      var url = Uri.parse(
+                                                          '$protocol://' +
+                                                              ip +
+                                                              '/api/v1/models/c_order/${controller.trx.records![index].id}');
 
-                                                var response = await http.put(
-                                                  url,
-                                                  body: msg,
-                                                  headers: <String, String>{
-                                                    'Content-Type':
-                                                        'application/json',
-                                                    'Authorization':
-                                                        authorization,
-                                                  },
-                                                );
-                                                if (response.statusCode ==
-                                                    200) {
-                                                  //print("done!");
-                                                  completeOrder(index);
-                                                } else {
-                                                  //print(response.body);
-                                                  Get.snackbar(
-                                                    "Errore!",
-                                                    "Il record non è stato completato",
-                                                    icon: const Icon(
-                                                      Icons.error,
-                                                      color: Colors.red,
-                                                    ),
+                                                      var response =
+                                                          await http.put(
+                                                        url,
+                                                        body: msg,
+                                                        headers: <String,
+                                                            String>{
+                                                          'Content-Type':
+                                                              'application/json',
+                                                          'Authorization':
+                                                              authorization,
+                                                        },
+                                                      );
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                        //print("done!");
+                                                        completeOrder(index);
+                                                      } else {
+                                                        //print(response.body);
+                                                        Get.snackbar(
+                                                          "Errore!",
+                                                          "Il record non è stato completato",
+                                                          icon: const Icon(
+                                                            Icons.error,
+                                                            color: Colors.red,
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
                                                   );
-                                                }
-                                              },
+                                                },
+                                              ),
                                             ),
                                           ],
                                         ),

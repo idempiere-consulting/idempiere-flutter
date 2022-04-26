@@ -40,7 +40,7 @@ class ProductionOrderController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       idDoc = json["records"][0]["id"];
       getProductionOrders();
@@ -54,7 +54,7 @@ class ProductionOrderController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_Production?\$filter= DocStatus neq \'CO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/M_Production?\$filter= DocStatus neq \'CO\' and DocStatus neq \'VO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -64,7 +64,8 @@ class ProductionOrderController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = ProductionOrderJson.fromJson(jsonDecode(response.body));
+      _trx = ProductionOrderJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

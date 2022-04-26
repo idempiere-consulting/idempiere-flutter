@@ -41,7 +41,8 @@ class CRMInvoiceLineController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = InvoiceLineJson.fromJson(jsonDecode(response.body));
+      _trx =
+          InvoiceLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

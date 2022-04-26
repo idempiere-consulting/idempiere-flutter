@@ -65,7 +65,8 @@ class TicketClientTicketController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = TicketTypeJson.fromJson(jsonDecode(response.body));
+      var json =
+          TicketTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       for (var i = 0; i < json.rowcount!; i++) {
         ticketFilter =
@@ -229,7 +230,8 @@ class TicketClientTicketController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       //var json = jsonDecode(response.body);
-      _tt = TicketTypeJson.fromJson(jsonDecode(response.body));
+      _tt =
+          TicketTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       dropdownValue = _tt.records![0].id.toString();
 
@@ -299,7 +301,7 @@ class TicketClientTicketController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = TicketsJson.fromJson(jsonDecode(response.body));
+      _trx = TicketsJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

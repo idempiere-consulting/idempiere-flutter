@@ -46,7 +46,8 @@ class CRMSalesOrderLineController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = SalesOrderLineJson.fromJson(jsonDecode(response.body));
+      _trx = SalesOrderLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

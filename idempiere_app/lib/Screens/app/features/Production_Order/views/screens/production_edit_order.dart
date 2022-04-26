@@ -166,7 +166,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
       //controller.getSalesOrders();
       getProductionOrder();
       //print("done!");
-      print(response.body);
+      //print(response.body);
       Get.snackbar(
         "Done!",
         "Processed: Picking Components",
@@ -282,7 +282,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

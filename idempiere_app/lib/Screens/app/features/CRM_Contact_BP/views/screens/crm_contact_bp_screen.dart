@@ -125,6 +125,29 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                     ),
                   ],
                 ),
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            controller.searchFilterValue.value =
+                                controller.searchFieldController.text;
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Contact Name',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
@@ -134,150 +157,173 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                           shrinkWrap: true,
                           itemCount: controller.trx.rowcount,
                           itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
+                            return Obx(
+                              () => Visibility(
+                                visible:
+                                    controller.searchFilterValue.value == ""
+                                        ? true
+                                        : controller.trx.records![index].name
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase()),
+                                child: Card(
+                                  elevation: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
                                     decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                      tooltip: 'Edit Lead',
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        /* Get.to(const EditLead(), arguments: {
-                                          "id": controller
-                                              .trx.records![index].id,
-                                          "name": controller
-                                              .trx.records![index].name,
-                                          "leadStatus": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .contactStatus
-                                                  ?.id ??
-                                              "",
-                                          "bpName": controller
-                                              .trx.windowrecords![index].bPName,
-                                          "Tel": controller
-                                              .trx.windowrecords![index].phone,
-                                          "eMail": controller
-                                              .trx.windowrecords![index].eMail,
-                                          "salesRep": controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""
-                                        }); */
-                                      },
-                                    ),
-                                  ),
-                                  title: Text(
-                                    controller.trx.records![index].name ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID!.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.call,
-                                                color: Colors.green,
-                                              ),
-                                              tooltip: 'Call',
-                                              onPressed: () {
-                                                //log("info button pressed");
-                                                if (controller
-                                                        .trx
-                                                        .records![index]
-                                                        .phone ==
-                                                    null) {
-                                                  log("info button pressed");
-                                                } else {
-                                                  controller.makePhoneCall(
-                                                      controller.trx
-                                                          .records![index].phone
-                                                          .toString());
-                                                }
-                                              },
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .phone ??
-                                                ""),
-                                          ],
+                                        color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: ExpansionTile(
+                                      tilePadding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.green,
+                                          ),
+                                          tooltip: 'Edit Lead',
+                                          onPressed: () {
+                                            //log("info button pressed");
+                                            /* Get.to(const EditLead(), arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "name": controller
+                                                .trx.records![index].name,
+                                            "leadStatus": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .contactStatus
+                                                    ?.id ??
+                                                "",
+                                            "bpName": controller
+                                                .trx.windowrecords![index].bPName,
+                                            "Tel": controller
+                                                .trx.windowrecords![index].phone,
+                                            "eMail": controller
+                                                .trx.windowrecords![index].eMail,
+                                            "salesRep": controller
+                                                    .trx
+                                                    .windowrecords![index]
+                                                    .salesRepID
+                                                    ?.identifier ??
+                                                ""
+                                          }); */
+                                          },
                                         ),
-                                        Row(
+                                      ),
+                                      title: Text(
+                                        controller.trx.records![index].name ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.linear_scale,
+                                              color: Colors.yellowAccent),
+                                          Text(
+                                            controller.trx.records![index]
+                                                    .cBPartnerID!.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      children: [
+                                        Column(
                                           children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.mail,
-                                                color: Colors.white,
-                                              ),
-                                              tooltip: 'EMail',
-                                              onPressed: () {
-                                                if (controller
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                  icon: const Icon(
+                                                    Icons.call,
+                                                    color: Colors.green,
+                                                  ),
+                                                  tooltip: 'Call',
+                                                  onPressed: () {
+                                                    //log("info button pressed");
+                                                    if (controller
+                                                            .trx
+                                                            .records![index]
+                                                            .phone ==
+                                                        null) {
+                                                      log("info button pressed");
+                                                    } else {
+                                                      controller.makePhoneCall(
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .phone
+                                                              .toString());
+                                                    }
+                                                  },
+                                                ),
+                                                Text(controller
                                                         .trx
                                                         .records![index]
-                                                        .eMail ==
-                                                    null) {
-                                                  log("mail button pressed");
-                                                } else {
-                                                  controller.writeMailTo(
-                                                      controller.trx
-                                                          .records![index].eMail
-                                                          .toString());
-                                                }
-                                              },
+                                                        .phone ??
+                                                    ""),
+                                              ],
                                             ),
-                                            Text(controller.trx.records![index]
-                                                    .eMail ??
-                                                ""),
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                  icon: const Icon(
+                                                    Icons.mail,
+                                                    color: Colors.white,
+                                                  ),
+                                                  tooltip: 'EMail',
+                                                  onPressed: () {
+                                                    if (controller
+                                                            .trx
+                                                            .records![index]
+                                                            .eMail ==
+                                                        null) {
+                                                      log("mail button pressed");
+                                                    } else {
+                                                      controller.writeMailTo(
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .eMail
+                                                              .toString());
+                                                    }
+                                                  },
+                                                ),
+                                                Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .eMail ??
+                                                    ""),
+                                              ],
+                                            ),
                                           ],
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             );

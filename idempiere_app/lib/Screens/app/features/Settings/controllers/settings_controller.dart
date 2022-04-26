@@ -70,7 +70,7 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('jpTODOSync', response.body);
+      GetStorage().write('jpTODOSync', utf8.decode(response.bodyBytes));
       isjpTODOSyncing.value = false;
     }
   }
@@ -91,7 +91,8 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('userPreferencesSync', response.body);
+      GetStorage()
+          .write('userPreferencesSync', utf8.decode(response.bodyBytes));
       isUserPreferencesSyncing.value = false;
     }
   }
@@ -114,7 +115,8 @@ class SettingsController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('businessPartnerSync', response.body);
+      GetStorage()
+          .write('businessPartnerSync', utf8.decode(response.bodyBytes));
       isBusinessPartnerSyncing.value = false;
     }
   }
@@ -137,7 +139,7 @@ class SettingsController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('productSync', response.body);
+      GetStorage().write('productSync', utf8.decode(response.bodyBytes));
       isProductSyncing.value = false;
     }
   }
@@ -161,7 +163,7 @@ class SettingsController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('workOrderSync', response.body);
+      GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
       //isWorkOrderSyncing.value = false;
       syncWorkOrderResource();
       syncWorkOrderRefListResource();
@@ -187,7 +189,8 @@ class SettingsController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('workOrderResourceSync', response.body);
+      GetStorage()
+          .write('workOrderResourceSync', utf8.decode(response.bodyBytes));
       syncWorkOrderResourceSurveyLines();
       syncWorkOrderResourceType();
     }
@@ -229,7 +232,8 @@ class SettingsController extends GetxController {
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage().write('refListResourceType', response2.body);
+        GetStorage()
+            .write('refListResourceType', utf8.decode(response2.bodyBytes));
 
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
@@ -279,7 +283,8 @@ class SettingsController extends GetxController {
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage().write('refListResourceTypeCategory', response2.body);
+        GetStorage().write(
+            'refListResourceTypeCategory', utf8.decode(response2.bodyBytes));
 
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
@@ -312,7 +317,8 @@ class SettingsController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('workOrderResourceSurveyLinesSync', response.body);
+      GetStorage().write(
+          'workOrderResourceSurveyLinesSync', utf8.decode(response.bodyBytes));
       isWorkOrderSyncing.value = false;
     }
   }
@@ -353,7 +359,8 @@ class SettingsController extends GetxController {
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage().write('refListResourceType', response2.body);
+        GetStorage()
+            .write('refListResourceType', utf8.decode(response2.bodyBytes));
 
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */

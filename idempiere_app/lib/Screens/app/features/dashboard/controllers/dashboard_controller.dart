@@ -48,7 +48,8 @@ class DashboardController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = EventJson.fromJson(jsonDecode(response.body));
+      var json =
+          EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       for (var i = 0; i < json.rowcount!; i++) {
         switch (json.records![i].jPToDoStatus!.id) {
@@ -104,7 +105,7 @@ class DashboardController extends GetxController {
 
       if (response.statusCode == 200) {
         //print(response.body);
-        var json = jsonDecode(response.body);
+        var json = jsonDecode(utf8.decode(response.bodyBytes));
         notificationCounter.value = json["row-count"];
       }
     }

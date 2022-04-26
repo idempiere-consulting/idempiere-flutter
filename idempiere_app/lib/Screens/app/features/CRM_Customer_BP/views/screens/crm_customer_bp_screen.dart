@@ -125,6 +125,29 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                     ),
                   ],
                 ),
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            controller.searchFilterValue.value =
+                                controller.searchFieldController.text;
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Customer Name',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
@@ -134,107 +157,127 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                           shrinkWrap: true,
                           itemCount: controller.trx.rowcount,
                           itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
+                            return Obx(
+                              () => Visibility(
+                                visible:
+                                    controller.searchFilterValue.value == ""
+                                        ? true
+                                        : controller.trx.records![index].name
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase()),
+                                child: Card(
+                                  elevation: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
                                     decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
+                                        color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: ExpansionTile(
+                                      tilePadding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.green,
+                                          ),
+                                          tooltip: 'Edit Lead',
+                                          onPressed: () {
+                                            //log("info button pressed");
+                                            /* Get.to(const EditLead(), arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "name": controller.trx
+                                                    .records![index].name ??
+                                                "",
+                                            "leadStatus": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .leadStatus
+                                                    ?.id ??
+                                                "",
+                                            "bpName": controller
+                                                .trx.records![index].bPName,
+                                            "Tel": controller.trx
+                                                    .records![index].phone ??
+                                                "",
+                                            "eMail": controller.trx
+                                                    .records![index].eMail ??
+                                                "",
+                                            "salesRep": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .salesRepID
+                                                    ?.identifier ??
+                                                ""
+                                          }); */
+                                          },
+                                        ),
                                       ),
-                                      tooltip: 'Edit Lead',
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        /* Get.to(const EditLead(), arguments: {
-                                          "id": controller
-                                              .trx.records![index].id,
-                                          "name": controller.trx
-                                                  .records![index].name ??
-                                              "",
-                                          "leadStatus": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .leadStatus
-                                                  ?.id ??
-                                              "",
-                                          "bpName": controller
-                                              .trx.records![index].bPName,
-                                          "Tel": controller.trx
-                                                  .records![index].phone ??
-                                              "",
-                                          "eMail": controller.trx
-                                                  .records![index].eMail ??
-                                              "",
-                                          "salesRep": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""
-                                        }); */
-                                      },
-                                    ),
-                                  ),
-                                  title: Text(
-                                    controller.trx.records![index].name ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.greenAccent),
-                                      Text(
-                                        controller.trx.records![index].value ??
-                                            "??",
+                                      title: Text(
+                                        controller.trx.records![index].name ??
+                                            "???",
                                         style: const TextStyle(
-                                            color: Colors.white),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.linear_scale,
+                                              color: Colors.greenAccent),
+                                          Text(
+                                            controller.trx.records![index]
+                                                    .value ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
                                       children: [
-                                        Row(
+                                        Column(
                                           children: [
-                                            const Text(
-                                              "Gruppo BP: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                            Row(
+                                              children: [
+                                                const Text(
+                                                  "Gruppo BP: ",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPGroupID
+                                                        ?.identifier ??
+                                                    ""),
+                                              ],
                                             ),
-                                            Text(controller.trx.records![index]
-                                                    .cBPGroupID?.identifier ??
-                                                ""),
                                           ],
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             );

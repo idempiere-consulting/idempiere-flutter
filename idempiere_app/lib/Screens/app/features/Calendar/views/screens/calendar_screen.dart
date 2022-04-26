@@ -129,7 +129,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = EventJson.fromJson(jsonDecode(response.body));
+      var json =
+          EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       List<EventRecords>? list = json.records;
 
       for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
@@ -380,6 +381,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       event.title,
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.timelapse,
+                        color: event.statusId == "WP"
+                            ? Colors.yellow
+                            : event.statusId == "CO"
+                                ? Colors.green
+                                : Colors.red,
+                      ),
+                      onPressed: () {},
                     ),
                     subtitle: Row(
                       children: <Widget>[

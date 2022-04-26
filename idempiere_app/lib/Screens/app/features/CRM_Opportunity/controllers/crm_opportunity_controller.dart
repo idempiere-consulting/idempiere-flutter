@@ -20,8 +20,7 @@ class CRMOpportunityController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/c_opportunity');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_opportunity');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -31,7 +30,8 @@ class CRMOpportunityController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = OpportunityJson.fromJson(jsonDecode(response.body));
+      _trx =
+          OpportunityJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(_trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

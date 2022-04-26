@@ -1,6 +1,7 @@
 import 'dart:convert';
 //import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -33,7 +34,7 @@ class _ProductListDetailState extends State<ProductListDetail> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
 
       var json = ProductJson.fromJson(jsonDecode(response.body));
       valueFieldController.text = json.records![0].value;
@@ -48,7 +49,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
         flagVisible = true;
       });
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
 
     //print(list[0].eMail);

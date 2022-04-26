@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:idempiere_app/Json_Classes/Authentication/get_1st_token_json.dart';
 import 'package:idempiere_app/Screens/Login/components/background.dart';
 import 'package:idempiere_app/Screens/LoginClient/loginclient_screen.dart';
@@ -44,6 +43,7 @@ class _BodyState extends State<Body> {
   }
 
   getLoginPermission() async {
+    var value = "0";
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
     final protocol = GetStorage().read('protocol');
@@ -71,10 +71,32 @@ class _BodyState extends State<Body> {
             .padLeft(4, "0")
             .toString()); */
         GetStorage().write('permission', list);
+        /* DateTime now = DateTime.now();
+        DateTime date = DateTime(now.year, now.month, now.day);
+        GetStorage().write('lastLoginDate', date.toString());
+        Get.offAllNamed('/Dashboard'); */
+        for (var i = 0; i < list.length; i++) {
+          if (int.parse(list[i], radix: 16)
+                  .toRadixString(2)
+                  .padLeft(8, "0")
+                  .toString()[4] ==
+              "1") {
+            value = i.toString();
+          }
+        }
         DateTime now = DateTime.now();
         DateTime date = DateTime(now.year, now.month, now.day);
         GetStorage().write('lastLoginDate', date.toString());
-        Get.offAllNamed('/Dashboard');
+
+        switch (value) {
+          case "0":
+            Get.offAllNamed("/Dashboard");
+            break;
+          case "32":
+            Get.offAllNamed("/TicketClient");
+            break;
+          default:
+        }
       } else {
         Get.snackbar(
           "Errore!",
@@ -218,11 +240,11 @@ class _BodyState extends State<Body> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const Text(
-            "LOGIN",
+            "",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          SvgPicture.asset(
-            "assets/icons/login.svg",
+          Image.asset(
+            "assets/icons/idempiere_logo_login.png",
             height: size.height * 0.35,
           ),
           RoundedInputField(

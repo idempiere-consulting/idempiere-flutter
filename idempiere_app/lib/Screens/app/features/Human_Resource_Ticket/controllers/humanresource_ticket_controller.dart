@@ -98,7 +98,8 @@ class HumanResourceTicketController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = TicketTypeJson.fromJson(jsonDecode(response.body));
+      var json =
+          TicketTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       for (var i = 0; i < json.rowcount!; i++) {
         ticketFilter =
@@ -177,7 +178,7 @@ class HumanResourceTicketController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
       //getTickets();
@@ -206,7 +207,7 @@ class HumanResourceTicketController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       closedTicketId = json["records"][0]["id"];
       getBusinessPartner();
@@ -237,7 +238,8 @@ class HumanResourceTicketController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       //var json = jsonDecode(response.body);
-      _tt = TicketTypeJson.fromJson(jsonDecode(response.body));
+      _tt =
+          TicketTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       dropdownValue = _tt.records![0].id.toString();
 
@@ -304,7 +306,7 @@ class HumanResourceTicketController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = TicketsJson.fromJson(jsonDecode(response.body));
+      _trx = TicketsJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

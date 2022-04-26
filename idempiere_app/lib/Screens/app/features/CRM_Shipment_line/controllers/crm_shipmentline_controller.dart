@@ -58,7 +58,7 @@ class CRMShipmentlineController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       adUserId = json["records"][0]["id"];
 
@@ -113,7 +113,8 @@ class CRMShipmentlineController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = ShipmentLineJson.fromJson(jsonDecode(response.body));
+      _trx = ShipmentLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

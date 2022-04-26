@@ -208,7 +208,7 @@ class CourseQuizController extends GetxController {
 
       if (response.statusCode == 200) {
         //print(response.body);
-        var json = jsonDecode(response.body);
+        var json = jsonDecode(utf8.decode(response.bodyBytes));
         getQuizLines(json["records"][0]["id"]);
         //GetStorage().write('workOrderSync', response.body);
         //isWorkOrderSyncing.value = false;
@@ -243,8 +243,8 @@ class CourseQuizController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      _trx =
-          WorkOrderResourceSurveyLinesJson.fromJson(jsonDecode(response.body));
+      _trx = WorkOrderResourceSurveyLinesJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
       selectedValue = RxList<int>.filled(_trx.records!.length, 0);
       checkValue = RxList<int>.filled(_trx.records!.length, 2);
       dateValue = RxList<String>.filled(_trx.records!.length, "");

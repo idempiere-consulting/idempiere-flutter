@@ -328,10 +328,29 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         productSync == false &&
         jpTODOSync == false &&
         workOrderSync == false) {
+      var value = "0";
+      List<dynamic> list = GetStorage().read('permission');
+      for (var i = 0; i < list.length; i++) {
+        if (int.parse(list[i], radix: 16)
+                .toRadixString(2)
+                .padLeft(8, "0")
+                .toString()[4] ==
+            "1") {
+          value = i.toString();
+        }
+      }
       DateTime now = DateTime.now();
       DateTime date = DateTime(now.year, now.month, now.day);
       GetStorage().write('lastLoginDate', date.toString());
-      Get.offAllNamed("/Dashboard");
+      switch (value) {
+        case "0":
+          Get.offAllNamed("/Dashboard");
+          break;
+        case "32":
+          Get.offAllNamed("/TicketClient");
+          break;
+        default:
+      }
     }
   }
 

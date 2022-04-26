@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/Login/login_screen.dart';
 //import 'package:idempiere_app/Screens/IdempiereUrlSet/idempiere_set_url.dart';
 //import 'package:idempiere_app/Screens/Login/login_screen.dart';
 //import 'package:idempiere_app/Screens/LoginOrganizations/loginorganizations_screen.dart';
@@ -102,11 +103,15 @@ class MyApp extends StatelessWidget {
       locale: const Locale('it', 'IT'),
       title: 'iDempiereApp',
       theme: AppTheme.basic,
-      initialRoute: '/',
+      initialRoute: GetStorage().read("ip") == null ? '/' : '/Login',
       getPages: [
         GetPage(
           name: '/',
           page: () => const WelcomeScreen(),
+        ),
+        GetPage(
+          name: '/Login',
+          page: () => const LoginScreen(),
         ),
         GetPage(
           name: '/Dashboard',

@@ -61,7 +61,7 @@ class HumanResourceWorkHoursController extends GetxController {
           );
           if (response.statusCode == 200) {
             //print(response.body);
-            var json = jsonDecode(response.body);
+            var json = jsonDecode(utf8.decode(response.bodyBytes));
             if (json["row-count"] > 0) {
               Get.defaultDialog(
                 title: "Welcome",

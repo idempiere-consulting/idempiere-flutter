@@ -104,7 +104,7 @@ class MaintenanceMptaskController extends GetxController {
 
       if (response.statusCode == 200) {
         //print(response.body);
-        GetStorage().write('workOrderSync', response.body);
+        GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
         //isWorkOrderSyncing.value = false;
         syncWorkOrderResource();
       }
@@ -138,7 +138,8 @@ class MaintenanceMptaskController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('workOrderResourceSync', response.body);
+      GetStorage()
+          .write('workOrderResourceSync', utf8.decode(response.bodyBytes));
       getWorkOrders();
     }
   }

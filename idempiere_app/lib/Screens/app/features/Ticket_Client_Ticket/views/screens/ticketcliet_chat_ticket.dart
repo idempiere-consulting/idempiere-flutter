@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -48,7 +49,8 @@ class TicketClientChatState extends State<TicketClientChat> {
     if (response.statusCode == 200) {
       //print(response.body);
 
-      var json = ChatLogJson.fromJson(jsonDecode(response.body));
+      var json =
+          ChatLogJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       for (var i = 0; i < json.rowcount!; i++) {
         var msg = types.TextMessage(
             author: GetStorage().read('user') ==
@@ -96,7 +98,7 @@ class TicketClientChatState extends State<TicketClientChat> {
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/windows/request/${Get.arguments["ticketid"]}');
+        '/api/v1/windows/request-all/${Get.arguments["ticketid"]}');
 
     var response = await http.put(
       url,
@@ -110,7 +112,9 @@ class TicketClientChatState extends State<TicketClientChat> {
     if (response.statusCode == 200) {
       _addMessage(textMessage);
     } else {
-      //print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

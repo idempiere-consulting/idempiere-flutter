@@ -586,7 +586,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                 Visibility(
                   visible: int.parse(list[37], radix: 16)
                               .toRadixString(2)
-                              .padLeft(4, "0")
+                              .padLeft(8, "0")
                               .toString()[6] ==
                           "1"
                       ? true
@@ -605,7 +605,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                 Visibility(
                   visible: int.parse(list[37], radix: 16)
                               .toRadixString(2)
-                              .padLeft(4, "0")
+                              .padLeft(8, "0")
                               .toString()[6] ==
                           "1"
                       ? true
@@ -664,7 +664,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                 Visibility(
                   visible: int.parse(list[37], radix: 16)
                               .toRadixString(2)
-                              .padLeft(4, "0")
+                              .padLeft(8, "0")
                               .toString()[6] ==
                           "1"
                       ? true
@@ -683,7 +683,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                 Visibility(
                   visible: int.parse(list[37], radix: 16)
                               .toRadixString(2)
-                              .padLeft(4, "0")
+                              .padLeft(8, "0")
                               .toString()[6] ==
                           "1"
                       ? true

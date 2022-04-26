@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: unused_element
 class _TeamMember extends StatelessWidget {
   const _TeamMember({
     required this.totalMember,

@@ -1541,6 +1541,8 @@ CRUD=1111=F
 0110=6   Complete + All + Miei
 0111=7   Complete + All + Team + Miei
 
+1000=8  Pagina sostitutiva al cruscotto
+
 ************************
   1 Calendar 		    : F (CRUD)  
   2 Email    		    : F
@@ -1574,7 +1576,7 @@ CRUD=1111=F
  30 carico scheda tecnica
  31 ..
  32 ..
- 33 Portale cliente*****: 1 *** 4 Portale Cliente
+ 33 Portale cliente*****: 1 *** 4 Portale Cliente 
  -- sezione dashboard
  34 News                : R
  35 Fatture di Acquisto : R
