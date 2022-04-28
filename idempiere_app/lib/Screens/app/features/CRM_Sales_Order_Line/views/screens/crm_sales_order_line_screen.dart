@@ -66,7 +66,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
           leading: IconButton(
             icon: const Icon(Icons.chevron_left),
             onPressed: () {
-              Get.offNamed('/SalesOrder');
+              Get.back();
             },
           ),
           actions: [
@@ -229,6 +229,21 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                             ),
                                             Text(
                                                 "${controller.trx.records![index].qtyEntered}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Instance Attribute: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mAttributeSetInstanceID
+                                                    ?.identifier ??
+                                                ""),
                                           ],
                                         ),
                                       ],

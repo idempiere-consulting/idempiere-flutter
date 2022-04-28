@@ -216,7 +216,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                           : Colors.yellow,
                                     ),
                                     onPressed: () {
-                                      Get.offNamed('/SalesOrderLine',
+                                      Get.toNamed('/SalesOrderLine',
                                           arguments: {
                                             "id": controller
                                                 .trx.records![index].id,

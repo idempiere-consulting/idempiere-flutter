@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/storageonhand_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_sales_order_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -38,7 +39,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
       "PriceActual": double.parse(priceFieldController.text),
       "C_UOM_ID": {"id": uomID},
       "C_Tax_ID": {"id": 1000319},
-      "M_AttributeSetInstance_ID": {"id": 0},
+      "M_AttributeSetInstance_ID": {"id": instAttrId},
       "LIT_StockInTrade": "test",
       "DatePromised": date,
     });
@@ -164,6 +165,161 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
     }
   }
 
+  Future<void> getInstAttr(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and DateLastInventory neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      attrList = StorageOnHandJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (attrList.rowcount! > 0) {
+        attrList.records!
+            .removeWhere((element) => element.mAttributeSetInstanceID?.id == 0);
+        SOORecords record = SOORecords(
+            mAttributeSetInstanceID:
+                MAttributeSetInstance2ID(id: 0, identifier: ""));
+        attrList.records!.add(record);
+
+        setState(() {
+          attrValue = "0";
+          attrFieldAvailable = true;
+          attrFieldVisible = true;
+        });
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> searchByCode(dynamic value) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter=Value eq \'$value\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json = ProductJson.fromJson(jsonDecode(response.body));
+      if (json.rowcount! > 0) {
+        setState(() {
+          attrFieldAvailable = false;
+          attrFieldVisible = false;
+          productId = json.records![0].id;
+          productName = json.records![0].name;
+          nameFieldController.text = json.records![0].name;
+          valueFieldController.text = json.records![0].value;
+          getProductPrice();
+          getAdditionalProductInfo();
+          if (json.records![0].mAttributeSetID?.id != null) {
+            getInstAttr(json.records![0].id!);
+          }
+        });
+      } else {
+        searchByInstAttr(value);
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> searchByInstAttr(dynamic id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and DateLastInventory neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        attrFieldAvailable = false;
+        attrFieldVisible = false;
+      });
+      attrList = StorageOnHandJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (attrList.rowcount! > 0) {
+        instAttrId = attrList.records![0].mAttributeSetInstanceID!.id!;
+        getProductByInstAttr(attrList.records![0].mProductID!.id!);
+        setState(() {
+          attrValue =
+              attrList.records![0].mAttributeSetInstanceID!.id.toString();
+          attrFieldAvailable = true;
+          attrFieldVisible = true;
+        });
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getProductByInstAttr(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter=M_Product_ID eq $id and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json =
+          ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      productId = json.records![0].id;
+      productName = json.records![0].name;
+      nameFieldController.text = json.records![0].name;
+      valueFieldController.text = json.records![0].value;
+      getProductPrice();
+      getAdditionalProductInfo();
+    }
+  }
+
   Future<List<Records>> getAllProducts() async {
     //print(response.body);
     var jsondecoded = jsonDecode(GetStorage().read('productSync'));
@@ -176,17 +332,9 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
     //print(json.);
   }
 
-  /* void fillFields() {
-    nameFieldController.text = args["name"];
-    bPartnerFieldController.text = args["bpName"];
-    phoneFieldController.text = args["Tel"];
-    mailFieldController.text = args["eMail"];
-    //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"];
-    //salesRepFieldController.text = args["salesRep"];
-  } */
-
   //dynamic args = Get.arguments;
+  // ignore: prefer_typing_uninitialized_variables
+  var bycodeFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var activityFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -212,11 +360,22 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
   var uomID;
   // ignore: prefer_typing_uninitialized_variables
   var cattaxID;
+
+  var instAttrId = 0;
   //var productPriceStd;
   // ignore: prefer_typing_uninitialized_variables
   var initialValue;
 
   var priceListVersionID = 0;
+
+  var attrFieldVisible = false;
+
+  var attrFieldAvailable = false;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var attrValue;
+
+  late StorageOnHandJson attrList;
 
   String date = Get.arguments["dateOrdered"];
 
@@ -235,9 +394,13 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
     nameFieldController = TextEditingController();
     qtyFieldController = TextEditingController();
     priceFieldController = TextEditingController();
+    bycodeFieldController = TextEditingController();
     qtyFieldController.text = "1";
     priceFieldController.text = "0";
     initialValue = const TextEditingValue(text: '');
+    attrFieldVisible = false;
+    attrFieldAvailable = false;
+    attrValue = "0";
     //fillFields();
   }
 
@@ -275,6 +438,32 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
               children: [
                 const SizedBox(
                   height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Search by code",
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    autofocus: true,
+                    onSubmitted: (String? text) {
+                      searchByCode(text!);
+                    },
+                    controller: bycodeFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      //labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
@@ -319,12 +508,18 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                                 },
                                 onSelected: (Records selection) {
                                   setState(() {
+                                    instAttrId = 0;
+                                    attrFieldAvailable = false;
+                                    attrFieldVisible = false;
                                     productId = _setIdForOption(selection);
                                     productName = selection.name;
                                     nameFieldController.text = selection.name;
                                     valueFieldController.text = selection.value;
                                     getProductPrice();
                                     getAdditionalProductInfo();
+                                    if (selection.mAttributeSetID?.id != null) {
+                                      getInstAttr(selection.id!);
+                                    }
                                   });
 
                                   //print(salesrepValue);
@@ -393,6 +588,62 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                       labelText: 'Price',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Attribute Instance",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: attrFieldAvailable
+                        ? DropdownButton(
+                            value: attrValue as String,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              instAttrId = int.parse(newValue!);
+                              setState(() {
+                                attrValue = newValue;
+                              });
+                              print(newValue);
+                            },
+                            items: attrList.records!
+                                .map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.mAttributeSetInstanceID
+                                              ?.identifier ??
+                                          "???",
+                                    ),
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
+                                  );
+                                })
+                                .toSet()
+                                .toList(),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                   ),
                 ),
                 Container(

@@ -52,6 +52,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
         Get.offNamed('/Dashboard');
@@ -76,8 +77,8 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
+                //_buildProfile(data: controller.getProfil()),
+                //const SizedBox(height: kSpacing),
                 Row(
                   children: [
                     Container(
@@ -136,132 +137,24 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                         ),
                       ),
                     ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ), */
                   ],
                 ),
-                const SizedBox(height: kSpacing),
+                const SizedBox(height: 10),
                 Obx(
                   () => controller.dataAvailable
-                      ? ListView.builder(
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: controller.trx.records?.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                              onTap: () {
-                                Get.to(const ProductListDetail(), arguments: {
-                                  "id": controller.trx.records![index].id,
-                                });
-                              },
-                              child: Card(
-                                elevation: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 6.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(
-                                            top: 1, bottom: 10),
-                                        decoration: const BoxDecoration(
-                                            border: Border(
-                                                bottom: BorderSide(
-                                                    width: 1.0,
-                                                    color: Colors.white24))),
-                                        child: controller.trx.records![index]
-                                                    .imageData !=
-                                                null
-                                            ? Image.memory(const Base64Codec()
-                                                .decode((controller
-                                                        .trx
-                                                        .records![index]
-                                                        .imageData!)
-                                                    .replaceAll(
-                                                        RegExp(r'\n'), '')))
-                                            : const Text("no image"),
-                                      ),
-                                      ListTile(
-                                        /* tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0), */
-                                        /* leading: Container(
-                                          padding:
-                                              const EdgeInsets.only(right: 12.0),
-                                          decoration: const BoxDecoration(
-                                              border: Border(
-                                                  right: BorderSide(
-                                                      width: 1.0,
-                                                      color: Colors.white24))),
-                                          child: controller.trx.records![index]
-                                                      .imageData !=
-                                                  null
-                                              ? Image.memory(const Base64Codec()
-                                                  .decode((controller
-                                                          .trx
-                                                          .records![index]
-                                                          .imageData!)
-                                                      .replaceAll(
-                                                          RegExp(r'\n'), '')))
-                                              : Text("no image"),
-                                        ), */
-
-                                        title: Text(
-                                          "  €" +
-                                              controller
-                                                  .trx.records![index].price
-                                                  .toString(),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                        subtitle: Column(
-                                          children: [
-                                            Row(
-                                              children: <Widget>[
-                                                /* const Icon(Icons.,
-                                                    color: Colors.yellowAccent), */
-                                                Expanded(
-                                                  child: Text(
-                                                    controller
-                                                            .trx
-                                                            .records![index]
-                                                            .name ??
-                                                        "??",
-                                                    style: const TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        /* trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.white,
-                                        size: 30.0,
-                                      ), */
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
+                      ? SizedBox(
+                          height: size.height,
+                          width: double.infinity,
+                          child: StaggeredGridView.countBuilder(
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              itemCount: controller.trx.records?.length ?? 0,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              itemBuilder: (BuildContext context, index) =>
+                                  buildImageCard(index),
+                              staggeredTileBuilder: (index) =>
+                                  const StaggeredTile.fit(1)),
                         )
                       : const Center(child: CircularProgressIndicator()),
                 ),
@@ -585,4 +478,176 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
           .toList(),
     ]);
   }
+
+  Widget buildImageCard(int index) => GestureDetector(
+        onTap: () {
+          Get.to(const ProductListDetail(), arguments: {
+            "id": controller.trx.records![index].id,
+          });
+        },
+        child: Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: controller.trx.records![index].imageData != null
+                      ? Image.memory(
+                          const Base64Codec().decode(
+                              (controller.trx.records![index].imageData!)
+                                  .replaceAll(RegExp(r'\n'), '')),
+                          fit: BoxFit.cover,
+                        )
+                      : const Text("no image"),
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "  €" + controller.trx.records![index].price.toString(),
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Column(
+                  children: [
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            controller.trx.records![index].name ?? "??",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 }
+
+
+
+
+
+/* Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.records?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                Get.to(const ProductListDetail(), arguments: {
+                                  "id": controller.trx.records![index].id,
+                                });
+                              },
+                              child: Card(
+                                elevation: 8.0,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 6.0),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(64, 75, 96, .9)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            top: 1, bottom: 10),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: controller.trx.records![index]
+                                                    .imageData !=
+                                                null
+                                            ? Image.memory(const Base64Codec()
+                                                .decode((controller
+                                                        .trx
+                                                        .records![index]
+                                                        .imageData!)
+                                                    .replaceAll(
+                                                        RegExp(r'\n'), '')))
+                                            : const Text("no image"),
+                                      ),
+                                      ListTile(
+                                        /* tilePadding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0), */
+                                        /* leading: Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: controller.trx.records![index]
+                                                      .imageData !=
+                                                  null
+                                              ? Image.memory(const Base64Codec()
+                                                  .decode((controller
+                                                          .trx
+                                                          .records![index]
+                                                          .imageData!)
+                                                      .replaceAll(
+                                                          RegExp(r'\n'), '')))
+                                              : Text("no image"),
+                                        ), */
+
+                                        title: Text(
+                                          "  €" +
+                                              controller
+                                                  .trx.records![index].price
+                                                  .toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Column(
+                                          children: [
+                                            Row(
+                                              children: <Widget>[
+                                                /* const Icon(Icons.,
+                                                    color: Colors.yellowAccent), */
+                                                Expanded(
+                                                  child: Text(
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name ??
+                                                        "??",
+                                                    style: const TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ), */

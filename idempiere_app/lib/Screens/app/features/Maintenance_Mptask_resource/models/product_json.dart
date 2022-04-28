@@ -66,6 +66,7 @@ class Records {
   final ProductType? productType;
   final int? guaranteeDays;
   final MAttributeSetInstanceID? mAttributeSetInstanceID;
+  final MAttributeSetID? mAttributeSetID;
   final int? guaranteeDaysMin;
   final bool? isWebStoreFeatured;
   final bool? isSelfService;
@@ -123,6 +124,7 @@ class Records {
     this.productType,
     this.guaranteeDays,
     this.mAttributeSetInstanceID,
+    this.mAttributeSetID,
     this.guaranteeDaysMin,
     this.isWebStoreFeatured,
     this.isSelfService,
@@ -204,6 +206,11 @@ class Records {
             (json['M_AttributeSetInstance_ID'] as Map<String, dynamic>?) != null
                 ? MAttributeSetInstanceID.fromJson(
                     json['M_AttributeSetInstance_ID'] as Map<String, dynamic>)
+                : null,
+        mAttributeSetID =
+            (json['M_AttributeSet_ID'] as Map<String, dynamic>?) != null
+                ? MAttributeSetID.fromJson(
+                    json['M_AttributeSet_ID'] as Map<String, dynamic>)
                 : null,
         guaranteeDaysMin = json['GuaranteeDaysMin'] as int?,
         isWebStoreFeatured = json['IsWebStoreFeatured'] as bool?,
@@ -507,21 +514,55 @@ class ProductType {
 class MAttributeSetInstanceID {
   final String? propertyLabel;
   final int? id;
+  final String? identifier;
   final String? modelname;
 
   MAttributeSetInstanceID({
     this.propertyLabel,
     this.id,
+    this.identifier,
     this.modelname,
   });
 
   MAttributeSetInstanceID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
-  Map<String, dynamic> toJson() =>
-      {'propertyLabel': propertyLabel, 'id': id, 'model-name': modelname};
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MAttributeSetID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MAttributeSetID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MAttributeSetID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
 }
 
 class MLocatorID {
