@@ -227,6 +227,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
       var json = ProductJson.fromJson(jsonDecode(response.body));
       if (json.rowcount! > 0) {
         setState(() {
+          attrValue = "0";
           attrFieldAvailable = false;
           attrFieldVisible = false;
           productId = json.records![0].id;
@@ -536,7 +537,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     readOnly: true,
                     controller: valueFieldController,
                     decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
+                      prefixIcon: Icon(Icons.wallet_travel),
                       border: OutlineInputBorder(),
                       labelText: 'Product Value',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -549,7 +550,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     readOnly: true,
                     controller: nameFieldController,
                     decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
+                      prefixIcon: Icon(Icons.wallet_travel),
                       border: OutlineInputBorder(),
                       labelText: 'Product Name',
                       floatingLabelBehavior: FloatingLabelBehavior.always,

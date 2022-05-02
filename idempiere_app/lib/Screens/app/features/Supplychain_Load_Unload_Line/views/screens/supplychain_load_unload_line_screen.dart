@@ -1,9 +1,7 @@
 library dashboard;
 
-//import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -22,7 +20,6 @@ import 'package:idempiere_app/Screens/app/shared_components/selection_button.dar
 import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
-//import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -59,7 +56,6 @@ class SupplychainLoadUnloadLineScreen
         return false;
       },
       child: Scaffold(
-        //key: controller.scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
           title: Text(Get.arguments["docNo"]),
@@ -134,18 +130,6 @@ class SupplychainLoadUnloadLineScreen
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-                                  /* trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.article,
-                                      color: controller.trx.records![index]
-                                                  .docStatus?.id ==
-                                              "CO"
-                                          ? Colors.green
-                                          : Colors.yellow,
-                                    ),
-                                    onPressed: () {},
-                                  ), */
                                   subtitle: Row(
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale_outlined),
@@ -161,11 +145,6 @@ class SupplychainLoadUnloadLineScreen
                                       ),
                                     ],
                                   ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
                                   childrenPadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   children: [

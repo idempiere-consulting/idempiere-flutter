@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/storageonhand_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/views/screens/supplychain_load_unload_line_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -33,6 +34,7 @@ class _CreateSupplychainLoadUnloadLineState
       "Description": descriptionFieldController.text,
       "QtyInternalUse": int.parse(qtyFieldController.text) * -1,
       "C_Charge_ID": {"id": 1000000},
+      "M_AttributeSetInstance_ID": {"id": instAttrId},
     });
     final protocol = GetStorage().read('protocol');
     var url =
@@ -111,13 +113,59 @@ class _CreateSupplychainLoadUnloadLineState
     }
   }
 
+  Future<void> getInstAttr(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and DateLastInventory neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      attrList = StorageOnHandJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (attrList.rowcount! > 0) {
+        attrList.records!
+            .removeWhere((element) => element.mAttributeSetInstanceID?.id == 0);
+        SOORecords record = SOORecords(
+            mAttributeSetInstanceID:
+                MAttributeSetInstance2ID(id: 0, identifier: ""));
+        attrList.records!.add(record);
+
+        setState(() {
+          attrValue = "0";
+          attrFieldAvailable = true;
+          attrFieldVisible = true;
+        });
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<void> searchByCode(String value) async {
+    setState(() {
+      productId = null;
+    });
+    instAttrId = 0;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_product?\$filter= M_Product_ID eq $value and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/m_product?\$filter= Value eq \'$value\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -130,7 +178,95 @@ class _CreateSupplychainLoadUnloadLineState
       //print(response.body);
 
       var json = ProductJson.fromJson(jsonDecode(response.body));
+      if (json.rowcount! > 0) {
+        nameFieldController.text = json.records![0].name;
+        valueFieldController.text = json.records![0].value;
+        productId = json.records![0].id;
+        if (json.records![0].mLocatorID != null) {
+          locatorId = json.records![0].mLocatorID?.id;
+          locatorName = json.records![0].mLocatorID?.identifier;
+          isready = false;
+          initialValue =
+              TextEditingValue(text: json.records![0].mLocatorID!.identifier!);
+          isready = true;
+        }
+        if (json.records![0].mAttributeSetID?.id != null) {
+          getInstAttr(json.records![0].id!);
+        }
+      } else {
+        searchByInstAttr(value);
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
 
+  Future<void> searchByInstAttr(dynamic id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and DateLastInventory neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        attrFieldAvailable = false;
+        attrFieldVisible = false;
+      });
+      attrList = StorageOnHandJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (attrList.rowcount! > 0) {
+        instAttrId = attrList.records![0].mAttributeSetInstanceID!.id!;
+        getProductByInstAttr(attrList.records![0].mProductID!.id!);
+        setState(() {
+          attrValue =
+              attrList.records![0].mAttributeSetInstanceID!.id.toString();
+          attrFieldAvailable = true;
+          attrFieldVisible = true;
+        });
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getProductByInstAttr(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter=M_Product_ID eq $id and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json =
+          ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      productId = json.records![0].id;
+      productName = json.records![0].name;
       nameFieldController.text = json.records![0].name;
       valueFieldController.text = json.records![0].value;
       if (json.records![0].mLocatorID != null) {
@@ -141,22 +277,217 @@ class _CreateSupplychainLoadUnloadLineState
             TextEditingValue(text: json.records![0].mLocatorID!.identifier!);
         isready = true;
       }
+    }
+  }
+
+  Future<void> nextLotIncrease() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    final msg = jsonEncode({
+      "CurrentNext": nextLot + 1,
+    });
+
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/M_LotCtl/1000001');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+  }
+
+  Future<void> createAttribute() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/M_LotCtl?\$filter= M_LotCtl_ID eq 1000001 and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+      nextLot = json["records"][0]["CurrentNext"];
+      nextLotIncrease();
+      createLot();
     } else {
       if (kDebugMode) {
         print(response.body);
+        Get.defaultDialog(
+          title: "Oops!",
+          content: const Text("createAttribute Error"),
+        );
       }
     }
   }
 
-  /* void fillFields() {
-    nameFieldController.text = args["name"];
-    bPartnerFieldController.text = args["bpName"];
-    phoneFieldController.text = args["Tel"];
-    mailFieldController.text = args["eMail"];
-    //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"];
-    //salesRepFieldController.text = args["salesRep"];
-  } */
+  Future<void> createLot() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/M_Lot/');
+
+    final msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_Product_ID": {"id": productId},
+      "Name": nextLot,
+      "M_LotCtl_ID": {"id": 1000001}
+    });
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+      idLot = json["id"];
+      createAttributeSetInstance();
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+        Get.defaultDialog(
+          title: "Oops!",
+          content: const Text("createLot Error"),
+        );
+      }
+    }
+  }
+
+  Future<void> createAttributeSetInstance() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/m_attributesetinstance/');
+
+    final msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_AttributeSet_ID": {"id": 1000001},
+      "Lot": nextLot,
+      "Description": seriesNr.toString() + '«' + nextLot.toString() + '»',
+      "M_Lot_ID": {"id": idLot},
+    });
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      print(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      instAttrId = json["id"];
+      setState(() {
+        attrFieldAvailable = false;
+        attrFieldVisible = false;
+      });
+
+      var mattrsetid = MAttributeSetInstance2ID(
+          id: json["id"], identifier: seriesNr.toString());
+
+      var record = SOORecords(mAttributeSetInstanceID: mattrsetid);
+
+      attrList.records!.add(record);
+      attrValue = json["id"].toString();
+
+      setState(() {
+        attrFieldAvailable = true;
+        attrFieldVisible = true;
+      });
+      createAttributeInstance();
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+        Get.defaultDialog(
+          title: "Oops!",
+          content: const Text("createAttributeSetInstance Error"),
+        );
+      }
+    }
+  }
+
+  Future<void> createAttributeInstance() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/m_attributesetinstance/');
+
+    final msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_AttributeSetInstance_ID": {"id": instAttrId},
+      "M_Attribute_ID": {"id": 1000000},
+      "Value": seriesNr
+    });
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      if (instAttrId != 0) {
+        Get.defaultDialog(
+          title: "Done!",
+          content: const Text("Instance Attribute Created!"),
+        );
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+        Get.defaultDialog(
+          title: "Oops!",
+          content: const Text("createAttributeInstance Error"),
+        );
+      }
+    }
+  }
+
+  // ignore: prefer_typing_uninitialized_variables
+  var nextLot;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var seriesNr;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var idLot;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var idAttributeInstance;
 
   //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
@@ -169,6 +500,9 @@ class _CreateSupplychainLoadUnloadLineState
   var descriptionFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var bycodeFieldController;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var seriesNrFieldController;
   String salesrepValue = "";
 
   bool isready = true;
@@ -188,7 +522,19 @@ class _CreateSupplychainLoadUnloadLineState
   // ignore: prefer_typing_uninitialized_variables
   var initialValue;
 
-  static String _displayStringForOption(Records option) => option.name!;
+  late StorageOnHandJson attrList;
+
+  var instAttrId = 0;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var attrValue;
+
+  var attrFieldVisible = false;
+
+  var attrFieldAvailable = false;
+
+  static String _displayStringForOption(Records option) =>
+      "${option.value}_${option.name}";
 
   static String _displayStringvalueForOption(Records option) => option.value!;
 
@@ -205,7 +551,11 @@ class _CreateSupplychainLoadUnloadLineState
     descriptionFieldController = TextEditingController();
     qtyFieldController.text = "1";
     bycodeFieldController = TextEditingController();
+    seriesNrFieldController = TextEditingController();
     initialValue = const TextEditingValue(text: '');
+    attrFieldVisible = false;
+    attrFieldAvailable = false;
+    attrValue = "0";
     //fillFields();
   }
 
@@ -216,6 +566,7 @@ class _CreateSupplychainLoadUnloadLineState
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -303,7 +654,7 @@ class _CreateSupplychainLoadUnloadLineState
                                     return const Iterable<Records>.empty();
                                   }
                                   return snapshot.data!.where((Records option) {
-                                    return option.name!
+                                    return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
@@ -311,12 +662,15 @@ class _CreateSupplychainLoadUnloadLineState
                                   });
                                 },
                                 onSelected: (Records selection) {
+                                  instAttrId = 0;
                                   setState(() {
                                     productId = _setIdForOption(selection);
-                                    productName =
-                                        _displayStringForOption(selection);
+                                    productName = selection.name;
                                     nameFieldController.text = selection.name;
                                     valueFieldController.text = selection.value;
+                                    if (selection.mAttributeSetID?.id != null) {
+                                      getInstAttr(selection.id!);
+                                    }
                                   });
 
                                   //print(salesrepValue);
@@ -335,7 +689,7 @@ class _CreateSupplychainLoadUnloadLineState
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.wallet_travel),
                       border: OutlineInputBorder(),
-                      labelText: 'Value',
+                      labelText: 'Product Value',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -348,7 +702,7 @@ class _CreateSupplychainLoadUnloadLineState
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.wallet_travel),
                       border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                      labelText: 'Product Name',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -380,6 +734,62 @@ class _CreateSupplychainLoadUnloadLineState
                       labelText: 'Description',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Attribute Instance",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: attrFieldAvailable
+                        ? DropdownButton(
+                            value: attrValue as String,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              instAttrId = int.parse(newValue!);
+                              setState(() {
+                                attrValue = newValue;
+                              });
+                              print(newValue);
+                            },
+                            items: attrList.records!
+                                .map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.mAttributeSetInstanceID
+                                              ?.identifier ??
+                                          "???",
+                                    ),
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
+                                  );
+                                })
+                                .toSet()
+                                .toList(),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                   ),
                 ),
                 Container(
@@ -437,6 +847,53 @@ class _CreateSupplychainLoadUnloadLineState
                                 child: CircularProgressIndicator(),
                               ),
                   ),
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  overflowDirection: VerticalDirection.down,
+                  overflowButtonSpacing: 8,
+                  children: [
+                    Visibility(
+                      visible: productId != null,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        child: const Text("Create Instance Attribute"),
+                        onPressed: () async {
+                          //declareFinishedProduct();
+                          Get.defaultDialog(
+                              title: 'Series Number',
+                              content: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: seriesNrFieldController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9]"))
+                                  ],
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.person_pin_outlined),
+                                    border: OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                              onConfirm: () {
+                                Get.back();
+                                seriesNr = seriesNrFieldController.text;
+                                createAttribute();
+                              },
+                              onCancel: () {});
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             );

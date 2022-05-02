@@ -3,7 +3,7 @@ class StorageOnHandJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<SOORecords>? records;
+  List<SOORecords>? records;
 
   StorageOnHandJson({
     this.pagecount,
