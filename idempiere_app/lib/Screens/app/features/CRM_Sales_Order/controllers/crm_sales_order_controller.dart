@@ -96,7 +96,7 @@ class CRMSalesOrderController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\'  and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DocStatus asc');
+        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\'   and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DocStatus desc');
     var response = await http.get(
       url,
       headers: <String, String>{

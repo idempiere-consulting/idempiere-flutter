@@ -3,6 +3,7 @@ library dashboard;
 //import 'dart:convert';
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -26,9 +27,11 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:nextcloud/nextcloud.dart';
+import 'package:path_provider/path_provider.dart';
 
 // binding
 part '../../bindings/dashboard_binding.dart';

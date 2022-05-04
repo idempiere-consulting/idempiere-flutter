@@ -415,6 +415,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  nextcloud:
+    dependency: "direct main"
+    description:
+      name: nextcloud
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.2"
   nfc_manager:
     dependency: "direct main"
     description:
@@ -444,7 +451,7 @@ packages:
     source: hosted
     version: "0.2.1"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"

@@ -18,12 +18,36 @@ class DashboardController extends GetxController {
   var filters = ["Sign Entry", "Sign Exit" /* , "Team" */];
   var filterCount = 0;
 
+  //late final NextCloudClient client;
+
   @override
   void onInit() {
     super.onInit();
+
     getNotificationCounter();
     getAllEvents();
   }
+
+  /* Future<void> nextcloudTest() async {
+    /* final files = await client.webDav.ls('/');
+    for (final file in files) {
+      print(file.path);
+    } */
+
+    final downloadedData = await client.webDav.downloadStream('Nextcloud.png');
+
+    Directory dir = await getApplicationDocumentsDirectory();
+
+    final file = File('${dir.path}/Nextcloud.png');
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+    final inputStream = file.openWrite();
+    await inputStream.addStream(downloadedData);
+    await inputStream.close();
+
+    print('... done!');
+  } */
 
   Future<void> getAllEvents() async {
     var now = DateTime.now();
@@ -68,7 +92,9 @@ class DashboardController extends GetxController {
 
       //print(json.rowcount);
     } else {
-      throw Exception("Failed to load events");
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
 
     //print(list[0].eMail);

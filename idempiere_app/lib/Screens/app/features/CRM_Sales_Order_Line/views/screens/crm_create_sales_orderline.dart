@@ -684,10 +684,502 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Search by code",
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    autofocus: true,
+                    onSubmitted: (String? text) {
+                      searchByCode(text!);
+                    },
+                    controller: bycodeFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      //labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Search by product",
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: initialValue,
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return ("${option.value}_${option.name}")
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    instAttrId = 0;
+                                    attrFieldAvailable = false;
+                                    attrFieldVisible = false;
+                                    productId = _setIdForOption(selection);
+                                    productName = selection.name;
+                                    nameFieldController.text = selection.name;
+                                    valueFieldController.text = selection.value;
+                                    getProductPrice();
+                                    getAdditionalProductInfo();
+                                    if (selection.mAttributeSetID?.id != null) {
+                                      getInstAttr(selection.id!);
+                                    }
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: valueFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.wallet_travel),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Value',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.wallet_travel),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields_rounded),
+                      border: OutlineInputBorder(),
+                      labelText: 'Quantity',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields_rounded),
+                      border: OutlineInputBorder(),
+                      labelText: 'Price',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Attribute Instance",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: attrFieldAvailable
+                        ? DropdownButton(
+                            value: attrValue as String,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              instAttrId = int.parse(newValue!);
+                              setState(() {
+                                attrValue = newValue;
+                              });
+                              print(newValue);
+                            },
+                            items: attrList.records!
+                                .map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.mAttributeSetInstanceID
+                                              ?.identifier ??
+                                          "???",
+                                    ),
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
+                                  );
+                                })
+                                .toSet()
+                                .toList(),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: Get.arguments["dateOrdered"],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Promised Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Search by code",
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    autofocus: true,
+                    onSubmitted: (String? text) {
+                      searchByCode(text!);
+                    },
+                    controller: bycodeFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      //labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Search by product",
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: initialValue,
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return ("${option.value}_${option.name}")
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    instAttrId = 0;
+                                    attrFieldAvailable = false;
+                                    attrFieldVisible = false;
+                                    productId = _setIdForOption(selection);
+                                    productName = selection.name;
+                                    nameFieldController.text = selection.name;
+                                    valueFieldController.text = selection.value;
+                                    getProductPrice();
+                                    getAdditionalProductInfo();
+                                    if (selection.mAttributeSetID?.id != null) {
+                                      getInstAttr(selection.id!);
+                                    }
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: valueFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.wallet_travel),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Value',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.wallet_travel),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields_rounded),
+                      border: OutlineInputBorder(),
+                      labelText: 'Quantity',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields_rounded),
+                      border: OutlineInputBorder(),
+                      labelText: 'Price',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Attribute Instance",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: attrFieldAvailable
+                        ? DropdownButton(
+                            value: attrValue as String,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              instAttrId = int.parse(newValue!);
+                              setState(() {
+                                attrValue = newValue;
+                              });
+                              print(newValue);
+                            },
+                            items: attrList.records!
+                                .map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.mAttributeSetInstanceID
+                                              ?.identifier ??
+                                          "???",
+                                    ),
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
+                                  );
+                                })
+                                .toSet()
+                                .toList(),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: Get.arguments["dateOrdered"],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Promised Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),
