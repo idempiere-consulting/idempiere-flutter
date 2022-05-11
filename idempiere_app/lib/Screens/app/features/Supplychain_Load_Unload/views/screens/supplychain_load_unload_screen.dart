@@ -329,7 +329,9 @@ class SupplychainLoadUnloadScreen
                                                       );
                                                       if (response.statusCode ==
                                                           200) {
-                                                        print(response.body);
+                                                        if (kDebugMode) {
+                                                          print(response.body);
+                                                        }
                                                         completeOrder(index);
                                                       } else {
                                                         //print(response.body);

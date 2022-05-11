@@ -320,6 +320,7 @@ class _CreateSupplychainLoadUnloadLineState
     var url =
         Uri.parse('$protocol://' + ip + '/api/v1/models/M_LotCtl/1000001');
 
+    // ignore: unused_local_variable
     var response = await http.put(
       url,
       body: msg,

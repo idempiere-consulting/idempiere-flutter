@@ -24,6 +24,7 @@ class _CreateSupplychainLoadUnloadState
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var formatter = DateFormat('yyyy-MM-dd');
+    // ignore: prefer_typing_uninitialized_variables
     var msg;
     if (activityFieldController.text == "") {
       msg = jsonEncode({
@@ -60,7 +61,9 @@ class _CreateSupplychainLoadUnloadState
       },
     );
     if (response.statusCode == 201) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       var json = jsonDecode(utf8.decode(response.bodyBytes));
       Get.find<SupplychainLoadUnloadController>().getLoadUnloads();
       Get.offNamed('/SupplychainLoadUnloadLine',

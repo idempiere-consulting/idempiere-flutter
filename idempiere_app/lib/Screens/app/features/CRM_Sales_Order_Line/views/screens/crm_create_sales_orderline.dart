@@ -625,7 +625,9 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                               setState(() {
                                 attrValue = newValue;
                               });
-                              print(newValue);
+                              if (kDebugMode) {
+                                print(newValue);
+                              }
                             },
                             items: attrList.records!
                                 .map((list) {
@@ -874,7 +876,9 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                               setState(() {
                                 attrValue = newValue;
                               });
-                              print(newValue);
+                              if (kDebugMode) {
+                                print(newValue);
+                              }
                             },
                             items: attrList.records!
                                 .map((list) {
@@ -1123,7 +1127,9 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                               setState(() {
                                 attrValue = newValue;
                               });
-                              print(newValue);
+                              if (kDebugMode) {
+                                print(newValue);
+                              }
                             },
                             items: attrList.records!
                                 .map((list) {
