@@ -21,7 +21,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   // ignore: prefer_typing_uninitialized_variables
-  var checkboxState;
+  var checkboxState = true;
   // ignore: prefer_typing_uninitialized_variables
   var userFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -36,7 +36,7 @@ class _BodyState extends State<Body> {
     userFieldController = TextEditingController();
     passwordFieldController = TextEditingController();
     checkSavedLogin();
-    checkboxState = GetStorage().read('checkboxLogin') ?? false;
+    checkboxState = GetStorage().read('checkboxLogin') ?? true;
     if (GetStorage().read('postCallId') == null) {
       GetStorage().write('postCallId', 1);
     }
@@ -71,6 +71,7 @@ class _BodyState extends State<Body> {
             .padLeft(4, "0")
             .toString()); */
         GetStorage().write('permission', list);
+        GetStorage().write('checkboxLogin', checkboxState);
         /* DateTime now = DateTime.now();
         DateTime date = DateTime(now.year, now.month, now.day);
         GetStorage().write('lastLoginDate', date.toString());
@@ -199,6 +200,7 @@ class _BodyState extends State<Body> {
           context,
           '/loginroles',
         ); */
+          GetStorage().write('checkboxLogin', checkboxState);
           GetStorage().write('clientlist', response.body);
           Get.to(() => const LoginClient());
         }
@@ -209,6 +211,7 @@ class _BodyState extends State<Body> {
       var lastdate = GetStorage().read('lastLoginDate');
 
       if (date.toString() == lastdate) {
+        GetStorage().write('checkboxLogin', checkboxState);
         GetStorage().write("isOffline", true);
         Get.offAllNamed('/Dashboard');
         Get.snackbar(
@@ -274,8 +277,8 @@ class _BodyState extends State<Body> {
               onChanged: (bool? value) {
                 setState(() {
                   checkboxState = value!;
+                  //GetStorage().write('checkboxLogin', checkboxState);
                 });
-                GetStorage().write('checkboxLogin', checkboxState);
               },
               controlAffinity: ListTileControlAffinity.leading,
             ),

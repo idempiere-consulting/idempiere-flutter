@@ -1,12 +1,14 @@
 part of dashboard;
 
 class _Sidebar extends StatelessWidget {
-  const _Sidebar({
+  _Sidebar({
     required this.data,
     Key? key,
   }) : super(key: key);
 
   final ProjectCardData data;
+
+  final List<dynamic> list = GetStorage().read('permission');
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +34,52 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
+                  activeIcon: EvaIcons.calendar,
+                  icon: EvaIcons.calendarOutline,
                   label: "SupplychainProductwarehouse".tr,
+                  visible: int.parse(list[64], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "SupplychainInventory".tr,
+                  visible: int.parse(list[73], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "SupplychainMaterialreceipt".tr,
+                  visible: int.parse(list[66], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Load & Unload",
+                  label: "Load & Unload".tr,
+                  visible: int.parse(list[74], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
               ],
               onSelected: (index, value) {

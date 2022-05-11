@@ -1613,13 +1613,11 @@ CRUD=1111=F
  63 
  64 Logistica ***********: 1 *** 7 Logistica
  65 Prodotto             : F
- 67 Spedizione Prodotti  :
- 68 Entrata Merci        :
+ 66 Spedizione Prodotti  :
+ 67 Entrata Merci        :
  68 Trasferimento        :
- 69 Consumo              :
- 66 Inventario           :
- 67 Carico Scarico
- 68
+ 74 Inventario           :
+ 75 Carico Scarico
  69 Mezzi ***************: 1 *** 8 Mezzi e Attrezzatura
  70 Mezzi
  71 Attrezzatura

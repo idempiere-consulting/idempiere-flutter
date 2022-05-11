@@ -189,7 +189,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,
                   label: "Employee".tr,
-                  visible: int.parse(list[93], radix: 16)
+                  visible: int.parse(list[103], radix: 16)
                                   .toRadixString(2)
                                   .padLeft(4, "0")
                                   .toString()[1] ==
@@ -202,7 +202,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.bookOpenOutline,
                   label: "Training and Course",
-                  visible: int.parse(list[93], radix: 16)
+                  visible: int.parse(list[52], radix: 16)
                                   .toRadixString(2)
                                   .padLeft(4, "0")
                                   .toString()[1] ==
@@ -216,7 +216,7 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.personOutline,
                   label: "Profil".tr,
                   visible:
-                      GetStorage().read("isOffline") == false ? true : false,
+                      GetStorage().read("isOffline") == false ? false : false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.settings,
@@ -224,6 +224,12 @@ class _Sidebar extends StatelessWidget {
                   label: "Setting".tr,
                   visible:
                       GetStorage().read("isOffline") == false ? true : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.logOut,
+                  icon: EvaIcons.logOutOutline,
+                  label: "Log Out",
+                  visible: true,
                 ),
               ],
               onSelected: (index, value) {
@@ -280,6 +286,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 16:
                     Get.offNamed('/Settings');
+                    break;
+                  case 17:
+                    Get.offAllNamed("/");
                     break;
                   default:
                 }

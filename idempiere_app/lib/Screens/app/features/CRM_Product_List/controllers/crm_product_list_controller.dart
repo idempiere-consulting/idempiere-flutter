@@ -54,7 +54,9 @@ class CRMProductListController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       _trx =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
@@ -62,7 +64,9 @@ class CRMProductListController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

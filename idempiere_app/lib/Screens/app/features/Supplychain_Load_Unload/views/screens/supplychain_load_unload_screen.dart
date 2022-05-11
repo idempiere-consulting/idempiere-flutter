@@ -27,7 +27,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 
 // binding
 part '../../bindings/supplychain_load_unload_binding.dart';
@@ -50,6 +50,53 @@ part '../components/team_member.dart';
 class SupplychainLoadUnloadScreen
     extends GetView<SupplychainLoadUnloadController> {
   const SupplychainLoadUnloadScreen({Key? key}) : super(key: key);
+
+  completeOrder(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "record-id": controller.trx.records![index].id,
+    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/processes/m-inventory-process');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      controller.getLoadUnloads();
+      if (kDebugMode) {
+        print(response.body);
+      }
+
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato completato",
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Errore!",
+        "Il record non è stato completato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +130,9 @@ class SupplychainLoadUnloadScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("LOAD & UNLOAD: ${controller.trx.rowcount}")
-                          : const Text("LOAD & UNLOAD: ")),
+                          ? Text("Load & Unload".tr +
+                              ": ${controller.trx.rowcount}")
+                          : Text("Load & Unload".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -169,7 +217,7 @@ class SupplychainLoadUnloadScreen
                                           : Colors.yellow,
                                     ),
                                     onPressed: () {
-                                      Get.offNamed('/SupplychainLoadUnloadLine',
+                                      Get.toNamed('/SupplychainLoadUnloadLine',
                                           arguments: {
                                             "id": controller
                                                 .trx.records![index].id,
@@ -222,6 +270,83 @@ class SupplychainLoadUnloadScreen
                                             Text(controller.trx.records![index]
                                                     .mWarehouseID?.identifier ??
                                                 ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .docStatus
+                                                      ?.id !=
+                                                  'CO',
+                                              child: ElevatedButton(
+                                                child: const Text("Complete"),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  Get.defaultDialog(
+                                                    title: 'Complete Action',
+                                                    content: const Text(
+                                                        "Are you sure you want to complete the record?"),
+                                                    onCancel: () {},
+                                                    onConfirm: () async {
+                                                      Get.back();
+                                                      final ip = GetStorage()
+                                                          .read('ip');
+                                                      String authorization =
+                                                          'Bearer ' +
+                                                              GetStorage().read(
+                                                                  'token');
+                                                      final msg = jsonEncode({
+                                                        "DocAction": "CO",
+                                                      });
+                                                      final protocol =
+                                                          GetStorage()
+                                                              .read('protocol');
+                                                      var url = Uri.parse(
+                                                          '$protocol://' +
+                                                              ip +
+                                                              '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+
+                                                      var response =
+                                                          await http.put(
+                                                        url,
+                                                        body: msg,
+                                                        headers: <String,
+                                                            String>{
+                                                          'Content-Type':
+                                                              'application/json',
+                                                          'Authorization':
+                                                              authorization,
+                                                        },
+                                                      );
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                        print(response.body);
+                                                        completeOrder(index);
+                                                      } else {
+                                                        //print(response.body);
+                                                        Get.snackbar(
+                                                          "Errore!",
+                                                          "Il record non è stato completato",
+                                                          icon: const Icon(
+                                                            Icons.error,
+                                                            color: Colors.red,
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ],

@@ -9,6 +9,8 @@ class SupplychainLoadUnloadLineController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var args = Get.arguments;
+
   @override
   void onInit() {
     super.onInit();
@@ -20,6 +22,48 @@ class SupplychainLoadUnloadLineController extends GetxController {
   LoadUnloadLineJson get trx => _trx;
   //String get value => _value.toString();
 
+  deleteLoadUnloadLine(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/M_InventoryLine/$id');
+    //print(msg);
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.find<SupplychainLoadUnloadLineController>().getLoadUnloadsLine();
+      Get.back();
+      //print("done!");
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato eliminato",
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Errore!",
+        "Record non eliminato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   Future<void> getLoadUnloadsLine() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
@@ -27,7 +71,7 @@ class SupplychainLoadUnloadLineController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_InventoryLine?\$filter= M_Inventory_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/M_InventoryLine?\$filter= M_Inventory_ID eq ${args["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{

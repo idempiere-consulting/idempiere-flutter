@@ -24,7 +24,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 
 // binding
 part '../../bindings/supplychain_load_unload_line_binding.dart';
@@ -52,7 +52,7 @@ class SupplychainLoadUnloadLineScreen
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.offNamed('/Dashboard');
+        Get.back();
         return false;
       },
       child: Scaffold(
@@ -62,7 +62,7 @@ class SupplychainLoadUnloadLineScreen
           leading: IconButton(
             icon: const Icon(Icons.chevron_left),
             onPressed: () {
-              Get.offNamed('/SupplychainLoadUnload');
+              Get.back();
             },
           ),
           actions: [
@@ -113,12 +113,23 @@ class SupplychainLoadUnloadLineScreen
                                                 color: Colors.white24))),
                                     child: IconButton(
                                       icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
+                                        Icons.delete,
+                                        color: Colors.red,
                                       ),
-                                      tooltip: 'Edit',
+                                      tooltip: 'Delete',
                                       onPressed: () {
                                         //log("info button pressed");
+                                        Get.defaultDialog(
+                                            title: "Delete".tr,
+                                            content: Text(
+                                                "Are you sure you want to delete the record?"
+                                                    .tr),
+                                            onConfirm: () {
+                                              controller.deleteLoadUnloadLine(
+                                                  controller
+                                                      .trx.records![index].id!);
+                                            },
+                                            onCancel: () {});
                                       },
                                     ),
                                   ),

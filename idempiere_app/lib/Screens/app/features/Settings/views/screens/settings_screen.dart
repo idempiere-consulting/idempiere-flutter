@@ -52,255 +52,278 @@ class SettingsScreen extends GetView<SettingsController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () {
-            Get.offNamed('/Dashboard');
-          },
+    return WillPopScope(
+      onWillPop: () async {
+        GetStorage().write(
+            'isUserPreferencesSync', controller.isUserPreferencesSync.value);
+        GetStorage().write(
+            'isBusinessPartnerSync', controller.isBusinessPartnerSync.value);
+        GetStorage().write('isjpTODOSync', controller.isjpTODOSync.value);
+        GetStorage().write('isProductSync', controller.isProductSync.value);
+        GetStorage().write('isWorkOrderSync', controller.isWorkOrderSync.value);
+        Get.offNamed('/Dashboard');
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Settings"),
+          leading: IconButton(
+            icon: const Icon(Icons.chevron_left),
+            onPressed: () {
+              GetStorage().write('isUserPreferencesSync',
+                  controller.isUserPreferencesSync.value);
+              GetStorage().write('isBusinessPartnerSync',
+                  controller.isBusinessPartnerSync.value);
+              GetStorage().write('isjpTODOSync', controller.isjpTODOSync.value);
+              GetStorage()
+                  .write('isProductSync', controller.isProductSync.value);
+              GetStorage()
+                  .write('isWorkOrderSync', controller.isWorkOrderSync.value);
+              Get.offNamed('/Dashboard');
+            },
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: ResponsiveBuilder(
-          mobileBuilder: (context, constraints) {
-            return Column(
-              children: [
-                Obx(() => SettingsList(
-                      shrinkWrap: true,
-                      sections: [
-                        SettingsSection(
-                          margin: const EdgeInsetsDirectional.all(8.0),
-                          title: const Text('Sync Data'),
-                          tiles: <SettingsTile>[
-                            SettingsTile(
-                              title: const Text('Re-Sync All'),
-                              leading: const Icon(Icons.sync),
-                              onPressed: (context) {
-                                controller.reSyncAll();
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('User Preferences'),
-                              // ignore: prefer_const_constructors
-                              leading:
-                                  controller.isUserPreferencesSyncing.value ==
-                                          false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue:
-                                  controller.isUserPreferencesSync.value,
-                              onToggle: (bool value) {
-                                controller.isUserPreferencesSync.value = value;
-                                GetStorage()
-                                    .write('isUserPreferencesSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Business Partners'),
-                              // ignore: prefer_const_constructors
-                              leading:
-                                  controller.isBusinessPartnerSyncing.value ==
-                                          false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue:
-                                  controller.isBusinessPartnerSync.value,
-                              onToggle: (bool value) {
-                                controller.isBusinessPartnerSync.value = value;
-                                GetStorage()
-                                    .write('isBusinessPartnerSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Event Calendar'),
-                              leading: controller.isjpTODOSyncing.value == false
-                                  ? const Icon(Icons.cloud_download)
-                                  : const CircularProgressIndicator(),
-                              initialValue: controller.isjpTODOSync.value,
-                              onToggle: (bool value) {
-                                controller.isjpTODOSync.value = value;
-                                GetStorage().write('isjpTODOSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Products'),
-                              leading:
-                                  controller.isProductSyncing.value == false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue: controller.isProductSync.value,
-                              onToggle: (bool value) {
-                                controller.isProductSync.value = value;
-                                GetStorage().write('isProductSync', value);
-                              },
-                            ),
-                            SettingsTile.switchTile(
-                              title: const Text('Work Orders'),
-                              // ignore: prefer_const_constructors
-                              leading:
-                                  controller.isWorkOrderSyncing.value == false
-                                      ? const Icon(Icons.cloud_download)
-                                      : const CircularProgressIndicator(),
-                              initialValue: controller.isWorkOrderSync.value,
-                              onToggle: (bool value) {
-                                controller.isWorkOrderSync.value = value;
-                                GetStorage().write('isWorkOrderSync', value);
-                              },
-                            ),
-                          ],
+        body: SingleChildScrollView(
+          child: ResponsiveBuilder(
+            mobileBuilder: (context, constraints) {
+              return Column(
+                children: [
+                  Obx(() => SettingsList(
+                        shrinkWrap: true,
+                        sections: [
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: const Text('Sync Data'),
+                            tiles: <SettingsTile>[
+                              SettingsTile(
+                                title: const Text('Re-Sync All'),
+                                leading: const Icon(Icons.sync),
+                                onPressed: (context) {
+                                  controller.reSyncAll();
+                                },
+                              ),
+                              SettingsTile.switchTile(
+                                title: const Text('User Preferences'),
+                                // ignore: prefer_const_constructors
+                                leading:
+                                    controller.isUserPreferencesSyncing.value ==
+                                            false
+                                        ? const Icon(Icons.cloud_download)
+                                        : const CircularProgressIndicator(),
+                                initialValue:
+                                    controller.isUserPreferencesSync.value,
+                                onToggle: (bool value) {
+                                  controller.isUserPreferencesSync.value =
+                                      value;
+                                  //GetStorage().write('isUserPreferencesSync', value);
+                                },
+                              ),
+                              SettingsTile.switchTile(
+                                title: const Text('Business Partners'),
+                                // ignore: prefer_const_constructors
+                                leading:
+                                    controller.isBusinessPartnerSyncing.value ==
+                                            false
+                                        ? const Icon(Icons.cloud_download)
+                                        : const CircularProgressIndicator(),
+                                initialValue:
+                                    controller.isBusinessPartnerSync.value,
+                                onToggle: (bool value) {
+                                  controller.isBusinessPartnerSync.value =
+                                      value;
+                                  //GetStorage().write('isBusinessPartnerSync', controller.isBusinessPartnerSync.value);
+                                },
+                              ),
+                              SettingsTile.switchTile(
+                                title: const Text('Event Calendar'),
+                                leading:
+                                    controller.isjpTODOSyncing.value == false
+                                        ? const Icon(Icons.cloud_download)
+                                        : const CircularProgressIndicator(),
+                                initialValue: controller.isjpTODOSync.value,
+                                onToggle: (bool value) {
+                                  controller.isjpTODOSync.value = value;
+                                  //GetStorage().write('isjpTODOSync', controller.isjpTODOSync.value);
+                                },
+                              ),
+                              SettingsTile.switchTile(
+                                title: const Text('Products'),
+                                leading:
+                                    controller.isProductSyncing.value == false
+                                        ? const Icon(Icons.cloud_download)
+                                        : const CircularProgressIndicator(),
+                                initialValue: controller.isProductSync.value,
+                                onToggle: (bool value) {
+                                  controller.isProductSync.value = value;
+                                  //GetStorage().write('isProductSync', controller.isProductSync.value);
+                                },
+                              ),
+                              SettingsTile.switchTile(
+                                title: const Text('Work Orders'),
+                                // ignore: prefer_const_constructors
+                                leading:
+                                    controller.isWorkOrderSyncing.value == false
+                                        ? const Icon(Icons.cloud_download)
+                                        : const CircularProgressIndicator(),
+                                initialValue: controller.isWorkOrderSync.value,
+                                onToggle: (bool value) {
+                                  controller.isWorkOrderSync.value = value;
+                                  //GetStorage().write('isWorkOrderSync', controller.isWorkOrderSync.value);
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: const Text('Language'),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                leading: const Icon(Icons.language),
+                                title: const Text('Language'),
+                                value: const Text('Italian'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )),
+                ],
+              );
+            },
+            tabletBuilder: (context, constraints) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: (constraints.maxWidth < 950) ? 6 : 9,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                        _buildHeader(
+                            onPressedMenu: () =>
+                                Scaffold.of(context).openDrawer()),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildProgress(
+                          axis: (constraints.maxWidth < 950)
+                              ? Axis.vertical
+                              : Axis.horizontal,
                         ),
-                        SettingsSection(
-                          margin: const EdgeInsetsDirectional.all(8.0),
-                          title: const Text('Language'),
-                          tiles: <SettingsTile>[
-                            SettingsTile.navigation(
-                              leading: const Icon(Icons.language),
-                              title: const Text('Language'),
-                              value: const Text('Italian'),
-                            ),
-                          ],
+                        const SizedBox(height: kSpacing * 2),
+                        _buildTaskOverview(
+                          data: controller.getAllTask(),
+                          headerAxis: (constraints.maxWidth < 850)
+                              ? Axis.vertical
+                              : Axis.horizontal,
+                          crossAxisCount: 6,
+                          crossAxisCellCount: (constraints.maxWidth < 950)
+                              ? 6
+                              : (constraints.maxWidth < 1100)
+                                  ? 3
+                                  : 2,
                         ),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildActiveProject(
+                          data: controller.getActiveProject(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount: (constraints.maxWidth < 950)
+                              ? 6
+                              : (constraints.maxWidth < 1100)
+                                  ? 3
+                                  : 2,
+                        ),
+                        const SizedBox(height: kSpacing),
                       ],
-                    )),
-              ],
-            );
-          },
-          tabletBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 950) ? 6 : 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                      _buildHeader(
-                          onPressedMenu: () =>
-                              Scaffold.of(context).openDrawer()),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(
-                        axis: (constraints.maxWidth < 950)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        headerAxis: (constraints.maxWidth < 850)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
+                    ),
                   ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
+                        _buildProfile(data: controller.getProfil()),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildTeamMember(data: controller.getMember()),
+                        const SizedBox(height: kSpacing),
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: kSpacing),
+                          child: GetPremiumCard(onPressed: () {}),
+                        ),
+                        const SizedBox(height: kSpacing),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildRecentMessages(data: controller.getChatting()),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
+            desktopBuilder: (context, constraints) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(kBorderRadius),
+                          bottomRight: Radius.circular(kBorderRadius),
+                        ),
+                        child: _Sidebar(data: controller.getSelectedProject())),
                   ),
-                )
-              ],
-            );
-          },
-          desktopBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(kBorderRadius),
-                        bottomRight: Radius.circular(kBorderRadius),
-                      ),
-                      child: _Sidebar(data: controller.getSelectedProject())),
-                ),
-                Flexible(
-                  flex: 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing),
-                      _buildHeader(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
+                  Flexible(
+                    flex: 9,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing),
+                        _buildHeader(),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildProgress(),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildTaskOverview(
+                          data: controller.getAllTask(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount:
+                              (constraints.maxWidth < 1360) ? 3 : 2,
+                        ),
+                        const SizedBox(height: kSpacing * 2),
+                        _buildActiveProject(
+                          data: controller.getActiveProject(),
+                          crossAxisCount: 6,
+                          crossAxisCellCount:
+                              (constraints.maxWidth < 1360) ? 3 : 2,
+                        ),
+                        const SizedBox(height: kSpacing),
+                      ],
+                    ),
                   ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing / 2),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing / 2),
+                        _buildProfile(data: controller.getProfil()),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildTeamMember(data: controller.getMember()),
+                        const SizedBox(height: kSpacing),
+                        Padding(
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: kSpacing),
+                          child: GetPremiumCard(onPressed: () {}),
+                        ),
+                        const SizedBox(height: kSpacing),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
+                        _buildRecentMessages(data: controller.getChatting()),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/views/screens/supplychain_load_unload_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -23,16 +24,30 @@ class _CreateSupplychainLoadUnloadState
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var formatter = DateFormat('yyyy-MM-dd');
+    var msg;
+    if (activityFieldController.text == "") {
+      msg = jsonEncode({
+        "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+        "AD_Client_ID": {"id": GetStorage().read("clientid")},
+        "C_DocType_ID": {"id": Get.arguments["idDoc"]},
+        "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+        "MovementDate": formatter.format(DateTime.now()),
+        "Description": descriptionFieldController.text,
+        "DocAction": "CO",
+      });
+    } else {
+      msg = jsonEncode({
+        "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+        "AD_Client_ID": {"id": GetStorage().read("clientid")},
+        "C_Activity_ID": {"id": int.parse(activityFieldController.text)},
+        "C_DocType_ID": {"id": Get.arguments["idDoc"]},
+        "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+        "MovementDate": formatter.format(DateTime.now()),
+        "Description": descriptionFieldController.text,
+        "DocAction": "CO",
+      });
+    }
 
-    final msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "C_Activity_ID": {"id": int.parse(activityFieldController.text)},
-      "C_DocType_ID": {"id": Get.arguments["idDoc"]},
-      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
-      "MovementDate": formatter.format(DateTime.now()),
-      "Description": descriptionFieldController.text,
-    });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/M_Inventory/');
     //print(msg);
@@ -45,7 +60,11 @@ class _CreateSupplychainLoadUnloadState
       },
     );
     if (response.statusCode == 201) {
-      //Get.find<CRMLeadController>().getLeads();
+      print(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+      Get.find<SupplychainLoadUnloadController>().getLoadUnloads();
+      Get.offNamed('/SupplychainLoadUnloadLine',
+          arguments: {"id": json["id"], "docNo": json["DocumentNo"]});
       //print("done!");
       Get.snackbar(
         "Fatto!",
@@ -103,8 +122,8 @@ class _CreateSupplychainLoadUnloadState
     //getSalesRepAutoComplete();
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Add Load/Unload'),
+        title: Center(
+          child: Text('Add Load/Unload'.tr),
         ),
         actions: [
           Padding(
@@ -132,10 +151,10 @@ class _CreateSupplychainLoadUnloadState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: activityFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Activity (Barcode)',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity (Barcode)'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -144,10 +163,10 @@ class _CreateSupplychainLoadUnloadState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: "Description".tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),

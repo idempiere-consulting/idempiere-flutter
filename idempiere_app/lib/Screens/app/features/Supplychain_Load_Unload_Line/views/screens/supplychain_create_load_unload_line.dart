@@ -33,7 +33,7 @@ class _CreateSupplychainLoadUnloadLineState
       "M_Locator_ID": {"id": locatorId},
       "Description": descriptionFieldController.text,
       "QtyInternalUse": int.parse(qtyFieldController.text) * -1,
-      "C_Charge_ID": {"id": 1000000},
+      "C_Charge_ID": {"id": chargeId},
       "M_AttributeSetInstance_ID": {"id": instAttrId},
     });
     final protocol = GetStorage().read('protocol');
@@ -71,6 +71,30 @@ class _CreateSupplychainLoadUnloadLineState
           color: Colors.red,
         ),
       );
+    }
+  }
+
+  Future<void> getCharge() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/AD_UserPreference?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      chargeId =
+          json["records"][0]["M_InventoryLine_C_Charge_ID"]["id"] ?? 1000000;
     }
   }
 
@@ -184,13 +208,15 @@ class _CreateSupplychainLoadUnloadLineState
         productId = json.records![0].id;
         if (json.records![0].mLocatorID != null) {
           locatorId = json.records![0].mLocatorID?.id;
-          locatorName = json.records![0].mLocatorID?.identifier;
           isready = false;
           initialValue =
               TextEditingValue(text: json.records![0].mLocatorID!.identifier!);
           isready = true;
         }
         if (json.records![0].mAttributeSetID?.id != null) {
+          setState(() {
+            buttonVisible = true;
+          });
           getInstAttr(json.records![0].id!);
         }
       } else {
@@ -230,7 +256,9 @@ class _CreateSupplychainLoadUnloadLineState
       if (attrList.rowcount! > 0) {
         instAttrId = attrList.records![0].mAttributeSetInstanceID!.id!;
         getProductByInstAttr(attrList.records![0].mProductID!.id!);
+
         setState(() {
+          buttonVisible = true;
           attrValue =
               attrList.records![0].mAttributeSetInstanceID!.id.toString();
           attrFieldAvailable = true;
@@ -507,6 +535,8 @@ class _CreateSupplychainLoadUnloadLineState
 
   bool isready = true;
 
+  bool buttonVisible = false;
+
   // ignore: prefer_typing_uninitialized_variables
   var productId;
   // ignore: prefer_typing_uninitialized_variables
@@ -533,6 +563,10 @@ class _CreateSupplychainLoadUnloadLineState
 
   var attrFieldAvailable = false;
 
+  var chargeId = 1000000;
+
+  late FocusNode focusNode;
+
   static String _displayStringForOption(Records option) =>
       "${option.value}_${option.name}";
 
@@ -543,6 +577,7 @@ class _CreateSupplychainLoadUnloadLineState
   @override
   void initState() {
     super.initState();
+    focusNode = FocusNode();
     dropdownValue = null;
     //getLocators();
     valueFieldController = TextEditingController();
@@ -556,6 +591,8 @@ class _CreateSupplychainLoadUnloadLineState
     attrFieldVisible = false;
     attrFieldAvailable = false;
     attrValue = "0";
+    buttonVisible = false;
+    getCharge();
     //fillFields();
   }
 
@@ -569,8 +606,8 @@ class _CreateSupplychainLoadUnloadLineState
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Add Load/Unload Line'),
+        title: Center(
+          child: Text('Add Line'.tr),
         ),
         actions: [
           Padding(
@@ -596,11 +633,11 @@ class _CreateSupplychainLoadUnloadLineState
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Search by code",
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      "Search by code".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -611,6 +648,7 @@ class _CreateSupplychainLoadUnloadLineState
                     autofocus: true,
                     onSubmitted: (String? text) {
                       searchByCode(text!);
+                      focusNode.requestFocus();
                     },
                     controller: bycodeFieldController,
                     decoration: const InputDecoration(
@@ -622,11 +660,11 @@ class _CreateSupplychainLoadUnloadLineState
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Search by product",
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      "Search by product".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -663,7 +701,18 @@ class _CreateSupplychainLoadUnloadLineState
                                 },
                                 onSelected: (Records selection) {
                                   instAttrId = 0;
+                                  locatorId = selection.mLocatorID?.id;
+
                                   setState(() {
+                                    if (selection.mAttributeSetID?.id != null) {
+                                      buttonVisible = true;
+                                    } else {
+                                      buttonVisible = false;
+                                    }
+                                    initialValue = TextEditingValue(
+                                        text:
+                                            selection.mLocatorID?.identifier ??
+                                                "");
                                     productId = _setIdForOption(selection);
                                     productName = selection.name;
                                     nameFieldController.text = selection.name;
@@ -682,122 +731,11 @@ class _CreateSupplychainLoadUnloadLineState
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    controller: valueFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.wallet_travel),
-                      border: OutlineInputBorder(),
-                      labelText: 'Product Value',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.wallet_travel),
-                      border: OutlineInputBorder(),
-                      labelText: 'Product Name',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: qtyFieldController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                        signed: true, decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
-                    ],
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Quantity',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: attrFieldVisible,
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 40),
-                    child: const Align(
-                      child: Text(
-                        "Attribute Instance",
-                        style: TextStyle(fontSize: 12),
-                      ),
-                      alignment: Alignment.centerLeft,
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: attrFieldVisible,
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    margin: const EdgeInsets.all(10),
-                    child: attrFieldAvailable
-                        ? DropdownButton(
-                            value: attrValue as String,
-                            elevation: 16,
-                            onChanged: (String? newValue) {
-                              instAttrId = int.parse(newValue!);
-                              setState(() {
-                                attrValue = newValue;
-                              });
-                              print(newValue);
-                            },
-                            items: attrList.records!
-                                .map((list) {
-                                  return DropdownMenuItem<String>(
-                                    child: Text(
-                                      list.mAttributeSetInstanceID
-                                              ?.identifier ??
-                                          "???",
-                                    ),
-                                    value: list.mAttributeSetInstanceID?.id
-                                        .toString(),
-                                  );
-                                })
-                                .toSet()
-                                .toList(),
-                          )
-                        : const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                  ),
-                ),
-                Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Locator",
-                      style: TextStyle(fontSize: 12),
+                      "Locator".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -848,23 +786,140 @@ class _CreateSupplychainLoadUnloadLineState
                               ),
                   ),
                 ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: valueFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Value'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    focusNode: focusNode,
+                    controller: qtyFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    onSubmitted: (String? text) {
+                      createLoadUnloadLine();
+                    },
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Attribute Instance".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: attrFieldAvailable
+                        ? DropdownButton(
+                            value: attrValue as String,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              instAttrId = int.parse(newValue!);
+                              setState(() {
+                                attrValue = newValue;
+                              });
+                              if (kDebugMode) {
+                                print(newValue);
+                              }
+                            },
+                            items: attrList.records!
+                                .map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.mAttributeSetInstanceID
+                                              ?.identifier ??
+                                          "???",
+                                    ),
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
+                                  );
+                                })
+                                .toSet()
+                                .toList(),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
                 ButtonBar(
                   alignment: MainAxisAlignment.center,
                   overflowDirection: VerticalDirection.down,
                   overflowButtonSpacing: 8,
                   children: [
                     Visibility(
-                      visible: productId != null,
+                      visible: productId != null && buttonVisible,
                       child: ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.green),
                         ),
-                        child: const Text("Create Instance Attribute"),
+                        child: Text("Create Instance Attribute".tr),
                         onPressed: () async {
                           //declareFinishedProduct();
                           Get.defaultDialog(
-                              title: 'Series Number',
+                              title: 'Series Number'.tr,
                               content: Container(
                                 margin: const EdgeInsets.all(10),
                                 child: TextField(
