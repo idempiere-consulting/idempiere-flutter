@@ -12,6 +12,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/sc
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class CreateSalesOrderLine extends StatefulWidget {
   const CreateSalesOrderLine({Key? key}) : super(key: key);
@@ -376,6 +377,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
   // ignore: prefer_typing_uninitialized_variables
   var attrValue;
 
+  String date2 = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
   late StorageOnHandJson attrList;
 
   String date = Get.arguments["dateOrdered"];
@@ -661,7 +664,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: Get.arguments["dateOrdered"],
+                    initialValue:
+                        DateFormat('yyyy-MM-dd').format(DateTime.now()),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Promised Date',
@@ -693,11 +697,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Search by code",
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      "Search by code".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -719,11 +723,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Search by product",
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      "Search by product".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -787,10 +791,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.wallet_travel),
-                      border: OutlineInputBorder(),
-                      labelText: 'Product Value',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Value'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -800,10 +804,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: TextField(
                     readOnly: true,
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.wallet_travel),
-                      border: OutlineInputBorder(),
-                      labelText: 'Product Name',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -817,10 +821,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Quantity',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -834,10 +838,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Price',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -846,10 +850,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   visible: attrFieldVisible,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: const Align(
+                    child: Align(
                       child: Text(
-                        "Attribute Instance",
-                        style: TextStyle(fontSize: 12),
+                        "Attribute Instance".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -912,7 +916,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: Get.arguments["dateOrdered"],
+                    initialValue:
+                        DateFormat('yyyy-MM-dd').format(DateTime.now()),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Promised Date',
@@ -1163,7 +1168,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: Get.arguments["dateOrdered"],
+                    initialValue:
+                        DateFormat('yyyy-MM-dd').format(DateTime.now()),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Promised Date',
