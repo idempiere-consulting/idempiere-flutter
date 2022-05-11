@@ -78,6 +78,7 @@ class LocaleString extends Translations {
           'Attribute Instance': 'Attribute Instance',
           'Create Instance Attribute': 'Create Instance Attribute',
           'Series Number': 'Series Number',
+          'Price': 'Price',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -153,6 +154,7 @@ class LocaleString extends Translations {
           'Attribute Instance': 'Attributo di Istanza',
           'Create Instance Attribute': 'Crea Attributo di Istanza',
           'Series Number': 'Numero di Serie',
+          'Price': 'Prezzo',
         },
       };
 }
