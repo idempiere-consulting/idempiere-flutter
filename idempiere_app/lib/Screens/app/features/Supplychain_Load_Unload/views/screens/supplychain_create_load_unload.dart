@@ -117,7 +117,7 @@ class _CreateSupplychainLoadUnloadState
     );
 
     if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
 
       trx = WarehouseJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
@@ -130,16 +130,6 @@ class _CreateSupplychainLoadUnloadState
       }
     }
   }
-
-  /* void fillFields() {
-    nameFieldController.text = args["name"];
-    bPartnerFieldController.text = args["bpName"];
-    phoneFieldController.text = args["Tel"];
-    mailFieldController.text = args["eMail"];
-    //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"];
-    //salesRepFieldController.text = args["salesRep"];
-  } */
 
   //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
@@ -212,6 +202,16 @@ class _CreateSupplychainLoadUnloadState
                   ),
                 ),
                 Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Warehouse".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
                   decoration: BoxDecoration(
@@ -265,10 +265,166 @@ class _CreateSupplychainLoadUnloadState
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: activityFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity (Barcode)'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Warehouse".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: warehouseAvailable
+                      ? DropdownButton(
+                          value: warehouseId,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              warehouseId = newValue!;
+                            });
+                            if (kDebugMode) {
+                              print(newValue);
+                            }
+                          },
+                          items: trx.records!
+                              .map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name ?? "???",
+                                  ),
+                                  value: list.id.toString(),
+                                );
+                              })
+                              .toSet()
+                              .toList(),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: "Description".tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: activityFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity (Barcode)'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Warehouse".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: warehouseAvailable
+                      ? DropdownButton(
+                          value: warehouseId,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              warehouseId = newValue!;
+                            });
+                            if (kDebugMode) {
+                              print(newValue);
+                            }
+                          },
+                          items: trx.records!
+                              .map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name ?? "???",
+                                  ),
+                                  value: list.id.toString(),
+                                );
+                              })
+                              .toSet()
+                              .toList(),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: "Description".tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),
