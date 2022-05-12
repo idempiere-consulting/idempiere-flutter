@@ -72,6 +72,7 @@ class SupplychainLoadUnloadLineScreen
                 onPressed: () {
                   Get.to(const CreateSupplychainLoadUnloadLine(), arguments: {
                     "id": Get.arguments["id"],
+                    "warehouseId": Get.arguments["warehouseId"]
                   });
                 },
                 icon: const Icon(

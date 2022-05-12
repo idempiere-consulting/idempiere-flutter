@@ -116,7 +116,7 @@ class _CreateSupplychainLoadUnloadLineState
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_Locator?\$filter= M_Warehouse_ID eq ${GetStorage().read('warehouseid')}  and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/M_Locator?\$filter= M_Warehouse_ID eq ${Get.arguments["warehouseId"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{

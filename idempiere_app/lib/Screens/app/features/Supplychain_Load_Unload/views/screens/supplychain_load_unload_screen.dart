@@ -140,7 +140,10 @@ class SupplychainLoadUnloadScreen
                       child: IconButton(
                         onPressed: () {
                           Get.to(const CreateSupplychainLoadUnload(),
-                              arguments: {"idDoc": controller.idDoc});
+                              arguments: {
+                                "idDoc": controller.idDoc,
+                                "warehouseId": GetStorage().read("warehouseid")
+                              });
                         },
                         icon: const Icon(
                           Icons.post_add,
@@ -222,7 +225,12 @@ class SupplychainLoadUnloadScreen
                                             "id": controller
                                                 .trx.records![index].id,
                                             "docNo": controller
-                                                .trx.records![index].documentNo
+                                                .trx.records![index].documentNo,
+                                            "warehouseId": controller
+                                                .trx
+                                                .records![index]
+                                                .mWarehouseID
+                                                ?.id
                                           });
                                     },
                                   ),
