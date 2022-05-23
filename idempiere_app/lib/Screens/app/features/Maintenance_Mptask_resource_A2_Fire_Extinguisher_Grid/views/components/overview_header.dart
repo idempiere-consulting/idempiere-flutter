@@ -4,6 +4,7 @@ part of dashboard;
 class _OverviewHeader extends StatelessWidget {
   const _OverviewHeader({
     required this.onSelected,
+    // ignore: unused_element
     this.axis = Axis.horizontal,
     Key? key,
   }) : super(key: key);
