@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_create_tasks.dart';
 
 class ProgressCardData {
   final int totalUndone;
@@ -71,6 +72,15 @@ class ProgressCard extends StatelessWidget {
                 const SizedBox(height: kSpacing),
                 ElevatedButton(
                   onPressed: () {
+                    Get.to(const CreateDashboardTasks());
+                  },
+                  child: const Text('Create Entry'),
+                ),
+                const SizedBox(
+                  height: kSpacing,
+                ),
+                ElevatedButton(
+                  onPressed: () {
                     /* if (Get.find<DashboardController>().filterCount == 0) {
                       Get.find<DashboardController>().changeFilter();
                       GetStorage().write(
@@ -85,7 +95,7 @@ class ProgressCard extends StatelessWidget {
                     Get.toNamed('DashboardTasks');
                   },
                   child: Text(text),
-                )
+                ),
               ],
             ),
           ),

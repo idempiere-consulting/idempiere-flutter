@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:get/get.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+/* import 'package:get/get.dart';
+import 'package:percent_indicator/percent_indicator.dart'; */
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 
 class ProjectCardData {
@@ -31,10 +31,11 @@ class ProjectCard extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _ProgressIndicator(
+        /* _ProgressIndicator(
           percent: data.percent,
           center: _ProfilImage(image: data.projectImage),
-        ),
+        ), */
+        _ProfilImage(image: data.projectImage),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -57,7 +58,7 @@ class ProjectCard extends StatelessWidget {
 }
 
 /* -----------------------------> COMPONENTS <------------------------------ */
-class _ProgressIndicator extends StatelessWidget {
+/* class _ProgressIndicator extends StatelessWidget {
   const _ProgressIndicator({
     required this.percent,
     required this.center,
@@ -79,7 +80,7 @@ class _ProgressIndicator extends StatelessWidget {
       progressColor: Theme.of(Get.context!).primaryColor,
     );
   }
-}
+} */
 
 class _ProfilImage extends StatelessWidget {
   const _ProfilImage({required this.image, Key? key}) : super(key: key);

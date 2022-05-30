@@ -39,7 +39,7 @@ dependencies:
   http: ^0.13.4
   eva_icons_flutter: ^3.0.2
   get:
-  percent_indicator: ^3.4.0
+  percent_indicator: 
   intl: ^0.17.0
   dotted_border: ^2.0.0+1
   timeago: ^3.1.0
