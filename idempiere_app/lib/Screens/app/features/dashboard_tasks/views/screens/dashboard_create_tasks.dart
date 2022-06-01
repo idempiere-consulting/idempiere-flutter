@@ -10,6 +10,7 @@ import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dar
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_tasks_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
+import 'package:intl/intl.dart';
 
 class CreateDashboardTasks extends StatefulWidget {
   const CreateDashboardTasks({Key? key}) : super(key: key);
@@ -25,21 +26,22 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "AD_User_ID": {"identifier": GetStorage().read('user')},
+      "AD_User_ID": {"id": GetStorage().read('userId')},
       "Name": nameFieldController.text,
       "Description": descriptionFieldController.text,
-      "JP_ToDo_ScheduledStartDate": date,
-      "JP_ToDo_ScheduledEndDate": date,
-      "JP_ToDo_ScheduledStartTime": '$timeStart:00Z',
-      "JP_ToDo_ScheduledEndTime": '$timeEnd:00Z',
+      "JP_ToDo_ScheduledStartDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledEndDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledStartTime": startTime,
+      "JP_ToDo_ScheduledEndTime": startTime,
       "JP_ToDo_Status": {"id": dropdownValue},
       "IsOpenToDoJP": true,
       "JP_ToDo_Type": {"id": "S"},
+      "C_Project_ID": {"id": projectId}
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
 
-    //print(msg);
+    print(msg);
     var response = await http.post(
       url,
       body: msg,
@@ -63,7 +65,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
         ),
       );
     } else {
-      //print(response.statusCode);
+      print(response.body);
       Get.snackbar(
         "Errore!",
         "Record non creato",
@@ -90,27 +92,93 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     return dJson.types;
   }
 
+  Future<void> getProject() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      projectFieldController.text =
+          json["records"][0]['C_Project_ID']['identifier'] ?? "";
+      projectId = json["records"][0]['C_Project_ID']['id'] ?? 0;
+    }
+  }
+
+  fillFields() {
+    DateTime now = DateTime.now();
+    var n = now.minute; // Number to match
+    var l = [0, 15, 30, 45]; // List of values
+
+    var number = l.where((e) => e <= n).toList()..sort();
+
+    //print(number[number.length - 1]);
+
+    var hourTime = "00";
+
+    var minuteTime = "00";
+
+    if (now.hour < 10) {
+      hourTime = "0${now.hour}";
+    } else {
+      hourTime = "${now.hour}";
+    }
+
+    if (number[number.length - 1] != 0) {
+      minuteTime = number[number.length - 1].toString();
+    }
+    if (number[number.length - 1] != 0) {
+      minuteTime = number[number.length - 1].toString();
+    }
+
+    var formatter = DateFormat('yyyy-MM-dd');
+    date = formatter.format(now);
+    startTime = '$hourTime:$minuteTime:00Z';
+  }
+
   // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var descriptionFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var projectFieldController;
   String date = "";
   String timeStart = "";
   String timeEnd = "";
   String dropdownValue = "";
+  String startTime = "";
+  int projectId = 0;
   late List<Types> dropDownList;
   //var adUserId;
 
   @override
   void initState() {
+    date = "";
+    startTime = "";
+    fillFields();
     super.initState();
     nameFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
+    projectFieldController = TextEditingController();
+
     dropDownList = getTypes()!;
     dropdownValue = "NY";
-    date = "";
+
     timeStart = "";
     timeEnd = "";
+    getProject();
   }
 
   @override
@@ -175,6 +243,18 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: projectFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Progetto',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   width: size.width,
                   decoration: BoxDecoration(
@@ -185,7 +265,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: '',
+                    initialValue: date,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Data',
@@ -217,8 +297,9 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    readOnly: true,
                     type: DateTimePickerType.time,
-                    initialValue: '',
+                    initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     timeLabelText: 'Ora Inizio',
@@ -247,8 +328,9 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    readOnly: true,
                     type: DateTimePickerType.time,
-                    initialValue: '',
+                    initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     timeLabelText: 'Ora Fine',

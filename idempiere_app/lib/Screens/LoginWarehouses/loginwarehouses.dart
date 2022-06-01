@@ -69,6 +69,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       GetStorage().write('jpTODOSync', response.body);
+      if (kDebugMode) {
+        print('jpToDo Checked');
+      }
       jpTODOSync = false;
       checkSyncData();
     } else {
@@ -95,6 +98,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (response.statusCode == 200) {
       GetStorage().write('userPreferencesSync', response.body);
       userPreferencesSync = false;
+      if (kDebugMode) {
+        print('User Preferences Checked');
+      }
       checkSyncData();
     }
   }
@@ -118,6 +124,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (response.statusCode == 200) {
       GetStorage().write('businessPartnerSync', response.body);
       businessPartnerSync = false;
+      if (kDebugMode) {
+        print('BusinessPartner Checked');
+      }
       checkSyncData();
     }
   }
@@ -140,6 +149,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       GetStorage().write('productSync', response.body);
+      if (kDebugMode) {
+        print('Products Checked');
+      }
       productSync = false;
       checkSyncData();
     }
@@ -164,6 +176,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       GetStorage().write('workOrderSync', response.body);
+      if (kDebugMode) {
+        print('WorkOrder Checked');
+      }
       syncWorkOrderResource();
     } else {
       workOrderSync = false;
@@ -190,6 +205,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (response.statusCode == 200) {
       //print(response.body);
       GetStorage().write('workOrderResourceSync', response.body);
+      if (kDebugMode) {
+        print('WorkOrderResource Checked');
+      }
       syncWorkOrderResourceSurveyLines();
     } else {
       workOrderSync = false;
@@ -234,6 +252,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (response2.statusCode == 200) {
         //print(response2.body);
         GetStorage().write('refListResourceType', response2.body);
+        if (kDebugMode) {
+          print('refListResourceType Checked');
+        }
 
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
@@ -284,6 +305,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (response2.statusCode == 200) {
         //print(response2.body);
         GetStorage().write('refListResourceTypeCategory', response2.body);
+        if (kDebugMode) {
+          print('refListResourceTypeCategory Checked');
+        }
 
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
@@ -317,6 +341,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (response.statusCode == 200) {
       //print(response.body);
       GetStorage().write('workOrderResourceSurveyLinesSync', response.body);
+      if (kDebugMode) {
+        print('workOrderResourceSurveyLinesSync Checked');
+      }
+
       workOrderSync = false;
       checkSyncData();
     }
@@ -350,6 +378,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
           Get.offAllNamed("/TicketClient");
           break;
         default:
+          Get.offAllNamed("/Dashboard");
+          break;
       }
     }
   }
