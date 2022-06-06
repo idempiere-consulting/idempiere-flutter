@@ -48,8 +48,8 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
       Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -58,8 +58,8 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
     } else {
       //print(response.statusCode);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not createdRecord not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -88,7 +88,7 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
 
       return json.records!;
     } else {
-      throw Exception("Failed to load lead statuses");
+      throw Exception("Failed to load lead statuses".tr);
     }
 
     //print(response.body);
@@ -114,7 +114,7 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
 
       return jsonContacts.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -166,8 +166,8 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Add Lead'),
+        title: Center(
+          child: Text('Add Lead'.tr),
         ),
         actions: [
           Padding(
@@ -296,9 +296,9 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Stato Lead",
+                      "Status Lead".tr,
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,

@@ -64,7 +64,7 @@ class _OverviewHeader extends StatelessWidget {
     return [
       _button(
         selected: task == null,
-        label: "All",
+        label: "All".tr,
         onPressed: () {
           task = null;
           onSelected(null);
@@ -72,7 +72,7 @@ class _OverviewHeader extends StatelessWidget {
       ),
       _button(
         selected: task == TaskType.todo,
-        label: "To do",
+        label: "To do".tr,
         onPressed: () {
           task = TaskType.todo;
           onSelected(TaskType.todo);
@@ -80,7 +80,7 @@ class _OverviewHeader extends StatelessWidget {
       ),
       _button(
         selected: task == TaskType.inProgress,
-        label: "In progress",
+        label: "In progress".tr,
         onPressed: () {
           task = TaskType.inProgress;
           onSelected(TaskType.inProgress);
@@ -88,7 +88,7 @@ class _OverviewHeader extends StatelessWidget {
       ),
       _button(
         selected: task == TaskType.done,
-        label: "Done",
+        label: "Done".tr,
         onPressed: () {
           task = TaskType.done;
           onSelected(TaskType.done);

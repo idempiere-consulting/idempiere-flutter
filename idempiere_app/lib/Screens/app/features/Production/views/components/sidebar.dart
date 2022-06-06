@@ -36,7 +36,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person_add,
                   icon: EvaIcons.personOutline,
-                  label: "Production",
+                  label: "Production".tr,
                   visible: int.parse(list[3], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -48,7 +48,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.paid,
                   icon: Icons.paid_outlined,
-                  label: "Production Order",
+                  label: "Production Order".tr,
                   visible: int.parse(list[7], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")

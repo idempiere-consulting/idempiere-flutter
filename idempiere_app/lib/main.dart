@@ -101,7 +101,6 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       translations: LocaleString(),
       locale: const Locale('it', 'IT'),
-      title: 'iDempiereApp',
       theme: AppTheme.basic,
       initialRoute: GetStorage().read("ip") == null ? '/' : '/',
       getPages: [

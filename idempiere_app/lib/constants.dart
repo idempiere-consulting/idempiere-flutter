@@ -93,8 +93,8 @@ emptyPostCallStack() {
     });
     GetStorage().write('postCallList', list);
     Get.snackbar(
-      "Fatto!",
-      "I record salvati localmente sono stati sincronizzati!",
+      "Done!".tr,
+      "Records saved locally have been synchronized!".tr,
       icon: const Icon(
         Icons.cloud_upload,
         color: Colors.green,
@@ -125,8 +125,8 @@ emptyEditAPICallStack() {
     GetStorage().write('storedEditAPICalls', calls);
 
     Get.snackbar(
-      "Fatto!",
-      "I record salvati localmente sono stati sincronizzati!",
+      "Done!".tr,
+      "Records saved locally have been synchronized!".tr,
       icon: const Icon(
         Icons.cloud_upload,
         color: Colors.green,
@@ -160,8 +160,8 @@ emptyDeleteCallStack() {
     });
     GetStorage().write('deleteCallList', list);
     Get.snackbar(
-      "Fatto!",
-      "I record salvati localmente sono stati sincronizzati!",
+      "Done!".tr,
+      "Records saved locally have been synchronized!".tr,
       icon: const Icon(
         Icons.cloud_upload,
         color: Colors.green,

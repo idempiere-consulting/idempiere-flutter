@@ -56,8 +56,8 @@ class _LoginOrganizationsState extends State<LoginOrganizations> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: const Center(
-            child: Text('Select Organization'),
+          title:       Center(
+            child: Text('Select Organization'.tr),
           ),
           backgroundColor: kPrimaryColor,
         ),

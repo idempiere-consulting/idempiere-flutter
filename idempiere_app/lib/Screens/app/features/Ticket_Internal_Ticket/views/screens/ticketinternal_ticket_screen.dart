@@ -86,8 +86,8 @@ class TicketInternalTicketScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKETS: ${controller.trx.rowcount}")
-                          : const Text("TICKETS: ")),
+                          ? Text("TICKETS: ".tr+"${controller.trx.rowcount}")
+                          : Text("TICKETS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -159,7 +159,7 @@ class TicketInternalTicketScreen
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Lead'.tr,
                                       onPressed: () {
                                         Get.to(const TicketInternalChat(),
                                             arguments: {
@@ -221,8 +221,8 @@ class TicketInternalTicketScreen
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Status: ",
+                                            Text(
+                                              "Status: ".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -238,8 +238,8 @@ class TicketInternalTicketScreen
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Summary: ",
+                                            Text(
+                                              "Summary: ".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -254,8 +254,8 @@ class TicketInternalTicketScreen
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Priority: ",
+                                            Text(
+                                              "Priority: ".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),

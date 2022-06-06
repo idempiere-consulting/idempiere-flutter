@@ -21,7 +21,8 @@ class _TeamMember extends StatelessWidget {
               color: kFontColorPallets[0],
             ),
             children: [
-              const TextSpan(text: "Team Member "),
+              
+              TextSpan(text: "Team Member ".tr),
               TextSpan(
                 text: "($totalMember)",
                 style: TextStyle(
@@ -36,7 +37,7 @@ class _TeamMember extends StatelessWidget {
         IconButton(
           onPressed: onPressedAdd,
           icon: const Icon(EvaIcons.plus),
-          tooltip: "add member",
+          tooltip: "add member".tr,
         )
       ],
     );

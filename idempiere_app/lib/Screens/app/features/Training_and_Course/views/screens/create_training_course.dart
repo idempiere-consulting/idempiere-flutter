@@ -47,8 +47,8 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
       Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -57,8 +57,8 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
     } else {
       //print(response.statusCode);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created ".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -87,7 +87,7 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
 
       return json.records!;
     } else {
-      throw Exception("Failed to load lead statuses");
+      throw Exception("Failed to load lead statuses".tr);
     }
 
     //print(response.body);
@@ -113,7 +113,7 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
 
       return jsonContacts.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -240,9 +240,9 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
+                      "Agent".tr,
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -295,9 +295,9 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Stato Lead",
+                      "Status Lead".tr,
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,

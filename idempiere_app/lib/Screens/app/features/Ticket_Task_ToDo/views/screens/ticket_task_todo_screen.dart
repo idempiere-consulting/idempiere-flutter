@@ -78,8 +78,8 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("TASK: ${controller.trx.rowcount}")
-                        : const Text("TASK: ")),
+                        ? Text("TASK: ".tr+"${controller.trx.rowcount}")
+                        : Text("TASK: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
@@ -151,7 +151,7 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Lead'.tr,
                                     onPressed: () {
                                       //log("info button pressed");
                                       /* Get.to(const EditLead(), arguments: {

@@ -27,8 +27,8 @@ class _LoginClientState extends State<LoginClient> {
     //getRoles(authorization, clientid);
     return Scaffold(
         appBar: AppBar(
-          title: const Center(
-            child: Text('Select Client'),
+          title: Center(
+            child: Text('Select Client'.tr),
           ),
           backgroundColor: kPrimaryColor,
         ),

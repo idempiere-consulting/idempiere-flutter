@@ -56,8 +56,8 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
       Get.find<MaintenanceMptaskController>().getWorkOrders();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -66,8 +66,8 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     } else {
       //print(response.body);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -179,7 +179,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
       var jsonBPs = BPJson.fromJson(jsondecoded);
       return jsonBPs.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
   }
 
@@ -204,7 +204,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
 
       return jsonResources.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -232,7 +232,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
 
       return jsonContacts.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -299,8 +299,8 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Add WorkOrder'),
+        title: Center(
+          child: Text('Add WorkOrder'.tr),
         ),
         actions: [
           Padding(
@@ -359,9 +359,9 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Risorsa",
+                      "Resource".tr,
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,

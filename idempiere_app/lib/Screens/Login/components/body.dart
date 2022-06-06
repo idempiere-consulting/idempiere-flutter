@@ -100,8 +100,8 @@ class _BodyState extends State<Body> {
         }
       } else {
         Get.snackbar(
-          "Errore!",
-          "Account senza Codice di Autenticazione valido",
+          "Error!".tr,
+          "Account without valid authentication code".tr,
           icon: const Icon(
             Icons.lock,
             color: Colors.red,
@@ -216,7 +216,7 @@ class _BodyState extends State<Body> {
         Get.offAllNamed('/Dashboard');
         Get.snackbar(
           "Offline!",
-          "Sei in offline a causa di mancata connessione Internet, saranno presenti delle limitazioni.",
+          "You are offline due to no internet connection, there will be limitations.".tr,
           icon: const Icon(
             Icons.wifi_lock,
             color: Colors.red,
@@ -225,7 +225,7 @@ class _BodyState extends State<Body> {
       } else {
         Get.snackbar(
           "Offline!",
-          "Sei in offline a causa di mancata connessione Internet e non il tuo ultimo login non è abbastanza recente.",
+          "You are offline due to no internet connection and not your last login is not recent enough.".tr,
           icon: const Icon(
             Icons.lock,
             color: Colors.red,
@@ -271,7 +271,7 @@ class _BodyState extends State<Body> {
                 ? size.width * 0.2
                 : size.width * 0.8,
             child: CheckboxListTile(
-              title: const Text('Select roles'),
+              title: Text('Select roles'.tr),
               value: checkboxState,
               activeColor: kPrimaryColor,
               onChanged: (bool? value) {

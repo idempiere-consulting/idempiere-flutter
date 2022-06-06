@@ -82,8 +82,8 @@ class TrainingCourseSurveyScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("COURSES: ${controller.trx.rowcount}")
-                          : const Text("COURSES: ")),
+                          ? Text("COURSES: ".tr+"${controller.trx.rowcount}")
+                          : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -143,7 +143,7 @@ class TrainingCourseSurveyScreen
                                         Icons.auto_stories,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Take the Quiz',
+                                      tooltip: 'Take the Quiz'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         Get.toNamed('/QuizCourse', arguments: {
@@ -188,8 +188,8 @@ class TrainingCourseSurveyScreen
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Description: ",
+                                            Text(
+                                              "Description: ".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -224,7 +224,7 @@ class TrainingCourseSurveyScreen
                     Container(
                       child: Obx(() => controller.dataAvailable
                           ? Text("COURSES: ${controller.trx.rowcount}")
-                          : const Text("COURSES: ")),
+                          : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -284,7 +284,7 @@ class TrainingCourseSurveyScreen
                                         Icons.auto_stories,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Take the Quiz',
+                                      tooltip: 'Take the Quiz'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -352,8 +352,8 @@ class TrainingCourseSurveyScreen
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Description: ",
+                                            Text(
+                                              "Description: ".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),

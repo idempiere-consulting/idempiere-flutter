@@ -78,8 +78,8 @@ class TicketTicketNewScreen extends GetView<TicketTicketNewController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("NEW: ${controller.trx.rowcount}")
-                        : const Text("NEW: ")),
+                        ? Text("NEW: ".tr+"${controller.trx.rowcount}")
+                        : Text("NEW: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
@@ -151,7 +151,7 @@ class TicketTicketNewScreen extends GetView<TicketTicketNewController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Lead'.tr,
                                     onPressed: () {
                                       //log("info button pressed");
                                       /* Get.to(const EditLead(), arguments: {

@@ -22,7 +22,7 @@ class TicketInternalImageState extends State<TicketInternalImage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Attachment"),
+        title: Text("Attachment".tr),
       ),
       // ignore: avoid_unnecessary_containers
       body: Container(

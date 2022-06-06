@@ -74,7 +74,7 @@ class ProgressCard extends StatelessWidget {
                   onPressed: () {
                     Get.to(const CreateDashboardTasks());
                   },
-                  child: const Text('Create Entry'),
+                  child: Text('Create Entry'.tr),
                 ),
                 const SizedBox(
                   height: kSpacing,
@@ -94,7 +94,7 @@ class ProgressCard extends StatelessWidget {
                         .write('signEntryDateTime', DateTime.now().toString());
                     Get.toNamed('DashboardTasks');
                   },
-                  child: Text(text),
+                  child: Text('Sign Entry'.tr),
                 ),
               ],
             ),

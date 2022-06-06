@@ -22,9 +22,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         return Dialog(
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children:  [
               CircularProgressIndicator(),
-              Text("Syncing data with iDempiere..."),
+              Text("Syncing data with iDempiere...".tr),
             ],
           ),
         );
@@ -415,8 +415,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         }
       } else {
         Get.snackbar(
-          "Errore!",
-          "Account senza Codice di Autenticazione valido",
+          "Error!".tr,
+          "Account without valid authentication code".tr,
           icon: const Icon(
             Icons.lock,
             color: Colors.red,
@@ -525,8 +525,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: const Center(
-            child: Text('Select Warehouse'),
+          title: Center(
+            child: Text('Select Warehouse'.tr),
           ),
           backgroundColor: kPrimaryColor,
         ),

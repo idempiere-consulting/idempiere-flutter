@@ -76,8 +76,8 @@ class SupplychainLoadUnloadScreen
       }
 
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato completato",
+        "Done!".tr,
+        "The record has been completed".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -88,8 +88,8 @@ class SupplychainLoadUnloadScreen
         print(response.body);
       }
       Get.snackbar(
-        "Errore!",
-        "Il record non è stato completato",
+        "Error!".tr,
+        "The record was not completed".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -196,7 +196,7 @@ class SupplychainLoadUnloadScreen
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit',
+                                      tooltip: 'Edit'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                       },
@@ -258,8 +258,8 @@ class SupplychainLoadUnloadScreen
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Activity: ",
+                                            Text(
+                                              "Activity: ".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -270,8 +270,8 @@ class SupplychainLoadUnloadScreen
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Warehouse: ",
+                                            Text(
+                                              "Warehouse: ".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -292,7 +292,7 @@ class SupplychainLoadUnloadScreen
                                                       ?.id !=
                                                   'CO',
                                               child: ElevatedButton(
-                                                child: const Text("Complete"),
+                                                child: Text("Complete".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -300,9 +300,9 @@ class SupplychainLoadUnloadScreen
                                                 ),
                                                 onPressed: () async {
                                                   Get.defaultDialog(
-                                                    title: 'Complete Action',
-                                                    content: const Text(
-                                                        "Are you sure you want to complete the record?"),
+                                                    title: 'Complete Action'.tr,
+                                                    content: Text(
+                                                        "Are you sure you want to complete the record?".tr),
                                                     onCancel: () {},
                                                     onConfirm: () async {
                                                       Get.back();
@@ -344,8 +344,8 @@ class SupplychainLoadUnloadScreen
                                                       } else {
                                                         //print(response.body);
                                                         Get.snackbar(
-                                                          "Errore!",
-                                                          "Il record non è stato completato",
+                                                          "Error!".tr,
+                                                          "The record was not completed".tr,
                                                           icon: const Icon(
                                                             Icons.error,
                                                             color: Colors.red,

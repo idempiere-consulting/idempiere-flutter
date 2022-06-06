@@ -48,8 +48,8 @@ class _EditTrainingCourseScoreState extends State<EditTrainingCourseScore> {
       Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato aggiornato",
+        "Done!".tr,
+        "The record has been updated".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -57,8 +57,8 @@ class _EditTrainingCourseScoreState extends State<EditTrainingCourseScore> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -87,8 +87,8 @@ class _EditTrainingCourseScoreState extends State<EditTrainingCourseScore> {
       Get.back();
       Get.back();
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato cancellato",
+        "Done!".tr,
+        "The record was deleted".tr,
         icon: const Icon(
           Icons.delete,
           color: Colors.green,
@@ -96,8 +96,8 @@ class _EditTrainingCourseScoreState extends State<EditTrainingCourseScore> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -126,7 +126,7 @@ class _EditTrainingCourseScoreState extends State<EditTrainingCourseScore> {
 
       return json.records!;
     } else {
-      throw Exception("Failed to load lead statuses");
+      throw Exception("Failed to load lead statuses".tr);
     }
 
     //print(response.body);
@@ -152,7 +152,7 @@ class _EditTrainingCourseScoreState extends State<EditTrainingCourseScore> {
 
       return jsonContacts.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -204,8 +204,8 @@ class _EditTrainingCourseScoreState extends State<EditTrainingCourseScore> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Edit Lead'),
+        title: Center(
+          child: Text('Edit Lead'.tr),
         ),
         actions: [
           Padding(
@@ -213,13 +213,13 @@ class _EditTrainingCourseScoreState extends State<EditTrainingCourseScore> {
             child: IconButton(
               onPressed: () {
                 Get.defaultDialog(
-                  title: "Eliminazione record",
-                  middleText: "Sicuro di voler eliminare il record?",
+                  title: "Eliminazione record".tr,
+                  middleText: "Sicuro di voler eliminare il record?".tr,
                   backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
                   //titleStyle: TextStyle(color: Colors.white),
                   //middleTextStyle: TextStyle(color: Colors.white),
-                  textConfirm: "Elimina",
-                  textCancel: "Annulla",
+                  textConfirm: "Elimina".tr,
+                  textCancel: "Annulla".tr,
                   cancelTextColor: Colors.white,
                   confirmTextColor: Colors.white,
                   buttonColor: const Color.fromRGBO(31, 29, 44, 1),

@@ -52,8 +52,8 @@ class _CreateSupplychainLoadUnloadLineState
       Get.find<SupplychainLoadUnloadLineController>().getLoadUnloadsLine();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+		"The record has been created" .tr,	
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -64,8 +64,8 @@ class _CreateSupplychainLoadUnloadLineState
         print(response.body);
       }
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -133,7 +133,7 @@ class _CreateSupplychainLoadUnloadLineState
       if (kDebugMode) {
         print(response.body);
       }
-      throw Exception("Failed to load lead statuses");
+      throw Exception("Failed to load lead statuses".tr);
     }
   }
 
@@ -491,7 +491,7 @@ class _CreateSupplychainLoadUnloadLineState
     if (response.statusCode == 201) {
       if (instAttrId != 0) {
         Get.defaultDialog(
-          title: "Done!",
+          title: "Done!".tr,
           content: const Text("Instance Attribute Created!"),
         );
       }

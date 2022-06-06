@@ -50,7 +50,7 @@ class TicketInternalScreen extends GetView<TicketInternalController> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.offNamed('Dashboard');
+        Get.offNamed('Dashboard'.tr);
         return false;
       },
       child: Scaffold(

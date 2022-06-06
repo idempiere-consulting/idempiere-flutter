@@ -39,8 +39,8 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
       Get.back();
       Get.back();
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato cancellato",
+        "Done!".tr,
+        "The record was deleted".tr,
         icon: const Icon(
           Icons.delete,
           color: Colors.green,
@@ -49,8 +49,8 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     } else {
       //print(response.body);
       Get.snackbar(
-        "Errore!",
-        "Il record non è stato cancellato",
+        "Error!".tr,
+        "The record was not deleted".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -92,8 +92,8 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
       //print("done!");
       Get.back();
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato modificato",
+        "Done!".tr,
+        "The record has been changed".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -102,8 +102,8 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     } else {
       //print(response.body);
       Get.snackbar(
-        "Errore!",
-        "Il record non è stato modificato",
+        "Error!".tr,
+        "The record has not been changed".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -134,7 +134,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
         resourceName = jsondecoded['records'][0]['Name'].toString();
       });
     } else {
-      throw Exception("Failed to load resource name");
+      throw Exception("Failed to load resource name".tr);
     }
   }
 
@@ -169,7 +169,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
       }
       //print(bPLocation);
     } else {
-      throw Exception("Failed to load bp location");
+      throw Exception("Failed to load bp location".tr);
     }
   }
 
@@ -194,7 +194,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
         docId = jsondecoded['records'][0]['Value'].toString();
       });
     } else {
-      throw Exception("Failed to load doctype id");
+      throw Exception("Failed to load doctype id".tr);
     }
   }
 
@@ -215,7 +215,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
       var jsonBPs = BPJson.fromJson(jsondecoded);
       return jsonBPs.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
   }
 
@@ -240,7 +240,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
       return jsonResources.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -268,7 +268,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
       return jsonContacts.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -330,13 +330,13 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
             child: IconButton(
               onPressed: () {
                 Get.defaultDialog(
-                  title: "Eliminazione record",
-                  middleText: "Sicuro di voler eliminare il record?",
+                  title: "Record deletion ".tr,
+                  middleText: "Are you sure you want to delete the record?".tr,
                   backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
                   //titleStyle: TextStyle(color: Colors.white),
                   //middleTextStyle: TextStyle(color: Colors.white),
-                  textConfirm: "Elimina",
-                  textCancel: "Annulla",
+                  textConfirm: "Erase".tr,
+                  textCancel: "Cancel".tr,
                   cancelTextColor: Colors.white,
                   confirmTextColor: Colors.white,
                   buttonColor: const Color.fromRGBO(31, 29, 44, 1),
@@ -410,9 +410,9 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Risorsa",
+                      "Resource".tr,
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,

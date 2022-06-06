@@ -52,8 +52,8 @@ class _LoginRolesState extends State<LoginRoles> {
     //getRoles(authorization, clientid);
     return Scaffold(
         appBar: AppBar(
-          title: const Center(
-            child: Text('Select Roles'),
+          title: Center(
+            child: Text('Select Roles'.tr),
           ),
           backgroundColor: kPrimaryColor,
         ),

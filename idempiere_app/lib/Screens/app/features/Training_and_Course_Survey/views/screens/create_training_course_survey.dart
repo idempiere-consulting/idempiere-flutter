@@ -49,8 +49,8 @@ class _CreateTrainingCoursePresenceState
       Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created ".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -59,8 +59,8 @@ class _CreateTrainingCoursePresenceState
     } else {
       //print(response.statusCode);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -89,7 +89,7 @@ class _CreateTrainingCoursePresenceState
 
       return json.records!;
     } else {
-      throw Exception("Failed to load lead statuses");
+      throw Exception("Failed to load lead statuses".tr);
     }
 
     //print(response.body);
@@ -115,7 +115,7 @@ class _CreateTrainingCoursePresenceState
 
       return jsonContacts.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -167,8 +167,8 @@ class _CreateTrainingCoursePresenceState
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Add Lead'),
+        title: Center(
+          child: Text('Add Lead'.tr),
         ),
         actions: [
           Padding(

@@ -54,7 +54,7 @@ class Windowrecords {
   final bool? lITIsPartner;
   final bool? isConfirmed;
   final String? slug;
-
+  
   Windowrecords({
     this.id,
     this.uid,

@@ -35,8 +35,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
       //print("done!");
       Get.off(const CalendarScreen());
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato cancellato",
+        "Done!".tr,
+        "The record was deleted".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.delete,
@@ -46,8 +46,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
     } else {
       //print(response.body);
       Get.snackbar(
-        "Errore!",
-        "Record non cancellato (è tuo?)",
+        "Error!".tr,
+        "Record not deleted (is it yours?)".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.error,
@@ -85,8 +85,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
     if (response.statusCode == 200) {
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato modificato",
+        "Done!".tr,
+        "The record has been changed".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.done,
@@ -96,8 +96,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
     } else {
       //print(response.body);
       Get.snackbar(
-        "Errore!",
-        "Record non modificato (è tuo?)",
+        "Error!".tr,
+        "Unmodified record (is it yours?)".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.error,
@@ -180,13 +180,13 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
               child: IconButton(
                 onPressed: () {
                   Get.defaultDialog(
-                    title: "Eliminazione record",
-                    middleText: "Sicuro di voler eliminare il record?",
+                    title: "Record deletion".tr,
+                    middleText: "Are you sure you want to delete the record?".tr,
                     backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
                     //titleStyle: TextStyle(color: Colors.white),
                     //middleTextStyle: TextStyle(color: Colors.white),
-                    textConfirm: "Elimina",
-                    textCancel: "Annulla",
+                    textConfirm: "Erase".tr,
+                    textCancel: "Cancel".tr,
                     cancelTextColor: Colors.white,
                     confirmTextColor: Colors.white,
                     buttonColor: const Color.fromRGBO(31, 29, 44, 1),
@@ -229,10 +229,10 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     margin: const EdgeInsets.all(10),
                     child: TextField(
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person_outlined),
                         border: OutlineInputBorder(),
-                        labelText: 'Nome',
+                        labelText: 'Nome'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -241,10 +241,10 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     margin: const EdgeInsets.all(10),
                     child: TextField(
                       controller: descriptionFieldController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person_pin_outlined),
                         border: OutlineInputBorder(),
-                        labelText: 'Descrizione',
+                        labelText: 'Descrizione'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -264,7 +264,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: date,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'Data',
+                      dateLabelText: 'Data'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -296,7 +296,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: timeStart,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Ora Inizio',
+                      timeLabelText: 'Ora Inizio'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -326,7 +326,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: timeEnd,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Ora Fine',
+                      timeLabelText: 'Ora Fine'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {

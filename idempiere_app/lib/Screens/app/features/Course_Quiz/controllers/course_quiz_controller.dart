@@ -162,8 +162,8 @@ class CourseQuizController extends GetxController {
       }
       Get.back();
       Get.snackbar(
-        "Done!",
-        "You've completed the Quiz",
+        "Done!".tr,
+        "You've completed the Quiz".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.done_all,
@@ -172,8 +172,8 @@ class CourseQuizController extends GetxController {
       );
     } else {
       Get.snackbar(
-        "Error!",
-        "Internet connection unavailable",
+        "Error!".tr,
+        "Internet connection unavailable".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.wifi_off_outlined,
@@ -215,8 +215,8 @@ class CourseQuizController extends GetxController {
       }
     } else {
       Get.snackbar(
-        "Connessione Internet assente!",
-        "Impossibile aggiornare i record.",
+        "No internet connection!".tr,
+        "Failed to update records.".tr,
         icon: const Icon(
           Icons.signal_wifi_connected_no_internet_4,
           color: Colors.red,
@@ -336,7 +336,7 @@ class CourseQuizController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "iDempiere APP",
+      projectName: "iDempiere APPP",
       releaseTime: DateTime.now(),
     );
   }

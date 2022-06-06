@@ -149,7 +149,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.emoji_transportation,
                   icon: Icons.emoji_transportation_outlined,
-                  label: "Production",
+                  label: "Production".tr,
                   visible: int.parse(list[75], radix: 16)
                                   .toRadixString(2)
                                   .padLeft(4, "0")
@@ -201,7 +201,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.bookOpenOutline,
-                  label: "Training and Course",
+                  label: "Training and Course".tr,
                   visible: int.parse(list[52], radix: 16)
                                   .toRadixString(2)
                                   .padLeft(4, "0")

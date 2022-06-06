@@ -36,8 +36,8 @@ class SignatureState extends State<SignatureScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Signature'),
+        title: Center(
+          child: Text('Signature'.tr),
         ),
         actions: [
           Padding(

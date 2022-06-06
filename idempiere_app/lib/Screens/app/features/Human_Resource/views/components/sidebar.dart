@@ -42,7 +42,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.punch_clock,
                   icon: EvaIcons.personOutline,
-                  label: "Work Hours",
+                  label: "Work Hours".tr,
                   visible: GetPlatform.isAndroid || GetPlatform.isIOS,
                 ),
               ],

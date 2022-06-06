@@ -88,7 +88,7 @@ class _MobileMapsScreenState extends State<MobileMapsScreen> {
               FloatingActionButton(
                 heroTag: null,
                 onPressed: () {
-                  // Automatically center the location marker on the map when location updated until user interact with the map.
+                  // Automatically cnter the location marker on the map when location updated until user interact with the map.
                   setState(() {
                     if (!_isShowLocMarker) {
                       _centerCurrentLocationStreamController =

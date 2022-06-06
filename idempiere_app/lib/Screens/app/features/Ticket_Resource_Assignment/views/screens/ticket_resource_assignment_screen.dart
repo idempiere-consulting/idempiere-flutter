@@ -79,8 +79,8 @@ class TicketResourceAssignmentScreen
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("ORE: ${controller.trx.rowcount}")
-                        : const Text("ORE: ")),
+                        ? Text("HOUR: ".tr+"${controller.trx.rowcount}")
+                        : Text("HOUR: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(

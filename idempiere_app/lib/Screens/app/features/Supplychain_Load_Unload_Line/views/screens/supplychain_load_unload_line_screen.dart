@@ -117,7 +117,7 @@ class SupplychainLoadUnloadLineScreen
                                         Icons.delete,
                                         color: Colors.red,
                                       ),
-                                      tooltip: 'Delete',
+                                      tooltip: 'Delete'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         Get.defaultDialog(
@@ -164,8 +164,8 @@ class SupplychainLoadUnloadLineScreen
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Stock Area: ",
+                                            Text(
+                                              "Stock Area: ".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -176,8 +176,8 @@ class SupplychainLoadUnloadLineScreen
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Quantity: ",
+                                            Text(
+                                              "Quantity: ".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),

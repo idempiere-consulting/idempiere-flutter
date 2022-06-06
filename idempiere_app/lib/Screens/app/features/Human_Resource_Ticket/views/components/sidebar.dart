@@ -36,12 +36,12 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                     activeIcon: Icons.person_add,
                     icon: EvaIcons.personOutline,
-                    label: "Ticket",
+                    label: "Ticket".tr,
                     visible: true),
                 SelectionButtonData(
                   activeIcon: Icons.punch_clock,
                   icon: EvaIcons.personOutline,
-                  label: "Work Hours",
+                  label: "Work Hours".tr,
                   visible: GetPlatform.isAndroid || GetPlatform.isIOS,
                 ),
               ],
@@ -50,7 +50,7 @@ class _Sidebar extends StatelessWidget {
                 //Get.toNamed('/${value.label}');
                 switch (index) {
                   case 0:
-                    Get.offNamed('/Dashboard');
+                    Get.offNamed('/Dashboard'.tr);
                     break;
                   case 1:
                     Get.offNamed('/TicketClientTicket');

@@ -160,7 +160,7 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                                   ?.id ==
                                               'Y',
                                           child: RadioListTile<int>(
-                                              title: const Text("True"),
+                                              title: Text("True".tr),
                                               value: 1,
                                               groupValue:
                                                   controller.checkValue[index],
@@ -179,7 +179,7 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                                   ?.id ==
                                               'Y',
                                           child: RadioListTile<int>(
-                                              title: const Text("False"),
+                                              title: Text("False".tr),
                                               value: 0,
                                               groupValue:
                                                   controller.checkValue[index],

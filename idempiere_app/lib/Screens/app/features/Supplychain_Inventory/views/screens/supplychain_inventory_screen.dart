@@ -73,7 +73,7 @@ class SupplychainInventoryScreen
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              const Text("OPPORTUNITIES LIST"),
+              Text("SUPPLY CHAIN".tr),
               const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
@@ -103,9 +103,9 @@ class SupplychainInventoryScreen
                                     Icons.paid,
                                     color: Colors.green,
                                   ),
-                                  tooltip: 'Lead Info',
+                                  tooltip: 'Lead Info'.tr,
                                   onPressed: () {
-                                    log("info button pressed");
+                                    log("info button pressed".tr);
                                   },
                                 ),
                               ),
@@ -143,8 +143,8 @@ class SupplychainInventoryScreen
                                   children: [
                                     Row(
                                       children: [
-                                        const Text(
-                                          "Contatto: ",
+                                        Text(
+                                          "Contact: ".tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -155,8 +155,8 @@ class SupplychainInventoryScreen
                                     ),
                                     Row(
                                       children: [
-                                        const Text(
-                                          "Prodotto: ",
+                                        Text(
+                                          "Product: ".tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -167,8 +167,8 @@ class SupplychainInventoryScreen
                                     ),
                                     Row(
                                       children: [
-                                        const Text(
-                                          "Importo Atteso: ",
+                                        Text(
+                                          "Expected Amount: ".tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -180,8 +180,8 @@ class SupplychainInventoryScreen
                                     ),
                                     Row(
                                       children: [
-                                        const Text(
-                                          "Agente: ",
+                                        Text(
+                                          "Agent: ".tr,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),

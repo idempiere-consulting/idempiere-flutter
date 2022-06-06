@@ -107,8 +107,8 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       Get.find<TicketClientTicketController>().getTickets();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -121,8 +121,8 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       }
       //print(response.statusCode);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -169,8 +169,8 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     if (response.statusCode == 201) {
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.done,
@@ -181,8 +181,8 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       //print(response.body);
       //print(response.statusCode);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.error,
@@ -331,7 +331,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       });
       //print(ticketTypeValue);
     } else {
-      throw Exception("Failed to load ticket types");
+      throw Exception("Failed to load ticket types".tr);
     }
   }
 
@@ -394,7 +394,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       if (kDebugMode) {
         print(response.body);
       }
-      throw Exception("Failed to load free slots");
+      throw Exception("Failed to load free slots".tr);
     }
   }
 
@@ -430,7 +430,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       //print(eventJson.records![0].jPToDoScheduledStartTime);
       return getFreeSlots();
     } else {
-      throw Exception("Failed to load scheduled events");
+      throw Exception("Failed to load scheduled events".tr);
     }
 
     //print(list[0].eMail);
@@ -458,7 +458,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
 
       return jsonContacts.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -549,8 +549,8 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Add Ticket'),
+        title: Center(
+          child: Text('Add Ticket'.tr),
         ),
         actions: [
           Padding(
@@ -790,9 +790,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Priority",
+                      "Priority".tr,
                       style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -831,9 +831,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   visible: ticketTypeValue == "TKC",
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: const Align(
+                    child: Align(
                       child: Text(
-                        "Session slots currently free",
+                        "Session slots currently free".tr,
                         style: TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,

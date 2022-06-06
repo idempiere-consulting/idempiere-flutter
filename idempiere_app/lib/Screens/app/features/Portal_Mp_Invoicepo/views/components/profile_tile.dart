@@ -28,7 +28,8 @@ class _ProfilTile extends StatelessWidget {
       trailing: IconButton(
         onPressed: onPressedNotification,
         icon: const Icon(EvaIcons.bellOutline),
-        tooltip: "notification",
+        tooltip: "notification".tr
+        ,
       ),
     );
   }

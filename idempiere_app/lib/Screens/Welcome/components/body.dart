@@ -35,14 +35,14 @@ class Body extends StatelessWidget {
             ),
             SizedBox(height: size.height * 0.05),
             RoundedButton(
-              text: "LOGIN",
+              text: "LOGIN".tr,
               press: () {
                 Get.to(() => const LoginScreen());
                 //Navigator.pushNamed(context, '/loginscreen');
               },
             ),
             RoundedButton(
-              text: "SET IDEMPIERE URL",
+              text: "SET IDEMPIERE URL".tr,
               color: kPrimaryLightColor,
               textColor: Colors.black,
               press: () {

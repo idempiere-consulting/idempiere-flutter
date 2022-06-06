@@ -156,7 +156,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Lead'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -223,8 +223,8 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Valuta : ",
+                                            Text(
+                                              "Currency:".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -235,8 +235,8 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Agente: ",
+                                            Text(
+                                              "Agent:".tr,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),

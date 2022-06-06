@@ -72,8 +72,8 @@ class _CreateSupplychainLoadUnloadState
       });
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created" .tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -84,8 +84,8 @@ class _CreateSupplychainLoadUnloadState
         print(response.body);
       }
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -138,7 +138,7 @@ class _CreateSupplychainLoadUnloadState
   bool warehouseAvailable = false;
 
   var warehouseId = "1000000";
-
+  
   late WarehouseJson trx;
 
   @override

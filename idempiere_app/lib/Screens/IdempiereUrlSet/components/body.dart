@@ -133,7 +133,7 @@ class _BodyState extends State<Body> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Protocollo "),
+                Text("Protocol ".tr),
               DropdownButton(
                 value: protocolDropdownValue,
                 elevation: 16,
