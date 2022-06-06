@@ -194,7 +194,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     projectFieldController = TextEditingController();
 
     dropDownList = getTypes()!;
-    dropdownValue = "NY";
+    dropdownValue = "WP";
 
     timeStart = "";
     timeEnd = "";
@@ -207,7 +207,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Crea To Do'),
+          child: Text('Create Task'),
         ),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),

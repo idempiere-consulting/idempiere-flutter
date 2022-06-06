@@ -320,7 +320,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Edit Task'),
+          child: Text('Task'),
         ),
         actions: [
           Padding(
@@ -491,7 +491,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.green),
                         ),
-                        child: const Text("Enter"),
+                        child: const Text("Start Task"),
                         onPressed: () async {
                           editTask("WP");
                         },
@@ -504,14 +504,14 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.red),
                         ),
-                        child: const Text("Exit"),
+                        child: Text("Complete".tr),
                         onPressed: () {
                           editTask("CO");
                         },
                       ),
                     ),
                     Visibility(
-                      visible: args["statusId"] == "WP",
+                      visible: args["statusId"] == "WP" && 1 == 2,
                       child: ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor:
