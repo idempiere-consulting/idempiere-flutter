@@ -116,7 +116,9 @@ class DashboardTasksController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       _trx = EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       wpCount.value = 0;
 

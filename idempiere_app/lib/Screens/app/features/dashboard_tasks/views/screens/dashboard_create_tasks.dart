@@ -2,6 +2,7 @@ import 'dart:convert';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -41,7 +42,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
 
-    print(msg);
+    //print(msg);
     var response = await http.post(
       url,
       body: msg,
@@ -51,8 +52,22 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
       },
     );
     if (response.statusCode == 201) {
-      Get.find<DashboardTasksController>().getLeads();
-      Get.find<DashboardController>().getAllEvents();
+      try {
+        Get.find<DashboardTasksController>().getLeads();
+      } catch (e) {
+        if (kDebugMode) {
+          print('page not found');
+        }
+      }
+
+      try {
+        Get.find<DashboardController>().getAllEvents();
+      } catch (e) {
+        if (kDebugMode) {
+          print('page not found');
+        }
+      }
+
       Get.back();
       //print("done!");
       Get.snackbar(
@@ -65,7 +80,9 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Errore!",
         "Record non creato",
@@ -112,6 +129,8 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       projectFieldController.text =
+          json["records"][0]['C_Project_ID']['identifier'] ?? "";
+      nameFieldController.text =
           json["records"][0]['C_Project_ID']['identifier'] ?? "";
       projectId = json["records"][0]['C_Project_ID']['id'] ?? 0;
     }

@@ -135,11 +135,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
         //print(list![i].jPToDoScheduledStartTime);
-        if (selectedEvents[DateTime.parse(
-                '${list![i].jPToDoScheduledStartDate} 00:00:00.000Z')] !=
+        if (selectedEvents[
+                DateTime.parse('${list![i].jPToDoScheduledStartDate}')] !=
             null) {
-          selectedEvents[DateTime.parse(
-                  '${list[i].jPToDoScheduledStartDate} 00:00:00.000Z')]!
+          selectedEvents[DateTime.parse('${list[i].jPToDoScheduledStartDate}')]!
               .add(
             Event(
                 id: list[i].id!,
@@ -156,8 +155,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     list[i].jPToDoScheduledEndTime!.substring(0, 5)),
           );
         } else {
-          selectedEvents[DateTime.parse(
-              '${list[i].jPToDoScheduledStartDate} 00:00:00.000Z')] = [
+          selectedEvents[
+              DateTime.parse('${list[i].jPToDoScheduledStartDate}')] = [
             Event(
                 id: list[i].id!,
                 type: list[i].jPToDoType!.identifier ?? "???",

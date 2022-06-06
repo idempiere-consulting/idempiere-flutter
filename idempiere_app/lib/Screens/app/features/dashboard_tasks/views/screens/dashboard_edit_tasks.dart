@@ -40,6 +40,8 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
     final msg = jsonEncode({
       "JP_ToDo_Status": {"id": statusId},
       "Qty": hours,
+      "JP_ToDo_ScheduledStartDate": '${args["startDate"]}T$startTime:00Z',
+      "JP_ToDo_ScheduledEndDate": '${args["startDate"]}T$endTime:00Z',
       "JP_ToDo_ScheduledStartTime": startTime,
       "JP_ToDo_ScheduledEndTime": endTime,
     });

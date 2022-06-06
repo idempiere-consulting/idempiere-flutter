@@ -63,8 +63,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
     final msg = jsonEncode({
       "Name": nameFieldController.text,
       "Description": descriptionFieldController.text,
-      "JP_ToDo_ScheduledStartDate": date,
-      "JP_ToDo_ScheduledEndDate": date,
+      "JP_ToDo_ScheduledStartDate": '${date}T$timeStart:00Z',
+      "JP_ToDo_ScheduledEndDate": '${date}T$timeEnd:00Z',
       "JP_ToDo_ScheduledStartTime": '$timeStart:00Z',
       "JP_ToDo_ScheduledEndTime": '$timeEnd:00Z',
       "JP_ToDo_Status": {"id": dropdownValue},
