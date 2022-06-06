@@ -30,6 +30,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
       "AD_User_ID": {"id": GetStorage().read('userId')},
       "Name": nameFieldController.text,
       "Description": descriptionFieldController.text,
+      "Qty": 1.0,
       "JP_ToDo_ScheduledStartDate": "${date}T$startTime",
       "JP_ToDo_ScheduledEndDate": "${date}T$startTime",
       "JP_ToDo_ScheduledStartTime": startTime,

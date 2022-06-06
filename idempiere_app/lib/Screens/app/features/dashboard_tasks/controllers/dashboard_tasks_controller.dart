@@ -107,7 +107,7 @@ class DashboardTasksController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and JP_ToDo_Status neq \'CO\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate eq \'$formattedDate\'&\$orderby=JP_ToDo_Status desc');
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and JP_ToDo_Status neq \'CO\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate ge \'$formattedDate 00:00:01\'&\$orderby=JP_ToDo_Status desc');
     var response = await http.get(
       url,
       headers: <String, String>{
