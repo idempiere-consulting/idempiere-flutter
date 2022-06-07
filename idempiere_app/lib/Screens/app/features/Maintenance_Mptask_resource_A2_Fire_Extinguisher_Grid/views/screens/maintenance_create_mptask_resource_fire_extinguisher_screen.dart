@@ -466,10 +466,426 @@ class _CreateMaintenanceMpResourceState
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Prodotto",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = _setIdForOption(selection);
+                                    productName =
+                                        _displayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                /* Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: valueFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Value',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ), */
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: sernoFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'SerNo',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Control3DateFrom',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date3 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Control2DateFrom',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date2 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Control1DateFrom',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date1 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Prodotto",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = _setIdForOption(selection);
+                                    productName =
+                                        _displayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                /* Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: valueFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Value',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ), */
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: sernoFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'SerNo',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Control3DateFrom',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date3 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Control2DateFrom',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date2 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Control1DateFrom',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date1 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

@@ -302,138 +302,468 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    flex: (constraints.maxWidth < 950) ? 6 : 9,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                        _buildHeader(
-                            onPressedMenu: () =>
-                                Scaffold.of(context).openDrawer()),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildProgress(
-                          axis: (constraints.maxWidth < 950)
-                              ? Axis.vertical
-                              : Axis.horizontal,
-                        ),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildTaskOverview(
-                          data: controller.getAllTask(),
-                          headerAxis: (constraints.maxWidth < 850)
-                              ? Axis.vertical
-                              : Axis.horizontal,
-                          crossAxisCount: 6,
-                          crossAxisCellCount: (constraints.maxWidth < 950)
-                              ? 6
-                              : (constraints.maxWidth < 1100)
-                                  ? 3
-                                  : 2,
-                        ),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildActiveProject(
-                          data: controller.getActiveProject(),
-                          crossAxisCount: 6,
-                          crossAxisCellCount: (constraints.maxWidth < 950)
-                              ? 6
-                              : (constraints.maxWidth < 1100)
-                                  ? 3
-                                  : 2,
-                        ),
-                        const SizedBox(height: kSpacing),
-                      ],
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
+                  children: [
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("FATTURE: ${controller.trx.rowcount}")
+                          : const Text("FATTURE: ")),
+                      margin: const EdgeInsets.only(left: 15),
                     ),
-                  ),
-                  Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                        _buildProfile(data: controller.getProfil()),
-                        const Divider(thickness: 1),
-                        const SizedBox(height: kSpacing),
-                        _buildTeamMember(data: controller.getMember()),
-                        const SizedBox(height: kSpacing),
-                        Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: kSpacing),
-                          child: GetPremiumCard(onPressed: () {}),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        onPressed: () {
+                          Get.to(const CreateLead());
+                        },
+                        icon: const Icon(
+                          Icons.person_add,
+                          color: Colors.lightBlue,
                         ),
-                        const SizedBox(height: kSpacing),
-                        const Divider(thickness: 1),
-                        const SizedBox(height: kSpacing),
-                        _buildRecentMessages(data: controller.getChatting()),
-                      ],
+                      ),
+                    ), */
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getInvoices();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
                     ),
-                  )
-                ],
-              );
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: Obx(
+                        () => TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            for (var i = 0; i < controller.trx.rowcount!; i++) {
+                              if (value.toString().toLowerCase() ==
+                                  controller.trx.records![i].documentNo!
+                                      .toLowerCase()) {
+                                Get.offNamed('/InvoiceLine', arguments: {
+                                  "id": controller.trx.records![i].id,
+                                  "docNo":
+                                      controller.trx.records![i].documentNo,
+                                  "bPartner": controller
+                                      .trx.records![i].cBPartnerID?.identifier,
+                                  "priceListId":
+                                      controller.trx.records![i].mPriceListID,
+                                  "dateOrdered":
+                                      controller.trx.records![i].dateInvoiced,
+                                });
+                              }
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Product Value',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Lead',
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        /* Get.to(const EditLead(), arguments: {
+                                          "id": controller
+                                              .trx.records![index].id,
+                                          "name": controller
+                                              .trx.records![index].name,
+                                          "leadStatus": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .Status
+                                                  ?.id ??
+                                              "",
+                                          "bpName": controller
+                                              .trx.records![index].bPName,
+                                          "Tel": controller
+                                              .trx.records![index].phone,
+                                          "eMail": controller
+                                              .trx.records![index].eMail,
+                                          "salesRep": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .salesRepID
+                                                  ?.identifier ??
+                                              ""
+                                        }); */
+                                      },
+                                    ),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.article,
+                                      color: controller.trx.records![index]
+                                                  .docStatus?.id ==
+                                              "CO"
+                                          ? Colors.green
+                                          : Colors.yellow,
+                                    ),
+                                    onPressed: () {
+                                      Get.offNamed('/InvoiceLine', arguments: {
+                                        "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "bPartner": controller
+                                            .trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                        "priceListId": controller
+                                            .trx.records![index].mPriceListID,
+                                        "dateOrdered": controller
+                                            .trx.records![index].dateInvoiced,
+                                      });
+                                    },
+                                  ),
+                                  title: Text(
+                                    "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID!.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: Colors.white,
+                                      size: 30.0,
+                                    ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Importo: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "€${controller.trx.records![index].grandTotal}"),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
             desktopBuilder: (context, constraints) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                    child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(kBorderRadius),
-                          bottomRight: Radius.circular(kBorderRadius),
-                        ),
-                        child: _Sidebar(data: controller.getSelectedProject())),
-                  ),
-                  Flexible(
-                    flex: 9,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing),
-                        _buildHeader(),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildProgress(),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildTaskOverview(
-                          data: controller.getAllTask(),
-                          crossAxisCount: 6,
-                          crossAxisCellCount:
-                              (constraints.maxWidth < 1360) ? 3 : 2,
-                        ),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildActiveProject(
-                          data: controller.getActiveProject(),
-                          crossAxisCount: 6,
-                          crossAxisCellCount:
-                              (constraints.maxWidth < 1360) ? 3 : 2,
-                        ),
-                        const SizedBox(height: kSpacing),
-                      ],
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
+                  children: [
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("FATTURE: ${controller.trx.rowcount}")
+                          : const Text("FATTURE: ")),
+                      margin: const EdgeInsets.only(left: 15),
                     ),
-                  ),
-                  Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing / 2),
-                        _buildProfile(data: controller.getProfil()),
-                        const Divider(thickness: 1),
-                        const SizedBox(height: kSpacing),
-                        _buildTeamMember(data: controller.getMember()),
-                        const SizedBox(height: kSpacing),
-                        Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: kSpacing),
-                          child: GetPremiumCard(onPressed: () {}),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        onPressed: () {
+                          Get.to(const CreateLead());
+                        },
+                        icon: const Icon(
+                          Icons.person_add,
+                          color: Colors.lightBlue,
                         ),
-                        const SizedBox(height: kSpacing),
-                        const Divider(thickness: 1),
-                        const SizedBox(height: kSpacing),
-                        _buildRecentMessages(data: controller.getChatting()),
-                      ],
+                      ),
+                    ), */
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getInvoices();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              );
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: Obx(
+                        () => TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            for (var i = 0; i < controller.trx.rowcount!; i++) {
+                              if (value.toString().toLowerCase() ==
+                                  controller.trx.records![i].documentNo!
+                                      .toLowerCase()) {
+                                Get.offNamed('/InvoiceLine', arguments: {
+                                  "id": controller.trx.records![i].id,
+                                  "docNo":
+                                      controller.trx.records![i].documentNo,
+                                  "bPartner": controller
+                                      .trx.records![i].cBPartnerID?.identifier,
+                                  "priceListId":
+                                      controller.trx.records![i].mPriceListID,
+                                  "dateOrdered":
+                                      controller.trx.records![i].dateInvoiced,
+                                });
+                              }
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Product Value',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Lead',
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        /* Get.to(const EditLead(), arguments: {
+                                          "id": controller
+                                              .trx.records![index].id,
+                                          "name": controller
+                                              .trx.records![index].name,
+                                          "leadStatus": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .Status
+                                                  ?.id ??
+                                              "",
+                                          "bpName": controller
+                                              .trx.records![index].bPName,
+                                          "Tel": controller
+                                              .trx.records![index].phone,
+                                          "eMail": controller
+                                              .trx.records![index].eMail,
+                                          "salesRep": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .salesRepID
+                                                  ?.identifier ??
+                                              ""
+                                        }); */
+                                      },
+                                    ),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.article,
+                                      color: controller.trx.records![index]
+                                                  .docStatus?.id ==
+                                              "CO"
+                                          ? Colors.green
+                                          : Colors.yellow,
+                                    ),
+                                    onPressed: () {
+                                      Get.offNamed('/InvoiceLine', arguments: {
+                                        "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "bPartner": controller
+                                            .trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                        "priceListId": controller
+                                            .trx.records![index].mPriceListID,
+                                        "dateOrdered": controller
+                                            .trx.records![index].dateInvoiced,
+                                      });
+                                    },
+                                  ),
+                                  title: Text(
+                                    "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID!.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: Colors.white,
+                                      size: 30.0,
+                                    ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Importo: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "€${controller.trx.records![index].grandTotal}"),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
           ),
         ),

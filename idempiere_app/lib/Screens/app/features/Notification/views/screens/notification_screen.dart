@@ -154,138 +154,158 @@ class NotificationScreen extends GetView<NotificationController> {
             ]);
           },
           tabletBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 950) ? 6 : 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                      _buildHeader(
-                          onPressedMenu: () =>
-                              Scaffold.of(context).openDrawer()),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(
-                        axis: (constraints.maxWidth < 950)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        headerAxis: (constraints.maxWidth < 850)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
-                  ),
-                )
-              ],
-            );
+            return Column(children: [
+              const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item =
+                              controller.trx.records![index].recordName!;
+                          return Dismissible(
+                            key: Key(item),
+                            onDismissed: (direction) {
+                              controller.sendReadNotification(index);
+                            },
+                            child: Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ListTile(
+                                    onTap: () {
+                                      controller.getToNotificationRecord(index);
+                                    },
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0),
+                                    leading: Container(
+                                      padding:
+                                          const EdgeInsets.only(right: 12.0),
+                                      decoration: const BoxDecoration(
+                                          border: Border(
+                                              right: BorderSide(
+                                                  width: 1.0,
+                                                  color: Colors.white24))),
+                                      child: const Icon(Icons.notifications,
+                                          color: Colors.white),
+                                    ),
+                                    title: Text(
+                                      controller
+                                              .trx.records![index].recordName ??
+                                          "??",
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                    subtitle: Row(
+                                      children: <Widget>[
+                                        const Icon(Icons.linear_scale,
+                                            color: Colors.yellowAccent),
+                                        Text(
+                                            " " +
+                                                controller.trx.records![index]
+                                                    .docType!,
+                                            style: const TextStyle(
+                                                color: Colors.white))
+                                      ],
+                                    ),
+                                    trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0)),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);
           },
           desktopBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(kBorderRadius),
-                        bottomRight: Radius.circular(kBorderRadius),
-                      ),
-                      child: _Sidebar(data: controller.getSelectedProject())),
-                ),
-                Flexible(
-                  flex: 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing),
-                      _buildHeader(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing / 2),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
-                  ),
-                ),
-              ],
-            );
+            return Column(children: [
+              const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item =
+                              controller.trx.records![index].recordName!;
+                          return Dismissible(
+                            key: Key(item),
+                            onDismissed: (direction) {
+                              controller.sendReadNotification(index);
+                            },
+                            child: Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ListTile(
+                                    onTap: () {
+                                      controller.getToNotificationRecord(index);
+                                    },
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0),
+                                    leading: Container(
+                                      padding:
+                                          const EdgeInsets.only(right: 12.0),
+                                      decoration: const BoxDecoration(
+                                          border: Border(
+                                              right: BorderSide(
+                                                  width: 1.0,
+                                                  color: Colors.white24))),
+                                      child: const Icon(Icons.notifications,
+                                          color: Colors.white),
+                                    ),
+                                    title: Text(
+                                      controller
+                                              .trx.records![index].recordName ??
+                                          "??",
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                    subtitle: Row(
+                                      children: <Widget>[
+                                        const Icon(Icons.linear_scale,
+                                            color: Colors.yellowAccent),
+                                        Text(
+                                            " " +
+                                                controller.trx.records![index]
+                                                    .docType!,
+                                            style: const TextStyle(
+                                                color: Colors.white))
+                                      ],
+                                    ),
+                                    trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0)),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);
           },
         ),
       ),

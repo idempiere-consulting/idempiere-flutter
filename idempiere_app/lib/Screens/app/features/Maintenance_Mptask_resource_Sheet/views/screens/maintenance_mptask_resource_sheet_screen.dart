@@ -851,7 +851,379 @@ class MaintenanceMpResourceSheetScreen
             );
           },
           desktopBuilder: (context, constraints) {
-            return const Text('WIP');
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.locationCodeFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.source),
+                          border: OutlineInputBorder(),
+                          labelText: 'Location Code',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.locationFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.source),
+                          border: OutlineInputBorder(),
+                          labelText: 'Location',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => controller.flagRefList.value == true
+                      ? Visibility(
+                          visible: controller.filterCount.value == 0,
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: DropdownButton(
+                              value: controller.dropDownValue.value,
+                              style: const TextStyle(fontSize: 12.0),
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                //print(newValue);
+                                controller.dropDownValue.value = newValue!;
+                              },
+                              items: controller.refList.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                  value: list.value.toString(),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.manufacturerFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.source),
+                          border: OutlineInputBorder(),
+                          labelText: 'Marca',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.modelFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.source),
+                          border: OutlineInputBorder(),
+                          labelText: 'Model',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.serialNoFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.source),
+                          border: OutlineInputBorder(),
+                          labelText: 'Serial No',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.lotFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.source),
+                          border: OutlineInputBorder(),
+                          labelText: 'Lot number',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.manufacturedYearFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.timelapse_sharp),
+                          border: OutlineInputBorder(),
+                          labelText: 'Manufactured Year',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.expectedDurationFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.timelapse_sharp),
+                          border: OutlineInputBorder(),
+                          labelText: 'Expected Duration (months)',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
+                      width: size.width,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: DateTimePicker(
+                        type: DateTimePickerType.date,
+                        initialValue: controller.date2,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                        dateLabelText: 'Purchase Date',
+                        icon: const Icon(Icons.event),
+                        onChanged: (val) {
+                          //print(DateTime.parse(val));
+                          //print(val);
+
+                          controller.date2 = val.substring(0, 10);
+
+                          //print(date);
+                        },
+                        validator: (val) {
+                          //print(val);
+                          return null;
+                        },
+                        // ignore: avoid_print
+                        onSaved: (val) => print(val),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
+                      width: size.width,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: DateTimePicker(
+                        type: DateTimePickerType.date,
+                        initialValue: controller.date3,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                        dateLabelText: 'First Use Date',
+                        icon: const Icon(Icons.event),
+                        onChanged: (val) {
+                          //print(DateTime.parse(val));
+                          //print(val);
+
+                          controller.date3 = val.substring(0, 10);
+
+                          //print(date);
+                        },
+                        validator: (val) {
+                          //print(val);
+                          return null;
+                        },
+                        // ignore: avoid_print
+                        onSaved: (val) => print(val),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.userFieldController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.person_pin_outlined),
+                          border: OutlineInputBorder(),
+                          labelText: 'User Name',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => controller.flagSurveyLines.value
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.surveyLines.records!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Obx(() => controller
+                                        .surveyLines.records![index].group1 !=
+                                    null
+                                ? Visibility(
+                                    visible: controller.filterCount.value == 1,
+                                    child: Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: CheckboxListTile(
+                                        title: Text(
+                                            '${controller.surveyLines.records![index].name}'),
+                                        value: controller.isChecked[index],
+                                        activeColor: kPrimaryColor,
+                                        onChanged: (bool? value) {
+                                          controller.isChecked[index] = value!;
+                                        },
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                      ),
+                                    ),
+                                  )
+                                : Visibility(
+                                    visible: controller.filterCount.value == 1,
+                                    child: Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: Text(
+                                          '${controller.surveyLines.records![index].name}'),
+                                    ),
+                                  ));
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 1,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        maxLines: 5,
+                        controller: controller.noteFieldController,
+                        decoration: const InputDecoration(
+                          //prefixIcon: Icon(Icons.person_pin_outlined),
+                          border: OutlineInputBorder(),
+                          labelText: 'Note',
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 2,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: CheckboxListTile(
+                        title: const Text(
+                            'The product can keep on being in service'),
+                        value: controller.checkboxState.value,
+                        activeColor: kPrimaryColor,
+                        onChanged: (bool? value) {
+                          controller.checkboxState.value = value!;
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 2,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              tooltip: "Sign",
+                              onPressed: () {
+                                Get.to(
+                                    const SignatureWorkOrderResourceScreen());
+                              },
+                              icon: controller.flagSign.value
+                                  ? const Icon(
+                                      EvaIcons.doneAll,
+                                      color: Colors.green,
+                                    )
+                                  : const Icon(EvaIcons.edit2Outline),
+                            ),
+                            const Text("Sign"),
+                          ]),
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

@@ -364,73 +364,570 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
             ]);
           },
           tabletBuilder: (context, constraints) {
-            return Column(children: const [
-              SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+            return Column(children: [
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                /* trailing: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.view_list,
+                                    color: Colors.green,
+                                  ),
+                                ), */
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                /* leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.work,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                ), */
+                                title: Text(
+                                  controller.trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                /* subtitle: Row(
+                                  children: <Widget>[
+                                    const Icon(Icons.event),
+                                    Text(
+                                      controller.trx.records![index]
+                                              .dateWorkStart ??
+                                          "??",
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ), */
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
+                                    children: [
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITSurveyType
+                                                  ?.id ==
+                                              'Y',
+                                          child: RadioListTile<int>(
+                                              title: Text("True".tr),
+                                              value: 1,
+                                              groupValue:
+                                                  controller.checkValue[index],
+                                              onChanged: (value) {
+                                                controller.checkValue[index] =
+                                                    1;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITSurveyType
+                                                  ?.id ==
+                                              'Y',
+                                          child: RadioListTile<int>(
+                                              title: Text("False".tr),
+                                              value: 0,
+                                              groupValue:
+                                                  controller.checkValue[index],
+                                              onChanged: (value) {
+                                                controller.checkValue[index] =
+                                                    0;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText1 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText1}"),
+                                              value: 1,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 1;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText2 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText2}"),
+                                              value: 2,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 2;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText3 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText3}"),
+                                              value: 3,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 3;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText4 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText4}"),
+                                              value: 4,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 4;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText5 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText5}"),
+                                              value: 5,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 5;
+                                              }),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .lITSurveyType?.id ==
+                                            'N',
+                                        child: TextField(
+                                          controller: controller
+                                              .numberfieldController[index],
+                                          keyboardType: const TextInputType
+                                                  .numberWithOptions(
+                                              signed: true, decimal: true),
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp("[0-9.-]"))
+                                          ],
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Answer',
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .lITSurveyType?.id ==
+                                            'T',
+                                        child: TextField(
+                                          maxLines: 7,
+                                          controller: controller
+                                              .textfieldController[index],
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Answer',
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITSurveyType
+                                                  ?.id ==
+                                              'D',
+                                          child: DateTimePicker(
+                                            type: DateTimePickerType.date,
+                                            initialValue:
+                                                controller.dateValue[index],
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime(2100),
+                                            dateLabelText: 'Date',
+                                            icon: const Icon(Icons.event),
+                                            onChanged: (val) {
+                                              //print(DateTime.parse(val));
+                                              //print(val);
+
+                                              controller.dateValue[index] =
+                                                  val.substring(0, 10);
+
+                                              //print(controller.dateValue[index]);
+                                            },
+                                            validator: (val) {
+                                              //print(val);
+                                              return null;
+                                            },
+                                            // ignore: avoid_print
+                                            onSaved: (val) => print(val),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
             ]);
           },
           desktopBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(kBorderRadius),
-                        bottomRight: Radius.circular(kBorderRadius),
-                      ),
-                      child: _Sidebar(data: controller.getSelectedProject())),
-                ),
-                Flexible(
-                  flex: 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing),
-                      _buildHeader(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing / 2),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
-                      ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
-                  ),
-                ),
-              ],
-            );
+            return Column(children: [
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                /* trailing: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.view_list,
+                                    color: Colors.green,
+                                  ),
+                                ), */
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                /* leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.work,
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                ), */
+                                title: Text(
+                                  controller.trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                /* subtitle: Row(
+                                  children: <Widget>[
+                                    const Icon(Icons.event),
+                                    Text(
+                                      controller.trx.records![index]
+                                              .dateWorkStart ??
+                                          "??",
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ), */
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
+                                    children: [
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITSurveyType
+                                                  ?.id ==
+                                              'Y',
+                                          child: RadioListTile<int>(
+                                              title: Text("True".tr),
+                                              value: 1,
+                                              groupValue:
+                                                  controller.checkValue[index],
+                                              onChanged: (value) {
+                                                controller.checkValue[index] =
+                                                    1;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITSurveyType
+                                                  ?.id ==
+                                              'Y',
+                                          child: RadioListTile<int>(
+                                              title: Text("False".tr),
+                                              value: 0,
+                                              groupValue:
+                                                  controller.checkValue[index],
+                                              onChanged: (value) {
+                                                controller.checkValue[index] =
+                                                    0;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText1 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText1}"),
+                                              value: 1,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 1;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText2 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText2}"),
+                                              value: 2,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 2;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText3 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText3}"),
+                                              value: 3,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 3;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText4 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText4}"),
+                                              value: 4,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 4;
+                                              }),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller.trx
+                                                  .records![index].lITText5 !=
+                                              null,
+                                          child: RadioListTile<int>(
+                                              title: Text(
+                                                  "${controller.trx.records![index].lITText5}"),
+                                              value: 5,
+                                              groupValue: controller
+                                                  .selectedValue[index],
+                                              onChanged: (value) {
+                                                controller
+                                                    .selectedValue[index] = 5;
+                                              }),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .lITSurveyType?.id ==
+                                            'N',
+                                        child: TextField(
+                                          controller: controller
+                                              .numberfieldController[index],
+                                          keyboardType: const TextInputType
+                                                  .numberWithOptions(
+                                              signed: true, decimal: true),
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp("[0-9.-]"))
+                                          ],
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Answer',
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .lITSurveyType?.id ==
+                                            'T',
+                                        child: TextField(
+                                          maxLines: 7,
+                                          controller: controller
+                                              .textfieldController[index],
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'Answer',
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITSurveyType
+                                                  ?.id ==
+                                              'D',
+                                          child: DateTimePicker(
+                                            type: DateTimePickerType.date,
+                                            initialValue:
+                                                controller.dateValue[index],
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime(2100),
+                                            dateLabelText: 'Date',
+                                            icon: const Icon(Icons.event),
+                                            onChanged: (val) {
+                                              //print(DateTime.parse(val));
+                                              //print(val);
+
+                                              controller.dateValue[index] =
+                                                  val.substring(0, 10);
+
+                                              //print(controller.dateValue[index]);
+                                            },
+                                            validator: (val) {
+                                              //print(val);
+                                              return null;
+                                            },
+                                            // ignore: avoid_print
+                                            onSaved: (val) => print(val),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);
           },
         ),
       ),

@@ -72,8 +72,8 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
       Get.back();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.done,
@@ -85,8 +85,8 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
         print(response.body);
       }
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.error,
@@ -401,10 +401,342 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Descrizione',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: projectFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Progetto',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: date,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Data',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: startTime.substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'Ora Inizio',
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      setState(() {
+                        timeStart = val;
+                      });
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: startTime.substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'Ora Fine',
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      setState(() {
+                        timeEnd = val;
+                      });
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton(
+                    value: dropdownValue,
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                      //print(dropdownValue);
+                    },
+                    items: dropDownList.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.id,
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Descrizione',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: projectFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Progetto',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: date,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Data',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: startTime.substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'Ora Inizio',
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      setState(() {
+                        timeStart = val;
+                      });
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: startTime.substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'Ora Fine',
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      setState(() {
+                        timeEnd = val;
+                      });
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton(
+                    value: dropdownValue,
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                      //print(dropdownValue);
+                    },
+                    items: dropDownList.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.id,
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

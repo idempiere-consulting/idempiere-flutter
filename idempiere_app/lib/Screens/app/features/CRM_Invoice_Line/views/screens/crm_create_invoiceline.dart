@@ -46,8 +46,8 @@ class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
       //Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Fatto!".tr,
+        "Il record è stato creato".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -58,8 +58,8 @@ class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
         print(response.body);
       }
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Errore!".tr,
+        "Record non creato".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -154,10 +154,70 @@ class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: activityFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Activity (Barcode)',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: activityFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Activity (Barcode)',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

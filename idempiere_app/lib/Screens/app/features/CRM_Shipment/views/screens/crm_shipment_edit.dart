@@ -188,10 +188,48 @@ class _EditShipmentState extends State<EditShipment> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    maxLines: 5,
+                    controller: noteFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields),
+                      border: OutlineInputBorder(),
+                      labelText: 'Note',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    maxLines: 5,
+                    controller: noteFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields),
+                      border: OutlineInputBorder(),
+                      labelText: 'Note',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

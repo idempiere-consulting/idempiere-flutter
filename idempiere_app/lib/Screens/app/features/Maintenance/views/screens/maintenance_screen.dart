@@ -167,33 +167,40 @@ class MaintenanceScreen extends GetView<MaintenanceController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Flexible(
-                flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(kBorderRadius),
-                      bottomRight: Radius.circular(kBorderRadius),
-                    ),
-                    child: _Sidebar(data: controller.getSelectedProject())),
-              ),
-              Flexible(
-                flex: 9,
+                flex: (constraints.maxWidth < 950) ? 6 : 9,
                 child: Column(
                   children: [
-                    const SizedBox(height: kSpacing),
-                    _buildHeader(),
+                    const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                    _buildHeader(
+                        onPressedMenu: () => Scaffold.of(context).openDrawer()),
                     const SizedBox(height: kSpacing * 2),
-                    _buildProgress(),
+                    _buildProgress(
+                      axis: (constraints.maxWidth < 950)
+                          ? Axis.vertical
+                          : Axis.horizontal,
+                    ),
                     const SizedBox(height: kSpacing * 2),
                     _buildTaskOverview(
                       data: controller.getAllTask(),
+                      headerAxis: (constraints.maxWidth < 850)
+                          ? Axis.vertical
+                          : Axis.horizontal,
                       crossAxisCount: 6,
-                      crossAxisCellCount: (constraints.maxWidth < 1360) ? 3 : 2,
+                      crossAxisCellCount: (constraints.maxWidth < 950)
+                          ? 6
+                          : (constraints.maxWidth < 1100)
+                              ? 3
+                              : 2,
                     ),
                     const SizedBox(height: kSpacing * 2),
                     _buildActiveProject(
                       data: controller.getActiveProject(),
                       crossAxisCount: 6,
-                      crossAxisCellCount: (constraints.maxWidth < 1360) ? 3 : 2,
+                      crossAxisCellCount: (constraints.maxWidth < 950)
+                          ? 6
+                          : (constraints.maxWidth < 1100)
+                              ? 3
+                              : 2,
                     ),
                     const SizedBox(height: kSpacing),
                   ],
@@ -203,7 +210,7 @@ class MaintenanceScreen extends GetView<MaintenanceController> {
                 flex: 4,
                 child: Column(
                   children: [
-                    const SizedBox(height: kSpacing / 2),
+                    const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
                     _buildProfile(data: controller.getProfil()),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),

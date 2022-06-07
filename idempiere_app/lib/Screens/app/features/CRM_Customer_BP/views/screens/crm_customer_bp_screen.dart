@@ -288,138 +288,438 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    flex: (constraints.maxWidth < 950) ? 6 : 9,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                        _buildHeader(
-                            onPressedMenu: () =>
-                                Scaffold.of(context).openDrawer()),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildProgress(
-                          axis: (constraints.maxWidth < 950)
-                              ? Axis.vertical
-                              : Axis.horizontal,
-                        ),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildTaskOverview(
-                          data: controller.getAllTask(),
-                          headerAxis: (constraints.maxWidth < 850)
-                              ? Axis.vertical
-                              : Axis.horizontal,
-                          crossAxisCount: 6,
-                          crossAxisCellCount: (constraints.maxWidth < 950)
-                              ? 6
-                              : (constraints.maxWidth < 1100)
-                                  ? 3
-                                  : 2,
-                        ),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildActiveProject(
-                          data: controller.getActiveProject(),
-                          crossAxisCount: 6,
-                          crossAxisCellCount: (constraints.maxWidth < 950)
-                              ? 6
-                              : (constraints.maxWidth < 1100)
-                                  ? 3
-                                  : 2,
-                        ),
-                        const SizedBox(height: kSpacing),
-                      ],
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
+                  children: [
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("CLIENTI: ${controller.trx.rowcount}")
+                          : const Text("CLIENTI: ")),
+                      margin: const EdgeInsets.only(left: 15),
                     ),
-                  ),
-                  Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                        _buildProfile(data: controller.getProfil()),
-                        const Divider(thickness: 1),
-                        const SizedBox(height: kSpacing),
-                        _buildTeamMember(data: controller.getMember()),
-                        const SizedBox(height: kSpacing),
-                        Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: kSpacing),
-                          child: GetPremiumCard(onPressed: () {}),
+                    Container(
+                      margin: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        onPressed: () {
+                          Get.to(const CreateLead());
+                        },
+                        icon: const Icon(
+                          Icons.person_add,
+                          color: Colors.lightBlue,
                         ),
-                        const SizedBox(height: kSpacing),
-                        const Divider(thickness: 1),
-                        const SizedBox(height: kSpacing),
-                        _buildRecentMessages(data: controller.getChatting()),
-                      ],
+                      ),
                     ),
-                  )
-                ],
-              );
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getCustomers();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 30),
+                      child: Obx(
+                        () => TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            controller.searchFilterValue.value =
+                                controller.searchFieldController.text;
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Customer Name',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Obx(
+                              () => Visibility(
+                                visible:
+                                    controller.searchFilterValue.value == ""
+                                        ? true
+                                        : controller.trx.records![index].name
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase()),
+                                child: Card(
+                                  elevation: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: ExpansionTile(
+                                      tilePadding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.green,
+                                          ),
+                                          tooltip: 'Edit Lead',
+                                          onPressed: () {
+                                            //log("info button pressed");
+                                            /* Get.to(const EditLead(), arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "name": controller.trx
+                                                    .records![index].name ??
+                                                "",
+                                            "leadStatus": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .leadStatus
+                                                    ?.id ??
+                                                "",
+                                            "bpName": controller
+                                                .trx.records![index].bPName,
+                                            "Tel": controller.trx
+                                                    .records![index].phone ??
+                                                "",
+                                            "eMail": controller.trx
+                                                    .records![index].eMail ??
+                                                "",
+                                            "salesRep": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .salesRepID
+                                                    ?.identifier ??
+                                                ""
+                                          }); */
+                                          },
+                                        ),
+                                      ),
+                                      title: Text(
+                                        controller.trx.records![index].name ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.linear_scale,
+                                              color: Colors.greenAccent),
+                                          Text(
+                                            controller.trx.records![index]
+                                                    .value ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text(
+                                                  "Gruppo BP: ",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPGroupID
+                                                        ?.identifier ??
+                                                    ""),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
             desktopBuilder: (context, constraints) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                    child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(kBorderRadius),
-                          bottomRight: Radius.circular(kBorderRadius),
-                        ),
-                        child: _Sidebar(data: controller.getSelectedProject())),
-                  ),
-                  Flexible(
-                    flex: 9,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing),
-                        _buildHeader(),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildProgress(),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildTaskOverview(
-                          data: controller.getAllTask(),
-                          crossAxisCount: 6,
-                          crossAxisCellCount:
-                              (constraints.maxWidth < 1360) ? 3 : 2,
-                        ),
-                        const SizedBox(height: kSpacing * 2),
-                        _buildActiveProject(
-                          data: controller.getActiveProject(),
-                          crossAxisCount: 6,
-                          crossAxisCellCount:
-                              (constraints.maxWidth < 1360) ? 3 : 2,
-                        ),
-                        const SizedBox(height: kSpacing),
-                      ],
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
+                  children: [
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("CLIENTI: ${controller.trx.rowcount}")
+                          : const Text("CLIENTI: ")),
+                      margin: const EdgeInsets.only(left: 15),
                     ),
-                  ),
-                  Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing / 2),
-                        _buildProfile(data: controller.getProfil()),
-                        const Divider(thickness: 1),
-                        const SizedBox(height: kSpacing),
-                        _buildTeamMember(data: controller.getMember()),
-                        const SizedBox(height: kSpacing),
-                        Padding(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: kSpacing),
-                          child: GetPremiumCard(onPressed: () {}),
+                    Container(
+                      margin: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        onPressed: () {
+                          Get.to(const CreateLead());
+                        },
+                        icon: const Icon(
+                          Icons.person_add,
+                          color: Colors.lightBlue,
                         ),
-                        const SizedBox(height: kSpacing),
-                        const Divider(thickness: 1),
-                        const SizedBox(height: kSpacing),
-                        _buildRecentMessages(data: controller.getChatting()),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
-              );
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getCustomers();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 30),
+                      child: Obx(
+                        () => TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            controller.searchFilterValue.value =
+                                controller.searchFieldController.text;
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Customer Name',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Obx(
+                              () => Visibility(
+                                visible:
+                                    controller.searchFilterValue.value == ""
+                                        ? true
+                                        : controller.trx.records![index].name
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase()),
+                                child: Card(
+                                  elevation: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: ExpansionTile(
+                                      tilePadding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.green,
+                                          ),
+                                          tooltip: 'Edit Lead',
+                                          onPressed: () {
+                                            //log("info button pressed");
+                                            /* Get.to(const EditLead(), arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "name": controller.trx
+                                                    .records![index].name ??
+                                                "",
+                                            "leadStatus": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .leadStatus
+                                                    ?.id ??
+                                                "",
+                                            "bpName": controller
+                                                .trx.records![index].bPName,
+                                            "Tel": controller.trx
+                                                    .records![index].phone ??
+                                                "",
+                                            "eMail": controller.trx
+                                                    .records![index].eMail ??
+                                                "",
+                                            "salesRep": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .salesRepID
+                                                    ?.identifier ??
+                                                ""
+                                          }); */
+                                          },
+                                        ),
+                                      ),
+                                      title: Text(
+                                        controller.trx.records![index].name ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.linear_scale,
+                                              color: Colors.greenAccent),
+                                          Text(
+                                            controller.trx.records![index]
+                                                    .value ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Text(
+                                                  "Gruppo BP: ",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPGroupID
+                                                        ?.identifier ??
+                                                    ""),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
           ),
         ),

@@ -410,133 +410,340 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ]);
         },
         tabletBuilder: (context, constraints) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                flex: (constraints.maxWidth < 950) ? 6 : 9,
-                child: Column(
-                  children: [
-                    const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                    _buildHeader(
-                        onPressedMenu: () => Scaffold.of(context).openDrawer()),
-                    const SizedBox(height: kSpacing * 2),
-                    _buildProgress(
-                      axis: (constraints.maxWidth < 950)
-                          ? Axis.vertical
-                          : Axis.horizontal,
-                    ),
-                    const SizedBox(height: kSpacing * 2),
-                    _buildTaskOverview(
-                      data: getAllTask(),
-                      headerAxis: (constraints.maxWidth < 850)
-                          ? Axis.vertical
-                          : Axis.horizontal,
-                      crossAxisCount: 6,
-                      crossAxisCellCount: (constraints.maxWidth < 950)
-                          ? 6
-                          : (constraints.maxWidth < 1100)
-                              ? 3
-                              : 2,
-                    ),
-                    const SizedBox(height: kSpacing * 2),
-                    _buildActiveProject(
-                      data: getActiveProject(),
-                      crossAxisCount: 6,
-                      crossAxisCellCount: (constraints.maxWidth < 950)
-                          ? 6
-                          : (constraints.maxWidth < 1100)
-                              ? 3
-                              : 2,
-                    ),
-                    const SizedBox(height: kSpacing),
-                  ],
+          return Column(children: [
+            const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+            _buildHeader(
+                onPressedMenu: () => Scaffold.of(context).openDrawer()),
+            const SizedBox(height: kSpacing / 2),
+            const Divider(),
+            _buildProfile(data: getProfil()),
+            const SizedBox(height: kSpacing),
+            TableCalendar(
+              focusedDay: focusedDay,
+              firstDay: DateTime(2000),
+              lastDay: DateTime(2100),
+              calendarFormat: format,
+              calendarStyle: const CalendarStyle(
+                markerDecoration:
+                    BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
+                todayDecoration: BoxDecoration(
+                  color: Colors.deepPurple,
                 ),
               ),
-              Flexible(
-                flex: 4,
-                child: Column(
-                  children: [
-                    const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                    _buildProfile(data: getProfil()),
-                    const Divider(thickness: 1),
-                    const SizedBox(height: kSpacing),
-                    _buildTeamMember(data: getMember()),
-                    const SizedBox(height: kSpacing),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                      child: GetPremiumCard(onPressed: () {}),
+              headerStyle: const HeaderStyle(
+                //formatButtonVisible: false,
+                formatButtonShowsNext: false,
+              ),
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              daysOfWeekVisible: true,
+              onFormatChanged: (CalendarFormat _format) {
+                setState(() {
+                  format = _format;
+                });
+              },
+              onDaySelected: (DateTime selectDay, DateTime focusDay) {
+                setState(() {
+                  selectedDay = selectDay;
+                  focusedDay = focusDay;
+                });
+                //print(focusedDay);
+              },
+              selectedDayPredicate: (DateTime date) {
+                return isSameDay(selectedDay, date);
+              },
+              onHeaderLongPressed: (date) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text(
+                      "Add Event",
                     ),
-                    const SizedBox(height: kSpacing),
-                    const Divider(thickness: 1),
-                    const SizedBox(height: kSpacing),
-                    _buildRecentMessages(data: getChatting()),
-                  ],
+                    content: DropdownButton(
+                      value: dropdownValue,
+                      elevation: 16,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                        //print(dropdownValue);
+                      },
+                      items: dropDownList.map((list) {
+                        return DropdownMenuItem<String>(
+                          child: Text(
+                            list.name.toString(),
+                          ),
+                          value: list.id,
+                        );
+                      }).toList(),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                          setState(() {});
+                          switch (dropdownValue) {
+                            case "1":
+                              Get.off(const CreateCalendarEvent());
+                              break;
+                            default:
+                          }
+                        },
+                        child: const Text("Continua"),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              eventLoader: _getEventsfromDay,
+            ),
+            ..._getEventsfromDay(selectedDay).map(
+              (Event event) => /* ListTile(
+                title: Text(
+                  event.title,
                 ),
-              )
-            ],
-          );
+              ), */
+                  Card(
+                elevation: 8.0,
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Color.fromRGBO(64, 75, 96, .9)),
+                  child: ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
+                    leading: Container(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              right: BorderSide(
+                                  width: 1.0, color: Colors.white24))),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.green,
+                        ),
+                        tooltip: 'Edit Event',
+                        onPressed: () {
+                          Get.off(const EditCalendarEvent(), arguments: {
+                            "id": event.id,
+                            "name": event.title,
+                            "description": event.description,
+                            "typeId": event.typeId,
+                            "startDate": event.scheduledStartDate,
+                            "startTime": event.scheduledStartTime,
+                            "endTime": event.scheduledEndTime,
+                            "statusId": event.statusId,
+                          });
+                        },
+                      ),
+                    ),
+                    title: Text(
+                      event.title,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.timelapse,
+                        color: event.statusId == "WP"
+                            ? Colors.yellow
+                            : event.statusId == "CO"
+                                ? Colors.green
+                                : Colors.red,
+                      ),
+                      onPressed: () {},
+                    ),
+                    subtitle: Row(
+                      children: <Widget>[
+                        const Icon(Icons.event),
+                        Text(
+                          '${event.scheduledStartDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
+                  ),
+                ),
+              ),
+            ),
+          ]);
         },
         desktopBuilder: (context, constraints) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(kBorderRadius),
-                      bottomRight: Radius.circular(kBorderRadius),
-                    ),
-                    child: _Sidebar(data: getSelectedProject())),
-              ),
-              Flexible(
-                flex: 9,
-                child: Column(
-                  children: [
-                    const SizedBox(height: kSpacing),
-                    _buildHeader(),
-                    const SizedBox(height: kSpacing * 2),
-                    _buildProgress(),
-                    const SizedBox(height: kSpacing * 2),
-                    _buildTaskOverview(
-                      data: getAllTask(),
-                      crossAxisCount: 6,
-                      crossAxisCellCount: (constraints.maxWidth < 1360) ? 3 : 2,
-                    ),
-                    const SizedBox(height: kSpacing * 2),
-                    _buildActiveProject(
-                      data: getActiveProject(),
-                      crossAxisCount: 6,
-                      crossAxisCellCount: (constraints.maxWidth < 1360) ? 3 : 2,
-                    ),
-                    const SizedBox(height: kSpacing),
-                  ],
+          return Column(children: [
+            const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+            _buildHeader(
+                onPressedMenu: () => Scaffold.of(context).openDrawer()),
+            const SizedBox(height: kSpacing / 2),
+            const Divider(),
+            _buildProfile(data: getProfil()),
+            const SizedBox(height: kSpacing),
+            TableCalendar(
+              focusedDay: focusedDay,
+              firstDay: DateTime(2000),
+              lastDay: DateTime(2100),
+              calendarFormat: format,
+              calendarStyle: const CalendarStyle(
+                markerDecoration:
+                    BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
+                todayDecoration: BoxDecoration(
+                  color: Colors.deepPurple,
                 ),
               ),
-              Flexible(
-                flex: 4,
-                child: Column(
-                  children: [
-                    const SizedBox(height: kSpacing / 2),
-                    _buildProfile(data: getProfil()),
-                    const Divider(thickness: 1),
-                    const SizedBox(height: kSpacing),
-                    _buildTeamMember(data: getMember()),
-                    const SizedBox(height: kSpacing),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                      child: GetPremiumCard(onPressed: () {}),
+              headerStyle: const HeaderStyle(
+                //formatButtonVisible: false,
+                formatButtonShowsNext: false,
+              ),
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              daysOfWeekVisible: true,
+              onFormatChanged: (CalendarFormat _format) {
+                setState(() {
+                  format = _format;
+                });
+              },
+              onDaySelected: (DateTime selectDay, DateTime focusDay) {
+                setState(() {
+                  selectedDay = selectDay;
+                  focusedDay = focusDay;
+                });
+                //print(focusedDay);
+              },
+              selectedDayPredicate: (DateTime date) {
+                return isSameDay(selectedDay, date);
+              },
+              onHeaderLongPressed: (date) {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text(
+                      "Add Event",
                     ),
-                    const SizedBox(height: kSpacing),
-                    const Divider(thickness: 1),
-                    const SizedBox(height: kSpacing),
-                    _buildRecentMessages(data: getChatting()),
-                  ],
+                    content: DropdownButton(
+                      value: dropdownValue,
+                      elevation: 16,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                        //print(dropdownValue);
+                      },
+                      items: dropDownList.map((list) {
+                        return DropdownMenuItem<String>(
+                          child: Text(
+                            list.name.toString(),
+                          ),
+                          value: list.id,
+                        );
+                      }).toList(),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Get.back();
+                          setState(() {});
+                          switch (dropdownValue) {
+                            case "1":
+                              Get.off(const CreateCalendarEvent());
+                              break;
+                            default:
+                          }
+                        },
+                        child: const Text("Continua"),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              eventLoader: _getEventsfromDay,
+            ),
+            ..._getEventsfromDay(selectedDay).map(
+              (Event event) => /* ListTile(
+                title: Text(
+                  event.title,
                 ),
-              )
-            ],
-          );
+              ), */
+                  Card(
+                elevation: 8.0,
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Color.fromRGBO(64, 75, 96, .9)),
+                  child: ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
+                    leading: Container(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              right: BorderSide(
+                                  width: 1.0, color: Colors.white24))),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.green,
+                        ),
+                        tooltip: 'Edit Event',
+                        onPressed: () {
+                          Get.off(const EditCalendarEvent(), arguments: {
+                            "id": event.id,
+                            "name": event.title,
+                            "description": event.description,
+                            "typeId": event.typeId,
+                            "startDate": event.scheduledStartDate,
+                            "startTime": event.scheduledStartTime,
+                            "endTime": event.scheduledEndTime,
+                            "statusId": event.statusId,
+                          });
+                        },
+                      ),
+                    ),
+                    title: Text(
+                      event.title,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.timelapse,
+                        color: event.statusId == "WP"
+                            ? Colors.yellow
+                            : event.statusId == "CO"
+                                ? Colors.green
+                                : Colors.red,
+                      ),
+                      onPressed: () {},
+                    ),
+                    subtitle: Row(
+                      children: <Widget>[
+                        const Icon(Icons.event),
+                        Text(
+                          '${event.scheduledStartDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
+                  ),
+                ),
+              ),
+            ),
+          ]);
         },
       )),
     );

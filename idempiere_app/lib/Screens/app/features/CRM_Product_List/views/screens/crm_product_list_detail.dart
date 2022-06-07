@@ -176,10 +176,154 @@ class _ProductListDetailState extends State<ProductListDetail> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: valueFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Value',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: descriptionFieldController,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: helpFieldController,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Help',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: flagVisible,
+                  child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: flagAvailable
+                            ? const Text("Available")
+                            : const Text("Not Available"),
+                        style: ButtonStyle(
+                          backgroundColor: flagAvailable
+                              ? MaterialStateProperty.all(Colors.green)
+                              : MaterialStateProperty.all(Colors.red),
+                        ),
+                      )),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: valueFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Value',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: descriptionFieldController,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: helpFieldController,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Help',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: flagVisible,
+                  child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: flagAvailable
+                            ? const Text("Available")
+                            : const Text("Not Available"),
+                        style: ButtonStyle(
+                          backgroundColor: flagAvailable
+                              ? MaterialStateProperty.all(Colors.green)
+                              : MaterialStateProperty.all(Colors.red),
+                        ),
+                      )),
+                ),
+              ],
+            );
           },
         ),
       ),

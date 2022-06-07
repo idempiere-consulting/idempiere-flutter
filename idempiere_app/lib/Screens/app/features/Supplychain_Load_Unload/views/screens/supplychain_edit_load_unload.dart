@@ -415,10 +415,328 @@ class _EditSupplychainLoadUnloadState extends State<EditSupplychainLoadUnload> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: bPartnerFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Business Partner',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: phoneFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Telefono',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: mailFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.mail_outline),
+                      border: OutlineInputBorder(),
+                      labelText: 'Email',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Agente",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllSalesRep(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    salesrepValue =
+                                        _displayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Stato Lead".tr,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadStatuses(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                value: dropdownValue,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                    value: list.value.toString(),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: nameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: bPartnerFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Business Partner',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: phoneFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Telefono',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: mailFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.mail_outline),
+                      border: OutlineInputBorder(),
+                      labelText: 'Email',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Agente",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllSalesRep(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    salesrepValue =
+                                        _displayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Stato Lead".tr,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadStatuses(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                value: dropdownValue,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                    value: list.value.toString(),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

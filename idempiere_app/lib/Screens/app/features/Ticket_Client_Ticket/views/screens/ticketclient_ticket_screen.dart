@@ -314,7 +314,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET: ${controller.trx.rowcount}")
+                          ? Text("TICKET: ".tr+"${controller.trx.rowcount}")
                           : Text("TICKET: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -547,7 +547,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET: ${controller.trx.rowcount}")
+                          ? Text("TICKET: ".tr+"${controller.trx.rowcount}")
                           : Text("TICKET: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),

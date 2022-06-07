@@ -159,10 +159,102 @@ class _EditShipmentlineState extends State<EditShipmentline> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    controller: qtyFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields),
+                      border: OutlineInputBorder(),
+                      labelText: 'Quantity Planned',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields),
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: CheckboxListTile(
+                    title: const Text('Selected'),
+                    value: checkboxState,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        checkboxState = value!;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    controller: qtyFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields),
+                      border: OutlineInputBorder(),
+                      labelText: 'Quantity Planned',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields),
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: CheckboxListTile(
+                    title: const Text('Selected'),
+                    value: checkboxState,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        checkboxState = value!;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

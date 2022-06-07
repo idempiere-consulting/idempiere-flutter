@@ -484,10 +484,388 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: documentNoFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Document N°',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: productFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: productionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Quantity in Production',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: actualFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Actual Quantity',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  overflowDirection: VerticalDirection.down,
+                  overflowButtonSpacing: 8,
+                  /* buttonPadding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20), */
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        child: const Text("Declare Finished Product"),
+                        onPressed: () async {
+                          //declareFinishedProduct();
+                          Get.defaultDialog(
+                              title: 'Quantity',
+                              content: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: qtyFieldController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9.]"))
+                                  ],
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.person_pin_outlined),
+                                    border: OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                              onConfirm: () {
+                                Get.back();
+                                declareFinishedProduct(
+                                    int.parse(qtyFieldController.text));
+                                qtyFieldController.text = "0";
+                              },
+                              onCancel: () {});
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 300,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                        ),
+                        child: const Text("Picking Components"),
+                        onPressed: () {
+                          //pickingComponents();
+                          Get.defaultDialog(
+                              title: 'Quantity',
+                              content: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: qtyFieldController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9.]"))
+                                  ],
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.person_pin_outlined),
+                                    border: OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                              onConfirm: () {
+                                Get.back();
+                                pickingComponents(
+                                    int.parse(qtyFieldController.text));
+                                qtyFieldController.text = "0";
+                              },
+                              onCancel: () {});
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 300,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.orange),
+                        ),
+                        child: const Text("Picking and Release"),
+                        onPressed: () {
+                          Get.defaultDialog(
+                              title: 'Quantity',
+                              content: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: qtyFieldController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9.]"))
+                                  ],
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.person_pin_outlined),
+                                    border: OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                              onConfirm: () {
+                                Get.back();
+                                pickingAndRelease(
+                                    int.parse(qtyFieldController.text));
+                                qtyFieldController.text = "0";
+                              },
+                              onCancel: () {});
+                          //editTask("NY");
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: documentNoFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Document N°',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: productFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: productionFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Quantity in Production',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: actualFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Actual Quantity',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  overflowDirection: VerticalDirection.down,
+                  overflowButtonSpacing: 8,
+                  /* buttonPadding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20), */
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        child: const Text("Declare Finished Product"),
+                        onPressed: () async {
+                          //declareFinishedProduct();
+                          Get.defaultDialog(
+                              title: 'Quantity',
+                              content: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: qtyFieldController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9.]"))
+                                  ],
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.person_pin_outlined),
+                                    border: OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                              onConfirm: () {
+                                Get.back();
+                                declareFinishedProduct(
+                                    int.parse(qtyFieldController.text));
+                                qtyFieldController.text = "0";
+                              },
+                              onCancel: () {});
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 300,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                        ),
+                        child: const Text("Picking Components"),
+                        onPressed: () {
+                          //pickingComponents();
+                          Get.defaultDialog(
+                              title: 'Quantity',
+                              content: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: qtyFieldController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9.]"))
+                                  ],
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.person_pin_outlined),
+                                    border: OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                              onConfirm: () {
+                                Get.back();
+                                pickingComponents(
+                                    int.parse(qtyFieldController.text));
+                                qtyFieldController.text = "0";
+                              },
+                              onCancel: () {});
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 300,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.orange),
+                        ),
+                        child: const Text("Picking and Release"),
+                        onPressed: () {
+                          Get.defaultDialog(
+                              title: 'Quantity',
+                              content: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: qtyFieldController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9.]"))
+                                  ],
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.person_pin_outlined),
+                                    border: OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                              onConfirm: () {
+                                Get.back();
+                                pickingAndRelease(
+                                    int.parse(qtyFieldController.text));
+                                qtyFieldController.text = "0";
+                              },
+                              onCancel: () {});
+                          //editTask("NY");
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
           },
         ),
       ),

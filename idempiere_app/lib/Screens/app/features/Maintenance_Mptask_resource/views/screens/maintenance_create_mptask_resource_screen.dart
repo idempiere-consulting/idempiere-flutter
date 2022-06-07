@@ -914,10 +914,828 @@ class _CreateMaintenanceMpResourceState
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Product",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = _setIdForOption(selection);
+                                    productName =
+                                        _displayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: productModelFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Model',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Type",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: DropdownButton(
+                    value: dropDownValue,
+                    style: const TextStyle(fontSize: 12.0),
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropDownValue = newValue!;
+                      });
+                    },
+                    items: tt.records!.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.value,
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: sernoFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'SerNo',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: barcodeFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Barcode',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: cartelFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Cartel',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: lotFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Lot',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: locationCodeFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'LocationCode',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: locationFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Location',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: manufacturerFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Manufacturer',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: manufacturedYearFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Manufactured Year',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: useLifeYearsFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Due Year',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Date Ordered',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateOrdered = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'First Use Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        firstUseDate = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Check Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date1 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Revision Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date2 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Testing Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date3 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: userNameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'User Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: noteFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Note',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Product",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = _setIdForOption(selection);
+                                    productName =
+                                        _displayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: productModelFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Model',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Type",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: DropdownButton(
+                    value: dropDownValue,
+                    style: const TextStyle(fontSize: 12.0),
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropDownValue = newValue!;
+                      });
+                    },
+                    items: tt.records!.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.value,
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: sernoFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'SerNo',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: barcodeFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Barcode',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: cartelFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Cartel',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: lotFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Lot',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: locationCodeFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'LocationCode',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: locationFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Location',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: manufacturerFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Manufacturer',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: manufacturedYearFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Manufactured Year',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: useLifeYearsFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Due Year',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Date Ordered',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateOrdered = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'First Use Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        firstUseDate = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Check Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date1 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Revision Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date2 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Testing Date',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date3 = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: userNameFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'User Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: noteFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_pin_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Note',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

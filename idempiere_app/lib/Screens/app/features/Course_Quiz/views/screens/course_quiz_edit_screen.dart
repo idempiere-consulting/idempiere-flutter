@@ -530,10 +530,324 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: date,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Data',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Resource".tr,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllResources(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<RRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<RRecords>(
+                                initialValue:
+                                    TextEditingValue(text: resourceName),
+                                displayStringForOption:
+                                    _rdisplayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<RRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((RRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (RRecords selection) {
+                                  setState(() {
+                                    resourceName =
+                                        _rdisplayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Business Partner",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllBusinessPartners(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<BPRecords>(
+                                initialValue: TextEditingValue(
+                                    text: businessPartnerValue),
+                                displayStringForOption:
+                                    _bPdisplayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<BPRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((BPRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (BPRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    businessPartnerValue =
+                                        _bPdisplayStringForOption(selection);
+                                  });
+
+                                  getSelectedBPLocation(selection.id!);
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: date,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Data',
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        date = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Resource".tr,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllResources(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<RRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<RRecords>(
+                                initialValue:
+                                    TextEditingValue(text: resourceName),
+                                displayStringForOption:
+                                    _rdisplayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<RRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((RRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (RRecords selection) {
+                                  setState(() {
+                                    resourceName =
+                                        _rdisplayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Business Partner",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllBusinessPartners(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<BPRecords>(
+                                initialValue: TextEditingValue(
+                                    text: businessPartnerValue),
+                                displayStringForOption:
+                                    _bPdisplayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<BPRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((BPRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (BPRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    businessPartnerValue =
+                                        _bPdisplayStringForOption(selection);
+                                  });
+
+                                  getSelectedBPLocation(selection.id!);
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

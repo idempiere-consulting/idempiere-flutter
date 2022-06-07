@@ -896,10 +896,640 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(8, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Business Partner",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(8, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllBPs(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<BPRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? Autocomplete<BPRecords>(
+                                  initialValue: TextEditingValue(
+                                      text: businessPartnerName),
+                                  displayStringForOption:
+                                      _displayStringForOption,
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    if (textEditingValue.text == '') {
+                                      return const Iterable<BPRecords>.empty();
+                                    }
+                                    return snapshot.data!
+                                        .where((BPRecords option) {
+                                      return option.name!
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(textEditingValue.text
+                                              .toLowerCase());
+                                    });
+                                  },
+                                  onSelected: (BPRecords selection) {
+                                    //debugPrint(
+                                    //'You just selected ${_displayStringForOption(selection)}');
+                                    setState(() {
+                                      businessPartnerName =
+                                          _displayStringForOption(selection);
+                                      businessPartnerId = selection.id;
+                                    });
+
+                                    //print(salesrepValue);
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(8, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "User",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(8, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllSalesRep(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? Autocomplete<Records>(
+                                  initialValue:
+                                      TextEditingValue(text: userName),
+                                  displayStringForOption:
+                                      _displayStringForOptionUser,
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    if (textEditingValue.text == '') {
+                                      return const Iterable<Records>.empty();
+                                    }
+                                    return snapshot.data!
+                                        .where((Records option) {
+                                      return option.name!
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(textEditingValue.text
+                                              .toLowerCase());
+                                    });
+                                  },
+                                  onSelected: (Records selection) {
+                                    //debugPrint(
+                                    //'You just selected ${_displayStringForOption(selection)}');
+                                    setState(() {
+                                      userName = _displayStringForOptionUser(
+                                          selection);
+                                    });
+
+                                    userId = selection.id;
+
+                                    //print(salesrepValue);
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: true,
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 1,
+                      controller: titleFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Ticket Title',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKG",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Summary of the issue',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Subject of the Scheduled Session',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Priority".tr,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton(
+                    value: dropdownValue,
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                      //print(dropdownValue);
+                    },
+                    items: dropDownList.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.id,
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Session slots currently free".tr,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllScheduledEvents(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Types>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  value: snapshot.data![0].id,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      slotDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                      value: list.id.toString(),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKG",
+                  child: IconButton(
+                      onPressed: () {
+                        attachImage();
+                      },
+                      icon: Icon(
+                        Icons.attach_file,
+                        color: image64 != "" ? Colors.green : Colors.white,
+                      )),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(8, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Business Partner",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(8, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllBPs(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<BPRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? Autocomplete<BPRecords>(
+                                  initialValue: TextEditingValue(
+                                      text: businessPartnerName),
+                                  displayStringForOption:
+                                      _displayStringForOption,
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    if (textEditingValue.text == '') {
+                                      return const Iterable<BPRecords>.empty();
+                                    }
+                                    return snapshot.data!
+                                        .where((BPRecords option) {
+                                      return option.name!
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(textEditingValue.text
+                                              .toLowerCase());
+                                    });
+                                  },
+                                  onSelected: (BPRecords selection) {
+                                    //debugPrint(
+                                    //'You just selected ${_displayStringForOption(selection)}');
+                                    setState(() {
+                                      businessPartnerName =
+                                          _displayStringForOption(selection);
+                                      businessPartnerId = selection.id;
+                                    });
+
+                                    //print(salesrepValue);
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(8, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "User",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[37], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(8, "0")
+                              .toString()[6] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllSalesRep(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? Autocomplete<Records>(
+                                  initialValue:
+                                      TextEditingValue(text: userName),
+                                  displayStringForOption:
+                                      _displayStringForOptionUser,
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    if (textEditingValue.text == '') {
+                                      return const Iterable<Records>.empty();
+                                    }
+                                    return snapshot.data!
+                                        .where((Records option) {
+                                      return option.name!
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(textEditingValue.text
+                                              .toLowerCase());
+                                    });
+                                  },
+                                  onSelected: (Records selection) {
+                                    //debugPrint(
+                                    //'You just selected ${_displayStringForOption(selection)}');
+                                    setState(() {
+                                      userName = _displayStringForOptionUser(
+                                          selection);
+                                    });
+
+                                    userId = selection.id;
+
+                                    //print(salesrepValue);
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: true,
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 1,
+                      controller: titleFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Ticket Title',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKG",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Summary of the issue',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Subject of the Scheduled Session',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Priority".tr,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton(
+                    value: dropdownValue,
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                      //print(dropdownValue);
+                    },
+                    items: dropDownList.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.id,
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Session slots currently free".tr,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllScheduledEvents(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Types>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  value: snapshot.data![0].id,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      slotDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                      value: list.id.toString(),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKG",
+                  child: IconButton(
+                      onPressed: () {
+                        attachImage();
+                      },
+                      icon: Icon(
+                        Icons.attach_file,
+                        color: image64 != "" ? Colors.green : Colors.white,
+                      )),
+                ),
+              ],
+            );
           },
         ),
       ),

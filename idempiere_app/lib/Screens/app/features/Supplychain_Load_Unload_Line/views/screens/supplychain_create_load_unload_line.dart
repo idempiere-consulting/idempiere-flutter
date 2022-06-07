@@ -955,10 +955,660 @@ class _CreateSupplychainLoadUnloadLineState
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Search by code".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    autofocus: true,
+                    onSubmitted: (String? text) {
+                      searchByCode(text!);
+                      focusNode.requestFocus();
+                    },
+                    controller: bycodeFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      //labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Search by product".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: initialValue,
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return ("${option.value}_${option.name}")
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  instAttrId = 0;
+                                  locatorId = selection.mLocatorID?.id;
+
+                                  setState(() {
+                                    if (selection.mAttributeSetID?.id != null) {
+                                      buttonVisible = true;
+                                    } else {
+                                      buttonVisible = false;
+                                    }
+                                    initialValue = TextEditingValue(
+                                        text:
+                                            selection.mLocatorID?.identifier ??
+                                                "");
+                                    productId = _setIdForOption(selection);
+                                    productName = selection.name;
+                                    nameFieldController.text = selection.name;
+                                    valueFieldController.text = selection.value;
+                                    if (selection.mAttributeSetID?.id != null) {
+                                      getInstAttr(selection.id!);
+                                    }
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Locator".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getLocators(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData && isready
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption:
+                                    _displayStringvalueForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.value!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    locatorId = _setIdForOption(selection);
+                                    locatorName = selection.value;
+                                    //nameFieldController.text = selection.name;
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: valueFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Value'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    focusNode: focusNode,
+                    controller: qtyFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    onSubmitted: (String? text) {
+                      createLoadUnloadLine();
+                    },
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Attribute Instance".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: attrFieldAvailable
+                        ? DropdownButton(
+                            value: attrValue as String,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              instAttrId = int.parse(newValue!);
+                              setState(() {
+                                attrValue = newValue;
+                              });
+                              if (kDebugMode) {
+                                print(newValue);
+                              }
+                            },
+                            items: attrList.records!
+                                .map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.mAttributeSetInstanceID
+                                              ?.identifier ??
+                                          "???",
+                                    ),
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
+                                  );
+                                })
+                                .toSet()
+                                .toList(),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  overflowDirection: VerticalDirection.down,
+                  overflowButtonSpacing: 8,
+                  children: [
+                    Visibility(
+                      visible: productId != null && buttonVisible,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        child: Text("Create Instance Attribute".tr),
+                        onPressed: () async {
+                          //declareFinishedProduct();
+                          Get.defaultDialog(
+                              title: 'Series Number'.tr,
+                              content: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: seriesNrFieldController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9]"))
+                                  ],
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.person_pin_outlined),
+                                    border: OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                              onConfirm: () {
+                                Get.back();
+                                seriesNr = seriesNrFieldController.text;
+                                createAttribute();
+                              },
+                              onCancel: () {});
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Search by code".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    autofocus: true,
+                    onSubmitted: (String? text) {
+                      searchByCode(text!);
+                      focusNode.requestFocus();
+                    },
+                    controller: bycodeFieldController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      //labelText: 'Nome',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Search by product".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: initialValue,
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return ("${option.value}_${option.name}")
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  instAttrId = 0;
+                                  locatorId = selection.mLocatorID?.id;
+
+                                  setState(() {
+                                    if (selection.mAttributeSetID?.id != null) {
+                                      buttonVisible = true;
+                                    } else {
+                                      buttonVisible = false;
+                                    }
+                                    initialValue = TextEditingValue(
+                                        text:
+                                            selection.mLocatorID?.identifier ??
+                                                "");
+                                    productId = _setIdForOption(selection);
+                                    productName = selection.name;
+                                    nameFieldController.text = selection.name;
+                                    valueFieldController.text = selection.value;
+                                    if (selection.mAttributeSetID?.id != null) {
+                                      getInstAttr(selection.id!);
+                                    }
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Locator".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getLocators(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData && isready
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption:
+                                    _displayStringvalueForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.value!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    locatorId = _setIdForOption(selection);
+                                    locatorName = selection.value;
+                                    //nameFieldController.text = selection.name;
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: valueFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Value'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    focusNode: focusNode,
+                    controller: qtyFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    onSubmitted: (String? text) {
+                      createLoadUnloadLine();
+                    },
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Attribute Instance".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: attrFieldAvailable
+                        ? DropdownButton(
+                            value: attrValue as String,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              instAttrId = int.parse(newValue!);
+                              setState(() {
+                                attrValue = newValue;
+                              });
+                              if (kDebugMode) {
+                                print(newValue);
+                              }
+                            },
+                            items: attrList.records!
+                                .map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.mAttributeSetInstanceID
+                                              ?.identifier ??
+                                          "???",
+                                    ),
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
+                                  );
+                                })
+                                .toSet()
+                                .toList(),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  overflowDirection: VerticalDirection.down,
+                  overflowButtonSpacing: 8,
+                  children: [
+                    Visibility(
+                      visible: productId != null && buttonVisible,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        child: Text("Create Instance Attribute".tr),
+                        onPressed: () async {
+                          //declareFinishedProduct();
+                          Get.defaultDialog(
+                              title: 'Series Number'.tr,
+                              content: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  controller: seriesNrFieldController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9]"))
+                                  ],
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.person_pin_outlined),
+                                    border: OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                              onConfirm: () {
+                                Get.back();
+                                seriesNr = seriesNrFieldController.text;
+                                createAttribute();
+                              },
+                              onCancel: () {});
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
           },
         ),
       ),

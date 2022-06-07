@@ -541,18 +541,19 @@ class MaintenanceMpResourceScreen
                         : const Text("RESOURCES: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
-                  /* Container(
+                  Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
-                        Get.to(const CreateMaintenanceMpResource());
+                        //Get.to(const CreateMaintenanceMpResource());
+                        controller.openResourceType();
                       },
                       icon: const Icon(
                         Icons.note_add_outlined,
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ), */
+                  ),
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -577,6 +578,46 @@ class MaintenanceMpResourceScreen
                       ),
                     ),
                   ), */
+                ],
+              ),
+              //const SizedBox(height: 5),
+              Row(
+                //mainAxisAlignment: MainAxisAlignment.,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => DropdownButton(
+                        value: controller.dropDownValue2.value,
+                        style: const TextStyle(fontSize: 12.0),
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          controller.dropDownValue2.value = newValue!;
+                          controller.getWorkOrders();
+                        },
+                        items: controller._tt2.records!.map((list) {
+                          return DropdownMenuItem<String>(
+                            child: Text(
+                              list.name.toString(),
+                            ),
+                            value: list.value,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: kSpacing),
@@ -639,82 +680,95 @@ class MaintenanceMpResourceScreen
                                         switch (controller
                                             .trx.records![index].eDIType?.id) {
                                           case "A1":
-                                            Get.toNamed(
-                                                '/MaintenanceMpResourceSheet',
-                                                arguments: {
-                                                  "surveyId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .lITSurveySheetsID
-                                                      ?.id,
-                                                  "id": controller
-                                                      .trx.records![index].id,
-                                                  "serNo": controller
-                                                          .trx
-                                                          .records![index]
-                                                          .serNo ??
-                                                      "",
-                                                  "prodId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .mProductID
-                                                      ?.id,
-                                                  "prodName": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .mProductID
-                                                      ?.identifier,
-                                                  "lot": controller
-                                                      .trx.records![index].lot,
-                                                  "location": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .locationComment,
-                                                  "locationCode": controller.trx
-                                                      .records![index].value,
-                                                  "manYear": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .manufacturedYear,
-                                                  "userName": controller.trx
-                                                      .records![index].userName,
-                                                  "serviceDate": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .serviceDate,
-                                                  "endDate": controller.trx
-                                                      .records![index].endDate,
-                                                  "manufacturer": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .manufacturer,
-                                                  "model": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .lITProductModel,
-                                                  "manufacturedYear": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .manufacturedYear,
-                                                  "purchaseDate": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .dateOrdered,
-                                                  "note": controller
-                                                      .trx.records![index].name,
-                                                  "resTypeId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .lITResourceType
-                                                      ?.id,
-                                                  "valid": controller.trx
-                                                      .records![index].isValid,
-                                                  "offlineid": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .offlineId,
-                                                  "index": index,
-                                                });
+                                            if (controller.trx.records![index]
+                                                    .offlineId ==
+                                                null) {
+                                              Get.toNamed(
+                                                  '/MaintenanceMpResourceSheet',
+                                                  arguments: {
+                                                    "surveyId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .lITSurveySheetsID
+                                                        ?.id,
+                                                    "id": controller
+                                                        .trx.records![index].id,
+                                                    "serNo": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .serNo ??
+                                                        "",
+                                                    "prodId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.id,
+                                                    "prodName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.identifier,
+                                                    "lot": controller.trx
+                                                        .records![index].lot,
+                                                    "location": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .locationComment,
+                                                    "locationCode": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .value,
+                                                    "manYear": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .manufacturedYear,
+                                                    "userName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .userName,
+                                                    "serviceDate": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .serviceDate,
+                                                    "endDate": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .endDate,
+                                                    "manufacturer": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .manufacturer,
+                                                    "model": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .lITProductModel,
+                                                    "manufacturedYear":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .manufacturedYear,
+                                                    "purchaseDate": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .dateOrdered,
+                                                    "note": controller.trx
+                                                        .records![index].name,
+                                                    "resTypeId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .lITResourceType
+                                                        ?.id,
+                                                    "valid": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .isValid,
+                                                    "offlineid": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .offlineId,
+                                                    "index": index,
+                                                  });
+                                            }
 
                                             break;
                                           case 'A2':
@@ -924,7 +978,451 @@ class MaintenanceMpResourceScreen
             ]);
           },
           desktopBuilder: (context, constraints) {
-            return const Text("WIP");
+            return Column(children: [
+              const SizedBox(height: kSpacing),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("RESOURCES: ${controller.trx.rowcount}")
+                        : const Text("RESOURCES: ")),
+                    margin: const EdgeInsets.only(left: 15),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        //Get.to(const CreateMaintenanceMpResource());
+                        controller.openResourceType();
+                      },
+                      icon: const Icon(
+                        Icons.note_add_outlined,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        //controller.syncWorkOrder();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ), */
+                ],
+              ),
+              //const SizedBox(height: 5),
+              Row(
+                //mainAxisAlignment: MainAxisAlignment.,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => DropdownButton(
+                        value: controller.dropDownValue2.value,
+                        style: const TextStyle(fontSize: 12.0),
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          controller.dropDownValue2.value = newValue!;
+                          controller.getWorkOrders();
+                        },
+                        items: controller._tt2.records!.map((list) {
+                          return DropdownMenuItem<String>(
+                            child: Text(
+                              list.name.toString(),
+                            ),
+                            value: list.value,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Visibility(
+                            visible: GetStorage().read('selectedTaskDocNo') ==
+                                controller.trx.records![index].mpOtDocumentno,
+                            child: Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  trailing: IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.timer_outlined,
+                                      color: (controller.trx.records![index]
+                                                      .lITControl2DateNext)
+                                                  ?.substring(0, 4) ==
+                                              controller.now.year.toString()
+                                          ? Colors.yellow
+                                          : (controller.trx.records![index]
+                                                          .lITControl3DateNext)
+                                                      ?.substring(0, 4) ==
+                                                  controller.now.year.toString()
+                                              ? Colors.orange
+                                              : Colors.green,
+                                    ),
+                                  ),
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: Icon(
+                                        controller.trx.records![index].eDIType
+                                                    ?.id ==
+                                                'A2'
+                                            ? Icons.grid_4x4_outlined
+                                            : Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Resource',
+                                      onPressed: () {
+                                        switch (controller
+                                            .trx.records![index].eDIType?.id) {
+                                          case "A1":
+                                            if (controller.trx.records![index]
+                                                    .offlineId ==
+                                                null) {
+                                              Get.toNamed(
+                                                  '/MaintenanceMpResourceSheet',
+                                                  arguments: {
+                                                    "surveyId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .lITSurveySheetsID
+                                                        ?.id,
+                                                    "id": controller
+                                                        .trx.records![index].id,
+                                                    "serNo": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .serNo ??
+                                                        "",
+                                                    "prodId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.id,
+                                                    "prodName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.identifier,
+                                                    "lot": controller.trx
+                                                        .records![index].lot,
+                                                    "location": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .locationComment,
+                                                    "locationCode": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .value,
+                                                    "manYear": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .manufacturedYear,
+                                                    "userName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .userName,
+                                                    "serviceDate": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .serviceDate,
+                                                    "endDate": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .endDate,
+                                                    "manufacturer": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .manufacturer,
+                                                    "model": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .lITProductModel,
+                                                    "manufacturedYear":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .manufacturedYear,
+                                                    "purchaseDate": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .dateOrdered,
+                                                    "note": controller.trx
+                                                        .records![index].name,
+                                                    "resTypeId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .lITResourceType
+                                                        ?.id,
+                                                    "valid": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .isValid,
+                                                    "offlineid": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .offlineId,
+                                                    "index": index,
+                                                  });
+                                            }
+
+                                            break;
+                                          case 'A2':
+                                            Get.toNamed(
+                                                '/MaintenanceMpResourceFireExtinguisherGrid');
+                                            break;
+                                          default:
+                                        }
+                                        /* Get.to(
+                                            const EditMaintenanceMpResource(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "productName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mProductID!
+                                                  .identifier,
+                                              "productId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mProductID!
+                                                  .id,
+                                              "name": controller
+                                                  .trx.records![index].name,
+                                              "SerNo": controller
+                                                  .trx.records![index].serNo,
+                                              "Description": controller.trx
+                                                  .records![index].description,
+                                              "date3": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl3DateFrom,
+                                              "date2": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl2DateFrom,
+                                              "date1": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl1DateFrom,
+                                              "offlineid": controller.trx
+                                                  .records![index].offlineId,
+                                              "index": index,
+                                            }); */
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.trx.records![index].mProductID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(
+                                          Icons.settings_input_component),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .resourceType?.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(children: [
+                                          const Text('Quantity: '),
+                                          Text(
+                                              "${controller.trx.records![index].resourceQty}"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Note: '),
+                                          Text(controller
+                                                  .trx.records![index].name ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('SerNo: '),
+                                          Text(controller
+                                                  .trx.records![index].serNo ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Descrizione: '),
+                                          Text(controller.trx.records![index]
+                                                  .description ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Location Code: '),
+                                          Text(controller
+                                                  .trx.records![index].value ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Check Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl1DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Next Check Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl1DateNext ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Revision Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Next Revision Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl2DateNext ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Testing Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateFrom ??
+                                              "??"),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Next Testing Date: '),
+                                          Text(controller.trx.records![index]
+                                                  .lITControl3DateNext ??
+                                              "??"),
+                                        ]),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .eDIType
+                                                  ?.id ==
+                                              "A2",
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  tooltip: 'Check',
+                                                  onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
+                                                    controller
+                                                        .editWorkOrderResourceDateCheck(
+                                                            isConnected, index);
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.content_paste),
+                                                ),
+                                                IconButton(
+                                                  tooltip: 'Revision',
+                                                  onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
+                                                    controller
+                                                        .editWorkOrderResourceDateRevision(
+                                                            isConnected, index);
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.search),
+                                                ),
+                                                IconButton(
+                                                  tooltip: 'Testing',
+                                                  onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
+                                                    controller
+                                                        .editWorkOrderResourceDateTesting(
+                                                            isConnected, index);
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.gavel_sharp),
+                                                ),
+                                              ]),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);
           },
         ),
       ),

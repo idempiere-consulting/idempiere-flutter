@@ -935,10 +935,668 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                /* const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKG",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Summary of the issue',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Subject of the Scheduled Session',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Priority",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton(
+                    value: dropdownValue,
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                      //print(dropdownValue);
+                    },
+                    items: dropDownList.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.id,
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Session slots currently free",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllScheduledEvents(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Types>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  value: snapshot.data![0].id,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      slotDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                      value: list.id.toString(),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ), */
+                Visibility(
+                  visible: ticketTypeValue == "HRG",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Description',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRH" || ticketTypeValue == "HRI",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'From',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateFrom = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Date',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateFrom = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      timeLabelText: 'Start Time',
+                      icon: const Icon(Icons.access_time),
+                      onChanged: (val) {
+                        setState(() {
+                          timeStart = val;
+                        });
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      timeLabelText: 'End Time',
+                      icon: const Icon(Icons.access_time),
+                      onChanged: (val) {
+                        setState(() {
+                          timeEnd = val;
+                        });
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRH" || ticketTypeValue == "HRI",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'To',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateTo = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRI",
+                  child: IconButton(
+                      onPressed: () {
+                        attachImage();
+                      },
+                      icon: const Icon(Icons.attach_file)),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                /* const SizedBox(
+                  height: 10,
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKG",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Summary of the issue',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Subject of the Scheduled Session',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: const Align(
+                    child: Text(
+                      "Priority",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton(
+                    value: dropdownValue,
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                      //print(dropdownValue);
+                    },
+                    items: dropDownList.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.id,
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Align(
+                      child: Text(
+                        "Session slots currently free",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "TKC",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllScheduledEvents(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Types>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  value: snapshot.data![0].id,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      slotDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                      value: list.id.toString(),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ), */
+                Visibility(
+                  visible: ticketTypeValue == "HRG",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      maxLines: 5,
+                      controller: nameFieldController,
+                      decoration: const InputDecoration(
+                        //prefixIcon: Icon(Icons.person_outlined),
+                        border: OutlineInputBorder(),
+                        labelText: 'Description',
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRH" || ticketTypeValue == "HRI",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'From',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateFrom = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Date',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateFrom = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      timeLabelText: 'Start Time',
+                      icon: const Icon(Icons.access_time),
+                      onChanged: (val) {
+                        setState(() {
+                          timeStart = val;
+                        });
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.time,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      timeLabelText: 'End Time',
+                      icon: const Icon(Icons.access_time),
+                      onChanged: (val) {
+                        setState(() {
+                          timeEnd = val;
+                        });
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRH" || ticketTypeValue == "HRI",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'To',
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateTo = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRI",
+                  child: IconButton(
+                      onPressed: () {
+                        attachImage();
+                      },
+                      icon: const Icon(Icons.attach_file)),
+                ),
+              ],
+            );
           },
         ),
       ),

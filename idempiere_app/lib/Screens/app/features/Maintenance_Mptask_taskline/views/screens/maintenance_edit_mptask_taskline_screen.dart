@@ -264,10 +264,82 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text("Stato Completamento"),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton(
+                    value: dropdownValue,
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                      //print(dropdownValue);
+                    },
+                    items: dropDownList.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.id,
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text("Stato Completamento"),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton(
+                    value: dropdownValue,
+                    elevation: 16,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                      //print(dropdownValue);
+                    },
+                    items: dropDownList.map((list) {
+                      return DropdownMenuItem<String>(
+                        child: Text(
+                          list.name.toString(),
+                        ),
+                        value: list.id,
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

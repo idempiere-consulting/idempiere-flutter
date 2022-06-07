@@ -697,11 +697,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "Search by code".tr,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
+                      "Search by code",
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -723,11 +723,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "Search by product".tr,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
+                      "Search by product",
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -791,10 +791,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.wallet_travel),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Product Value'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.wallet_travel),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Value',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -804,10 +804,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: TextField(
                     readOnly: true,
                     controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.wallet_travel),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Product Name'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.wallet_travel),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Name',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -821,10 +821,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Quantity'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields_rounded),
+                      border: OutlineInputBorder(),
+                      labelText: 'Quantity',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -838,10 +838,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Price'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields_rounded),
+                      border: OutlineInputBorder(),
+                      labelText: 'Price',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -850,10 +850,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   visible: attrFieldVisible,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: Align(
+                    child: const Align(
                       child: Text(
-                        "Attribute Instance".tr,
-                        style: const TextStyle(fontSize: 12),
+                        "Attribute Instance",
+                        style: TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -1043,10 +1043,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.wallet_travel),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Product Value'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.wallet_travel),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Value',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1056,10 +1056,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: TextField(
                     readOnly: true,
                     controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.wallet_travel),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Product Name'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.wallet_travel),
+                      border: OutlineInputBorder(),
+                      labelText: 'Product Name',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1073,10 +1073,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Quantity'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields_rounded),
+                      border: OutlineInputBorder(),
+                      labelText: 'Quantity',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1090,10 +1090,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Price'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.text_fields_rounded),
+                      border: OutlineInputBorder(),
+                      labelText: 'Price',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1102,10 +1102,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   visible: attrFieldVisible,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: Align(
+                    child: const Align(
                       child: Text(
-                        "Attribute Instance".tr,
-                        style: const TextStyle(fontSize: 12),
+                        "Attribute Instance",
+                        style: TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),

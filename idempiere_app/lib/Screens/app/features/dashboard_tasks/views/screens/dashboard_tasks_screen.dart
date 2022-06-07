@@ -153,7 +153,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Lead'.tr,
                                     onPressed: () {
                                       var formatter = DateFormat('yyyy-MM-dd');
 
@@ -251,8 +251,8 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Business Partner: ",
+                                          Text(
+                                            "Business Partner: ".tr,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -268,8 +268,8 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Description: ",
+                                          Text(
+                                            "Description: ".tr,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -295,138 +295,458 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
             ]);
           },
           tabletBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 950) ? 6 : 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                      _buildHeader(
-                          onPressedMenu: () =>
-                              Scaffold.of(context).openDrawer()),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(
-                        axis: (constraints.maxWidth < 950)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        headerAxis: (constraints.maxWidth < 850)
-                            ? Axis.vertical
-                            : Axis.horizontal,
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount: (constraints.maxWidth < 950)
-                            ? 6
-                            : (constraints.maxWidth < 1100)
-                                ? 3
-                                : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
+            return Column(children: [
+              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+              _buildHeader(
+                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
+              const SizedBox(height: kSpacing / 2),
+              const Divider(),
+              _buildProfile(data: controller.getProfil()),
+              const SizedBox(height: kSpacing),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("In Progress: ".tr+"${controller.wpCount.value}")
+                        : Text("In Progress: ".tr)),
+                    margin: const EdgeInsets.only(left: 15),
                   ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing * (kIsWeb ? 0.5 : 1.5)),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateDashboardTasks());
+                      },
+                      icon: const Icon(
+                        Icons.add_task,
+                        color: Colors.lightBlue,
                       ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
+                    ),
                   ),
-                )
-              ],
-            );
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getLeads();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ), */
+                ],
+              ),
+              const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                    tooltip: 'Edit Lead'.tr,
+                                    onPressed: () {
+                                      var formatter = DateFormat('yyyy-MM-dd');
+
+                                      var startDate = DateTime.parse(controller
+                                          .trx
+                                          .records![index]
+                                          .jPToDoScheduledStartDate!);
+
+                                      //log("info button pressed");
+                                      Get.to(const DashboardTasksEdit(),
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "name": controller
+                                                    .trx.records![index].name ??
+                                                "",
+                                            "user": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .aDUserID
+                                                    ?.identifier ??
+                                                "",
+                                            "status": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .jPToDoStatus
+                                                    ?.identifier ??
+                                                "",
+                                            "statusId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .jPToDoStatus
+                                                    ?.id ??
+                                                "",
+                                            "description": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                "",
+                                            "startDate":
+                                                formatter.format(startDate),
+                                            "startTime": controller
+                                                .trx
+                                                .records![index]
+                                                .jPToDoScheduledStartTime,
+                                            "endTime": controller
+                                                .trx
+                                                .records![index]
+                                                .jPToDoScheduledEndTime,
+                                            "qty": controller
+                                                .trx.records![index].qty,
+                                          });
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Row(
+                                  children: <Widget>[
+                                    const Icon(
+                                      Icons.timer,
+                                    ),
+                                    Text(
+                                      " ${controller.trx.records![index].jPToDoScheduledStartTime!.substring(0, 5)}",
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.timelapse,
+                                    color: controller.trx.records![index]
+                                                .jPToDoStatus!.id ==
+                                            "WP"
+                                        ? Colors.yellow
+                                        : controller.trx.records![index]
+                                                    .jPToDoStatus!.id ==
+                                                "CO"
+                                            ? Colors.green
+                                            : Colors.red,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Business Partner: ".tr,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Description: ".tr,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);
           },
           desktopBuilder: (context, constraints) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(kBorderRadius),
-                        bottomRight: Radius.circular(kBorderRadius),
-                      ),
-                      child: _Sidebar(data: controller.getSelectedProject())),
-                ),
-                Flexible(
-                  flex: 9,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing),
-                      _buildHeader(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildProgress(),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildTaskOverview(
-                        data: controller.getAllTask(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing * 2),
-                      _buildActiveProject(
-                        data: controller.getActiveProject(),
-                        crossAxisCount: 6,
-                        crossAxisCellCount:
-                            (constraints.maxWidth < 1360) ? 3 : 2,
-                      ),
-                      const SizedBox(height: kSpacing),
-                    ],
+            return Column(children: [
+              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+              _buildHeader(
+                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
+              const SizedBox(height: kSpacing / 2),
+              const Divider(),
+              _buildProfile(data: controller.getProfil()),
+              const SizedBox(height: kSpacing),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("In Progress: ".tr+"${controller.wpCount.value}")
+                        : Text("In Progress: ".tr)),
+                    margin: const EdgeInsets.only(left: 15),
                   ),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing / 2),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildTeamMember(data: controller.getMember()),
-                      const SizedBox(height: kSpacing),
-                      Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: kSpacing),
-                        child: GetPremiumCard(onPressed: () {}),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateDashboardTasks());
+                      },
+                      icon: const Icon(
+                        Icons.add_task,
+                        color: Colors.lightBlue,
                       ),
-                      const SizedBox(height: kSpacing),
-                      const Divider(thickness: 1),
-                      const SizedBox(height: kSpacing),
-                      _buildRecentMessages(data: controller.getChatting()),
-                    ],
+                    ),
                   ),
-                ),
-              ],
-            );
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getLeads();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ), */
+                ],
+              ),
+              const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                    tooltip: 'Edit Lead'.tr,
+                                    onPressed: () {
+                                      var formatter = DateFormat('yyyy-MM-dd');
+
+                                      var startDate = DateTime.parse(controller
+                                          .trx
+                                          .records![index]
+                                          .jPToDoScheduledStartDate!);
+
+                                      //log("info button pressed");
+                                      Get.to(const DashboardTasksEdit(),
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "name": controller
+                                                    .trx.records![index].name ??
+                                                "",
+                                            "user": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .aDUserID
+                                                    ?.identifier ??
+                                                "",
+                                            "status": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .jPToDoStatus
+                                                    ?.identifier ??
+                                                "",
+                                            "statusId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .jPToDoStatus
+                                                    ?.id ??
+                                                "",
+                                            "description": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                "",
+                                            "startDate":
+                                                formatter.format(startDate),
+                                            "startTime": controller
+                                                .trx
+                                                .records![index]
+                                                .jPToDoScheduledStartTime,
+                                            "endTime": controller
+                                                .trx
+                                                .records![index]
+                                                .jPToDoScheduledEndTime,
+                                            "qty": controller
+                                                .trx.records![index].qty,
+                                          });
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Row(
+                                  children: <Widget>[
+                                    const Icon(
+                                      Icons.timer,
+                                    ),
+                                    Text(
+                                      " ${controller.trx.records![index].jPToDoScheduledStartTime!.substring(0, 5)}",
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.timelapse,
+                                    color: controller.trx.records![index]
+                                                .jPToDoStatus!.id ==
+                                            "WP"
+                                        ? Colors.yellow
+                                        : controller.trx.records![index]
+                                                    .jPToDoStatus!.id ==
+                                                "CO"
+                                            ? Colors.green
+                                            : Colors.red,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Business Partner: ".tr,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Description: ".tr,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);
           },
         ),
       ),
