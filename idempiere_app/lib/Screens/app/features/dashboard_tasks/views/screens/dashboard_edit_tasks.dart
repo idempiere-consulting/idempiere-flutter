@@ -71,6 +71,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
       );
       return true;
     } else {
+      print(response.body);
       Get.snackbar(
         "Errore!",
         "Record non aggiornato",

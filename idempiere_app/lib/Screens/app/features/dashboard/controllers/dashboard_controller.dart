@@ -18,6 +18,9 @@ class DashboardController extends GetxController {
   var filters = ["Sign Entry", "Sign Exit" /* , "Team" */];
   var filterCount = 0;
 
+  var workStartFlag = false;
+  var workStartHour = "N/A".obs;
+
   //late final NextCloudClient client;
 
   @override
@@ -61,7 +64,7 @@ class DashboardController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate eq \'$formattedDate\'');
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate ge \'$formattedDate 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedDate 23:59:59\'&\$orderby=JP_ToDo_ScheduledStartDate asc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -76,6 +79,14 @@ class DashboardController extends GetxController {
           EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       for (var i = 0; i < json.rowcount!; i++) {
+        //print(json.records![i].jPToDoScheduledStartDate);
+        if (workStartFlag == false &&
+            json.records![i].jPToDoStatus!.id != "NY") {
+          DateFormat df = DateFormat('HH:mm');
+          var date = DateTime.parse(json.records![i].jPToDoScheduledStartDate!);
+          workStartFlag = true;
+          workStartHour.value = df.format(date);
+        }
         switch (json.records![i].jPToDoStatus!.id) {
           case "NY":
             notDoneCount.value++;
