@@ -31,6 +31,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
       "Name": nameFieldController.text,
       "Description": descriptionFieldController.text,
       "Qty": 1.0,
+      "C_BPartner_ID": {"id": businessPartnerId},
       "JP_ToDo_ScheduledStartDate": "${date}T$startTime",
       "JP_ToDo_ScheduledEndDate": "${date}T$startTime",
       "JP_ToDo_ScheduledStartTime": startTime,
@@ -134,6 +135,34 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
       nameFieldController.text =
           json["records"][0]['C_Project_ID']['identifier'] ?? "";
       projectId = json["records"][0]['C_Project_ID']['id'] ?? 0;
+      getProjectBP();
+    }
+  }
+
+  Future<void> getProjectBP() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/c_project?\$filter= C_Project_ID eq $projectId');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"] ?? 0;
+    } else {
+      if (kDebugMode) {
+        print(utf8.decode(response.bodyBytes));
+      }
     }
   }
 
@@ -180,6 +209,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
   String dropdownValue = "";
   String startTime = "";
   int projectId = 0;
+  int businessPartnerId = 0;
   late List<Types> dropDownList;
   //var adUserId;
 

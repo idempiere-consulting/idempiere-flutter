@@ -92,6 +92,27 @@ class DashboardScreen extends GetView<DashboardController> {
                     inprogress: controller.inProgressCount.value,
                     notYetStarted: controller.notDoneCount.value,
                   )),
+
+              const SizedBox(height: kSpacing * 1),
+
+              Obx(
+                () => Visibility(
+                  visible: controller.workStartHour.value != "N/A",
+                  child: ElevatedButton.icon(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.green)),
+                    onPressed: () {},
+                    icon: const Icon(
+                      // <-- Icon
+                      Icons.pending_actions_rounded,
+                      size: 24.0,
+                    ),
+                    label: Text(
+                        'You Started at ${controller.workStartHour.value}'), // <-- Text
+                  ),
+                ),
+              ),
               //  const SizedBox(height: kSpacing),
               //  _buildTeamMember(data: controller.getMember()),
               //  const SizedBox(height: kSpacing),
@@ -99,7 +120,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-              const SizedBox(height: kSpacing * 2),
+              const SizedBox(height: kSpacing * 1),
               _buildTaskOverview(
                 data: controller.getAllTask(),
                 headerAxis: Axis.vertical,
@@ -136,6 +157,26 @@ class DashboardScreen extends GetView<DashboardController> {
                     inprogress: controller.inProgressCount.value,
                     notYetStarted: controller.notDoneCount.value,
                   )),
+              const SizedBox(height: kSpacing * 1),
+
+              Obx(
+                () => Visibility(
+                  visible: controller.workStartHour.value != "N/A",
+                  child: ElevatedButton.icon(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.green)),
+                    onPressed: () {},
+                    icon: const Icon(
+                      // <-- Icon
+                      Icons.pending_actions_rounded,
+                      size: 24.0,
+                    ),
+                    label: Text(
+                        'You Started at ${controller.workStartHour.value}'), // <-- Text
+                  ),
+                ),
+              ),
               //  const SizedBox(height: kSpacing),
               //  _buildTeamMember(data: controller.getMember()),
               //  const SizedBox(height: kSpacing),
@@ -143,7 +184,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-              const SizedBox(height: kSpacing * 2),
+              const SizedBox(height: kSpacing * 1),
               _buildTaskOverview(
                 data: controller.getAllTask(),
                 headerAxis: Axis.vertical,
@@ -180,6 +221,26 @@ class DashboardScreen extends GetView<DashboardController> {
                     inprogress: controller.inProgressCount.value,
                     notYetStarted: controller.notDoneCount.value,
                   )),
+              const SizedBox(height: kSpacing * 1),
+
+              Obx(
+                () => Visibility(
+                  visible: controller.workStartHour.value != "N/A",
+                  child: ElevatedButton.icon(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.green)),
+                    onPressed: () {},
+                    icon: const Icon(
+                      // <-- Icon
+                      Icons.pending_actions_rounded,
+                      size: 24.0,
+                    ),
+                    label: Text(
+                        'You Started at ${controller.workStartHour.value}'), // <-- Text
+                  ),
+                ),
+              ),
               //  const SizedBox(height: kSpacing),
               //  _buildTeamMember(data: controller.getMember()),
               //  const SizedBox(height: kSpacing),
@@ -187,7 +248,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-              const SizedBox(height: kSpacing * 2),
+              const SizedBox(height: kSpacing * 1),
               _buildTaskOverview(
                 data: controller.getAllTask(),
                 headerAxis: Axis.vertical,
