@@ -181,7 +181,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                 onPressed: () {
                   Get.defaultDialog(
                     title: "Record deletion".tr,
-                    middleText: "Are you sure you want to delete the record?".tr,
+                    middleText:
+                        "Are you sure you want to delete the record?".tr,
                     backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
                     //titleStyle: TextStyle(color: Colors.white),
                     //middleTextStyle: TextStyle(color: Colors.white),
@@ -230,8 +231,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     child: TextField(
                       controller: nameFieldController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
                         labelText: 'Nome'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
@@ -242,8 +243,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     child: TextField(
                       controller: descriptionFieldController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person_pin_outlined),
-                        border: OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
                         labelText: 'Descrizione'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
@@ -384,8 +385,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     child: TextField(
                       controller: nameFieldController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
                         labelText: 'Nome'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
@@ -396,8 +397,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     child: TextField(
                       controller: descriptionFieldController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person_pin_outlined),
-                        border: OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
                         labelText: 'Descrizione'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
@@ -538,8 +539,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     child: TextField(
                       controller: nameFieldController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
                         labelText: 'Nome'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
@@ -550,8 +551,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     child: TextField(
                       controller: descriptionFieldController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person_pin_outlined),
-                        border: OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
                         labelText: 'Descrizione'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 library dashboard;
 
 //import 'dart:convert';
@@ -12,7 +14,6 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_c
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Lead/models/purchase_orderpo_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';

@@ -81,7 +81,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET: ".tr+"${controller.trx.rowcount}")
+                          ? Text("TICKET: ".tr + "${controller.trx.rowcount}")
                           : Text("TICKET: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -229,7 +229,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           children: [
                                             Text(
                                               "Type: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -246,7 +246,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           children: [
                                             Text(
                                               "Summary: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -262,7 +262,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           children: [
                                             Text(
                                               "Priority: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -314,7 +314,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET: ".tr+"${controller.trx.rowcount}")
+                          ? Text("TICKET: ".tr + "${controller.trx.rowcount}")
                           : Text("TICKET: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -462,7 +462,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           children: [
                                             Text(
                                               "Type: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -479,7 +479,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           children: [
                                             Text(
                                               "Summary: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -495,7 +495,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           children: [
                                             Text(
                                               "Priority: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -547,7 +547,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET: ".tr+"${controller.trx.rowcount}")
+                          ? Text("TICKET: ".tr + "${controller.trx.rowcount}")
                           : Text("TICKET: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -695,7 +695,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           children: [
                                             Text(
                                               "Type: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -712,7 +712,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           children: [
                                             Text(
                                               "Summary: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -728,7 +728,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           children: [
                                             Text(
                                               "Priority: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(

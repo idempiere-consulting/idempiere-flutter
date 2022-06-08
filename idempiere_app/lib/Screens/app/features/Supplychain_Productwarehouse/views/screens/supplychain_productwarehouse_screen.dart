@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 library dashboard;
 
 //import 'dart:convert';
@@ -10,7 +12,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
@@ -145,7 +146,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Contatto: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
@@ -157,7 +158,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Prodotto: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
@@ -169,7 +170,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Importo Atteso: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text("€" +
@@ -182,7 +183,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Agente: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
@@ -282,7 +283,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Contatto: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
@@ -294,7 +295,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Prodotto: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
@@ -306,7 +307,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Importo Atteso: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text("€" +
@@ -319,7 +320,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Agente: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
@@ -419,7 +420,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Contatto: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
@@ -431,7 +432,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Prodotto: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
@@ -443,7 +444,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Importo Atteso: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text("€" +
@@ -456,7 +457,7 @@ class SupplychainProductwarehouseScreen
                                       children: [
                                         Text(
                                           "Agente: ".tr,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]

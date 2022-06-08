@@ -22,8 +22,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         return Dialog(
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children:  [
-              CircularProgressIndicator(),
+            children: [
+              const CircularProgressIndicator(),
               Text("Syncing data with iDempiere...".tr),
             ],
           ),

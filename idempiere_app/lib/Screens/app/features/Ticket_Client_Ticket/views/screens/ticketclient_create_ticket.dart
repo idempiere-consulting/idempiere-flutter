@@ -793,7 +793,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   child: Align(
                     child: Text(
                       "Priority".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -834,7 +834,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: Align(
                       child: Text(
                         "Session slots currently free".tr,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -1111,7 +1111,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   child: Align(
                     child: Text(
                       "Priority".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -1152,7 +1152,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: Align(
                       child: Text(
                         "Session slots currently free".tr,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -1429,7 +1429,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   child: Align(
                     child: Text(
                       "Priority".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -1470,7 +1470,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: Align(
                       child: Text(
                         "Session slots currently free".tr,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),

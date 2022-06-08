@@ -368,7 +368,7 @@ class _EditSupplychainLoadUnloadState extends State<EditSupplychainLoadUnload> {
                   child: Align(
                     child: Text(
                       "Stato Lead".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -530,7 +530,7 @@ class _EditSupplychainLoadUnloadState extends State<EditSupplychainLoadUnload> {
                   child: Align(
                     child: Text(
                       "Stato Lead".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -692,7 +692,7 @@ class _EditSupplychainLoadUnloadState extends State<EditSupplychainLoadUnload> {
                   child: Align(
                     child: Text(
                       "Stato Lead".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),

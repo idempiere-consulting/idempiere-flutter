@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 library dashboard;
 
 //import 'dart:convert';
@@ -11,7 +13,6 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/models/resource_assignment_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
@@ -79,7 +80,7 @@ class TicketResourceAssignmentScreen
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("HOUR: ".tr+"${controller.trx.rowcount}")
+                        ? Text("HOUR: ".tr + "${controller.trx.rowcount}")
                         : Text("HOUR: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
@@ -317,7 +318,7 @@ class TicketResourceAssignmentScreen
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("HOUR: ".tr+"${controller.trx.rowcount}")
+                        ? Text("HOUR: ".tr + "${controller.trx.rowcount}")
                         : Text("HOUR: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
@@ -555,7 +556,7 @@ class TicketResourceAssignmentScreen
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("HOUR: ".tr+"${controller.trx.rowcount}")
+                        ? Text("HOUR: ".tr + "${controller.trx.rowcount}")
                         : Text("HOUR: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),

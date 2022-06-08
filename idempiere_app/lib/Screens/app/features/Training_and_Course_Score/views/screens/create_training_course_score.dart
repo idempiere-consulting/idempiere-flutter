@@ -299,7 +299,7 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                   child: Align(
                     child: Text(
                       "Status Lead".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -513,7 +513,7 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                   child: Align(
                     child: Text(
                       "Status Lead".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -727,7 +727,7 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                   child: Align(
                     child: Text(
                       "Status Lead".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),

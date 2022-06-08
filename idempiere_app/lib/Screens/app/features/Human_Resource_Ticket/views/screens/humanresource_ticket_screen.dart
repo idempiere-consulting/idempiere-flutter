@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 library dashboard;
 
 //import 'dart:convert';
@@ -14,7 +16,6 @@ import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/t
 import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_chat_ticket.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_image_ticket.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';

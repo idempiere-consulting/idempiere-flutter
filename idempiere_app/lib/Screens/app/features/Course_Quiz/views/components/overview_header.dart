@@ -19,7 +19,7 @@ class _OverviewHeader extends StatelessWidget {
               children: [
                 Text(
                   "Task Overview".tr,
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const Spacer(),
                 ..._listButton(
@@ -36,7 +36,7 @@ class _OverviewHeader extends StatelessWidget {
               children: [
                 Text(
                   "Task Overview".tr,
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 10),
                 SingleChildScrollView(

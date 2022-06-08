@@ -413,7 +413,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   child: Align(
                     child: Text(
                       "Resource".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -573,7 +573,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   child: Align(
                     child: Text(
                       "Resource".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -733,7 +733,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   child: Align(
                     child: Text(
                       "Resource".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 library dashboard;
 
 //import 'dart:convert';
@@ -12,7 +14,6 @@ import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.da
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_create_tasks.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_edit_tasks.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
@@ -253,7 +254,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                         children: [
                                           Text(
                                             "Business Partner: ".tr,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Expanded(
@@ -270,7 +271,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                         children: [
                                           Text(
                                             "Description: ".tr,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Expanded(
@@ -307,7 +308,8 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("In Progress: ".tr+"${controller.wpCount.value}")
+                        ? Text(
+                            "In Progress: ".tr + "${controller.wpCount.value}")
                         : Text("In Progress: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
@@ -480,7 +482,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                         children: [
                                           Text(
                                             "Business Partner: ".tr,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Expanded(
@@ -497,7 +499,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                         children: [
                                           Text(
                                             "Description: ".tr,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Expanded(
@@ -534,7 +536,8 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("In Progress: ".tr+"${controller.wpCount.value}")
+                        ? Text(
+                            "In Progress: ".tr + "${controller.wpCount.value}")
                         : Text("In Progress: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
@@ -707,7 +710,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                         children: [
                                           Text(
                                             "Business Partner: ".tr,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Expanded(
@@ -724,7 +727,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                         children: [
                                           Text(
                                             "Description: ".tr,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Expanded(

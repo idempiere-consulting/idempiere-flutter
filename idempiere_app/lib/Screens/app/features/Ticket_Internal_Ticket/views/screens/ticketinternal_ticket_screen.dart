@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 library dashboard;
 
 //import 'dart:convert';
@@ -13,7 +15,6 @@ import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/t
 import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_chat_ticket.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_image_ticket.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
@@ -86,7 +87,7 @@ class TicketInternalTicketScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKETS: ".tr+"${controller.trx.rowcount}")
+                          ? Text("TICKETS: ".tr + "${controller.trx.rowcount}")
                           : Text("TICKETS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -223,7 +224,7 @@ class TicketInternalTicketScreen
                                           children: [
                                             Text(
                                               "Status: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -240,7 +241,7 @@ class TicketInternalTicketScreen
                                           children: [
                                             Text(
                                               "Summary: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -256,7 +257,7 @@ class TicketInternalTicketScreen
                                           children: [
                                             Text(
                                               "Priority: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -315,7 +316,7 @@ class TicketInternalTicketScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKETS: ".tr+"${controller.trx.rowcount}")
+                          ? Text("TICKETS: ".tr + "${controller.trx.rowcount}")
                           : Text("TICKETS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -452,7 +453,7 @@ class TicketInternalTicketScreen
                                           children: [
                                             Text(
                                               "Status: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -469,7 +470,7 @@ class TicketInternalTicketScreen
                                           children: [
                                             Text(
                                               "Summary: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -485,7 +486,7 @@ class TicketInternalTicketScreen
                                           children: [
                                             Text(
                                               "Priority: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -544,7 +545,7 @@ class TicketInternalTicketScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKETS: ".tr+"${controller.trx.rowcount}")
+                          ? Text("TICKETS: ".tr + "${controller.trx.rowcount}")
                           : Text("TICKETS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -681,7 +682,7 @@ class TicketInternalTicketScreen
                                           children: [
                                             Text(
                                               "Status: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -698,7 +699,7 @@ class TicketInternalTicketScreen
                                           children: [
                                             Text(
                                               "Summary: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -714,7 +715,7 @@ class TicketInternalTicketScreen
                                           children: [
                                             Text(
                                               "Priority: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(

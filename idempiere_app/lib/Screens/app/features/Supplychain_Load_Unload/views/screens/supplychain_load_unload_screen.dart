@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 library dashboard;
 
 //import 'dart:convert';
@@ -11,7 +13,6 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/models/loadunloadjson.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/views/screens/supplychain_create_load_unload.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
@@ -260,7 +261,7 @@ class SupplychainLoadUnloadScreen
                                           children: [
                                             Text(
                                               "Activity: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -272,7 +273,7 @@ class SupplychainLoadUnloadScreen
                                           children: [
                                             Text(
                                               "Warehouse: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -302,7 +303,8 @@ class SupplychainLoadUnloadScreen
                                                   Get.defaultDialog(
                                                     title: 'Complete Action'.tr,
                                                     content: Text(
-                                                        "Are you sure you want to complete the record?".tr),
+                                                        "Are you sure you want to complete the record?"
+                                                            .tr),
                                                     onCancel: () {},
                                                     onConfirm: () async {
                                                       Get.back();
@@ -345,7 +347,8 @@ class SupplychainLoadUnloadScreen
                                                         //print(response.body);
                                                         Get.snackbar(
                                                           "Error!".tr,
-                                                          "The record was not completed".tr,
+                                                          "The record was not completed"
+                                                              .tr,
                                                           icon: const Icon(
                                                             Icons.error,
                                                             color: Colors.red,
@@ -514,7 +517,7 @@ class SupplychainLoadUnloadScreen
                                           children: [
                                             Text(
                                               "Activity: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -526,7 +529,7 @@ class SupplychainLoadUnloadScreen
                                           children: [
                                             Text(
                                               "Warehouse: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -556,7 +559,8 @@ class SupplychainLoadUnloadScreen
                                                   Get.defaultDialog(
                                                     title: 'Complete Action'.tr,
                                                     content: Text(
-                                                        "Are you sure you want to complete the record?".tr),
+                                                        "Are you sure you want to complete the record?"
+                                                            .tr),
                                                     onCancel: () {},
                                                     onConfirm: () async {
                                                       Get.back();
@@ -599,7 +603,8 @@ class SupplychainLoadUnloadScreen
                                                         //print(response.body);
                                                         Get.snackbar(
                                                           "Error!".tr,
-                                                          "The record was not completed".tr,
+                                                          "The record was not completed"
+                                                              .tr,
                                                           icon: const Icon(
                                                             Icons.error,
                                                             color: Colors.red,
@@ -768,7 +773,7 @@ class SupplychainLoadUnloadScreen
                                           children: [
                                             Text(
                                               "Activity: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -780,7 +785,7 @@ class SupplychainLoadUnloadScreen
                                           children: [
                                             Text(
                                               "Warehouse: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -810,7 +815,8 @@ class SupplychainLoadUnloadScreen
                                                   Get.defaultDialog(
                                                     title: 'Complete Action'.tr,
                                                     content: Text(
-                                                        "Are you sure you want to complete the record?".tr),
+                                                        "Are you sure you want to complete the record?"
+                                                            .tr),
                                                     onCancel: () {},
                                                     onConfirm: () async {
                                                       Get.back();
@@ -853,7 +859,8 @@ class SupplychainLoadUnloadScreen
                                                         //print(response.body);
                                                         Get.snackbar(
                                                           "Error!".tr,
-                                                          "The record was not completed".tr,
+                                                          "The record was not completed"
+                                                              .tr,
                                                           icon: const Icon(
                                                             Icons.error,
                                                             color: Colors.red,

@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: unused_element
 class _Sidebar extends StatelessWidget {
   const _Sidebar({
     required this.data,

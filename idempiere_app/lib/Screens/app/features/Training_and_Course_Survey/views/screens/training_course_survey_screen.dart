@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 library dashboard;
 
 //import 'dart:convert';
@@ -10,7 +12,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Training_and_Course_Survey/models/trainingcoursejson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
@@ -82,7 +83,7 @@ class TrainingCourseSurveyScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("COURSES: ".tr+"${controller.trx.rowcount}")
+                          ? Text("COURSES: ".tr + "${controller.trx.rowcount}")
                           : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -190,7 +191,7 @@ class TrainingCourseSurveyScreen
                                           children: [
                                             Text(
                                               "Description: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -223,7 +224,7 @@ class TrainingCourseSurveyScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("COURSES: ".tr+"${controller.trx.rowcount}")
+                          ? Text("COURSES: ".tr + "${controller.trx.rowcount}")
                           : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -331,7 +332,7 @@ class TrainingCourseSurveyScreen
                                           children: [
                                             Text(
                                               "Description: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -364,7 +365,7 @@ class TrainingCourseSurveyScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("COURSES: ".tr+"${controller.trx.rowcount}")
+                          ? Text("COURSES: ".tr + "${controller.trx.rowcount}")
                           : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -472,7 +473,7 @@ class TrainingCourseSurveyScreen
                                           children: [
                                             Text(
                                               "Description: ".tr,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
