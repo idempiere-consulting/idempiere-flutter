@@ -172,7 +172,11 @@ class LocaleString extends Translations {
           'True': 'True',
           'False': 'False',
           'My Active Project': 'My Active Project',
-          'Production Order': 'Production Order'
+          'Production Order': 'Production Order',
+          'You Have': 'You Have',
+          'Undone Tasks': 'Undone Tasks',
+          'Tasks are in progress': 'Tasks are in progress',
+          'Project': 'Project',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -347,7 +351,11 @@ class LocaleString extends Translations {
           'True': 'Vero',
           'False': 'Falso',
           'My Active Project': 'I miei progetti attivi',
-          'Production Order': 'Ordine di produzione'
+          'Production Order': 'Ordine di produzione',
+          'You Have': 'Hai',
+          'Undone Tasks': 'Task non finiti',
+          'Tasks are in progress': 'Task in corso',
+          'Project': 'Progetto',
         },
       };
 }

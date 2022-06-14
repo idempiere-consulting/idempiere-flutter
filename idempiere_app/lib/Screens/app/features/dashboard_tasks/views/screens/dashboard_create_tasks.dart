@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/models/project_json.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_tasks_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:intl/intl.dart';
@@ -130,12 +131,15 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     if (response.statusCode == 200) {
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 
-      projectFieldController.text =
-          json["records"][0]['C_Project_ID']['identifier'] ?? "";
+      /* projectFieldController.text =
+          json["records"][0]['C_Project_ID']['identifier'] ?? ""; */
+      initialValue = TextEditingValue(
+          text: json["records"][0]['C_Project_ID']['identifier'] ?? "");
       nameFieldController.text =
           json["records"][0]['C_Project_ID']['identifier'] ?? "";
       projectId = json["records"][0]['C_Project_ID']['id'] ?? 0;
       getProjectBP();
+      getAllProjects();
     }
   }
 
@@ -164,6 +168,41 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
         print(utf8.decode(response.bodyBytes));
       }
     }
+    setState(() {
+      flagProject = true;
+    });
+  }
+
+  Future<List<Records>> getAllProjects() async {
+    final ip = GetStorage().read('ip');
+    String authorization =
+        'Bearer ' + GetStorage().read('token'); //GetStorage().read("clientid")
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/c_project?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //var jsondecoded = jsonDecode(response.body);
+
+      var jsonProjects =
+          ProjectJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      return jsonProjects.records!;
+    } else {
+      throw Exception("Failed to load projects");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
   }
 
   fillFields() {
@@ -211,10 +250,13 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
   int projectId = 0;
   int businessPartnerId = 0;
   late List<Types> dropDownList;
+  bool flagProject = false;
+  late TextEditingValue initialValue;
   //var adUserId;
 
   @override
   void initState() {
+    flagProject = false;
     date = "";
     startTime = "";
     fillFields();
@@ -230,6 +272,8 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     timeEnd = "";
     getProject();
   }
+
+  static String _displayStringForOption(Records option) => option.name!;
 
   @override
   Widget build(BuildContext context) {
@@ -291,7 +335,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     ),
                   ),
                 ),
-                Container(
+                /* Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: projectFieldController,
@@ -301,6 +345,62 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                       labelText: 'Progetto',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ), */
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Project".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProjects(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData && flagProject
+                            ? Autocomplete<Records>(
+                                initialValue: initialValue,
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  projectId = selection.id!;
+                                  nameFieldController.text =
+                                      "${selection.value}_${selection.name}";
+                                  setState(() {});
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
@@ -461,15 +561,59 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: projectFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Progetto',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Project".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProjects(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData && flagProject
+                            ? Autocomplete<Records>(
+                                initialValue: initialValue,
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  projectId = selection.id!;
+                                  nameFieldController.text =
+                                      "${selection.value}_${selection.name}";
+                                  setState(() {});
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
@@ -630,15 +774,59 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: projectFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Progetto',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Project".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProjects(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData && flagProject
+                            ? Autocomplete<Records>(
+                                initialValue: initialValue,
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  projectId = selection.id!;
+                                  nameFieldController.text =
+                                      "${selection.value}_${selection.name}";
+                                  setState(() {});
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(

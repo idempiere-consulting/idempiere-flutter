@@ -63,14 +63,15 @@ class DashboardScreen extends GetView<DashboardController> {
       },
       child: Scaffold(
         //key: controller.scaffoldKey,
-        drawer: (ResponsiveBuilder.isDesktop(context))
+        drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
             child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
@@ -121,7 +122,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-              const SizedBox(height: kSpacing * 1),
+              /* const SizedBox(height: kSpacing * 1),
               _buildTaskOverview(
                 data: controller.getAllTask(),
                 headerAxis: Axis.vertical,
@@ -135,7 +136,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 crossAxisCellCount: 6,
               ),
               const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
           tabletBuilder: (context, constraints) {
@@ -185,7 +186,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-              const SizedBox(height: kSpacing * 1),
+              /* const SizedBox(height: kSpacing * 1),
               _buildTaskOverview(
                 data: controller.getAllTask(),
                 headerAxis: Axis.vertical,
@@ -199,7 +200,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 crossAxisCellCount: 6,
               ),
               const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
           desktopBuilder: (context, constraints) {
@@ -249,7 +250,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-              const SizedBox(height: kSpacing * 1),
+              /* const SizedBox(height: kSpacing * 1),
               _buildTaskOverview(
                 data: controller.getAllTask(),
                 headerAxis: Axis.vertical,
@@ -263,7 +264,7 @@ class DashboardScreen extends GetView<DashboardController> {
                 crossAxisCellCount: 6,
               ),
               const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
         )),

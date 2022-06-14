@@ -66,11 +66,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
       //print(list![i].jPToDoScheduledStartTime);
-      if (selectedEvents[DateTime.parse(
-              '${list![i].jPToDoScheduledStartDate} 00:00:00.000Z')] !=
+      var formatter = DateFormat('yyyy-MM-dd');
+      var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);
+      if (selectedEvents[
+              DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] !=
           null) {
-        selectedEvents[DateTime.parse(
-                '${list[i].jPToDoScheduledStartDate} 00:00:00.000Z')]!
+        selectedEvents[
+                DateTime.parse('${formatter.format(date)} 00:00:00.000Z')]!
             .add(
           Event(
               id: list[i].id!,
@@ -81,14 +83,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
               title: list[i].name ?? "???",
               description: list[i].description ?? "",
               scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
+              startDate: formatter.format(date),
               scheduledStartTime:
                   list[i].jPToDoScheduledStartTime!.substring(0, 5),
               scheduledEndTime:
                   list[i].jPToDoScheduledEndTime!.substring(0, 5)),
         );
       } else {
-        selectedEvents[DateTime.parse(
-            '${list[i].jPToDoScheduledStartDate} 00:00:00.000Z')] = [
+        selectedEvents[
+            DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
           Event(
               id: list[i].id!,
               type: list[i].jPToDoType!.identifier ?? "???",
@@ -98,6 +101,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               title: list[i].name ?? "???",
               description: list[i].description ?? "",
               scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "???",
+              startDate: formatter.format(date),
               scheduledStartTime:
                   list[i].jPToDoScheduledStartTime!.substring(0, 5),
               scheduledEndTime: list[i].jPToDoScheduledEndTime!.substring(0, 5))
@@ -119,7 +123,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and Created ge \'$formattedFiftyDaysAgo\' and Created le \'$formattedDate 23:59:59\'');
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and Created ge \'$formattedFiftyDaysAgo 00:00:01\' and Created le \'$formattedDate 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -136,10 +140,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
         //print(list![i].jPToDoScheduledStartTime);
+        var formatter = DateFormat('yyyy-MM-dd');
+        var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);
+
         if (selectedEvents[
-                DateTime.parse('${list![i].jPToDoScheduledStartDate}')] !=
+                DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] !=
             null) {
-          selectedEvents[DateTime.parse('${list[i].jPToDoScheduledStartDate}')]!
+          selectedEvents[
+                  DateTime.parse('${formatter.format(date)} 00:00:00.000Z')]!
               .add(
             Event(
                 id: list[i].id!,
@@ -150,6 +158,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 title: list[i].name ?? "???",
                 description: list[i].description ?? "",
                 scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
+                startDate: formatter.format(date),
                 scheduledStartTime:
                     list[i].jPToDoScheduledStartTime!.substring(0, 5),
                 scheduledEndTime:
@@ -157,7 +166,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           );
         } else {
           selectedEvents[
-              DateTime.parse('${list[i].jPToDoScheduledStartDate}')] = [
+              DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
             Event(
                 id: list[i].id!,
                 type: list[i].jPToDoType!.identifier ?? "???",
@@ -167,6 +176,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 title: list[i].name ?? "???",
                 description: list[i].description ?? "",
                 scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "???",
+                startDate: formatter.format(date),
                 scheduledStartTime:
                     list[i].jPToDoScheduledStartTime!.substring(0, 5),
                 scheduledEndTime:
@@ -397,7 +407,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       children: <Widget>[
                         const Icon(Icons.event),
                         Text(
-                          '${event.scheduledStartDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                          '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
                           style: const TextStyle(color: Colors.white),
                         ),
                       ],

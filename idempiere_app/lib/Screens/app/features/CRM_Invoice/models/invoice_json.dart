@@ -44,6 +44,7 @@ class Records {
   final String? documentNo;
   final CDocTypeID? cDocTypeID;
   final DocStatus? docStatus;
+  final String? description;
   final bool? processed;
   final CBPartnerID? cBPartnerID;
   final CPaymentTermID? cPaymentTermID;
@@ -94,6 +95,7 @@ class Records {
     this.documentNo,
     this.cDocTypeID,
     this.docStatus,
+    this.description,
     this.processed,
     this.cBPartnerID,
     this.cPaymentTermID,
@@ -147,6 +149,7 @@ class Records {
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
         updated = json['Updated'] as String?,
+        description = json['Description'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
@@ -236,6 +239,7 @@ class Records {
         'AD_Org_ID': aDOrgID?.toJson(),
         'IsActive': isActive,
         'Created': created,
+        'Description': description,
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),

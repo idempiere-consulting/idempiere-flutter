@@ -14,6 +14,7 @@ class Event {
   final String status;
   final String statusId;
   final String scheduledStartDate;
+  final String startDate;
   final String scheduledStartTime;
   final String scheduledEndTime;
 
@@ -26,6 +27,7 @@ class Event {
     required this.status,
     required this.statusId,
     required this.scheduledStartDate,
+    required this.startDate,
     required this.scheduledStartTime,
     required this.scheduledEndTime,
   });

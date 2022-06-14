@@ -13,6 +13,7 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -129,6 +130,37 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                 ),
                 Row(
                   children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
@@ -142,7 +174,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                             prefixIcon: Icon(Icons.search_outlined),
                             border: OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Contact Name',
+                            hintText: 'Search',
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -164,12 +196,30 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                 visible: controller.searchFilterValue.value ==
                                         ""
                                     ? true
-                                    : controller.trx.windowrecords![index].name
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(controller
-                                            .searchFilterValue.value
-                                            .toLowerCase()),
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller.trx.windowrecords![index].name
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase())
+                                        : controller.dropdownValue.value == "2"
+                                            ? controller
+                                                .trx.windowrecords![index].eMail
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : controller.dropdownValue.value ==
+                                                    "3"
+                                                ? controller.trx
+                                                    .windowrecords![index].phone
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        controller.searchFilterValue.value.toLowerCase())
+                                                : true,
                                 child: Card(
                                   elevation: 8.0,
                                   margin: const EdgeInsets.symmetric(
@@ -440,6 +490,37 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                 ),
                 Row(
                   children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
@@ -751,6 +832,37 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                 ),
                 Row(
                   children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),

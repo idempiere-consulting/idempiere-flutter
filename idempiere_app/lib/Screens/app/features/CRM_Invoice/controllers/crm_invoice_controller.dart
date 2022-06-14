@@ -15,9 +15,29 @@ class CRMInvoiceController extends GetxController {
   var _dataAvailable = false.obs;
 
   var searchFieldController = TextEditingController();
+  var searchFilterValue = "".obs;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  final json = {
+    "types": [
+      {"id": "1", "name": "Doc N°"},
+      {"id": "2", "name": "Date Invoiced"},
+      {"id": "3", "name": "Business Partner"},
+      {"id": "4", "name": "Description"}
+    ]
+  };
+
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
+  }
 
   @override
   void onInit() {
+    dropDownList = getTypes()!;
     super.onInit();
     getInvoices();
     getADUserID();
@@ -89,6 +109,11 @@ class CRMInvoiceController extends GetxController {
   }
 
   Future<void> getInvoices() async {
+    var now = DateTime.now();
+    DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
@@ -96,7 +121,7 @@ class CRMInvoiceController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_invoice?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/c_invoice?\$filter= IsSoTrx eq Y and DateInvoiced le \'$formattedDate 23:59:59\' and DateInvoiced ge \'$formattedNinetyDaysAgo 00:00:00\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateInvoiced desc');
     var response = await http.get(
       url,
       headers: <String, String>{
