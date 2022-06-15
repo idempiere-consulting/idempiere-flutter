@@ -1,15 +1,16 @@
 import 'dart:convert';
 //import 'dart:developer';
 
-import 'package:date_time_picker/date_time_picker.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunitystatus.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/business_partner_json.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,67 +22,22 @@ class CreateOpportunity extends StatefulWidget {
 }
 
 class _CreateOpportunityState extends State<CreateOpportunity> {
-  attachImage() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.any);
-
-    if (result != null) {
-      //File file = File(result.files.first.bytes!);
-      setState(() {
-        image64 = base64.encode(result.files.first.bytes!);
-        imageName = result.files.first.name;
-      });
-
-      //print(image64);
-    }
-  }
-
-  sendOpportunityAttachedImage(int id) async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-
-    final msg = jsonEncode({"name": imageName, "data": image64});
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/c_opportunity/$id/attachments');
-
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      //print(response.body);
-    } else {
-      //print(response.body);
-    }
-  }
-
-  static String _bPdisplayStringForOption(BPRecords option) => option.name!;
-
-  createOpportunity() async {
+  saveOpportunity() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "Name": nameFieldController.text,
-      "C_BPartner_ID": {"identifier": businessPartnerValue},
-      "Phone": phoneFieldController.text,
-      "EMail": mailFieldController.text,
+      "C_SalesStage_ID":{"id": int.parse(dropdownValue)},
       "SalesRep_ID": {"identifier": salesrepValue},
-      'C_SalesStage_ID': {"id": dropdownOpportunityValue},
-      'ExpectedCloseDate': date,
-      'OpportunityAmt': int.parse(amtFieldController.text),
-      'C_Currency_ID': {'id': 102},
-      'Probability': 50,
+      "M_Product_ID": {"id": productId},
+      "OpportunityAmt": double.parse(amtFieldController.text),
+      "C_BPartner_ID": {"id": bPId},
+      "Description":  descriptionFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_opportunity/');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/C_Opportunity/');
     //print(msg);
     var response = await http.post(
       url,
@@ -91,27 +47,21 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 201) {
-      var json = jsonDecode(response.body);
-      if (imageName != "" && image64 != "") {
-        sendOpportunityAttachedImage(json["id"]);
-        //print(response.body);
-      }
+    if (response.statusCode == 200) {
       Get.find<CRMOpportunityController>().getOpportunities();
       //print("done!");
       Get.snackbar(
         "Fatto!",
-        "Il record è stato creato",
+        "Il record è stato aggiornato",
         icon: const Icon(
           Icons.done,
           color: Colors.green,
         ),
       );
     } else {
-      //print(response.body);
       Get.snackbar(
         "Errore!",
-        "Record non creato",
+        "Record non aggiornato",
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -120,11 +70,15 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     }
   }
 
+  
+
   Future<List<OSRecords>> getAllOpportunityStatuses() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/C_SalesStage/');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -134,7 +88,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     );
     if (response.statusCode == 200) {
       var json = OppurtunityStatusJson.fromJson(jsonDecode(response.body));
-      //print(response.body);
+      //print(json.rowcount);
 
       return json.records!;
     } else {
@@ -144,13 +98,14 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     //print(response.body);
   }
 
-  Future<List<BPRecords>> getAllBusinessPartners() async {
+
+  Future<void> getSaleStageDefault() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_bpartner?\$filter= IsCustomer eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')} and IsDefault eq Y');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -159,12 +114,20 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       },
     );
     if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-      var jsonBPs = BPJson.fromJson(jsondecoded);
-      return jsonBPs.records!;
+      var json = OppurtunityStatusJson.fromJson(jsonDecode(response.body));
+      //print(json.rowcount);
+      setState(() {
+        dropdownValue = json.records![0].id.toString();
+        flag = true;
+      }); 
     } else {
-      throw Exception("Failed to load sales reps");
+      //throw Exception("Failed to load lead statuses");
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
+
+    //print(response.body);
   }
 
   Future<List<Records>> getAllSalesRep() async {
@@ -195,17 +158,40 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     //print(json.);
   }
 
-  /* void fillFields() {
-    nameFieldController.text = args["name"];
-    bPartnerFieldController.text = args["bpName"];
-    phoneFieldController.text = args["Tel"];
-    mailFieldController.text = args["eMail"];
-    //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"];
-    //salesRepFieldController.text = args["salesRep"];
-  } */
+  Future<List<PRecords>> getAllProducts() async {
+    //print(response.body);
+    var jsondecoded = jsonDecode(GetStorage().read('productSync'));
+    var jsonResources = ProductJson.fromJson(jsondecoded);
+    //print(jsonResources.rowcount);
+    return jsonResources.records!;
 
-  //dynamic args = Get.arguments;
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<BPRecords>> getAllBPs() async {
+    //print(response.body);
+    var jsondecoded = jsonDecode(GetStorage().read('businessPartnerSync'));
+    var jsonResources = BusinessPartnerJson.fromJson(jsondecoded);
+    //print(jsonResources.rowcount);
+    return jsonResources.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  void fillFields() {
+    nameFieldController.text = "";
+    bPartnerFieldController.text = "";
+    amtFieldController.text = "0";
+    //dropdownValue = args["leadStatus"];
+    salesrepValue = "";
+    //salesRepFieldController.text = args["salesRep"];
+  }
+
+  dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -216,6 +202,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
   var phoneFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var mailFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var descriptionFieldController;
+  
   String dropdownOpportunityValuedropdownValue = "";
   String salesrepValue = "";
   String businessPartnerValue = "";
@@ -223,6 +212,12 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
   String date = "";
   String image64 = "";
   String imageName = "";
+  late String dropdownValue= ""; 
+  int productId = 0;
+  int bPId =  0;
+  late TextEditingValue bPName ;
+  late TextEditingValue productName;
+  bool flag = false;
 
   @override
   void initState() {
@@ -231,18 +226,27 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
+    descriptionFieldController = TextEditingController();
+    //dropdownValue = (Get.arguments['SaleStageID']).toString();
+    productName = const TextEditingValue(text: "");
+    bPName = const TextEditingValue(text: "");
     businessPartnerValue = "";
     dropdownOpportunityValue = "1000001";
     date = "";
     amtFieldController = TextEditingController();
     image64 = "";
     imageName = "";
-
-    //fillFields();
+    dropdownValue = "";
+    flag = false;
+    fillFields();
     getAllOpportunityStatuses();
+    getAllBPs();
+    getSaleStageDefault();
   }
 
   static String _displayStringForOption(Records option) => option.name!;
+  static String _displayProductStringForOption(PRecords option) => option.name!;
+  static String _displayBPStringForOption(BPRecords option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 
@@ -253,14 +257,14 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Add Opportunity'),
+          child: Text('Create Opportunity'),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createOpportunity();
+                saveOpportunity();
               },
               icon: const Icon(
                 Icons.save,
@@ -279,10 +283,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Business Partner",
-                      style: TextStyle(fontSize: 12),
+                      "Business Partner".tr,
+                      style:
+                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -297,21 +302,20 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
-                    future: getAllBusinessPartners(),
+                    future: getAllBPs(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
-                                displayStringForOption:
-                                    _bPdisplayStringForOption,
+                                //initialValue: bPName,
+                                displayStringForOption: _displayBPStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
                                     return const Iterable<BPRecords>.empty();
                                   }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return option.name!
+                                  return snapshot.data!.where((BPRecords option) {
+                                    return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
@@ -319,12 +323,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                   });
                                 },
                                 onSelected: (BPRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
-                                    businessPartnerValue =
-                                        _bPdisplayStringForOption(selection);
+                                    bPId = selection.id!;
+                                    //productName = selection.name;
                                   });
+                                  print(bPId);
 
                                   //print(salesrepValue);
                                 },
@@ -337,90 +340,96 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    controller: amtFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'OpportunityAmt'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                  ),
+                ),
+                 Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Product".tr,
+                      style:
+                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
-                  width: size.width,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.grey,
                     ),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<PRecords>(
+                                //initialValue: productName,
+                                displayStringForOption: _displayProductStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<PRecords>.empty();
+                                  }
+                                  return snapshot.data!.where((PRecords option) {
+                                    return ("${option.value}_${option.name}")
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (PRecords selection) {
+                                  setState(() {
+                                    productId = selection.id!;
+                                    //productName = selection.name;
+                                  });
+                                  print(productId);
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: amtFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Importo Atteso',
+                    controller: descriptionFieldController,
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.message),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
+                    minLines: 3,
+                    maxLines: 4,
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -440,6 +449,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: GetStorage().read('user')),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -472,51 +483,14 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "SalesStage".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
-                /* Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    //icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    //style: const TextStyle(color: Colors.deepPurple),
-                    /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: <String>[
-                      'Chiuso',
-                      'Convertito',
-                      'In Lavoro',
-                      'Nuovo'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ), */
                 Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -531,39 +505,22 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                     future: getAllOpportunityStatuses(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<OSRecords>> snapshot) =>
-                        snapshot.hasData
+                        snapshot.hasData && flag
                             ? DropdownButton(
-                                value: dropdownOpportunityValue,
-                                //icon: const Icon(Icons.arrow_downward),
+                                value: dropdownValue,
                                 elevation: 16,
-                                //style: const TextStyle(color: Colors.deepPurple),
-                                /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    dropdownOpportunityValue = newValue!;
+                                    dropdownValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },
-                                items: /* <String>[
-                                  'Chiuso',
-                                  'Convertito',
-                                  'In Lavoro',
-                                  'Nuovo'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList()*/
-                                    snapshot.data!.map((list) {
+                                items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
+                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -572,11 +529,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                               ),
                   ),
                 ),
-                IconButton(
-                    onPressed: () {
-                      attachImage();
-                    },
-                    icon: const Icon(Icons.attach_file)),
               ],
             );
           },
@@ -588,10 +540,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Business Partner",
-                      style: TextStyle(fontSize: 12),
+                      "Business Partner".tr,
+                      style:
+                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -606,21 +559,20 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
-                    future: getAllBusinessPartners(),
+                    future: getAllBPs(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
-                                displayStringForOption:
-                                    _bPdisplayStringForOption,
+                                //initialValue: bPName,
+                                displayStringForOption: _displayBPStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
                                     return const Iterable<BPRecords>.empty();
                                   }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return option.name!
+                                  return snapshot.data!.where((BPRecords option) {
+                                    return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
@@ -628,12 +580,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                   });
                                 },
                                 onSelected: (BPRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
-                                    businessPartnerValue =
-                                        _bPdisplayStringForOption(selection);
+                                    bPId = selection.id!;
+                                    //productName = selection.name;
                                   });
+                                  print(bPId);
 
                                   //print(salesrepValue);
                                 },
@@ -646,90 +597,96 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    controller: amtFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'OpportunityAmt'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                  ),
+                ),
+                 Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Product".tr,
+                      style:
+                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
-                  width: size.width,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.grey,
                     ),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<PRecords>(
+                                //initialValue: productName,
+                                displayStringForOption: _displayProductStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<PRecords>.empty();
+                                  }
+                                  return snapshot.data!.where((PRecords option) {
+                                    return ("${option.value}_${option.name}")
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (PRecords selection) {
+                                  setState(() {
+                                    productId = selection.id!;
+                                    //productName = selection.name;
+                                  });
+                                  print(productId);
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: amtFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Importo Atteso',
+                    controller: descriptionFieldController,
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.message),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
+                    minLines: 3,
+                    maxLines: 4,
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -749,6 +706,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: GetStorage().read('user')),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -781,51 +740,14 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "SalesStage".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
-                /* Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    //icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    //style: const TextStyle(color: Colors.deepPurple),
-                    /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: <String>[
-                      'Chiuso',
-                      'Convertito',
-                      'In Lavoro',
-                      'Nuovo'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ), */
                 Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -840,39 +762,22 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                     future: getAllOpportunityStatuses(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<OSRecords>> snapshot) =>
-                        snapshot.hasData
+                        snapshot.hasData && flag
                             ? DropdownButton(
-                                value: dropdownOpportunityValue,
-                                //icon: const Icon(Icons.arrow_downward),
+                                value: dropdownValue,
                                 elevation: 16,
-                                //style: const TextStyle(color: Colors.deepPurple),
-                                /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    dropdownOpportunityValue = newValue!;
+                                    dropdownValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },
-                                items: /* <String>[
-                                  'Chiuso',
-                                  'Convertito',
-                                  'In Lavoro',
-                                  'Nuovo'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList()*/
-                                    snapshot.data!.map((list) {
+                                items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
+                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -881,11 +786,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                               ),
                   ),
                 ),
-                IconButton(
-                    onPressed: () {
-                      attachImage();
-                    },
-                    icon: const Icon(Icons.attach_file)),
               ],
             );
           },
@@ -897,10 +797,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Business Partner",
-                      style: TextStyle(fontSize: 12),
+                      "Business Partner".tr,
+                      style:
+                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -915,21 +816,20 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
-                    future: getAllBusinessPartners(),
+                    future: getAllBPs(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
-                                displayStringForOption:
-                                    _bPdisplayStringForOption,
+                                //initialValue: bPName,
+                                displayStringForOption: _displayBPStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
                                     return const Iterable<BPRecords>.empty();
                                   }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return option.name!
+                                  return snapshot.data!.where((BPRecords option) {
+                                    return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
@@ -937,12 +837,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                   });
                                 },
                                 onSelected: (BPRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
-                                    businessPartnerValue =
-                                        _bPdisplayStringForOption(selection);
+                                    bPId = selection.id!;
+                                    //productName = selection.name;
                                   });
+                                  print(bPId);
 
                                   //print(salesrepValue);
                                 },
@@ -955,90 +854,96 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    controller: amtFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'OpportunityAmt'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                  ),
+                ),
+                 Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Product".tr,
+                      style:
+                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
-                  width: size.width,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.grey,
                     ),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<PRecords>(
+                                //initialValue: productName,
+                                displayStringForOption: _displayProductStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<PRecords>.empty();
+                                  }
+                                  return snapshot.data!.where((PRecords option) {
+                                    return ("${option.value}_${option.name}")
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (PRecords selection) {
+                                  setState(() {
+                                    productId = selection.id!;
+                                    //productName = selection.name;
+                                  });
+                                  print(productId);
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: amtFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Importo Atteso',
+                    controller: descriptionFieldController,
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.message),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
+                    minLines: 3,
+                    maxLines: 4,
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -1058,6 +963,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: GetStorage().read('user')),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -1090,51 +997,14 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "SalesStage".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
-                /* Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    //icon: const Icon(Icons.arrow_downward),
-                    elevation: 16,
-                    //style: const TextStyle(color: Colors.deepPurple),
-                    /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: <String>[
-                      'Chiuso',
-                      'Convertito',
-                      'In Lavoro',
-                      'Nuovo'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ), */
                 Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -1149,39 +1019,22 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                     future: getAllOpportunityStatuses(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<OSRecords>> snapshot) =>
-                        snapshot.hasData
+                        snapshot.hasData && flag
                             ? DropdownButton(
-                                value: dropdownOpportunityValue,
-                                //icon: const Icon(Icons.arrow_downward),
+                                value: dropdownValue,
                                 elevation: 16,
-                                //style: const TextStyle(color: Colors.deepPurple),
-                                /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    dropdownOpportunityValue = newValue!;
+                                    dropdownValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },
-                                items: /* <String>[
-                                  'Chiuso',
-                                  'Convertito',
-                                  'In Lavoro',
-                                  'Nuovo'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList()*/
-                                    snapshot.data!.map((list) {
+                                items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
+                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -1190,11 +1043,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                               ),
                   ),
                 ),
-                IconButton(
-                    onPressed: () {
-                      attachImage();
-                    },
-                    icon: const Icon(Icons.attach_file)),
               ],
             );
           },

@@ -177,6 +177,9 @@ class LocaleString extends Translations {
           'Undone Tasks': 'Undone Tasks',
           'Tasks are in progress': 'Tasks are in progress',
           'Project': 'Project',
+          'Product': 'Product',
+          'SalesStage': 'Sales Stage',
+          'OpportunityAmt': 'Opportunity Amount'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -356,6 +359,9 @@ class LocaleString extends Translations {
           'Undone Tasks': 'Task non finiti',
           'Tasks are in progress': 'Task in corso',
           'Project': 'Progetto',
+          'Product': 'Prodotto',
+          'SalesStage': 'Stato di Vendita',
+          'OpportunityAmt': 'Importo Atteso'
         },
       };
 }

@@ -6,8 +6,30 @@ class CRMOpportunityController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var searchFieldController = TextEditingController();
+  var searchFilterValue = "".obs;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  final json = {
+    "types": [
+      {"id": "1", "name": "Business Partner".tr},
+      {"id": "2", "name": "Product".tr},
+      {"id": "3", "name": "SalesRep".tr},
+      {"id": "4", "name": "SalesStage".tr}
+    ]
+  };
+
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
+  }
+
   @override
   void onInit() {
+    dropDownList = getTypes()!;
     super.onInit();
     getOpportunities();
   }

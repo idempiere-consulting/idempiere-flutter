@@ -13,6 +13,7 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_edit_opportunity.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_create.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -125,6 +126,60 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                     ),
                   ],
                 ),
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            controller.searchFilterValue.value =
+                                controller.searchFieldController.text;
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Search',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: kSpacing),
                 Obx(() => controller.dataAvailable
                     ? ListView.builder(
@@ -133,166 +188,173 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         shrinkWrap: true,
                         itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 6.0),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(64, 75, 96, .9)),
-                              child: ExpansionTile(
-                                tilePadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                leading: Container(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  decoration: const BoxDecoration(
-                                      border: Border(
-                                          right: BorderSide(
-                                              width: 1.0,
-                                              color: Colors.white24))),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.paid,
-                                      color: Colors.green,
+                          
+                          return Obx( ()=> Visibility(
+                            visible: controller.searchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller.trx.records![index].cBPartnerID!.identifier
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase())
+                                    : controller.dropdownValue.value == "2"
+                                            ? (controller
+                                                .trx.records![index].mProductID?.identifier ?? "")
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                    : controller.dropdownValue.value == "3"
+                                            ? controller
+                                                .trx.records![index].salesRepID!.identifier
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                    : controller.dropdownValue.value == "4"
+                                            ? controller
+                                                .trx.records![index].cSalesStageID!.identifier
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : true,
+                            child: Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.paid,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Opportunity',
+                                      onPressed: () {
+                                        Get.to(const EditOpportunity(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "SaleStageID": controller.trx.records![index].cSalesStageID!.id,
+                                              "salesRep": controller.trx.records![index].salesRepID?.identifier ?? "",
+                                              "productName": controller.trx.records![index].mProductID?.identifier ?? "",
+                                              "productId": controller.trx.records![index].mProductID?.id ?? 0,
+                                              "opportunityAmt": controller.trx.records![index].opportunityAmt ?? 0,
+                                              "cBPartnerID": controller.trx.records![index].cBPartnerID?.id ?? 0,
+                                              "cBPartnerName": controller.trx.records![index].cBPartnerID?.identifier ?? "",
+                                              "Description": controller.trx.records![index].description ?? "",
+                                            });
+                                        
+                                      },
                                     ),
-                                    tooltip: 'Lead Info',
-                                    onPressed: () {
-                                      Get.to(const EditOpportunity(),
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "leadStatus": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "bpName": controller
-                                                .trx
-                                                .records![index]
-                                                .aDClientID!
-                                                .identifier,
-                                            "Tel": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "eMail": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                "",
-                                            "salesStageValue": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .cSalesStageID
-                                                    ?.id ??
-                                                "",
-                                          });
-                                    },
                                   ),
-                                ),
-                                title: Text(
-                                  controller.trx.records![index].cBPartnerID
-                                          ?.identifier ??
-                                      "???",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index]
-                                              .cSalesStageID!.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                                /* trailing: const Icon(
-                                  Icons.keyboard_arrow_right,
-                                  color: Colors.white,
-                                  size: 30.0,
-                                ), */
-                                childrenPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                children: [
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Contatto: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .aDUserID?.identifier ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Prodotto: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .mProductID?.identifier ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Importo Atteso: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("€" +
-                                              controller.trx.records![index]
-                                                  .opportunityAmt
-                                                  .toString()),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .salesRepID!.identifier ??
-                                              ""),
-                                        ],
+                                  title: Text(
+                                    controller.trx.records![index].cBPartnerID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                          
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .cSalesStageID!.identifier ??
+                                            "??",
+                                        style:
+                                            const TextStyle(color: Colors.white),
                                       ),
                                     ],
                                   ),
-                                ],
+                                  /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Contatto: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .aDUserID?.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Prodotto: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .mProductID?.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Importo Atteso: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text("€" +
+                                                controller.trx.records![index]
+                                                    .opportunityAmt
+                                                    .toString()),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Agente: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .salesRepID!.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
+                          ),
                           );
                         },
                       )
@@ -353,6 +415,60 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                     ),
                   ],
                 ),
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            controller.searchFilterValue.value =
+                                controller.searchFieldController.text;
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Search',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: kSpacing),
                 Obx(() => controller.dataAvailable
                     ? ListView.builder(
@@ -361,166 +477,173 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         shrinkWrap: true,
                         itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 6.0),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(64, 75, 96, .9)),
-                              child: ExpansionTile(
-                                tilePadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                leading: Container(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  decoration: const BoxDecoration(
-                                      border: Border(
-                                          right: BorderSide(
-                                              width: 1.0,
-                                              color: Colors.white24))),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.paid,
-                                      color: Colors.green,
+                          
+                          return Obx( ()=> Visibility(
+                            visible: controller.searchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller.trx.records![index].cBPartnerID!.identifier
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase())
+                                    : controller.dropdownValue.value == "2"
+                                            ? (controller
+                                                .trx.records![index].mProductID?.identifier ?? "")
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                    : controller.dropdownValue.value == "3"
+                                            ? controller
+                                                .trx.records![index].salesRepID!.identifier
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                    : controller.dropdownValue.value == "4"
+                                            ? controller
+                                                .trx.records![index].cSalesStageID!.identifier
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : true,
+                            child: Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.paid,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Opportunity',
+                                      onPressed: () {
+                                        Get.to(const EditOpportunity(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "SaleStageID": controller.trx.records![index].cSalesStageID!.id,
+                                              "salesRep": controller.trx.records![index].salesRepID?.identifier ?? "",
+                                              "productName": controller.trx.records![index].mProductID?.identifier ?? "",
+                                              "productId": controller.trx.records![index].mProductID?.id ?? 0,
+                                              "opportunityAmt": controller.trx.records![index].opportunityAmt ?? 0,
+                                              "cBPartnerID": controller.trx.records![index].cBPartnerID?.id ?? 0,
+                                              "cBPartnerName": controller.trx.records![index].cBPartnerID?.identifier ?? "",
+                                              "Description": controller.trx.records![index].description ?? "",
+                                            });
+                                        
+                                      },
                                     ),
-                                    tooltip: 'Lead Info',
-                                    onPressed: () {
-                                      Get.to(const EditOpportunity(),
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "leadStatus": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "bpName": controller
-                                                .trx
-                                                .records![index]
-                                                .aDClientID!
-                                                .identifier,
-                                            "Tel": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "eMail": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                "",
-                                            "salesStageValue": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .cSalesStageID
-                                                    ?.id ??
-                                                "",
-                                          });
-                                    },
                                   ),
-                                ),
-                                title: Text(
-                                  controller.trx.records![index].cBPartnerID
-                                          ?.identifier ??
-                                      "???",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index]
-                                              .cSalesStageID!.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                                /* trailing: const Icon(
-                                  Icons.keyboard_arrow_right,
-                                  color: Colors.white,
-                                  size: 30.0,
-                                ), */
-                                childrenPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                children: [
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Contatto: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .aDUserID?.identifier ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Prodotto: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .mProductID?.identifier ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Importo Atteso: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("€" +
-                                              controller.trx.records![index]
-                                                  .opportunityAmt
-                                                  .toString()),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .salesRepID!.identifier ??
-                                              ""),
-                                        ],
+                                  title: Text(
+                                    controller.trx.records![index].cBPartnerID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                          
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .cSalesStageID!.identifier ??
+                                            "??",
+                                        style:
+                                            const TextStyle(color: Colors.white),
                                       ),
                                     ],
                                   ),
-                                ],
+                                  /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Contatto: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .aDUserID?.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Prodotto: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .mProductID?.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Importo Atteso: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text("€" +
+                                                controller.trx.records![index]
+                                                    .opportunityAmt
+                                                    .toString()),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Agente: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .salesRepID!.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
+                          ),
                           );
                         },
                       )
@@ -581,6 +704,60 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                     ),
                   ],
                 ),
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.searchFieldController,
+                          onSubmitted: (String? value) {
+                            controller.searchFilterValue.value =
+                                controller.searchFieldController.text;
+                          },
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search_outlined),
+                            border: OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Search',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: kSpacing),
                 Obx(() => controller.dataAvailable
                     ? ListView.builder(
@@ -589,166 +766,173 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         shrinkWrap: true,
                         itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 6.0),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(64, 75, 96, .9)),
-                              child: ExpansionTile(
-                                tilePadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                leading: Container(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  decoration: const BoxDecoration(
-                                      border: Border(
-                                          right: BorderSide(
-                                              width: 1.0,
-                                              color: Colors.white24))),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.paid,
-                                      color: Colors.green,
+                          
+                          return Obx( ()=> Visibility(
+                            visible: controller.searchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller.trx.records![index].cBPartnerID!.identifier
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase())
+                                    : controller.dropdownValue.value == "2"
+                                            ? (controller
+                                                .trx.records![index].mProductID?.identifier ?? "")
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                    : controller.dropdownValue.value == "3"
+                                            ? controller
+                                                .trx.records![index].salesRepID!.identifier
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                    : controller.dropdownValue.value == "4"
+                                            ? controller
+                                                .trx.records![index].cSalesStageID!.identifier
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : true,
+                            child: Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.paid,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Opportunity',
+                                      onPressed: () {
+                                        Get.to(const EditOpportunity(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "SaleStageID": controller.trx.records![index].cSalesStageID!.id,
+                                              "salesRep": controller.trx.records![index].salesRepID?.identifier ?? "",
+                                              "productName": controller.trx.records![index].mProductID?.identifier ?? "",
+                                              "productId": controller.trx.records![index].mProductID?.id ?? 0,
+                                              "opportunityAmt": controller.trx.records![index].opportunityAmt ?? 0,
+                                              "cBPartnerID": controller.trx.records![index].cBPartnerID?.id ?? 0,
+                                              "cBPartnerName": controller.trx.records![index].cBPartnerID?.identifier ?? "",
+                                              "Description": controller.trx.records![index].description ?? "",
+                                            });
+                                        
+                                      },
                                     ),
-                                    tooltip: 'Lead Info',
-                                    onPressed: () {
-                                      Get.to(const EditOpportunity(),
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "leadStatus": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "bpName": controller
-                                                .trx
-                                                .records![index]
-                                                .aDClientID!
-                                                .identifier,
-                                            "Tel": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "eMail": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .aDClientID
-                                                    ?.identifier ??
-                                                "",
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                "",
-                                            "salesStageValue": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .cSalesStageID
-                                                    ?.id ??
-                                                "",
-                                          });
-                                    },
                                   ),
-                                ),
-                                title: Text(
-                                  controller.trx.records![index].cBPartnerID
-                                          ?.identifier ??
-                                      "???",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index]
-                                              .cSalesStageID!.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                                /* trailing: const Icon(
-                                  Icons.keyboard_arrow_right,
-                                  color: Colors.white,
-                                  size: 30.0,
-                                ), */
-                                childrenPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                children: [
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Contatto: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .aDUserID?.identifier ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Prodotto: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .mProductID?.identifier ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Importo Atteso: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("€" +
-                                              controller.trx.records![index]
-                                                  .opportunityAmt
-                                                  .toString()),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller.trx.records![index]
-                                                  .salesRepID!.identifier ??
-                                              ""),
-                                        ],
+                                  title: Text(
+                                    controller.trx.records![index].cBPartnerID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                          
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .cSalesStageID!.identifier ??
+                                            "??",
+                                        style:
+                                            const TextStyle(color: Colors.white),
                                       ),
                                     ],
                                   ),
-                                ],
+                                  /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Contatto: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .aDUserID?.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Prodotto: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .mProductID?.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Importo Atteso: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text("€" +
+                                                controller.trx.records![index]
+                                                    .opportunityAmt
+                                                    .toString()),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Agente: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .salesRepID!.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
+                          ),
                           );
                         },
                       )
