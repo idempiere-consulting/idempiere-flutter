@@ -95,6 +95,11 @@ class CRMPaymentController extends GetxController {
   }
 
   Future<void> getPayments() async {
+    var now = DateTime.now();
+    DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
@@ -102,7 +107,7 @@ class CRMPaymentController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/C_Payment?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/C_Payment?\$filter= DateAcct le \'$formattedDate 23:59:59\' and DateAcct ge \'$formattedNinetyDaysAgo 00:00:00\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateAcct desc');
     var response = await http.get(
       url,
       headers: <String, String>{
