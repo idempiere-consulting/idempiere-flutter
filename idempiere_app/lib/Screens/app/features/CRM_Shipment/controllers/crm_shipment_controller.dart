@@ -95,6 +95,11 @@ class CRMShipmentController extends GetxController {
   }
 
   Future<void> getShipments() async {
+    var now = DateTime.now();
+    DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
     _dataAvailable.value = false;
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
@@ -103,7 +108,7 @@ class CRMShipmentController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_InOut?\$filter= IsSoTrx eq Y and DocStatus eq \'CO\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/M_InOut?\$filter= IsSoTrx eq Y and DocStatus eq \'CO\' and MovementDate le \'$formattedDate 23:59:59\' and MovementDate ge \'$formattedNinetyDaysAgo 00:00:00\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= MovementDate desc');
 
     var response = await http.get(
       url,
