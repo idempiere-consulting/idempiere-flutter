@@ -179,7 +179,9 @@ class LocaleString extends Translations {
           'Project': 'Project',
           'Product': 'Product',
           'SalesStage': 'Sales Stage',
-          'OpportunityAmt': 'Opportunity Amount'
+          'OpportunityAmt': 'Opportunity Amount',
+          'Phone': 'Phone',
+          'LeadStatus': 'Lead Status'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -361,7 +363,9 @@ class LocaleString extends Translations {
           'Project': 'Progetto',
           'Product': 'Prodotto',
           'SalesStage': 'Stato di Vendita',
-          'OpportunityAmt': 'Importo Atteso'
+          'OpportunityAmt': 'Importo Atteso',
+          'Phone': 'Telefono',
+          'LeadStatus': 'Stato Lead'
         },
       };
 }

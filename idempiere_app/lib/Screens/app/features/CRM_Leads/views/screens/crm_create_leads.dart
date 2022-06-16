@@ -197,10 +197,10 @@ class _CreateLeadState extends State<CreateLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -221,10 +221,10 @@ class _CreateLeadState extends State<CreateLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -243,10 +243,10 @@ class _CreateLeadState extends State<CreateLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -298,10 +298,10 @@ class _CreateLeadState extends State<CreateLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "LeadStatus".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -411,10 +411,10 @@ class _CreateLeadState extends State<CreateLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -435,10 +435,10 @@ class _CreateLeadState extends State<CreateLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -457,10 +457,10 @@ class _CreateLeadState extends State<CreateLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -512,10 +512,10 @@ class _CreateLeadState extends State<CreateLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "LeadStatus".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -625,10 +625,10 @@ class _CreateLeadState extends State<CreateLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -649,10 +649,10 @@ class _CreateLeadState extends State<CreateLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -671,10 +671,10 @@ class _CreateLeadState extends State<CreateLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -726,10 +726,10 @@ class _CreateLeadState extends State<CreateLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "LeadStatus".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),

@@ -301,9 +301,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Contatto: ",
-                                              style: TextStyle(
+                                             Text(
+                                              "${'ContactBP'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -313,9 +313,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Prodotto: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Product'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -325,9 +325,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Importo Atteso: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'OpportunityAmt'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text("€" +
@@ -338,9 +338,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Agente: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'SalesRep'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -590,9 +590,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Contatto: ",
-                                              style: TextStyle(
+                                             Text(
+                                              "${'ContactBP'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -602,9 +602,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Prodotto: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Product'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -614,9 +614,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Importo Atteso: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'OpportunityAmt'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text("€" +
@@ -627,9 +627,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Agente: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'SalesRep'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -879,9 +879,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Contatto: ",
-                                              style: TextStyle(
+                                             Text(
+                                              "${'ContactBP'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -891,9 +891,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Prodotto: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Product'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -903,9 +903,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Importo Atteso: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'OpportunityAmt'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text("€" +
@@ -916,9 +916,9 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Agente: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'SalesRep'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
