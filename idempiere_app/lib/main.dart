@@ -26,6 +26,9 @@ import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/cr
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/calendar_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Charts/echart.dart';
+import 'package:idempiere_app/Screens/app/features/Charts/interval.dart';
+import 'package:idempiere_app/Screens/app/features/Charts/liea_area_point.dart';
 import 'package:idempiere_app/Screens/app/features/Course_Quiz/views/screens/course_quiz_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Employee/views/screens/employee_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource/views/screens/human_resource_screen.dart';
@@ -111,6 +114,18 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/Login',
           page: () => const LoginScreen(),
+        ),
+        GetPage(
+          name: '/LinearCharts',
+          page: () => LineAreaPointPage(),
+        ),
+        GetPage(
+          name: '/IntervalCharts',
+          page: () => IntervalPage(),
+        ),
+        GetPage(
+          name: '/ECharts',
+          page: () => EchartsPage(),
         ),
         GetPage(
           name: '/Dashboard',

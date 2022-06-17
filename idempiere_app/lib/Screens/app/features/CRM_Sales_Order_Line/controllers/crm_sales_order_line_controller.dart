@@ -19,8 +19,9 @@ class CRMSalesOrderLineController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     lineId = Get.arguments["id"];
+    super.onInit();
+
     getSalesOrderLines();
   }
 
