@@ -181,7 +181,12 @@ class LocaleString extends Translations {
           'SalesStage': 'Sales Stage',
           'OpportunityAmt': 'Opportunity Amount',
           'Phone': 'Phone',
-          'LeadStatus': 'Lead Status'
+          'LeadStatus': 'Lead Status',
+          'Edit Sales Order': 'Edit Sales Order',
+          'DocumentNo': 'DocumentNo',
+          'Document Type': 'Document Type',
+          'Business Partner Location': 'Business Partner Location',
+          'Value': 'Value'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -365,7 +370,12 @@ class LocaleString extends Translations {
           'SalesStage': 'Stato di Vendita',
           'OpportunityAmt': 'Importo Atteso',
           'Phone': 'Telefono',
-          'LeadStatus': 'Stato Lead'
+          'LeadStatus': 'Stato Lead',
+          'Edit Sales Order': 'Modifica Offerta',
+          'DocumentNo': 'N. Documento',
+          'Document Type': 'Tipo Documento',
+          'Business Partner Location': 'Indirizzo del Business Partner',
+          'Value': 'Chiave di Ricerca'
         },
       };
 }

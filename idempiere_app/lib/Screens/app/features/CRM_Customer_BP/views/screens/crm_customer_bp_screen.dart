@@ -11,6 +11,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/models/customer_bp_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_edit_customer_bp.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -23,6 +24,7 @@ import 'package:idempiere_app/Screens/app/shared_components/selection_button.dar
 import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
 
@@ -128,6 +130,37 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                 ),
                 Row(
                   children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
@@ -141,7 +174,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                             prefixIcon: Icon(Icons.search_outlined),
                             border: OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Customer Name',
+                            hintText: 'Search',
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -150,25 +183,42 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                   ],
                 ),
                 const SizedBox(height: kSpacing),
-                Obx(
-                  () => controller.dataAvailable
-                      ? ListView.builder(
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Obx(
-                              () => Visibility(
-                                visible:
-                                    controller.searchFilterValue.value == ""
-                                        ? true
-                                        : controller.trx.records![index].name
+                Obx(() => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          
+                          return Obx( ()=> Visibility(
+                            visible: controller.searchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller.trx.records![index].name
                                             .toString()
                                             .toLowerCase()
                                             .contains(controller
                                                 .searchFilterValue.value
-                                                .toLowerCase()),
+                                                .toLowerCase())
+                                    : controller.dropdownValue.value == "2"
+                                            ? (controller
+                                                .trx.records![index].cBPGroupID?.identifier)
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                    : controller.dropdownValue.value == "3"
+                                            ? controller
+                                                .trx.records![index].value
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : true,
                                 child: Card(
                                   elevation: 8.0,
                                   margin: const EdgeInsets.symmetric(
@@ -195,33 +245,21 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                           tooltip: 'Edit Lead',
                                           onPressed: () {
                                             //log("info button pressed");
-                                            /* Get.to(const EditLead(), arguments: {
+                                            Get.to(const EditCRMCustomerBP(), arguments: {
                                             "id": controller
                                                 .trx.records![index].id,
-                                            "name": controller.trx
+                                            "Name": controller.trx
                                                     .records![index].name ??
                                                 "",
-                                            "leadStatus": controller
+                                            "C_BP_Group_ID": controller
                                                     .trx
                                                     .records![index]
-                                                    .leadStatus
-                                                    ?.id ??
+                                                    .cBPGroupID?.id
+                                                    ??
                                                 "",
-                                            "bpName": controller
-                                                .trx.records![index].bPName,
-                                            "Tel": controller.trx
-                                                    .records![index].phone ??
-                                                "",
-                                            "eMail": controller.trx
-                                                    .records![index].eMail ??
-                                                "",
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""
-                                          }); */
+                                            "Value": controller
+                                                .trx.records![index].value,
+                                          });
                                           },
                                         ),
                                       ),
@@ -345,6 +383,37 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                 ),
                 Row(
                   children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
@@ -358,7 +427,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                             prefixIcon: Icon(Icons.search_outlined),
                             border: OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Customer Name',
+                            hintText: 'Search',
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -367,25 +436,42 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                   ],
                 ),
                 const SizedBox(height: kSpacing),
-                Obx(
-                  () => controller.dataAvailable
-                      ? ListView.builder(
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Obx(
-                              () => Visibility(
-                                visible:
-                                    controller.searchFilterValue.value == ""
-                                        ? true
-                                        : controller.trx.records![index].name
+                Obx(() => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          
+                          return Obx( ()=> Visibility(
+                            visible: controller.searchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller.trx.records![index].name
                                             .toString()
                                             .toLowerCase()
                                             .contains(controller
                                                 .searchFilterValue.value
-                                                .toLowerCase()),
+                                                .toLowerCase())
+                                    : controller.dropdownValue.value == "2"
+                                            ? (controller
+                                                .trx.records![index].cBPGroupID?.identifier)
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                    : controller.dropdownValue.value == "3"
+                                            ? controller
+                                                .trx.records![index].value
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : true,
                                 child: Card(
                                   elevation: 8.0,
                                   margin: const EdgeInsets.symmetric(
@@ -412,33 +498,21 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                           tooltip: 'Edit Lead',
                                           onPressed: () {
                                             //log("info button pressed");
-                                            /* Get.to(const EditLead(), arguments: {
+                                            Get.to(const EditCRMCustomerBP(), arguments: {
                                             "id": controller
                                                 .trx.records![index].id,
-                                            "name": controller.trx
+                                            "Name": controller.trx
                                                     .records![index].name ??
                                                 "",
-                                            "leadStatus": controller
+                                            "C_BP_Group_ID": controller
                                                     .trx
                                                     .records![index]
-                                                    .leadStatus
-                                                    ?.id ??
+                                                    .cBPGroupID?.id
+                                                    ??
                                                 "",
-                                            "bpName": controller
-                                                .trx.records![index].bPName,
-                                            "Tel": controller.trx
-                                                    .records![index].phone ??
-                                                "",
-                                            "eMail": controller.trx
-                                                    .records![index].eMail ??
-                                                "",
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""
-                                          }); */
+                                            "Value": controller
+                                                .trx.records![index].value,
+                                          });
                                           },
                                         ),
                                       ),
@@ -562,6 +636,37 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                 ),
                 Row(
                   children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
@@ -575,7 +680,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                             prefixIcon: Icon(Icons.search_outlined),
                             border: OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Customer Name',
+                            hintText: 'Search',
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -584,25 +689,42 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                   ],
                 ),
                 const SizedBox(height: kSpacing),
-                Obx(
-                  () => controller.dataAvailable
-                      ? ListView.builder(
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Obx(
-                              () => Visibility(
-                                visible:
-                                    controller.searchFilterValue.value == ""
-                                        ? true
-                                        : controller.trx.records![index].name
+                Obx(() => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.rowcount,
+                        itemBuilder: (BuildContext context, int index) {
+                          
+                          return Obx( ()=> Visibility(
+                            visible: controller.searchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller.trx.records![index].name
                                             .toString()
                                             .toLowerCase()
                                             .contains(controller
                                                 .searchFilterValue.value
-                                                .toLowerCase()),
+                                                .toLowerCase())
+                                    : controller.dropdownValue.value == "2"
+                                            ? (controller
+                                                .trx.records![index].cBPGroupID?.identifier)
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                    : controller.dropdownValue.value == "3"
+                                            ? controller
+                                                .trx.records![index].value
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : true,
                                 child: Card(
                                   elevation: 8.0,
                                   margin: const EdgeInsets.symmetric(
@@ -629,33 +751,21 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                           tooltip: 'Edit Lead',
                                           onPressed: () {
                                             //log("info button pressed");
-                                            /* Get.to(const EditLead(), arguments: {
+                                            Get.to(const EditCRMCustomerBP(), arguments: {
                                             "id": controller
                                                 .trx.records![index].id,
-                                            "name": controller.trx
+                                            "Name": controller.trx
                                                     .records![index].name ??
                                                 "",
-                                            "leadStatus": controller
+                                            "C_BP_Group_ID": controller
                                                     .trx
                                                     .records![index]
-                                                    .leadStatus
-                                                    ?.id ??
+                                                    .cBPGroupID?.id
+                                                    ??
                                                 "",
-                                            "bpName": controller
-                                                .trx.records![index].bPName,
-                                            "Tel": controller.trx
-                                                    .records![index].phone ??
-                                                "",
-                                            "eMail": controller.trx
-                                                    .records![index].eMail ??
-                                                "",
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""
-                                          }); */
+                                            "Value": controller
+                                                .trx.records![index].value,
+                                          });
                                           },
                                         ),
                                       ),

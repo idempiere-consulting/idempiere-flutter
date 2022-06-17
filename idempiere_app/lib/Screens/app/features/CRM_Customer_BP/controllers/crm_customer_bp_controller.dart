@@ -1,5 +1,5 @@
 part of dashboard;
-
+ 
 class CRMCustomerBPController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late CustomerBpJson _trx;
@@ -11,17 +11,34 @@ class CRMCustomerBPController extends GetxController {
 
   var value = "Tutti".obs;
 
-  var searchFilterValue = "".obs;
-
   var filters = ["Tutti", "Miei" /* , "Team" */];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
   var searchFieldController = TextEditingController();
+  var searchFilterValue = "".obs;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  final json = {
+    "types": [
+      {"id": "1", "name": "Business Partner".tr},
+      {"id": "2", "name": "Business Partner Group".tr},
+      {"id": "3", "name": "Value".tr},
+    ]
+  };
+
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
+  }
 
   @override
   void onInit() {
+    dropDownList = getTypes()!;
     super.onInit();
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;

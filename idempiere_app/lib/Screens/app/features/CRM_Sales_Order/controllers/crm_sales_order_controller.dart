@@ -15,9 +15,28 @@ class CRMSalesOrderController extends GetxController {
   var _dataAvailable = false.obs;
 
   var searchFieldController = TextEditingController();
+  var searchFilterValue = "".obs;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  final json = {
+    "types": [
+      {"id": "1", "name": "DocumentNo".tr},
+      {"id": "2", "name": "Business Partner".tr},
+      //{"id": "3", "name": "SalesRep".tr},
+    ]
+  };
+
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
+  }
 
   @override
   void onInit() {
+    dropDownList = getTypes()!;
     super.onInit();
     getSalesOrders();
     getADUserID();
@@ -96,7 +115,7 @@ class CRMSalesOrderController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\'   and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DocStatus desc');
+        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\'   and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateOrdered desc');
     var response = await http.get(
       url,
       headers: <String, String>{
