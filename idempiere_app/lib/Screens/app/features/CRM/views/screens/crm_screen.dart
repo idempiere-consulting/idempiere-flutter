@@ -3,12 +3,18 @@
 library dashboard;
 
 //import 'dart:convert';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/widgets.dart';
+
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:graphic/graphic.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM/models/lead_funnel_data_json.dart';
+
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -25,6 +31,8 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 // binding
 part '../../bindings/crm_binding.dart';
@@ -49,6 +57,7 @@ class CRMScreen extends GetView<CRMController> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
         Get.offNamed('/Dashboard');
@@ -84,7 +93,7 @@ class CRMScreen extends GetView<CRMController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-              const SizedBox(height: kSpacing * 2),
+              /* const SizedBox(height: kSpacing * 2),
               _buildTaskOverview(
                 data: controller.getAllTask(),
                 headerAxis: Axis.vertical,
@@ -98,7 +107,73 @@ class CRMScreen extends GetView<CRMController> {
                 crossAxisCellCount: 6,
               ),
               const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              _buildRecentMessages(data: controller.getChatting()), */
+              Container( 
+                child: const Text(
+                  'Lead Status',
+                  style: TextStyle(fontSize: 20, /* color: Colors.black */),
+                ),
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 10),
+                width: 350,
+                height: 300,
+                child: 
+                Obx(() => controller.dataAvailable ? Chart(
+                  padding: (_) => const EdgeInsets.all(10),
+                  data: controller.funnelData,
+                  variables: {
+                    'Name': Variable(
+                      accessor: (Map map) => map['Name'] as String,
+                    ),
+                    'tot': Variable(
+                      accessor: (Map map) => map['tot'] as num,
+                      scale: LinearScale(min: 0-controller.charScale, max: controller.charScale),
+                    ),
+                  },
+                   transforms: [
+                    Sort(
+                      compare: (a, b) =>
+                          ((b['tot'] as num) - (a['tot'] as num)).toInt(),
+                    )
+                  ], 
+                  elements: [
+                    IntervalElement(
+                      label: LabelAttr(
+                          encoder: (tuple) => Label(
+                                "${tuple['tot']}"/* "${tuple['Name']}:\n${tuple['tot']}" */,
+                                LabelStyle(style: Defaults.runeStyle, textAlign: TextAlign.center, textScaleFactor: 1.5, /* offset: Offset.lerp(Offset.fromDirection(0.33), Offset.fromDirection(-10), 50) */),
+                              )),
+                            
+                      shape: ShapeAttr(value: FunnelShape()),
+                      color: ColorAttr(
+                          variable: 'Name', values: Defaults.colors10,),
+                      modifiers: [SymmetricModifier()],
+                    )
+                  ],
+                  coord: RectCoord(transposed: true, verticalRange: [1, 0]),
+                ) : const Center(child: CircularProgressIndicator())
+              )),
+              Container(
+                child: Obx(() => controller.dataAvailable ? 
+                ListView.builder(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: controller.funnelData.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Icon(
+                        Icons.circle,
+                        color: Defaults.colors10[index],
+                        size: 15,
+                      ),
+                      title: Text(controller.funnelData[index]['Name']),
+                      
+                  );
+              },) :  const Center(child: CircularProgressIndicator())),
+              )
             ]);
           },
           tabletBuilder: (context, constraints) {
@@ -118,7 +193,7 @@ class CRMScreen extends GetView<CRMController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-              const SizedBox(height: kSpacing * 2),
+              /* const SizedBox(height: kSpacing * 2),
               _buildTaskOverview(
                 data: controller.getAllTask(),
                 headerAxis: Axis.vertical,
@@ -132,7 +207,73 @@ class CRMScreen extends GetView<CRMController> {
                 crossAxisCellCount: 6,
               ),
               const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              _buildRecentMessages(data: controller.getChatting()), */
+              Container( 
+                child: const Text(
+                  'Lead Status',
+                  style: TextStyle(fontSize: 20, /* color: Colors.black */),
+                ),
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 10),
+                width: 350,
+                height: 300,
+                child: 
+                Obx(() => controller.dataAvailable ? Chart(
+                  padding: (_) => const EdgeInsets.all(10),
+                  data: controller.funnelData,
+                  variables: {
+                    'Name': Variable(
+                      accessor: (Map map) => map['Name'] as String,
+                    ),
+                    'tot': Variable(
+                      accessor: (Map map) => map['tot'] as num,
+                      scale: LinearScale(min: 0-controller.charScale, max: controller.charScale),
+                    ),
+                  },
+                   transforms: [
+                    Sort(
+                      compare: (a, b) =>
+                          ((b['tot'] as num) - (a['tot'] as num)).toInt(),
+                    )
+                  ], 
+                  elements: [
+                    IntervalElement(
+                      label: LabelAttr(
+                          encoder: (tuple) => Label(
+                                "${tuple['tot']}"/* "${tuple['Name']}:\n${tuple['tot']}" */,
+                                LabelStyle(style: Defaults.runeStyle, textAlign: TextAlign.center, textScaleFactor: 1.5),
+                              )),
+                            
+                      shape: ShapeAttr(value: FunnelShape()),
+                      color: ColorAttr(
+                          variable: 'Name', values: Defaults.colors10,),
+                      modifiers: [SymmetricModifier()],
+                    )
+                  ],
+                  coord: RectCoord(transposed: true, verticalRange: [1, 0]),
+                ) : const Center(child: CircularProgressIndicator())
+              )),
+              Container(
+                child: Obx(() => controller.dataAvailable ? 
+                ListView.builder(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: controller.funnelData.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Icon(
+                        Icons.circle,
+                        color: Defaults.colors10[index],
+                        size: 15,
+                      ),
+                      title: Text(controller.funnelData[index]['Name']),
+                      
+                  );
+              },) :  const Center(child: CircularProgressIndicator())),
+              )
             ]);
           },
           desktopBuilder: (context, constraints) {
@@ -152,7 +293,7 @@ class CRMScreen extends GetView<CRMController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-              const SizedBox(height: kSpacing * 2),
+              /* const SizedBox(height: kSpacing * 2),
               _buildTaskOverview(
                 data: controller.getAllTask(),
                 headerAxis: Axis.vertical,
@@ -166,7 +307,76 @@ class CRMScreen extends GetView<CRMController> {
                 crossAxisCellCount: 6,
               ),
               const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              _buildRecentMessages(data: controller.getChatting()), */
+              Container( 
+                child: const Text(
+                  'Lead Status',
+                  style: TextStyle(fontSize: 20, /* color: Colors.black */),
+                ),
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 10),
+                width: 350,
+                height: 300,
+                child: 
+                Obx(() => controller.dataAvailable ? Chart(
+                  padding: (_) => const EdgeInsets.all(10),
+                  data: controller.funnelData,
+                  variables: {
+                    'Name': Variable(
+                      accessor: (Map map) => map['Name'] as String,
+                    ),
+                    'tot': Variable(
+                      accessor: (Map map) => map['tot'] as num,
+                      scale: LinearScale(min: 0-controller.charScale, max: controller.charScale),
+                    ),
+                  },
+                   transforms: [
+                    Sort(
+                      compare: (a, b) =>
+                          ((b['tot'] as num) - (a['tot'] as num)).toInt(),
+                    )
+                  ], 
+                  elements: [
+                    IntervalElement(
+                      label: LabelAttr(
+                          encoder: (tuple) => Label(
+                                "${tuple['tot']}"/* "${tuple['Name']}:\n${tuple['tot']}" */,
+                                LabelStyle(style: Defaults.runeStyle, textAlign: TextAlign.center, textScaleFactor: 1.5,
+                                /* offset: Offset.lerp(Offset.fromDirection(0.33), Offset.fromDirection(-10), 50) */)
+                              )),
+                            
+                      shape: ShapeAttr(value: FunnelShape()),
+                      color: ColorAttr(
+                          variable: 'Name', values: Defaults.colors10,),
+                      modifiers: [SymmetricModifier()],
+                    )
+                  ],
+                  coord: RectCoord(transposed: true, verticalRange: [1, 0]),
+                ) : const Center(child: CircularProgressIndicator())
+              )),
+              Container(
+                alignment: Alignment.center,
+                width: size.width,
+                child: Obx(() => controller.dataAvailable ? 
+                ListView.builder(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: controller.funnelData.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Icon(
+                        Icons.circle,
+                        color: Defaults.colors10[index],
+                        size: 15,
+                      ),
+                      title: Text(controller.funnelData[index]['Name']),
+                      
+                                      );
+                  },) :  const Center(child: CircularProgressIndicator())),
+              ),
             ]);
           },
         )),
