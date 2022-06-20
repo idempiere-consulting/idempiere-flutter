@@ -25,7 +25,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
   createEvent() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    final msg = jsonEncode({
+    var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "AD_User_ID": {"id": GetStorage().read('userId')},
@@ -42,6 +42,26 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
       "JP_ToDo_Type": {"id": "S"},
       "C_Project_ID": {"id": projectId}
     });
+
+    if (projectId == 0) {
+      msg = jsonEncode({
+        "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+        "AD_Client_ID": {"id": GetStorage().read("clientid")},
+        "AD_User_ID": {"id": GetStorage().read('userId')},
+        "Name": nameFieldController.text,
+        "Description": descriptionFieldController.text,
+        "Qty": 1.0,
+        //"C_BPartner_ID": {"id": businessPartnerId},
+        "JP_ToDo_ScheduledStartDate": "${date}T$startTime",
+        "JP_ToDo_ScheduledEndDate": "${date}T$startTime",
+        "JP_ToDo_ScheduledStartTime": startTime,
+        "JP_ToDo_ScheduledEndTime": startTime,
+        "JP_ToDo_Status": {"id": dropdownValue},
+        "IsOpenToDoJP": true,
+        "JP_ToDo_Type": {"id": "S"},
+        //"C_Project_ID": {"id": projectId}
+      });
+    }
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
 
@@ -133,11 +153,24 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
 
       /* projectFieldController.text =
           json["records"][0]['C_Project_ID']['identifier'] ?? ""; */
-      initialValue = TextEditingValue(
-          text: json["records"][0]['C_Project_ID']['identifier'] ?? "");
-      nameFieldController.text =
-          json["records"][0]['C_Project_ID']['identifier'] ?? "";
-      projectId = json["records"][0]['C_Project_ID']['id'] ?? 0;
+      try {
+        initialValue = TextEditingValue(
+            text: json["records"][0]['C_Project_ID']['identifier'] ?? "");
+      } catch (e) {
+        initialValue = null;
+      }
+
+      try {
+        nameFieldController.text =
+            json["records"][0]['C_Project_ID']['identifier'] ?? "";
+      } catch (e) {
+        nameFieldController.text = "";
+      }
+      try {
+        projectId = json["records"][0]['C_Project_ID']['id'] ?? 0;
+      } catch (e) {
+        projectId = 0;
+      }
       getProjectBP();
       getAllProjects();
     }
@@ -162,7 +195,11 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     if (response.statusCode == 200) {
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 
-      businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"] ?? 0;
+      try {
+        businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"] ?? 0;
+      } catch (e) {
+        businessPartnerId = 0;
+      }
     } else {
       if (kDebugMode) {
         print(utf8.decode(response.bodyBytes));
@@ -251,7 +288,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
   int businessPartnerId = 0;
   late List<Types> dropDownList;
   bool flagProject = false;
-  late TextEditingValue initialValue;
+  late dynamic initialValue;
   //var adUserId;
 
   @override
@@ -394,7 +431,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                                   nameFieldController.text =
                                       "${selection.value}_${selection.name}";
                                   setState(() {});
-
+                                  getProjectBP();
                                   //print(salesrepValue);
                                 },
                               )

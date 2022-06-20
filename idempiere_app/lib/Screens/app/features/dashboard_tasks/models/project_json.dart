@@ -46,15 +46,15 @@ class Records {
   final String? value;
   final CCurrencyID? cCurrencyID;
   final bool? isCommitment;
-  final int? committedAmt;
+  final num? committedAmt;
   final bool? processed;
-  final int? plannedAmt;
-  final int? plannedQty;
-  final int? plannedMarginAmt;
-  final int? invoicedAmt;
-  final int? invoicedQty;
-  final int? projectBalanceAmt;
-  final int? committedQty;
+  final num? plannedAmt;
+  final num? plannedQty;
+  final num? plannedMarginAmt;
+  final num? invoicedAmt;
+  final num? invoicedQty;
+  final num? projectBalanceAmt;
+  final num? committedQty;
   final bool? isCommitCeiling;
   final ProjectCategory? projectCategory;
   final ProjInvoiceRule? projInvoiceRule;
@@ -118,15 +118,15 @@ class Records {
                 json['C_Currency_ID'] as Map<String, dynamic>)
             : null,
         isCommitment = json['IsCommitment'] as bool?,
-        committedAmt = json['CommittedAmt'] as int?,
+        committedAmt = json['CommittedAmt'] as num?,
         processed = json['Processed'] as bool?,
-        plannedAmt = json['PlannedAmt'] as int?,
-        plannedQty = json['PlannedQty'] as int?,
-        plannedMarginAmt = json['PlannedMarginAmt'] as int?,
-        invoicedAmt = json['InvoicedAmt'] as int?,
-        invoicedQty = json['InvoicedQty'] as int?,
-        projectBalanceAmt = json['ProjectBalanceAmt'] as int?,
-        committedQty = json['CommittedQty'] as int?,
+        plannedAmt = json['PlannedAmt'] as num?,
+        plannedQty = json['PlannedQty'] as num?,
+        plannedMarginAmt = json['PlannedMarginAmt'] as num?,
+        invoicedAmt = json['InvoicedAmt'] as num?,
+        invoicedQty = json['InvoicedQty'] as num?,
+        projectBalanceAmt = json['ProjectBalanceAmt'] as num?,
+        committedQty = json['CommittedQty'] as num?,
         isCommitCeiling = json['IsCommitCeiling'] as bool?,
         projectCategory =
             (json['ProjectCategory'] as Map<String, dynamic>?) != null
