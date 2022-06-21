@@ -244,7 +244,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                                 Icons.account_balance,
                                                 color: Colors.green,
                                               ),
-                                              tooltip: 'Bank',
+                                              tooltip: 'Bank'.tr,
                                               onPressed: () {
                                                 //log("info button pressed");
                                               },
@@ -482,7 +482,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                                 Icons.account_balance,
                                                 color: Colors.green,
                                               ),
-                                              tooltip: 'Bank',
+                                              tooltip: 'Bank'.tr,
                                               onPressed: () {
                                                 //log("info button pressed");
                                               },
@@ -720,7 +720,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                                 Icons.account_balance,
                                                 color: Colors.green,
                                               ),
-                                              tooltip: 'Bank',
+                                              tooltip: 'Bank'.tr,
                                               onPressed: () {
                                                 //log("info button pressed");
                                               },

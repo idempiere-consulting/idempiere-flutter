@@ -96,7 +96,7 @@ class _ProductListDetailState extends State<ProductListDetail> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Product Detail'),
+        title: Text('Product Detail'.tr),
       ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
@@ -111,9 +111,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Value',
+                    decoration:  InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Value'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -123,9 +123,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration:  InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -136,9 +136,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
                     readOnly: true,
                     controller: descriptionFieldController,
                     maxLines: null,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -163,8 +163,8 @@ class _ProductListDetailState extends State<ProductListDetail> {
                       child: ElevatedButton(
                         onPressed: () {},
                         child: flagAvailable
-                            ? const Text("Available")
-                            : const Text("Not Available"),
+                            ?  Text("Available".tr)
+                            :  Text("Not Available".tr),
                         style: ButtonStyle(
                           backgroundColor: flagAvailable
                               ? MaterialStateProperty.all(Colors.green)
@@ -186,9 +186,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Value',
+                    decoration:  InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Value'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -198,9 +198,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration:  InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -211,9 +211,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
                     readOnly: true,
                     controller: descriptionFieldController,
                     maxLines: null,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -238,8 +238,8 @@ class _ProductListDetailState extends State<ProductListDetail> {
                       child: ElevatedButton(
                         onPressed: () {},
                         child: flagAvailable
-                            ? const Text("Available")
-                            : const Text("Not Available"),
+                            ?  Text("Available".tr)
+                            :  Text("Not Available".tr),
                         style: ButtonStyle(
                           backgroundColor: flagAvailable
                               ? MaterialStateProperty.all(Colors.green)
@@ -261,9 +261,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Value',
+                    decoration:  InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Value'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -273,9 +273,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration:  InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -286,9 +286,9 @@ class _ProductListDetailState extends State<ProductListDetail> {
                     readOnly: true,
                     controller: descriptionFieldController,
                     maxLines: null,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -313,8 +313,8 @@ class _ProductListDetailState extends State<ProductListDetail> {
                       child: ElevatedButton(
                         onPressed: () {},
                         child: flagAvailable
-                            ? const Text("Available")
-                            : const Text("Not Available"),
+                            ?  Text("Available".tr)
+                            :  Text("Not Available".tr),
                         style: ButtonStyle(
                           backgroundColor: flagAvailable
                               ? MaterialStateProperty.all(Colors.green)

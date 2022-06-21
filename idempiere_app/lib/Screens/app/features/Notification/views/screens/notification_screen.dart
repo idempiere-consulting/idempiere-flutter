@@ -53,7 +53,7 @@ class NotificationScreen extends GetView<NotificationController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notifications"),
+        title: Text("Notifications".tr),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {

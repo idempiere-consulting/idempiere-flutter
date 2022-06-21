@@ -84,8 +84,8 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("PROVVIGIONE: ${controller.trx.rowcount}")
-                          : const Text("PROVVIGIONE: ")),
+                          ? Text("COMMISSIONS: ".tr + controller.trx.rowcount.toString())
+                          : Text("COMMISSIONS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -157,7 +157,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead'.tr,
+                                      tooltip: 'Edit Commission'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -225,7 +225,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Currency:".tr,
+                                              "Currency: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -237,7 +237,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Agent:".tr,
+                                              "Agent: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -274,8 +274,8 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("PROVVIGIONE: ${controller.trx.rowcount}")
-                          : const Text("PROVVIGIONE: ")),
+                          ? Text("COMMISSIONS: ".tr + controller.trx.rowcount.toString())
+                          : Text("COMMISSIONS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -415,7 +415,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Currency:".tr,
+                                              "Currency: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -427,7 +427,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Agent:".tr,
+                                              "Agent: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -464,8 +464,8 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("PROVVIGIONE: ${controller.trx.rowcount}")
-                          : const Text("PROVVIGIONE: ")),
+                          ? Text("COMMISSIONS: ".tr + controller.trx.rowcount.toString())
+                          : Text("COMMISSIONS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -537,7 +537,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead'.tr,
+                                      tooltip: 'Edit Commission'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -605,7 +605,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Currency:".tr,
+                                              "Currency: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -617,7 +617,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Agent:".tr,
+                                              "Agent: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),

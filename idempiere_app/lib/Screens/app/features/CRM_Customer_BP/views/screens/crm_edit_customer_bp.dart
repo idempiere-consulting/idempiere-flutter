@@ -158,8 +158,8 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Edit Customer'),
+        title: Center(
+          child: Text('Edit Customer'.tr),
         ),
         actions: [
           Padding(

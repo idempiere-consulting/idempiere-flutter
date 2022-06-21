@@ -47,8 +47,8 @@ class _EditLeadState extends State<EditLead> {
       Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato aggiornato",
+        "Done!".tr,
+        "The record has been updated".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -56,8 +56,8 @@ class _EditLeadState extends State<EditLead> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -86,8 +86,8 @@ class _EditLeadState extends State<EditLead> {
       Get.back();
       Get.back();
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato cancellato",
+        "Done!".tr,
+        "The record has been erased".tr,
         icon: const Icon(
           Icons.delete,
           color: Colors.green,
@@ -95,8 +95,8 @@ class _EditLeadState extends State<EditLead> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -214,7 +214,7 @@ class _EditLeadState extends State<EditLead> {
             child: IconButton(
               onPressed: () {
                 Get.defaultDialog(
-                  title: "Eliminazione record",
+                  title: "Record deletion".tr,
                   middleText: "Sicuro di voler eliminare il record?",
                   backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
                   //titleStyle: TextStyle(color: Colors.white),

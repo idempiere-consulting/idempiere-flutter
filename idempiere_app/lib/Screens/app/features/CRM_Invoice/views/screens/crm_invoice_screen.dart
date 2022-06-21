@@ -85,8 +85,8 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("FATTURE: ${controller.trx.rowcount}")
-                          : const Text("FATTURE: ")),
+                          ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
+                          : Text("INVOICES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -169,11 +169,11 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Search',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -248,7 +248,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                               Icons.edit,
                                               color: Colors.green,
                                             ),
-                                            tooltip: 'Edit Lead',
+                                            tooltip: 'Edit Invoice'.tr,
                                             onPressed: () {
                                               //log("info button pressed");
                                               /* Get.to(const EditLead(), arguments: {
@@ -355,9 +355,9 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                             children: [
                                               Row(
                                                 children: [
-                                                  const Text(
-                                                    "Importo: ",
-                                                    style: TextStyle(
+                                                  Text(
+                                                    "Amount: ".tr,
+                                                    style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
@@ -391,8 +391,8 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("FATTURE: ${controller.trx.rowcount}")
-                          : const Text("FATTURE: ")),
+                          ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
+                          : Text("INVOICES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -431,35 +431,55 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                         ),
                       ),
                     ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
                           controller: controller.searchFieldController,
                           onSubmitted: (String? value) {
-                            for (var i = 0; i < controller.trx.rowcount!; i++) {
-                              if (value.toString().toLowerCase() ==
-                                  controller.trx.records![i].documentNo!
-                                      .toLowerCase()) {
-                                Get.offNamed('/InvoiceLine', arguments: {
-                                  "id": controller.trx.records![i].id,
-                                  "docNo":
-                                      controller.trx.records![i].documentNo,
-                                  "bPartner": controller
-                                      .trx.records![i].cBPartnerID?.identifier,
-                                  "priceListId":
-                                      controller.trx.records![i].mPriceListID,
-                                  "dateOrdered":
-                                      controller.trx.records![i].dateInvoiced,
-                                });
-                              }
-                            }
+                            controller.searchFilterValue.value =
+                                controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Product Value',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -476,134 +496,188 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                           shrinkWrap: true,
                           itemCount: controller.trx.rowcount,
                           itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                      tooltip: 'Edit Lead',
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        /* Get.to(const EditLead(), arguments: {
-                                          "id": controller
-                                              .trx.records![index].id,
-                                          "name": controller
-                                              .trx.records![index].name,
-                                          "leadStatus": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .Status
-                                                  ?.id ??
-                                              "",
-                                          "bpName": controller
-                                              .trx.records![index].bPName,
-                                          "Tel": controller
-                                              .trx.records![index].phone,
-                                          "eMail": controller
-                                              .trx.records![index].eMail,
-                                          "salesRep": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""
-                                        }); */
-                                      },
-                                    ),
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.article,
-                                      color: controller.trx.records![index]
-                                                  .docStatus?.id ==
-                                              "CO"
-                                          ? Colors.green
-                                          : Colors.yellow,
-                                    ),
-                                    onPressed: () {
-                                      Get.offNamed('/InvoiceLine', arguments: {
-                                        "id": controller.trx.records![index].id,
-                                        "docNo": controller
-                                            .trx.records![index].documentNo,
-                                        "bPartner": controller
-                                            .trx
-                                            .records![index]
-                                            .cBPartnerID
-                                            ?.identifier,
-                                        "priceListId": controller
-                                            .trx.records![index].mPriceListID,
-                                        "dateOrdered": controller
-                                            .trx.records![index].dateInvoiced,
-                                      });
-                                    },
-                                  ),
-                                  title: Text(
-                                    "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID!.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Importo: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                            return Obx(() => Visibility(
+                                  visible: controller.searchFilterValue.value ==
+                                          ""
+                                      ? true
+                                      : controller.dropdownValue.value == "1"
+                                          ? controller
+                                              .trx.records![index].documentNo
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .searchFilterValue.value
+                                                  .toLowerCase())
+                                          : controller.dropdownValue.value ==
+                                                  "2"
+                                              ? controller.trx.records![index]
+                                                  .dateInvoiced
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .searchFilterValue.value
+                                                      .toLowerCase())
+                                              : controller.dropdownValue.value ==
+                                                      "3"
+                                                  ? controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID!
+                                                      .identifier
+                                                      .toString()
+                                                      .toLowerCase()
+                                                      .contains(controller.searchFilterValue.value.toLowerCase())
+                                                  : controller.dropdownValue.value == "4"
+                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                      : true,
+                                  child: Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          color:
+                                              Color.fromRGBO(64, 75, 96, .9)),
+                                      child: ExpansionTile(
+                                        tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        leading: Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: Colors.green,
                                             ),
-                                            Text(
-                                                "€${controller.trx.records![index].grandTotal}"),
+                                            tooltip: 'Edit Invoice'.tr,
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                              /* Get.to(const EditLead(), arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "name": controller
+                                                .trx.records![index].name,
+                                            "leadStatus": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .Status
+                                                    ?.id ??
+                                                "",
+                                            "bpName": controller
+                                                .trx.records![index].bPName,
+                                            "Tel": controller
+                                                .trx.records![index].phone,
+                                            "eMail": controller
+                                                .trx.records![index].eMail,
+                                            "salesRep": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .salesRepID
+                                                    ?.identifier ??
+                                                ""
+                                          }); */
+                                            },
+                                          ),
+                                        ),
+                                        trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.article,
+                                            color: controller
+                                                        .trx
+                                                        .records![index]
+                                                        .docStatus
+                                                        ?.id ==
+                                                    "CO"
+                                                ? Colors.green
+                                                : Colors.yellow,
+                                          ),
+                                          onPressed: () {
+                                            Get.offNamed('/InvoiceLine',
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "docNo": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .documentNo,
+                                                  "bPartner": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier,
+                                                  "priceListId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mPriceListID,
+                                                  "dateOrdered": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateInvoiced,
+                                                });
+                                          },
+                                        ),
+                                        title: Text(
+                                          "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Row(
+                                          children: <Widget>[
+                                            const Icon(Icons.linear_scale,
+                                                color: Colors.yellowAccent),
+                                            Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID!
+                                                        .identifier ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                      ],
+                                        /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                        childrenPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 10.0),
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                      "€${controller.trx.records![index].grandTotal}"),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
+                                  ),
+                                ));
                           },
                         )
                       : const Center(child: CircularProgressIndicator()),
@@ -623,8 +697,8 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("FATTURE: ${controller.trx.rowcount}")
-                          : const Text("FATTURE: ")),
+                          ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
+                          : Text("INVOICES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -663,35 +737,55 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                         ),
                       ),
                     ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.dropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.dropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id,
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
                           controller: controller.searchFieldController,
                           onSubmitted: (String? value) {
-                            for (var i = 0; i < controller.trx.rowcount!; i++) {
-                              if (value.toString().toLowerCase() ==
-                                  controller.trx.records![i].documentNo!
-                                      .toLowerCase()) {
-                                Get.offNamed('/InvoiceLine', arguments: {
-                                  "id": controller.trx.records![i].id,
-                                  "docNo":
-                                      controller.trx.records![i].documentNo,
-                                  "bPartner": controller
-                                      .trx.records![i].cBPartnerID?.identifier,
-                                  "priceListId":
-                                      controller.trx.records![i].mPriceListID,
-                                  "dateOrdered":
-                                      controller.trx.records![i].dateInvoiced,
-                                });
-                              }
-                            }
+                            controller.searchFilterValue.value =
+                                controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Product Value',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -708,134 +802,188 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                           shrinkWrap: true,
                           itemCount: controller.trx.rowcount,
                           itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                      tooltip: 'Edit Lead',
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        /* Get.to(const EditLead(), arguments: {
-                                          "id": controller
-                                              .trx.records![index].id,
-                                          "name": controller
-                                              .trx.records![index].name,
-                                          "leadStatus": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .Status
-                                                  ?.id ??
-                                              "",
-                                          "bpName": controller
-                                              .trx.records![index].bPName,
-                                          "Tel": controller
-                                              .trx.records![index].phone,
-                                          "eMail": controller
-                                              .trx.records![index].eMail,
-                                          "salesRep": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""
-                                        }); */
-                                      },
-                                    ),
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.article,
-                                      color: controller.trx.records![index]
-                                                  .docStatus?.id ==
-                                              "CO"
-                                          ? Colors.green
-                                          : Colors.yellow,
-                                    ),
-                                    onPressed: () {
-                                      Get.offNamed('/InvoiceLine', arguments: {
-                                        "id": controller.trx.records![index].id,
-                                        "docNo": controller
-                                            .trx.records![index].documentNo,
-                                        "bPartner": controller
-                                            .trx
-                                            .records![index]
-                                            .cBPartnerID
-                                            ?.identifier,
-                                        "priceListId": controller
-                                            .trx.records![index].mPriceListID,
-                                        "dateOrdered": controller
-                                            .trx.records![index].dateInvoiced,
-                                      });
-                                    },
-                                  ),
-                                  title: Text(
-                                    "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID!.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Importo: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                            return Obx(() => Visibility(
+                                  visible: controller.searchFilterValue.value ==
+                                          ""
+                                      ? true
+                                      : controller.dropdownValue.value == "1"
+                                          ? controller
+                                              .trx.records![index].documentNo
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .searchFilterValue.value
+                                                  .toLowerCase())
+                                          : controller.dropdownValue.value ==
+                                                  "2"
+                                              ? controller.trx.records![index]
+                                                  .dateInvoiced
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .searchFilterValue.value
+                                                      .toLowerCase())
+                                              : controller.dropdownValue.value ==
+                                                      "3"
+                                                  ? controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID!
+                                                      .identifier
+                                                      .toString()
+                                                      .toLowerCase()
+                                                      .contains(controller.searchFilterValue.value.toLowerCase())
+                                                  : controller.dropdownValue.value == "4"
+                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                      : true,
+                                  child: Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          color:
+                                              Color.fromRGBO(64, 75, 96, .9)),
+                                      child: ExpansionTile(
+                                        tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        leading: Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: Colors.green,
                                             ),
-                                            Text(
-                                                "€${controller.trx.records![index].grandTotal}"),
+                                            tooltip: 'Edit Invoice'.tr,
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                              /* Get.to(const EditLead(), arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "name": controller
+                                                .trx.records![index].name,
+                                            "leadStatus": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .Status
+                                                    ?.id ??
+                                                "",
+                                            "bpName": controller
+                                                .trx.records![index].bPName,
+                                            "Tel": controller
+                                                .trx.records![index].phone,
+                                            "eMail": controller
+                                                .trx.records![index].eMail,
+                                            "salesRep": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .salesRepID
+                                                    ?.identifier ??
+                                                ""
+                                          }); */
+                                            },
+                                          ),
+                                        ),
+                                        trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.article,
+                                            color: controller
+                                                        .trx
+                                                        .records![index]
+                                                        .docStatus
+                                                        ?.id ==
+                                                    "CO"
+                                                ? Colors.green
+                                                : Colors.yellow,
+                                          ),
+                                          onPressed: () {
+                                            Get.offNamed('/InvoiceLine',
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "docNo": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .documentNo,
+                                                  "bPartner": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier,
+                                                  "priceListId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mPriceListID,
+                                                  "dateOrdered": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateInvoiced,
+                                                });
+                                          },
+                                        ),
+                                        title: Text(
+                                          "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Row(
+                                          children: <Widget>[
+                                            const Icon(Icons.linear_scale,
+                                                color: Colors.yellowAccent),
+                                            Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID!
+                                                        .identifier ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                      ],
+                                        /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                        childrenPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 10.0),
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                      "€${controller.trx.records![index].grandTotal}"),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
+                                  ),
+                                ));
                           },
                         )
                       : const Center(child: CircularProgressIndicator()),

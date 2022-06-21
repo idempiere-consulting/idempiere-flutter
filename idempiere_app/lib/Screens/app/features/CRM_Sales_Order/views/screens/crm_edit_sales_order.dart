@@ -92,7 +92,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
       Get.back();
       Get.snackbar(
         "Done!".tr,
-        "The record has been updated".tr,
+        "The record has been deleted".tr,
         icon: const Icon(
           Icons.delete,
           color: Colors.green,
@@ -101,7 +101,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     } else {
       Get.snackbar(
         "Error!".tr,
-        "Record not updated".tr,
+        "Record not deleted".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,

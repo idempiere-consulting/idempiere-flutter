@@ -170,11 +170,11 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Search',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -243,7 +243,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                             Icons.edit,
                                             color: Colors.green,
                                           ),
-                                          tooltip: 'Edit Lead',
+                                          tooltip: 'Edit Lead'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
                                             Get.to(const EditLead(),

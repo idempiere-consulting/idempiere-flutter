@@ -45,8 +45,8 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
       Get.find<CRMSalesOrderLineController>().getSalesOrderLines();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato modificato",
+        "Done!".tr,
+        "The record has been modified".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -57,8 +57,8 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
         print(response.body);
       }
       Get.snackbar(
-        "Errore!",
-        "Record non modificato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -87,8 +87,8 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
       Get.back();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato eliminato",
+        "Done!".tr,
+        "The record has been deleted".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -99,8 +99,8 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
         print(response.body);
       }
       Get.snackbar(
-        "Errore!",
-        "Record non eliminato",
+        "Error!".tr,
+        "Record not deleted".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -159,8 +159,8 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Edit Sales Order Line'),
+        title: Center(
+          child: Text('Edit Sales Order Line'.tr),
         ),
         actions: [
           Padding(
@@ -169,9 +169,9 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
               onPressed: () {
                 //deleteSalesOrderLine();
                 Get.defaultDialog(
-                    title: "Delete",
-                    content: const Text(
-                        "Are you sure you want to delete the record?"),
+                    title: "Delete".tr,
+                    content: Text(
+                        "Are you sure you want to delete the record?".tr),
                     onConfirm: () {
                       deleteSalesOrderLine();
                     },
@@ -213,10 +213,10 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Quantity',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -230,10 +230,10 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Price',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -253,7 +253,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     initialValue: Get.arguments["date"],
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Promised Date',
+                    dateLabelText: 'Promised Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -289,10 +289,10 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Quantity',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -306,10 +306,10 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Price',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -329,7 +329,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     initialValue: Get.arguments["date"],
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Promised Date',
+                    dateLabelText: 'Promised Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -365,10 +365,10 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Quantity',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -382,10 +382,10 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: 'Price',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -405,7 +405,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     initialValue: Get.arguments["date"],
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Promised Date',
+                    dateLabelText: 'Promised Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));

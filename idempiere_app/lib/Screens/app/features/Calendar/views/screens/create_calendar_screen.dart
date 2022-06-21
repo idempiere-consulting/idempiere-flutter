@@ -113,8 +113,8 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Crea To Do'),
+        title: Center(
+          child: Text('Create To Do'.tr),
         ),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
@@ -148,10 +148,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -160,10 +160,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Descrizione',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -183,7 +183,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
+                    dateLabelText: 'Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -216,7 +216,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Inizio',
+                    timeLabelText: 'Start Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -246,7 +246,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Fine',
+                    timeLabelText: 'End Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -303,10 +303,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -315,10 +315,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Descrizione',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -338,7 +338,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
+                    dateLabelText: 'Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -371,7 +371,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Inizio',
+                    timeLabelText: 'Start Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -401,7 +401,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Fine',
+                    timeLabelText: 'End Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -458,10 +458,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -470,10 +470,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Descrizione',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -493,7 +493,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
+                    dateLabelText: 'Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -526,7 +526,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Inizio',
+                    timeLabelText: 'Start Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -556,7 +556,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Fine',
+                    timeLabelText: 'End Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {

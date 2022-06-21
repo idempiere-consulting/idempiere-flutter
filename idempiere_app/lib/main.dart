@@ -103,7 +103,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       translations: LocaleString(),
-      locale: const Locale('it', 'IT'),
+      locale:   Locale(GetStorage().read('language')?? 'it_IT'),
       theme: AppTheme.basic,
       initialRoute: GetStorage().read("ip") == null ? '/' : '/IntervalCharts',
       getPages: [

@@ -50,8 +50,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       Get.find<CRMOpportunityController>().getOpportunities();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato aggiornato",
+        "Done!".tr,
+        "The record has been updated".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -59,8 +59,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -252,8 +252,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Create Opportunity'),
+        title: Center(
+          child: Text('Create Opportunity'.tr),
         ),
         actions: [
           Padding(

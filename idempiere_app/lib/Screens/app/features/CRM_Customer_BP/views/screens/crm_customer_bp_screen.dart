@@ -86,8 +86,8 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CLIENTI: ${controller.trx.rowcount}")
-                          : const Text("CLIENTI: ")),
+                          ? Text("CUSTOMERS: ".tr + controller.trx.rowcount.toString())
+                          : Text("CUSTOMERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -170,11 +170,11 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Search',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -242,7 +242,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                             Icons.edit,
                                             color: Colors.green,
                                           ),
-                                          tooltip: 'Edit Lead',
+                                          tooltip: 'Edit Customer'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
                                             Get.to(const EditCRMCustomerBP(), arguments: {
@@ -298,9 +298,9 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                           children: [
                                             Row(
                                               children: [
-                                                const Text(
-                                                  "Gruppo BP: ",
-                                                  style: TextStyle(
+                                                Text(
+                                                  "BP Group: ".tr,
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
@@ -339,8 +339,8 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CLIENTI: ${controller.trx.rowcount}")
-                          : const Text("CLIENTI: ")),
+                          ? Text("CUSTOMERS: ".tr + controller.trx.rowcount.toString())
+                          : Text("CUSTOMERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -423,11 +423,11 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Search',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -495,7 +495,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                             Icons.edit,
                                             color: Colors.green,
                                           ),
-                                          tooltip: 'Edit Lead',
+                                          tooltip: 'Edit Customer'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
                                             Get.to(const EditCRMCustomerBP(), arguments: {
@@ -551,9 +551,9 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                           children: [
                                             Row(
                                               children: [
-                                                const Text(
-                                                  "Gruppo BP: ",
-                                                  style: TextStyle(
+                                                Text(
+                                                  "BP Group: ".tr,
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
@@ -592,8 +592,8 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CLIENTI: ${controller.trx.rowcount}")
-                          : const Text("CLIENTI: ")),
+                          ? Text("CUSTOMERS: ".tr + controller.trx.rowcount.toString())
+                          : Text("CUSTOMERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -676,11 +676,11 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Search',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -748,7 +748,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                             Icons.edit,
                                             color: Colors.green,
                                           ),
-                                          tooltip: 'Edit Lead',
+                                          tooltip: 'Edit Customer'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
                                             Get.to(const EditCRMCustomerBP(), arguments: {
@@ -804,9 +804,9 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                           children: [
                                             Row(
                                               children: [
-                                                const Text(
-                                                  "Gruppo BP: ",
-                                                  style: TextStyle(
+                                                Text(
+                                                  "BP Group: ".tr,
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),

@@ -85,8 +85,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("OPPORTUNITY: ${controller.trx.rowcount}")
-                          : const Text("OPPORTUNITY: ")),
+                          ? Text("OPPORTUNITY: ".tr + controller.trx.rowcount.toString())
+                          : Text("OPPORTUNITY: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -168,11 +168,11 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Search',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -247,7 +247,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                         Icons.paid,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Opportunity',
+                                      tooltip: 'Edit Opportunity'.tr,
                                       onPressed: () {
                                         Get.to(const EditOpportunity(),
                                             arguments: {
@@ -374,8 +374,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("OPPORTUNITY: ${controller.trx.rowcount}")
-                          : const Text("OPPORTUNITY: ")),
+                          ? Text("OPPORTUNITY: ".tr + controller.trx.rowcount.toString())
+                          : Text("OPPORTUNITY: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -663,8 +663,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("OPPORTUNITY: ${controller.trx.rowcount}")
-                          : const Text("OPPORTUNITY: ")),
+                          ? Text("OPPORTUNITY: ".tr + controller.trx.rowcount.toString())
+                          : Text("OPPORTUNITY: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(

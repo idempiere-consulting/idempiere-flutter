@@ -84,8 +84,8 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CONTATTI: ${controller.trx.rowcount}")
-                          : const Text("CONTATTI: ")),
+                          ? Text("CONTACTS: ".tr + controller.trx.rowcount.toString())
+                          : Text("CONTACTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -137,11 +137,11 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Contact Name',
+                            hintText: 'Contact Name'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -192,7 +192,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                             Icons.edit,
                                             color: Colors.green,
                                           ),
-                                          tooltip: 'Edit Lead',
+                                          tooltip: 'Edit Contact'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
                                             /* Get.to(const EditLead(), arguments: {
@@ -347,8 +347,8 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CONTATTI: ${controller.trx.rowcount}")
-                          : const Text("CONTATTI: ")),
+                          ? Text("CONTACTS: ".tr + controller.trx.rowcount.toString())
+                          : Text("CONTACTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -400,11 +400,11 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Contact Name',
+                            hintText: 'Contact Name'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -455,7 +455,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                             Icons.edit,
                                             color: Colors.green,
                                           ),
-                                          tooltip: 'Edit Lead',
+                                          tooltip: 'Edit Contact'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
                                             /* Get.to(const EditLead(), arguments: {
@@ -610,8 +610,8 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CONTATTI: ${controller.trx.rowcount}")
-                          : const Text("CONTATTI: ")),
+                          ? Text("CONTACTS: ".tr + controller.trx.rowcount.toString())
+                          : Text("CONTACTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -663,11 +663,11 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Contact Name',
+                            hintText: 'Contact Name'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -718,7 +718,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                             Icons.edit,
                                             color: Colors.green,
                                           ),
-                                          tooltip: 'Edit Lead',
+                                          tooltip: 'Edit Contact'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
                                             /* Get.to(const EditLead(), arguments: {

@@ -79,8 +79,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
       //print("done!");
 
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato completato",
+        "Done!".tr,
+        "Record has been completed".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -89,8 +89,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
     } else {
       //print(response.body);
       Get.snackbar(
-        "Errore!",
-        "Il record non è stato completato",
+        "Error!".tr,
+        "Record not completed".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -131,8 +131,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("ORDINI: ${controller.trx.rowcount}")
-                          : const Text("ORDINI: ")),
+                          ? Text("SALES ORDERS: ".tr + controller.trx.rowcount.toString())
+                          : Text("SALES ORDERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -205,11 +205,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Search',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -298,7 +298,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                         icon: const Icon(
                                           Icons.edit,
                                         ),
-                                        tooltip: 'Edit Sales Order',
+                                        tooltip: 'Edit Sales Order'.tr,
                                         onPressed: () {
                                           //log("info button pressed");
                                           Get.to(const CRMEditSalesOrder(), arguments: {
@@ -348,9 +348,9 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                         children: [
                                           Row(
                                             children: [
-                                              const Text(
-                                                "Importo: ",
-                                                style: TextStyle(
+                                              Text(
+                                                "Amount: ".tr,
+                                                style: const TextStyle(
                                                     fontWeight: FontWeight.bold),
                                               ),
                                               Text(
@@ -369,7 +369,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         ?.id !=
                                                     'CO',
                                                 child: ElevatedButton(
-                                                  child: const Text("Complete"),
+                                                  child: Text("Complete".tr),
                                                   style: ButtonStyle(
                                                     backgroundColor:
                                                         MaterialStateProperty.all(
@@ -418,8 +418,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         } else {
                                                           //print(response.body);
                                                           Get.snackbar(
-                                                            "Errore!",
-                                                            "Il record non è stato completato",
+                                                            "Error!".tr,
+                                                            "Record not completed".tr,
                                                             icon: const Icon(
                                                               Icons.error,
                                                               color: Colors.red,
@@ -459,8 +459,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("ORDINI: ${controller.trx.rowcount}")
-                          : const Text("ORDINI: ")),
+                          ? Text("SALES ORDERS: ".tr + controller.trx.rowcount.toString())
+                          : Text("SALES ORDERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -533,11 +533,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Search',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -626,7 +626,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                         icon: const Icon(
                                           Icons.edit,
                                         ),
-                                        tooltip: 'Edit Sales Order',
+                                        tooltip: 'Edit Sales Order'.tr,
                                         onPressed: () {
                                           //log("info button pressed");
                                           Get.to(const CRMEditSalesOrder(), arguments: {
@@ -676,9 +676,9 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                         children: [
                                           Row(
                                             children: [
-                                              const Text(
-                                                "Importo: ",
-                                                style: TextStyle(
+                                              Text(
+                                                "Amount: ".tr,
+                                                style: const TextStyle(
                                                     fontWeight: FontWeight.bold),
                                               ),
                                               Text(
@@ -697,7 +697,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         ?.id !=
                                                     'CO',
                                                 child: ElevatedButton(
-                                                  child: const Text("Complete"),
+                                                  child: Text("Complete".tr),
                                                   style: ButtonStyle(
                                                     backgroundColor:
                                                         MaterialStateProperty.all(
@@ -746,8 +746,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         } else {
                                                           //print(response.body);
                                                           Get.snackbar(
-                                                            "Errore!",
-                                                            "Il record non è stato completato",
+                                                            "Error!".tr,
+                                                            "Record not completed".tr,
                                                             icon: const Icon(
                                                               Icons.error,
                                                               color: Colors.red,
@@ -787,8 +787,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("ORDINI: ${controller.trx.rowcount}")
-                          : const Text("ORDINI: ")),
+                          ? Text("SALES ORDERS: ".tr + controller.trx.rowcount.toString())
+                          : Text("SALES ORDERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -861,11 +861,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Search',
+                            hintText: 'Search'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -954,7 +954,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                         icon: const Icon(
                                           Icons.edit,
                                         ),
-                                        tooltip: 'Edit Sales Order',
+                                        tooltip: 'Edit Sales Order'.tr,
                                         onPressed: () {
                                           //log("info button pressed");
                                           Get.to(const CRMEditSalesOrder(), arguments: {
@@ -1004,9 +1004,9 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                         children: [
                                           Row(
                                             children: [
-                                              const Text(
-                                                "Importo: ",
-                                                style: TextStyle(
+                                              Text(
+                                                "Amount: ".tr,
+                                                style: const TextStyle(
                                                     fontWeight: FontWeight.bold),
                                               ),
                                               Text(
@@ -1025,7 +1025,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         ?.id !=
                                                     'CO',
                                                 child: ElevatedButton(
-                                                  child: const Text("Complete"),
+                                                  child: Text("Complete".tr),
                                                   style: ButtonStyle(
                                                     backgroundColor:
                                                         MaterialStateProperty.all(
@@ -1074,8 +1074,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         } else {
                                                           //print(response.body);
                                                           Get.snackbar(
-                                                            "Errore!",
-                                                            "Il record non è stato completato",
+                                                            "Error!".tr,
+                                                            "Record not completed".tr,
                                                             icon: const Icon(
                                                               Icons.error,
                                                               color: Colors.red,

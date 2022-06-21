@@ -126,7 +126,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Sales Order Line'.tr,
                                       onPressed: () {
                                         Get.to(const EditSalesOrderLine(),
                                             arguments: {
@@ -157,10 +157,10 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Total Row: ",
+                                          Text(
+                                            "Total Rows: ".tr,
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                const TextStyle(color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -201,9 +201,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Listed Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Listed Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -212,9 +212,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Entered Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Entered Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -223,9 +223,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Quantity: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Quantity: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -234,9 +234,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Instance Attribute: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Instance Attribute: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller
@@ -292,7 +292,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Sales Order Line'.tr,
                                       onPressed: () {
                                         Get.to(const EditSalesOrderLine(),
                                             arguments: {
@@ -323,10 +323,10 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Total Row: ",
+                                          Text(
+                                            "Total Rows: ".tr,
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                const TextStyle(color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -367,9 +367,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Listed Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Listed Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -378,9 +378,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Entered Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Entered Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -389,9 +389,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Quantity: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Quantity: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -400,9 +400,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Instance Attribute: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Instance Attribute: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller
@@ -458,7 +458,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Sales Order Line'.tr,
                                       onPressed: () {
                                         Get.to(const EditSalesOrderLine(),
                                             arguments: {
@@ -489,10 +489,10 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Total Row: ",
+                                          Text(
+                                            "Total Rows: ".tr,
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                const TextStyle(color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -533,9 +533,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Listed Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Listed Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -544,9 +544,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Entered Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Entered Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -555,9 +555,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Quantity: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Quantity: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -566,9 +566,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Instance Attribute: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Instance Attribute: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller

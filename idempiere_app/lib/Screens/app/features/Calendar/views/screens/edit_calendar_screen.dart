@@ -165,8 +165,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Center(
-            child: Text('Edit To Do'),
+          title: Center(
+            child: Text('Edit To Do'.tr),
           ),
           leading: IconButton(
             icon: const Icon(Icons.chevron_left),
@@ -233,7 +233,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
-                        labelText: 'Nome'.tr,
+                        labelText: 'Name'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -245,7 +245,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
-                        labelText: 'Descrizione'.tr,
+                        labelText: 'Description'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -265,7 +265,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: date,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'Data'.tr,
+                      dateLabelText: 'Date'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -297,7 +297,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: timeStart,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Ora Inizio'.tr,
+                      timeLabelText: 'Start Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -327,7 +327,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: timeEnd,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Ora Fine'.tr,
+                      timeLabelText: 'End Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -387,7 +387,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
-                        labelText: 'Nome'.tr,
+                        labelText: 'Name'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -399,7 +399,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
-                        labelText: 'Descrizione'.tr,
+                        labelText: 'Description'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -419,7 +419,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: date,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'Data'.tr,
+                      dateLabelText: 'Date'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -451,7 +451,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: timeStart,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Ora Inizio'.tr,
+                      timeLabelText: 'Start Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -481,7 +481,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: timeEnd,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Ora Fine'.tr,
+                      timeLabelText: 'End Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -541,7 +541,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
-                        labelText: 'Nome'.tr,
+                        labelText: 'Name'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -553,7 +553,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
-                        labelText: 'Descrizione'.tr,
+                        labelText: 'Description'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -573,7 +573,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: date,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'Data'.tr,
+                      dateLabelText: 'Date'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -605,7 +605,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: timeStart,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Ora Inizio'.tr,
+                      timeLabelText: 'Start Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -635,7 +635,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       initialValue: timeEnd,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Ora Fine'.tr,
+                      timeLabelText: 'End Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {

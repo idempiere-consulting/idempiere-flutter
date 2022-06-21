@@ -84,8 +84,8 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ${controller.trx.rowcount}")
-                          : const Text("Product List: ")),
+                          ? Text("Product List: ".tr + controller.trx.rowcount.toString())
+                          : Text("Product List: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -128,11 +128,11 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                               }
                             }
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Product Value',
+                            hintText: 'Product Value'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -174,8 +174,8 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ${controller.trx.rowcount}")
-                          : const Text("Product List: ")),
+                          ? Text("Product List: ".tr + controller.trx.rowcount.toString())
+                          : Text("Product List: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -218,11 +218,11 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                               }
                             }
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Product Value',
+                            hintText: 'Product Value'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
@@ -264,8 +264,8 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ${controller.trx.rowcount}")
-                          : const Text("Product List: ")),
+                          ? Text("Product List: ".tr + controller.trx.rowcount.toString())
+                          : Text("Product List: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -308,11 +308,11 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                               }
                             }
                           },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
-                            hintText: 'Product Value',
+                            hintText: 'Product Value'.tr,
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                         ),
