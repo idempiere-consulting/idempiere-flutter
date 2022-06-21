@@ -6,10 +6,10 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        const TodayText(),
-        const SizedBox(width: kSpacing),
-        Expanded(child: SearchField()),
+      children: const [
+        TodayText(),
+        SizedBox(width: kSpacing),
+        //Expanded(child: SearchField()),
       ],
     );
   }
