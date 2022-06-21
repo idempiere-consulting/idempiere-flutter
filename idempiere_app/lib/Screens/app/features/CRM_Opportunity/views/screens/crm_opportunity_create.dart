@@ -28,16 +28,15 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "C_SalesStage_ID":{"id": int.parse(dropdownValue)},
+      "C_SalesStage_ID": {"id": int.parse(dropdownValue)},
       "SalesRep_ID": {"identifier": salesrepValue},
       "M_Product_ID": {"id": productId},
       "OpportunityAmt": double.parse(amtFieldController.text),
       "C_BPartner_ID": {"id": bPId},
-      "Description":  descriptionFieldController.text,
+      "Description": descriptionFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/C_Opportunity/');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/C_Opportunity/');
     //print(msg);
     var response = await http.post(
       url,
@@ -70,8 +69,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     }
   }
 
-  
-
   Future<List<OSRecords>> getAllOpportunityStatuses() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -98,7 +95,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     //print(response.body);
   }
 
-
   Future<void> getSaleStageDefault() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -119,7 +115,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       setState(() {
         dropdownValue = json.records![0].id.toString();
         flag = true;
-      }); 
+      });
     } else {
       //throw Exception("Failed to load lead statuses");
       if (kDebugMode) {
@@ -204,7 +200,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
   var mailFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var descriptionFieldController;
-  
+
   String dropdownOpportunityValuedropdownValue = "";
   String salesrepValue = "";
   String businessPartnerValue = "";
@@ -212,10 +208,10 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
   String date = "";
   String image64 = "";
   String imageName = "";
-  late String dropdownValue= ""; 
+  late String dropdownValue = "";
   int productId = 0;
-  int bPId =  0;
-  late TextEditingValue bPName ;
+  int bPId = 0;
+  late TextEditingValue bPName;
   late TextEditingValue productName;
   bool flag = false;
 
@@ -286,8 +282,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   child: Align(
                     child: Text(
                       "Business Partner".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -308,13 +304,15 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
                                 //initialValue: bPName,
-                                displayStringForOption: _displayBPStringForOption,
+                                displayStringForOption:
+                                    _displayBPStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
                                     return const Iterable<BPRecords>.empty();
                                   }
-                                  return snapshot.data!.where((BPRecords option) {
+                                  return snapshot.data!
+                                      .where((BPRecords option) {
                                     return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
@@ -327,7 +325,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                     bPId = selection.id!;
                                     //productName = selection.name;
                                   });
-                                  print(bPId);
+                                  //print(bPId);
 
                                   //print(salesrepValue);
                                 },
@@ -354,13 +352,13 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                     ],
                   ),
                 ),
-                 Container(
+                Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
                       "Product".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -381,13 +379,15 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                         snapshot.hasData
                             ? Autocomplete<PRecords>(
                                 //initialValue: productName,
-                                displayStringForOption: _displayProductStringForOption,
+                                displayStringForOption:
+                                    _displayProductStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
                                     return const Iterable<PRecords>.empty();
                                   }
-                                  return snapshot.data!.where((PRecords option) {
+                                  return snapshot.data!
+                                      .where((PRecords option) {
                                     return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
@@ -400,7 +400,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                     productId = selection.id!;
                                     //productName = selection.name;
                                   });
-                                  print(productId);
+                                  //print(productId);
 
                                   //print(salesrepValue);
                                 },
@@ -414,7 +414,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.message),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
@@ -449,8 +449,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: GetStorage().read('user')),
+                                initialValue: TextEditingValue(
+                                    text: GetStorage().read('user')),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -543,8 +543,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   child: Align(
                     child: Text(
                       "Business Partner".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -565,13 +565,15 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
                                 //initialValue: bPName,
-                                displayStringForOption: _displayBPStringForOption,
+                                displayStringForOption:
+                                    _displayBPStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
                                     return const Iterable<BPRecords>.empty();
                                   }
-                                  return snapshot.data!.where((BPRecords option) {
+                                  return snapshot.data!
+                                      .where((BPRecords option) {
                                     return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
@@ -584,7 +586,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                     bPId = selection.id!;
                                     //productName = selection.name;
                                   });
-                                  print(bPId);
+                                  //print(bPId);
 
                                   //print(salesrepValue);
                                 },
@@ -611,13 +613,13 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                     ],
                   ),
                 ),
-                 Container(
+                Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
                       "Product".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -638,13 +640,15 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                         snapshot.hasData
                             ? Autocomplete<PRecords>(
                                 //initialValue: productName,
-                                displayStringForOption: _displayProductStringForOption,
+                                displayStringForOption:
+                                    _displayProductStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
                                     return const Iterable<PRecords>.empty();
                                   }
-                                  return snapshot.data!.where((PRecords option) {
+                                  return snapshot.data!
+                                      .where((PRecords option) {
                                     return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
@@ -657,7 +661,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                     productId = selection.id!;
                                     //productName = selection.name;
                                   });
-                                  print(productId);
+                                  //print(productId);
 
                                   //print(salesrepValue);
                                 },
@@ -671,7 +675,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.message),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
@@ -706,8 +710,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: GetStorage().read('user')),
+                                initialValue: TextEditingValue(
+                                    text: GetStorage().read('user')),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -800,8 +804,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   child: Align(
                     child: Text(
                       "Business Partner".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -822,13 +826,15 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
                                 //initialValue: bPName,
-                                displayStringForOption: _displayBPStringForOption,
+                                displayStringForOption:
+                                    _displayBPStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
                                     return const Iterable<BPRecords>.empty();
                                   }
-                                  return snapshot.data!.where((BPRecords option) {
+                                  return snapshot.data!
+                                      .where((BPRecords option) {
                                     return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
@@ -841,7 +847,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                     bPId = selection.id!;
                                     //productName = selection.name;
                                   });
-                                  print(bPId);
+                                  //print(bPId);
 
                                   //print(salesrepValue);
                                 },
@@ -868,13 +874,13 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                     ],
                   ),
                 ),
-                 Container(
+                Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
                       "Product".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -895,13 +901,15 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                         snapshot.hasData
                             ? Autocomplete<PRecords>(
                                 //initialValue: productName,
-                                displayStringForOption: _displayProductStringForOption,
+                                displayStringForOption:
+                                    _displayProductStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
                                     return const Iterable<PRecords>.empty();
                                   }
-                                  return snapshot.data!.where((PRecords option) {
+                                  return snapshot.data!
+                                      .where((PRecords option) {
                                     return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
@@ -914,7 +922,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                     productId = selection.id!;
                                     //productName = selection.name;
                                   });
-                                  print(productId);
+                                  //print(productId);
 
                                   //print(salesrepValue);
                                 },
@@ -928,7 +936,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.message),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
@@ -963,8 +971,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: GetStorage().read('user')),
+                                initialValue: TextEditingValue(
+                                    text: GetStorage().read('user')),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {

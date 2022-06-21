@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -9,12 +10,10 @@ import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.d
 
 //models
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/doctype_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/bplocation_json.dart';
 
 //screens
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
-
 
 class CRMEditSalesOrder extends StatefulWidget {
   const CRMEditSalesOrder({Key? key}) : super(key: key);
@@ -24,8 +23,7 @@ class CRMEditSalesOrder extends StatefulWidget {
 }
 
 class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
-
-  EditSalesOrder() async {
+  editSalesOrder() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
@@ -34,9 +32,9 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
       "C_DocTypeTarget_ID": {'id': int.parse(dropdownDocType)},
       'C_BPartner_Location_ID': {'id': int.parse(dropdownBPLocation)}
     });
-  final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://'  + ip + '/api/v1/models/C_Order/${args["id"]}');
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/C_Order/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -59,7 +57,9 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Error!".tr,
         "Record not updated".tr,
@@ -75,8 +75,8 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -169,7 +169,6 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     //salesRepFieldController.text = args["salesRep"];
   }
 
-
   dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var bPartnerFieldController;
@@ -177,7 +176,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
   var docNoFieldController;
   //String dropdownValue = "";
   //var bPartnerValue = "";
-  late TextEditingValue bPName ;
+  late TextEditingValue bPName;
   /* int bPartnerId = Get.arguments['bPartnerId'] ?? 0;
   int bPartnerAddressId = Get.arguments['bPAddressId'] ?? 0; */
   String dropdownDocType = "";
@@ -196,7 +195,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     //bPGroupController = TextEditingController();
     fillFields();
     getBPLocations();
-    //getAllDocType();    
+    //getAllDocType();
     //getAllBPartners();
   }
 
@@ -242,7 +241,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                EditSalesOrder();
+                editSalesOrder();
               },
               icon: const Icon(
                 Icons.save,

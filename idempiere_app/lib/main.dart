@@ -105,7 +105,7 @@ class MyApp extends StatelessWidget {
       translations: LocaleString(),
       locale: const Locale('it', 'IT'),
       theme: AppTheme.basic,
-      initialRoute: GetStorage().read("ip") == null ? '/' : '/',
+      initialRoute: GetStorage().read("ip") == null ? '/' : '/IntervalCharts',
       getPages: [
         GetPage(
           name: '/',

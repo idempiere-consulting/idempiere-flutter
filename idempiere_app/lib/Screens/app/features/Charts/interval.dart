@@ -216,28 +216,27 @@ class IntervalPage extends StatelessWidget {
               Container(
                 child: const Text(
                   '- Nested by type.',
+                  style: TextStyle(color: Colors.black),
                 ),
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                 alignment: Alignment.centerLeft,
               ),
               Container(
-                child: const Text(
-                  '- With a label in middle of each bar.',
-                ),
+                child: const Text('- With a label in middle of each bar.',
+                    style: TextStyle(color: Colors.black)),
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                 alignment: Alignment.centerLeft,
               ),
               Container(
                 child: const Text(
-                  '- Selects tuples with same index but different types.',
-                ),
+                    '- Selects tuples with same index but different types.',
+                    style: TextStyle(color: Colors.black)),
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                 alignment: Alignment.centerLeft,
               ),
               Container(
-                child: const Text(
-                  '- A multiple variabes tooltip.',
-                ),
+                child: const Text('- A multiple variabes tooltip.',
+                    style: TextStyle(color: Colors.black)),
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                 alignment: Alignment.centerLeft,
               ),
@@ -265,7 +264,7 @@ class IntervalPage extends StatelessWidget {
                           Varset('index') * Varset('value') / Varset('type'),
                       shape: ShapeAttr(value: RectShape(labelPosition: 0.5)),
                       color: ColorAttr(
-                          variable: 'type', values: Defaults.colors10),
+                          variable: 'type', values: Defaults.colors20),
                       label: LabelAttr(
                           encoder: (tuple) => Label(
                                 tuple['value'].toString(),

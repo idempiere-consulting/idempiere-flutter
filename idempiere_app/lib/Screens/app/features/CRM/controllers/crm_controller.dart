@@ -12,10 +12,11 @@ class CRMController extends GetxController {
   @override
   void onInit() {
     getFunnelChartData();
-    super.onInit();    
+    super.onInit();
   }
 
   //late LeadFunnelDataJson _trx;
+  // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
   List<Map> funnelData = [];
   int charScale = 1;
@@ -24,13 +25,12 @@ class CRMController extends GetxController {
   //LeadFunnelDataJson get trx => _trx;
 
   Future<void> getFunnelChartData() async {
-     _dataAvailable.value = false;
+    _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_lead_funnel_v/');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_mobile_lead_funnel_v/');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -41,12 +41,16 @@ class CRMController extends GetxController {
     if (response.statusCode == 200) {
       //print(utf8.decode(response.bodyBytes));
       /* _trx = LeadFunnelDataJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
-      var json = LeadFunnelDataJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      for(int i = 0; i < json.records!.length; i++){
+      var json = LeadFunnelDataJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (int i = 0; i < json.records!.length; i++) {
+        if (int.parse(json.records![i].tot!) > charScale)
+          charScale = int.parse(json.records![i].tot!);
 
-        if(int.parse(json.records![i].tot!) > charScale) charScale = int.parse(json.records![i].tot!);
-        
-        var funnelMap = {"Name": json.records![i].name, "tot": num.parse(json.records![i].tot!)};
+        var funnelMap = {
+          "Name": json.records![i].name,
+          "tot": num.parse(json.records![i].tot!)
+        };
         //print('Name : ${json.records![i].name}, tot: ${num.parse(json.records![i].tot!)} ');
         funnelData.add(funnelMap);
       }

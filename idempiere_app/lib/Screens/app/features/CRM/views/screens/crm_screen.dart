@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -32,7 +31,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 // binding
 part '../../bindings/crm_binding.dart';
@@ -68,12 +66,13 @@ class CRMScreen extends GetView<CRMController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
             child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
@@ -108,71 +107,85 @@ class CRMScreen extends GetView<CRMController> {
               ),
               const SizedBox(height: kSpacing),
               _buildRecentMessages(data: controller.getChatting()), */
-              Container( 
+              Container(
                 child: const Text(
                   'Lead Status',
-                  style: TextStyle(fontSize: 20, /* color: Colors.black */),
+                  style: TextStyle(
+                    fontSize: 20, /* color: Colors.black */
+                  ),
                 ),
                 padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 10),
-                width: 350,
-                height: 300,
-                child: 
-                Obx(() => controller.dataAvailable ? Chart(
-                  padding: (_) => const EdgeInsets.all(10),
-                  data: controller.funnelData,
-                  variables: {
-                    'Name': Variable(
-                      accessor: (Map map) => map['Name'] as String,
-                    ),
-                    'tot': Variable(
-                      accessor: (Map map) => map['tot'] as num,
-                      scale: LinearScale(min: 0-controller.charScale, max: controller.charScale),
-                    ),
-                  },
-                   transforms: [
-                    Sort(
-                      compare: (a, b) =>
-                          ((b['tot'] as num) - (a['tot'] as num)).toInt(),
-                    )
-                  ], 
-                  elements: [
-                    IntervalElement(
-                      label: LabelAttr(
-                          encoder: (tuple) => Label(
-                                "${tuple['tot']}"/* "${tuple['Name']}:\n${tuple['tot']}" */,
-                                LabelStyle(style: Defaults.runeStyle, textAlign: TextAlign.center, textScaleFactor: 1.5, /* offset: Offset.lerp(Offset.fromDirection(0.33), Offset.fromDirection(-10), 50) */),
-                              )),
-                            
-                      shape: ShapeAttr(value: FunnelShape()),
-                      color: ColorAttr(
-                          variable: 'Name', values: Defaults.colors10,),
-                      modifiers: [SymmetricModifier()],
-                    )
-                  ],
-                  coord: RectCoord(transposed: true, verticalRange: [1, 0]),
-                ) : const Center(child: CircularProgressIndicator())
-              )),
+                  margin: const EdgeInsets.only(top: 10),
+                  width: 350,
+                  height: 300,
+                  child: Obx(() => controller.dataAvailable
+                      ? Chart(
+                          padding: (_) => const EdgeInsets.all(10),
+                          data: controller.funnelData,
+                          variables: {
+                            'Name': Variable(
+                              accessor: (Map map) => map['Name'] as String,
+                            ),
+                            'tot': Variable(
+                              accessor: (Map map) => map['tot'] as num,
+                              scale: LinearScale(
+                                  min: 0 - controller.charScale,
+                                  max: controller.charScale),
+                            ),
+                          },
+                          transforms: [
+                            Sort(
+                              compare: (a, b) =>
+                                  ((b['tot'] as num) - (a['tot'] as num))
+                                      .toInt(),
+                            )
+                          ],
+                          elements: [
+                            IntervalElement(
+                              label: LabelAttr(
+                                  encoder: (tuple) => Label(
+                                        "${tuple['tot']}" /* "${tuple['Name']}:\n${tuple['tot']}" */,
+                                        LabelStyle(
+                                          style: Defaults.runeStyle,
+                                          textAlign: TextAlign.center,
+                                          textScaleFactor:
+                                              1.5, /* offset: Offset.lerp(Offset.fromDirection(0.33), Offset.fromDirection(-10), 50) */
+                                        ),
+                                      )),
+                              shape: ShapeAttr(value: FunnelShape()),
+                              color: ColorAttr(
+                                variable: 'Name',
+                                values: Defaults.colors10,
+                              ),
+                              modifiers: [SymmetricModifier()],
+                            )
+                          ],
+                          coord: RectCoord(
+                              transposed: true, verticalRange: [1, 0]),
+                        )
+                      : const Center(child: CircularProgressIndicator()))),
+              // ignore: avoid_unnecessary_containers
               Container(
-                child: Obx(() => controller.dataAvailable ? 
-                ListView.builder(
-                  primary: false,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: controller.funnelData.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Icon(
-                        Icons.circle,
-                        color: Defaults.colors10[index],
-                        size: 15,
-                      ),
-                      title: Text(controller.funnelData[index]['Name']),
-                      
-                  );
-              },) :  const Center(child: CircularProgressIndicator())),
+                child: Obx(() => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.funnelData.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: Icon(
+                              Icons.circle,
+                              color: Defaults.colors10[index],
+                              size: 15,
+                            ),
+                            title: Text(controller.funnelData[index]['Name']),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator())),
               )
             ]);
           },
@@ -208,72 +221,81 @@ class CRMScreen extends GetView<CRMController> {
               ),
               const SizedBox(height: kSpacing),
               _buildRecentMessages(data: controller.getChatting()), */
-              Container( 
+              Container(
                 child: const Text(
                   'Lead Status',
-                  style: TextStyle(fontSize: 20, /* color: Colors.black */),
+                  style: TextStyle(
+                    fontSize: 20, /* color: Colors.black */
+                  ),
                 ),
                 padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 10),
-                width: 350,
-                height: 300,
-                child: 
-                Obx(() => controller.dataAvailable ? Chart(
-                  padding: (_) => const EdgeInsets.all(10),
-                  data: controller.funnelData,
-                  variables: {
-                    'Name': Variable(
-                      accessor: (Map map) => map['Name'] as String,
-                    ),
-                    'tot': Variable(
-                      accessor: (Map map) => map['tot'] as num,
-                      scale: LinearScale(min: 0-controller.charScale, max: controller.charScale),
-                    ),
-                  },
-                   transforms: [
-                    Sort(
-                      compare: (a, b) =>
-                          ((b['tot'] as num) - (a['tot'] as num)).toInt(),
+                  margin: const EdgeInsets.only(top: 10),
+                  width: 350,
+                  height: 300,
+                  child: Obx(() => controller.dataAvailable
+                      ? Chart(
+                          padding: (_) => const EdgeInsets.all(10),
+                          data: controller.funnelData,
+                          variables: {
+                            'Name': Variable(
+                              accessor: (Map map) => map['Name'] as String,
+                            ),
+                            'tot': Variable(
+                              accessor: (Map map) => map['tot'] as num,
+                              scale: LinearScale(
+                                  min: 0 - controller.charScale,
+                                  max: controller.charScale),
+                            ),
+                          },
+                          transforms: [
+                            Sort(
+                              compare: (a, b) =>
+                                  ((b['tot'] as num) - (a['tot'] as num))
+                                      .toInt(),
+                            )
+                          ],
+                          elements: [
+                            IntervalElement(
+                              label: LabelAttr(
+                                  encoder: (tuple) => Label(
+                                        "${tuple['tot']}" /* "${tuple['Name']}:\n${tuple['tot']}" */,
+                                        LabelStyle(
+                                            style: Defaults.runeStyle,
+                                            textAlign: TextAlign.center,
+                                            textScaleFactor: 1.5),
+                                      )),
+                              shape: ShapeAttr(value: FunnelShape()),
+                              color: ColorAttr(
+                                variable: 'Name',
+                                values: Defaults.colors10,
+                              ),
+                              modifiers: [SymmetricModifier()],
+                            )
+                          ],
+                          coord: RectCoord(
+                              transposed: true, verticalRange: [1, 0]),
+                        )
+                      : const Center(child: CircularProgressIndicator()))),
+              Obx(() => controller.dataAvailable
+                  ? ListView.builder(
+                      primary: false,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: controller.funnelData.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: Icon(
+                            Icons.circle,
+                            color: Defaults.colors10[index],
+                            size: 15,
+                          ),
+                          title: Text(controller.funnelData[index]['Name']),
+                        );
+                      },
                     )
-                  ], 
-                  elements: [
-                    IntervalElement(
-                      label: LabelAttr(
-                          encoder: (tuple) => Label(
-                                "${tuple['tot']}"/* "${tuple['Name']}:\n${tuple['tot']}" */,
-                                LabelStyle(style: Defaults.runeStyle, textAlign: TextAlign.center, textScaleFactor: 1.5),
-                              )),
-                            
-                      shape: ShapeAttr(value: FunnelShape()),
-                      color: ColorAttr(
-                          variable: 'Name', values: Defaults.colors10,),
-                      modifiers: [SymmetricModifier()],
-                    )
-                  ],
-                  coord: RectCoord(transposed: true, verticalRange: [1, 0]),
-                ) : const Center(child: CircularProgressIndicator())
-              )),
-              Container(
-                child: Obx(() => controller.dataAvailable ? 
-                ListView.builder(
-                  primary: false,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: controller.funnelData.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Icon(
-                        Icons.circle,
-                        color: Defaults.colors10[index],
-                        size: 15,
-                      ),
-                      title: Text(controller.funnelData[index]['Name']),
-                      
-                  );
-              },) :  const Center(child: CircularProgressIndicator())),
-              )
+                  : const Center(child: CircularProgressIndicator()))
             ]);
           },
           desktopBuilder: (context, constraints) {
@@ -308,74 +330,85 @@ class CRMScreen extends GetView<CRMController> {
               ),
               const SizedBox(height: kSpacing),
               _buildRecentMessages(data: controller.getChatting()), */
-              Container( 
+              Container(
                 child: const Text(
                   'Lead Status',
-                  style: TextStyle(fontSize: 20, /* color: Colors.black */),
+                  style: TextStyle(
+                    fontSize: 20, /* color: Colors.black */
+                  ),
                 ),
                 padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 10),
-                width: 350,
-                height: 300,
-                child: 
-                Obx(() => controller.dataAvailable ? Chart(
-                  padding: (_) => const EdgeInsets.all(10),
-                  data: controller.funnelData,
-                  variables: {
-                    'Name': Variable(
-                      accessor: (Map map) => map['Name'] as String,
-                    ),
-                    'tot': Variable(
-                      accessor: (Map map) => map['tot'] as num,
-                      scale: LinearScale(min: 0-controller.charScale, max: controller.charScale),
-                    ),
-                  },
-                   transforms: [
-                    Sort(
-                      compare: (a, b) =>
-                          ((b['tot'] as num) - (a['tot'] as num)).toInt(),
-                    )
-                  ], 
-                  elements: [
-                    IntervalElement(
-                      label: LabelAttr(
-                          encoder: (tuple) => Label(
-                                "${tuple['tot']}"/* "${tuple['Name']}:\n${tuple['tot']}" */,
-                                LabelStyle(style: Defaults.runeStyle, textAlign: TextAlign.center, textScaleFactor: 1.5,
-                                /* offset: Offset.lerp(Offset.fromDirection(0.33), Offset.fromDirection(-10), 50) */)
-                              )),
-                            
-                      shape: ShapeAttr(value: FunnelShape()),
-                      color: ColorAttr(
-                          variable: 'Name', values: Defaults.colors10,),
-                      modifiers: [SymmetricModifier()],
-                    )
-                  ],
-                  coord: RectCoord(transposed: true, verticalRange: [1, 0]),
-                ) : const Center(child: CircularProgressIndicator())
-              )),
+                  margin: const EdgeInsets.only(top: 10),
+                  width: 350,
+                  height: 300,
+                  child: Obx(() => controller.dataAvailable
+                      ? Chart(
+                          padding: (_) => const EdgeInsets.all(10),
+                          data: controller.funnelData,
+                          variables: {
+                            'Name': Variable(
+                              accessor: (Map map) => map['Name'] as String,
+                            ),
+                            'tot': Variable(
+                              accessor: (Map map) => map['tot'] as num,
+                              scale: LinearScale(
+                                  min: 0 - controller.charScale,
+                                  max: controller.charScale),
+                            ),
+                          },
+                          transforms: [
+                            Sort(
+                              compare: (a, b) =>
+                                  ((b['tot'] as num) - (a['tot'] as num))
+                                      .toInt(),
+                            )
+                          ],
+                          elements: [
+                            IntervalElement(
+                              label: LabelAttr(
+                                  encoder: (tuple) => Label(
+                                      "${tuple['tot']}" /* "${tuple['Name']}:\n${tuple['tot']}" */,
+                                      LabelStyle(
+                                        style: Defaults.runeStyle,
+                                        textAlign: TextAlign.center,
+                                        textScaleFactor:
+                                            1.5, /* offset: Offset.lerp(Offset.fromDirection(0.33), Offset.fromDirection(-10), 50) */
+                                      ))),
+                              shape: ShapeAttr(value: FunnelShape()),
+                              color: ColorAttr(
+                                variable: 'Name',
+                                values: Defaults.colors10,
+                              ),
+                              modifiers: [SymmetricModifier()],
+                            )
+                          ],
+                          coord: RectCoord(
+                              transposed: true, verticalRange: [1, 0]),
+                        )
+                      : const Center(child: CircularProgressIndicator()))),
               Container(
                 alignment: Alignment.center,
                 width: size.width,
-                child: Obx(() => controller.dataAvailable ? 
-                ListView.builder(
-                  primary: false,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: controller.funnelData.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Icon(
-                        Icons.circle,
-                        color: Defaults.colors10[index],
-                        size: 15,
-                      ),
-                      title: Text(controller.funnelData[index]['Name']),
-                      
-                                      );
-                  },) :  const Center(child: CircularProgressIndicator())),
+                child: Obx(() => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.funnelData.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: Icon(
+                              Icons.circle,
+                              color: Defaults.colors10[index],
+                              size: 15,
+                            ),
+                            title: Text(controller.funnelData[index]['Name']),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator())),
               ),
             ]);
           },
