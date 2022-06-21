@@ -44,8 +44,9 @@ class CRMController extends GetxController {
       var json = LeadFunnelDataJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       for (int i = 0; i < json.records!.length; i++) {
-        if (int.parse(json.records![i].tot!) > charScale)
+        if (int.parse(json.records![i].tot!) > charScale) {
           charScale = int.parse(json.records![i].tot!);
+        }
 
         var funnelMap = {
           "Name": json.records![i].name,
