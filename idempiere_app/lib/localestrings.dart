@@ -191,7 +191,10 @@ class LocaleString extends Translations {
           'Edit Receipt': 'Edit Receipt',
           'Edit Payment': 'Edit Payment',
           'Invoice: ': 'Invoice: ',
-          'RECEIPTS: ': 'RECEIPTS: '
+          'RECEIPTS: ': 'RECEIPTS: ',
+          'Today': 'Today',
+          'language': 'en',
+          'languageCalendar': 'en_EN'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -386,6 +389,9 @@ class LocaleString extends Translations {
           'Edit Payment': 'Modifica Pagamento',
           'Invoice: ': 'Fattura: ',
           'RECEIPTS: ': 'INCASSI: ',
+          'Today': 'Oggi',
+          'language': 'it',
+          'languageCalendar': 'it_IT'
         },
       };
 }

@@ -262,7 +262,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             _buildProfile(data: getProfil()),
             const SizedBox(height: kSpacing),
             TableCalendar(
-              locale: 'it_IT',
+              locale: 'languageCalendar'.tr,
               focusedDay: focusedDay,
               firstDay: DateTime(2000),
               lastDay: DateTime(2100),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -26,11 +27,11 @@ class _TodayTextState extends State<TodayText> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Today",
+            "Today".tr,
             style: Theme.of(context).textTheme.caption,
           ),
           Text(
-            DateFormat.yMMMEd('it').format(DateTime.now()),
+            DateFormat.yMMMEd('language'.tr).format(DateTime.now()),
           )
         ],
       ),
