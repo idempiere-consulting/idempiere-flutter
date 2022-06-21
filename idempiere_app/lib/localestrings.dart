@@ -194,7 +194,10 @@ class LocaleString extends Translations {
           'RECEIPTS: ': 'RECEIPTS: ',
           'Today': 'Today',
           'language': 'en',
-          'languageCalendar': 'en_EN'
+          'languageCalendar': 'en_EN',
+          'Add Event': 'Add Event',
+          'Edit Event': 'Edit Event',
+          'Accept': 'Accept',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -391,7 +394,10 @@ class LocaleString extends Translations {
           'RECEIPTS: ': 'INCASSI: ',
           'Today': 'Oggi',
           'language': 'it',
-          'languageCalendar': 'it_IT'
+          'languageCalendar': 'it_IT',
+          'Add Event': 'Aggiungi Evento',
+          'Edit Event': 'Modifica Evento',
+          'Accept': 'Continua',
         },
       };
 }

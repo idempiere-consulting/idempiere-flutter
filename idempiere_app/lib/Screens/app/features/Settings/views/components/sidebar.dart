@@ -61,15 +61,21 @@ class _Sidebar extends StatelessWidget {
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
+                  activeIcon: Icons.ballot,
+                  icon: Icons.ballot_outlined,
+                  label: "ProductList".tr,
+                  totalNotif: 20,
+                ),
+                SelectionButtonData(
                   activeIcon: Icons.description,
                   icon: Icons.description_outlined,
                   label: "SalesOrder".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.ballot,
-                  icon: Icons.ballot_outlined,
-                  label: "ProductList".tr,
+                  activeIcon: Icons.local_shipping,
+                  icon: Icons.local_shipping_outlined,
+                  label: "Shipment".tr,
                   totalNotif: 20,
                 ),
                 SelectionButtonData(
@@ -88,12 +94,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.request_quote,
                   icon: Icons.request_quote_outlined,
                   label: "Commission".tr,
-                  totalNotif: 20,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.local_shipping,
-                  icon: Icons.local_shipping_outlined,
-                  label: "Shipment".tr,
                   totalNotif: 20,
                 ),
               ],
@@ -120,22 +120,22 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/Task');
                     break;
                   case 6:
-                    Get.offNamed('/SalesOrder');
-                    break;
-                  case 7:
                     Get.offNamed('/ProductList');
                     break;
+                  case 7:
+                    Get.offNamed('/SalesOrder');
+                    break;
                   case 8:
-                    Get.offNamed('/Invoice');
+                    Get.offNamed('/Shipment');
                     break;
                   case 9:
-                    Get.offNamed('/Payment');
+                    Get.offNamed('/Invoice');
                     break;
                   case 10:
-                    Get.offNamed('/Commission');
+                    Get.offNamed('/Payment');
                     break;
                   case 11:
-                    Get.offNamed('/Shipment');
+                    Get.offNamed('/Commission');
                     break;
                   default:
                 }

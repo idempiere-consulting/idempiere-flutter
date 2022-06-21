@@ -49,8 +49,8 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
     if (response.statusCode == 201) {
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.done,
@@ -60,8 +60,8 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
     } else {
       //print(response.statusCode);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.error,

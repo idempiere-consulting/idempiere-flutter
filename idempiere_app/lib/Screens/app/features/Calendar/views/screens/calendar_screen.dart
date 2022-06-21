@@ -299,8 +299,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text(
-                      "Add Event",
+                    title: Text(
+                      "Add Event".tr,
                     ),
                     content: DropdownButton(
                       value: dropdownValue,
@@ -325,7 +325,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         onPressed: () {
                           Get.back();
                         },
-                        child: const Text("Cancel"),
+                        child: Text("Cancel".tr),
                       ),
                       TextButton(
                         onPressed: () {
@@ -338,7 +338,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             default:
                           }
                         },
-                        child: const Text("Continua"),
+                        child: Text("Accept".tr),
                       ),
                     ],
                   ),
@@ -373,7 +373,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           Icons.edit,
                           color: Colors.green,
                         ),
-                        tooltip: 'Edit Event',
+                        tooltip: 'Edit Event'.tr,
                         onPressed: () {
                           Get.off(const EditCalendarEvent(), arguments: {
                             "id": event.id,
@@ -431,6 +431,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             _buildProfile(data: getProfil()),
             const SizedBox(height: kSpacing),
             TableCalendar(
+              locale: 'languageCalendar'.tr,
               focusedDay: focusedDay,
               firstDay: DateTime(2000),
               lastDay: DateTime(2100),
@@ -467,8 +468,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text(
-                      "Add Event",
+                    title: Text(
+                      "Add Event".tr,
                     ),
                     content: DropdownButton(
                       value: dropdownValue,
@@ -493,7 +494,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         onPressed: () {
                           Get.back();
                         },
-                        child: const Text("Cancel"),
+                        child: Text("Cancel".tr),
                       ),
                       TextButton(
                         onPressed: () {
@@ -506,7 +507,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             default:
                           }
                         },
-                        child: const Text("Continua"),
+                        child: Text("Accept".tr),
                       ),
                     ],
                   ),
@@ -541,7 +542,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           Icons.edit,
                           color: Colors.green,
                         ),
-                        tooltip: 'Edit Event',
+                        tooltip: 'Edit Event'.tr,
                         onPressed: () {
                           Get.off(const EditCalendarEvent(), arguments: {
                             "id": event.id,
@@ -576,7 +577,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       children: <Widget>[
                         const Icon(Icons.event),
                         Text(
-                          '${event.scheduledStartDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                          '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
                           style: const TextStyle(color: Colors.white),
                         ),
                       ],
@@ -599,6 +600,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             _buildProfile(data: getProfil()),
             const SizedBox(height: kSpacing),
             TableCalendar(
+              locale: 'languageCalendar'.tr,
               focusedDay: focusedDay,
               firstDay: DateTime(2000),
               lastDay: DateTime(2100),
@@ -635,8 +637,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text(
-                      "Add Event",
+                    title: Text(
+                      "Add Event".tr,
                     ),
                     content: DropdownButton(
                       value: dropdownValue,
@@ -661,7 +663,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         onPressed: () {
                           Get.back();
                         },
-                        child: const Text("Cancel"),
+                        child: Text("Cancel".tr),
                       ),
                       TextButton(
                         onPressed: () {
@@ -674,7 +676,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             default:
                           }
                         },
-                        child: const Text("Continua"),
+                        child: Text("Accept".tr),
                       ),
                     ],
                   ),
@@ -709,7 +711,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           Icons.edit,
                           color: Colors.green,
                         ),
-                        tooltip: 'Edit Event',
+                        tooltip: 'Edit Event'.tr,
                         onPressed: () {
                           Get.off(const EditCalendarEvent(), arguments: {
                             "id": event.id,
@@ -744,7 +746,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       children: <Widget>[
                         const Icon(Icons.event),
                         Text(
-                          '${event.scheduledStartDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                          '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
                           style: const TextStyle(color: Colors.white),
                         ),
                       ],
