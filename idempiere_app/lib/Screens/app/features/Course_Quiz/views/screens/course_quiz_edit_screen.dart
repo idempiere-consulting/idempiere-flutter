@@ -93,7 +93,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
       Get.back();
       Get.snackbar(
         "Done!".tr,
-        "The record has been changed".tr,
+        "The record has been updated".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,

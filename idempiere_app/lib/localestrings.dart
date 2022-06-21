@@ -17,7 +17,7 @@ class LocaleString extends Translations {
           'SalesOrder': 'Sales Order',
           'ProductList': 'Product',
           'Invoice': 'Customer Invoice',
-          'Payment': 'Payment',
+          'Payment: ': 'Payment: ',
           'Commission': 'Commission',
           'Shipment': 'Shipment Customer',
           'Ticket': 'Ticket',
@@ -155,7 +155,7 @@ class LocaleString extends Translations {
           'You\'ve completed the Quiz': 'You\'ve completed the Quiz',
           'Internet connection unavailable': 'Internet connection unavailable',
           'No internet connection!': 'No internet connection!',
-          'Failed to update records': 'Failed to update records',
+          'Failed to update records': 'FaileCustomer d to update records',
           'See All': 'See All',
           'Task Overview': 'Task Overview',
           'All': 'All',
@@ -186,7 +186,12 @@ class LocaleString extends Translations {
           'DocumentNo': 'DocumentNo',
           'Document Type': 'Document Type',
           'Business Partner Location': 'Business Partner Location',
-          'Value': 'Value'
+          'Value': 'Value',
+          'Receipt: ': 'Receipt: ',
+          'Edit Receipt': 'Edit Receipt',
+          'Edit Payment': 'Edit Payment',
+          'Invoice: ': 'Invoice: ',
+          'RECEIPTS: ': 'RECEIPTS: '
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -202,7 +207,7 @@ class LocaleString extends Translations {
           'SalesOrder': 'Offerta',
           'ProductList': 'Listino Prodotto',
           'Invoice': 'Fattura',
-          'Payment': 'Incasso',
+          'Payment: ': 'Pagamento: ',
           'Commission': 'Provvigione',
           'Shipment': 'Documento di Trasporto',
           'Ticket': 'Ticket',
@@ -375,7 +380,12 @@ class LocaleString extends Translations {
           'DocumentNo': 'N. Documento',
           'Document Type': 'Tipo Documento',
           'Business Partner Location': 'Indirizzo del Business Partner',
-          'Value': 'Chiave di Ricerca'
+          'Value': 'Chiave di Ricerca',
+          'Receipt: ': 'Incasso: ',
+          'Edit Receipt': 'Modifica Incasso',
+          'Edit Payment': 'Modifica Pagamento',
+          'Invoice: ': 'Fattura: ',
+          'RECEIPTS: ': 'INCASSI: ',
         },
       };
 }

@@ -51,9 +51,9 @@ class EmployeeScreen extends GetView<EmployeeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       //key: controller.scaffoldKey,
-      drawer: (ResponsiveBuilder.isDesktop(context))
+      drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : Drawer(
+          : */ Drawer(
               child: Padding(
                 padding: const EdgeInsets.only(top: kSpacing),
                 child: _Sidebar(data: controller.getSelectedProject()),

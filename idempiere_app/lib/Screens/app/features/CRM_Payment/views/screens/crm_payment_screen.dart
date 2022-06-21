@@ -62,9 +62,9 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
       },
       child: Scaffold(
         //key: controller.scaffoldKey,
-        drawer: (ResponsiveBuilder.isDesktop(context))
+        drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : Drawer(
+            : */ Drawer(
                 child: Padding(
                   padding: const EdgeInsets.only(top: kSpacing),
                   child: _Sidebar(data: controller.getSelectedProject()),
@@ -85,8 +85,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("INCASSI: ${controller.trx.rowcount}")
-                          : const Text("INCASSI: ")),
+                          ? Text("RECEIPTS: ".tr + controller.trx.rowcount.toString())
+                          : Text("RECEIPTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -158,7 +158,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: controller.trx.records![index].isReceipt! ? 'Edit Receipt'.tr : 'Edit Payment'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -273,9 +273,9 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Pagamento: ",
-                                              style: TextStyle(
+                                            Text(
+                                              controller.trx.records![index].isReceipt! ? "Receipt: ".tr : "Payment: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -284,9 +284,9 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Fattura: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Invoice: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -323,8 +323,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("INCASSI: ${controller.trx.rowcount}")
-                          : const Text("INCASSI: ")),
+                          ? Text("RECEIPTS: ".tr + controller.trx.rowcount.toString())
+                          : Text("RECEIPTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -396,7 +396,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: controller.trx.records![index].isReceipt! ? 'Edit Receipt'.tr : 'Edit Payment'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -511,9 +511,9 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Pagamento: ",
-                                              style: TextStyle(
+                                            Text(
+                                              controller.trx.records![index].isReceipt! ? "Receipt: ".tr : "Payment: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -522,9 +522,9 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Fattura: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Invoice: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -561,8 +561,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("INCASSI: ${controller.trx.rowcount}")
-                          : const Text("INCASSI: ")),
+                          ? Text("RECEIPTS: ".tr + controller.trx.rowcount.toString())
+                          : Text("RECEIPTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -634,7 +634,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: controller.trx.records![index].isReceipt! ? 'Edit Receipt'.tr : 'Edit Payment'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -749,9 +749,9 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Pagamento: ",
-                                              style: TextStyle(
+                                            Text(
+                                              controller.trx.records![index].isReceipt! ? "Receipt: ".tr : "Payment: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -760,9 +760,9 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Fattura: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Invoice: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(

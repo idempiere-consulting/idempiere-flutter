@@ -242,9 +242,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: (ResponsiveBuilder.isDesktop(context))
+      drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : Drawer(
+          : */ Drawer(
               child: Padding(
                 padding: const EdgeInsets.only(top: kSpacing),
                 child: _Sidebar(data: getSelectedProject()),

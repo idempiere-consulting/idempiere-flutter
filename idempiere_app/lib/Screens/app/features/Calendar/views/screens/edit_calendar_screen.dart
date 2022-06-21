@@ -86,7 +86,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
       //print("done!");
       Get.snackbar(
         "Done!".tr,
-        "The record has been changed".tr,
+        "The record has been updated".tr,
         isDismissible: true,
         icon: const Icon(
           Icons.done,
