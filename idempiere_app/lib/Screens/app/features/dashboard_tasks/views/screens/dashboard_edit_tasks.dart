@@ -63,8 +63,8 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
       Get.find<DashboardController>().getAllEvents();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato aggiornato",
+        "Done!".tr,
+        "The record has been updated".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -76,8 +76,8 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
         print(response.body);
       }
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -107,8 +107,8 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
       Get.back();
       Get.back();
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato cancellato",
+        "Done!".tr,
+        "The record has been erased".tr,
         icon: const Icon(
           Icons.delete,
           color: Colors.green,
@@ -116,8 +116,8 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -332,13 +332,13 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
             child: IconButton(
               onPressed: () {
                 Get.defaultDialog(
-                  title: "Eliminazione record",
-                  middleText: "Sicuro di voler eliminare il record?",
+                  title: "Record deletion".tr,
+                  middleText: "Are you sure to delete the record?".tr,
                   backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
                   //titleStyle: TextStyle(color: Colors.white),
                   //middleTextStyle: TextStyle(color: Colors.white),
-                  textConfirm: "Elimina",
-                  textCancel: "Annulla",
+                  textConfirm: "Delete".tr,
+                  textCancel: "Cancel".tr,
                   cancelTextColor: Colors.white,
                   confirmTextColor: Colors.white,
                   buttonColor: const Color.fromRGBO(31, 29, 44, 1),
@@ -371,10 +371,10 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   child: TextField(
                     readOnly: true,
                     controller: userFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Assigned To',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Assigned To'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -384,10 +384,10 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   child: TextField(
                     readOnly: true,
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.task_alt),
-                      border: OutlineInputBorder(),
-                      labelText: 'Task',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.task_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Task'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -397,10 +397,10 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   child: TextField(
                     readOnly: true,
                     controller: statusFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.settings_applications_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Status',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.settings_applications_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Status'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -435,7 +435,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Start Time',
+                    timeLabelText: 'Start Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       /* setState(() {
@@ -466,7 +466,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     initialValue: endTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'End Time',
+                    timeLabelText: 'End Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       /* setState(() {
@@ -533,10 +533,348 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return const Text("desktop visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: userFieldController,
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Assigned To'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.task_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Task'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: statusFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.settings_applications_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Status'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                /* Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    maxLines: 4,
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      //prefixIcon: Icon(Icons.list),
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ), */
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: startTime.substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'Start Time'.tr,
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      /* setState(() {
+                        //timeStart = val;
+                      }); */
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: endTime.substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'End Time'.tr,
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      /* setState(() {
+                        //timeStart = val;
+                      }); */
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  overflowDirection: VerticalDirection.down,
+                  overflowButtonSpacing: 5,
+                  /* buttonPadding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20), */
+                  children: [
+                    Visibility(
+                      visible: args["statusId"] == "NY",
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        child: const Text("Start Task"),
+                        onPressed: () async {
+                          editTask("WP");
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: args["statusId"] == "WP",
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                        ),
+                        child: Text("Complete".tr),
+                        onPressed: () {
+                          editTask("CO");
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: args["statusId"] == "WP" && 1 == 2,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.orange),
+                        ),
+                        child: const Text("Exit without closing the task"),
+                        onPressed: () {
+                          editTask("NY");
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
           },
           desktopBuilder: (context, constraints) {
-            return const Text("tablet visual WIP");
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: userFieldController,
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Assigned To'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.task_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Task'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: statusFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.settings_applications_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Status'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                /* Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    maxLines: 4,
+                    controller: descriptionFieldController,
+                    decoration: const InputDecoration(
+                      //prefixIcon: Icon(Icons.list),
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ), */
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: startTime.substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'Start Time'.tr,
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      /* setState(() {
+                        //timeStart = val;
+                      }); */
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    readOnly: true,
+                    type: DateTimePickerType.time,
+                    initialValue: endTime.substring(0, 5),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    timeLabelText: 'End Time'.tr,
+                    icon: const Icon(Icons.access_time),
+                    onChanged: (val) {
+                      /* setState(() {
+                        //timeStart = val;
+                      }); */
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  overflowDirection: VerticalDirection.down,
+                  overflowButtonSpacing: 5,
+                  /* buttonPadding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20), */
+                  children: [
+                    Visibility(
+                      visible: args["statusId"] == "NY",
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        child: const Text("Start Task"),
+                        onPressed: () async {
+                          editTask("WP");
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: args["statusId"] == "WP",
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                        ),
+                        child: Text("Complete".tr),
+                        onPressed: () {
+                          editTask("CO");
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: args["statusId"] == "WP" && 1 == 2,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.orange),
+                        ),
+                        child: const Text("Exit without closing the task"),
+                        onPressed: () {
+                          editTask("NY");
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
           },
         ),
       ),

@@ -242,7 +242,7 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
-                      "Agent".tr,
+                      "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -456,7 +456,7 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
-                      "Agent".tr,
+                      "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -670,7 +670,7 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
-                      "Agent".tr,
+                      "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,

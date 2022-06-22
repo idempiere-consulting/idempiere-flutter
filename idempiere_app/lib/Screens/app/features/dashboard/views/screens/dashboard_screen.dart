@@ -110,7 +110,7 @@ class DashboardScreen extends GetView<DashboardController> {
                       size: 24.0,
                     ),
                     label: Text(
-                        'You Started at ${controller.workStartHour.value}'), // <-- Text
+                        'You Started at '.tr + controller.workStartHour.value), // <-- Text
                   ),
                 ),
               ),
@@ -158,6 +158,7 @@ class DashboardScreen extends GetView<DashboardController> {
                     inprogress: controller.inProgressCount.value,
                     notYetStarted: controller.notDoneCount.value,
                   )),
+
               const SizedBox(height: kSpacing * 1),
 
               Obx(
@@ -174,7 +175,7 @@ class DashboardScreen extends GetView<DashboardController> {
                       size: 24.0,
                     ),
                     label: Text(
-                        'You Started at ${controller.workStartHour.value}'), // <-- Text
+                        'You Started at '.tr + controller.workStartHour.value), // <-- Text
                   ),
                 ),
               ),
@@ -222,6 +223,7 @@ class DashboardScreen extends GetView<DashboardController> {
                     inprogress: controller.inProgressCount.value,
                     notYetStarted: controller.notDoneCount.value,
                   )),
+
               const SizedBox(height: kSpacing * 1),
 
               Obx(
@@ -238,7 +240,7 @@ class DashboardScreen extends GetView<DashboardController> {
                       size: 24.0,
                     ),
                     label: Text(
-                        'You Started at ${controller.workStartHour.value}'), // <-- Text
+                        'You Started at '.tr + controller.workStartHour.value), // <-- Text
                   ),
                 ),
               ),

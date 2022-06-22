@@ -87,8 +87,8 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET HR: ${controller.trx.rowcount}")
-                          : const Text("TICKET HR: ")),
+                          ? Text("TICKET HR: ".tr + controller.trx.rowcount.toString())
+                          : Text("TICKET HR: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -161,7 +161,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Ticket'.tr,
                                       onPressed: () {
                                         Get.to(const TicketInternalChat(),
                                             arguments: {
@@ -211,9 +211,9 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Status: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Status".tr + ": ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -228,9 +228,9 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Summary: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Summary".tr +": ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -244,9 +244,9 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Priority: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Priority".tr +": ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -305,8 +305,8 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET HR: ${controller.trx.rowcount}")
-                          : const Text("TICKET HR: ")),
+                          ? Text("TICKET HR: ".tr + controller.trx.rowcount.toString())
+                          : Text("TICKET HR: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -379,7 +379,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Ticket'.tr,
                                       onPressed: () {
                                         Get.to(const TicketInternalChat(),
                                             arguments: {
@@ -429,9 +429,9 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Status: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Status".tr + ": ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -446,9 +446,9 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Summary: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Summary".tr +": ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -462,9 +462,9 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Priority: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Priority".tr +": ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -523,8 +523,8 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET HR: ${controller.trx.rowcount}")
-                          : const Text("TICKET HR: ")),
+                          ? Text("TICKET HR: ".tr + controller.trx.rowcount.toString())
+                          : Text("TICKET HR: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -597,7 +597,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Ticket'.tr,
                                       onPressed: () {
                                         Get.to(const TicketInternalChat(),
                                             arguments: {
@@ -647,9 +647,9 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Status: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Status".tr + ": ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -664,9 +664,9 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Summary: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Summary".tr +": ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -680,9 +680,9 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Priority: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Priority".tr +": ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(

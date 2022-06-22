@@ -118,7 +118,7 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Invoice'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -163,10 +163,10 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Total Row: ",
+                                          Text(
+                                            "Total Rows: ".tr,
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                const TextStyle(color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -207,9 +207,9 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Listed Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Listed Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -218,9 +218,9 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Entered Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Entered Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -229,9 +229,9 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Quantity: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Quantity: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -283,7 +283,7 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Invoice'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -328,10 +328,10 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Total Row: ",
+                                          Text(
+                                            "Total Rows: ".tr,
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                const TextStyle(color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -372,9 +372,9 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Listed Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Listed Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -383,9 +383,9 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Entered Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Entered Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -394,9 +394,9 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Quantity: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Quantity: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -448,7 +448,7 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Invoice'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -493,10 +493,10 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Total Row: ",
+                                          Text(
+                                            "Total Rows: ".tr,
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                const TextStyle(color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -537,9 +537,9 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Listed Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Listed Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -548,9 +548,9 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Entered Price: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Entered Price: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -559,9 +559,9 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Quantity: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Quantity: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(

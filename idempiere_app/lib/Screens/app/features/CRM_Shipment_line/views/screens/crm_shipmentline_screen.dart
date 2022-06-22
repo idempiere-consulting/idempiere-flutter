@@ -87,8 +87,8 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("DDT Lines: ${controller.trx.rowcount}")
-                        : const Text("DDT Lines: ")),
+                        ? Text("Shipment Lines: ".tr + controller.trx.rowcount.toString())
+                        : Text("Shipment Lines: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   /* Container(
@@ -160,7 +160,7 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Shipment'.tr,
                                     onPressed: () {
                                       //log("info button pressed");
                                       Get.to(const EditShipmentline(),
@@ -216,9 +216,9 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                 subtitle: Column(children: [
                                   Row(
                                     children: <Widget>[
-                                      const Text(
-                                        "- Qty Confirmed: ",
-                                        style: TextStyle(
+                                      Text(
+                                        "- Qty Confirmed: ".tr,
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       ),
@@ -235,9 +235,9 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                   ),
                                   Row(
                                     children: <Widget>[
-                                      const Text(
-                                        "- Qty Planned: ",
-                                        style: TextStyle(
+                                      Text(
+                                        "- Qty Planned: ".tr,
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       ),
@@ -263,9 +263,9 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Description: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Description: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Expanded(
@@ -302,8 +302,8 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("DDT Lines: ${controller.trx.rowcount}")
-                        : const Text("DDT Lines: ")),
+                        ? Text("Shipment Lines: ".tr + controller.trx.rowcount.toString())
+                        : Text("Shipment Lines: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   /* Container(
@@ -375,7 +375,7 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Shipment'.tr,
                                     onPressed: () {
                                       //log("info button pressed");
                                       Get.to(const EditShipmentline(),
@@ -431,9 +431,9 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                 subtitle: Column(children: [
                                   Row(
                                     children: <Widget>[
-                                      const Text(
-                                        "- Qty Confirmed: ",
-                                        style: TextStyle(
+                                      Text(
+                                        "- Qty Confirmed: ".tr,
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       ),
@@ -450,9 +450,9 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                   ),
                                   Row(
                                     children: <Widget>[
-                                      const Text(
-                                        "- Qty Planned: ",
-                                        style: TextStyle(
+                                      Text(
+                                        "- Qty Planned: ".tr,
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       ),
@@ -478,9 +478,9 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Description: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Description: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Expanded(
@@ -517,8 +517,8 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("DDT Lines: ${controller.trx.rowcount}")
-                        : const Text("DDT Lines: ")),
+                        ? Text("Shipment Lines: ".tr + controller.trx.rowcount.toString())
+                        : Text("Shipment Lines: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   /* Container(
@@ -590,7 +590,7 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Shipment'.tr,
                                     onPressed: () {
                                       //log("info button pressed");
                                       Get.to(const EditShipmentline(),
@@ -646,9 +646,9 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                 subtitle: Column(children: [
                                   Row(
                                     children: <Widget>[
-                                      const Text(
-                                        "- Qty Confirmed: ",
-                                        style: TextStyle(
+                                      Text(
+                                        "- Qty Confirmed: ".tr,
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       ),
@@ -665,9 +665,9 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                   ),
                                   Row(
                                     children: <Widget>[
-                                      const Text(
-                                        "- Qty Planned: ",
-                                        style: TextStyle(
+                                      Text(
+                                        "- Qty Planned: ".tr,
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       ),
@@ -693,9 +693,9 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Description: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Description: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Expanded(

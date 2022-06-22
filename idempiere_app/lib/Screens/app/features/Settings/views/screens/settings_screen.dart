@@ -94,17 +94,17 @@ class SettingsScreen extends GetView<SettingsController> {
                         sections: [
                           SettingsSection(
                             margin: const EdgeInsetsDirectional.all(8.0),
-                            title: const Text('Sync Data'),
+                            title: Text('Sync Data'.tr),
                             tiles: <SettingsTile>[
                               SettingsTile(
-                                title: const Text('Re-Sync All'),
+                                title: Text('Re-Sync All'.tr),
                                 leading: const Icon(Icons.sync),
                                 onPressed: (context) {
                                   controller.reSyncAll();
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('User Preferences'),
+                                title: Text('User Preferences'.tr),
                                 // ignore: prefer_const_constructors
                                 leading:
                                     controller.isUserPreferencesSyncing.value ==
@@ -120,7 +120,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Business Partners'),
+                                title: Text('Business Partners'.tr),
                                 // ignore: prefer_const_constructors
                                 leading:
                                     controller.isBusinessPartnerSyncing.value ==
@@ -136,7 +136,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Event Calendar'),
+                                title: Text('Event Calendar'.tr),
                                 leading:
                                     controller.isjpTODOSyncing.value == false
                                         ? const Icon(Icons.cloud_download)
@@ -148,7 +148,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Products'),
+                                title: Text('Products'.tr),
                                 leading:
                                     controller.isProductSyncing.value == false
                                         ? const Icon(Icons.cloud_download)
@@ -160,7 +160,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Work Orders'),
+                                title: Text('Work Orders'.tr),
                                 // ignore: prefer_const_constructors
                                 leading:
                                     controller.isWorkOrderSyncing.value == false
@@ -176,12 +176,12 @@ class SettingsScreen extends GetView<SettingsController> {
                           ),
                           SettingsSection(
                             margin: const EdgeInsetsDirectional.all(8.0),
-                            title: const Text('Language'),
+                            title: Text('Language'.tr),
                             tiles: <SettingsTile>[
                               SettingsTile.navigation(
                                 leading: const Icon(Icons.language),
-                                title: const Text('Language'),
-                                value: const Text('Italian'),
+                                title: Text('Language'.tr),
+                                value: Text('Italian'.tr),
                               ),
                             ],
                           ),
@@ -198,17 +198,17 @@ class SettingsScreen extends GetView<SettingsController> {
                         sections: [
                           SettingsSection(
                             margin: const EdgeInsetsDirectional.all(8.0),
-                            title: const Text('Sync Data'),
+                            title: Text('Sync Data'.tr),
                             tiles: <SettingsTile>[
                               SettingsTile(
-                                title: const Text('Re-Sync All'),
+                                title: Text('Re-Sync All'.tr),
                                 leading: const Icon(Icons.sync),
                                 onPressed: (context) {
                                   controller.reSyncAll();
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('User Preferences'),
+                                title: Text('User Preferences'.tr),
                                 // ignore: prefer_const_constructors
                                 leading:
                                     controller.isUserPreferencesSyncing.value ==
@@ -224,7 +224,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Business Partners'),
+                                title: Text('Business Partners'.tr),
                                 // ignore: prefer_const_constructors
                                 leading:
                                     controller.isBusinessPartnerSyncing.value ==
@@ -240,7 +240,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Event Calendar'),
+                                title: Text('Event Calendar'.tr),
                                 leading:
                                     controller.isjpTODOSyncing.value == false
                                         ? const Icon(Icons.cloud_download)
@@ -252,7 +252,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Products'),
+                                title: Text('Products'.tr),
                                 leading:
                                     controller.isProductSyncing.value == false
                                         ? const Icon(Icons.cloud_download)
@@ -264,7 +264,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Work Orders'),
+                                title: Text('Work Orders'.tr),
                                 // ignore: prefer_const_constructors
                                 leading:
                                     controller.isWorkOrderSyncing.value == false
@@ -280,12 +280,12 @@ class SettingsScreen extends GetView<SettingsController> {
                           ),
                           SettingsSection(
                             margin: const EdgeInsetsDirectional.all(8.0),
-                            title: const Text('Language'),
+                            title: Text('Language'.tr),
                             tiles: <SettingsTile>[
                               SettingsTile.navigation(
                                 leading: const Icon(Icons.language),
-                                title: const Text('Language'),
-                                value: const Text('Italian'),
+                                title: Text('Language'.tr),
+                                value: Text('Italian'.tr),
                               ),
                             ],
                           ),
@@ -302,17 +302,17 @@ class SettingsScreen extends GetView<SettingsController> {
                         sections: [
                           SettingsSection(
                             margin: const EdgeInsetsDirectional.all(8.0),
-                            title: const Text('Sync Data'),
+                            title: Text('Sync Data'.tr),
                             tiles: <SettingsTile>[
                               SettingsTile(
-                                title: const Text('Re-Sync All'),
+                                title: Text('Re-Sync All'.tr),
                                 leading: const Icon(Icons.sync),
                                 onPressed: (context) {
                                   controller.reSyncAll();
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('User Preferences'),
+                                title: Text('User Preferences'.tr),
                                 // ignore: prefer_const_constructors
                                 leading:
                                     controller.isUserPreferencesSyncing.value ==
@@ -328,7 +328,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Business Partners'),
+                                title: Text('Business Partners'.tr),
                                 // ignore: prefer_const_constructors
                                 leading:
                                     controller.isBusinessPartnerSyncing.value ==
@@ -344,7 +344,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Event Calendar'),
+                                title: Text('Event Calendar'.tr),
                                 leading:
                                     controller.isjpTODOSyncing.value == false
                                         ? const Icon(Icons.cloud_download)
@@ -356,7 +356,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Products'),
+                                title: Text('Products'.tr),
                                 leading:
                                     controller.isProductSyncing.value == false
                                         ? const Icon(Icons.cloud_download)
@@ -368,7 +368,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                 },
                               ),
                               SettingsTile.switchTile(
-                                title: const Text('Work Orders'),
+                                title: Text('Work Orders'.tr),
                                 // ignore: prefer_const_constructors
                                 leading:
                                     controller.isWorkOrderSyncing.value == false
@@ -384,12 +384,12 @@ class SettingsScreen extends GetView<SettingsController> {
                           ),
                           SettingsSection(
                             margin: const EdgeInsetsDirectional.all(8.0),
-                            title: const Text('Language'),
+                            title: Text('Language'.tr),
                             tiles: <SettingsTile>[
                               SettingsTile.navigation(
                                 leading: const Icon(Icons.language),
-                                title: const Text('Language'),
-                                value: const Text('Italian'),
+                                title: Text('Language'.tr),
+                                value: Text('Italian'.tr),
                               ),
                             ],
                           ),

@@ -39,8 +39,8 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
       Get.back();
       Get.back();
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato cancellato",
+        "Done!".tr,
+        "The record has been erased".tr,
         icon: const Icon(
           Icons.delete,
           color: Colors.green,

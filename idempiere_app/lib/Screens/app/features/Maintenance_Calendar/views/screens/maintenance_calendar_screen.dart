@@ -73,7 +73,7 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              const Text("LISTA LEAD"),
+              Text('LEAD LIST'.tr),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -105,7 +105,7 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Lead'.tr,
                                     onPressed: () {
                                       log("info button pressed");
                                     },
@@ -145,9 +145,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "BPartner: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "BPartner: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -159,9 +159,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Tel: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Tel: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -183,9 +183,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Email: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Email: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -207,9 +207,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Agent: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -241,7 +241,7 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              const Text("LISTA LEAD"),
+              Text('LEAD LIST'.tr),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -273,7 +273,7 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Lead'.tr,
                                     onPressed: () {
                                       log("info button pressed");
                                     },
@@ -313,9 +313,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "BPartner: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "BPartner: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -327,9 +327,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Tel: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Tel: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -351,9 +351,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Email: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Email: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -375,9 +375,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Agent: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -409,7 +409,7 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              const Text("LISTA LEAD"),
+              Text('LEAD LIST'.tr),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -441,7 +441,7 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead',
+                                    tooltip: 'Edit Lead'.tr,
                                     onPressed: () {
                                       log("info button pressed");
                                     },
@@ -481,9 +481,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "BPartner: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "BPartner: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -495,9 +495,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Tel: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Tel: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -519,9 +519,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Email: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Email: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -543,9 +543,9 @@ class MaintenanceCalendarScreen extends GetView<MaintenanceCalendarController> {
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Agent: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller

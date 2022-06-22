@@ -55,8 +55,8 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
       Get.find<MaintenanceMptaskController>().getWorkOrders();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -65,8 +65,8 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     } else {
       //print(response.body);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,

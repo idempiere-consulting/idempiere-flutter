@@ -48,8 +48,8 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
       Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato aggiornato",
+        "Done!".tr,
+        "The record has been updated".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -57,8 +57,8 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -87,8 +87,8 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
       Get.back();
       Get.back();
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato cancellato",
+        "Done!".tr,
+        "The record has been erased".tr,
         icon: const Icon(
           Icons.delete,
           color: Colors.green,
@@ -96,8 +96,8 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -204,8 +204,8 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Edit Lead'),
+        title: Center(
+          child: Text('Edit Ticket'.tr),
         ),
         actions: [
           Padding(
@@ -213,13 +213,13 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
             child: IconButton(
               onPressed: () {
                 Get.defaultDialog(
-                  title: "Eliminazione record",
-                  middleText: "Sicuro di voler eliminare il record?",
+                  title: "Record deletion".tr,
+                  middleText: "Are you sure to delete the record?".tr,
                   backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
                   //titleStyle: TextStyle(color: Colors.white),
                   //middleTextStyle: TextStyle(color: Colors.white),
-                  textConfirm: "Elimina",
-                  textCancel: "Annulla",
+                  textConfirm: "Delete".tr,
+                  textCancel: "Cancel".tr,
                   cancelTextColor: Colors.white,
                   confirmTextColor: Colors.white,
                   buttonColor: const Color.fromRGBO(31, 29, 44, 1),
@@ -262,10 +262,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -274,10 +274,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -286,10 +286,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -298,20 +298,20 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.mail_outline),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Email'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -365,10 +365,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child:  Align(
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "Lead Status".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -424,10 +424,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -436,10 +436,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -448,10 +448,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -460,20 +460,20 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.mail_outline),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Email'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -527,10 +527,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child:  Align(
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "Lead Status".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -586,10 +586,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -598,10 +598,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -610,10 +610,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -622,20 +622,20 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.mail_outline),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Email'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -689,10 +689,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child:  Align(
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "Lead Status".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),

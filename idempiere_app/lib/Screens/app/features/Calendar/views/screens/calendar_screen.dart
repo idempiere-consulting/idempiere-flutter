@@ -119,11 +119,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ' + GetStorage().read('token'); 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and Created ge \'$formattedFiftyDaysAgo 00:00:01\' and Created le \'$formattedDate 23:59:59\'');
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedDate 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{

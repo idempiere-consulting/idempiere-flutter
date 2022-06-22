@@ -196,8 +196,8 @@ class _CreateMaintenanceMpResourceState
       GetStorage().write('workOrderResourceSurveyLinesSync', response.body);
       Get.find<MaintenanceMpResourceController>().getWorkOrders();
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -288,13 +288,21 @@ class _CreateMaintenanceMpResourceState
       if (response.statusCode == 201) {
         //print("done!");
         syncWorkOrder();
+        Get.snackbar(
+        "Done!".tr,
+        "The record has been created".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
       } else {
         if (kDebugMode) {
           print(response.body);
         }
         Get.snackbar(
-          "Errore!",
-          "Record non creato",
+          "Error!".tr,
+        "Record not created".tr,
           icon: const Icon(
             Icons.error,
             color: Colors.red,
@@ -373,8 +381,8 @@ class _CreateMaintenanceMpResourceState
       GetStorage().write('postCallId', GetStorage().read('postCallId') + 1);
       GetStorage().write('postCallList', list);
       Get.snackbar(
-        "Salvato!",
-        "Il record è stato salvato localmente in attesa di connessione internet.",
+        "Saved!".tr,
+        "The record has been saved locally waiting for internet connection".tr,
         icon: const Icon(
           Icons.save,
           color: Colors.red,
@@ -481,8 +489,8 @@ class _CreateMaintenanceMpResourceState
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Add Resource'),
+        title: Center(
+          child: Text('Add Resource'.tr),
         ),
         actions: [
           Padding(
@@ -509,10 +517,10 @@ class _CreateMaintenanceMpResourceState
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child:  Align(
                     child: Text(
-                      "Product",
-                      style: TextStyle(fontSize: 12),
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -566,20 +574,20 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: productModelFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Product Model',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Model'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Type",
-                      style: TextStyle(fontSize: 12),
+                      "Type".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -617,10 +625,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: sernoFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'SerNo',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'SerNo'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -629,10 +637,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: barcodeFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Barcode',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Barcode'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -641,10 +649,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: cartelFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Cartel',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Cartel'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -653,10 +661,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: lotFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Lot',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Lot'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -665,10 +673,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationCodeFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'LocationCode',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'LocationCode'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -677,10 +685,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Location',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Location'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -689,10 +697,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: manufacturerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Manufacturer',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manufacturer'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -701,10 +709,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: manufacturedYearFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Manufactured Year',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manufactured Year'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -713,10 +721,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: useLifeYearsFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Due Year',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Due Year'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -736,7 +744,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Date Ordered',
+                    dateLabelText: 'Date Ordered'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -769,7 +777,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'First Use Date',
+                    dateLabelText: 'First Use Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -802,7 +810,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Check Date',
+                    dateLabelText: 'Check Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -835,7 +843,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Revision Date',
+                    dateLabelText: 'Revision Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -868,7 +876,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Testing Date',
+                    dateLabelText: 'Testing Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -890,10 +898,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: userNameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'User Name',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'User Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -902,10 +910,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: noteFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Note',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -921,10 +929,10 @@ class _CreateMaintenanceMpResourceState
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child:  Align(
                     child: Text(
-                      "Product",
-                      style: TextStyle(fontSize: 12),
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -978,20 +986,20 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: productModelFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Product Model',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Model'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Type",
-                      style: TextStyle(fontSize: 12),
+                      "Type".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -1029,10 +1037,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: sernoFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'SerNo',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'SerNo'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1041,10 +1049,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: barcodeFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Barcode',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Barcode'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1053,10 +1061,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: cartelFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Cartel',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Cartel'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1065,10 +1073,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: lotFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Lot',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Lot'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1077,10 +1085,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationCodeFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'LocationCode',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'LocationCode'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1089,10 +1097,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Location',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Location'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1101,10 +1109,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: manufacturerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Manufacturer',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manufacturer'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1113,10 +1121,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: manufacturedYearFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Manufactured Year',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manufactured Year'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1125,10 +1133,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: useLifeYearsFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Due Year',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Due Year'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1148,7 +1156,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Date Ordered',
+                    dateLabelText: 'Date Ordered'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1181,7 +1189,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'First Use Date',
+                    dateLabelText: 'First Use Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1214,7 +1222,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Check Date',
+                    dateLabelText: 'Check Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1247,7 +1255,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Revision Date',
+                    dateLabelText: 'Revision Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1280,7 +1288,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Testing Date',
+                    dateLabelText: 'Testing Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1302,10 +1310,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: userNameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'User Name',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'User Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1314,10 +1322,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: noteFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Note',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1333,10 +1341,10 @@ class _CreateMaintenanceMpResourceState
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child:  Align(
                     child: Text(
-                      "Product",
-                      style: TextStyle(fontSize: 12),
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -1390,20 +1398,20 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: productModelFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Product Model',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product Model'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Type",
-                      style: TextStyle(fontSize: 12),
+                      "Type".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -1441,10 +1449,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: sernoFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'SerNo',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'SerNo'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1453,10 +1461,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: barcodeFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Barcode',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Barcode'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1465,10 +1473,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: cartelFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Cartel',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Cartel'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1477,10 +1485,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: lotFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Lot',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Lot'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1489,10 +1497,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationCodeFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'LocationCode',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'LocationCode'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1501,10 +1509,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Location',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Location'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1513,10 +1521,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: manufacturerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Manufacturer',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manufacturer'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1525,10 +1533,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: manufacturedYearFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Manufactured Year',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manufactured Year'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1537,10 +1545,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: useLifeYearsFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Due Year',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Due Year'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1560,7 +1568,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Date Ordered',
+                    dateLabelText: 'Date Ordered'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1593,7 +1601,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'First Use Date',
+                    dateLabelText: 'First Use Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1626,7 +1634,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Check Date',
+                    dateLabelText: 'Check Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1659,7 +1667,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Revision Date',
+                    dateLabelText: 'Revision Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1692,7 +1700,7 @@ class _CreateMaintenanceMpResourceState
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Testing Date',
+                    dateLabelText: 'Testing Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -1714,10 +1722,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: userNameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'User Name',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'User Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1726,10 +1734,10 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: noteFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Note',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),

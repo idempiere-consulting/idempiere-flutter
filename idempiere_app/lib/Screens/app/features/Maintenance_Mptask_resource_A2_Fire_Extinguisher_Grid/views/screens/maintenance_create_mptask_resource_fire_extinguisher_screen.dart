@@ -94,8 +94,8 @@ class _CreateMaintenanceMpResourceState
       } else {
         //print(response.body);
         Get.snackbar(
-          "Errore!",
-          "Record non creato",
+          "Error!".tr,
+        "Record not created".tr,
           icon: const Icon(
             Icons.error,
             color: Colors.red,

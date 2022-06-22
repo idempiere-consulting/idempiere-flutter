@@ -39,8 +39,8 @@ class _EditShipmentState extends State<EditShipment> {
       Get.find<CRMShipmentController>().getShipments();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato aggiornato",
+        "Done!".tr,
+        "The record has been updated".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -48,8 +48,8 @@ class _EditShipmentState extends State<EditShipment> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -78,8 +78,8 @@ class _EditShipmentState extends State<EditShipment> {
       Get.back();
       Get.back();
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato cancellato",
+        "Done!".tr,
+        "The record has been erased".tr,
         icon: const Icon(
           Icons.delete,
           color: Colors.green,
@@ -87,8 +87,8 @@ class _EditShipmentState extends State<EditShipment> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -117,8 +117,8 @@ class _EditShipmentState extends State<EditShipment> {
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Edit Shipment'),
+        title: Center(
+          child: Text('Edit Shipment'.tr),
         ),
         actions: [
           /* Padding(
@@ -176,10 +176,10 @@ class _EditShipmentState extends State<EditShipment> {
                   child: TextField(
                     maxLines: 5,
                     controller: noteFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields),
-                      border: OutlineInputBorder(),
-                      labelText: 'Note',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -198,10 +198,10 @@ class _EditShipmentState extends State<EditShipment> {
                   child: TextField(
                     maxLines: 5,
                     controller: noteFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields),
-                      border: OutlineInputBorder(),
-                      labelText: 'Note',
+                    decoration:  InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -220,10 +220,10 @@ class _EditShipmentState extends State<EditShipment> {
                   child: TextField(
                     maxLines: 5,
                     controller: noteFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields),
-                      border: OutlineInputBorder(),
-                      labelText: 'Note',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),

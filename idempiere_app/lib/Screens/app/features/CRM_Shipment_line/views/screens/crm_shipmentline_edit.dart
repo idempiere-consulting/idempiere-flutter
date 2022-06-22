@@ -43,8 +43,8 @@ class _EditShipmentlineState extends State<EditShipmentline> {
       Get.find<CRMShipmentlineController>().getShipmentlines();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato aggiornato",
+        "Done!".tr,
+        "The record has been updated".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -52,8 +52,8 @@ class _EditShipmentlineState extends State<EditShipmentline> {
       );
     } else {
       Get.snackbar(
-        "Errore!",
-        "Record non aggiornato",
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -90,8 +90,8 @@ class _EditShipmentlineState extends State<EditShipmentline> {
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Edit ShipmentLine'),
+        title: Center(
+          child: Text('Edit ShipmentLine'.tr),
         ),
         actions: [
           Padding(
@@ -120,10 +120,10 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                   child: TextField(
                     //maxLines: 5,
                     controller: qtyFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields),
-                      border: OutlineInputBorder(),
-                      labelText: 'Quantity Planned',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity Planned'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -133,10 +133,10 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                   child: TextField(
                     //maxLines: 5,
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields),
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -144,7 +144,7 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: CheckboxListTile(
-                    title: const Text('Selected'),
+                    title: Text('Selected'.tr),
                     value: checkboxState,
                     activeColor: kPrimaryColor,
                     onChanged: (bool? value) {
@@ -169,10 +169,10 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                   child: TextField(
                     //maxLines: 5,
                     controller: qtyFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields),
-                      border: OutlineInputBorder(),
-                      labelText: 'Quantity Planned',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity Planned'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -182,10 +182,10 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                   child: TextField(
                     //maxLines: 5,
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields),
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -193,7 +193,7 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: CheckboxListTile(
-                    title: const Text('Selected'),
+                    title: Text('Selected'.tr),
                     value: checkboxState,
                     activeColor: kPrimaryColor,
                     onChanged: (bool? value) {
@@ -218,10 +218,10 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                   child: TextField(
                     //maxLines: 5,
                     controller: qtyFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields),
-                      border: OutlineInputBorder(),
-                      labelText: 'Quantity Planned',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity Planned'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -231,10 +231,10 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                   child: TextField(
                     //maxLines: 5,
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.text_fields),
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -242,7 +242,7 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: CheckboxListTile(
-                    title: const Text('Selected'),
+                    title: Text('Selected'.tr),
                     value: checkboxState,
                     activeColor: kPrimaryColor,
                     onChanged: (bool? value) {

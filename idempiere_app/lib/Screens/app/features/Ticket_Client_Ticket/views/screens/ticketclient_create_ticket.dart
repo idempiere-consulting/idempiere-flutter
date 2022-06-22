@@ -593,10 +593,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       : false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: const Align(
+                    child:  Align(
                       child: Text(
-                        "Business Partner",
-                        style: TextStyle(fontSize: 12),
+                        "Business Partner".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -671,10 +671,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       : false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: const Align(
+                    child: Align(
                       child: Text(
-                        "User",
-                        style: TextStyle(fontSize: 12),
+                        "User".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -747,10 +747,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 1,
                       controller: titleFieldController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Ticket Title',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Ticket Title'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -763,10 +763,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Summary of the issue',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Summary of the issue'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -779,10 +779,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Subject of the Scheduled Session',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Subject of the Scheduled Session'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -911,10 +911,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       : false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: const Align(
+                    child:  Align(
                       child: Text(
-                        "Business Partner",
-                        style: TextStyle(fontSize: 12),
+                        "Business Partner".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -989,10 +989,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       : false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: const Align(
+                    child: Align(
                       child: Text(
-                        "User",
-                        style: TextStyle(fontSize: 12),
+                        "User".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -1065,10 +1065,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 1,
                       controller: titleFieldController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Ticket Title',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Ticket Title'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -1081,10 +1081,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Summary of the issue',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Summary of the issue'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -1097,10 +1097,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Subject of the Scheduled Session',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Subject of the Scheduled Session'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -1229,10 +1229,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       : false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: const Align(
+                    child:  Align(
                       child: Text(
-                        "Business Partner",
-                        style: TextStyle(fontSize: 12),
+                        "Business Partner".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -1307,10 +1307,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       : false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child: const Align(
+                    child: Align(
                       child: Text(
-                        "User",
-                        style: TextStyle(fontSize: 12),
+                        "User".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),
@@ -1383,10 +1383,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 1,
                       controller: titleFieldController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Ticket Title',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Ticket Title'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -1399,10 +1399,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Summary of the issue',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Summary of the issue'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -1415,10 +1415,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Subject of the Scheduled Session',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Subject of the Scheduled Session'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),

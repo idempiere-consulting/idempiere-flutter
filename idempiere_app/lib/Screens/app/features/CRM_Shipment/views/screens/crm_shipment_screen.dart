@@ -86,8 +86,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("DDT: ${controller.trx.rowcount}")
-                          : const Text("DDT: ")),
+                          ? Text("Shipment: ".tr + controller.trx.rowcount.toString())
+                          : Text("Shipment: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -174,7 +174,7 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Shipment'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         Get.to(const EditShipment(),
@@ -239,9 +239,9 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Note: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Note: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -278,8 +278,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("DDT: ${controller.trx.rowcount}")
-                          : const Text("DDT: ")),
+                          ? Text("Shipment: ".tr + controller.trx.rowcount.toString())
+                          : Text("Shipment: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -366,7 +366,7 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Shipment'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         Get.to(const EditShipment(),
@@ -431,9 +431,9 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Note: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Note: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -470,8 +470,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("DDT: ${controller.trx.rowcount}")
-                          : const Text("DDT: ")),
+                          ? Text("Shipment: ".tr + controller.trx.rowcount.toString())
+                          : Text("Shipment: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
@@ -558,7 +558,7 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead',
+                                      tooltip: 'Edit Shipment'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         Get.to(const EditShipment(),
@@ -623,9 +623,9 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Note: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Note: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(

@@ -352,10 +352,10 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -364,10 +364,10 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Descrizione',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const  OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -455,7 +455,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     initialValue: date,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
+                    dateLabelText: 'Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -489,7 +489,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Inizio',
+                    timeLabelText: 'Start Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -520,7 +520,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Fine',
+                    timeLabelText: 'End Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -577,10 +577,10 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -589,14 +589,26 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Descrizione',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const  OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
+                /* Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: projectFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Progetto',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ), */
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
@@ -644,7 +656,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                                   nameFieldController.text =
                                       "${selection.value}_${selection.name}";
                                   setState(() {});
-
+                                  getProjectBP();
                                   //print(salesrepValue);
                                 },
                               )
@@ -668,7 +680,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     initialValue: date,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
+                    dateLabelText: 'Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -702,7 +714,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Inizio',
+                    timeLabelText: 'Start Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -733,7 +745,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Fine',
+                    timeLabelText: 'End Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -790,10 +802,10 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -802,14 +814,26 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Descrizione',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const  OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
+                /* Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: projectFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Progetto',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ), */
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
@@ -857,7 +881,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                                   nameFieldController.text =
                                       "${selection.value}_${selection.name}";
                                   setState(() {});
-
+                                  getProjectBP();
                                   //print(salesrepValue);
                                 },
                               )
@@ -881,7 +905,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     initialValue: date,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
+                    dateLabelText: 'Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -915,7 +939,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Inizio',
+                    timeLabelText: 'Start Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {
@@ -946,7 +970,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    timeLabelText: 'Ora Fine',
+                    timeLabelText: 'End Time'.tr,
                     icon: const Icon(Icons.access_time),
                     onChanged: (val) {
                       setState(() {

@@ -111,8 +111,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       Get.find<HumanResourceTicketController>().getTickets();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -125,8 +125,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       }
       //print(response.statusCode);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -181,8 +181,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       Get.find<HumanResourceTicketController>().getTickets();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -195,8 +195,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       }
       //print(response.statusCode);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -243,8 +243,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       Get.find<HumanResourceTicketController>().getTickets();
       //print("done!");
       Get.snackbar(
-        "Fatto!",
-        "Il record è stato creato",
+        "Done!".tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -257,8 +257,8 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
       }
       //print(response.statusCode);
       Get.snackbar(
-        "Errore!",
-        "Record non creato",
+        "Error!".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -740,10 +740,10 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Description',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Description'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -766,7 +766,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'From',
+                      dateLabelText: 'From'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -802,7 +802,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'Date',
+                      dateLabelText: 'Date'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -838,7 +838,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Start Time',
+                      timeLabelText: 'Start Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -871,7 +871,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'End Time',
+                      timeLabelText: 'End Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -1072,10 +1072,10 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Description',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Description'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -1098,7 +1098,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'From',
+                      dateLabelText: 'From'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -1134,7 +1134,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'Date',
+                      dateLabelText: 'Date'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -1170,7 +1170,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Start Time',
+                      timeLabelText: 'Start Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -1203,7 +1203,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'End Time',
+                      timeLabelText: 'End Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -1404,10 +1404,10 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
-                        border: OutlineInputBorder(),
-                        labelText: 'Description',
+                        border: const OutlineInputBorder(),
+                        labelText: 'Description'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -1430,7 +1430,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'From',
+                      dateLabelText: 'From'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -1466,7 +1466,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'Date',
+                      dateLabelText: 'Date'.tr,
                       icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
@@ -1502,7 +1502,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Start Time',
+                      timeLabelText: 'Start Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -1535,7 +1535,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'End Time',
+                      timeLabelText: 'End Time'.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
