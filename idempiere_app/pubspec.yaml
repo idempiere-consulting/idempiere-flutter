@@ -61,7 +61,7 @@ dependencies:
   flutter_compass: ^0.7.0
   geolocator: ^8.2.0
   nfc_manager: ^3.1.1
-  analog_clock: ^0.1.0
+  #analog_clock: ^0.1.0
   #nextcloud: ^3.0.2
   path_provider: ^2.0.9
   graphic: ^0.10.5

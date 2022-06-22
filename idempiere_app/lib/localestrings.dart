@@ -59,6 +59,7 @@ class LocaleString extends Translations {
           'ST': 'Stopped',
           'WP': 'Work in Progress',
           'CO': 'Completed',
+          'NY': 'Not Yet Started',
           'Location Code': 'Location Code',
           'Location': 'Location',
           'Locator': 'Locator',
@@ -253,7 +254,7 @@ class LocaleString extends Translations {
           'LEAD LIST': 'LEAD LIST',
           'Saved!': 'Saved!',
           'The record has been saved locally waiting for internet connection':
-            'The record has been saved locally waiting for internet connection',
+              'The record has been saved locally waiting for internet connection',
           'Add Resource': 'Add Resource',
           'Product Model': 'Product Model',
           'Barcode': 'Barcode',
@@ -280,7 +281,8 @@ class LocaleString extends Translations {
           'User': 'User',
           'Ticket Title': 'Ticket Title',
           'Summary of the issue': 'Summary of the issue',
-          'Subject of the Scheduled Session': 'Subject of the Scheduled Session',
+          'Subject of the Scheduled Session':
+              'Subject of the Scheduled Session',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -337,6 +339,7 @@ class LocaleString extends Translations {
           'WP': 'In Corso',
           'ST': 'Fermato',
           'CO': 'Completato',
+          'NY': 'Non Iniziato',
           'Location Code': 'Codice Ubicazione',
           'Location': 'Ubicazione',
           'Locator': 'Area Stoccaggio',
@@ -536,8 +539,8 @@ class LocaleString extends Translations {
           'TICKET HR: ': 'TICKET HR: ',
           'LEAD LIST': 'LISTA LEAD',
           'Saved!': 'Salvato!',
-          'The record has been saved locally waiting for internet connection': 
-            'Il record è stato salvato localmente in attesa di connessione internet.',
+          'The record has been saved locally waiting for internet connection':
+              'Il record è stato salvato localmente in attesa di connessione internet.',
           'Add Resource': 'Aggiungi Risorsa',
           'Product Model': 'Modello Prodotto',
           'Barcode': 'Barcode',

@@ -73,9 +73,9 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
 
   final json = {
     "types": [
-      {"id": "CO", "name": "Completed"},
-      {"id": "NY", "name": "Not Yet Started"},
-      {"id": "WP", "name": "Work In Progress"},
+      {"id": "CO", "name": "CO".tr},
+      {"id": "NY", "name": "NY".tr},
+      {"id": "WP", "name": "WP".tr},
     ]
   };
 
@@ -148,7 +148,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
@@ -160,7 +160,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
@@ -303,7 +303,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
@@ -315,7 +315,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
@@ -458,7 +458,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
@@ -470,7 +470,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: descriptionFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,

@@ -261,7 +261,7 @@ class _EditTicketClientTicketState extends State<EditTicketClientTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
@@ -273,7 +273,7 @@ class _EditTicketClientTicketState extends State<EditTicketClientTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Business Partner'.tr,
@@ -310,7 +310,7 @@ class _EditTicketClientTicketState extends State<EditTicketClientTicket> {
                   child: Align(
                     child: Text(
                       "SalesRep".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -423,7 +423,7 @@ class _EditTicketClientTicketState extends State<EditTicketClientTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
@@ -435,7 +435,7 @@ class _EditTicketClientTicketState extends State<EditTicketClientTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Business Partner'.tr,
@@ -472,7 +472,7 @@ class _EditTicketClientTicketState extends State<EditTicketClientTicket> {
                   child: Align(
                     child: Text(
                       "SalesRep".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -585,7 +585,7 @@ class _EditTicketClientTicketState extends State<EditTicketClientTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
@@ -597,7 +597,7 @@ class _EditTicketClientTicketState extends State<EditTicketClientTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Business Partner'.tr,
@@ -634,7 +634,7 @@ class _EditTicketClientTicketState extends State<EditTicketClientTicket> {
                   child: Align(
                     child: Text(
                       "SalesRep".tr,
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),

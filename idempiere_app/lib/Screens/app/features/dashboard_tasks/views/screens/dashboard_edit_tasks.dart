@@ -371,7 +371,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   child: TextField(
                     readOnly: true,
                     controller: userFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Assigned To'.tr,
@@ -398,7 +398,8 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     readOnly: true,
                     controller: statusFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.settings_applications_outlined),
+                      prefixIcon:
+                          const Icon(Icons.settings_applications_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Status'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -430,6 +431,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('languageCalendar'.tr),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
@@ -461,6 +463,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('languageCalendar'.tr),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: endTime.substring(0, 5),
@@ -543,7 +546,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   child: TextField(
                     readOnly: true,
                     controller: userFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Assigned To'.tr,
@@ -570,7 +573,8 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     readOnly: true,
                     controller: statusFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.settings_applications_outlined),
+                      prefixIcon:
+                          const Icon(Icons.settings_applications_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Status'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -602,6 +606,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('languageCalendar'.tr),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
@@ -633,6 +638,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('languageCalendar'.tr),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: endTime.substring(0, 5),
@@ -715,7 +721,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   child: TextField(
                     readOnly: true,
                     controller: userFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Assigned To'.tr,
@@ -742,7 +748,8 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     readOnly: true,
                     controller: statusFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.settings_applications_outlined),
+                      prefixIcon:
+                          const Icon(Icons.settings_applications_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Status'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -774,6 +781,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('languageCalendar'.tr),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
@@ -805,6 +813,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('languageCalendar'.tr),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: endTime.substring(0, 5),
