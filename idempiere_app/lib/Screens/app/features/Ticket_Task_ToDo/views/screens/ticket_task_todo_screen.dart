@@ -210,9 +210,9 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Business Partner: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Business Partner: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -441,9 +441,9 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Business Partner: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Business Partner: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller
@@ -672,9 +672,9 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Text(
-                                            "Business Partner: ",
-                                            style: TextStyle(
+                                          Text(
+                                            "Business Partner: ".tr,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(controller

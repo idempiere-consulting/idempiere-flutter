@@ -155,7 +155,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Open Chat',
+                                      tooltip: 'Open Chat'.tr,
                                       onPressed: () {
                                         Get.to(const TicketClientChat(),
                                             arguments: {
@@ -388,7 +388,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Open Chat',
+                                      tooltip: 'Open Chat'.tr,
                                       onPressed: () {
                                         Get.to(const TicketClientChat(),
                                             arguments: {
@@ -621,7 +621,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Open Chat',
+                                      tooltip: 'Open Chat'.tr,
                                       onPressed: () {
                                         Get.to(const TicketClientChat(),
                                             arguments: {

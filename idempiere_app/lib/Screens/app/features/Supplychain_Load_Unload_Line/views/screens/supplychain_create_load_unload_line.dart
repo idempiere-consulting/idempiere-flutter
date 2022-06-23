@@ -357,8 +357,8 @@ class _CreateSupplychainLoadUnloadLineState
       if (kDebugMode) {
         print(response.body);
         Get.defaultDialog(
-          title: "Oops!",
-          content: const Text("createAttribute Error"),
+          title: "Oops!".tr,
+          content: Text("createAttribute Error".tr),
         );
       }
     }
@@ -396,8 +396,8 @@ class _CreateSupplychainLoadUnloadLineState
       if (kDebugMode) {
         print(response.body);
         Get.defaultDialog(
-          title: "Oops!",
-          content: const Text("createLot Error"),
+          title: "Oops!".tr,
+          content: Text("createLot Error".tr),
         );
       }
     }
@@ -456,7 +456,7 @@ class _CreateSupplychainLoadUnloadLineState
       if (kDebugMode) {
         print(response.body);
         Get.defaultDialog(
-          title: "Oops!",
+          title: "Oops!".tr,
           content: const Text("createAttributeSetInstance Error"),
         );
       }
@@ -492,15 +492,15 @@ class _CreateSupplychainLoadUnloadLineState
       if (instAttrId != 0) {
         Get.defaultDialog(
           title: "Done!".tr,
-          content: const Text("Instance Attribute Created!"),
+          content: Text("Instance Attribute Created!".tr),
         );
       }
     } else {
       if (kDebugMode) {
         print(response.body);
         Get.defaultDialog(
-          title: "Oops!",
-          content: const Text("createAttributeInstance Error"),
+          title: "Oops!".tr,
+          content: Text("createAttributeInstance Error".tr),
         );
       }
     }

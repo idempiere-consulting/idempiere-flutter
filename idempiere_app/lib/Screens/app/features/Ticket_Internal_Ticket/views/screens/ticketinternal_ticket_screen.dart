@@ -160,7 +160,7 @@ class TicketInternalTicketScreen
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead'.tr,
+                                      tooltip: 'Edit Ticket'.tr,
                                       onPressed: () {
                                         Get.to(const TicketInternalChat(),
                                             arguments: {
@@ -389,7 +389,7 @@ class TicketInternalTicketScreen
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead'.tr,
+                                      tooltip: 'Edit Ticket'.tr,
                                       onPressed: () {
                                         Get.to(const TicketInternalChat(),
                                             arguments: {
@@ -618,7 +618,7 @@ class TicketInternalTicketScreen
                                         Icons.chat,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead'.tr,
+                                      tooltip: 'Edit Ticket'.tr,
                                       onPressed: () {
                                         Get.to(const TicketInternalChat(),
                                             arguments: {

@@ -165,8 +165,8 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Add Lead'),
+        title: Center(
+          child: Text('Add Training and Course'.tr),
         ),
         actions: [
           Padding(
@@ -194,10 +194,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -206,10 +206,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -218,10 +218,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -230,10 +230,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.mail_outline),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Email'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -408,10 +408,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -420,10 +420,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -432,10 +432,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -444,10 +444,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.mail_outline),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Email'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -622,10 +622,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -634,10 +634,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -646,10 +646,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -658,10 +658,10 @@ class _CreateTrainingCourseState extends State<CreateTrainingCourse> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: mailFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.mail_outline),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Email'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
