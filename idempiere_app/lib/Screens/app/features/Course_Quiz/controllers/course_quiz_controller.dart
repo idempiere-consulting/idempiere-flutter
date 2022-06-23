@@ -63,7 +63,7 @@ class CourseQuizController extends GetxController {
                   '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
 
               var msg = jsonEncode({
-                "ValueNumber": double.parse(numberfieldController[i].text),
+                "ValueNumber": numberfieldController[i].text,
               });
 
               // ignore: unused_local_variable
@@ -84,7 +84,7 @@ class CourseQuizController extends GetxController {
                 '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
 
             var msg = jsonEncode({
-              "LIT_Text1": textfieldController[i].text,
+              "ValueNumber": textfieldController[i].text,
             });
 
             // ignore: unused_local_variable
@@ -122,7 +122,7 @@ class CourseQuizController extends GetxController {
                 '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
 
             var msg = jsonEncode({
-              "ValueNumber": selectedValue[i],
+              "ValueNumber": selectedValue[i].toString(),
             });
 
             // ignore: unused_local_variable
@@ -142,7 +142,7 @@ class CourseQuizController extends GetxController {
                   '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
 
               var msg = jsonEncode({
-                "LIT_IsField1": checkValue[i] == 1 ? true : false,
+                "ValueNumber": checkValue[i] == 1 ? "Y" : "N",
               });
 
               // ignore: unused_local_variable
