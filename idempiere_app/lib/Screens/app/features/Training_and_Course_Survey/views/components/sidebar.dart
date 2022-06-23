@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: must_be_immutable
 class _Sidebar extends StatelessWidget {
   _Sidebar({
     required this.data,
@@ -9,6 +10,8 @@ class _Sidebar extends StatelessWidget {
   final ProjectCardData data;
 
   final List<dynamic> list = GetStorage().read('permission');
+
+  TextEditingController passwordFieldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +86,18 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.person_add,
+                  icon: EvaIcons.personOutline,
+                  label: "Course List",
+                  visible: int.parse(list[57], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -98,10 +113,51 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/TrainingCoursePresence');
                     break;
                   case 3:
+                    /* Get.defaultDialog(
+                      title: "Your Quiz Code:",
+                      content: RoundedPasswordField(
+                        controller: passwordFieldController,
+                        onChanged: (value) {},
+                      ),
+                      barrierDismissible: true,
+                      textConfirm: 'Confirm',
+                      buttonColor: kNotifColor,
+                      onConfirm: () async {
+                        final ip = GetStorage().read('ip');
+                        String authorization =
+                            'Bearer ' + GetStorage().read('token');
+                        final protocol = GetStorage().read('protocol');
+                        var url = Uri.parse('$protocol://' +
+                            ip +
+                            '/api/v1/models/MP_Maintain_Resource?\$filter= MP_Maintain_Resource_UU eq \'${passwordFieldController.text}\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+                        var response = await http.get(
+                          url,
+                          headers: <String, String>{
+                            'Content-Type': 'application/json',
+                            'Authorization': authorization,
+                          },
+                        );
+                        if (response.statusCode == 200) {
+                          print(response.body);
+                          var json = pagejsonDecode(response.body);
+                          if (json['row-count'] == 1) {
+                            Get.offNamed('/TrainingCourseSurvey', arguments: {
+                              "id": json["records"][0]["id"],
+                            });
+                          }
+                        } else {
+                          print(response.body);
+                        }
+                      },
+                    ); */
                     Get.offNamed('/TrainingCourseSurvey');
                     break;
                   case 4:
                     Get.offNamed('/TrainingCourseScore');
+                    break;
+                  case 5:
+                    Get.offNamed('/TrainingCourseCourseListScreen');
                     break;
                   default:
                 }

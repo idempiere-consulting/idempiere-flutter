@@ -215,7 +215,10 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                         () => Visibility(
                                           visible: controller.trx
                                                   .records![index].lITText2 !=
-                                              null,
+                                              null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText2}"),
@@ -232,7 +235,10 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                         () => Visibility(
                                           visible: controller.trx
                                                   .records![index].lITText3 !=
-                                              null,
+                                              null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText3}"),
@@ -249,7 +255,10 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                         () => Visibility(
                                           visible: controller.trx
                                                   .records![index].lITText4 !=
-                                              null,
+                                              null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText4}"),
@@ -266,7 +275,10 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                         () => Visibility(
                                           visible: controller.trx
                                                   .records![index].lITText5 !=
-                                              null,
+                                              null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText5}"),

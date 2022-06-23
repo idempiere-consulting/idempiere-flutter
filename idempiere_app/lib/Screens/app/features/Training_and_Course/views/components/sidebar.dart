@@ -86,6 +86,18 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.person_add,
+                  icon: EvaIcons.personOutline,
+                  label: "Course List",
+                  visible: int.parse(list[57], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -128,7 +140,7 @@ class _Sidebar extends StatelessWidget {
                         );
                         if (response.statusCode == 200) {
                           print(response.body);
-                          var json = jsonDecode(response.body);
+                          var json = pagejsonDecode(response.body);
                           if (json['row-count'] == 1) {
                             Get.offNamed('/TrainingCourseSurvey', arguments: {
                               "id": json["records"][0]["id"],
@@ -143,6 +155,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 4:
                     Get.offNamed('/TrainingCourseScore');
+                    break;
+                  case 5:
+                    Get.offNamed('/TrainingCourseCourseListScreen');
                     break;
                   default:
                 }

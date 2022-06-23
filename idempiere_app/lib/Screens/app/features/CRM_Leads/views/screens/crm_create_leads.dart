@@ -209,10 +209,10 @@ class _CreateLeadState extends State<CreateLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -423,10 +423,10 @@ class _CreateLeadState extends State<CreateLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -637,10 +637,10 @@ class _CreateLeadState extends State<CreateLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),

@@ -10,14 +10,16 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_l
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
-class EditLead extends StatefulWidget {
-  const EditLead({Key? key}) : super(key: key);
+class EditTrainingCourseCourseList extends StatefulWidget {
+  const EditTrainingCourseCourseList({Key? key}) : super(key: key);
 
   @override
-  State<EditLead> createState() => _EditLeadState();
+  State<EditTrainingCourseCourseList> createState() =>
+      _EditTrainingCourseCourseListState();
 }
 
-class _EditLeadState extends State<EditLead> {
+class _EditTrainingCourseCourseListState
+    extends State<EditTrainingCourseCourseList> {
   editLead() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -32,8 +34,8 @@ class _EditLeadState extends State<EditLead> {
       "LeadStatus": {"id": dropdownValue}
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://'  + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -70,8 +72,8 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -87,7 +89,7 @@ class _EditLeadState extends State<EditLead> {
       Get.back();
       Get.snackbar(
         "Done!".tr,
-        "The record has been erased".tr,
+        "The record was deleted".tr,
         icon: const Icon(
           Icons.delete,
           color: Colors.green,
@@ -109,8 +111,7 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
@@ -126,7 +127,7 @@ class _EditLeadState extends State<EditLead> {
 
       return json.records!;
     } else {
-      throw Exception("Failed to load lead statuses");
+      throw Exception("Failed to load lead statuses".tr);
     }
 
     //print(response.body);
@@ -136,8 +137,7 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -153,7 +153,7 @@ class _EditLeadState extends State<EditLead> {
 
       return jsonContacts.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -263,10 +263,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -287,10 +287,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.phone_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Phone'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Telefono',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -309,10 +309,10 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                      "Agente",
+                      style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -368,7 +368,7 @@ class _EditLeadState extends State<EditLead> {
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
-                      "LeadStatus".tr,
+                      "Status Lead".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -425,10 +425,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -449,10 +449,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.phone_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Phone'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Telefono',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -471,10 +471,10 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                      "Agente",
+                      style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -530,7 +530,7 @@ class _EditLeadState extends State<EditLead> {
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
-                      "LeadStatus".tr,
+                      "Status Lead".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -587,10 +587,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -611,10 +611,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.phone_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Phone'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Telefono',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -633,10 +633,10 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                      "Agente",
+                      style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -692,7 +692,7 @@ class _EditLeadState extends State<EditLead> {
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
-                      "LeadStatus".tr,
+                      "Status Lead".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,

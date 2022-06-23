@@ -10,15 +10,17 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_l
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
-class EditLead extends StatefulWidget {
-  const EditLead({Key? key}) : super(key: key);
+class CreateTrainingCourseCourseList extends StatefulWidget {
+  const CreateTrainingCourseCourseList({Key? key}) : super(key: key);
 
   @override
-  State<EditLead> createState() => _EditLeadState();
+  State<CreateTrainingCourseCourseList> createState() =>
+      _CreateTrainingCourseCourseListState();
 }
 
-class _EditLeadState extends State<EditLead> {
-  editLead() async {
+class _CreateTrainingCourseCourseListState
+    extends State<CreateTrainingCourseCourseList> {
+  createLead() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
@@ -29,13 +31,13 @@ class _EditLeadState extends State<EditLead> {
       "Phone": phoneFieldController.text,
       "EMail": mailFieldController.text,
       "SalesRep_ID": {"identifier": salesrepValue},
-      "LeadStatus": {"id": dropdownValue}
+      "LeadStatus": {"id": dropdownValue},
+      "IsSalesLead": true
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://'  + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/');
     //print(msg);
-    var response = await http.put(
+    var response = await http.post(
       url,
       body: msg,
       headers: <String, String>{
@@ -43,60 +45,22 @@ class _EditLeadState extends State<EditLead> {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       Get.find<CRMLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
         "Done!".tr,
-        "The record has been updated".tr,
+        "The record has been created ".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
         ),
       );
     } else {
+      //print(response.statusCode);
       Get.snackbar(
         "Error!".tr,
-        "Record not updated".tr,
-        icon: const Icon(
-          Icons.error,
-          color: Colors.red,
-        ),
-      );
-    }
-  }
-
-  deleteLead() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
-    //print(msg);
-    var response = await http.delete(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      Get.find<CRMLeadController>().getLeads();
-      //print("done!");
-      Get.back();
-      Get.back();
-      Get.snackbar(
-        "Done!".tr,
-        "The record has been erased".tr,
-        icon: const Icon(
-          Icons.delete,
-          color: Colors.green,
-        ),
-      );
-    } else {
-      Get.snackbar(
-        "Error!".tr,
-        "Record not updated".tr,
+        "Record not created".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -109,8 +73,7 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
@@ -126,7 +89,7 @@ class _EditLeadState extends State<EditLead> {
 
       return json.records!;
     } else {
-      throw Exception("Failed to load lead statuses");
+      throw Exception("Failed to load lead statuses".tr);
     }
 
     //print(response.body);
@@ -136,8 +99,7 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -153,7 +115,7 @@ class _EditLeadState extends State<EditLead> {
 
       return jsonContacts.records!;
     } else {
-      throw Exception("Failed to load sales reps");
+      throw Exception("Failed to load sales reps".tr);
     }
 
     //print(list[0].eMail);
@@ -161,17 +123,17 @@ class _EditLeadState extends State<EditLead> {
     //print(json.);
   }
 
-  void fillFields() {
-    nameFieldController.text = args["name"] ?? "";
-    bPartnerFieldController.text = args["bpName"] ?? "";
-    phoneFieldController.text = args["Tel"] ?? "";
-    mailFieldController.text = args["eMail"] ?? "";
+  /* void fillFields() {
+    nameFieldController.text = args["name"];
+    bPartnerFieldController.text = args["bpName"];
+    phoneFieldController.text = args["Tel"];
+    mailFieldController.text = args["eMail"];
     //dropdownValue = args["leadStatus"];
-    salesrepValue = args["salesRep"] ?? "";
+    salesrepValue = args["salesRep"];
     //salesRepFieldController.text = args["salesRep"];
-  }
+  } */
 
-  dynamic args = Get.arguments;
+  //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -190,8 +152,8 @@ class _EditLeadState extends State<EditLead> {
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
-    dropdownValue = Get.arguments["leadStatus"];
-    fillFields();
+    dropdownValue = "N";
+    //fillFields();
     getAllLeadStatuses();
   }
 
@@ -206,43 +168,14 @@ class _EditLeadState extends State<EditLead> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Edit Lead'.tr),
+          child: Text('Add Lead'.tr),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                Get.defaultDialog(
-                  title: "Record deletion".tr,
-                  middleText: "Are you sure you want to delete the record?".tr,
-                  backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
-                  //titleStyle: TextStyle(color: Colors.white),
-                  //middleTextStyle: TextStyle(color: Colors.white),
-                  textConfirm: "Delete".tr,
-                  textCancel: "Cancel".tr,
-                  cancelTextColor: Colors.white,
-                  confirmTextColor: Colors.white,
-                  buttonColor: const Color.fromRGBO(31, 29, 44, 1),
-                  barrierDismissible: false,
-                  onConfirm: () {
-                    deleteLead();
-                  },
-                  //radius: 50,
-                );
-                //editLead();
-              },
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: IconButton(
-              onPressed: () {
-                editLead();
+                createLead();
               },
               icon: const Icon(
                 Icons.save,
@@ -263,10 +196,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -287,10 +220,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.phone_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Phone'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Telefono',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -309,10 +242,10 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                      "Agente",
+                      style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -332,8 +265,6 @@ class _EditLeadState extends State<EditLead> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: args["salesRep"]),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -366,14 +297,51 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "LeadStatus".tr,
-                      style: const TextStyle(fontSize: 12),
+                      "Stato Lead",
+                      style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
+                /* Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    //icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    //style: const TextStyle(color: Colors.deepPurple),
+                    /* underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ), */
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    items: <String>[
+                      'Chiuso',
+                      'Convertito',
+                      'In Lavoro',
+                      'Nuovo'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ), */
                 Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -391,14 +359,31 @@ class _EditLeadState extends State<EditLead> {
                         snapshot.hasData
                             ? DropdownButton(
                                 value: dropdownValue,
+                                //icon: const Icon(Icons.arrow_downward),
                                 elevation: 16,
+                                //style: const TextStyle(color: Colors.deepPurple),
+                                /* underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ), */
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     dropdownValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },
-                                items: snapshot.data!.map((list) {
+                                items: /* <String>[
+                                  'Chiuso',
+                                  'Convertito',
+                                  'In Lavoro',
+                                  'Nuovo'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList()*/
+                                    snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     child: Text(
                                       list.name.toString(),
@@ -425,10 +410,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -449,10 +434,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.phone_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Phone'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Telefono',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -471,10 +456,10 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                      "Agente",
+                      style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -494,8 +479,6 @@ class _EditLeadState extends State<EditLead> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: args["salesRep"]),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -528,14 +511,51 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "LeadStatus".tr,
-                      style: const TextStyle(fontSize: 12),
+                      "Stato Lead",
+                      style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
+                /* Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    //icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    //style: const TextStyle(color: Colors.deepPurple),
+                    /* underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ), */
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    items: <String>[
+                      'Chiuso',
+                      'Convertito',
+                      'In Lavoro',
+                      'Nuovo'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ), */
                 Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -553,14 +573,31 @@ class _EditLeadState extends State<EditLead> {
                         snapshot.hasData
                             ? DropdownButton(
                                 value: dropdownValue,
+                                //icon: const Icon(Icons.arrow_downward),
                                 elevation: 16,
+                                //style: const TextStyle(color: Colors.deepPurple),
+                                /* underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ), */
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     dropdownValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },
-                                items: snapshot.data!.map((list) {
+                                items: /* <String>[
+                                  'Chiuso',
+                                  'Convertito',
+                                  'In Lavoro',
+                                  'Nuovo'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList()*/
+                                    snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     child: Text(
                                       list.name.toString(),
@@ -587,10 +624,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.person_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Nome',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -611,10 +648,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.phone_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Phone'.tr,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Telefono',
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -633,10 +670,10 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                      "Agente",
+                      style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -656,8 +693,6 @@ class _EditLeadState extends State<EditLead> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: args["salesRep"]),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -690,14 +725,51 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: Align(
+                  child: const Align(
                     child: Text(
-                      "LeadStatus".tr,
-                      style: const TextStyle(fontSize: 12),
+                      "Stato Lead",
+                      style: TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
+                /* Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    //icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    //style: const TextStyle(color: Colors.deepPurple),
+                    /* underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ), */
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    items: <String>[
+                      'Chiuso',
+                      'Convertito',
+                      'In Lavoro',
+                      'Nuovo'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ), */
                 Container(
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -715,14 +787,31 @@ class _EditLeadState extends State<EditLead> {
                         snapshot.hasData
                             ? DropdownButton(
                                 value: dropdownValue,
+                                //icon: const Icon(Icons.arrow_downward),
                                 elevation: 16,
+                                //style: const TextStyle(color: Colors.deepPurple),
+                                /* underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ), */
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     dropdownValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },
-                                items: snapshot.data!.map((list) {
+                                items: /* <String>[
+                                  'Chiuso',
+                                  'Convertito',
+                                  'In Lavoro',
+                                  'Nuovo'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList()*/
+                                    snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     child: Text(
                                       list.name.toString(),

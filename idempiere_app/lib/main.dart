@@ -73,6 +73,7 @@ import 'package:idempiere_app/Screens/app/features/Ticket_Resource_Assignment/vi
 import 'package:idempiere_app/Screens/app/features/Ticket_Task_ToDo/views/screens/ticket_task_todo_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Ticket_New/views/screens/ticket_ticket_new_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Training_and_Course/views/screens/training_course_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Training_and_Course_CourseList/views/screens/training_course_courselist_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Training_and_Course_Presence/views/screens/training_course_presence_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Training_and_Course_Score/views/screens/training_course_score_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Training_and_Course_Survey/views/screens/training_course_survey_screen.dart';
@@ -291,6 +292,12 @@ class MyApp extends StatelessWidget {
           name: '/TrainingCourseSurvey',
           page: () => const TrainingCourseSurveyScreen(),
           binding: TrainingCourseSurveyBinding(),
+        ),
+        //TrainingCourseCourseListScreen
+        GetPage(
+          name: '/TrainingCourseCourseListScreen',
+          page: () => const TrainingCourseCourseListScreen(),
+          binding: TrainingCourseCourseListBinding(),
         ),
         GetPage(
           name: '/QuizCourse',

@@ -283,6 +283,7 @@ class LocaleString extends Translations {
           'Summary of the issue': 'Summary of the issue',
           'Subject of the Scheduled Session':
               'Subject of the Scheduled Session',
+          'Open Chat': 'Open Chat'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -567,7 +568,8 @@ class LocaleString extends Translations {
           'User': 'Utente',
           'Ticket Title': 'Titolo Ticket',
           'Summary of the issue': 'Riassunto del problema',
-          'Subject of the Scheduled Session': 'Soggetto della Sessione'
+          'Subject of the Scheduled Session': 'Soggetto della Sessione',
+          'Open Chat': 'Apri Chat',
         },
       };
 }

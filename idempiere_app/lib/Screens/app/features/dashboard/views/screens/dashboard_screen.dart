@@ -85,20 +85,35 @@ class DashboardScreen extends GetView<DashboardController> {
                   counter: controller.notificationCounter.value)),
               //_buildProfile(data: controller.getProfil(), counter: 0),
               const SizedBox(height: kSpacing),
-              Obx(() => _buildProgress(
-                    axis: Axis.vertical,
-                    text: controller.value.value,
-                    function: controller.changeFilter,
-                    done: controller.doneCount.value,
-                    inprogress: controller.inProgressCount.value,
-                    notYetStarted: controller.notDoneCount.value,
-                  )),
+              Obx(() => Visibility(
+                visible: int.parse(controller.list[105], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                child: _buildProgress(
+                      axis: Axis.vertical,
+                      text: controller.value.value,
+                      function: controller.changeFilter,
+                      done: controller.doneCount.value,
+                      inprogress: controller.inProgressCount.value,
+                      notYetStarted: controller.notDoneCount.value,
+                    ),
+              )),
 
               const SizedBox(height: kSpacing * 1),
 
               Obx(
                 () => Visibility(
-                  visible: controller.workStartHour.value != "N/A",
+                  visible: controller.workStartHour.value != "N/A" && int.parse(controller.list[105], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                   child: ElevatedButton.icon(
                     style: ButtonStyle(
                         backgroundColor:

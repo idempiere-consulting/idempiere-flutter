@@ -24,7 +24,7 @@ class TrainingCourseSurveyController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_trainingcourse_v?\$filter= AD_User_ID eq $adUserId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/lit_trainingcourse_v?\$filter= LIT_AD_CourseUser_ID eq $adUserId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{

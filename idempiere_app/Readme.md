@@ -1604,7 +1604,7 @@ CRUD=1111=F
  54 Presenza Corso       : F3
  55 Questionario         :
  56 Valutazione          :
- 57
+ 57 Training and Course Course List
  58
  59 Acquisti ************: 1 *** 6 Acquisti
  60 Lead Fornitore       : F

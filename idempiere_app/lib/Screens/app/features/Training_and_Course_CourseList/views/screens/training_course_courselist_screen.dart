@@ -10,7 +10,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/Training_and_Course_Survey/models/trainingcoursejson.dart';
+import 'package:idempiere_app/Screens/app/features/Training_and_Course_CourseList/models/courselist_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -30,10 +30,10 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 
 // binding
-part '../../bindings/training_course_survey_binding.dart';
+part '../../bindings/training_course_courselist_binding.dart';
 
 // controller
-part '../../controllers/training_course_survey_controller.dart';
+part '../../controllers/training_course_courselist_controller.dart';
 
 // models
 part '../../models/profile.dart';
@@ -47,9 +47,9 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class TrainingCourseSurveyScreen
-    extends GetView<TrainingCourseSurveyController> {
-  const TrainingCourseSurveyScreen({Key? key}) : super(key: key);
+class TrainingCourseCourseListScreen
+    extends GetView<TrainingCourseCourseListController> {
+  const TrainingCourseCourseListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -168,12 +168,14 @@ class TrainingCourseSurveyScreen
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -311,12 +313,14 @@ class TrainingCourseSurveyScreen
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -454,12 +458,14 @@ class TrainingCourseSurveyScreen
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
