@@ -1655,7 +1655,7 @@ CRUD=1111=F
  103
  104 Dipendente *******: 1 *** 12 Dipendente
  105 Bacheca Personale
- 106 Timbracartellino 
+ 106 Timbracartellino : F3 (abilita anche timbra dashboard)
  107 Richiesta Permesso
  108 Sondaggi
  109 Armadietto
