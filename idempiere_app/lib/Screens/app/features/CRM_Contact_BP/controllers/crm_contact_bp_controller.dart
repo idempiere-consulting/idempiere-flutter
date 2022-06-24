@@ -17,8 +17,27 @@ class CRMContactBPController extends GetxController {
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
 
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  final json = {
+    "types": [
+      {"id": "1", "name": "Name"},
+      {"id": "2", "name": "Business Partner"},
+      {"id": "3", "name": "Phone N°"},
+      {"id": "4", "name": "Mail"},
+    ]
+  };
+
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
+  }
+
   @override
   void onInit() {
+    dropDownList = getTypes()!;
     super.onInit();
     getContacts();
     getADUserID();
