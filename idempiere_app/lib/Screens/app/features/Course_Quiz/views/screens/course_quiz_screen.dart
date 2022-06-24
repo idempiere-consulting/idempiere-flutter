@@ -69,7 +69,18 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                controller.sendQuizLines();
+                Get.defaultDialog(
+                    title: "Send Quiz".tr,
+                    content:
+                        Text("Are you sure you want to finish the Quiz?".tr),
+                    buttonColor: kNotifColor,
+                    textConfirm: "Send".tr,
+                    textCancel: "Cancel".tr,
+                    onConfirm: () {
+                      controller.sendQuizLines();
+                    });
+
+                //controller.sendQuizLines();
               },
               icon: const Icon(
                 Icons.save,
@@ -213,9 +224,11 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText2 !=
-                                              null &&
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText2 !=
+                                                  null &&
                                               controller.trx.records![index]
                                                       .lITSurveyType?.id ==
                                                   'M',
@@ -233,9 +246,11 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText3 !=
-                                              null &&
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText3 !=
+                                                  null &&
                                               controller.trx.records![index]
                                                       .lITSurveyType?.id ==
                                                   'M',
@@ -253,9 +268,11 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText4 !=
-                                              null &&
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText4 !=
+                                                  null &&
                                               controller.trx.records![index]
                                                       .lITSurveyType?.id ==
                                                   'M',
@@ -273,9 +290,11 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText5 !=
-                                              null &&
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText5 !=
+                                                  null &&
                                               controller.trx.records![index]
                                                       .lITSurveyType?.id ==
                                                   'M',

@@ -18,7 +18,7 @@ class TrainingCourseCourseListController extends GetxController {
 
   getCourseSurveys() async {
     _dataAvailable.value = false;
-    final adUserId = GetStorage().read('userId');
+    //final adUserId = GetStorage().read('userId');
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
