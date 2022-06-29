@@ -60,6 +60,7 @@ import 'package:idempiere_app/Screens/app/features/Settings/views/screens/settin
 import 'package:idempiere_app/Screens/app/features/Signature/signature_page.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain/views/screens/supplychain_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_inventory_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/views/screens/supplychain_inventoryline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/views/screens/supplychain_load_unload_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/views/screens/supplychain_load_unload_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
@@ -104,7 +105,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       translations: LocaleString(),
-      locale:   Locale(GetStorage().read('language')?? 'it_IT'),
+      locale: Locale(GetStorage().read('language') ?? 'it_IT'),
       theme: AppTheme.basic,
       initialRoute: GetStorage().read("ip") == null ? '/' : '/',
       getPages: [
@@ -426,6 +427,11 @@ class MyApp extends StatelessWidget {
           name: '/SupplychainInventory',
           page: () => const SupplychainInventoryScreen(),
           binding: SupplychainInventoryBinding(),
+        ),
+        GetPage(
+          name: '/SupplychainInventoryLine',
+          page: () => const SupplychainInventoryLineScreen(),
+          binding: SupplychainInventoryLineBinding(),
         ),
         GetPage(
           name: '/SupplychainMaterialreceipt',

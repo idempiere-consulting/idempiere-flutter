@@ -10,7 +10,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/models/loadunloadjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -175,7 +174,16 @@ class SupplychainInventoryScreen
                                       ? Colors.green
                                       : Colors.yellow,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.toNamed('/SupplychainInventoryLine',
+                                      arguments: {
+                                        "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "warehouseId": controller.trx
+                                            .records![index].mWarehouseID?.id
+                                      });
+                                },
                               ),
                               /* trailing: const Icon(
                                 Icons.keyboard_arrow_right,

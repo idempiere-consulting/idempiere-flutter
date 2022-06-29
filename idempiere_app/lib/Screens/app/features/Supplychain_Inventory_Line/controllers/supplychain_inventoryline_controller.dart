@@ -1,29 +1,73 @@
 part of dashboard;
 
-class SupplychainInventoryController extends GetxController {
+class SupplychainInventoryLineController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late LoadUnloadJson _trx;
+  late LoadUnloadLineJson _trx;
+  // ignore: prefer_final_fields
+  var args = Get.arguments;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
   late int idDoc;
 
   @override
   void onInit() {
-    getDocType();
     super.onInit();
+    getInventoryLines();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  LoadUnloadJson get trx => _trx;
+  LoadUnloadLineJson get trx => _trx;
 
-  Future<void> getInventories() async {
+  deleteLoadUnloadLine(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/M_InventoryLine/$id');
+    //print(msg);
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      getInventoryLines();
+      Get.back();
+      //print("done!");
+      Get.snackbar(
+        "Fatto!",
+        "Il record è stato eliminato",
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Errore!",
+        "Record non eliminato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> getInventoryLines() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_Inventory?\$filter= C_DocType_ID eq $idDoc and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/M_InventoryLine?\$filter= M_Inventory_ID eq ${args["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -33,35 +77,12 @@ class SupplychainInventoryController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx =
-          LoadUnloadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      _trx = LoadUnloadLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
-    }
-  }
-
-  Future<void> getDocType() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_DocType?\$filter= DocBaseType eq \'MMI\' and DocSubTypeInv eq \'PI\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
-
-      idDoc = json["records"][0]["id"];
-      getInventories();
     }
   }
 
