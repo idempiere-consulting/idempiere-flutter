@@ -285,6 +285,7 @@ class LocaleString extends Translations {
               'Subject of the Scheduled Session',
           'Open Chat': 'Open Chat',
           'Edit Contact': 'Edit Contact',
+          'INVENTORY: ': 'INVENTORY: '
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -416,7 +417,7 @@ class LocaleString extends Translations {
           'info button pressed': 'informazioni del bottone premuto',
           'Expected amount': 'Importo Atteso: ',
           'Agent: ': 'Agente: ',
-          'SUPLLY CHAIN': 'CATENA DI MONTAGGIO',
+          'SUPPLY CHAIN': 'CATENA DI MONTAGGIO',
           'Stock Area: ': 'Area di scorta',
           'Quantity: ': 'Quantita: ',
           'Activity: ': 'Attivita: ',
@@ -572,6 +573,7 @@ class LocaleString extends Translations {
           'Subject of the Scheduled Session': 'Soggetto della Sessione',
           'Open Chat': 'Apri Chat',
           'Edit Contact': 'Modifica Contatto',
+          'INVENTORY: ': 'INVENTARIO: '
         },
       };
 }

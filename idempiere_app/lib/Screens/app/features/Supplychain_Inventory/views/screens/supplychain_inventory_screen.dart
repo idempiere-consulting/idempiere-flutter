@@ -11,6 +11,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/models/loadunloadjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -57,12 +58,13 @@ class SupplychainInventoryScreen
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
@@ -74,7 +76,40 @@ class SupplychainInventoryScreen
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              Text("SUPPLY CHAIN".tr),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
+                        : Text("INVENTORY: ".tr)),
+                    margin: const EdgeInsets.only(left: 15),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        //Get.to(const CreateLead());
+                      },
+                      icon: const Icon(
+                        Icons.person_add,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getInventories();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
@@ -101,18 +136,17 @@ class SupplychainInventoryScreen
                                             color: Colors.white24))),
                                 child: IconButton(
                                   icon: const Icon(
-                                    Icons.paid,
+                                    Icons.edit,
                                     color: Colors.green,
                                   ),
-                                  tooltip: 'Lead Info'.tr,
+                                  tooltip: 'Edit Inventory'.tr,
                                   onPressed: () {
                                     log("info button pressed".tr);
                                   },
                                 ),
                               ),
                               title: Text(
-                                controller.trx.records![index].cBPartnerID
-                                        ?.identifier ??
+                                controller.trx.records![index].documentNo ??
                                     "???",
                                 style: const TextStyle(
                                     color: Colors.white,
@@ -122,15 +156,26 @@ class SupplychainInventoryScreen
 
                               subtitle: Row(
                                 children: <Widget>[
-                                  const Icon(Icons.linear_scale,
-                                      color: Colors.yellowAccent),
+                                  const Icon(Icons.calendar_month,
+                                      color: Colors.white),
                                   Text(
-                                    controller.trx.records![index]
-                                            .cSalesStageID!.identifier ??
+                                    controller
+                                            .trx.records![index].movementDate ??
                                         "??",
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ],
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.article,
+                                  color: controller.trx.records![index]
+                                              .docStatus?.id ==
+                                          "CO"
+                                      ? Colors.green
+                                      : Colors.yellow,
+                                ),
+                                onPressed: () {},
                               ),
                               /* trailing: const Icon(
                                 Icons.keyboard_arrow_right,
@@ -145,49 +190,28 @@ class SupplychainInventoryScreen
                                     Row(
                                       children: [
                                         Text(
-                                          "Contact: ".tr,
+                                          "Description: ".tr,
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(controller.trx.records![index]
-                                                .aDUserID?.identifier ??
-                                            ""),
+                                        Expanded(
+                                          child: Text(controller
+                                                  .trx
+                                                  .records![index]
+                                                  .description ??
+                                              ""),
+                                        ),
                                       ],
                                     ),
                                     Row(
                                       children: [
                                         Text(
-                                          "Product: ".tr,
+                                          "Activity: ".tr,
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
-                                                .mProductID?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Expected Amount: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("€" +
-                                            controller.trx.records![index]
-                                                .opportunityAmt
-                                                .toString()),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Agent: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .salesRepID!.identifier ??
+                                                .cActivityID?.identifier ??
                                             ""),
                                       ],
                                     ),
@@ -211,7 +235,40 @@ class SupplychainInventoryScreen
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              Text("SUPPLY CHAIN".tr),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
+                        : Text("INVENTORY: ".tr)),
+                    margin: const EdgeInsets.only(left: 15),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        //Get.to(const CreateLead());
+                      },
+                      icon: const Icon(
+                        Icons.person_add,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getInventories();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
@@ -238,18 +295,17 @@ class SupplychainInventoryScreen
                                             color: Colors.white24))),
                                 child: IconButton(
                                   icon: const Icon(
-                                    Icons.paid,
+                                    Icons.edit,
                                     color: Colors.green,
                                   ),
-                                  tooltip: 'Lead Info'.tr,
+                                  tooltip: 'Edit Inventory'.tr,
                                   onPressed: () {
                                     log("info button pressed".tr);
                                   },
                                 ),
                               ),
                               title: Text(
-                                controller.trx.records![index].cBPartnerID
-                                        ?.identifier ??
+                                controller.trx.records![index].documentNo ??
                                     "???",
                                 style: const TextStyle(
                                     color: Colors.white,
@@ -259,15 +315,26 @@ class SupplychainInventoryScreen
 
                               subtitle: Row(
                                 children: <Widget>[
-                                  const Icon(Icons.linear_scale,
-                                      color: Colors.yellowAccent),
+                                  const Icon(Icons.calendar_month,
+                                      color: Colors.white),
                                   Text(
-                                    controller.trx.records![index]
-                                            .cSalesStageID!.identifier ??
+                                    controller
+                                            .trx.records![index].movementDate ??
                                         "??",
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ],
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.article,
+                                  color: controller.trx.records![index]
+                                              .docStatus?.id ==
+                                          "CO"
+                                      ? Colors.green
+                                      : Colors.yellow,
+                                ),
+                                onPressed: () {},
                               ),
                               /* trailing: const Icon(
                                 Icons.keyboard_arrow_right,
@@ -282,49 +349,28 @@ class SupplychainInventoryScreen
                                     Row(
                                       children: [
                                         Text(
-                                          "Contact: ".tr,
+                                          "Description: ".tr,
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(controller.trx.records![index]
-                                                .aDUserID?.identifier ??
-                                            ""),
+                                        Expanded(
+                                          child: Text(controller
+                                                  .trx
+                                                  .records![index]
+                                                  .description ??
+                                              ""),
+                                        ),
                                       ],
                                     ),
                                     Row(
                                       children: [
                                         Text(
-                                          "Product: ".tr,
+                                          "Activity: ".tr,
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
-                                                .mProductID?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Expected Amount: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("€" +
-                                            controller.trx.records![index]
-                                                .opportunityAmt
-                                                .toString()),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Agent: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .salesRepID!.identifier ??
+                                                .cActivityID?.identifier ??
                                             ""),
                                       ],
                                     ),
@@ -348,7 +394,40 @@ class SupplychainInventoryScreen
               const Divider(),
               _buildProfile(data: controller.getProfil()),
               const SizedBox(height: kSpacing),
-              Text("SUPPLY CHAIN".tr),
+              Row(
+                children: [
+                  Container(
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
+                        : Text("INVENTORY: ".tr)),
+                    margin: const EdgeInsets.only(left: 15),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        //Get.to(const CreateLead());
+                      },
+                      icon: const Icon(
+                        Icons.person_add,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getInventories();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
@@ -375,18 +454,17 @@ class SupplychainInventoryScreen
                                             color: Colors.white24))),
                                 child: IconButton(
                                   icon: const Icon(
-                                    Icons.paid,
+                                    Icons.edit,
                                     color: Colors.green,
                                   ),
-                                  tooltip: 'Lead Info'.tr,
+                                  tooltip: 'Edit Inventory'.tr,
                                   onPressed: () {
                                     log("info button pressed".tr);
                                   },
                                 ),
                               ),
                               title: Text(
-                                controller.trx.records![index].cBPartnerID
-                                        ?.identifier ??
+                                controller.trx.records![index].documentNo ??
                                     "???",
                                 style: const TextStyle(
                                     color: Colors.white,
@@ -396,15 +474,26 @@ class SupplychainInventoryScreen
 
                               subtitle: Row(
                                 children: <Widget>[
-                                  const Icon(Icons.linear_scale,
+                                  const Icon(Icons.calendar_month,
                                       color: Colors.yellowAccent),
                                   Text(
-                                    controller.trx.records![index]
-                                            .cSalesStageID!.identifier ??
+                                    controller
+                                            .trx.records![index].movementDate ??
                                         "??",
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ],
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.article,
+                                  color: controller.trx.records![index]
+                                              .docStatus?.id ==
+                                          "CO"
+                                      ? Colors.green
+                                      : Colors.yellow,
+                                ),
+                                onPressed: () {},
                               ),
                               /* trailing: const Icon(
                                 Icons.keyboard_arrow_right,
@@ -419,49 +508,28 @@ class SupplychainInventoryScreen
                                     Row(
                                       children: [
                                         Text(
-                                          "Contact: ".tr,
+                                          "Description: ".tr,
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text(controller.trx.records![index]
-                                                .aDUserID?.identifier ??
-                                            ""),
+                                        Expanded(
+                                          child: Text(controller
+                                                  .trx
+                                                  .records![index]
+                                                  .description ??
+                                              ""),
+                                        ),
                                       ],
                                     ),
                                     Row(
                                       children: [
                                         Text(
-                                          "Product: ".tr,
+                                          "Activity: ".tr,
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(controller.trx.records![index]
-                                                .mProductID?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Expected Amount: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("€" +
-                                            controller.trx.records![index]
-                                                .opportunityAmt
-                                                .toString()),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Agent: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .salesRepID!.identifier ??
+                                                .cActivityID?.identifier ??
                                             ""),
                                       ],
                                     ),
