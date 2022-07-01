@@ -35,6 +35,7 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:url_launcher/url_launcher.dart';
 
 // binding
 part '../../bindings/calendar_binding.dart';
@@ -88,8 +89,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
               startDate: formatter.format(date),
               scheduledStartTime:
                   list[i].jPToDoScheduledStartTime!.substring(0, 5),
-              scheduledEndTime:
-                  list[i].jPToDoScheduledEndTime!.substring(0, 5)),
+              scheduledEndTime: list[i].jPToDoScheduledEndTime!.substring(0, 5),
+              phone: list[i].phone ?? "N/A",
+              phone2: list[i].phone2 ?? "N/A",
+              refname: list[i].refname ?? "N/A",
+              ref2name: list[i].ref2name ?? "N/A",
+              cBPartner: list[i].cBPartnerID?.identifier ?? ""),
         );
       } else {
         selectedEvents[
@@ -106,7 +111,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
               startDate: formatter.format(date),
               scheduledStartTime:
                   list[i].jPToDoScheduledStartTime!.substring(0, 5),
-              scheduledEndTime: list[i].jPToDoScheduledEndTime!.substring(0, 5))
+              scheduledEndTime: list[i].jPToDoScheduledEndTime!.substring(0, 5),
+              phone: list[i].phone ?? "N/A",
+              phone2: list[i].phone2 ?? "N/A",
+              refname: list[i].refname ?? "N/A",
+              ref2name: list[i].ref2name ?? "N/A",
+              cBPartner: list[i].cBPartnerID?.identifier ?? "")
         ];
       }
     }
@@ -125,7 +135,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedDate 23:59:59\'');
+        '/api/v1/models/lit_mobile_jp_todo_v?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedDate 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -164,7 +174,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 scheduledStartTime:
                     list[i].jPToDoScheduledStartTime!.substring(0, 5),
                 scheduledEndTime:
-                    list[i].jPToDoScheduledEndTime!.substring(0, 5)),
+                    list[i].jPToDoScheduledEndTime!.substring(0, 5),
+                phone: list[i].phone ?? "N/A",
+                phone2: list[i].phone2 ?? "N/A",
+                refname: list[i].refname ?? "N/A",
+                ref2name: list[i].ref2name ?? "N/A",
+                cBPartner: list[i].cBPartnerID?.identifier ?? ""),
           );
         } else {
           selectedEvents[
@@ -182,7 +197,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 scheduledStartTime:
                     list[i].jPToDoScheduledStartTime!.substring(0, 5),
                 scheduledEndTime:
-                    list[i].jPToDoScheduledEndTime!.substring(0, 5))
+                    list[i].jPToDoScheduledEndTime!.substring(0, 5),
+                phone: list[i].phone ?? "N/A",
+                phone2: list[i].phone2 ?? "N/A",
+                refname: list[i].refname ?? "N/A",
+                ref2name: list[i].ref2name ?? "N/A",
+                cBPartner: list[i].cBPartnerID?.identifier ?? "")
           ];
         }
       }
@@ -242,6 +262,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
     //print(json.);
   }
 
+  Future<void> makePhoneCall(String phoneNumber) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    if (_hasCallSupport) {
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: phoneNumber,
+      );
+      await launchUrl(launchUri);
+    }
+  }
+
   static String _displayStringForOption(Records option) => option.name!;
 
   CalendarFormat format = CalendarFormat.month;
@@ -249,7 +283,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   var selectedDay;
   // ignore: prefer_typing_uninitialized_variables
   var focusedDay;
-
+  bool _hasCallSupport = false;
   // ignore: prefer_final_fields, prefer_typing_uninitialized_variables
   var checkbox;
   String dropdownValue = "";
@@ -261,6 +295,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   void initState() {
+    canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
+      _hasCallSupport = result;
+    });
     flag = true;
     adUserId = GetStorage().read('userId');
     super.initState();
@@ -502,30 +539,138 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     ),
                     title: Text(
-                      event.title,
+                      event.cBPartner,
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     trailing: IconButton(
                       icon: Icon(
                         Icons.timelapse,
-                        color: event.statusId == "WP"
+                        color: event.statusId == "DR"
                             ? Colors.yellow
                             : event.statusId == "CO"
                                 ? Colors.green
-                                : Colors.red,
+                                : event.statusId == "IN"
+                                    ? Colors.grey
+                                    : event.statusId == "PR"
+                                        ? Colors.orange
+                                        : event.statusId == "IP"
+                                            ? Colors.white
+                                            : event.statusId == "CF"
+                                                ? Colors.lightGreen
+                                                : event.statusId == "NY"
+                                                    ? Colors.red
+                                                    : event.statusId == "WP"
+                                                        ? Colors.yellow
+                                                        : Colors.red,
                       ),
                       onPressed: () {},
                     ),
-                    subtitle: Row(
-                      children: <Widget>[
-                        const Icon(Icons.event),
-                        Text(
-                          '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
-                          style: const TextStyle(color: Colors.white),
+                    subtitle: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Text(
+                              event.title,
+                              style: const TextStyle(color: Colors.white),
+                            )),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            const Icon(
+                              Icons.event,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
                       ],
                     ),
+                    children: [
+                      Visibility(
+                        visible: event.refname != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "User : ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(event.refname),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: event.phone != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Phone: ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.call,
+                                color: Colors.green,
+                              ),
+                              tooltip: 'Call',
+                              onPressed: () {
+                                //log("info button pressed");
+                                if (event.phone != 'N/A') {
+                                  makePhoneCall(event.phone.toString());
+                                }
+                              },
+                            ),
+                            Text(event.phone),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: event.ref2name != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "User 2: ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(event.ref2name),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: event.phone2 != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Phone 2: ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.call,
+                                color: Colors.green,
+                              ),
+                              tooltip: 'Call',
+                              onPressed: () {
+                                //log("info button pressed");
+                                if (event.phone != 'N/A') {
+                                  makePhoneCall(event.phone.toString());
+                                }
+                              },
+                            ),
+                            Text(event.phone2),
+                          ],
+                        ),
+                      ),
+                    ],
                     childrenPadding: const EdgeInsets.symmetric(
                         horizontal: 20.0, vertical: 10.0),
                   ),
@@ -543,91 +688,164 @@ class _CalendarScreenState extends State<CalendarScreen> {
             const Divider(),
             _buildProfile(data: getProfil()),
             const SizedBox(height: kSpacing),
-            TableCalendar(
-              locale: 'languageCalendar'.tr,
-              focusedDay: focusedDay,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: format,
-              calendarStyle: const CalendarStyle(
-                markerDecoration:
-                    BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
-                todayDecoration: BoxDecoration(
-                  color: Colors.deepPurple,
+            Visibility(
+              visible: int.parse(list[0], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[6] ==
+                      "1"
+                  ? true
+                  : false,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getAllSalesRep(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<Records>> snapshot) =>
+                      snapshot.hasData
+                          ? Autocomplete<Records>(
+                              initialValue: TextEditingValue(
+                                  text: GetStorage().read('user') ?? ""),
+                              displayStringForOption: _displayStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<Records>.empty();
+                                }
+                                return snapshot.data!.where((Records option) {
+                                  return option.name!
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (Records selection) {
+                                //debugPrint(
+                                //'You just selected ${_displayStringForOption(selection)}');
+                                setState(() {
+                                  flag = false;
+                                  adUserId = selection.id!;
+                                  //flag = true;
+                                });
+                                getAllEvents();
+
+                                //print(salesrepValue);
+                              },
+                            )
+                          : Visibility(
+                              visible: int.parse(list[0], radix: 16)
+                                          .toRadixString(2)
+                                          .padLeft(8, "0")
+                                          .toString()[7] ==
+                                      "1"
+                                  ? true
+                                  : false,
+                              child: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
                 ),
               ),
-              headerStyle: const HeaderStyle(
-                //formatButtonVisible: false,
-                formatButtonShowsNext: false,
-              ),
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              daysOfWeekVisible: true,
-              onFormatChanged: (CalendarFormat _format) {
-                setState(() {
-                  format = _format;
-                });
-              },
-              onDaySelected: (DateTime selectDay, DateTime focusDay) {
-                setState(() {
-                  selectedDay = selectDay;
-                  focusedDay = focusDay;
-                });
-                //print(focusedDay);
-              },
-              selectedDayPredicate: (DateTime date) {
-                return isSameDay(selectedDay, date);
-              },
-              onHeaderLongPressed: (date) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(
-                      "Add Event".tr,
-                    ),
-                    content: DropdownButton(
-                      value: dropdownValue,
-                      elevation: 16,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                        //print(dropdownValue);
-                      },
-                      items: dropDownList.map((list) {
-                        return DropdownMenuItem<String>(
-                          child: Text(
-                            list.name.toString(),
-                          ),
-                          value: list.id,
-                        );
-                      }).toList(),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: Text("Cancel".tr),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Get.back();
-                          setState(() {});
-                          switch (dropdownValue) {
-                            case "1":
-                              Get.off(const CreateCalendarEvent());
-                              break;
-                            default:
-                          }
-                        },
-                        child: Text("Accept".tr),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              eventLoader: _getEventsfromDay,
             ),
+            flag
+                ? TableCalendar(
+                    locale: 'languageCalendar'.tr,
+                    focusedDay: focusedDay,
+                    firstDay: DateTime(2000),
+                    lastDay: DateTime(2100),
+                    calendarFormat: format,
+                    calendarStyle: const CalendarStyle(
+                      markerDecoration: BoxDecoration(
+                          color: Colors.yellow, shape: BoxShape.circle),
+                      todayDecoration: BoxDecoration(
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    headerStyle: const HeaderStyle(
+                      //formatButtonVisible: false,
+                      formatButtonShowsNext: false,
+                    ),
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    daysOfWeekVisible: true,
+                    onFormatChanged: (CalendarFormat _format) {
+                      setState(() {
+                        format = _format;
+                      });
+                    },
+                    onDaySelected: (DateTime selectDay, DateTime focusDay) {
+                      setState(() {
+                        selectedDay = selectDay;
+                        focusedDay = focusDay;
+                      });
+                      //print(focusedDay);
+                    },
+                    selectedDayPredicate: (DateTime date) {
+                      return isSameDay(selectedDay, date);
+                    },
+                    onHeaderLongPressed: (date) {
+                      /* showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(
+                            "Add Event".tr,
+                          ),
+                          content: DropdownButton(
+                            value: dropdownValue,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValue = newValue!;
+                              });
+                              //print(dropdownValue);
+                            },
+                            items: dropDownList.map((list) {
+                              return DropdownMenuItem<String>(
+                                child: Text(
+                                  list.name.toString(),
+                                ),
+                                value: list.id,
+                              );
+                            }).toList(),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text("Cancel".tr),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Get.back();
+                                setState(() {});
+                                switch (dropdownValue) {
+                                  case "1":
+                                    Get.off(const CreateCalendarEvent());
+                                    break;
+                                  default:
+                                }
+                              },
+                              child: Text("Accept".tr),
+                            ),
+                          ],
+                        ),
+                      ); */
+                      Get.off(const CreateCalendarEvent(),
+                          arguments: {"adUserId": adUserId});
+                    },
+                    eventLoader: _getEventsfromDay,
+                  )
+                : const Center(
+                    child: CircularProgressIndicator(),
+                  ),
             ..._getEventsfromDay(selectedDay).map(
               (Event event) => /* ListTile(
                 title: Text(
@@ -671,30 +889,138 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     ),
                     title: Text(
-                      event.title,
+                      event.cBPartner,
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     trailing: IconButton(
                       icon: Icon(
                         Icons.timelapse,
-                        color: event.statusId == "WP"
+                        color: event.statusId == "DR"
                             ? Colors.yellow
                             : event.statusId == "CO"
                                 ? Colors.green
-                                : Colors.red,
+                                : event.statusId == "IN"
+                                    ? Colors.grey
+                                    : event.statusId == "PR"
+                                        ? Colors.orange
+                                        : event.statusId == "IP"
+                                            ? Colors.white
+                                            : event.statusId == "CF"
+                                                ? Colors.lightGreen
+                                                : event.statusId == "NY"
+                                                    ? Colors.red
+                                                    : event.statusId == "WP"
+                                                        ? Colors.yellow
+                                                        : Colors.red,
                       ),
                       onPressed: () {},
                     ),
-                    subtitle: Row(
-                      children: <Widget>[
-                        const Icon(Icons.event),
-                        Text(
-                          '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
-                          style: const TextStyle(color: Colors.white),
+                    subtitle: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Text(
+                              event.title,
+                              style: const TextStyle(color: Colors.white),
+                            )),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            const Icon(
+                              Icons.event,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
                       ],
                     ),
+                    children: [
+                      Visibility(
+                        visible: event.refname != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "User : ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(event.refname),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: event.phone != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Phone: ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.call,
+                                color: Colors.green,
+                              ),
+                              tooltip: 'Call',
+                              onPressed: () {
+                                //log("info button pressed");
+                                if (event.phone != 'N/A') {
+                                  makePhoneCall(event.phone.toString());
+                                }
+                              },
+                            ),
+                            Text(event.phone),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: event.ref2name != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "User 2: ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(event.ref2name),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: event.phone2 != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Phone 2: ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.call,
+                                color: Colors.green,
+                              ),
+                              tooltip: 'Call',
+                              onPressed: () {
+                                //log("info button pressed");
+                                if (event.phone != 'N/A') {
+                                  makePhoneCall(event.phone.toString());
+                                }
+                              },
+                            ),
+                            Text(event.phone2),
+                          ],
+                        ),
+                      ),
+                    ],
                     childrenPadding: const EdgeInsets.symmetric(
                         horizontal: 20.0, vertical: 10.0),
                   ),
@@ -712,91 +1038,164 @@ class _CalendarScreenState extends State<CalendarScreen> {
             const Divider(),
             _buildProfile(data: getProfil()),
             const SizedBox(height: kSpacing),
-            TableCalendar(
-              locale: 'languageCalendar'.tr,
-              focusedDay: focusedDay,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: format,
-              calendarStyle: const CalendarStyle(
-                markerDecoration:
-                    BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
-                todayDecoration: BoxDecoration(
-                  color: Colors.deepPurple,
+            Visibility(
+              visible: int.parse(list[0], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[6] ==
+                      "1"
+                  ? true
+                  : false,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getAllSalesRep(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<Records>> snapshot) =>
+                      snapshot.hasData
+                          ? Autocomplete<Records>(
+                              initialValue: TextEditingValue(
+                                  text: GetStorage().read('user') ?? ""),
+                              displayStringForOption: _displayStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<Records>.empty();
+                                }
+                                return snapshot.data!.where((Records option) {
+                                  return option.name!
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (Records selection) {
+                                //debugPrint(
+                                //'You just selected ${_displayStringForOption(selection)}');
+                                setState(() {
+                                  flag = false;
+                                  adUserId = selection.id!;
+                                  //flag = true;
+                                });
+                                getAllEvents();
+
+                                //print(salesrepValue);
+                              },
+                            )
+                          : Visibility(
+                              visible: int.parse(list[0], radix: 16)
+                                          .toRadixString(2)
+                                          .padLeft(8, "0")
+                                          .toString()[7] ==
+                                      "1"
+                                  ? true
+                                  : false,
+                              child: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
                 ),
               ),
-              headerStyle: const HeaderStyle(
-                //formatButtonVisible: false,
-                formatButtonShowsNext: false,
-              ),
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              daysOfWeekVisible: true,
-              onFormatChanged: (CalendarFormat _format) {
-                setState(() {
-                  format = _format;
-                });
-              },
-              onDaySelected: (DateTime selectDay, DateTime focusDay) {
-                setState(() {
-                  selectedDay = selectDay;
-                  focusedDay = focusDay;
-                });
-                //print(focusedDay);
-              },
-              selectedDayPredicate: (DateTime date) {
-                return isSameDay(selectedDay, date);
-              },
-              onHeaderLongPressed: (date) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(
-                      "Add Event".tr,
-                    ),
-                    content: DropdownButton(
-                      value: dropdownValue,
-                      elevation: 16,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                        //print(dropdownValue);
-                      },
-                      items: dropDownList.map((list) {
-                        return DropdownMenuItem<String>(
-                          child: Text(
-                            list.name.toString(),
-                          ),
-                          value: list.id,
-                        );
-                      }).toList(),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: Text("Cancel".tr),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Get.back();
-                          setState(() {});
-                          switch (dropdownValue) {
-                            case "1":
-                              Get.off(const CreateCalendarEvent());
-                              break;
-                            default:
-                          }
-                        },
-                        child: Text("Accept".tr),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              eventLoader: _getEventsfromDay,
             ),
+            flag
+                ? TableCalendar(
+                    locale: 'languageCalendar'.tr,
+                    focusedDay: focusedDay,
+                    firstDay: DateTime(2000),
+                    lastDay: DateTime(2100),
+                    calendarFormat: format,
+                    calendarStyle: const CalendarStyle(
+                      markerDecoration: BoxDecoration(
+                          color: Colors.yellow, shape: BoxShape.circle),
+                      todayDecoration: BoxDecoration(
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    headerStyle: const HeaderStyle(
+                      //formatButtonVisible: false,
+                      formatButtonShowsNext: false,
+                    ),
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    daysOfWeekVisible: true,
+                    onFormatChanged: (CalendarFormat _format) {
+                      setState(() {
+                        format = _format;
+                      });
+                    },
+                    onDaySelected: (DateTime selectDay, DateTime focusDay) {
+                      setState(() {
+                        selectedDay = selectDay;
+                        focusedDay = focusDay;
+                      });
+                      //print(focusedDay);
+                    },
+                    selectedDayPredicate: (DateTime date) {
+                      return isSameDay(selectedDay, date);
+                    },
+                    onHeaderLongPressed: (date) {
+                      /* showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(
+                            "Add Event".tr,
+                          ),
+                          content: DropdownButton(
+                            value: dropdownValue,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValue = newValue!;
+                              });
+                              //print(dropdownValue);
+                            },
+                            items: dropDownList.map((list) {
+                              return DropdownMenuItem<String>(
+                                child: Text(
+                                  list.name.toString(),
+                                ),
+                                value: list.id,
+                              );
+                            }).toList(),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text("Cancel".tr),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Get.back();
+                                setState(() {});
+                                switch (dropdownValue) {
+                                  case "1":
+                                    Get.off(const CreateCalendarEvent());
+                                    break;
+                                  default:
+                                }
+                              },
+                              child: Text("Accept".tr),
+                            ),
+                          ],
+                        ),
+                      ); */
+                      Get.off(const CreateCalendarEvent(),
+                          arguments: {"adUserId": adUserId});
+                    },
+                    eventLoader: _getEventsfromDay,
+                  )
+                : const Center(
+                    child: CircularProgressIndicator(),
+                  ),
             ..._getEventsfromDay(selectedDay).map(
               (Event event) => /* ListTile(
                 title: Text(
@@ -840,30 +1239,138 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     ),
                     title: Text(
-                      event.title,
+                      event.cBPartner,
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     trailing: IconButton(
                       icon: Icon(
                         Icons.timelapse,
-                        color: event.statusId == "WP"
+                        color: event.statusId == "DR"
                             ? Colors.yellow
                             : event.statusId == "CO"
                                 ? Colors.green
-                                : Colors.red,
+                                : event.statusId == "IN"
+                                    ? Colors.grey
+                                    : event.statusId == "PR"
+                                        ? Colors.orange
+                                        : event.statusId == "IP"
+                                            ? Colors.white
+                                            : event.statusId == "CF"
+                                                ? Colors.lightGreen
+                                                : event.statusId == "NY"
+                                                    ? Colors.red
+                                                    : event.statusId == "WP"
+                                                        ? Colors.yellow
+                                                        : Colors.red,
                       ),
                       onPressed: () {},
                     ),
-                    subtitle: Row(
-                      children: <Widget>[
-                        const Icon(Icons.event),
-                        Text(
-                          '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
-                          style: const TextStyle(color: Colors.white),
+                    subtitle: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Text(
+                              event.title,
+                              style: const TextStyle(color: Colors.white),
+                            )),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            const Icon(
+                              Icons.event,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
                       ],
                     ),
+                    children: [
+                      Visibility(
+                        visible: event.refname != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "User : ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(event.refname),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: event.phone != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Phone: ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.call,
+                                color: Colors.green,
+                              ),
+                              tooltip: 'Call',
+                              onPressed: () {
+                                //log("info button pressed");
+                                if (event.phone != 'N/A') {
+                                  makePhoneCall(event.phone.toString());
+                                }
+                              },
+                            ),
+                            Text(event.phone),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: event.ref2name != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "User 2: ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(event.ref2name),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: event.phone2 != 'N/A' ? true : false,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Phone 2: ".tr,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.call,
+                                color: Colors.green,
+                              ),
+                              tooltip: 'Call',
+                              onPressed: () {
+                                //log("info button pressed");
+                                if (event.phone != 'N/A') {
+                                  makePhoneCall(event.phone.toString());
+                                }
+                              },
+                            ),
+                            Text(event.phone2),
+                          ],
+                        ),
+                      ),
+                    ],
                     childrenPadding: const EdgeInsets.symmetric(
                         horizontal: 20.0, vertical: 10.0),
                   ),

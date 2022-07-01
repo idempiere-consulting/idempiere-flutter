@@ -17,6 +17,11 @@ class Event {
   final String startDate;
   final String scheduledStartTime;
   final String scheduledEndTime;
+  final String phone;
+  final String phone2;
+  final String refname;
+  final String ref2name;
+  final String cBPartner;
 
   const Event({
     required this.id,
@@ -30,5 +35,10 @@ class Event {
     required this.startDate,
     required this.scheduledStartTime,
     required this.scheduledEndTime,
+    required this.phone,
+    required this.phone2,
+    required this.refname,
+    required this.ref2name,
+    required this.cBPartner,
   });
 }

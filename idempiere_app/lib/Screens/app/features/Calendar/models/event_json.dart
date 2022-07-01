@@ -58,6 +58,10 @@ class EventRecords {
   final bool? isEndDateAllDayJP;
   final int? percent;
   final num? qty;
+  final String? phone;
+  final String? phone2;
+  final String? refname;
+  final String? ref2name;
   final String? modelname;
 
   EventRecords({
@@ -86,6 +90,10 @@ class EventRecords {
     this.isEndDateAllDayJP,
     this.percent,
     this.qty,
+    this.phone,
+    this.phone2,
+    this.refname,
+    this.ref2name,
     this.modelname,
   });
 
@@ -135,6 +143,10 @@ class EventRecords {
         isEndDateAllDayJP = json['IsEndDateAllDayJP'] as bool?,
         percent = json['Percent'] as int?,
         qty = json['Qty'] as num?,
+        phone = json['Phone'] as String?,
+        phone2 = json['Phone2'] as String?,
+        refname = json['ref_name'] as String?,
+        ref2name = json['ref2_name'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -163,6 +175,8 @@ class EventRecords {
         'IsEndDateAllDayJP': isEndDateAllDayJP,
         'Percent': percent,
         'Qty': qty,
+        'Phone': phone,
+        'Phone2': phone2,
         'model-name': modelname
       };
 }

@@ -54,7 +54,7 @@ class Records {
   final String? lITText3;
   final String? lITText4;
   final String? lITText5;
-  final num? lITCorrectAnswerValue;
+  final String? lITCorrectAnswerValue;
   final MPMaintainResourceID? mPMaintainResourceID;
   final LITSurveyType? lITSurveyType;
   final String? modelname;
@@ -123,7 +123,7 @@ class Records {
         lITText3 = json['LIT_Text3'] as String?,
         lITText4 = json['LIT_Text4'] as String?,
         lITText5 = json['LIT_Text5'] as String?,
-        lITCorrectAnswerValue = json['LIT_CorrectAnswerValue'] as num?,
+        lITCorrectAnswerValue = json['LIT_CorrectAnswerValue'] as String?,
         mPMaintainResourceID =
             (json['MP_Maintain_Resource_ID'] as Map<String, dynamic>?) != null
                 ? MPMaintainResourceID.fromJson(
