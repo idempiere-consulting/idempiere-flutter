@@ -515,6 +515,21 @@ class MaintenanceMpResourceScreen
                                                   icon: const Icon(
                                                       Icons.gavel_sharp),
                                                 ),
+                                                IconButton(
+                                                  tooltip: 'Anomaly',
+                                                  onPressed: () async {
+                                                    /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateRevision(
+                                                                isConnected,
+                                                                index); */
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.warning,
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
                                               ]),
                                         ),
                                       ],

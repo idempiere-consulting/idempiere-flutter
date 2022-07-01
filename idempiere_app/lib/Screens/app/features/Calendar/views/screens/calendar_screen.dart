@@ -3,10 +3,12 @@
 library dashboard;
 
 //import 'dart:convert';
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
@@ -119,11 +121,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token'); 
+    String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedDate 23:59:59\'');
+        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedDate 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -184,6 +186,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ];
         }
       }
+      flag = true;
       setState(() {});
 
       //print(json.rowcount);
@@ -211,6 +214,36 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return dJson.types;
   }
 
+  Future<List<Records>> getAllSalesRep() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonContacts = ContactsJson.fromJson(jsondecoded);
+
+      return jsonContacts.records!;
+    } else {
+      throw Exception("Failed to load sales reps");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  static String _displayStringForOption(Records option) => option.name!;
+
   CalendarFormat format = CalendarFormat.month;
   // ignore: prefer_typing_uninitialized_variables
   var selectedDay;
@@ -221,9 +254,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
   var checkbox;
   String dropdownValue = "";
   late List<Types> dropDownList;
+  int adUserId = 0;
+  bool flag = true;
+
+  final List<dynamic> list = GetStorage().read('permission');
 
   @override
   void initState() {
+    flag = true;
+    adUserId = GetStorage().read('userId');
     super.initState();
     selectedEvents = {};
     getAllEvents();
@@ -244,12 +283,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Scaffold(
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
           child: ResponsiveBuilder(
         mobileBuilder: (context, constraints) {
@@ -261,91 +301,164 @@ class _CalendarScreenState extends State<CalendarScreen> {
             const Divider(),
             _buildProfile(data: getProfil()),
             const SizedBox(height: kSpacing),
-            TableCalendar(
-              locale: 'languageCalendar'.tr,
-              focusedDay: focusedDay,
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              calendarFormat: format,
-              calendarStyle: const CalendarStyle(
-                markerDecoration:
-                    BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
-                todayDecoration: BoxDecoration(
-                  color: Colors.deepPurple,
+            Visibility(
+              visible: int.parse(list[0], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[6] ==
+                      "1"
+                  ? true
+                  : false,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getAllSalesRep(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<Records>> snapshot) =>
+                      snapshot.hasData
+                          ? Autocomplete<Records>(
+                              initialValue: TextEditingValue(
+                                  text: GetStorage().read('user') ?? ""),
+                              displayStringForOption: _displayStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<Records>.empty();
+                                }
+                                return snapshot.data!.where((Records option) {
+                                  return option.name!
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (Records selection) {
+                                //debugPrint(
+                                //'You just selected ${_displayStringForOption(selection)}');
+                                setState(() {
+                                  flag = false;
+                                  adUserId = selection.id!;
+                                  //flag = true;
+                                });
+                                getAllEvents();
+
+                                //print(salesrepValue);
+                              },
+                            )
+                          : Visibility(
+                              visible: int.parse(list[0], radix: 16)
+                                          .toRadixString(2)
+                                          .padLeft(8, "0")
+                                          .toString()[7] ==
+                                      "1"
+                                  ? true
+                                  : false,
+                              child: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
                 ),
               ),
-              headerStyle: const HeaderStyle(
-                //formatButtonVisible: false,
-                formatButtonShowsNext: false,
-              ),
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              daysOfWeekVisible: true,
-              onFormatChanged: (CalendarFormat _format) {
-                setState(() {
-                  format = _format;
-                });
-              },
-              onDaySelected: (DateTime selectDay, DateTime focusDay) {
-                setState(() {
-                  selectedDay = selectDay;
-                  focusedDay = focusDay;
-                });
-                //print(focusedDay);
-              },
-              selectedDayPredicate: (DateTime date) {
-                return isSameDay(selectedDay, date);
-              },
-              onHeaderLongPressed: (date) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(
-                      "Add Event".tr,
-                    ),
-                    content: DropdownButton(
-                      value: dropdownValue,
-                      elevation: 16,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                        //print(dropdownValue);
-                      },
-                      items: dropDownList.map((list) {
-                        return DropdownMenuItem<String>(
-                          child: Text(
-                            list.name.toString(),
-                          ),
-                          value: list.id,
-                        );
-                      }).toList(),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: Text("Cancel".tr),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Get.back();
-                          setState(() {});
-                          switch (dropdownValue) {
-                            case "1":
-                              Get.off(const CreateCalendarEvent());
-                              break;
-                            default:
-                          }
-                        },
-                        child: Text("Accept".tr),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              eventLoader: _getEventsfromDay,
             ),
+            flag
+                ? TableCalendar(
+                    locale: 'languageCalendar'.tr,
+                    focusedDay: focusedDay,
+                    firstDay: DateTime(2000),
+                    lastDay: DateTime(2100),
+                    calendarFormat: format,
+                    calendarStyle: const CalendarStyle(
+                      markerDecoration: BoxDecoration(
+                          color: Colors.yellow, shape: BoxShape.circle),
+                      todayDecoration: BoxDecoration(
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    headerStyle: const HeaderStyle(
+                      //formatButtonVisible: false,
+                      formatButtonShowsNext: false,
+                    ),
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    daysOfWeekVisible: true,
+                    onFormatChanged: (CalendarFormat _format) {
+                      setState(() {
+                        format = _format;
+                      });
+                    },
+                    onDaySelected: (DateTime selectDay, DateTime focusDay) {
+                      setState(() {
+                        selectedDay = selectDay;
+                        focusedDay = focusDay;
+                      });
+                      //print(focusedDay);
+                    },
+                    selectedDayPredicate: (DateTime date) {
+                      return isSameDay(selectedDay, date);
+                    },
+                    onHeaderLongPressed: (date) {
+                      /* showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(
+                            "Add Event".tr,
+                          ),
+                          content: DropdownButton(
+                            value: dropdownValue,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValue = newValue!;
+                              });
+                              //print(dropdownValue);
+                            },
+                            items: dropDownList.map((list) {
+                              return DropdownMenuItem<String>(
+                                child: Text(
+                                  list.name.toString(),
+                                ),
+                                value: list.id,
+                              );
+                            }).toList(),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text("Cancel".tr),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Get.back();
+                                setState(() {});
+                                switch (dropdownValue) {
+                                  case "1":
+                                    Get.off(const CreateCalendarEvent());
+                                    break;
+                                  default:
+                                }
+                              },
+                              child: Text("Accept".tr),
+                            ),
+                          ],
+                        ),
+                      ); */
+                      Get.off(const CreateCalendarEvent(),
+                          arguments: {"adUserId": adUserId});
+                    },
+                    eventLoader: _getEventsfromDay,
+                  )
+                : const Center(
+                    child: CircularProgressIndicator(),
+                  ),
             ..._getEventsfromDay(selectedDay).map(
               (Event event) => /* ListTile(
                 title: Text(

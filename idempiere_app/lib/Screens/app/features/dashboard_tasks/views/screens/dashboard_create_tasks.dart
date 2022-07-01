@@ -366,7 +366,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const  OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
@@ -591,7 +591,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const  OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
@@ -816,7 +816,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const  OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
