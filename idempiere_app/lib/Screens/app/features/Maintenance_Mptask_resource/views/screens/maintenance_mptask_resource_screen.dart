@@ -11,6 +11,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_mptask_resource_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_resource_anomaly.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/project_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -384,12 +385,14 @@ class MaintenanceMpResourceScreen
                                     children: <Widget>[
                                       const Icon(
                                           Icons.settings_input_component),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .resourceType?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .resourceType?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -468,70 +471,141 @@ class MaintenanceMpResourceScreen
                                                   .lITControl3DateNext ??
                                               "??"),
                                         ]),
-                                        Visibility(
-                                          visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .eDIType
-                                                  ?.id ==
-                                              "A2",
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                IconButton(
-                                                  tooltip: 'Check',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateCheck(
-                                                            isConnected, index);
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.content_paste),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Revision',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateRevision(
-                                                            isConnected, index);
-                                                  },
-                                                  icon:
-                                                      const Icon(Icons.search),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Testing',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateTesting(
-                                                            isConnected, index);
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.gavel_sharp),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Anomaly',
-                                                  onPressed: () async {
-                                                    /* var isConnected =
+                                        controller.trx.records![index].eDIType
+                                                    ?.id ==
+                                                "A2"
+                                            ? Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                    IconButton(
+                                                      tooltip: 'Check',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateCheck(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.content_paste),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Revision',
+                                                      onPressed: () async {
+                                                        var isConnected =
                                                             await checkConnection();
                                                         controller
                                                             .editWorkOrderResourceDateRevision(
                                                                 isConnected,
-                                                                index); */
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.warning,
-                                                    color: Colors.red,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.search),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Testing',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.gavel_sharp),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Anomaly',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        if (isConnected) {
+                                                          await emptyPostCallStack();
+                                                          await emptyEditAPICallStack();
+                                                          await emptyDeleteCallStack();
+
+                                                          Get.to(
+                                                              const CreateResAnomaly(),
+                                                              arguments: {
+                                                                "docNo": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mpOtDocumentno ??
+                                                                    "",
+                                                                "productId": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mProductID
+                                                                        ?.id ??
+                                                                    0,
+                                                                "productName": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mProductID
+                                                                        ?.identifier ??
+                                                                    "",
+                                                              });
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.warning,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ])
+                                            : Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  IconButton(
+                                                    tooltip: 'Anomaly',
+                                                    onPressed: () async {
+                                                      var isConnected =
+                                                          await checkConnection();
+                                                      if (isConnected) {
+                                                        await emptyPostCallStack();
+                                                        await emptyEditAPICallStack();
+                                                        await emptyDeleteCallStack();
+
+                                                        Get.to(
+                                                            const CreateResAnomaly(),
+                                                            arguments: {
+                                                              "docNo": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mpOtDocumentno ??
+                                                                  "",
+                                                              "productId": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.id ??
+                                                                  0,
+                                                              "productName": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.identifier ??
+                                                                  "",
+                                                            });
+                                                      }
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.warning,
+                                                      color: Colors.red,
+                                                    ),
                                                   ),
-                                                ),
-                                              ]),
-                                        ),
+                                                ],
+                                              ),
                                       ],
                                     ),
                                   ],

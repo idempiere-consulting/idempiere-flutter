@@ -287,7 +287,10 @@ class LocaleString extends Translations {
               'Subject of the Scheduled Session',
           'Open Chat': 'Open Chat',
           'Edit Contact': 'Edit Contact',
-          'INVENTORY: ': 'INVENTORY: '
+          'INVENTORY: ': 'INVENTORY: ',
+          'Add Anomaly': 'Add Anomaly',
+          'Anomaly Type': 'Anomaly Type',
+          'Is Charged': 'Is Charged',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -577,7 +580,10 @@ class LocaleString extends Translations {
           'Subject of the Scheduled Session': 'Soggetto della Sessione',
           'Open Chat': 'Apri Chat',
           'Edit Contact': 'Modifica Contatto',
-          'INVENTORY: ': 'INVENTARIO: '
+          'INVENTORY: ': 'INVENTARIO: ',
+          'Add Anomaly': 'Crea Anomalia',
+          'Anomaly Type': 'Tipo Anomalia',
+          'Is Charged': ' Non Compreso'
         },
       };
 }
