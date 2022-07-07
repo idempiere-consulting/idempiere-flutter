@@ -96,7 +96,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('userPreferencesSync', response.body);
+      GetStorage()
+          .write('userPreferencesSync', utf8.decode(response.bodyBytes));
       userPreferencesSync = false;
       if (kDebugMode) {
         print('User Preferences Checked');
@@ -122,7 +123,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('businessPartnerSync', response.body);
+      GetStorage()
+          .write('businessPartnerSync', utf8.decode(response.bodyBytes));
       businessPartnerSync = false;
       if (kDebugMode) {
         print('BusinessPartner Checked');
@@ -148,7 +150,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('productSync', response.body);
+      GetStorage().write('productSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
         print('Products Checked');
       }
@@ -175,7 +177,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('workOrderSync', response.body);
+      GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
         print('WorkOrder Checked');
       }
@@ -204,7 +206,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('workOrderResourceSync', response.body);
+      GetStorage()
+          .write('workOrderResourceSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
         print('WorkOrderResource Checked');
       }
@@ -251,7 +254,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage().write('refListResourceType', response2.body);
+        GetStorage()
+            .write('refListResourceType', utf8.decode(response2.bodyBytes));
         if (kDebugMode) {
           print('refListResourceType Checked');
         }
@@ -304,7 +308,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage().write('refListResourceTypeCategory', response2.body);
+        GetStorage().write(
+            'refListResourceTypeCategory', utf8.decode(response2.bodyBytes));
         if (kDebugMode) {
           print('refListResourceTypeCategory Checked');
         }
@@ -340,7 +345,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('workOrderResourceSurveyLinesSync', response.body);
+      GetStorage().write(
+          'workOrderResourceSurveyLinesSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
         print('workOrderResourceSurveyLinesSync Checked');
       }

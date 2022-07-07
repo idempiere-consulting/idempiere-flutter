@@ -291,6 +291,8 @@ class LocaleString extends Translations {
           'Add Anomaly': 'Add Anomaly',
           'Anomaly Type': 'Anomaly Type',
           'Is Charged': 'Is Charged',
+          'Is being Replaced Now': 'Is being Replaced Now',
+          'Replacement': 'Replacement',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -583,7 +585,9 @@ class LocaleString extends Translations {
           'INVENTORY: ': 'INVENTARIO: ',
           'Add Anomaly': 'Crea Anomalia',
           'Anomaly Type': 'Tipo Anomalia',
-          'Is Charged': ' Non Compreso'
+          'Is Charged': ' Non Compreso',
+          'Is being Replaced Now': 'Sostituito adesso',
+          'Replacement': 'Sostituzione'
         },
       };
 }

@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/anomaly_type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/bom_line_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
@@ -82,7 +84,13 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           AnomalyTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       list = json.records!;
-      list.insert(0, Records(id: 0, name: ""));
+      list.insert(0, ARecords(id: 0, name: ""));
+
+      for (var element in list) {
+        if (element.name == 'Parte Mancante') {
+          missingPartId = element.id.toString();
+        }
+      }
 
       setState(() {
         anomalyTypesAvailable = true;
@@ -121,6 +129,80 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     }
   }
 
+  getProductBOM() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/PP_Product_BOM?\$filter= M_Product_ID eq ${args["productId"]}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (json["row-count"] > 0) {
+        getProductBOMLines(json["records"][0]["id"]);
+      }
+    } else {
+      if (kDebugMode) {
+        print(utf8.decode(response.bodyBytes));
+      }
+    }
+  }
+
+  getProductBOMLines(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/PP_Product_BOMLine?\$filter= PP_Product_BOM_ID eq $id');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          BOMLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      var jsonResources =
+          ProductJson.fromJson(jsonDecode(GetStorage().read('productSync')));
+
+      bomList = [];
+
+      for (var element in json.records!) {
+        for (var i = 0; i < jsonResources.records!.length; i++) {
+          if (element.mProductCategoryID?.id ==
+              jsonResources.records![i].mProductCategoryID?.id) {
+            bomList.add(jsonResources.records![i]);
+          }
+        }
+        //print(element.mProductCategoryID?.identifier ?? "nothing");
+      }
+      setState(() {
+        missingPartFlag = true;
+      });
+    } else {
+      if (kDebugMode) {
+        print(utf8.decode(response.bodyBytes));
+      }
+    }
+  }
+
   /* void fillFields() {
     nameFieldController.text = args["name"];
     bPartnerFieldController.text = args["bpName"];
@@ -144,17 +226,21 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   String salesrepValue = ""; */
   late TextEditingController productFieldController;
   late TextEditingController stockFieldController;
-  late List<Records> list;
+  late List<ARecords> list;
   String dropdownValue = "";
   bool anomalyTypesAvailable = false;
   bool isCharged = false;
   bool isReplacedNow = false;
+  late String missingPartId;
+  List<Records> bomList = [];
+  bool missingPartFlag = false;
 
   @override
   void initState() {
     productFieldController = TextEditingController();
     stockFieldController = TextEditingController();
-
+    bomList = [];
+    missingPartFlag = false;
     super.initState();
     anomalyTypesAvailable = false;
     isCharged = false;
@@ -163,6 +249,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     stockFieldController.text = "0";
     list = [];
     dropdownValue = "0";
+
     getAnomalyTypes();
     getProductStock();
     /* nameFieldController = TextEditingController();
@@ -172,6 +259,9 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     dropdownValue = "N"; */
     //fillFields();
   }
+
+  static String _displayStringForOption(Records option) =>
+      "${option.value}_${option.name}";
 
   //static String _displayStringForOption(Records option) => option.name!;
   //late List<Records> salesrepRecord;
@@ -260,10 +350,15 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                           elevation: 16,
                           onChanged: (String? newValue) {
                             setState(() {
+                              missingPartFlag = false;
                               dropdownValue = newValue!;
                             });
                             if (kDebugMode) {
                               print(newValue);
+                            }
+
+                            if (newValue == missingPartId) {
+                              getProductBOM();
                             }
                           },
                           items: list
@@ -281,6 +376,56 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                       : const Center(
                           child: CircularProgressIndicator(),
                         ),
+                ),
+                Visibility(
+                  visible: missingPartFlag,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Replacement".tr,
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: missingPartFlag,
+                  child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      margin: const EdgeInsets.all(10),
+                      child: missingPartFlag
+                          ? Autocomplete<Records>(
+                              displayStringForOption: _displayStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<Records>.empty();
+                                }
+                                return bomList.where((Records option) {
+                                  return ("${option.value}_${option.name}")
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (Records selection) {
+                                //print(salesrepValue);
+                              },
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            )),
                 ),
                 CheckboxListTile(
                   contentPadding: const EdgeInsets.only(left: 30),
