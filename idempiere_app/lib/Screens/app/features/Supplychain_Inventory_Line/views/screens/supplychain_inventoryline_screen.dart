@@ -10,6 +10,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/views/screens/supplychain_inventoryline_create.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/models/loadunloadjsonline.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -73,10 +74,10 @@ class SupplychainInventoryLineScreen
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: IconButton(
                 onPressed: () {
-                  /* Get.to(const CreateSupplychainLoadUnloadLine(), arguments: {
+                  Get.to(const CreateSupplychainInventoryLine(), arguments: {
                     "id": Get.arguments["id"],
                     "warehouseId": Get.arguments["warehouseId"]
-                  }); */
+                  });
                 },
                 icon: const Icon(
                   Icons.add,
@@ -255,9 +256,9 @@ class SupplychainInventoryLineScreen
                                                 "Are you sure you want to delete the record?"
                                                     .tr),
                                             onConfirm: () {
-                                              controller.deleteLoadUnloadLine(
+                                              /* controller.deleteLoadUnloadLine(
                                                   controller
-                                                      .trx.records![index].id!);
+                                                      .trx.records![index].id!); */
                                             },
                                             onCancel: () {});
                                       },
@@ -306,12 +307,24 @@ class SupplychainInventoryLineScreen
                                         Row(
                                           children: [
                                             Text(
-                                              "Quantity: ".tr,
+                                              "Quantity Count: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            Text(controller.trx.records![index]
-                                                .qtyInternalUse
+                                            Text(controller
+                                                .trx.records![index].qtyCount
+                                                .toString()),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Quantity Booked: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller
+                                                .trx.records![index].qtyBook
                                                 .toString()),
                                           ],
                                         ),
@@ -369,9 +382,9 @@ class SupplychainInventoryLineScreen
                                                 "Are you sure you want to delete the record?"
                                                     .tr),
                                             onConfirm: () {
-                                              controller.deleteLoadUnloadLine(
+                                              /* controller.deleteLoadUnloadLine(
                                                   controller
-                                                      .trx.records![index].id!);
+                                                      .trx.records![index].id!); */
                                             },
                                             onCancel: () {});
                                       },
@@ -420,12 +433,24 @@ class SupplychainInventoryLineScreen
                                         Row(
                                           children: [
                                             Text(
-                                              "Quantity: ".tr,
+                                              "Quantity Count: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            Text(controller.trx.records![index]
-                                                .qtyInternalUse
+                                            Text(controller
+                                                .trx.records![index].qtyCount
+                                                .toString()),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Quantity Booked: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller
+                                                .trx.records![index].qtyBook
                                                 .toString()),
                                           ],
                                         ),
