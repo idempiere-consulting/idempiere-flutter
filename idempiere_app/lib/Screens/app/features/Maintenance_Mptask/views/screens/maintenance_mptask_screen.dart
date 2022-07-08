@@ -63,12 +63,13 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -268,8 +269,79 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ), */
                                             Icon(Icons.location_pin,
                                                 color: Colors.red.shade700),
-                                            Text(
-                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                            Expanded(
+                                              child: Text(
+                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              child:
+                                                  Text("Create Sales Order".tr),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {
+                                                /* Get.defaultDialog(
+                                                        title: 'Complete Action',
+                                                        content: const Text(
+                                                            "Are you sure you want to complete the record?"),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          final ip = GetStorage()
+                                                              .read('ip');
+                                                          String authorization =
+                                                              'Bearer ' +
+                                                                  GetStorage().read(
+                                                                      'token');
+                                                          final msg = jsonEncode({
+                                                            "DocAction": "CO",
+                                                          });
+                                                          final protocol =
+                                                              GetStorage()
+                                                                  .read('protocol');
+                                                          var url = Uri.parse(
+                                                              '$protocol://' +
+                                                                  ip +
+                                                                  '/api/v1/models/c_order/${controller.trx.records![index].id}');
+                            
+                                                          var response =
+                                                              await http.put(
+                                                            url,
+                                                            body: msg,
+                                                            headers: <String,
+                                                                String>{
+                                                              'Content-Type':
+                                                                  'application/json',
+                                                              'Authorization':
+                                                                  authorization,
+                                                            },
+                                                          );
+                                                          if (response.statusCode ==
+                                                              200) {
+                                                            //print("done!");
+                                                            completeOrder(index);
+                                                          } else {
+                                                            //print(response.body);
+                                                            Get.snackbar(
+                                                              "Error!".tr,
+                                                              "Record not completed".tr,
+                                                              icon: const Icon(
+                                                                Icons.error,
+                                                                color: Colors.red,
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
+                                                      ); */
+                                              },
+                                            ),
                                           ],
                                         ),
                                       ],
@@ -485,6 +557,75 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                           ],
                                         ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              child:
+                                                  Text("Create Sales Order".tr),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {
+                                                /* Get.defaultDialog(
+                                                        title: 'Complete Action',
+                                                        content: const Text(
+                                                            "Are you sure you want to complete the record?"),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          final ip = GetStorage()
+                                                              .read('ip');
+                                                          String authorization =
+                                                              'Bearer ' +
+                                                                  GetStorage().read(
+                                                                      'token');
+                                                          final msg = jsonEncode({
+                                                            "DocAction": "CO",
+                                                          });
+                                                          final protocol =
+                                                              GetStorage()
+                                                                  .read('protocol');
+                                                          var url = Uri.parse(
+                                                              '$protocol://' +
+                                                                  ip +
+                                                                  '/api/v1/models/c_order/${controller.trx.records![index].id}');
+                            
+                                                          var response =
+                                                              await http.put(
+                                                            url,
+                                                            body: msg,
+                                                            headers: <String,
+                                                                String>{
+                                                              'Content-Type':
+                                                                  'application/json',
+                                                              'Authorization':
+                                                                  authorization,
+                                                            },
+                                                          );
+                                                          if (response.statusCode ==
+                                                              200) {
+                                                            //print("done!");
+                                                            completeOrder(index);
+                                                          } else {
+                                                            //print(response.body);
+                                                            Get.snackbar(
+                                                              "Error!".tr,
+                                                              "Record not completed".tr,
+                                                              icon: const Icon(
+                                                                Icons.error,
+                                                                color: Colors.red,
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
+                                                      ); */
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -694,8 +835,79 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ), */
                                             Icon(Icons.location_pin,
                                                 color: Colors.red.shade700),
-                                            Text(
-                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                            Expanded(
+                                              child: Text(
+                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              child:
+                                                  Text("Create Sales Order".tr),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {
+                                                /* Get.defaultDialog(
+                                                        title: 'Complete Action',
+                                                        content: const Text(
+                                                            "Are you sure you want to complete the record?"),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          final ip = GetStorage()
+                                                              .read('ip');
+                                                          String authorization =
+                                                              'Bearer ' +
+                                                                  GetStorage().read(
+                                                                      'token');
+                                                          final msg = jsonEncode({
+                                                            "DocAction": "CO",
+                                                          });
+                                                          final protocol =
+                                                              GetStorage()
+                                                                  .read('protocol');
+                                                          var url = Uri.parse(
+                                                              '$protocol://' +
+                                                                  ip +
+                                                                  '/api/v1/models/c_order/${controller.trx.records![index].id}');
+                            
+                                                          var response =
+                                                              await http.put(
+                                                            url,
+                                                            body: msg,
+                                                            headers: <String,
+                                                                String>{
+                                                              'Content-Type':
+                                                                  'application/json',
+                                                              'Authorization':
+                                                                  authorization,
+                                                            },
+                                                          );
+                                                          if (response.statusCode ==
+                                                              200) {
+                                                            //print("done!");
+                                                            completeOrder(index);
+                                                          } else {
+                                                            //print(response.body);
+                                                            Get.snackbar(
+                                                              "Error!".tr,
+                                                              "Record not completed".tr,
+                                                              icon: const Icon(
+                                                                Icons.error,
+                                                                color: Colors.red,
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
+                                                      ); */
+                                              },
+                                            ),
                                           ],
                                         ),
                                       ],
