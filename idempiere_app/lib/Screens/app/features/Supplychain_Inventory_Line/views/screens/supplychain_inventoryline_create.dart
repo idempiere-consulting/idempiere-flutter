@@ -8,7 +8,6 @@ import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/mo
 
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 class CreateSupplychainInventoryLine extends StatefulWidget {
   const CreateSupplychainInventoryLine({Key? key}) : super(key: key);
@@ -20,7 +19,6 @@ class CreateSupplychainInventoryLine extends StatefulWidget {
 
 class _CreateSupplychainInventoryLineState
     extends State<CreateSupplychainInventoryLine> {
-
   Future<List<Records>> getAllProducts() async {
     //print(response.body);
     var jsondecoded = jsonDecode(GetStorage().read('productSync'));
@@ -33,18 +31,18 @@ class _CreateSupplychainInventoryLineState
     //print(json.);
   }
 
-  Future<void> createInventoryLine() async{
+  Future<void> createInventoryLine() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/windows/physical-inventory/tabs/inventory-count/1000008/inventory-count-line/');
-        // physical-inventory/conteggio-inventario-if00/tabs/
-        // physical-inventory/tabs/inventory-count/1000008/
-        // inventory-count-line/
-        // 1000008
-        // 1000159
+    // physical-inventory/conteggio-inventario-if00/tabs/
+    // physical-inventory/tabs/inventory-count/1000008/
+    // inventory-count-line/
+    // 1000008
+    // 1000159
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -68,14 +66,13 @@ class _CreateSupplychainInventoryLineState
       }
       Get.snackbar(
         "Done!".tr,
-        "The record has been created" .tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
         ),
       );
-    }
-    else {
+    } else {
       if (kDebugMode) {
         print(utf8.decode(response.bodyBytes));
       }
@@ -98,7 +95,7 @@ class _CreateSupplychainInventoryLineState
 
   var warehouseId = "1000000";
   String productValue = "";
-  
+
   /* late WarehouseJson trx; */
 
   @override
@@ -122,7 +119,7 @@ class _CreateSupplychainInventoryLineState
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -204,7 +201,6 @@ class _CreateSupplychainInventoryLineState
                               ),
                   ),
                 ),
-                
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
@@ -295,7 +291,6 @@ class _CreateSupplychainInventoryLineState
                               ),
                   ),
                 ),
-                
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
@@ -386,7 +381,6 @@ class _CreateSupplychainInventoryLineState
                               ),
                   ),
                 ),
-                
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(

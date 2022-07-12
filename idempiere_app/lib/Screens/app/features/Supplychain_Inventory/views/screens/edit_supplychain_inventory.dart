@@ -28,9 +28,8 @@ class _EditSupplychainInventoryState extends State<EditSupplychainInventory> {
       "Description": descriptionFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip +
-        '/api/v1/models/M_Inventory/${args['id']}');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/M_Inventory/${args['id']}');
     var response = await http.put(
       url,
       body: msg,
