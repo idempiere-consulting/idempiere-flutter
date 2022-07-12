@@ -49,8 +49,9 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views
 import 'package:idempiere_app/Screens/app/features/Maps/maps_page.dart';
 import 'package:idempiere_app/Screens/app/features/Notification/views/screens/notification_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/portal_mp_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoicepo/views/screens/portal_mp_invoicepo_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Portaloffer/views/screens/portal_mp_portaloffer_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Anomaly_Order/views/screens/portal_mp_anomaly_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Contract/views/screens/portal_mp_contract_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoice/views/screens/portal_mp_invoice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Production/views/screens/production_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Production_Order/views/screens/production_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase/views/screens/purchase_screen.dart';
@@ -87,6 +88,8 @@ import 'package:idempiere_app/components/ignoressl.dart';
 import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_assetresource/views/screens/dashboard_assetresource_screen.dart';
 import 'package:idempiere_app/localestrings.dart';
+
+import 'Screens/app/features/PortalMp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 
 //import 'components/ignoressl.dart';
 
@@ -375,14 +378,24 @@ class MyApp extends StatelessWidget {
           binding: PortalMpBinding(),
         ),
         GetPage(
-          name: '/PortalMpInvoicepo',
-          page: () => const PortalMpInvoicepoScreen(),
-          binding: PortalMpInvoicepoBinding(),
+          name: '/PortalMpInvoice',
+          page: () => const PortalMpInvoiceScreen(),
+          binding: PortalMpInvoiceBinding(),
         ),
         GetPage(
-          name: '/PortalMpPortaloffer',
-          page: () => const PortalMpPortalofferScreen(),
-          binding: PortalMpPortalofferBinding(),
+          name: '/PortalMpContract',
+          page: () => const PortalMpContractScreen(),
+          binding: PortalMpContractBinding(),
+        ),
+        GetPage(
+          name: '/PortalMpAnomaly',
+          page: () => const PortalMpAnomalyScreen(),
+          binding: PortalMpAnomalyBinding(),
+        ),
+        GetPage(
+          name: '/PortalMpSalesOrder',
+          page: () => const PortalMpSalesOrderScreen(),
+          binding: PortalMpSalesOrderBinding(),
         ),
         GetPage(
           name: '/Purchase',

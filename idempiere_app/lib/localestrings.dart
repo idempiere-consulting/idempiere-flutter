@@ -293,6 +293,11 @@ class LocaleString extends Translations {
           'Is Charged': 'Is Charged',
           'Is being Replaced Now': 'Is being Replaced Now',
           'Replacement': 'Replacement',
+          'CONTRACTS: ': 'CONTRACTS: ',
+          'Contract': 'Contract',
+          'ANOMALIES: ': 'ANOMALIES: ',
+          'Anomaly': 'Anomaly',
+          'Edit Anomaly': 'Edit Anomaly',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -587,7 +592,12 @@ class LocaleString extends Translations {
           'Anomaly Type': 'Tipo Anomalia',
           'Is Charged': ' Non Compreso',
           'Is being Replaced Now': 'Sostituito adesso',
-          'Replacement': 'Sostituzione'
+          'Replacement': 'Sostituzione',
+          'CONTRACTS: ': 'CONTRATTI: ',
+          'Contract': 'Contratto',
+          'ANOMALIES: ': 'ANOMALIE: ',
+          'Anomaly': 'Anomalia',
+          'Edit Anomaly': 'Modifica Anomalia',
         },
       };
 }
