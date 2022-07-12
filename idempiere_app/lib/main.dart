@@ -49,7 +49,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views
 import 'package:idempiere_app/Screens/app/features/Maps/maps_page.dart';
 import 'package:idempiere_app/Screens/app/features/Notification/views/screens/notification_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/portal_mp_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Anomaly_Order/views/screens/portal_mp_anomaly_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Anomaly/views/screens/portal_mp_anomaly_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Contract/views/screens/portal_mp_contract_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoice/views/screens/portal_mp_invoice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Production/views/screens/production_screen.dart';
