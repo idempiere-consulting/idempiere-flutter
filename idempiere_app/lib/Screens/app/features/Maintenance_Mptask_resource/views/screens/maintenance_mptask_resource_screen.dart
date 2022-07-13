@@ -530,6 +530,11 @@ class MaintenanceMpResourceScreen
                                                           Get.to(
                                                               const CreateResAnomaly(),
                                                               arguments: {
+                                                                "id": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .id,
                                                                 "docNo": controller
                                                                         .trx
                                                                         .records![

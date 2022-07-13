@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/anomaly_type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/bom_line_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/locator_json.dart';
@@ -13,6 +12,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
+import 'package:intl/intl.dart';
 
 class CreateResAnomaly extends StatefulWidget {
   const CreateResAnomaly({Key? key}) : super(key: key);
@@ -22,15 +22,47 @@ class CreateResAnomaly extends StatefulWidget {
 }
 
 class _CreateResAnomalyState extends State<CreateResAnomaly> {
+  String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   createResAnomaly() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final msg = jsonEncode({
+    String authorization =
+        'Bearer ' + GetStorage().read('token'); //selectedTaskId
+    var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+      "MP_Maintain_Resource_ID": {"id": args["id"]},
+      "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
+      "AD_User_ID": {"id": GetStorage().read("userId")},
+      "Name": "anomaly",
+      "Description": noteFieldController.text,
+      "IsInvoiced": isCharged,
+      "LIT_IsReplaced": isReplacedNow,
+      "M_Product_ID": {"id": replacementId},
+      "DateDoc": "${formattedDate}T00:00:00Z",
+      "LIT_IsManagedByCustomer": manByCustomer,
+      "IsClosed": isClosed,
     });
+
+    if (manByCustomer) {
+      msg = jsonEncode({
+        "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+        "AD_Client_ID": {"id": GetStorage().read("clientid")},
+        "MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+        "MP_Maintain_Resource_ID": {"id": args["id"]},
+        "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
+        "AD_User_ID": {"id": GetStorage().read("userId")},
+        "Name": "anomaly",
+        "Description": noteFieldController.text,
+        "IsInvoiced": isCharged,
+        "LIT_IsReplaced": isReplacedNow,
+        "DateDoc": "${formattedDate}T00:00:00Z",
+        "LIT_IsManagedByCustomer": manByCustomer,
+        "IsClosed": isClosed,
+      });
+    }
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NC/');
     //print(msg);
     var response = await http.post(
       url,
@@ -41,7 +73,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       },
     );
     if (response.statusCode == 201) {
-      Get.find<CRMLeadController>().getLeads();
+      Get.back();
       //print("done!");
       Get.snackbar(
         "Done!".tr,
@@ -52,7 +84,9 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         ),
       );
     } else {
-      //print(response.statusCode);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Error!".tr,
         "Record not created".tr,
@@ -290,11 +324,13 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   bool locatorAvailable = false;
   bool isCharged = false;
   bool isReplacedNow = false;
+  bool isClosed = false;
   bool manByCustomer = false;
   late String missingPartId;
   List<Records> bomList = [];
   bool missingPartFlag = false;
   int locationId = 0;
+  int replacementId = 0;
   late TextEditingValue locatorInitialValue;
 
   @override
@@ -310,6 +346,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     locatorAvailable = false;
     isCharged = false;
     isReplacedNow = false;
+    isClosed = false;
     productFieldController.text = args["productName"] ?? "";
     stockFieldController.text = "0";
     list = [];
@@ -491,6 +528,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                               },
                               onSelected: (Records selection) {
                                 //print(salesrepValue);
+                                replacementId = selection.id!;
                               },
                             )
                           : const Center(
@@ -610,6 +648,19 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Closed'.tr),
+                  value: isClosed,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isClosed = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ],
             );
