@@ -3,7 +3,6 @@ part of dashboard;
 class AnomalyReviewController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late AnomalyJson _trx;
-  var _hasCallSupport = false;
   //var _hasMailSupport = false;
   dynamic args = Get.arguments;
 
@@ -23,27 +22,24 @@ class AnomalyReviewController extends GetxController {
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
-  final json = {
+  /* final json = {
     "types": [
       {"id": "1", "name": "Name"},
       {"id": "2", "name": "Mail"},
       {"id": "3", "name": "Phone N°"},
     ]
-  };
+  }; */
 
-  List<Types>? getTypes() {
+  /* List<Types>? getTypes() {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types;
-  }
+  } */
 
   @override
   void onInit() {
-    dropDownList = getTypes()!;
+    //dropDownList = getTypes()!;
     super.onInit();
-    canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
-      _hasCallSupport = result;
-    });
 
     getLeads();
     //getADUserID();
@@ -62,32 +58,6 @@ class AnomalyReviewController extends GetxController {
 
     value.value = filters[filterCount];
     getLeads();
-  }
-
-  Future<void> makePhoneCall(String phoneNumber) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    if (_hasCallSupport) {
-      final Uri launchUri = Uri(
-        scheme: 'tel',
-        path: phoneNumber,
-      );
-      await launchUrl(launchUri);
-    }
-  }
-
-  Future<void> writeMailTo(String receiver) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'mailto',
-      path: receiver,
-    );
-    await launchUrl(launchUri);
   }
 
   Future<void> getLeads() async {

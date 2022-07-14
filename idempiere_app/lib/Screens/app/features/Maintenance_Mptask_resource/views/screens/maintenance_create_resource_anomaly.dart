@@ -29,8 +29,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         'Bearer ' + GetStorage().read('token'); //selectedTaskId
     var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "AD_Client_ID": {
+        "id": GetStorage().read("clientid")
+      }, //selectedWorkOrderId
       "MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+      "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
       "MP_Maintain_Resource_ID": {"id": args["id"]},
       "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
       "AD_User_ID": {"id": GetStorage().read("userId")},
@@ -49,6 +52,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         "AD_Org_ID": {"id": GetStorage().read("organizationid")},
         "AD_Client_ID": {"id": GetStorage().read("clientid")},
         "MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+        "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
         "MP_Maintain_Resource_ID": {"id": args["id"]},
         "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
         "AD_User_ID": {"id": GetStorage().read("userId")},
