@@ -1,12 +1,14 @@
 part of dashboard;
 
 class _Sidebar extends StatelessWidget {
-  const _Sidebar({
+  _Sidebar({
     required this.data,
     Key? key,
   }) : super(key: key);
 
   final ProjectCardData data;
+
+  final List<dynamic> list = GetStorage().read('permission');
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,34 @@ class _Sidebar extends StatelessWidget {
                 //Get.toNamed('/${value.label}');
                 switch (index) {
                   case 0:
-                    Get.offNamed('/Dashboard');
+                    if ((int.parse(list[32], radix: 16)
+                                    .toRadixString(2)
+                                    .padLeft(8, "0")
+                                    .toString()[4] ==
+                                "1" &&
+                            (int.parse(list[32], radix: 16)
+                                        .toRadixString(2)
+                                        .padLeft(8, "0")
+                                        .toString()[5] ==
+                                    "1" ||
+                                int.parse(list[32], radix: 16)
+                                        .toRadixString(2)
+                                        .padLeft(8, "0")
+                                        .toString()[6] ==
+                                    "1" ||
+                                int.parse(list[32], radix: 16)
+                                        .toRadixString(2)
+                                        .padLeft(8, "0")
+                                        .toString()[7] ==
+                                    "1")) ||
+                        int.parse(list[32], radix: 16)
+                                .toRadixString(2)
+                                .padLeft(8, "0")
+                                .toString()[4] ==
+                            "0") {
+                      Get.offNamed('/Dashboard');
+                    }
+
                     break;
 
                   case 1:
