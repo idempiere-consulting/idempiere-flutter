@@ -5,7 +5,7 @@ class AnomalyReviewController extends GetxController {
   late AnomalyJson _trx;
   //var _hasMailSupport = false;
   dynamic args = Get.arguments;
-
+  int docId = 0;
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
@@ -21,6 +21,93 @@ class AnomalyReviewController extends GetxController {
 
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
+
+  Future<void> getWarehouseDocType() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_DocType?\$filter= Name eq \'Warehouse Order\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (json["row-count"] > 0) {
+        docId = json["records"][0]["id"];
+      }
+
+      //_trx = AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    }
+  }
+
+  Future<void> createSalesOrderFromAnomaly() async {
+    Get.defaultDialog(
+      title: 'Create Sales Order'.tr,
+      content: Text("Are you sure you want to create a Sales Order?".tr),
+      onCancel: () {},
+      onConfirm: () async {
+        final ip = GetStorage().read('ip');
+        String authorization = 'Bearer ' + GetStorage().read('token');
+        final msg = jsonEncode({
+          "record-id": args["record-id"],
+          "model-name": args["model-name"],
+          "C_DocType_ID": docId,
+        });
+        //print(msg);
+        final protocol = GetStorage().read('protocol');
+        var url = Uri.parse('$protocol://' +
+            ip +
+            '/api/v1/processes/createsalesorderfromanomaly');
+
+        var response = await http.post(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          //print("done!");
+          Get.back();
+          //print(response.body);
+          Get.snackbar(
+            "Done!".tr,
+            "Sales Order has been created".tr,
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          if (kDebugMode) {
+            print(response.body);
+          }
+          Get.snackbar(
+            "Error!".tr,
+            "Sales Order not created".tr,
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      },
+    );
+  }
 
   /* final json = {
     "types": [
@@ -40,7 +127,7 @@ class AnomalyReviewController extends GetxController {
   void onInit() {
     //dropDownList = getTypes()!;
     super.onInit();
-
+    getWarehouseDocType();
     getLeads();
     //getADUserID();
     adUserId = GetStorage().read('userId');

@@ -32,6 +32,11 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
                   label: "Dashboard",
+                  visible: int.parse(list[0], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
@@ -64,33 +69,8 @@ class _Sidebar extends StatelessWidget {
                 //Get.toNamed('/${value.label}');
                 switch (index) {
                   case 0:
-                    if ((int.parse(list[32], radix: 16)
-                                    .toRadixString(2)
-                                    .padLeft(8, "0")
-                                    .toString()[4] ==
-                                "1" &&
-                            (int.parse(list[32], radix: 16)
-                                        .toRadixString(2)
-                                        .padLeft(8, "0")
-                                        .toString()[5] ==
-                                    "1" ||
-                                int.parse(list[32], radix: 16)
-                                        .toRadixString(2)
-                                        .padLeft(8, "0")
-                                        .toString()[6] ==
-                                    "1" ||
-                                int.parse(list[32], radix: 16)
-                                        .toRadixString(2)
-                                        .padLeft(8, "0")
-                                        .toString()[7] ==
-                                    "1")) ||
-                        int.parse(list[32], radix: 16)
-                                .toRadixString(2)
-                                .padLeft(8, "0")
-                                .toString()[4] ==
-                            "0") {
-                      Get.offNamed('/Dashboard');
-                    }
+                    Get.offNamed('/Dashboard');
+
                     break;
 
                   case 1:

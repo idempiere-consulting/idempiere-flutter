@@ -292,11 +292,22 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                     '/MaintenanceMptaskAnomalyReview',
                                                     arguments: {
                                                       "id": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mPMaintainTaskID
+                                                          ?.id,
+                                                      "record-id": controller
                                                               .trx
                                                               .records![index]
-                                                              .mPMaintainTaskID
+                                                              .mPOTID
                                                               ?.id ??
-                                                          0
+                                                          0,
+                                                      "model-name": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID
+                                                              ?.modelname ??
+                                                          "",
                                                     });
                                               },
                                             ),
@@ -532,11 +543,22 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                     '/MaintenanceMptaskAnomalyReview',
                                                     arguments: {
                                                       "id": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mPMaintainTaskID
+                                                          ?.id,
+                                                      "record-id": controller
                                                               .trx
                                                               .records![index]
-                                                              .mPMaintainTaskID
+                                                              .mPOTID
                                                               ?.id ??
-                                                          0
+                                                          0,
+                                                      "model-name": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID
+                                                              ?.modelname ??
+                                                          "",
                                                     });
                                               },
                                             ),
@@ -774,11 +796,22 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                     '/MaintenanceMptaskAnomalyReview',
                                                     arguments: {
                                                       "id": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mPMaintainTaskID
+                                                          ?.id,
+                                                      "record-id": controller
                                                               .trx
                                                               .records![index]
-                                                              .mPMaintainTaskID
+                                                              .mPOTID
                                                               ?.id ??
-                                                          0
+                                                          0,
+                                                      "model-name": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID
+                                                              ?.modelname ??
+                                                          "",
                                                     });
                                               },
                                             ),

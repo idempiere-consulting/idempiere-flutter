@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -63,6 +64,7 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
             child: IconButton(
               onPressed: () {
                 //createResAnomaly();
+                controller.createSalesOrderFromAnomaly();
               },
               icon: const Icon(
                 Icons.done_all_outlined,
