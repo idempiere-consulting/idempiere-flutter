@@ -26,7 +26,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 8,
+              initialSelected: 2,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -90,6 +90,7 @@ class _Sidebar extends StatelessWidget {
                 switch (index) {
                   case 0:
                     Get.offNamed('/Dashboard');
+
                     break;
 
                   case 1:

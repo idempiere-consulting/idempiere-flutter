@@ -13,6 +13,8 @@ class PortalMpInvoiceController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+  // ignore: prefer_typing_uninitialized_variables
+  var businessPartnerId;
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
@@ -55,6 +57,35 @@ class PortalMpInvoiceController extends GetxController {
 
     value.value = filters[filterCount];
     getInvoices();
+  }
+
+  Future<void> getBusinessPartner() async {
+    var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      GetStorage().write('BusinessPartnerName',
+          json["records"][0]["C_BPartner_ID"]["identifier"]);
+      GetStorage().write(
+          'BusinessPartnerId', json["records"][0]["C_BPartner_ID"]["id"]);
+
+      businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+    } else {
+      //print(response.body);
+    }
   }
 
   Future<void> getADUserID() async {
@@ -109,6 +140,7 @@ class PortalMpInvoiceController extends GetxController {
   }
 
   Future<void> getInvoices() async {
+    getBusinessPartner();
     var now = DateTime.now();
     DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
     var formatter = DateFormat('yyyy-MM-dd');
@@ -121,7 +153,8 @@ class PortalMpInvoiceController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_invoice?\$filter= IsSoTrx eq Y and DateInvoiced le \'$formattedDate 23:59:59\' and DateInvoiced ge \'$formattedNinetyDaysAgo 00:00:00\' and SalesRep_ID eq ${GetStorage().read("userId")} and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateInvoiced desc');
+        '/api/v1/models/c_invoice?\$filter= IsSoTrx eq Y and DateInvoiced le \'$formattedDate 23:59:59\' and DateInvoiced ge \'$formattedNinetyDaysAgo 00:00:00\' and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateInvoiced desc');
+    //SalesRep_ID eq ${GetStorage().read("userId")}
     var response = await http.get(
       url,
       headers: <String, String>{

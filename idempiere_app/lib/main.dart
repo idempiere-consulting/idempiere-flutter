@@ -53,6 +53,9 @@ import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/porta
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Anomaly/views/screens/portal_mp_anomaly_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Contract/views/screens/portal_mp_contract_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoice/views/screens/portal_mp_invoice_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Maintenance/views/screens/portal_mp_maintenance_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Opportunity/views/screens/portal_mp_opportunity_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Training_and_CourseList/views/screens/portal_mp_training_course_courselist_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Production/views/screens/production_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Production_Order/views/screens/production_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase/views/screens/purchase_screen.dart';
@@ -90,7 +93,7 @@ import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_assetresource/views/screens/dashboard_assetresource_screen.dart';
 import 'package:idempiere_app/localestrings.dart';
 
-import 'Screens/app/features/PortalMp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
+import 'Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 
 //import 'components/ignoressl.dart';
 
@@ -399,9 +402,24 @@ class MyApp extends StatelessWidget {
           binding: PortalMpAnomalyBinding(),
         ),
         GetPage(
+          name: '/PortalMpMaintenanceMp',
+          page: () => const PortalMpMaintenanceMpScreen(),
+          binding: PortalMpMaintenanceMpBinding(),
+        ),
+        GetPage(
           name: '/PortalMpSalesOrder',
           page: () => const PortalMpSalesOrderScreen(),
           binding: PortalMpSalesOrderBinding(),
+        ),
+        GetPage(
+          name: '/PortalMpTrainingCourse',
+          page: () => const PortalMpTrainingCourseCourseListScreen(),
+          binding: PortalMpTrainingCourseCourseListBinding(),
+        ),
+        GetPage(
+          name: '/PortalMpOpportunity',
+          page: () => const PortalMpOpportunityScreen(),
+          binding: PortalMpOpportunityBinding(),
         ),
         GetPage(
           name: '/Purchase',

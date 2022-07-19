@@ -17,6 +17,8 @@ class PortalMpContractController extends GetxController {
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
+  // ignore: prefer_typing_uninitialized_variables
+  var businessPartnerId;
 
   var dropdownValue = "1".obs;
   
@@ -59,6 +61,36 @@ class PortalMpContractController extends GetxController {
     getContracts();
   }
 
+  Future<void> getBusinessPartner() async {
+    var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      GetStorage().write('BusinessPartnerName',
+          json["records"][0]["C_BPartner_ID"]["identifier"]);
+      GetStorage().write(
+          'BusinessPartnerId', json["records"][0]["C_BPartner_ID"]["id"]);
+
+      businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+    } else {
+      //print(response.body);
+    }
+  }
+
+
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
@@ -85,6 +117,7 @@ class PortalMpContractController extends GetxController {
   }
 
   Future<void> getContracts() async {
+    getBusinessPartner();
     _dataAvailable.value = false;
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
@@ -93,7 +126,7 @@ class PortalMpContractController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/C_Contract?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/C_Contract?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]} and C_BPartner_ID eq $businessPartnerId');
         //'/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(
       url,

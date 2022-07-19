@@ -1,8 +1,8 @@
 part of dashboard;
 
-class PortalMpAnomalyController extends GetxController {
+class PortalMpSalesOrderController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late AnomalyJson _trx;
+  late SalesOrderJson _trx;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -13,19 +13,18 @@ class PortalMpAnomalyController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
-    // ignore: prefer_typing_uninitialized_variables
-  var businessPartnerId;
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
-
+  // ignore: prefer_typing_uninitialized_variables
+  var businessPartnerId;
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
   final json = {
     "types": [
-      {"id": "1", "name": "Description".tr},
-      {"id": "2", "name": "Name".tr},
+      {"id": "1", "name": "DocumentNo".tr},
+      {"id": "2", "name": "Business Partner".tr},
       //{"id": "3", "name": "SalesRep".tr},
     ]
   };
@@ -40,12 +39,12 @@ class PortalMpAnomalyController extends GetxController {
   void onInit() {
     dropDownList = getTypes()!;
     super.onInit();
-    getAnomalies();
+    getSalesOrders();
     getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  AnomalyJson get trx => _trx;
+  SalesOrderJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -55,35 +54,9 @@ class PortalMpAnomalyController extends GetxController {
     }
 
     value.value = filters[filterCount];
-    getAnomalies();
+    getSalesOrders();
   }
 
-  Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
-
-      adUserId = json["records"][0]["id"];
-
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-    }
-  }
 
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
@@ -114,7 +87,59 @@ class PortalMpAnomalyController extends GetxController {
     }
   }
 
-  Future<void> getAnomalies() async {
+
+  Future<void> getADUserID() async {
+    var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      adUserId = json["records"][0]["id"];
+
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    }
+  }
+
+  Future<void> makePhoneCall(String phoneNumber) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  Future<void> writeMailTo(String receiver) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'mailto',
+      path: receiver,
+    );
+    await launchUrl(launchUri);
+  }
+
+  Future<void> getSalesOrders() async {
     getBusinessPartner();
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
@@ -123,8 +148,8 @@ class PortalMpAnomalyController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/LIT_NC?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]} and C_BPartner_ID eq $businessPartnerId');
-        //and AD_User_ID eq ${GetStorage().read("userId")}
+        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and  C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateOrdered desc');
+    //SalesRep_ID eq ${GetStorage().read("userId")}
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -135,7 +160,7 @@ class PortalMpAnomalyController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx =
-          AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+          SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

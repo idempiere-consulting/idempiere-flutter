@@ -1,11 +1,15 @@
 part of dashboard;
 
-class PortalMpAnomalyController extends GetxController {
+class PortalMpMaintenanceMptaskController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late AnomalyJson _trx;
+  late WorkOrderLocalJson _trx;
+  var _hasCallSupport = false;
+  //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
+  // ignore: prefer_typing_uninitialized_variables
+  var businessPartnerId;
 
   var value = "Tutti".obs;
 
@@ -13,39 +17,19 @@ class PortalMpAnomalyController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
-    // ignore: prefer_typing_uninitialized_variables
-  var businessPartnerId;
-
-  var searchFieldController = TextEditingController();
-  var searchFilterValue = "".obs;
-
-  late List<Types> dropDownList;
-  var dropdownValue = "1".obs;
-
-  final json = {
-    "types": [
-      {"id": "1", "name": "Description".tr},
-      {"id": "2", "name": "Name".tr},
-      //{"id": "3", "name": "SalesRep".tr},
-    ]
-  };
-
-  List<Types>? getTypes() {
-    var dJson = TypeJson.fromJson(json);
-
-    return dJson.types;
-  }
 
   @override
   void onInit() {
-    dropDownList = getTypes()!;
     super.onInit();
-    getAnomalies();
-    getADUserID();
+    canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
+      _hasCallSupport = result;
+    });
+
+    getWorkOrders();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  AnomalyJson get trx => _trx;
+  WorkOrderLocalJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -55,17 +39,18 @@ class PortalMpAnomalyController extends GetxController {
     }
 
     value.value = filters[filterCount];
-    getAnomalies();
+    getWorkOrders();
   }
 
-  Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
+  Future<void> syncWorkOrder() async {
+    getBusinessPartner();
+    String ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+        '/api/v1/models/lit_mp_ot_v?\$filter= c_bpartner_id eq $businessPartnerId ');//mp_ot_ad_user_id eq $userId 
+
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -74,14 +59,13 @@ class PortalMpAnomalyController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
+      
       //print(response.body);
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
-
-      adUserId = json["records"][0]["id"];
-
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
+      GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
+      //isWorkOrderSyncing.value = false;
+      /* syncWorkOrderResource();
+      syncWorkOrderRefListResource();
+      syncWorkOrderRefListResourceCategory(); */
     }
   }
 
@@ -103,28 +87,105 @@ class PortalMpAnomalyController extends GetxController {
       //print(response.body);
       var json = jsonDecode(response.body);
 
-      GetStorage().write('BusinessPartnerName',
-          json["records"][0]["C_BPartner_ID"]["identifier"]);
-      GetStorage().write(
-          'BusinessPartnerId', json["records"][0]["C_BPartner_ID"]["id"]);
-
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+      //getTickets();
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
     } else {
       //print(response.body);
     }
   }
 
-  Future<void> getAnomalies() async {
-    getBusinessPartner();
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+  Future<void> makePhoneCall(String phoneNumber) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    if (_hasCallSupport) {
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: phoneNumber,
+      );
+      await launchUrl(launchUri);
+    }
+  }
+
+  Future<void> writeMailTo(String receiver) async {
+    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
+    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
+    // such as spaces in the input, which would cause `launch` to fail on some
+    // platforms.
+    final Uri launchUri = Uri(
+      scheme: 'mailto',
+      path: receiver,
+    );
+    await launchUrl(launchUri);
+  }
+
+  Future<void> getWorkOrders() async {
     _dataAvailable.value = false;
-    final ip = GetStorage().read('ip');
+    //print(GetStorage().read('workOrderSync'));
+    //print(GetStorage().read('userId'));
+    if (GetStorage().read('workOrderSync') != null) {
+      _trx = WorkOrderLocalJson.fromJson(
+          jsonDecode(GetStorage().read('workOrderSync')));
+      // ignore: unnecessary_null_comparison
+      _dataAvailable.value = _trx != null;
+    }
+  }
+
+  /* Future<void> syncWorkOrder() async {
+    var isConnected = await checkConnection();
+
+    //print(isConnected);
+
+    if (isConnected) {
+      emptyAPICallStak();
+      _dataAvailable.value = false;
+      String ip = GetStorage().read('ip');
+      var userId = GetStorage().read('userId');
+      String authorization = 'Bearer ' + GetStorage().read('token');
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId and ');
+
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        //print(response.body);
+        GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
+        //isWorkOrderSyncing.value = false;
+        syncWorkOrderResource();
+      }
+    } else {
+      Get.snackbar(
+        "Connessione Internet assente!",
+        "Impossibile aggiornare i record.",
+        icon: const Icon(
+          Icons.signal_wifi_connected_no_internet_4,
+          color: Colors.red,
+        ),
+      );
+    }
+  } */
+
+  Future<void> syncWorkOrderResource() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/LIT_NC?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]} and C_BPartner_ID eq $businessPartnerId');
-        //and AD_User_ID eq ${GetStorage().read("userId")}
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
+
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -132,14 +193,12 @@ class PortalMpAnomalyController extends GetxController {
         'Authorization': authorization,
       },
     );
+
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx =
-          AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      GetStorage()
+          .write('workOrderResourceSync', utf8.decode(response.bodyBytes));
+      getWorkOrders();
     }
   }
 

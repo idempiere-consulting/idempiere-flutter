@@ -264,7 +264,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                             : Colors.yellow,
                                       ),
                                       onPressed: () {
-                                        Get.toNamed('/SalesOrderLine',
+                                        Get.toNamed('/PortalMpSalesOrderLine',
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
@@ -592,7 +592,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                             : Colors.yellow,
                                       ),
                                       onPressed: () {
-                                        Get.toNamed('/SalesOrderLine',
+                                        Get.toNamed('/PortalMpSalesOrderLine',
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
@@ -920,7 +920,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                             : Colors.yellow,
                                       ),
                                       onPressed: () {
-                                        Get.toNamed('/SalesOrderLine',
+                                        Get.toNamed('/PortalMpSalesOrderLine',
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,

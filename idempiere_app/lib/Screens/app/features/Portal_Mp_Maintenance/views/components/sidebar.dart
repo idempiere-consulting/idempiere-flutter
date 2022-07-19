@@ -1,14 +1,12 @@
 part of dashboard;
 
 class _Sidebar extends StatelessWidget {
-  _Sidebar({
+  const _Sidebar({
     required this.data,
     Key? key,
   }) : super(key: key);
 
   final ProjectCardData data;
-
-  final List<dynamic> list = GetStorage().read('permission');
 
   @override
   Widget build(BuildContext context) {
@@ -26,63 +24,48 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 8,
+              initialSelected: 2,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
-                  visible: int.parse(list[0], radix: 16)
-                          .toRadixString(2)
-                          .padLeft(8, "0")
-                          .toString()[1] ==
-                      "1",
+                  label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Ticket".tr,
+                  label: "MaintenanceCalendar".tr,
                 ),
-                //Richieste di offerta
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Opportunity".tr,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "SalesOrder".tr,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Training and Course".tr,
-                ),
-                //Impianto
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "MaintenanceMptask".tr,
                 ),
-                //Impianti dettaglio
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Anomaly".tr,
-                ),
-                //Scadenze
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Invoice".tr,
+                  label: "MaintenanceMpanomaly".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Contract".tr,
+                  label: "MaintenanceMpwarehouse".tr,
                 ),
-                
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "MaintenanceMppicking".tr,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "MaintenanceInternaluseinventory".tr,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "MaintenanceMpimportitem".tr,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -93,35 +76,25 @@ class _Sidebar extends StatelessWidget {
                     break;
 
                   case 1:
-                    Get.offNamed('/TicketClientTicket');
+                    Get.offNamed('/MaintenanceCalendar');
                     break;
-                  //Richieste di offerta
                   case 2:
-                    Get.offNamed('/PortalMpOpportunity');
+                    Get.offNamed('/MaintenanceMptask');
                     break;
-                  
                   case 3:
-                    Get.offNamed('/PortalMpSalesOrder');
+                    Get.offNamed('/MaintenanceMpanomaly');
                     break;
-                  
                   case 4:
-                    Get.offNamed('/PortalMpTrainingCourse');
+                    Get.offNamed('/MaintenanceMpwarehouse');
                     break;
-                  //Impianto
                   case 5:
-                    Get.offNamed('/PortalMpMaintenanceMp');
+                    Get.offNamed('/MaintenanceMppicking');
                     break;
-                  //Impianti dettaglio
                   case 6:
-                    Get.offNamed('/PortalMpAnomaly');
+                    Get.offNamed('/MaintenanceInternaluseinventory');
                     break;
-                  //Scadenze
                   case 7:
-                    Get.offNamed('/PortalMpInvoice');
-                    break;
-
-                  case 8:
-                    Get.offNamed('/PortalMpContract');
+                    Get.offNamed('/MaintenanceMpimportitem');
                     break;
 
                   default:

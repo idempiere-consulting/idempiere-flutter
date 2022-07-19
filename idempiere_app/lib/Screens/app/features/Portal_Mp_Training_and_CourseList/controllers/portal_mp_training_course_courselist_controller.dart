@@ -1,69 +1,30 @@
 part of dashboard;
 
-class PortalMpSalesOrderController extends GetxController {
+class PortalMpTrainingCourseCourseListController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late SalesOrderJson _trx;
-
-  // ignore: prefer_typing_uninitialized_variables
-  var adUserId;
-
-  var value = "Tutti".obs;
-
-  var filters = ["Tutti", "Miei" /* , "Team" */];
-  var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+  late CourseListJson _trx;
+  //var passwordFieldController = TextEditingController();
+  // ignore: prefer_typing_uninitialized_variables
+  var businessPartnerId;
 
-  var searchFieldController = TextEditingController();
-  var searchFilterValue = "".obs;
-
-  late List<Types> dropDownList;
-  var dropdownValue = "1".obs;
-
-  final json = {
-    "types": [
-      {"id": "1", "name": "DocumentNo".tr},
-      {"id": "2", "name": "Business Partner".tr},
-      //{"id": "3", "name": "SalesRep".tr},
-    ]
-  };
-
-  List<Types>? getTypes() {
-    var dJson = TypeJson.fromJson(json);
-
-    return dJson.types;
-  }
+  CourseListJson get trx => _trx;
+  bool get dataAvailable => _dataAvailable.value;
 
   @override
   void onInit() {
-    dropDownList = getTypes()!;
     super.onInit();
-    getSalesOrders();
-    getADUserID();
+    getCourseSurveys();
   }
 
-  bool get dataAvailable => _dataAvailable.value;
-  SalesOrderJson get trx => _trx;
-  //String get value => _value.toString();
-
-  changeFilter() {
-    filterCount++;
-    if (filterCount == 2) {
-      filterCount = 0;
-    }
-
-    value.value = filters[filterCount];
-    getSalesOrders();
-  }
-
-  Future<void> getADUserID() async {
+  Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
+    var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -73,49 +34,29 @@ class PortalMpSalesOrderController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(response.body);
 
-      adUserId = json["records"][0]["id"];
+      GetStorage().write('BusinessPartnerName',
+          json["records"][0]["C_BPartner_ID"]["identifier"]);
+      GetStorage().write(
+          'BusinessPartnerId', json["records"][0]["C_BPartner_ID"]["id"]);
 
-      //print(trx.rowcount);
+      businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+    } else {
       //print(response.body);
-      // ignore: unnecessary_null_comparison
     }
   }
 
-  Future<void> makePhoneCall(String phoneNumber) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
-    await launchUrl(launchUri);
-  }
-
-  Future<void> writeMailTo(String receiver) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'mailto',
-      path: receiver,
-    );
-    await launchUrl(launchUri);
-  }
-
-  Future<void> getSalesOrders() async {
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+  getCourseSurveys() async {
+    getBusinessPartner();
     _dataAvailable.value = false;
+    //final adUserId = GetStorage().read('userId');
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and SalesRep_ID eq ${GetStorage().read("userId")}  and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateOrdered desc');
+        '/api/v1/models/mp_maintain?\$filter= WindowType eq \'T\' and isChild eq \'N\' and AD_Client_ID eq ${GetStorage().read('clientid')} and C_BPartner_ID eq $businessPartnerId');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -123,22 +64,18 @@ class PortalMpSalesOrderController extends GetxController {
         'Authorization': authorization,
       },
     );
+
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx =
-          SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      //print(trx.rowcount);
-      //print(response.body);
+      _trx = CourseListJson.fromJson(jsonDecode(response.body));
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
-
-  /* void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
-    }
-  } */
 
   // Data
   _Profile getProfil() {

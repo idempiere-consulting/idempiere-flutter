@@ -298,6 +298,11 @@ class LocaleString extends Translations {
           'ANOMALIES: ': 'ANOMALIES: ',
           'Anomaly': 'Anomaly',
           'Edit Anomaly': 'Edit Anomaly',
+          'Bill Business Partner': 'Bill Business Partner',
+          'Organization' : 'Organization',
+          'Date Next Run': 'Date Next Run ',
+          'Date Last Run': 'Date Last Run',
+          'ContractNo': 'ContractNo',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -465,7 +470,7 @@ class LocaleString extends Translations {
           'To do': 'Da fare',
           'In progress': 'In esecuzione',
           'Done': 'Fatto',
-          'notification': 'Notificha',
+          'notification': 'Notifica',
           'more': 'Di più',
           'Recent Messages': 'Messaggi recenti',
           'Team Member ': 'Membro del team',
@@ -598,6 +603,11 @@ class LocaleString extends Translations {
           'ANOMALIES: ': 'ANOMALIE: ',
           'Anomaly': 'Anomalia',
           'Edit Anomaly': 'Modifica Anomalia',
+          'Bill Business Partner': 'Partner di fatturazione',
+          'Organization': 'Organizzazione',
+          'Date Next Run': 'Data Prossima Elaborazione',
+          'Date Last Run': 'Data Ultima Elaborazione',
+          'ContractNo': 'N. Contratto'
         },
       };
 }

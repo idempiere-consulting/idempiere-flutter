@@ -291,7 +291,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                 : Colors.yellow,
                                           ),
                                           onPressed: () {
-                                            Get.offNamed('/InvoiceLine',
+                                            Get.offNamed('/PortalMpInvoiceLine',
                                                 arguments: {
                                                   "id": controller
                                                       .trx.records![index].id,
@@ -597,7 +597,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                 : Colors.yellow,
                                           ),
                                           onPressed: () {
-                                            Get.offNamed('/InvoiceLine',
+                                            Get.offNamed('/PortalMpInvoiceLine',
                                                 arguments: {
                                                   "id": controller
                                                       .trx.records![index].id,
@@ -903,7 +903,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                 : Colors.yellow,
                                           ),
                                           onPressed: () {
-                                            Get.offNamed('/InvoiceLine',
+                                            Get.offNamed('/PortalMpInvoiceLine',
                                                 arguments: {
                                                   "id": controller
                                                       .trx.records![index].id,

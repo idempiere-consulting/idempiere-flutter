@@ -1,32 +1,26 @@
 part of dashboard;
 
-class PortalMpAnomalyController extends GetxController {
+class PortalMpOpportunityController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late AnomalyJson _trx;
-
-  // ignore: prefer_typing_uninitialized_variables
-  var adUserId;
-
-  var value = "Tutti".obs;
-
-  var filters = ["Tutti", "Miei" /* , "Team" */];
-  var filterCount = 0;
+  late OpportunityJson _trx;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
-    // ignore: prefer_typing_uninitialized_variables
-  var businessPartnerId;
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var businessPartnerId;
 
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
   final json = {
     "types": [
-      {"id": "1", "name": "Description".tr},
-      {"id": "2", "name": "Name".tr},
-      //{"id": "3", "name": "SalesRep".tr},
+      {"id": "1", "name": "Business Partner".tr},
+      {"id": "2", "name": "Product".tr},
+      {"id": "3", "name": "SalesRep".tr},
+      {"id": "4", "name": "SalesStage".tr}
     ]
   };
 
@@ -40,50 +34,11 @@ class PortalMpAnomalyController extends GetxController {
   void onInit() {
     dropDownList = getTypes()!;
     super.onInit();
-    getAnomalies();
-    getADUserID();
+    getOpportunities();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  AnomalyJson get trx => _trx;
-  //String get value => _value.toString();
-
-  changeFilter() {
-    filterCount++;
-    if (filterCount == 2) {
-      filterCount = 0;
-    }
-
-    value.value = filters[filterCount];
-    getAnomalies();
-  }
-
-  Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
-
-      adUserId = json["records"][0]["id"];
-
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-    }
-  }
+  OpportunityJson get trx => _trx;
 
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
@@ -114,17 +69,13 @@ class PortalMpAnomalyController extends GetxController {
     }
   }
 
-  Future<void> getAnomalies() async {
+  Future<void> getOpportunities() async {
     getBusinessPartner();
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/LIT_NC?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]} and C_BPartner_ID eq $businessPartnerId');
-        //and AD_User_ID eq ${GetStorage().read("userId")}
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_opportunity?\$filter= C_BPartner_ID eq $businessPartnerId');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -135,8 +86,8 @@ class PortalMpAnomalyController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx =
-          AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      //print(trx.rowcount);
+          OpportunityJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      //print(_trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
@@ -288,45 +239,5 @@ class PortalMpAnomalyController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }
