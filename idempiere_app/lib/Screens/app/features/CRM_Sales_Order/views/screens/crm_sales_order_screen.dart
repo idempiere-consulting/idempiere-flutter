@@ -11,6 +11,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/views/screens/crm_sales_order_creation_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -110,12 +112,13 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -131,9 +134,23 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("SALES ORDERS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("SALES ORDERS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          //controller.getSalesOrders();
+                          Get.to(const CRMSalesOrderCreationScreen());
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.yellow,
+                        ),
+                      ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -159,8 +176,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                         ),
                       ),
                     ),
-                    
-                    
                   ],
                 ),
                 Row(
@@ -205,7 +220,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -226,220 +241,287 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           shrinkWrap: true,
                           itemCount: controller.trx.rowcount,
                           itemBuilder: (BuildContext context, int index) {
-                            return Obx (() => Visibility(
-                              visible: controller.searchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.dropdownValue.value == "1"
-                                        ? controller.trx.records![index].documentNo
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(controller
-                                                .searchFilterValue.value
-                                                .toLowerCase())
-                                    : controller.dropdownValue.value == "2"
-                                            ? (controller
-                                                .trx.records![index].cBPartnerID?.identifier?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .searchFilterValue.value
-                                                    .toLowerCase()): true,
-                            
-                              child: Card(
-                                elevation: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: ExpansionTile(
-                                    trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.article,
-                                        color: controller.trx.records![index]
-                                                    .docStatus?.id ==
-                                                "CO"
-                                            ? Colors.green
-                                            : Colors.yellow,
-                                      ),
-                                      onPressed: () {
-                                        Get.toNamed('/SalesOrderLine',
-                                            arguments: {
-                                              "id": controller
-                                                  .trx.records![index].id,
-                                              "bPartner": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.identifier,
-                                              "docNo": controller
-                                                  .trx.records![index].documentNo,
-                                              "priceListId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mPriceListID
-                                                  ?.id,
-                                              "dateOrdered": controller.trx
-                                                  .records![index].dateOrdered,
-                                            });
-                                      },
-                                    ),
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding: const EdgeInsets.only(right: 12.0),
+                            return Obx(() => Visibility(
+                                  visible: controller.searchFilterValue.value ==
+                                          ""
+                                      ? true
+                                      : controller.dropdownValue.value == "1"
+                                          ? controller
+                                              .trx.records![index].documentNo
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .searchFilterValue.value
+                                                  .toLowerCase())
+                                          : controller.dropdownValue.value ==
+                                                  "2"
+                                              ? (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier ??
+                                                      "")
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .searchFilterValue.value
+                                                      .toLowerCase())
+                                              : true,
+                                  child: Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
                                       decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.edit,
-                                        ),
-                                        tooltip: 'Edit Sales Order'.tr,
-                                        onPressed: () {
-                                          //log("info button pressed");
-                                          Get.to(const CRMEditSalesOrder(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "docNo": controller
-                                                  .trx.records![index].documentNo,
-                                            "docTypeTargetId": controller.trx.records![index].cDocTypeTargetID!.id,
-                                            "BPartnerLocationId": controller.trx.records![index].cBPartnerLocationID!.id,
-                                            "bPartnerId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.id,
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-                            
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.handshake,
-                                            color: Colors.yellowAccent),
-                                        Expanded(
-                                          child: Text(
-                                            controller.trx.records![index]
-                                                    .cBPartnerID!.identifier ??
-                                                "??",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Amount: ".tr,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "€${controller.trx.records![index].grandTotal}"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Visibility(
-                                                visible: controller
+                                          color:
+                                              Color.fromRGBO(64, 75, 96, .9)),
+                                      child: ExpansionTile(
+                                        trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.article,
+                                            color: controller
                                                         .trx
                                                         .records![index]
                                                         .docStatus
-                                                        ?.id !=
-                                                    'CO',
-                                                child: ElevatedButton(
-                                                  child: Text("Complete".tr),
-                                                  style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty.all(
-                                                            Colors.green),
+                                                        ?.id ==
+                                                    "CO"
+                                                ? Colors.green
+                                                : Colors.yellow,
+                                          ),
+                                          onPressed: () {
+                                            Get.toNamed('/SalesOrderLine',
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "bPartner": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier,
+                                                  "docNo": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .documentNo,
+                                                  "priceListId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mPriceListID
+                                                      ?.id,
+                                                  "dateOrdered": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateOrdered,
+                                                });
+                                          },
+                                        ),
+                                        tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        leading: Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                            ),
+                                            tooltip: 'Edit Sales Order'.tr,
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                              Get.to(const CRMEditSalesOrder(),
+                                                  arguments: {
+                                                    "id": controller
+                                                        .trx.records![index].id,
+                                                    "docNo": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .documentNo,
+                                                    "docTypeTargetId":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeTargetID!
+                                                            .id,
+                                                    "BPartnerLocationId":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cBPartnerLocationID!
+                                                            .id,
+                                                    "bPartnerId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.id,
+                                                  });
+                                            },
+                                          ),
+                                        ),
+                                        title: Text(
+                                          "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Row(
+                                          children: <Widget>[
+                                            const Icon(Icons.handshake,
+                                                color: Colors.yellowAccent),
+                                            Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID!
+                                                        .identifier ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        childrenPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 10.0),
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
-                                                  onPressed: () async {
-                                                    Get.defaultDialog(
-                                                      title: 'Complete Action',
-                                                      content: const Text(
-                                                          "Are you sure you want to complete the record?"),
-                                                      onCancel: () {},
-                                                      onConfirm: () async {
-                                                        final ip = GetStorage()
-                                                            .read('ip');
-                                                        String authorization =
-                                                            'Bearer ' +
+                                                  Text(
+                                                      "€${controller.trx.records![index].grandTotal}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  IconButton(
+                                                    tooltip: 'Sign',
+                                                    onPressed: () async {
+                                                      /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                      Get.to(
+                                                          const SignatureSalesOrderScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          });
+                                                    },
+                                                    icon: const Icon(
+                                                        EvaIcons.edit2Outline),
+                                                  ),
+                                                  Visibility(
+                                                    visible: controller
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id !=
+                                                        'CO',
+                                                    child: ElevatedButton(
+                                                      child:
+                                                          Text("Complete".tr),
+                                                      style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .green),
+                                                      ),
+                                                      onPressed: () async {
+                                                        Get.defaultDialog(
+                                                          title:
+                                                              'Complete Action',
+                                                          content: const Text(
+                                                              "Are you sure you want to complete the record?"),
+                                                          onCancel: () {},
+                                                          onConfirm: () async {
+                                                            final ip =
+                                                                GetStorage()
+                                                                    .read('ip');
+                                                            String
+                                                                authorization =
+                                                                'Bearer ' +
+                                                                    GetStorage()
+                                                                        .read(
+                                                                            'token');
+                                                            final msg =
+                                                                jsonEncode({
+                                                              "DocAction": "CO",
+                                                            });
+                                                            final protocol =
                                                                 GetStorage().read(
-                                                                    'token');
-                                                        final msg = jsonEncode({
-                                                          "DocAction": "CO",
-                                                        });
-                                                        final protocol =
-                                                            GetStorage()
-                                                                .read('protocol');
-                                                        var url = Uri.parse(
-                                                            '$protocol://' +
-                                                                ip +
-                                                                '/api/v1/models/c_order/${controller.trx.records![index].id}');
-                            
-                                                        var response =
-                                                            await http.put(
-                                                          url,
-                                                          body: msg,
-                                                          headers: <String,
-                                                              String>{
-                                                            'Content-Type':
-                                                                'application/json',
-                                                            'Authorization':
-                                                                authorization,
+                                                                    'protocol');
+                                                            var url = Uri.parse(
+                                                                '$protocol://' +
+                                                                    ip +
+                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
+
+                                                            var response =
+                                                                await http.put(
+                                                              url,
+                                                              body: msg,
+                                                              headers: <String,
+                                                                  String>{
+                                                                'Content-Type':
+                                                                    'application/json',
+                                                                'Authorization':
+                                                                    authorization,
+                                                              },
+                                                            );
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                              //print("done!");
+                                                              completeOrder(
+                                                                  index);
+                                                            } else {
+                                                              //print(response.body);
+                                                              Get.snackbar(
+                                                                "Error!".tr,
+                                                                "Record not completed"
+                                                                    .tr,
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                              );
+                                                            }
                                                           },
                                                         );
-                                                        if (response.statusCode ==
-                                                            200) {
-                                                          //print("done!");
-                                                          completeOrder(index);
-                                                        } else {
-                                                          //print(response.body);
-                                                          Get.snackbar(
-                                                            "Error!".tr,
-                                                            "Record not completed".tr,
-                                                            icon: const Icon(
-                                                              Icons.error,
-                                                              color: Colors.red,
-                                                            ),
-                                                          );
-                                                        }
                                                       },
-                                                    );
-                                                  },
-                                                ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ));
+                                ));
                           },
                         )
                       : const Center(child: CircularProgressIndicator()),
@@ -459,7 +541,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("SALES ORDERS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("SALES ORDERS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -487,8 +570,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                         ),
                       ),
                     ),
-                    
-                    
                   ],
                 ),
                 Row(
@@ -533,7 +614,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -554,220 +635,266 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           shrinkWrap: true,
                           itemCount: controller.trx.rowcount,
                           itemBuilder: (BuildContext context, int index) {
-                            return Obx (() => Visibility(
-                              visible: controller.searchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.dropdownValue.value == "1"
-                                        ? controller.trx.records![index].documentNo
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(controller
-                                                .searchFilterValue.value
-                                                .toLowerCase())
-                                    : controller.dropdownValue.value == "2"
-                                            ? (controller
-                                                .trx.records![index].cBPartnerID?.identifier?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .searchFilterValue.value
-                                                    .toLowerCase()): true,
-                            
-                              child: Card(
-                                elevation: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: ExpansionTile(
-                                    trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.article,
-                                        color: controller.trx.records![index]
-                                                    .docStatus?.id ==
-                                                "CO"
-                                            ? Colors.green
-                                            : Colors.yellow,
-                                      ),
-                                      onPressed: () {
-                                        Get.toNamed('/SalesOrderLine',
-                                            arguments: {
-                                              "id": controller
-                                                  .trx.records![index].id,
-                                              "bPartner": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.identifier,
-                                              "docNo": controller
-                                                  .trx.records![index].documentNo,
-                                              "priceListId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mPriceListID
-                                                  ?.id,
-                                              "dateOrdered": controller.trx
-                                                  .records![index].dateOrdered,
-                                            });
-                                      },
-                                    ),
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding: const EdgeInsets.only(right: 12.0),
+                            return Obx(() => Visibility(
+                                  visible: controller.searchFilterValue.value ==
+                                          ""
+                                      ? true
+                                      : controller.dropdownValue.value == "1"
+                                          ? controller
+                                              .trx.records![index].documentNo
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .searchFilterValue.value
+                                                  .toLowerCase())
+                                          : controller.dropdownValue.value ==
+                                                  "2"
+                                              ? (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier ??
+                                                      "")
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .searchFilterValue.value
+                                                      .toLowerCase())
+                                              : true,
+                                  child: Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
                                       decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.edit,
-                                        ),
-                                        tooltip: 'Edit Sales Order'.tr,
-                                        onPressed: () {
-                                          //log("info button pressed");
-                                          Get.to(const CRMEditSalesOrder(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "docNo": controller
-                                                  .trx.records![index].documentNo,
-                                            "docTypeTargetId": controller.trx.records![index].cDocTypeTargetID!.id,
-                                            "BPartnerLocationId": controller.trx.records![index].cBPartnerLocationID!.id,
-                                            "bPartnerId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.id,
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-                            
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.handshake,
-                                            color: Colors.yellowAccent),
-                                        Expanded(
-                                          child: Text(
-                                            controller.trx.records![index]
-                                                    .cBPartnerID!.identifier ??
-                                                "??",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Amount: ".tr,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "€${controller.trx.records![index].grandTotal}"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Visibility(
-                                                visible: controller
+                                          color:
+                                              Color.fromRGBO(64, 75, 96, .9)),
+                                      child: ExpansionTile(
+                                        trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.article,
+                                            color: controller
                                                         .trx
                                                         .records![index]
                                                         .docStatus
-                                                        ?.id !=
-                                                    'CO',
-                                                child: ElevatedButton(
-                                                  child: Text("Complete".tr),
-                                                  style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty.all(
-                                                            Colors.green),
+                                                        ?.id ==
+                                                    "CO"
+                                                ? Colors.green
+                                                : Colors.yellow,
+                                          ),
+                                          onPressed: () {
+                                            Get.toNamed('/SalesOrderLine',
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "bPartner": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier,
+                                                  "docNo": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .documentNo,
+                                                  "priceListId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mPriceListID
+                                                      ?.id,
+                                                  "dateOrdered": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateOrdered,
+                                                });
+                                          },
+                                        ),
+                                        tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        leading: Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                            ),
+                                            tooltip: 'Edit Sales Order'.tr,
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                              Get.to(const CRMEditSalesOrder(),
+                                                  arguments: {
+                                                    "id": controller
+                                                        .trx.records![index].id,
+                                                    "docNo": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .documentNo,
+                                                    "docTypeTargetId":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeTargetID!
+                                                            .id,
+                                                    "BPartnerLocationId":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cBPartnerLocationID!
+                                                            .id,
+                                                    "bPartnerId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.id,
+                                                  });
+                                            },
+                                          ),
+                                        ),
+                                        title: Text(
+                                          "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Row(
+                                          children: <Widget>[
+                                            const Icon(Icons.handshake,
+                                                color: Colors.yellowAccent),
+                                            Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID!
+                                                        .identifier ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        childrenPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 10.0),
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
-                                                  onPressed: () async {
-                                                    Get.defaultDialog(
-                                                      title: 'Complete Action',
-                                                      content: const Text(
-                                                          "Are you sure you want to complete the record?"),
-                                                      onCancel: () {},
-                                                      onConfirm: () async {
-                                                        final ip = GetStorage()
-                                                            .read('ip');
-                                                        String authorization =
-                                                            'Bearer ' +
+                                                  Text(
+                                                      "€${controller.trx.records![index].grandTotal}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Visibility(
+                                                    visible: controller
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id !=
+                                                        'CO',
+                                                    child: ElevatedButton(
+                                                      child:
+                                                          Text("Complete".tr),
+                                                      style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .green),
+                                                      ),
+                                                      onPressed: () async {
+                                                        Get.defaultDialog(
+                                                          title:
+                                                              'Complete Action',
+                                                          content: const Text(
+                                                              "Are you sure you want to complete the record?"),
+                                                          onCancel: () {},
+                                                          onConfirm: () async {
+                                                            final ip =
+                                                                GetStorage()
+                                                                    .read('ip');
+                                                            String
+                                                                authorization =
+                                                                'Bearer ' +
+                                                                    GetStorage()
+                                                                        .read(
+                                                                            'token');
+                                                            final msg =
+                                                                jsonEncode({
+                                                              "DocAction": "CO",
+                                                            });
+                                                            final protocol =
                                                                 GetStorage().read(
-                                                                    'token');
-                                                        final msg = jsonEncode({
-                                                          "DocAction": "CO",
-                                                        });
-                                                        final protocol =
-                                                            GetStorage()
-                                                                .read('protocol');
-                                                        var url = Uri.parse(
-                                                            '$protocol://' +
-                                                                ip +
-                                                                '/api/v1/models/c_order/${controller.trx.records![index].id}');
-                            
-                                                        var response =
-                                                            await http.put(
-                                                          url,
-                                                          body: msg,
-                                                          headers: <String,
-                                                              String>{
-                                                            'Content-Type':
-                                                                'application/json',
-                                                            'Authorization':
-                                                                authorization,
+                                                                    'protocol');
+                                                            var url = Uri.parse(
+                                                                '$protocol://' +
+                                                                    ip +
+                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
+
+                                                            var response =
+                                                                await http.put(
+                                                              url,
+                                                              body: msg,
+                                                              headers: <String,
+                                                                  String>{
+                                                                'Content-Type':
+                                                                    'application/json',
+                                                                'Authorization':
+                                                                    authorization,
+                                                              },
+                                                            );
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                              //print("done!");
+                                                              completeOrder(
+                                                                  index);
+                                                            } else {
+                                                              //print(response.body);
+                                                              Get.snackbar(
+                                                                "Error!".tr,
+                                                                "Record not completed"
+                                                                    .tr,
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                              );
+                                                            }
                                                           },
                                                         );
-                                                        if (response.statusCode ==
-                                                            200) {
-                                                          //print("done!");
-                                                          completeOrder(index);
-                                                        } else {
-                                                          //print(response.body);
-                                                          Get.snackbar(
-                                                            "Error!".tr,
-                                                            "Record not completed".tr,
-                                                            icon: const Icon(
-                                                              Icons.error,
-                                                              color: Colors.red,
-                                                            ),
-                                                          );
-                                                        }
                                                       },
-                                                    );
-                                                  },
-                                                ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ));
+                                ));
                           },
                         )
                       : const Center(child: CircularProgressIndicator()),
@@ -787,7 +914,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("SALES ORDERS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("SALES ORDERS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -815,8 +943,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                         ),
                       ),
                     ),
-                    
-                    
                   ],
                 ),
                 Row(
@@ -861,7 +987,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -882,220 +1008,266 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           shrinkWrap: true,
                           itemCount: controller.trx.rowcount,
                           itemBuilder: (BuildContext context, int index) {
-                            return Obx (() => Visibility(
-                              visible: controller.searchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.dropdownValue.value == "1"
-                                        ? controller.trx.records![index].documentNo
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(controller
-                                                .searchFilterValue.value
-                                                .toLowerCase())
-                                    : controller.dropdownValue.value == "2"
-                                            ? (controller
-                                                .trx.records![index].cBPartnerID?.identifier?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .searchFilterValue.value
-                                                    .toLowerCase()): true,
-                            
-                              child: Card(
-                                elevation: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: ExpansionTile(
-                                    trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.article,
-                                        color: controller.trx.records![index]
-                                                    .docStatus?.id ==
-                                                "CO"
-                                            ? Colors.green
-                                            : Colors.yellow,
-                                      ),
-                                      onPressed: () {
-                                        Get.toNamed('/SalesOrderLine',
-                                            arguments: {
-                                              "id": controller
-                                                  .trx.records![index].id,
-                                              "bPartner": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.identifier,
-                                              "docNo": controller
-                                                  .trx.records![index].documentNo,
-                                              "priceListId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mPriceListID
-                                                  ?.id,
-                                              "dateOrdered": controller.trx
-                                                  .records![index].dateOrdered,
-                                            });
-                                      },
-                                    ),
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding: const EdgeInsets.only(right: 12.0),
+                            return Obx(() => Visibility(
+                                  visible: controller.searchFilterValue.value ==
+                                          ""
+                                      ? true
+                                      : controller.dropdownValue.value == "1"
+                                          ? controller
+                                              .trx.records![index].documentNo
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .searchFilterValue.value
+                                                  .toLowerCase())
+                                          : controller.dropdownValue.value ==
+                                                  "2"
+                                              ? (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier ??
+                                                      "")
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .searchFilterValue.value
+                                                      .toLowerCase())
+                                              : true,
+                                  child: Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
                                       decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.edit,
-                                        ),
-                                        tooltip: 'Edit Sales Order'.tr,
-                                        onPressed: () {
-                                          //log("info button pressed");
-                                          Get.to(const CRMEditSalesOrder(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "docNo": controller
-                                                  .trx.records![index].documentNo,
-                                            "docTypeTargetId": controller.trx.records![index].cDocTypeTargetID!.id,
-                                            "BPartnerLocationId": controller.trx.records![index].cBPartnerLocationID!.id,
-                                            "bPartnerId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.id,
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-                            
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.handshake,
-                                            color: Colors.yellowAccent),
-                                        Expanded(
-                                          child: Text(
-                                            controller.trx.records![index]
-                                                    .cBPartnerID!.identifier ??
-                                                "??",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Amount: ".tr,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "€${controller.trx.records![index].grandTotal}"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Visibility(
-                                                visible: controller
+                                          color:
+                                              Color.fromRGBO(64, 75, 96, .9)),
+                                      child: ExpansionTile(
+                                        trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.article,
+                                            color: controller
                                                         .trx
                                                         .records![index]
                                                         .docStatus
-                                                        ?.id !=
-                                                    'CO',
-                                                child: ElevatedButton(
-                                                  child: Text("Complete".tr),
-                                                  style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty.all(
-                                                            Colors.green),
+                                                        ?.id ==
+                                                    "CO"
+                                                ? Colors.green
+                                                : Colors.yellow,
+                                          ),
+                                          onPressed: () {
+                                            Get.toNamed('/SalesOrderLine',
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "bPartner": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier,
+                                                  "docNo": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .documentNo,
+                                                  "priceListId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mPriceListID
+                                                      ?.id,
+                                                  "dateOrdered": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateOrdered,
+                                                });
+                                          },
+                                        ),
+                                        tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        leading: Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                            ),
+                                            tooltip: 'Edit Sales Order'.tr,
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                              Get.to(const CRMEditSalesOrder(),
+                                                  arguments: {
+                                                    "id": controller
+                                                        .trx.records![index].id,
+                                                    "docNo": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .documentNo,
+                                                    "docTypeTargetId":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeTargetID!
+                                                            .id,
+                                                    "BPartnerLocationId":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cBPartnerLocationID!
+                                                            .id,
+                                                    "bPartnerId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.id,
+                                                  });
+                                            },
+                                          ),
+                                        ),
+                                        title: Text(
+                                          "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Row(
+                                          children: <Widget>[
+                                            const Icon(Icons.handshake,
+                                                color: Colors.yellowAccent),
+                                            Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID!
+                                                        .identifier ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        childrenPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 10.0),
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
-                                                  onPressed: () async {
-                                                    Get.defaultDialog(
-                                                      title: 'Complete Action',
-                                                      content: const Text(
-                                                          "Are you sure you want to complete the record?"),
-                                                      onCancel: () {},
-                                                      onConfirm: () async {
-                                                        final ip = GetStorage()
-                                                            .read('ip');
-                                                        String authorization =
-                                                            'Bearer ' +
+                                                  Text(
+                                                      "€${controller.trx.records![index].grandTotal}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Visibility(
+                                                    visible: controller
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id !=
+                                                        'CO',
+                                                    child: ElevatedButton(
+                                                      child:
+                                                          Text("Complete".tr),
+                                                      style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .green),
+                                                      ),
+                                                      onPressed: () async {
+                                                        Get.defaultDialog(
+                                                          title:
+                                                              'Complete Action',
+                                                          content: const Text(
+                                                              "Are you sure you want to complete the record?"),
+                                                          onCancel: () {},
+                                                          onConfirm: () async {
+                                                            final ip =
+                                                                GetStorage()
+                                                                    .read('ip');
+                                                            String
+                                                                authorization =
+                                                                'Bearer ' +
+                                                                    GetStorage()
+                                                                        .read(
+                                                                            'token');
+                                                            final msg =
+                                                                jsonEncode({
+                                                              "DocAction": "CO",
+                                                            });
+                                                            final protocol =
                                                                 GetStorage().read(
-                                                                    'token');
-                                                        final msg = jsonEncode({
-                                                          "DocAction": "CO",
-                                                        });
-                                                        final protocol =
-                                                            GetStorage()
-                                                                .read('protocol');
-                                                        var url = Uri.parse(
-                                                            '$protocol://' +
-                                                                ip +
-                                                                '/api/v1/models/c_order/${controller.trx.records![index].id}');
-                            
-                                                        var response =
-                                                            await http.put(
-                                                          url,
-                                                          body: msg,
-                                                          headers: <String,
-                                                              String>{
-                                                            'Content-Type':
-                                                                'application/json',
-                                                            'Authorization':
-                                                                authorization,
+                                                                    'protocol');
+                                                            var url = Uri.parse(
+                                                                '$protocol://' +
+                                                                    ip +
+                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
+
+                                                            var response =
+                                                                await http.put(
+                                                              url,
+                                                              body: msg,
+                                                              headers: <String,
+                                                                  String>{
+                                                                'Content-Type':
+                                                                    'application/json',
+                                                                'Authorization':
+                                                                    authorization,
+                                                              },
+                                                            );
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                              //print("done!");
+                                                              completeOrder(
+                                                                  index);
+                                                            } else {
+                                                              //print(response.body);
+                                                              Get.snackbar(
+                                                                "Error!".tr,
+                                                                "Record not completed"
+                                                                    .tr,
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                              );
+                                                            }
                                                           },
                                                         );
-                                                        if (response.statusCode ==
-                                                            200) {
-                                                          //print("done!");
-                                                          completeOrder(index);
-                                                        } else {
-                                                          //print(response.body);
-                                                          Get.snackbar(
-                                                            "Error!".tr,
-                                                            "Record not completed".tr,
-                                                            icon: const Icon(
-                                                              Icons.error,
-                                                              color: Colors.red,
-                                                            ),
-                                                          );
-                                                        }
                                                       },
-                                                    );
-                                                  },
-                                                ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ));
+                                ));
                           },
                         )
                       : const Center(child: CircularProgressIndicator()),
