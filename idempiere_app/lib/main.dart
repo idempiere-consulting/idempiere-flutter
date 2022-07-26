@@ -21,6 +21,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens
 import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm_payment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/views/screens/crm_sales_order_creation_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_sales_order_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_screen.dart';
@@ -190,6 +191,11 @@ class MyApp extends StatelessWidget {
           name: '/SalesOrder',
           page: () => const CRMSalesOrderScreen(),
           binding: CRMSalesOrderBinding(),
+        ),
+        GetPage(
+          name: '/SalesOrderCreation',
+          page: () => const CRMSalesOrderCreationScreen(),
+          binding: CRMSalesOrderCreationBinding(),
         ),
         GetPage(
           name: '/SalesOrderLine',

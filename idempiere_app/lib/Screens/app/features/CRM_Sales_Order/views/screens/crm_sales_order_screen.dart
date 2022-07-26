@@ -12,7 +12,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/views/screens/crm_sales_order_creation_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -144,7 +143,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                       child: IconButton(
                         onPressed: () {
                           //controller.getSalesOrders();
-                          Get.to(const CRMSalesOrderCreationScreen());
+                          Get.toNamed('/SalesOrderCreation');
                         },
                         icon: const Icon(
                           Icons.add,

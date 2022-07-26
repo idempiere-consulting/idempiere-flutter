@@ -63,12 +63,13 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -84,7 +85,8 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ".tr + controller.trx.rowcount.toString())
+                          ? Text("Product List: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("Product List: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -128,7 +130,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                               }
                             }
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -174,7 +176,8 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ".tr + controller.trx.rowcount.toString())
+                          ? Text("Product List: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("Product List: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -218,7 +221,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                               }
                             }
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -264,7 +267,8 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ".tr + controller.trx.rowcount.toString())
+                          ? Text("Product List: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("Product List: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -308,7 +312,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                               }
                             }
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -530,6 +534,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
         onTap: () {
           Get.to(const ProductListDetail(), arguments: {
             "id": controller.trx.records![index].id,
+            "add": false,
           });
         },
         child: Card(

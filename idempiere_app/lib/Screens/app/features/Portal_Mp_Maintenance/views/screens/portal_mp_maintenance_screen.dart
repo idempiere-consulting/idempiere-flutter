@@ -49,9 +49,10 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class PortalMpMaintenanceMpScreen extends GetView<PortalMpMaintenanceMpController> {
+class PortalMpMaintenanceMpScreen
+    extends GetView<PortalMpMaintenanceMpController> {
   const PortalMpMaintenanceMpScreen({Key? key}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     controller.getMPMaintain();
@@ -213,7 +214,7 @@ class PortalMpMaintenanceMpScreen extends GetView<PortalMpMaintenanceMpControlle
                                         fontWeight: FontWeight.bold),
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-                                          
+
                                   subtitle: Row(
                                     children: <Widget>[
                                       const Icon(Icons.event),
@@ -269,9 +270,9 @@ class PortalMpMaintenanceMpScreen extends GetView<PortalMpMaintenanceMpControlle
                                             ), */
                                             Icon(Icons.location_pin,
                                                 color: Colors.red.shade700),
-                                            Expanded(
+                                            const Expanded(
                                               child: Text(
-                                                  ""),//"${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                                  ""), //"${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                             ),
                                           ],
                                         ),
@@ -496,7 +497,7 @@ class PortalMpMaintenanceMpScreen extends GetView<PortalMpMaintenanceMpControlle
                                         fontWeight: FontWeight.bold),
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-                                          
+
                                   subtitle: Row(
                                     children: <Widget>[
                                       const Icon(Icons.event),
@@ -552,9 +553,9 @@ class PortalMpMaintenanceMpScreen extends GetView<PortalMpMaintenanceMpControlle
                                             ), */
                                             Icon(Icons.location_pin,
                                                 color: Colors.red.shade700),
-                                            Expanded(
+                                            const Expanded(
                                               child: Text(
-                                                  ""),//"${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                                  ""), //"${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                             ),
                                           ],
                                         ),
@@ -700,172 +701,253 @@ class PortalMpMaintenanceMpScreen extends GetView<PortalMpMaintenanceMpControlle
                       //height: kSpacing,
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width / 2,
-                      child: 
-                        Obx( () => controller.dataAvailable ? 
-                          Scrollbar(
-                            child: ListView.builder(
-                              primary: false,
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: controller.trx.rowcount,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Card(
-                                  elevation: 8.0,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                    child: ExpansionTile(
-                                      trailing: IconButton(
-                                        icon: const Icon(
-                                          Icons.article,
-                                          color: Colors.green,
-                                        ),
-                                        onPressed: () {
-                                          GetStorage().write('selectedMaintainID', 
-                                            controller.trx.records![index].id.toString());
-                                          controller.getTasks();
-                                        }),
-                                      title: Text(
-                                        "DocumentNo".tr + " " +
-                                        controller.trx.records![index].documentNo! ?? '???',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                      ),
-                                      subtitle: 
-                                      Expanded(
-                                        child: Column(
-                                          children: <Widget>[
-                                            Row(
-                                              children: [
-                                                Text("Business Partner".tr + ": ",),
-                                                Text(controller.trx.records![index].cBPartnerID?.identifier ?? "???",
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold
-                                                )),
-                                              ],
-                                            ),
-                                            const SizedBox(width: 50 /* MediaQuery.of(context).size.width / 10, */),
-                                            Row(
-                                              children: [
-                                                Text('Business Partner Location'.tr + ': '),
-                                                Text(controller.trx.records![index].cBPartnerLocationID?.identifier ?? '???',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold
-                                                  )
+                      child: Obx(
+                        () => controller.dataAvailable
+                            ? Scrollbar(
+                                child: ListView.builder(
+                                  primary: false,
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: controller.trx.rowcount,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Card(
+                                      elevation: 8.0,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 10.0, vertical: 6.0),
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                            color:
+                                                Color.fromRGBO(64, 75, 96, .9)),
+                                        child: ExpansionTile(
+                                          trailing: IconButton(
+                                              icon: const Icon(
+                                                Icons.article,
+                                                color: Colors.green,
+                                              ),
+                                              onPressed: () {
+                                                GetStorage().write(
+                                                    'selectedMaintainID',
+                                                    controller
+                                                        .trx.records![index].id
+                                                        .toString());
+                                                controller.getTasks();
+                                              }),
+                                          title: Text(
+                                            "DocumentNo".tr +
+                                                " " +
+                                                controller.trx.records![index]
+                                                    .documentNo!,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: Expanded(
+                                            child: Column(
+                                              children: <Widget>[
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Business Partner".tr +
+                                                          ": ",
+                                                    ),
+                                                    Text(
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.identifier ??
+                                                            "???",
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                  ],
+                                                ),
+                                                const SizedBox(
+                                                    width:
+                                                        50 /* MediaQuery.of(context).size.width / 10, */),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                        'Business Partner Location'
+                                                                .tr +
+                                                            ': '),
+                                                    Text(
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cBPartnerLocationID
+                                                                ?.identifier ??
+                                                            '???',
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                  ],
                                                 ),
                                               ],
                                             ),
-                                        ],
-                                        
-                                                                          ),
-                                      ),
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      children: [
-                                        Column(
+                                          ),
+                                          childrenPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 20.0,
+                                                  vertical: 10.0),
                                           children: [
-                                            Row(
+                                            Column(
                                               children: [
-                                                Text('Organization'.tr + ': '),
-                                                Text(controller.trx.records![index].aDOrgID?.identifier ?? '???')
+                                                Row(
+                                                  children: [
+                                                    Text('Organization'.tr +
+                                                        ': '),
+                                                    Text(controller
+                                                            .trx
+                                                            .records![index]
+                                                            .aDOrgID
+                                                            ?.identifier ??
+                                                        '???')
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text('Bill Business Partner'
+                                                            .tr +
+                                                        ': '),
+                                                    Text(controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cBPartnerLocationID
+                                                            ?.identifier ??
+                                                        '???')
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text('Date Next Run'.tr +
+                                                        ': '),
+                                                    Text(controller
+                                                            .trx
+                                                            .records![index]
+                                                            .dateNextRun ??
+                                                        '')
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text('Date Last Run'.tr +
+                                                        ': '),
+                                                    Text(
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .dateLastRun ??
+                                                          '',
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                        'ContractNo'.tr + ': '),
+                                                    /* Text(controller.trx.records![index].cContractID?.identifier ?? '??') */
+                                                  ],
+                                                ),
                                               ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text('Bill Business Partner'.tr + ': '),
-                                                Text(controller.trx.records![index].cBPartnerLocationID?.identifier ?? '???')
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text('Date Next Run'.tr + ': '),
-                                                Text(controller.trx.records![index].dateNextRun ?? '')
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text('Date Last Run'.tr + ': '),
-                                                Text(controller.trx.records![index].dateLastRun ?? '',)
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text('ContractNo'.tr + ': '),
-                                                /* Text(controller.trx.records![index].cContractID?.identifier ?? '??') */
-                                              ],
-                                            ),
+                                            )
                                           ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ):
-                          const Center(child: CircularProgressIndicator()),
-                        ),
-                    ), 
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            : const Center(child: CircularProgressIndicator()),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 1.0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.height,
-                          child: 
-                          Obx( () => controller.dataAvailable1 ? 
-                            Container(
-                              color: const Color.fromRGBO(64, 75, 96, .9),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width / 3,
-                                    child: Column(
-                                      children: [ 
-                                        Text('DocumentNo'.tr),
-                                        const SizedBox(height: 10,),
-                                        Text('Line'.tr),
-                                      ]),
-                                  ),
-                                    
-                                  Column(
-                                    children: [
-                                      Container(
-                                        alignment: Alignment.topLeft,
-                                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 3),
-                                        decoration: const ShapeDecoration(
-                                          shape: StadiumBorder(
-                                            side: BorderSide(width: 0.5, color: Colors.white),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          controller.trx1.records![0].mPMaintainID?.identifier ?? '',
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 3),
-                                        decoration: const ShapeDecoration(
-                                          shape: StadiumBorder(
-                                            side: BorderSide(width: 0.5, color: Colors.white),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          controller.trx1.records![0].line.toString() ?? '',
-                                        ),
-                                      ),
-                                    ],
-                              )],
-                              ),
-                            ):  Text('No Maintenance Selected')
-                            
-                            /* Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width / 2,
+                                height: MediaQuery.of(context).size.height,
+                                child: Obx(() => controller.dataAvailable1
+                                        ? Container(
+                                            color: const Color.fromRGBO(
+                                                64, 75, 96, .9),
+                                            child: Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      3,
+                                                  child: Column(children: [
+                                                    Text('DocumentNo'.tr),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text('Line'.tr),
+                                                  ]),
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.topLeft,
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 50,
+                                                          vertical: 3),
+                                                      decoration:
+                                                          const ShapeDecoration(
+                                                        shape: StadiumBorder(
+                                                          side: BorderSide(
+                                                              width: 0.5,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        controller
+                                                                .trx1
+                                                                .records![0]
+                                                                .mPMaintainID
+                                                                ?.identifier ??
+                                                            '',
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 50,
+                                                          vertical: 3),
+                                                      decoration:
+                                                          const ShapeDecoration(
+                                                        shape: StadiumBorder(
+                                                          side: BorderSide(
+                                                              width: 0.5,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        controller.trx1
+                                                            .records![0].line
+                                                            .toString(),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        : const Text('No Maintenance Selected')
+
+                                    /* Column(
                               
                               children: [
                                 Card(
@@ -894,7 +976,7 @@ class PortalMpMaintenanceMpScreen extends GetView<PortalMpMaintenanceMpControlle
                                 ),
                               ],
                             ) */
-                                /* Row(
+                                    /* Row(
                                   children: [
                                     Text('DocumentNo'.tr),
                                        Container(
@@ -925,12 +1007,10 @@ class PortalMpMaintenanceMpScreen extends GetView<PortalMpMaintenanceMpControlle
                                         ),
                                       ),
                                   ],
-                                ) */ 
-                            //Text(controller.trx1.records![0].mPMaintainID?.identifier ?? '') : Text('No Maintenance Selected')
-                          ) 
-                        ),
-                  ]
-                  ),
+                                ) */
+                                    //Text(controller.trx1.records![0].mPMaintainID?.identifier ?? '') : Text('No Maintenance Selected')
+                                    )),
+                          ]),
                     )
                   ],
                 )

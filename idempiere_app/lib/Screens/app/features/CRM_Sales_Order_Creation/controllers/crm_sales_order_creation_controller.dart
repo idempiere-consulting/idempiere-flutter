@@ -2,23 +2,32 @@ part of dashboard;
 
 class CRMSalesOrderCreationController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late LeadJson _trx;
+  late ProductListJson _trx;
   //var _hasMailSupport = false;
-
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
+  var docTypeFlag = false.obs;
+  int businessPartnerId = 0;
+  var businessPartnerName = "".obs;
+
+  List<ProductListJson> productList = [];
 
   var value = "Tutti".obs;
 
-  var filters = ["Tutti", "Miei" /* , "Team" */];
-  var filterCount = 0;
+  var filters = [
+    "1. BP and Doc Type",
+    "2. Products",
+    "3. Checkout",
+    "4. Payment"
+  ];
+  var filterCount = 0.obs;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
 
-  late List<Types> dropDownList;
+  late List<Records> dropDownList;
   var dropdownValue = "1".obs;
 
   final json = {
@@ -29,54 +38,57 @@ class CRMSalesOrderCreationController extends GetxController {
     ]
   };
 
+  get displayStringForOption => _displayStringForOption;
+
   List<Types>? getTypes() {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types;
   }
 
-  /* @override
+  changeFilterPlus() {
+    if (filterCount < 3) {
+      filterCount.value++;
+      value.value = filters[filterCount.value];
+    }
+    //print(object);
+
+    //value.value = filters[filterCount];
+  }
+
+  changeFilterMinus() {
+    if (filterCount > 0) {
+      filterCount.value--;
+      value.value = filters[filterCount.value];
+    }
+
+    //value.value = filters[filterCount];
+  }
+
+  @override
   void onInit() {
     //dropDownList = getTypes()!;
     super.onInit();
-
+    getProductLists();
+    getDocTypes();
     //getLeads();
     //getADUserID();
     //adUserId = GetStorage().read('userId');
-  } */
-
-  bool get dataAvailable => _dataAvailable.value;
-  LeadJson get trx => _trx;
-  //String get value => _value.toString();
-
-  changeFilter() {
-    filterCount++;
-    if (filterCount == 2) {
-      filterCount = 0;
-    }
-
-    value.value = filters[filterCount];
-    getLeads();
   }
 
-  Future<void> getLeads() async {
-    _dataAvailable.value = false;
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
-    var notificationFilter = "";
-    if (Get.arguments != null) {
-      if (Get.arguments['notificationId'] != null) {
-        notificationFilter =
-            " and AD_User_ID eq ${Get.arguments['notificationId']}";
-        Get.arguments['notificationId'] = null;
-      }
-    }
-    _dataAvailable.value = false;
+  bool get dataAvailable => _dataAvailable.value;
+  ProductListJson get trx => _trx;
+  //String get value => _value.toString();
+
+  static String _displayStringForOption(BPRecords option) => option.name!;
+
+  Future<void> getBusinessPartner() async {
+    var userId = GetStorage().read("userId");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
+    var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
+        '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -86,11 +98,115 @@ class CRMSalesOrderCreationController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = LeadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      var json = jsonDecode(response.body);
+      try {
+        businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+      } catch (e) {
+        if (kDebugMode) {
+          print("no bp");
+        }
+      }
+
+      try {
+        businessPartnerName.value =
+            json["records"][0]["C_BPartner_ID"]["identifier"];
+      } catch (e) {
+        if (kDebugMode) {
+          print("no bp");
+        }
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<List<BPRecords>> getAllBPs() async {
+    //await getBusinessPartner();
+    //print(response.body);
+    var jsondecoded = jsonDecode(GetStorage().read('businessPartnerSync'));
+
+    var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    return jsonbps.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<void> getDocTypes() async {
+    docTypeFlag.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_DocType?\$filter= DocBaseType eq \'SOO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          DocTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      var check = true;
+      for (var element in json.records!) {
+        //print(element.id);
+        if (element.isDefault == true) {
+          dropdownValue.value = element.id.toString();
+          check = false;
+          //print("Dropdown: ${dropdownValue.value}");
+        }
+      }
+
+      if (check) {
+        dropdownValue.value = json.records![0].id.toString();
+      }
+
+      dropDownList = json.records!;
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+      docTypeFlag.value = true;
+    }
+  }
+
+  Future<void> getProductLists() async {
+    _dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_product_list_v?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      _trx =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
