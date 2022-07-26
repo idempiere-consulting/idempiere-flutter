@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +18,8 @@ class ProductListDetail extends StatefulWidget {
   State<ProductListDetail> createState() => _ProductListDetailState();
 }
 
-class _ProductListDetailState extends State<ProductListDetail> {
+class _ProductListDetailState extends State<ProductListDetail>
+    with TickerProviderStateMixin {
   Future<void> getProduct() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -74,12 +76,16 @@ class _ProductListDetailState extends State<ProductListDetail> {
   // ignore: prefer_typing_uninitialized_variables
   var flagVisible;
 
+  // ignore: prefer_typing_uninitialized_variables
+  late TabController imagesController;
+
   @override
   void initState() {
     flagVisible = false;
     flagAvailable = false;
-    super.initState();
 
+    super.initState();
+    imagesController = TabController(length: 3, vsync: this);
     nameFieldController = TextEditingController();
     valueFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
@@ -101,79 +107,7 @@ class _ProductListDetailState extends State<ProductListDetail> {
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    controller: valueFieldController,
-                    decoration:  InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: 'Value'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    controller: nameFieldController,
-                    decoration:  InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    controller: descriptionFieldController,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: 'Description'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    controller: helpFieldController,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Help',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: flagVisible,
-                  child: Container(
-                      margin: const EdgeInsets.all(10),
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: flagAvailable
-                            ?  Text("Available".tr)
-                            :  Text("Not Available".tr),
-                        style: ButtonStyle(
-                          backgroundColor: flagAvailable
-                              ? MaterialStateProperty.all(Colors.green)
-                              : MaterialStateProperty.all(Colors.red),
-                        ),
-                      )),
-                ),
-              ],
-            );
+            return _buildProductDetailsPage(context);
           },
           tabletBuilder: (context, constraints) {
             return Column(
@@ -186,7 +120,7 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       labelText: 'Value'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -198,7 +132,7 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -238,8 +172,8 @@ class _ProductListDetailState extends State<ProductListDetail> {
                       child: ElevatedButton(
                         onPressed: () {},
                         child: flagAvailable
-                            ?  Text("Available".tr)
-                            :  Text("Not Available".tr),
+                            ? Text("Available".tr)
+                            : Text("Not Available".tr),
                         style: ButtonStyle(
                           backgroundColor: flagAvailable
                               ? MaterialStateProperty.all(Colors.green)
@@ -261,7 +195,7 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       labelText: 'Value'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -273,7 +207,7 @@ class _ProductListDetailState extends State<ProductListDetail> {
                   child: TextField(
                     readOnly: true,
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -313,8 +247,8 @@ class _ProductListDetailState extends State<ProductListDetail> {
                       child: ElevatedButton(
                         onPressed: () {},
                         child: flagAvailable
-                            ?  Text("Available".tr)
-                            :  Text("Not Available".tr),
+                            ? Text("Available".tr)
+                            : Text("Not Available".tr),
                         style: ButtonStyle(
                           backgroundColor: flagAvailable
                               ? MaterialStateProperty.all(Colors.green)
@@ -326,6 +260,390 @@ class _ProductListDetailState extends State<ProductListDetail> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  _buildProductDetailsPage(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+
+    return ListView(
+      shrinkWrap: true,
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.all(4.0),
+          child: Card(
+            elevation: 4.0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildProductImagesWidgets(),
+                _buildProductTitleWidget(),
+                const SizedBox(height: 12.0),
+                _buildPriceWidgets(),
+                const SizedBox(height: 12.0),
+                _buildDivider(screenSize),
+                const SizedBox(height: 12.0),
+                _buildFurtherInfoWidget(),
+                const SizedBox(height: 12.0),
+                _buildDivider(screenSize),
+                const SizedBox(height: 12.0),
+                /* _buildSizeChartWidgets(),
+                SizedBox(height: 12.0), */
+                _buildDetailsAndMaterialWidgets(),
+                const SizedBox(height: 12.0),
+                /* _buildStyleNoteHeader(), */
+                const SizedBox(height: 6.0),
+                _buildDivider(screenSize),
+                const SizedBox(height: 4.0),
+                /* _buildStyleNoteData(),
+                SizedBox(height: 20.0), */
+                _buildMoreInfoHeader(),
+                const SizedBox(height: 6.0),
+                _buildDivider(screenSize),
+                const SizedBox(height: 4.0),
+                _buildMoreInfoData(),
+                const SizedBox(height: 24.0),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _buildDivider(Size screenSize) {
+    return Column(
+      children: <Widget>[
+        Container(
+          color: Colors.grey[600],
+          width: screenSize.width,
+          height: 0.25,
+        ),
+      ],
+    );
+  }
+
+  _buildProductImagesWidgets() {
+    TabController imagesController = TabController(length: 3, vsync: this);
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        height: 250.0,
+        child: Center(
+          child: DefaultTabController(
+            length: 3,
+            child: Stack(
+              children: <Widget>[
+                TabBarView(
+                  controller: imagesController,
+                  children: <Widget>[
+                    Image.network(
+                      "https://assets.myntassets.com/h_240,q_90,w_180/v1/assets/images/1304671/2016/4/14/11460624898615-Hancock-Men-Shirts-8481460624898035-1_mini.jpg",
+                    ),
+                    Image.network(
+                      "https://n1.sdlcdn.com/imgs/c/9/8/Lambency-Brown-Solid-Casual-Blazers-SDL781227769-1-1b660.jpg",
+                    ),
+                    Image.network(
+                      "https://images-na.ssl-images-amazon.com/images/I/71O0zS0DT0L._UX342_.jpg",
+                    ),
+                  ],
+                ),
+                Container(
+                  alignment: const FractionalOffset(0.5, 0.95),
+                  child: TabPageSelector(
+                    controller: imagesController,
+                    selectedColor: Colors.grey,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildProductTitleWidget() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Center(
+        child: Text(
+          //name,
+          nameFieldController.text,
+          style: const TextStyle(fontSize: 16.0, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  _buildPriceWidgets() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: const <Widget>[
+          Text(
+            "\$899",
+            style: TextStyle(fontSize: 16.0, color: Colors.white),
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          Text(
+            "\$1299",
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Colors.grey,
+              decoration: TextDecoration.lineThrough,
+            ),
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          Text(
+            "30% Off",
+            style: TextStyle(
+              fontSize: 12.0,
+              color: kNotifColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildFurtherInfoWidget() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Row(
+        children: <Widget>[
+          Icon(
+            Icons.local_offer,
+            color: Colors.grey[500],
+          ),
+          const SizedBox(
+            width: 12.0,
+          ),
+          Text(
+            "Tap to get further info",
+            style: TextStyle(
+              color: Colors.grey[500],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildSizeChartWidgets() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.straighten,
+                color: Colors.grey[600],
+              ),
+              const SizedBox(
+                width: 12.0,
+              ),
+              Text(
+                "Size",
+                style: TextStyle(
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+          Text(
+            "SIZE CHART",
+            style: TextStyle(
+              color: Colors.blue[400],
+              fontSize: 12.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildDetailsAndMaterialWidgets() {
+    TabController tabController = TabController(length: 2, vsync: this);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        TabBar(
+          controller: tabController,
+          tabs: const <Widget>[
+            Tab(
+              child: Text(
+                "DETAILS",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Tab(
+              child: Text(
+                "MATERIAL & CARE",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          height: 50.0,
+          child: TabBarView(
+            controller: tabController,
+            children: <Widget>[
+              Text(
+                descriptionFieldController.text,
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              const Text(
+                "86% acrylic, 9% polyster, 1% metallic yarn Hand-wash cold",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /* _buildStyleNoteHeader() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 12.0,
+      ),
+      child: Text(
+        "STYLE NOTE",
+        style: TextStyle(
+          color: Colors.grey[600],
+        ),
+      ),
+    );
+  }
+
+  _buildStyleNoteData() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 12.0,
+      ),
+      child: Text(
+        "Boys dress",
+        style: TextStyle(
+          color: Colors.grey[600],
+        ),
+      ),
+    );
+  } */
+
+  _buildMoreInfoHeader() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 12.0,
+      ),
+      child: Text(
+        "MORE INFO",
+        style: TextStyle(
+          color: Colors.grey[600],
+        ),
+      ),
+    );
+  }
+
+  _buildMoreInfoData() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 12.0,
+        bottom: 12.0,
+      ),
+      child: Text(
+        "Product Code: ${valueFieldController.text}\nTax info: Applicable GST will be charged at the time of chekout",
+        style: TextStyle(
+          color: Colors.grey[500],
+        ),
+      ),
+    );
+  }
+
+  _buildBottomNavigationBar() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 50.0,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: RaisedButton(
+              onPressed: () {},
+              color: Colors.grey,
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    Icon(
+                      Icons.list,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      "SAVE",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Flexible(
+            flex: 2,
+            child: RaisedButton(
+              onPressed: () {},
+              color: Colors.greenAccent,
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    Icon(
+                      Icons.card_travel,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 4.0,
+                    ),
+                    Text(
+                      "ADD TO BAG",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
