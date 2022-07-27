@@ -1,4 +1,4 @@
-part of dashboard;
+/* /* part of dashboard;
 
 class _ActiveProjectCard extends StatelessWidget {
   const _ActiveProjectCard({
@@ -54,3 +54,5 @@ class _ActiveProjectCard extends StatelessWidget {
     );
   }
 }
+ */
+ */

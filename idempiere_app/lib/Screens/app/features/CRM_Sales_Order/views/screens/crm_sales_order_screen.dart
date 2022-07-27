@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+//import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
@@ -45,9 +45,9 @@ part '../../controllers/crm_sales_order_controller.dart';
 part '../../models/profile.dart';
 
 // component
-part '../components/active_project_card.dart';
+//part '../components/active_project_card.dart';
 part '../components/header.dart';
-part '../components/overview_header.dart';
+//part '../components/overview_header.dart';
 part '../components/profile_tile.dart';
 part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
@@ -1354,7 +1354,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
     );
   }
 
-  Widget _buildTaskOverview({
+  /* Widget _buildTaskOverview({
     required List<TaskCardData> data,
     int crossAxisCount = 6,
     int crossAxisCellCount = 2,
@@ -1414,7 +1414,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
         ),
       ),
     );
-  }
+  } */
 
   Widget _buildProfile({required _Profile data}) {
     return Padding(

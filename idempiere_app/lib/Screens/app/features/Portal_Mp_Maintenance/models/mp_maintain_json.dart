@@ -1,3 +1,4 @@
+
 class MPMaintainJson {
   final int? pagecount;
   final int? recordssize;
@@ -48,6 +49,7 @@ class Records {
   final CBPartnerLocationID? cBPartnerLocationID;
   final String? modelname;
   final CContractID? cContractID;
+  final BillBPartnerID? billBPartnerID;
 
   Records({
     this.id,
@@ -68,6 +70,7 @@ class Records {
     this.cBPartnerLocationID,
     this.modelname,
     this.cContractID,
+    this.billBPartnerID,
   });
 
   Records.fromJson(Map<String, dynamic> json)
@@ -87,6 +90,7 @@ class Records {
       aDOrgID = (json['AD_Org_ID'] as Map<String,dynamic>?) != null ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String,dynamic>) : null,
       cBPartnerID = (json['C_BPartner_ID'] as Map<String,dynamic>?) != null ? CBPartnerID.fromJson(json['C_BPartner_ID'] as Map<String,dynamic>) : null,
       cBPartnerLocationID = (json['C_BPartner_Location_ID'] as Map<String,dynamic>?) != null ? CBPartnerLocationID.fromJson(json['C_BPartner_Location_ID'] as Map<String,dynamic>) : null,
+      billBPartnerID = (json['Bill_BPartner_ID'] as Map<String,dynamic>?) != null ? BillBPartnerID.fromJson(json['Bill_BPartner_ID'] as Map <String,dynamic>) : null,
       modelname = json['model-name'] as String?,
       cContractID = (json['C_Contract_ID'] as Map<String,dynamic>?) != null ? CContractID.fromJson(json['C_Contract_ID'] as Map<String,dynamic>) : null;
 
@@ -106,7 +110,8 @@ class Records {
     'AD_Org_ID' : aDOrgID?.toJson(),
     'C_BPartner_ID' : cBPartnerID?.toJson(),
     'C_BPartner_Location_ID' : cBPartnerLocationID?.toJson(),
-    'model-name' : modelname
+    'model-name' : modelname,
+    'Bill_BPartner_ID' : billBPartnerID?.toJson(),
   };
 }
 
@@ -313,6 +318,33 @@ class CBPartnerLocationID {
   });
 
   CBPartnerLocationID.fromJson(Map<String, dynamic> json)
+    : propertyLabel = json['propertyLabel'] as String?,
+      id = json['id'] as int?,
+      identifier = json['identifier'] as String?,
+      modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+    'propertyLabel' : propertyLabel,
+    'id' : id,
+    'identifier' : identifier,
+    'model-name' : modelname
+  };
+}
+
+class BillBPartnerID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  BillBPartnerID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  BillBPartnerID.fromJson(Map<String, dynamic> json)
     : propertyLabel = json['propertyLabel'] as String?,
       id = json['id'] as int?,
       identifier = json['identifier'] as String?,

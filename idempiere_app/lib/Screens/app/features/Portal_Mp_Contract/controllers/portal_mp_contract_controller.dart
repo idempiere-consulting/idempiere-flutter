@@ -2,7 +2,8 @@ part of dashboard;
 
 class PortalMpContractController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late ContractJSON _trx;
+  late PortalMPContractJson _trx;
+  late PortalMPContractLineJson _trx1;
   //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
@@ -21,6 +22,14 @@ class PortalMpContractController extends GetxController {
   var businessPartnerId;
 
   var dropdownValue = "1".obs;
+
+  // ignore: prefer_final_fields
+  var _selectedCard = 0.obs;
+
+  // ignore: prefer_final_fields
+  var _contractId = 0.obs;
+  // ignore: prefer_final_fields
+  var _showData = false.obs;
   
   late List<Types> dropDownList;
 
@@ -48,8 +57,15 @@ class PortalMpContractController extends GetxController {
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  ContractJSON get trx => _trx;
-  //String get value => _value.toString();
+  PortalMPContractJson get trx => _trx;
+  PortalMPContractLineJson get trx1 => _trx1;
+  int get selectedCard => _selectedCard.value;
+  set selectedCard(index) => _selectedCard.value = index;
+
+  int get contractId => _contractId.value;
+  set contractId(id) => _contractId.value = id;
+
+  bool get showData => _showData.value;
 
   changeFilter() {
     filterCount++;
@@ -117,17 +133,15 @@ class PortalMpContractController extends GetxController {
   }
 
   Future<void> getContracts() async {
-    getBusinessPartner();
+    await getBusinessPartner();
     _dataAvailable.value = false;
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
-    _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/C_Contract?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]} and C_BPartner_ID eq $businessPartnerId');
-        //'/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -135,17 +149,39 @@ class PortalMpContractController extends GetxController {
         'Authorization': authorization,
       },
     );
-
     if (response.statusCode == 200) {
-      //print(response.body);
-      _trx = ContractJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      //print(trx.rowcount);
-      //print(response.body);
+      _trx = PortalMPContractJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     }
+
   }
 
+  Future<void> getContractLines() async {
+    _showData.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_ContractLine?\$filter= C_Contract_ID eq $contractId');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      _trx1 = PortalMPContractLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      
+      _showData.value = _trx1.records!.isNotEmpty;
+    } else {
+      _showData.value = false;
+    }
+
+  }
+  
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();

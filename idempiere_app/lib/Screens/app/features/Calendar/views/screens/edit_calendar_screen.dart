@@ -261,7 +261,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
-                      locale: Locale('languageCalendar'.tr),
+                      //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.date,
                       initialValue: date,
                       firstDate: DateTime(2000),
@@ -294,7 +294,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
-                      locale: Locale('languageCalendar'.tr),
+                      //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeStart,
                       firstDate: DateTime(2000),
@@ -325,7 +325,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
-                      locale: Locale('languageCalendar'.tr),
+                      //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeEnd,
                       firstDate: DateTime(2000),
@@ -418,7 +418,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
-                      locale: Locale('languageCalendar'.tr),
+                      //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.date,
                       initialValue: date,
                       firstDate: DateTime(2000),
@@ -451,7 +451,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
-                      locale: Locale('languageCalendar'.tr),
+                      //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeStart,
                       firstDate: DateTime(2000),
@@ -482,7 +482,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
-                      locale: Locale('languageCalendar'.tr),
+                      //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeEnd,
                       firstDate: DateTime(2000),
@@ -575,7 +575,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
-                      locale: Locale('languageCalendar'.tr),
+                      //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.date,
                       initialValue: date,
                       firstDate: DateTime(2000),
@@ -608,7 +608,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
-                      locale: Locale('languageCalendar'.tr),
+                      //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeStart,
                       firstDate: DateTime(2000),
@@ -639,7 +639,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
-                      locale: Locale('languageCalendar'.tr),
+                      //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeEnd,
                       firstDate: DateTime(2000),

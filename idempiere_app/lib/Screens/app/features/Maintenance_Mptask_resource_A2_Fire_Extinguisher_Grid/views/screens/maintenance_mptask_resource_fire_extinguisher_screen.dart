@@ -16,7 +16,7 @@ import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.d
 import 'package:idempiere_app/Screens/app/shared_components/search_field.dart';
 import 'package:idempiere_app/Screens/app/shared_components/selection_button.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
-import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
+//import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 
 import 'package:flutter/material.dart';
@@ -36,9 +36,9 @@ part '../../controllers/maintenance_mptask_resource_fire_extinguisher_controller
 part '../../models/profile.dart';
 
 // component
-part '../components/active_project_card.dart';
+//part '../components/active_project_card.dart';
 part '../components/header.dart';
-part '../components/overview_header.dart';
+//part '../components/overview_header.dart';
 part '../components/profile_tile.dart';
 part '../components/recent_messages.dart';
 part '../components/sidebar.dart';

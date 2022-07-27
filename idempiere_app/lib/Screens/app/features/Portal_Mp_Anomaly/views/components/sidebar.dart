@@ -63,7 +63,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "MaintenanceMptask".tr,
+                  label: "Maintenance".tr,
                 ),
                 //Impianti dettaglio
                 SelectionButtonData(

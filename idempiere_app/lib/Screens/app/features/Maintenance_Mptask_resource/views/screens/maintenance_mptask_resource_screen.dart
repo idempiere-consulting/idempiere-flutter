@@ -39,9 +39,9 @@ part '../../controllers/maintenance_mptask_resource_controller.dart';
 part '../../models/profile.dart';
 
 // component
-part '../components/active_project_card.dart';
+//part '../components/active_project_card.dart';
 part '../components/header.dart';
-part '../components/overview_header.dart';
+//part '../components/overview_header.dart';
 part '../components/profile_tile.dart';
 part '../components/recent_messages.dart';
 part '../components/sidebar.dart';

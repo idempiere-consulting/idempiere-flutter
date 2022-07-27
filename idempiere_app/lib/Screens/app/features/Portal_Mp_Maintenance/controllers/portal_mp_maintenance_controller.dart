@@ -2,8 +2,8 @@ part of dashboard;
 
 class PortalMpMaintenanceMpController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late MPMaintainJson _trx;
-  late MPMaintainTaskJson _trx1;
+  late LitMaintainJson _trx;
+  late MPMaintainResourcesJson _trx1;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
@@ -20,9 +20,19 @@ class PortalMpMaintenanceMpController extends GetxController {
   var _dataAvailable = false.obs;
   // ignore: prefer_final_fields
   var _dataAvailable1 = false.obs;
+  // ignore: prefer_final_fields
+  var _selectedMaintenanceCard = 10000.obs;
+  // ignore: prefer_final_fields
+  var _selectedResourceCard = 10000.obs;
+  // ignore: prefer_final_fields
+  var _showResourceDetails = false.obs;
+  // ignore: prefer_final_fields
+  var _selectedMaintainID = 0.obs;
 
   @override
   void onInit() {
+    maintenanceDropDownList = getMaintenanceTypes()!;
+    resourcesDropDownList = getResourcesTypes()!;
     super.onInit();
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
@@ -32,9 +42,64 @@ class PortalMpMaintenanceMpController extends GetxController {
 
   bool get dataAvailable => _dataAvailable.value;
   bool get dataAvailable1 => _dataAvailable1.value;
-  MPMaintainJson get trx => _trx;
-  MPMaintainTaskJson get trx1 => _trx1;
-  //String get value => _value.toString();
+
+  int get selectedMaintenanceCard => _selectedMaintenanceCard.value;
+  set selectedMaintenanceCard(index) => _selectedMaintenanceCard.value = index;
+
+  int get selectedResourceCard => _selectedResourceCard.value;
+  set selectedResourceCard(index) => _selectedResourceCard.value = index;
+
+  LitMaintainJson get trxMaintain => _trx;
+  MPMaintainResourcesJson get trxResources => _trx1;
+
+  bool get showResourceDetails => _showResourceDetails.value;
+  set showResourceDetails(show) => _showResourceDetails.value = show; 
+  
+  int get selectedMaintainID=> _selectedMaintainID.value;
+  set selectedMaintainID(id) => _selectedMaintainID.value = id; 
+
+  //maintenance filter
+  late List<Types> maintenanceDropDownList;
+  var maintenanceDropdownValue = "1".obs;
+  var maintenanceSearchFieldController = TextEditingController();
+  var maintenanceSearchFilterValue = "".obs;
+
+  //resources filter
+  //filter
+  late List<Types> resourcesDropDownList;
+  var resourcesDropdownValue = "1".obs;
+  var resourcesSearchFieldController = TextEditingController();
+  var resourcesSearchFilterValue = "".obs;
+
+  final maintenanceJson = {
+    "types": [
+      {"id": "1", "name": "DocumentNo".tr},
+      {"id": "2", "name": "Business Partner".tr},
+      {"id": "3", "name": "Billing Partner".tr},
+      {"id": "4", "name": "Organization".tr},
+      {"id": "5", "name": "ContractNo".tr},
+    ]
+  };
+
+  List<Types>? getMaintenanceTypes() {
+    var dJson = TypeJson.fromJson(maintenanceJson);
+
+    return dJson.types;
+  }
+
+  final resourcesJson = {
+    "types": [
+      {"id": "1", "name": "Product".tr},
+      {"id": "2", "name": "Location".tr},
+      {"id": "3", "name": "Code/Position".tr},
+    ]
+  };
+
+  List<Types>? getResourcesTypes() {
+    var dJson = TypeJson.fromJson(resourcesJson);
+
+    return dJson.types;
+  }
 
   changeFilter() {
     filterCount++;
@@ -45,7 +110,7 @@ class PortalMpMaintenanceMpController extends GetxController {
     value.value = filters[filterCount];
   }
 
-  Future<void> getMPMaintain() async {
+/*   Future<void> getMPMaintain() async {
     await getBusinessPartner();
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -62,21 +127,22 @@ class PortalMpMaintenanceMpController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx = MPMaintainJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      //_trx = MPMaintainJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      _dataAvailable1.value = false;
     }
-  }
+  } */
 
-
-  Future<void> getTasks() async {
-    // _dataAvailable1 = false.obs;
-    var maintainId = GetStorage().read('selectedMaintainID');
-    final ip = GetStorage().read('ip');
+  Future<void> getMPMaintain() async {
+    await getBusinessPartner();
+    String ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/MP_Maintain_Task?\$filter= MP_Maintain_ID eq $maintainId');
+        '/api/v1/models/lit_mobile_maintain_bploc_v?\$filter= C_BPartner_ID eq $businessPartnerId'); //?\$filter= C_BPartner_ID eq $businessPartnerId  
 
     var response = await http.get(
       url,
@@ -86,10 +152,36 @@ class PortalMpMaintenanceMpController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx1 = MPMaintainTaskJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      _trx = LitMaintainJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       // ignore: unnecessary_null_comparison
-      _dataAvailable1.value = _trx1 != null; 
+      _dataAvailable.value = _trx != null;
     } else {
+      _dataAvailable1.value = false;
+    }
+  }
+
+  Future<void> getResources() async {
+    // _dataAvailable1 = false.obs;
+    var maintainId = _selectedMaintainID;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/MP_Maintain_Resource?\$filter= MP_Maintain_ID eq $maintainId');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      _trx1 = MPMaintainResourcesJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      _dataAvailable1.value = _trx1.records!.isNotEmpty;
+    } else {
+      _dataAvailable1.value = false;
       //print(response.body);
     }
   }

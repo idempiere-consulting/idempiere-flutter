@@ -1,4 +1,4 @@
-part of dashboard;
+/* /* part of dashboard;
 
 // ignore: unused_element
 class _OverviewHeader extends StatelessWidget {
@@ -124,3 +124,5 @@ class _OverviewHeader extends StatelessWidget {
     );
   }
 }
+ */
+ */

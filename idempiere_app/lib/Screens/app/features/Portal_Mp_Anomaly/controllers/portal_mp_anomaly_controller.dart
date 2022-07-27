@@ -2,7 +2,7 @@ part of dashboard;
 
 class PortalMpAnomalyController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late AnomalyJson _trx;
+  late LitNcJson _trx;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -19,6 +19,12 @@ class PortalMpAnomalyController extends GetxController {
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
 
+  // ignore: prefer_final_fields
+  var _showDetails = false.obs;
+
+  // ignore: prefer_final_fields
+  var _selectedCard = 0.obs;
+
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
@@ -26,7 +32,7 @@ class PortalMpAnomalyController extends GetxController {
     "types": [
       {"id": "1", "name": "Description".tr},
       {"id": "2", "name": "Name".tr},
-      //{"id": "3", "name": "SalesRep".tr},
+      {"id": "3", "name": "Document Date".tr},
     ]
   };
 
@@ -45,9 +51,14 @@ class PortalMpAnomalyController extends GetxController {
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  AnomalyJson get trx => _trx;
-  //String get value => _value.toString();
-
+  LitNcJson get trx => _trx;
+  
+  int get selectedCard => _selectedCard.value;
+  set selectedCard(index) => _selectedCard.value = index;
+  
+  bool get showDetails => _showDetails.value;
+  set showDetails(show) => _showDetails.value = show; 
+  
   changeFilter() {
     filterCount++;
     if (filterCount == 2) {
@@ -115,6 +126,37 @@ class PortalMpAnomalyController extends GetxController {
   }
 
   Future<void> getAnomalies() async {
+    _dataAvailable.value = false;
+    getBusinessPartner();
+    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    _dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mobile_nc_v?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]} ');
+        //and C_BPartner_ID eq $businessPartnerId'
+        //and AD_User_ID eq ${GetStorage().read("userId")}
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      _trx =
+          LitNcJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      _dataAvailable.value = _trx != null;
+    }
+  }
+
+  /* Future<void> getAnomalies() async {
+    _dataAvailable.value = false;
     getBusinessPartner();
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
@@ -133,15 +175,14 @@ class PortalMpAnomalyController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
       _trx =
-          AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+          PortalMPAnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     }
-  }
+  } */
 
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {

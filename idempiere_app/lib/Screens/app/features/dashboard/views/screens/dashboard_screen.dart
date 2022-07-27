@@ -7,7 +7,7 @@ library dashboard;
 import 'dart:convert';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+//import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/Login/login_screen.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -42,9 +42,9 @@ part '../../controllers/dashboard_controller.dart';
 part '../../models/profile.dart';
 
 // component
-part '../components/active_project_card.dart';
+//part '../components/active_project_card.dart';
 part '../components/header.dart';
-part '../components/overview_header.dart';
+//part '../components/overview_header.dart';
 part '../components/profile_tile.dart';
 part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
@@ -377,7 +377,7 @@ class DashboardScreen extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildTaskOverview({
+  /* Widget _buildTaskOverview({
     required List<TaskCardData> data,
     int crossAxisCount = 6,
     int crossAxisCellCount = 2,
@@ -437,7 +437,7 @@ class DashboardScreen extends GetView<DashboardController> {
         ),
       ),
     );
-  }
+  } */
 
   Widget _buildProfile({required _Profile data, required int counter}) {
     return Padding(

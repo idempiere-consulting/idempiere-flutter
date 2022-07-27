@@ -40,9 +40,9 @@ part '../../controllers/crm_product_list_controller.dart';
 part '../../models/profile.dart';
 
 // component
-part '../components/active_project_card.dart';
+//part '../components/active_project_card.dart';
 part '../components/header.dart';
-part '../components/overview_header.dart';
+//part '../components/overview_header.dart';
 part '../components/profile_tile.dart';
 part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
@@ -148,7 +148,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                       ? SizedBox(
                           height: size.height,
                           width: double.infinity,
-                          child: StaggeredGridView.countBuilder(
+                          child: /* StaggeredGridView.countBuilder(
                               shrinkWrap: true,
                               crossAxisCount: 2,
                               itemCount: controller.trx.records?.length ?? 0,
@@ -157,7 +157,19 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                               itemBuilder: (BuildContext context, index) =>
                                   buildImageCard(index),
                               staggeredTileBuilder: (index) =>
-                                  const StaggeredTile.fit(1)),
+                                  const StaggeredTile.fit(1)), */
+                              MasonryGridView.count(
+                                shrinkWrap: true,
+                                itemCount: controller.trx.records?.length ?? 0,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                
+                                itemBuilder: (context, index) {
+                                  return buildImageCard(index);
+                                  
+                                },
+                              )
                         )
                       : const Center(child: CircularProgressIndicator()),
                 ),
@@ -239,16 +251,18 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                       ? SizedBox(
                           height: size.height,
                           width: double.infinity,
-                          child: StaggeredGridView.countBuilder(
-                              shrinkWrap: true,
-                              crossAxisCount: 2,
-                              itemCount: controller.trx.records?.length ?? 0,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                              itemBuilder: (BuildContext context, index) =>
-                                  buildImageCard(index),
-                              staggeredTileBuilder: (index) =>
-                                  const StaggeredTile.fit(1)),
+                          child: MasonryGridView.count(
+                                shrinkWrap: true,
+                                itemCount: controller.trx.records?.length ?? 0,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                
+                                itemBuilder: (context, index) {
+                                  return buildImageCard(index);
+                                  
+                                },
+                              )
                         )
                       : const Center(child: CircularProgressIndicator()),
                 ),
@@ -330,16 +344,18 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                       ? SizedBox(
                           height: size.height,
                           width: double.infinity,
-                          child: StaggeredGridView.countBuilder(
-                              shrinkWrap: true,
-                              crossAxisCount: 2,
-                              itemCount: controller.trx.records?.length ?? 0,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                              itemBuilder: (BuildContext context, index) =>
-                                  buildImageCard(index),
-                              staggeredTileBuilder: (index) =>
-                                  const StaggeredTile.fit(1)),
+                          child: MasonryGridView.count(
+                                shrinkWrap: true,
+                                itemCount: controller.trx.records?.length ?? 0,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                
+                                itemBuilder: (context, index) {
+                                  return buildImageCard(index);
+                                  
+                                },
+                              )
                         )
                       : const Center(child: CircularProgressIndicator()),
                 ),
@@ -426,7 +442,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
     );
   }
 
-  Widget _buildTaskOverview({
+  /* Widget _buildTaskOverview({
     required List<TaskCardData> data,
     int crossAxisCount = 6,
     int crossAxisCellCount = 2,
@@ -486,7 +502,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
         ),
       ),
     );
-  }
+  } */
 
   Widget _buildProfile({required _Profile data}) {
     return Padding(

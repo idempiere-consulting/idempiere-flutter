@@ -4,13 +4,52 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
-  late CourseListJson _trx;
+  // ignore: prefer_final_fields
+  var _dataAvailable1 = false.obs;
+  late CourseListJson _trxCourses;
+  late CourseStudentJson _trxStudents;
   //var passwordFieldController = TextEditingController();
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
 
-  CourseListJson get trx => _trx;
+  // ignore: prefer_final_fields
+  var _selectedCourse = 10000.obs;
+  // ignore: prefer_final_fields
+  var _selectedStudent = 0.obs;
+  // ignore: prefer_final_fields
+  var _courseId = 0.obs; 
+  // ignore: prefer_final_fields
+  var _showStudentDetails  = false.obs;
+
+  // ignore: prefer_final_fields
+  bool _newStudent = false;
+
+  // ignore: prefer_final_fields
+  List<TextEditingController> _studentFields =  List.generate(7, (i) => TextEditingController());
+
+  CourseListJson get trxCourses => _trxCourses;
+  CourseStudentJson get trxStudents => _trxStudents;
   bool get dataAvailable => _dataAvailable.value;
+  bool get dataAvailable1 => _dataAvailable1.value;
+  set dataAvailable1(show) => _dataAvailable1.value = show;
+
+   get selectedCourse => _selectedCourse.value;
+  set selectedCourse(index) => _selectedCourse.value = index;
+
+  int get courseId => _courseId.value;
+  set courseId(id) => _courseId.value = id; 
+
+  int get selectedStudent => _selectedStudent.value;
+  set selectedStudent(index) => _selectedStudent.value = index;
+
+  bool get showStudentDetails => _showStudentDetails.value;
+  set showStudentDetails(show) => _showStudentDetails.value = show;
+  
+  List<TextEditingController> get studentFields => _studentFields;
+  //set studentFields(list) => _studentFields = list;
+  
+  bool get newStudent => _newStudent;
+  set newStudent(value) => _newStudent = value;
 
   @override
   void onInit() {
@@ -48,7 +87,7 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
   }
 
   getCourseSurveys() async {
-    getBusinessPartner();
+    await getBusinessPartner();
     _dataAvailable.value = false;
     //final adUserId = GetStorage().read('userId');
     final ip = GetStorage().read('ip');
@@ -56,7 +95,32 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/mp_maintain?\$filter= WindowType eq \'T\' and isChild eq \'N\' and AD_Client_ID eq ${GetStorage().read('clientid')} and C_BPartner_ID eq $businessPartnerId');
+        '/api/v1/models/mp_maintain?\$filter= WindowType eq \'T\' and isChild eq \'N\' and C_BPartner_ID eq $businessPartnerId');//and AD_Client_ID eq ${GetStorage().read('clientid')}
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      _trxCourses = CourseListJson.fromJson(jsonDecode(response.body));
+      _dataAvailable.value = _trxCourses.records!.isNotEmpty;
+    } else {
+      _dataAvailable.value = false;
+    }
+  }
+
+  getCourseStudents() async {
+    _dataAvailable1.value = false;
+    //final adUserId = GetStorage().read('userId');
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/mp_maintain_resource?\$filter= Mp_Maintain_ID eq $courseId');//and AD_Client_ID eq ${GetStorage().read('clientid')}
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -66,14 +130,35 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //print(response.body);
-      _trx = CourseListJson.fromJson(jsonDecode(response.body));
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      //
+      _trxStudents = CourseStudentJson.fromJson(jsonDecode(response.body));
+      _dataAvailable1.value = _trxStudents.records!.isNotEmpty;
     } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
+      _dataAvailable1.value = false;
+    }
+  }
+
+  initFieldsController(index, newStudent){
+    print(_studentFields.length);
+    if(_studentFields.length != 7){
+      for (int i = 1; i < 8; i++) {_studentFields.add(TextEditingController());}
+    }
+    if(newStudent){
+      _studentFields[0].text = '';
+      _studentFields[1].text = '';
+      _studentFields[2].text = '';
+      _studentFields[3].text = '';
+      _studentFields[4].text = '';
+      _studentFields[5].text = '';
+      _studentFields[6].text = '';
+    } else{
+      _studentFields[0].text = _trxStudents.records?[index].name ?? '';
+      _studentFields[1].text = _trxStudents.records?[index].surname ?? '';
+      _studentFields[2].text = _trxStudents.records?[index].birthcity ?? '';
+      _studentFields[3].text = _trxStudents.records?[index].birthday ?? '';
+      _studentFields[4].text = _trxStudents.records?[index].email ?? '';
+      _studentFields[5].text = _trxStudents.records?[index].position ?? '';
+      _studentFields[6].text = _trxStudents.records?[index].taxcode ?? '';
     }
   }
 

@@ -1,4 +1,4 @@
-part of dashboard;
+/* /* part of dashboard;
 
 class _OverviewHeader extends StatelessWidget {
   const _OverviewHeader({
@@ -122,3 +122,4 @@ class _OverviewHeader extends StatelessWidget {
     );
   }
 }
+ */ */

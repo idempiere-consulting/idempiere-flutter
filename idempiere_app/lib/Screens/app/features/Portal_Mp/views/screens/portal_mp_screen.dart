@@ -4,7 +4,7 @@ library dashboard;
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+//import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -35,9 +35,9 @@ part '../../controllers/portal_mp_controller.dart';
 part '../../models/profile.dart';
 
 // component
-part '../components/active_project_card.dart';
+//part '../components/active_project_card.dart';
 part '../components/header.dart';
-part '../components/overview_header.dart';
+//part '../components/overview_header.dart';
 part '../components/profile_tile.dart';
 part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
@@ -77,7 +77,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
               padding: const EdgeInsets.symmetric(horizontal: kSpacing),
               child: GetPremiumCard(onPressed: () {}),
             ),
-            const SizedBox(height: kSpacing * 2),
+            /* const SizedBox(height: kSpacing * 2),
             _buildTaskOverview(
               data: controller.getAllTask(),
               headerAxis: Axis.vertical,
@@ -89,7 +89,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
               data: controller.getActiveProject(),
               crossAxisCount: 6,
               crossAxisCellCount: 6,
-            ),
+            ), */
             const SizedBox(height: kSpacing),
             _buildRecentMessages(data: controller.getChatting()),
           ]);
@@ -111,7 +111,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
               padding: const EdgeInsets.symmetric(horizontal: kSpacing),
               child: GetPremiumCard(onPressed: () {}),
             ),
-            const SizedBox(height: kSpacing * 2),
+            /* const SizedBox(height: kSpacing * 2),
             _buildTaskOverview(
               data: controller.getAllTask(),
               headerAxis: Axis.vertical,
@@ -123,13 +123,64 @@ class PortalMpScreen extends GetView<PortalMpController> {
               data: controller.getActiveProject(),
               crossAxisCount: 6,
               crossAxisCellCount: 6,
-            ),
+            ), */
             const SizedBox(height: kSpacing),
             _buildRecentMessages(data: controller.getChatting()),
           ]);
         },
         desktopBuilder: (context, constraints) {
-          return Column(children: [
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                flex: (constraints.maxWidth < 1360) ? 4 : 3,
+                child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(kBorderRadius),
+                      bottomRight: Radius.circular(kBorderRadius),
+                    ),
+                    child: _Sidebar(data: controller.getSelectedProject())),
+              ),
+              Flexible(
+                flex: 9,
+                child: Column(
+                  children: [
+                    const SizedBox(height: kSpacing),
+                    _buildHeader(),
+                    const SizedBox(height: kSpacing * 2),
+                    _buildProgress(),
+                    const SizedBox(height: kSpacing * 2),
+                    const SizedBox(height: kSpacing * 2),
+                    const SizedBox(height: kSpacing),
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 4,
+                child: Column(
+                  children: [
+                    const SizedBox(height: kSpacing / 2),
+                    _buildProfile(data: controller.getProfil()),
+                    const Divider(thickness: 1),
+                    const SizedBox(height: kSpacing),
+                    _buildTeamMember(data: controller.getMember()),
+                    const SizedBox(height: kSpacing),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+                      child: GetPremiumCard(onPressed: () {}),
+                    ),
+                    const SizedBox(height: kSpacing),
+                    const Divider(thickness: 1),
+                    const SizedBox(height: kSpacing),
+                    _buildRecentMessages(data: controller.getChatting()),
+                  ],
+                ),
+              )
+            ],
+          );
+
+
+          /* Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
             _buildHeader(
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -145,7 +196,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
               padding: const EdgeInsets.symmetric(horizontal: kSpacing),
               child: GetPremiumCard(onPressed: () {}),
             ),
-            const SizedBox(height: kSpacing * 2),
+            /* const SizedBox(height: kSpacing * 2),
             _buildTaskOverview(
               data: controller.getAllTask(),
               headerAxis: Axis.vertical,
@@ -157,11 +208,11 @@ class PortalMpScreen extends GetView<PortalMpController> {
               data: controller.getActiveProject(),
               crossAxisCount: 6,
               crossAxisCellCount: 6,
-            ),
+            ), */
             const SizedBox(height: kSpacing),
             _buildRecentMessages(data: controller.getChatting()),
           ]);
-        },
+ */        },
       )),
     );
   }
@@ -241,7 +292,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
     );
   }
 
-  Widget _buildTaskOverview({
+  /* Widget _buildTaskOverview({
     required List<TaskCardData> data,
     int crossAxisCount = 6,
     int crossAxisCellCount = 2,
@@ -301,7 +352,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
         ),
       ),
     );
-  }
+  } */
 
   Widget _buildProfile({required _Profile data}) {
     return Padding(

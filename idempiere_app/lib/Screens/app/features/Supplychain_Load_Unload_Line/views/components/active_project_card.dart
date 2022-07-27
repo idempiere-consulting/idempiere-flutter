@@ -1,6 +1,6 @@
 part of dashboard;
 
-class _ActiveProjectCard extends StatelessWidget {
+/* class _ActiveProjectCard extends StatelessWidget {
   const _ActiveProjectCard({
     required this.child,
     required this.onPressedSeeAll,
@@ -54,3 +54,4 @@ class _ActiveProjectCard extends StatelessWidget {
     );
   }
 }
+ */

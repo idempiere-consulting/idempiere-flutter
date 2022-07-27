@@ -1,4 +1,4 @@
-part of dashboard;
+/* part of dashboard;
 
 // ignore: unused_element
 class _ActiveProjectCard extends StatelessWidget {
@@ -55,3 +55,4 @@ class _ActiveProjectCard extends StatelessWidget {
     );
   }
 }
+ */

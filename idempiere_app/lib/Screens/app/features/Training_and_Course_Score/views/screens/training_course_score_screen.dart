@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+//import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -38,9 +38,9 @@ part '../../controllers/training_course_score_controller.dart';
 part '../../models/profile.dart';
 
 // component
-part '../components/active_project_card.dart';
+//part '../components/active_project_card.dart';
 part '../components/header.dart';
-part '../components/overview_header.dart';
+//part '../components/overview_header.dart';
 part '../components/profile_tile.dart';
 part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
@@ -86,7 +86,7 @@ class TrainingCourseScoreScreen extends GetView<TrainingCourseScoreController> {
                 child: GetPremiumCard(onPressed: () {}),
               ), */
                 const SizedBox(height: kSpacing * 2),
-                _buildTaskOverview(
+                /* _buildTaskOverview(
                   data: controller.getAllTask(),
                   headerAxis: Axis.vertical,
                   crossAxisCount: 6,
@@ -97,7 +97,7 @@ class TrainingCourseScoreScreen extends GetView<TrainingCourseScoreController> {
                   data: controller.getActiveProject(),
                   crossAxisCount: 6,
                   crossAxisCellCount: 6,
-                ),
+                ), */
                 const SizedBox(height: kSpacing),
                 _buildRecentMessages(data: controller.getChatting()),
               ]);
@@ -120,7 +120,7 @@ class TrainingCourseScoreScreen extends GetView<TrainingCourseScoreController> {
                 child: GetPremiumCard(onPressed: () {}),
               ), */
                 const SizedBox(height: kSpacing * 2),
-                _buildTaskOverview(
+                /* _buildTaskOverview(
                   data: controller.getAllTask(),
                   headerAxis: Axis.vertical,
                   crossAxisCount: 6,
@@ -131,7 +131,7 @@ class TrainingCourseScoreScreen extends GetView<TrainingCourseScoreController> {
                   data: controller.getActiveProject(),
                   crossAxisCount: 6,
                   crossAxisCellCount: 6,
-                ),
+                ), */
                 const SizedBox(height: kSpacing),
                 _buildRecentMessages(data: controller.getChatting()),
               ]);
@@ -154,7 +154,7 @@ class TrainingCourseScoreScreen extends GetView<TrainingCourseScoreController> {
                 child: GetPremiumCard(onPressed: () {}),
               ), */
                 const SizedBox(height: kSpacing * 2),
-                _buildTaskOverview(
+                /* _buildTaskOverview(
                   data: controller.getAllTask(),
                   headerAxis: Axis.vertical,
                   crossAxisCount: 6,
@@ -165,7 +165,7 @@ class TrainingCourseScoreScreen extends GetView<TrainingCourseScoreController> {
                   data: controller.getActiveProject(),
                   crossAxisCount: 6,
                   crossAxisCellCount: 6,
-                ),
+                ), */
                 const SizedBox(height: kSpacing),
                 _buildRecentMessages(data: controller.getChatting()),
               ]);
@@ -251,7 +251,7 @@ class TrainingCourseScoreScreen extends GetView<TrainingCourseScoreController> {
     );
   }
 
-  Widget _buildTaskOverview({
+  /* Widget _buildTaskOverview({
     required List<TaskCardData> data,
     int crossAxisCount = 6,
     int crossAxisCellCount = 2,
@@ -311,7 +311,7 @@ class TrainingCourseScoreScreen extends GetView<TrainingCourseScoreController> {
         ),
       ),
     );
-  }
+  } */
 
   Widget _buildProfile({required _Profile data}) {
     return Padding(
