@@ -434,16 +434,15 @@ class CRMSalesOrderCreationScreen
                             //margin: const EdgeInsets.only(top: 10),
                             height: size.height,
                             width: double.infinity,
-                            child: StaggeredGridView.countBuilder(
-                                shrinkWrap: true,
-                                crossAxisCount: 2,
-                                itemCount: controller.trx.records?.length ?? 0,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                                itemBuilder: (BuildContext context, index) =>
-                                    buildImageCard(index),
-                                staggeredTileBuilder: (index) =>
-                                    const StaggeredTile.fit(1)),
+                            child: MasonryGridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              itemCount: controller.trx.records?.length ?? 0,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              itemBuilder: (BuildContext context, index) =>
+                                  buildImageCard(index),
+                            ),
                           )
                         : const Center(
                             child: CircularProgressIndicator(),
@@ -850,7 +849,7 @@ class CRMSalesOrderCreationScreen
     );
   }
 
-  Widget _buildTaskOverview({
+  /* Widget _buildTaskOverview({
     required List<TaskCardData> data,
     int crossAxisCount = 6,
     int crossAxisCellCount = 2,
@@ -910,7 +909,7 @@ class CRMSalesOrderCreationScreen
         ),
       ),
     );
-  }
+  } */
 
   Widget _buildProfile({required _Profile data}) {
     return Padding(
