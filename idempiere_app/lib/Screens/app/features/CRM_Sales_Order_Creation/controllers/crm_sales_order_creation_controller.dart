@@ -3,12 +3,15 @@ part of dashboard;
 class CRMSalesOrderCreationController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late ProductListJson _trx;
-  //late PaymentTermsJson pTerms;
+  late PaymentTermsJson pTerms;
+  late PaymentRuleJson pRules;
   //var _hasMailSupport = false;
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
   var docTypeFlag = false.obs;
   int businessPartnerId = 0;
+  var paymentTermId = "0".obs;
+  var paymentRuleId = "B".obs;
   var businessPartnerName = "".obs;
 
   List<ProductCheckout> productList = [];
@@ -30,6 +33,8 @@ class CRMSalesOrderCreationController extends GetxController {
   var _dataAvailable = false.obs;
 
   var pTermAvailable = false.obs;
+
+  var pRuleAvailable = false.obs;
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
@@ -53,8 +58,10 @@ class CRMSalesOrderCreationController extends GetxController {
 
   updateTotal() {
     num tot = 0;
-    for (var i = 0; i < productList.length; i++) {
-      tot = tot + (productList[i].cost * productList[i].qty);
+    if (productList.isNotEmpty) {
+      for (var i = 0; i < productList.length; i++) {
+        tot = tot + (productList[i].cost * productList[i].qty);
+      }
     }
 
     total.value = double.parse(tot.toString());
@@ -90,7 +97,8 @@ class CRMSalesOrderCreationController extends GetxController {
     //dropDownList = getTypes()!;
     super.onInit();
     getProductLists();
-    //getPaymentTerms();
+    getPaymentTerms();
+    getPaymentRules();
     getDocTypes();
     //getLeads();
     //getADUserID();
@@ -231,7 +239,7 @@ class CRMSalesOrderCreationController extends GetxController {
     }
   }
 
-  /* Future<void> getPaymentTerms() async {
+  Future<void> getPaymentTerms() async {
     pTermAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -239,6 +247,43 @@ class CRMSalesOrderCreationController extends GetxController {
     var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/C_PaymentTerm?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
+    if (businessPartnerId != 0) {
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        /* if (kDebugMode) {
+        print(response.body);
+      } */
+        //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+        pTerms = PaymentTermsJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+        getDefaultPaymentTermsFromBP();
+
+        for (var element in pTerms.records!) {
+          if (element.isDefault == true) {
+            paymentTermId.value = element.id!.toString();
+          }
+        }
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+      }
+    }
+  }
+
+  Future<void> getDefaultPaymentTermsFromBP() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_BPartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -247,14 +292,87 @@ class CRMSalesOrderCreationController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      /* if (kDebugMode) {
-        print(response.body);
-      } */
+      print(utf8.decode(response.bodyBytes));
       //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      pTerms = PaymentTermsJson.fromJson(
+      var json = BusinessPartnerJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.rowcount! > 0) {
+        if (json.records![0].cPaymentTermID != null) {
+          paymentTermId.value = json.records![0].cPaymentTermID!.id!.toString();
+        }
+      }
       //print(trx.rowcount);
       //print(response.body);
+      print(paymentTermId);
+      pTermAvailable.value = true;
+      // ignore: unnecessary_null_comparison
+      //pTermAvailable.value = pTerm != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getPaymentRules() async {
+    pTermAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 195');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pRules =
+          PaymentRuleJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pRuleAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  /* Future<void> getDefaultPaymentRulesFromBP() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_BPartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(utf8.decode(response.bodyBytes));
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      var json = BusinessPartnerJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.rowcount! > 0) {
+        if (json.records![0].cPaymentTermID != null) {
+          paymentRuleId.value = json.records![0].pay;
+        }
+      }
+      //print(trx.rowcount);
+      //print(response.body);
+      print(paymentTermId);
+      pTermAvailable.value = true;
       // ignore: unnecessary_null_comparison
       //pTermAvailable.value = pTerm != null;
     } else {

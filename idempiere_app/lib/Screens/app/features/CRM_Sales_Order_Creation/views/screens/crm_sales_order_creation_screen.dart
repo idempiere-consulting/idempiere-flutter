@@ -14,6 +14,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/doctype_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_term_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/product_list_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
@@ -361,6 +362,7 @@ class CRMSalesOrderCreationScreen
                                     onSelected: (BPRecords selection) {
                                       controller.businessPartnerId =
                                           selection.id!;
+                                      controller.getPaymentTerms();
                                     },
                                   )
                                 : const Center(
@@ -517,6 +519,7 @@ class CRMSalesOrderCreationScreen
                                           controller.productList[index].id
                                               .toString());
                                   controller.updateTotal();
+                                  controller.updateCounter();
                                 },
                                 child: Card(
                                   child: Padding(
@@ -652,6 +655,112 @@ class CRMSalesOrderCreationScreen
                         ],
                       ),
                     )),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        child: Text(
+                          "Payment Term".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.pTermAvailable.value
+                          ? DropdownButton(
+                              value: controller.paymentTermId.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.paymentTermId.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.pTerms.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                  value: list.id.toString(),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        child: Text(
+                          "Payment Rule".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.pRuleAvailable.value
+                          ? DropdownButton(
+                              value: controller.paymentRuleId.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.paymentRuleId.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.pRules.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                  value: list.value,
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
               ]);
             },
             tabletBuilder: (context, constraints) {
