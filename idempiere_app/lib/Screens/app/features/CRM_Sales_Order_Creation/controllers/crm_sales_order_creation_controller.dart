@@ -3,6 +3,7 @@ part of dashboard;
 class CRMSalesOrderCreationController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late ProductListJson _trx;
+  //late PaymentTermsJson pTerms;
   //var _hasMailSupport = false;
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -10,7 +11,11 @@ class CRMSalesOrderCreationController extends GetxController {
   int businessPartnerId = 0;
   var businessPartnerName = "".obs;
 
-  List<ProductListJson> productList = [];
+  List<ProductCheckout> productList = [];
+
+  var counter = 0.obs;
+
+  var total = 0.0.obs;
 
   var value = "Tutti".obs;
 
@@ -23,6 +28,8 @@ class CRMSalesOrderCreationController extends GetxController {
   var filterCount = 0.obs;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+
+  var pTermAvailable = false.obs;
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
@@ -39,6 +46,19 @@ class CRMSalesOrderCreationController extends GetxController {
   };
 
   get displayStringForOption => _displayStringForOption;
+
+  updateCounter() {
+    counter.value = productList.length;
+  }
+
+  updateTotal() {
+    num tot = 0;
+    for (var i = 0; i < productList.length; i++) {
+      tot = tot + (productList[i].cost * productList[i].qty);
+    }
+
+    total.value = double.parse(tot.toString());
+  }
 
   List<Types>? getTypes() {
     var dJson = TypeJson.fromJson(json);
@@ -70,6 +90,7 @@ class CRMSalesOrderCreationController extends GetxController {
     //dropDownList = getTypes()!;
     super.onInit();
     getProductLists();
+    //getPaymentTerms();
     getDocTypes();
     //getLeads();
     //getADUserID();
@@ -185,7 +206,7 @@ class CRMSalesOrderCreationController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_product_list_v?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '/api/v1/models/lit_product_list_v?\$filter= PriceStd neq null and IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -194,9 +215,9 @@ class CRMSalesOrderCreationController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      if (kDebugMode) {
+      /* if (kDebugMode) {
         print(response.body);
-      }
+      } */
       _trx =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
@@ -209,6 +230,39 @@ class CRMSalesOrderCreationController extends GetxController {
       }
     }
   }
+
+  /* Future<void> getPaymentTerms() async {
+    pTermAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_PaymentTerm?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      /* if (kDebugMode) {
+        print(response.body);
+      } */
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pTerms = PaymentTermsJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //pTermAvailable.value = pTerm != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  } */
 
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {

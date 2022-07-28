@@ -79,6 +79,8 @@ class PRecords {
   final String? modelname;
   final String? imageData;
   final num? price;
+  final num? pricelist;
+  int? checkoutQty;
 
   PRecords({
     this.id,
@@ -128,6 +130,8 @@ class PRecords {
     this.modelname,
     this.imageData,
     this.price,
+    this.pricelist,
+    this.checkoutQty,
   });
 
   PRecords.fromJson(Map<String, dynamic> json)
@@ -201,7 +205,9 @@ class PRecords {
         lITIsProductConfigurable = json['LIT_IsProductConfigurable'] as bool?,
         modelname = json['model-name'] as String?,
         imageData = json['imagebase64'] as String?,
-        price = json['Price'] as num?;
+        price = json['PriceStd'] as num?,
+        pricelist = json['PriceList'] as num?,
+        checkoutQty = json[' checkoutQty'] as int?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -250,7 +256,7 @@ class PRecords {
         'LIT_IsProductConfigurable': lITIsProductConfigurable,
         'model-name': modelname,
         'imagebase64': imageData,
-        'Price': price,
+        'PriceStd': price,
       };
 }
 

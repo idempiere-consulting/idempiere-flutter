@@ -6,6 +6,7 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -13,7 +14,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/doctype_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_term_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/product_list_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -133,11 +136,64 @@ class CRMSalesOrderCreationScreen
                                   : index == 2
                                       ? Container(
                                           color: color,
-                                          child: const Icon(
-                                            Icons.shopping_cart_checkout,
-                                            color: Colors.white,
-                                          ),
-                                        )
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
                                       : index == 3
                                           ? Container(
                                               color: color,
@@ -172,11 +228,64 @@ class CRMSalesOrderCreationScreen
                                   : index == 2
                                       ? Container(
                                           color: color,
-                                          child: const Icon(
-                                            Icons.shopping_cart_checkout,
-                                            color: Colors.white,
-                                          ),
-                                        )
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
                                       : index == 3
                                           ? Container(
                                               color: color,
@@ -314,29 +423,234 @@ class CRMSalesOrderCreationScreen
                     ),
                   ),
                 ),
-                Obx(() => Visibility(
-                      visible: controller.dataAvailable &&
-                          controller.filterCount.value == 1,
-                      child: controller.dataAvailable
-                          ? SizedBox(
-                              //margin: const EdgeInsets.only(top: 10),
-                              height: size.height,
-                              width: double.infinity,
-                              child: StaggeredGridView.countBuilder(
-                                  shrinkWrap: true,
-                                  crossAxisCount: 2,
-                                  itemCount:
-                                      controller.trx.records?.length ?? 0,
-                                  crossAxisSpacing: 8,
-                                  mainAxisSpacing: 8,
-                                  itemBuilder: (BuildContext context, index) =>
-                                      buildImageCard(index),
-                                  staggeredTileBuilder: (index) =>
-                                      const StaggeredTile.fit(1)),
-                            )
-                          : const Center(
-                              child: CircularProgressIndicator(),
+                Obx(
+                  () => Visibility(
+                    visible: controller.dataAvailable &&
+                        controller.filterCount.value == 1,
+                    child: controller.dataAvailable
+                        ? SizedBox(
+                            //margin: const EdgeInsets.only(top: 10),
+                            height: size.height,
+                            width: double.infinity,
+                            child: StaggeredGridView.countBuilder(
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                                itemCount: controller.trx.records?.length ?? 0,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                itemBuilder: (BuildContext context, index) =>
+                                    buildImageCard(index),
+                                staggeredTileBuilder: (index) =>
+                                    const StaggeredTile.fit(1)),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 2,
+                    child: ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.productList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item =
+                              controller.productList[index].id.toString();
+                          return /* Card(
+                              child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                leading: const Icon(Icons.local_offer),
+                                trailing: Text(
+                                  "€" +
+                                      (controller.productList[index].qty *
+                                              controller
+                                                  .productList[index].cost)
+                                          .toString(),
+                                  style: const TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+
+                                title: Text(
+                                  controller.productList[index].name,
+                                  style: const TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                          'Quantity: ' +
+                                              controller.productList[index].qty
+                                                  .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 13.0,
+                                              fontWeight: FontWeight.normal)),
+                                      Text(
+                                          '€${controller.productList[index].cost}',
+                                          style: TextStyle(
+                                              fontSize: 11.0,
+                                              fontWeight: FontWeight.normal)),
+                                    ]),
+                                //trailing: ,
+                                onTap: () {},
+                              )
+                            ],
+                          )); */
+                              FadeInDown(
+                            duration: Duration(milliseconds: 350 * index),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Dismissible(
+                                key: Key(item),
+                                onDismissed: (direction) {
+                                  controller.productList.removeWhere(
+                                      (element) =>
+                                          element.id.toString() ==
+                                          controller.productList[index].id
+                                              .toString());
+                                  controller.updateTotal();
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              /* boxShadow: [BoxShadow(
+                                                          spreadRadius: 0.5,
+                                                          color: black.withOpacity(0.1),
+                                                          blurRadius: 1
+                                                        )], */
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                left: 10,
+                                                right: 10,
+                                                bottom: 10),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Container(
+                                                    width: 120,
+                                                    height: 70,
+                                                    decoration: const BoxDecoration(
+                                                        image: DecorationImage(
+                                                            image: AssetImage(
+                                                                "assets/images/404.png"),
+                                                            fit: BoxFit.cover)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              controller
+                                                  .productList[index].name,
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  "€ " +
+                                                      controller
+                                                          .productList[index]
+                                                          .cost
+                                                          .toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "x${controller.productList[index].qty}",
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
+                          );
+                        }),
+                  ),
+                ),
+                Obx(() => Visibility(
+                      visible: controller.filterCount.value == 2,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Text(
+                                  "Total",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Obx(
+                                  () => Text(
+                                    "€ ${controller.total.value}",
+                                    style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
                     )),
               ]);
             },
@@ -536,6 +850,8 @@ class CRMSalesOrderCreationScreen
           Get.to(const ProductListDetail(), arguments: {
             "id": controller.trx.records![index].id,
             "add": true,
+            "priceStd": controller.trx.records![index].price,
+            "priceList": controller.trx.records![index].pricelist,
           });
         },
         child: Card(

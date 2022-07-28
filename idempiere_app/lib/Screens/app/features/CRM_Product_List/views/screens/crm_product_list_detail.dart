@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/views/screens/crm_sales_order_creation_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:idempiere_app/constants.dart';
 
 import '../../../Maintenance_Mptask_resource/models/product_json.dart';
 
@@ -39,6 +42,7 @@ class _ProductListDetailState extends State<ProductListDetail>
       //print(response.body);
 
       var json = ProductJson.fromJson(jsonDecode(response.body));
+      prodId = json.records![0].id!;
       valueFieldController.text = json.records![0].value;
       nameFieldController.text = json.records![0].name;
       descriptionFieldController.text = json.records![0].description ?? "";
@@ -62,6 +66,7 @@ class _ProductListDetailState extends State<ProductListDetail>
   }
 
   dynamic args = Get.arguments;
+
   // ignore: prefer_typing_uninitialized_variables
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
@@ -79,12 +84,19 @@ class _ProductListDetailState extends State<ProductListDetail>
   // ignore: prefer_typing_uninitialized_variables
   late TabController imagesController;
 
+  int quantity = 1;
+  int prodId = 0;
+  num cost = 0;
+  double discountedCost = 0;
+  double discount = 0;
+
   @override
   void initState() {
     flagVisible = false;
     flagAvailable = false;
-
+    quantity = 1;
     super.initState();
+    cost = args["priceStd"] ?? 0;
     imagesController = TabController(length: 3, vsync: this);
     nameFieldController = TextEditingController();
     valueFieldController = TextEditingController();
@@ -264,51 +276,56 @@ class _ProductListDetailState extends State<ProductListDetail>
     );
   }
 
-  _buildProductDetailsPage(BuildContext context) {
+  Widget _buildProductDetailsPage(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
-    return ListView(
-      shrinkWrap: true,
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(4.0),
-          child: Card(
-            elevation: 4.0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildProductImagesWidgets(),
-                _buildProductTitleWidget(),
-                const SizedBox(height: 12.0),
-                _buildPriceWidgets(),
-                const SizedBox(height: 12.0),
-                _buildDivider(screenSize),
-                const SizedBox(height: 12.0),
-                _buildFurtherInfoWidget(),
-                const SizedBox(height: 12.0),
-                _buildDivider(screenSize),
-                const SizedBox(height: 12.0),
-                /* _buildSizeChartWidgets(),
-                SizedBox(height: 12.0), */
-                _buildDetailsAndMaterialWidgets(),
-                const SizedBox(height: 12.0),
-                /* _buildStyleNoteHeader(), */
-                const SizedBox(height: 6.0),
-                _buildDivider(screenSize),
-                const SizedBox(height: 4.0),
-                /* _buildStyleNoteData(),
-                SizedBox(height: 20.0), */
-                _buildMoreInfoHeader(),
-                const SizedBox(height: 6.0),
-                _buildDivider(screenSize),
-                const SizedBox(height: 4.0),
-                _buildMoreInfoData(),
-                const SizedBox(height: 24.0),
-              ],
+    return Container(
+      height: screenSize.height,
+      child: ListView(
+        primary: true,
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.all(4.0),
+            child: Card(
+              elevation: 4.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildProductImagesWidgets(),
+                  _buildProductTitleWidget(),
+                  const SizedBox(height: 12.0),
+                  _buildPriceWidgets(),
+                  const SizedBox(height: 12.0),
+                  _buildDivider(screenSize),
+                  const SizedBox(height: 12.0),
+                  _buildFurtherInfoWidget(),
+                  const SizedBox(height: 12.0),
+                  _buildDivider(screenSize),
+                  const SizedBox(height: 12.0),
+                  /* _buildSizeChartWidgets(),
+                  SizedBox(height: 12.0), */
+                  _buildDetailsAndMaterialWidgets(),
+                  const SizedBox(height: 12.0),
+                  /* _buildStyleNoteHeader(), */
+                  const SizedBox(height: 6.0),
+                  _buildDivider(screenSize),
+                  const SizedBox(height: 4.0),
+                  /* _buildStyleNoteData(),
+                  SizedBox(height: 20.0), */
+                  _buildMoreInfoHeader(),
+                  const SizedBox(height: 6.0),
+                  _buildDivider(screenSize),
+                  const SizedBox(height: 4.0),
+                  _buildMoreInfoData(),
+                  const SizedBox(height: 24.0),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -329,7 +346,7 @@ class _ProductListDetailState extends State<ProductListDetail>
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Container(
+      child: SizedBox(
         height: 250.0,
         child: Center(
           child: DefaultTabController(
@@ -385,26 +402,26 @@ class _ProductListDetailState extends State<ProductListDetail>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
-        children: const <Widget>[
+        children: <Widget>[
           Text(
-            "\$899",
-            style: TextStyle(fontSize: 16.0, color: Colors.white),
+            "€$cost",
+            style: const TextStyle(fontSize: 16.0, color: Colors.white),
           ),
-          SizedBox(
+          const SizedBox(
             width: 8.0,
           ),
-          Text(
-            "\$1299",
+          const Text(
+            "€1299",
             style: TextStyle(
               fontSize: 12.0,
               color: Colors.grey,
               decoration: TextDecoration.lineThrough,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 8.0,
           ),
-          Text(
+          const Text(
             "30% Off",
             style: TextStyle(
               fontSize: 12.0,
@@ -420,18 +437,98 @@ class _ProductListDetailState extends State<ProductListDetail>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
+        //mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(
-            Icons.local_offer,
-            color: Colors.grey[500],
+          const Icon(
+            //Icons.local_offer,
+            Icons.shopping_cart,
+            color: Colors.white,
           ),
           const SizedBox(
-            width: 12.0,
+            width: 30.0,
+          ),
+          SizedBox(
+            height: 25.0,
+            width: 25.0,
+            child: FittedBox(
+              child: FloatingActionButton(
+                heroTag: "minus",
+                backgroundColor: kPrimaryColor,
+                mini: true,
+                child: const Icon(
+                  Icons.remove,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (quantity > 1) {
+                    setState(() {
+                      quantity = quantity - 1;
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 20.0,
           ),
           Text(
-            "Tap to get further info",
+            "$quantity",
             style: TextStyle(
               color: Colors.grey[500],
+            ),
+          ),
+          const SizedBox(
+            width: 20.0,
+          ),
+          SizedBox(
+            height: 25.0,
+            width: 25.0,
+            child: FittedBox(
+              child: FloatingActionButton(
+                heroTag: "plus",
+                backgroundColor: kPrimaryColor,
+                mini: true,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    quantity = quantity + 1;
+                  });
+                },
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 30.0,
+          ),
+          Visibility(
+            visible: flagVisible,
+            child: ElevatedButton(
+              onPressed: () {
+                if (flagAvailable) {
+                  ProductCheckout prod = ProductCheckout(
+                      id: prodId,
+                      name: nameFieldController.text,
+                      qty: quantity,
+                      cost: cost);
+                  Get.find<CRMSalesOrderCreationController>()
+                      .productList
+                      .add(prod);
+                  Get.find<CRMSalesOrderCreationController>().updateCounter();
+                  Get.find<CRMSalesOrderCreationController>().updateTotal();
+                }
+              },
+              child: flagAvailable
+                  ? Text("Add to Basket".tr)
+                  : Text("Not Available".tr),
+              style: ButtonStyle(
+                backgroundColor: flagAvailable
+                    ? MaterialStateProperty.all(Colors.green)
+                    : MaterialStateProperty.all(Colors.red),
+              ),
             ),
           ),
         ],
@@ -439,7 +536,7 @@ class _ProductListDetailState extends State<ProductListDetail>
     );
   }
 
-  _buildSizeChartWidgets() {
+  /* _buildSizeChartWidgets() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
@@ -473,7 +570,7 @@ class _ProductListDetailState extends State<ProductListDetail>
         ],
       ),
     );
-  }
+  } */
 
   _buildDetailsAndMaterialWidgets() {
     TabController tabController = TabController(length: 2, vsync: this);
@@ -584,8 +681,8 @@ class _ProductListDetailState extends State<ProductListDetail>
     );
   }
 
-  _buildBottomNavigationBar() {
-    return Container(
+  /* _buildBottomNavigationBar() {
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 50.0,
       child: Row(
@@ -646,5 +743,5 @@ class _ProductListDetailState extends State<ProductListDetail>
         ],
       ),
     );
-  }
+  } */
 }
