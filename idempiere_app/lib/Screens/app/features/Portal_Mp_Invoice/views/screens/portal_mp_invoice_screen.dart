@@ -12,6 +12,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/invoice_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoice/models/portal_mp_invoice_line_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -142,14 +143,14 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                       child: Obx(
                         () => DropdownButton(
                           icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
+                          value: controller.invoiceDropdownValue.value,
                           elevation: 16,
                           onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
+                            controller.invoiceDropdownValue.value = newValue!;
 
-                            //print(dropdownValue);
+                            //print(invoiceDropdownValue);
                           },
-                          items: controller.dropDownList.map((list) {
+                          items: controller.invoiceDropDownList.map((list) {
                             return DropdownMenuItem<String>(
                               child: Text(
                                 list.name.toString(),
@@ -164,10 +165,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
-                          controller: controller.searchFieldController,
+                          controller: controller.invoiceSearchFieldController,
                           onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
+                            controller.invoiceSearchFilterValue.value =
+                                controller.invoiceSearchFieldController.text;
                           },
                           decoration:  InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
@@ -191,27 +192,27 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                           itemCount: controller.trx.rowcount,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(() => Visibility(
-                                  visible: controller.searchFilterValue.value ==
+                                  visible: controller.invoiceSearchFilterValue.value ==
                                           ""
                                       ? true
-                                      : controller.dropdownValue.value == "1"
+                                      : controller.invoiceDropdownValue.value == "1"
                                           ? controller
                                               .trx.records![index].documentNo
                                               .toString()
                                               .toLowerCase()
                                               .contains(controller
-                                                  .searchFilterValue.value
+                                                  .invoiceSearchFilterValue.value
                                                   .toLowerCase())
-                                          : controller.dropdownValue.value ==
+                                          : controller.invoiceDropdownValue.value ==
                                                   "2"
                                               ? controller.trx.records![index]
                                                   .dateInvoiced
                                                   .toString()
                                                   .toLowerCase()
                                                   .contains(controller
-                                                      .searchFilterValue.value
+                                                      .invoiceSearchFilterValue.value
                                                       .toLowerCase())
-                                              : controller.dropdownValue.value ==
+                                              : controller.invoiceDropdownValue.value ==
                                                       "3"
                                                   ? controller
                                                       .trx
@@ -220,9 +221,9 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                       .identifier
                                                       .toString()
                                                       .toLowerCase()
-                                                      .contains(controller.searchFilterValue.value.toLowerCase())
-                                                  : controller.dropdownValue.value == "4"
-                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                      .contains(controller.invoiceSearchFilterValue.value.toLowerCase())
+                                                  : controller.invoiceDropdownValue.value == "4"
+                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.invoiceSearchFilterValue.value.toLowerCase())
                                                       : true,
                                   child: Card(
                                     elevation: 8.0,
@@ -437,25 +438,17 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                   children: [
                     Container(
                       margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
                       child: Obx(
                         () => DropdownButton(
                           icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
+                          value: controller.invoiceDropdownValue.value,
                           elevation: 16,
                           onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
+                            controller.invoiceDropdownValue.value = newValue!;
 
-                            //print(dropdownValue);
+                            //print(invoiceDropdownValue);
                           },
-                          items: controller.dropDownList.map((list) {
+                          items: controller.invoiceDropDownList.map((list) {
                             return DropdownMenuItem<String>(
                               child: Text(
                                 list.name.toString(),
@@ -470,10 +463,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
-                          controller: controller.searchFieldController,
+                          controller: controller.invoiceSearchFieldController,
                           onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
+                            controller.invoiceSearchFilterValue.value =
+                                controller.invoiceSearchFieldController.text;
                           },
                           decoration:  InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
@@ -497,27 +490,27 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                           itemCount: controller.trx.rowcount,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(() => Visibility(
-                                  visible: controller.searchFilterValue.value ==
+                                  visible: controller.invoiceSearchFilterValue.value ==
                                           ""
                                       ? true
-                                      : controller.dropdownValue.value == "1"
+                                      : controller.invoiceDropdownValue.value == "1"
                                           ? controller
                                               .trx.records![index].documentNo
                                               .toString()
                                               .toLowerCase()
                                               .contains(controller
-                                                  .searchFilterValue.value
+                                                  .invoiceSearchFilterValue.value
                                                   .toLowerCase())
-                                          : controller.dropdownValue.value ==
+                                          : controller.invoiceDropdownValue.value ==
                                                   "2"
                                               ? controller.trx.records![index]
                                                   .dateInvoiced
                                                   .toString()
                                                   .toLowerCase()
                                                   .contains(controller
-                                                      .searchFilterValue.value
+                                                      .invoiceSearchFilterValue.value
                                                       .toLowerCase())
-                                              : controller.dropdownValue.value ==
+                                              : controller.invoiceDropdownValue.value ==
                                                       "3"
                                                   ? controller
                                                       .trx
@@ -526,9 +519,9 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                       .identifier
                                                       .toString()
                                                       .toLowerCase()
-                                                      .contains(controller.searchFilterValue.value.toLowerCase())
-                                                  : controller.dropdownValue.value == "4"
-                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                      .contains(controller.invoiceSearchFilterValue.value.toLowerCase())
+                                                  : controller.invoiceDropdownValue.value == "4"
+                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.invoiceSearchFilterValue.value.toLowerCase())
                                                       : true,
                                   child: Card(
                                     elevation: 8.0,
@@ -697,1065 +690,633 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                     ),
                     child: _Sidebar(data: controller.getSelectedProject())),
               ),
-              /* Flexible(
-                flex: 3,
-                child: Column(children: [
-                  _buildProfile(data: controller.getProfil()),
-                /* Row(
-                  children: [
-                    Flexible(flex: 3, child: _buildHeader(onPressedMenu: () => Scaffold.of(context).openDrawer())),
-                    Flexible(flex: 5, child: _buildProfile(data: controller.getProfil())),
-                  ],
-                ), */
-                Row(
-                  children: [
-                Container(
-                  child: Obx(() => controller.dataAvailable
-                      ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
-                      : Text("INVOICES: ".tr)),
-                  margin: const EdgeInsets.only(left: 15),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  child: IconButton(
-                    onPressed: () {
-                      controller.getInvoices();
-                    },
-                    icon: const Icon(
-                      Icons.refresh,
-                      color: Colors.yellow,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  child: Obx(
-                    () => TextButton(
-                      onPressed: () {
-                        controller.changeFilter();
-                      },
-                      child: Text(controller.value.value),
-                    ),
-                  ),
-                ),
-                
-                
-                  ],
-                ),
-                Row(
-                  children: [
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: Obx(
-                    () => DropdownButton(
-                      icon: const Icon(Icons.filter_alt_sharp),
-                      value: controller.dropdownValue.value,
-                      elevation: 16,
-                      onChanged: (String? newValue) {
-                        controller.dropdownValue.value = newValue!;
-
-                        //print(dropdownValue);
-                      },
-                      items: controller.dropDownList.map((list) {
-                        return DropdownMenuItem<String>(
-                          child: Text(
-                            list.name.toString(),
-                          ),
-                          value: list.id,
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 10, right: 10),
-                    child: TextField(
-                      controller: controller.searchFieldController,
-                      onSubmitted: (String? value) {
-                        controller.searchFilterValue.value =
-                            controller.searchFieldController.text;
-                      },
-                      decoration:  InputDecoration(
-                        prefixIcon: const Icon(Icons.search_outlined),
-                        border: const OutlineInputBorder(),
-                        //labelText: 'Product Value',
-                        hintText: 'Search'.tr,
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                      ),
-                    ),
-                  ),
-                ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
-                Obx(
-                  () => controller.dataAvailable
-                  ? Scrollbar(
-                    child: ListView.builder(
-                        primary: false,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Obx (() => Visibility(
-                            visible: controller.searchFilterValue.value ==
-                                      ""
-                                  ? true
-                                  : controller.dropdownValue.value == "1"
-                                      ? controller.trx.records![index].ncDescription
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(controller
-                                              .searchFilterValue.value
-                                              .toLowerCase())
-                                  : controller.dropdownValue.value == "2"
-                                          ? (controller
-                                              .trx.records![index].name ?? "")
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(controller
-                                                  .searchFilterValue.value
-                                                  .toLowerCase())
-                                  : controller.dropdownValue.value == "3"
-                                          ? (controller
-                                              .trx.records![index].dateDoc ?? "")
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(controller
-                                                  .searchFilterValue.value
-                                                  .toLowerCase())
-                                  : true,
-                          
-                            child: Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Obx( () => controller.selectedCard == index ? 
-                                      _buildCard(Theme.of(context).cardColor, context, index) : 
-                                      _buildCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
-                            ),
-                          )));
-                        },
-                      ),
-                  )
-                  : const Center(child: CircularProgressIndicator()),
-                ),
-              ]),
-              ),
               Flexible(
-                flex: 4,
-                child: Column(
-                              children: [
-                                const SizedBox(height: kSpacing ),
-                                _buildHeader(),
-                                const SizedBox(height: kSpacing * 6.5),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: SizedBox(
-                                      //width: 100,
-                                      height: MediaQuery.of(context).size.height / 1.3,
-                                      child: 
-                                      Obx( () => controller.dataAvailable ? 
-                                        Container(
-                                          //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                          margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
-                                          color: const Color.fromRGBO(64, 75, 96, .9),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Container(
-                                                      margin: const EdgeInsets.all(10),
-                                                      child: SizedBox(
-                                                        width: 200,
-                                                        child: TextField(
-                                                          decoration: InputDecoration(
-                                                            hintStyle: const TextStyle(
-                                                              color: Color.fromARGB(255, 255, 255, 255)
-                                                            ),
-                                                            labelStyle: const TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 20,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                            border: const OutlineInputBorder(),
-                                                            labelText: 'Client'.tr,
-                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                            hintText: controller.trx.records![controller.selectedCard]
-                                                            .aDClientID?.identifier ?? '',
-                                                            enabled: false
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin: const EdgeInsets.all(10),
-                                                      child: SizedBox(
-                                                        width: 200,
-                                                        child: TextField(
-                                                          decoration: InputDecoration(
-                                                            hintStyle: const TextStyle(
-                                                              color: Color.fromARGB(255, 255, 255, 255)
-                                                            ),
-                                                            labelStyle: const TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 20,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                            border: const OutlineInputBorder(),
-                                                            labelText: 'Organization'.tr,
-                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                            hintText: controller.trx.records![controller.selectedCard]
-                                                            .aDOrgID?.identifier?? '',
-                                                            enabled: false
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      hintStyle: const TextStyle(
-                                                        color: Color.fromARGB(255, 255, 255, 255)
-                                                      ),
-                                                      labelStyle: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20,
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
-                                                      border: const OutlineInputBorder(),
-                                                      labelText: 'Maintenance Resource'.tr,
-                                                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                      hintText: controller.trx.records![controller.selectedCard]
-                                                      .mPMaintainResourceID?.identifier?? '',
-                                                      enabled: false
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      hintStyle: const TextStyle(
-                                                        color: Color.fromARGB(255, 255, 255, 255)
-                                                      ),
-                                                      labelStyle: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20,
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
-                                                      border: const OutlineInputBorder(),
-                                                      labelText: 'Maintenance Task'.tr,
-                                                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                      hintText: controller.trx.records![controller.selectedCard]
-                                                      .mPMaintainTaskID?.identifier ?? '',
-                                                      enabled: false
-                                                    ),
-                                                  ),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Container(
-                                                      margin: const EdgeInsets.all(10),
-                                                      child: SizedBox(
-                                                        width: 200,
-                                                        child: TextField(
-                                                          decoration: InputDecoration(
-                                                            hintStyle: const TextStyle(
-                                                              color: Color.fromARGB(255, 255, 255, 255)
-                                                            ),
-                                                            labelStyle: const TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 20,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                            border: const OutlineInputBorder(),
-                                                            labelText: 'Fault Type'.tr,
-                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                            hintText: controller.trx.records![controller.selectedCard]
-                                                            .lITNCFaultTypeID?.identifier ?? '',
-                                                            enabled: false
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin: const EdgeInsets.all(10),
-                                                      child: SizedBox(
-                                                        width: 200,
-                                                        child: TextField(
-                                                          decoration: InputDecoration(
-                                                            hintStyle: const TextStyle(
-                                                              color: Color.fromARGB(255, 255, 255, 255)
-                                                            ),
-                                                            labelStyle: const TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 20,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                            border: const OutlineInputBorder(),
-                                                            labelText: 'Document Date'.tr,
-                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                            hintText: controller.trx.records![controller.selectedCard]
-                                                            .dateDoc ?? '',
-                                                            enabled: false
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      hintStyle: const TextStyle(
-                                                        color: Color.fromARGB(255, 255, 255, 255)
-                                                      ),
-                                                      labelStyle: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20,
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
-                                                      border: const OutlineInputBorder(),
-                                                      labelText: 'User/Contact'.tr,
-                                                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                      hintText: controller.trx.records![controller.selectedCard]
-                                                      .aDUserID?.identifier ?? '',
-                                                      enabled: false
-                                                    ),
-                                                  ),
-                                                ),
-                                                //const SizedBox(width: kSpacing * 2,),
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      hintStyle: const TextStyle(
-                                                        color: Color.fromARGB(255, 255, 255, 255)
-                                                      ),
-                                                      labelStyle: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20,
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
-                                                      border: const OutlineInputBorder(),
-                                                      labelText: 'Name'.tr,
-                                                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                      hintText: controller.trx.records![controller.selectedCard]
-                                                      .name ?? '',
-                                                      enabled: false
-                                                ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      hintStyle: const TextStyle(
-                                                        color: Color.fromARGB(255, 255, 255, 255)
-                                                      ),
-                                                      labelStyle: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20,
-                                                        fontWeight: FontWeight.bold,
-                                                      ),
-                                                      border: const OutlineInputBorder(),
-                                                      labelText: 'Description'.tr,
-                                                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                      hintText: controller.trx.records![controller.selectedCard]
-                                                      .ncDescription ?? '',
-                                                      enabled: false
-                                                    ),
-                                                  ),
-                                                ),
-                                              ]),
-                                          )) : const Center(child: CircularProgressIndicator()) 
-                                        )),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-              ),
-              Flexible(
-                flex: 4,
-                child: Column(
-                  children: [
-                    const SizedBox(height: kSpacing * 10),
-                    Row(
+                    flex: 4,
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: SizedBox(
-                          //width: 100,
-                          height: MediaQuery.of(context).size.height / 1.3,
-                          child: 
-                          Obx( () => controller.showDetails ? 
-                            SingleChildScrollView(
-                              child: Container(
-                                //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
-                                color: const Color.fromRGBO(64, 75, 96, .9),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Text('Maintenance Resource'.tr,
-                                      style: const TextStyle(fontSize: 15),),
-                                      Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: Color.fromARGB(255, 255, 255, 255)
-                                            ),
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: const OutlineInputBorder(),
-                                            labelText: 'Product'.tr,
-                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                            hintText: controller.trx.records![controller.selectedCard]
-                                            .mProductID?.identifier ?? '',
-                                            enabled: false
-                                          ),
-                                        ),
+                        Row(
+                          children: [
+                            Flexible(flex: 5, child: _buildProfile(data: controller.getProfil())),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              child: Obx(() => controller.dataAvailable
+                                  ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
+                                  : Text("INVOICES: ".tr)),
+                              margin: const EdgeInsets.only(left: 15),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 20),
+                              child: IconButton(
+                                onPressed: () {
+                                  controller.getInvoices();
+                                },
+                                icon: const Icon(
+                                  Icons.refresh,
+                                  color: Colors.yellow,
+                                ),
+                              ),
+                            ),                            
+                          ],
+                        ),
+                        _buildInvoicesFilter(),
+                        const SizedBox(height: kSpacing),
+                        Obx(
+                          () => controller.dataAvailable
+                              ? ListView.builder(
+                                  primary: false,
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: controller.trx.rowcount,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return Obx (() => Visibility(
+                                      visible: controller.invoiceSearchFilterValue.value ==
+                                                ""
+                                            ? true
+                                            : controller.invoiceDropdownValue.value == "1"
+                                                ? controller.trx.records![index].documentNo
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .contains(controller
+                                                        .invoiceSearchFilterValue.value
+                                                        .toLowerCase())
+                                            : controller.invoiceDropdownValue.value == "2"
+                                                    ? (controller
+                                                        .trx.records![index].cBPartnerID?.identifier?? "")
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .contains(controller
+                                                            .invoiceSearchFilterValue.value
+                                                            .toLowerCase()): true,
+                                    
+                                      child: Card(
+                                        elevation: 8.0,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10.0, vertical: 6.0),
+                                        child: Obx( () => controller.selectedCard == index ? 
+                                          _buildCard(Theme.of(context).cardColor, context, index) : 
+                                          _buildCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
                                       ),
-                                      Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: Color.fromARGB(255, 255, 255, 255)
-                                            ),
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: const OutlineInputBorder(),
-                                            labelText: 'Location'.tr,
-                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                            hintText: controller.trx.records![controller.selectedCard]
-                                            .maintainLocation ?? '',
-                                            enabled: false
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: Color.fromARGB(255, 255, 255, 255)
-                                            ),
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: const OutlineInputBorder(),
-                                            labelText: 'Code/Position'.tr,
-                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                            hintText: controller.trx.records![controller.selectedCard]
-                                            .maintainValue ?? '',
-                                            enabled: false
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: Color.fromARGB(255, 255, 255, 255)
-                                            ),
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: const OutlineInputBorder(),
-                                            labelText: 'SerNo'.tr,
-                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                            hintText: controller.trx.records![controller.selectedCard]
-                                            .maintainSerNo ?? '',
-                                            enabled: false
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    )));
+                                  },
+                                )
+                              : const Center(child: CircularProgressIndicator()),
+                        )
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing ),
+                        _buildHeader(),
+                        const SizedBox(height: kSpacing * 6.5),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                              //width: 100,
+                              height: MediaQuery.of(context).size.height / 1.3,
+                              child: 
+                              Obx( () => controller.dataAvailable ? 
+                                SingleChildScrollView(
+                                  child: Container(
+                                    //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                    margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
+                                    color: const Color.fromRGBO(64, 75, 96, .9),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
                                         children: [
-                                          Container(
+                                          Container( 
                                             margin: const EdgeInsets.all(10),
-                                            child: SizedBox(
-                                              width: 200,
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Check Date'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trx.records![controller.selectedCard]
-                                                  .litControl1DateFrom ?? '',
-                                                  enabled: false
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                hintStyle: const TextStyle(
+                                                  color: Color.fromARGB(255, 255, 255, 255)
                                                 ),
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                border: const OutlineInputBorder(),
+                                                labelText: 'DocumentNo'.tr,
+                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                hintText: controller.trx.records![controller.selectedCard]
+                                                .documentNo ?? '',
+                                                enabled: false
                                               ),
                                             ),
                                           ),
-                                          //const SizedBox(width: kSpacing * 2,),
                                           Container(
                                             margin: const EdgeInsets.all(10),
-                                            child: SizedBox(
-                                              width: 200,
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Next Check'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trx.records![controller.selectedCard]
-                                                  .litControl1DateNext ?? '',
-                                                  enabled: false
-                                          ),
-                                        ),
-                                            ),
-                                      ), 
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: SizedBox(
-                                              width: 200,
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Revision Date'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trx.records![controller.selectedCard]
-                                                  .litControl2DateFrom ?? '',
-                                                  enabled: false
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                hintStyle: const TextStyle(
+                                                  color: Color.fromARGB(255, 255, 255, 255)
                                                 ),
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                border: const OutlineInputBorder(),
+                                                labelText: 'Business Partner'.tr,
+                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                hintText: controller.trx.records![controller.selectedCard]
+                                                .cBPartnerID?.identifier ?? '',
+                                                enabled: false
                                               ),
                                             ),
                                           ),
-                                          //const SizedBox(width: kSpacing * 2,),
                                           Container(
                                             margin: const EdgeInsets.all(10),
-                                            child: SizedBox(
-                                              width: 200,
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Next Revision'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trx.records![controller.selectedCard]
-                                                  .litControl2DateNext ?? '',
-                                                  enabled: false
-                                          ),
-                                        ),
-                                            ),
-                                      ), 
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: SizedBox(
-                                              width: 200,
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Testing Date'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trx.records![controller.selectedCard]
-                                                  .litControl3DateFrom ?? '',
-                                                  enabled: false
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                hintStyle: const TextStyle(
+                                                  color: Color.fromARGB(255, 255, 255, 255)
                                                 ),
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                border: const OutlineInputBorder(),
+                                                labelText: 'Document Type'.tr,
+                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                hintText: controller.trx.records![controller.selectedCard]
+                                                .cDocTypeTargetID?.identifier ?? '',
+                                                enabled: false
                                               ),
                                             ),
                                           ),
-                                          //const SizedBox(width: kSpacing * 2,),
                                           Container(
                                             margin: const EdgeInsets.all(10),
-                                            child: SizedBox(
-                                              width: 200,
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Next Testing'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trx.records![controller.selectedCard]
-                                                  .litControl3DateNext ?? '',
-                                                  enabled: false
-                                          ),
-                                        ),
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                hintStyle: const TextStyle(
+                                                  color: Color.fromARGB(255, 255, 255, 255)
+                                                ),
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                border: const OutlineInputBorder(),
+                                                labelText: 'Date Invoiced'.tr,
+                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                hintText: controller.trx.records![controller.selectedCard]
+                                                .dateInvoiced ?? '',
+                                                enabled: false
+                                              ),
                                             ),
-                                      ), 
-                                        ],
-                                      ),
-                                      const Divider(
-                                         height: 20,
-                                         thickness: 1,
-                                         indent: 10,
-                                         endIndent: 10,
-                                         color: Colors.white,
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                hintStyle: const TextStyle(
+                                                  color: Color.fromARGB(255, 255, 255, 255)
+                                                ),
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                border: const OutlineInputBorder(),
+                                                labelText: 'Payment Rule'.tr,
+                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                hintText: controller.trx.records![controller.selectedCard]
+                                                .paymentRule?.identifier ?? '',
+                                                enabled: false
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                hintStyle: const TextStyle(
+                                                  color: Color.fromARGB(255, 255, 255, 255)
+                                                ),
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                border: const OutlineInputBorder(),
+                                                labelText: 'Payment Term'.tr,
+                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                hintText: controller.trx.records![controller.selectedCard]
+                                                .cPaymentTermID?.identifier ?? '',
+                                                enabled: false
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                hintStyle: const TextStyle(
+                                                  color: Color.fromARGB(255, 255, 255, 255)
+                                                ),
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                border: const OutlineInputBorder(),
+                                                labelText: 'SalesRep'.tr,
+                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                hintText: controller.trx.records![controller.selectedCard]
+                                                .salesRepID?.identifier ?? '',
+                                                enabled: false
+                                              ),
+                                            ),
+                                          ),
+                                          Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: SizedBox(
+                                                width: 200,
+                                                child: TextField(
+                                                  decoration: InputDecoration(
+                                                    hintStyle: const TextStyle(
+                                                      color: Color.fromARGB(255, 255, 255, 255)
+                                                    ),
+                                                    labelStyle: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                    border: const OutlineInputBorder(),
+                                                    labelText: 'Lines Amount'.tr,
+                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                    hintText:  ( controller.trx.records![controller.selectedCard]
+                                                      .totalLines ?? "").toString(),
+                                                    enabled: false
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            //const SizedBox(width: kSpacing * 2,),
+                                            Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: SizedBox(
+                                                width: 200,
+                                                child: TextField(
+                                                  decoration: InputDecoration(
+                                                    hintStyle: const TextStyle(
+                                                      color: Color.fromARGB(255, 255, 255, 255)
+                                                    ),
+                                                    labelStyle: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                    border: const OutlineInputBorder(),
+                                                    labelText: 'Charge Amount'.tr,
+                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                    hintText: (controller.trx.records![controller.selectedCard]
+                                                    .chargeAmt ?? "").toString(),
+                                                    enabled: false
+                                            ),
+                                          ),
+                                              ),
                                         ), 
-                                      Text('Maintenance Task'.tr,
-                                      style: const TextStyle(fontSize: 15),),
-                                      Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: Color.fromARGB(255, 255, 255, 255)
-                                            ),
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: const OutlineInputBorder(),
-                                            labelText: 'LineNo'.tr,
-                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                            hintText: (controller.trx.records![controller.selectedCard]
-                                            .taskLine != null ? controller.trx.records![controller.selectedCard]
-                                            .taskLine.toString() : ''),
-                                            enabled: false
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: Color.fromARGB(255, 255, 255, 255)
-                                            ),
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: const OutlineInputBorder(),
-                                            labelText: 'Name'.tr,
-                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                            hintText: controller.trx.records![controller.selectedCard]
-                                            .taskName ?? '',
-                                            enabled: false
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: Color.fromARGB(255, 255, 255, 255)
-                                            ),
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: const OutlineInputBorder(),
-                                            labelText: 'Description'.tr,
-                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                            hintText: controller.trx.records![controller.selectedCard]
-                                            .taskDescription?? '',
-                                            enabled: false
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: Color.fromARGB(255, 255, 255, 255)
-                                            ),
-                                            labelStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            border: const OutlineInputBorder(),
-                                            labelText: 'Quantity'.tr,
-                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                            hintText: (controller.trx.records![controller.selectedCard]
-                                            .taskQuantity != null ? controller.trx.records![controller.selectedCard]
-                                            .taskQuantity.toString() : ''),
-                                            enabled: false
-                                          ),
-                                        ),
-                                      ),
+                                      ],),
                                     ]),
+                                  )),
+                                ) : const Center(child: CircularProgressIndicator()) 
                                 )),
-                            ) : Center(child: Text('No Anomaly Selected'.tr)) 
+                            ),
+                          ],
+                        ),
+                      ]
+                    )),
+                    Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing * 3.3),
+                        Row(
+                          children: [
+                            Container(
+                              child: Obx(() => controller.showData
+                                  ? Text("LINES: ".tr + controller.trx1.rowcount.toString())
+                                  : Text("LINES: ".tr)),
+                              margin: const EdgeInsets.only(left: 15),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 20),
+                              child: IconButton(
+                                onPressed: () {
+                                  controller.getInvoiceLines();
+                                },
+                                icon: const Icon(
+                                  Icons.refresh,
+                                  color: Colors.yellow,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        _buildLinesFilter(),
+                        const SizedBox(height: kSpacing * 1.2),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                              //width: 100,
+                              height: MediaQuery.of(context).size.height / 1.3,
+                              child: 
+                              Obx( () => controller.showData ? 
+                              
+                                SingleChildScrollView(
+                                  child: ListView.builder(
+                                    primary: false,
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemCount: controller.trx1.rowcount,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return Obx(() => Visibility(
+                                visible: controller.linesSearchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.linesDropdownValue.value == "1"
+                                        ? (controller.trx1.records![index].mProductID?.identifier ?? "")
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .linesSearchFilterValue.value
+                                                .toLowerCase())
+                                        : controller.linesDropdownValue.value == "2"
+                                            ? (controller
+                                                .trx1.records![index].line ?? "")
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .linesSearchFilterValue.value
+                                                    .toLowerCase())
+                                        : controller.linesDropdownValue.value == "3"
+                                            ? (controller
+                                                .trx1.records![index].name ?? "")
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .linesSearchFilterValue.value
+                                                    .toLowerCase())
+                                        : controller.linesDropdownValue.value == "4"
+                                            ? (controller
+                                                .trx1.records![index].lineTotalAmt ?? "")
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .linesSearchFilterValue.value
+                                                    .toLowerCase())
+                                                : true,
+                                child:/* SizedBox(
+                                        child: SingleChildScrollView(
+                                          child: Container(
+                                            margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
+                                            color: const Color.fromRGBO(64, 75, 96, .9),
+                                            child: Row(
+                                              children: [
+                                                Center(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Column(
+                                                      children: [
+                                                      Container(
+                                                      margin: const EdgeInsets.all(10),
+                                                      child: SizedBox(
+                                                        width: 450,
+                                                        child: TextField(
+                                                          decoration: InputDecoration(
+                                                            hintStyle: const TextStyle(
+                                                              color: Color.fromARGB(255, 255, 255, 255)
+                                                            ),
+                                                            labelStyle: const TextStyle(
+                                                              color: Colors.white,
+                                                              fontSize: 20,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                            border: const OutlineInputBorder(),
+                                                            labelText: 'Product'.tr,
+                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                            hintText: controller.trx1.records![index]
+                                                            .mProductID?.identifier ?? '',
+                                                            enabled: false
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin: const EdgeInsets.all(10),
+                                                      child: SizedBox(
+                                                        width: 450,
+                                                        child: TextField(
+                                                          decoration: InputDecoration(
+                                                            hintStyle: const TextStyle(
+                                                              color: Color.fromARGB(255, 255, 255, 255)
+                                                            ),
+                                                            labelStyle: const TextStyle(
+                                                              color: Colors.white,
+                                                              fontSize: 20,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                            border: const OutlineInputBorder(),
+                                                            labelText: 'LineNo'.tr,
+                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                            hintText: (controller.trx1.records![index].line ?? "").toString(),
+                                                            enabled: false
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin: const EdgeInsets.all(10),
+                                                      child: SizedBox(
+                                                        width: 450,
+                                                        child: TextField(
+                                                          decoration: InputDecoration(
+                                                            hintStyle: const TextStyle(
+                                                              color: Color.fromARGB(255, 255, 255, 255)
+                                                            ),
+                                                            labelStyle: const TextStyle(
+                                                              color: Colors.white,
+                                                              fontSize: 20,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                            border: const OutlineInputBorder(),
+                                                            labelText: 'Name'.tr,
+                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                            hintText: controller.trx1.records![index]
+                                                            .name ?? '',
+                                                            enabled: false
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin: const EdgeInsets.all(10),
+                                                      child: SizedBox(
+                                                        width: 450,
+                                                        child: TextField(
+                                                          decoration: InputDecoration(
+                                                            hintStyle: const TextStyle(
+                                                              color: Color.fromARGB(255, 255, 255, 255)
+                                                            ),
+                                                            labelStyle: const TextStyle(
+                                                              color: Colors.white,
+                                                              fontSize: 20,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                            border: const OutlineInputBorder(),
+                                                            labelText: 'Description'.tr,
+                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                            hintText: controller.trx1.records![index]
+                                                            .description ?? '',
+                                                            enabled: false
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                          margin: const EdgeInsets.all(10),
+                                                          child: SizedBox(
+                                                            width: 300,
+                                                            child: TextField(
+                                                              decoration: InputDecoration(
+                                                                hintStyle: const TextStyle(
+                                                                  color: Color.fromARGB(255, 255, 255, 255)
+                                                                ),
+                                                                labelStyle: const TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontSize: 20,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
+                                                                border: const OutlineInputBorder(),
+                                                                labelText: 'List Price'.tr,
+                                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                                hintText: (controller.trx1.records![index]
+                                                                .priceList ?? '').toString(),
+                                                                enabled: false
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          margin: const EdgeInsets.all(10),
+                                                          child: SizedBox(
+                                                            width: 300,
+                                                            child: TextField(
+                                                              decoration: InputDecoration(
+                                                                hintStyle: const TextStyle(
+                                                                  color: Color.fromARGB(255, 255, 255, 255)
+                                                                ),
+                                                                labelStyle: const TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontSize: 20,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
+                                                                border: const OutlineInputBorder(),
+                                                                labelText: 'Price'.tr,
+                                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                                hintText: controller.trx1.records![index]
+                                                                .description ?? '',
+                                                                enabled: false
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                          margin: const EdgeInsets.all(10),
+                                                          child: SizedBox(
+                                                            width: 300,
+                                                            child: TextField(
+                                                              decoration: InputDecoration(
+                                                                hintStyle: const TextStyle(
+                                                                  color: Color.fromARGB(255, 255, 255, 255)
+                                                                ),
+                                                                labelStyle: const TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontSize: 20,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
+                                                                border: const OutlineInputBorder(),
+                                                                labelText: 'Tax'.tr,
+                                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                                hintText: controller.trx1.records![index]
+                                                                .cTaxID?.identifier ?? '',
+                                                                enabled: false
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          margin: const EdgeInsets.all(10),
+                                                          child: SizedBox(
+                                                            width: 300,
+                                                            child: TextField(
+                                                              decoration: InputDecoration(
+                                                                hintStyle: const TextStyle(
+                                                                  color: Color.fromARGB(255, 255, 255, 255)
+                                                                ),
+                                                                labelStyle: const TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontSize: 20,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
+                                                                border: const OutlineInputBorder(),
+                                                                labelText: 'Total Line'.tr,
+                                                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                                hintText: (controller.trx1.records![index]
+                                                                .lineTotalAmt ?? '').toString(),
+                                                                enabled: false
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    
+                                                    ]
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ) */ _buildLineCard(context, index)));
+                                    }
+                                  ),
+                                )
+                            : Center(child: Text('No Invoice Selected'.tr)) 
                             )),
                         ),
                       ],
                     ),
                   ],
                 ),
-              ), */
+              ),
             ],
-          ); 
-              /* return Column(children: [
-                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
-                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
-                const SizedBox(height: kSpacing / 2),
-                const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
-                          : Text("INVOICES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getInvoices();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
-
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                              value: list.id,
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration:  InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
-                Obx(
-                  () => controller.dataAvailable
-                      ? ListView.builder(
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Obx(() => Visibility(
-                                  visible: controller.searchFilterValue.value ==
-                                          ""
-                                      ? true
-                                      : controller.dropdownValue.value == "1"
-                                          ? controller
-                                              .trx.records![index].documentNo
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(controller
-                                                  .searchFilterValue.value
-                                                  .toLowerCase())
-                                          : controller.dropdownValue.value ==
-                                                  "2"
-                                              ? controller.trx.records![index]
-                                                  .dateInvoiced
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(controller
-                                                      .searchFilterValue.value
-                                                      .toLowerCase())
-                                              : controller.dropdownValue.value ==
-                                                      "3"
-                                                  ? controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerID!
-                                                      .identifier
-                                                      .toString()
-                                                      .toLowerCase()
-                                                      .contains(controller.searchFilterValue.value.toLowerCase())
-                                                  : controller.dropdownValue.value == "4"
-                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
-                                                      : true,
-                                  child: Card(
-                                    elevation: 8.0,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 6.0),
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                          color:
-                                              Color.fromRGBO(64, 75, 96, .9)),
-                                      child: ExpansionTile(
-                                        tilePadding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0, vertical: 10.0),
-                                        leading: Container(
-                                          padding: const EdgeInsets.only(
-                                              right: 12.0),
-                                          decoration: const BoxDecoration(
-                                              border: Border(
-                                                  right: BorderSide(
-                                                      width: 1.0,
-                                                      color: Colors.white24))),
-                                          child: IconButton(
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              color: Colors.green,
-                                            ),
-                                            tooltip: 'Edit Invoice'.tr,
-                                            onPressed: () {
-                                              //log("info button pressed");
-                                              /* Get.to(const EditLead(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                .trx.records![index].name,
-                                            "leadStatus": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .Status
-                                                    ?.id ??
-                                                "",
-                                            "bpName": controller
-                                                .trx.records![index].bPName,
-                                            "Tel": controller
-                                                .trx.records![index].phone,
-                                            "eMail": controller
-                                                .trx.records![index].eMail,
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""
-                                          }); */
-                                            },
-                                          ),
-                                        ),
-                                        trailing: IconButton(
-                                          icon: Icon(
-                                            Icons.article,
-                                            color: controller
-                                                        .trx
-                                                        .records![index]
-                                                        .docStatus
-                                                        ?.id ==
-                                                    "CO"
-                                                ? Colors.green
-                                                : Colors.yellow,
-                                          ),
-                                          onPressed: () {
-                                            Get.offNamed('/PortalMpInvoiceLine',
-                                                arguments: {
-                                                  "id": controller
-                                                      .trx.records![index].id,
-                                                  "docNo": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .documentNo,
-                                                  "bPartner": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerID
-                                                      ?.identifier,
-                                                  "priceListId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .mPriceListID,
-                                                  "dateOrdered": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .dateInvoiced,
-                                                });
-                                          },
-                                        ),
-                                        title: Text(
-                                          "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateInvoiced}",
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                        subtitle: Row(
-                                          children: <Widget>[
-                                            const Icon(Icons.linear_scale,
-                                                color: Colors.yellowAccent),
-                                            Expanded(
-                                              child: Text(
-                                                controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID!
-                                                        .identifier ??
-                                                    "??",
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        /* trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.white,
-                                        size: 30.0,
-                                      ), */
-                                        childrenPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 20.0,
-                                                vertical: 10.0),
-                                        children: [
-                                          Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Amount: ".tr,
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(
-                                                      "€${controller.trx.records![index].grandTotal}"),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ));
-                          },
-                        )
-                      : const Center(child: CircularProgressIndicator()),
-                ),
-              ]); */
+          );
             },
           ),
         ),
@@ -1940,5 +1501,283 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
           )
           .toList(),
     ]);
+  }
+
+  Widget _buildCard(Color selectionColor, context, index){
+    return Container(
+      decoration: BoxDecoration(
+          color: selectionColor),
+      child: ExpansionTile(
+        trailing: IconButton(
+          icon: const Icon(
+            Icons.article,
+            color: Colors.green,
+          ),
+          onPressed: () {
+            controller.selectedCard = index;
+            controller.invoiceId = controller.trx.records?[index].id;
+            controller.getInvoiceLines();
+          },
+        ),
+        title: Text(
+          'DocumentNo'.tr + ' ' + controller.trx.records![index].documentNo!,
+          style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold),
+        ),
+        subtitle: Row(
+          children: <Widget>[
+            const Icon(Icons.payments,
+                color: Colors.green),
+            Expanded(
+              child: Text(
+                controller.trx.records![index].cBPartnerID?.identifier ??
+                    "",
+                style: const TextStyle(
+                    color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        childrenPadding: const EdgeInsets.symmetric(
+            horizontal: 20.0, vertical: 10.0),
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text('Document Type'.tr + ': '),
+                        Text(controller.trx.records![index].cDocTypeTargetID?.identifier ?? "",)
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('Date Invoiced'.tr + ': '),
+                        Text(controller.trx.records![index].dateInvoiced ?? "",)
+                      ],
+                    ),                    
+                  ],
+                ),
+              ],
+            ),
+          );
+  }
+
+  _buildInvoicesFilter(){
+    return Row(
+      children: [
+        Container(
+          margin: const EdgeInsets.all(10),
+          //padding: const EdgeInsets.all(10),
+          //width: 20,
+          /* decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey,
+            ),
+            borderRadius: BorderRadius.circular(5),
+          ), */
+          child: Obx(
+            () => DropdownButton(
+              icon: const Icon(Icons.filter_alt_sharp),
+              value: controller.invoiceDropdownValue.value,
+              elevation: 16,
+              onChanged: (String? newValue) {
+                controller.invoiceDropdownValue.value = newValue!;
+              },
+              items: controller.invoiceDropDownList.map((list) {
+                return DropdownMenuItem<String>(
+                  child: Text(
+                    list.name.toString(),
+                  ),
+                  value: list.id,
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        Flexible(
+          child: Container(
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            child: TextField(
+              controller: controller.invoiceSearchFieldController,
+              onSubmitted: (String? value) {
+                controller.invoiceSearchFilterValue.value =
+                    controller.invoiceSearchFieldController.text;
+              },
+              decoration:  InputDecoration(
+                prefixIcon: const Icon(Icons.search_outlined),
+                border: const OutlineInputBorder(),
+                //labelText: 'Product Value',
+                hintText: 'Search'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLinesFilter(){
+    return Row(children: [
+      Container(
+          margin: const EdgeInsets.all(10),
+          child: Obx(
+            () => DropdownButton(
+              icon: const Icon(Icons.filter_alt_sharp),
+              value: controller.linesDropdownValue.value,
+              elevation: 16,
+              onChanged: (String? newValue) {
+                controller.linesDropdownValue.value = newValue!;
+              },
+              items: controller.linesDropDownList.map((list) {
+                return DropdownMenuItem<String>(
+                  child: Text(
+                    list.name.toString(),
+                  ),
+                  value: list.id,
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        Flexible(
+          child: Container(
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            child: TextField(
+              controller: controller.linesSearchFieldController,
+              onSubmitted: (String? value) {
+                controller.linesSearchFilterValue.value =
+                    controller.linesSearchFieldController.text;
+              },
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search_outlined),
+                border: const OutlineInputBorder(),
+                hintText: 'Search'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
+        ),
+    ],);
+  }
+
+  Widget _buildLineCard(context, index){
+    return Container(
+      decoration: const BoxDecoration(
+          color: Color.fromRGBO(64, 75, 96, .9)),
+      child: ExpansionTile(
+        title: Text(
+          controller.trx1.records![index].mProductID?.identifier ?? "",
+          style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold),
+        ),
+        subtitle: Expanded(
+          child: Column(
+            children: <Widget>[
+              /* Container(
+                margin: const EdgeInsets.only(right: 5),
+                child: const Icon(Icons.payments,
+                    color: Colors.green),
+              ), */
+              Row(
+                children: [
+                  Text(
+                    'LineNo'.tr + ': ',
+                    style: const TextStyle(
+                        color: Colors.white),
+                  ),
+                  Text((controller.trx1.records![index].line ??
+                        "").toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold
+                        ),)
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Name'.tr + ': ',
+                    style: const TextStyle(
+                        color: Colors.white),
+                  ),
+                  Text(controller.trx1.records![index].name ??
+                        "",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold
+                      ))
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Line Amount'.tr + ': ',
+                    style: const TextStyle(
+                        color: Colors.white),
+                  ),
+                  Text((controller.trx1.records![index].lineTotalAmt ??
+                        "").toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                      )
+                ],
+              ),
+            ],
+          ),
+        ),
+        childrenPadding: const EdgeInsets.symmetric(
+            horizontal: 20.0, vertical: 10.0),
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text('Description'.tr + ': '),
+                        Text(controller.trx1.records![index].description ?? "",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('Price'.tr + ': '),
+                        Text((controller.trx1.records![index].priceEntered ?? "").toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('List Price'.tr + ': '),
+                        Text((controller.trx1.records![index].priceList ?? "").toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('Tax'.tr + ': '),
+                        Text(controller.trx1.records![index].cTaxID?.identifier ?? "",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
   }
 }

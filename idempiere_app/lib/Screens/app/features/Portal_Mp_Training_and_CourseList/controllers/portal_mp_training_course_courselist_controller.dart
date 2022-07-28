@@ -22,10 +22,34 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
   var _showStudentDetails  = false.obs;
 
   // ignore: prefer_final_fields
-  bool _newStudent = false;
+  bool _newStudent = true;
 
   // ignore: prefer_final_fields
   List<TextEditingController> _studentFields =  List.generate(7, (i) => TextEditingController());
+
+  late List<Types> courseDropDownList;
+  var courseSearchFieldController = TextEditingController();
+  var courseSearchFilterValue = "".obs;
+  var courseDropdownValue = "1".obs;
+  final courseJson = {
+    "types": [
+      {"id": "1", "name": "DocumentNo".tr},
+      {"id": "2", "name": "Name".tr},
+      {"id": "3", "name": "Business Partner".tr},
+    ]
+  };
+
+  late List<Types> studentDropDownList;
+  var studentSearchFieldController = TextEditingController();
+  var studentSearchFilterValue = "".obs;
+  var studentDropdownValue = "1".obs;
+  final studentJson = {
+    "types": [
+      {"id": "1", "name": "Name".tr},
+      {"id": "2", "name": "Birthplace".tr},
+      {"id": "3", "name": "Birthday".tr},
+    ]
+  };
 
   CourseListJson get trxCourses => _trxCourses;
   CourseStudentJson get trxStudents => _trxStudents;
@@ -54,7 +78,15 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    courseDropDownList = getTypes(courseJson)!;
+    studentDropDownList = getTypes(studentJson)!;
     getCourseSurveys();
+  }
+
+  List<Types>? getTypes(json) {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
   }
 
   Future<void> getBusinessPartner() async {
@@ -130,7 +162,7 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //
+      print(response.body);
       _trxStudents = CourseStudentJson.fromJson(jsonDecode(response.body));
       _dataAvailable1.value = _trxStudents.records!.isNotEmpty;
     } else {
@@ -139,7 +171,6 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
   }
 
   initFieldsController(index, newStudent){
-    print(_studentFields.length);
     if(_studentFields.length != 7){
       for (int i = 1; i < 8; i++) {_studentFields.add(TextEditingController());}
     }

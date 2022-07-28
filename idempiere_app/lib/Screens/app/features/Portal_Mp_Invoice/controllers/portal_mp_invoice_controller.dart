@@ -3,9 +3,10 @@ part of dashboard;
 class PortalMpInvoiceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late InvoiceJson _trx;
+  late PortalMPInvoiceLineJson _trx1;
 
   // ignore: prefer_typing_uninitialized_variables
-  var adUserId;
+  var adUserId; 
 
   var value = "Tutti".obs;
 
@@ -16,22 +17,42 @@ class PortalMpInvoiceController extends GetxController {
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
 
-  var searchFieldController = TextEditingController();
-  var searchFilterValue = "".obs;
+  // ignore: prefer_final_fields
+  var _selectedCard = 0.obs;
 
-  late List<Types> dropDownList;
-  var dropdownValue = "1".obs;
+  // ignore: prefer_final_fields
+  var _invoicetId = 0.obs;
 
-  final json = {
+  // ignore: prefer_final_fields
+  var _showData = false.obs;
+
+  var invoiceSearchFieldController = TextEditingController();
+  var invoiceSearchFilterValue = "".obs;
+  late List<Types> invoiceDropDownList;
+  var invoiceDropdownValue = "1".obs;
+  final invoiceJson = {
     "types": [
-      {"id": "1", "name": "Doc N°"},
-      {"id": "2", "name": "Date Invoiced"},
-      {"id": "3", "name": "Business Partner"},
-      {"id": "4", "name": "Description"}
+      {"id": "1", "name": "DocumentNo".tr},
+      {"id": "2", "name": "Date Invoiced".tr},
+      {"id": "3", "name": "Business Partner".tr},
+      {"id": "4", "name": "Description".tr}
     ]
   };
 
-  List<Types>? getTypes() {
+  var linesSearchFieldController = TextEditingController();
+  var linesSearchFilterValue = "".obs;
+  var linesDropdownValue = "1".obs;
+  late List<Types> linesDropDownList;
+  final linesJson = {
+    "types": [
+      {"id": "1", "name": "Product".tr},
+      {"id": "2", "name": "LineNo".tr},
+      {"id": "3", "name": "Name".tr},
+      {"id": "4", "name": "Line Total Amount".tr},
+    ]
+  };
+
+  List<Types>? getTypes(json) {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types;
@@ -39,7 +60,8 @@ class PortalMpInvoiceController extends GetxController {
 
   @override
   void onInit() {
-    dropDownList = getTypes()!;
+    invoiceDropDownList = getTypes(invoiceJson)!;
+    linesDropDownList = getTypes(linesJson)!;
     super.onInit();
     getInvoices();
     getADUserID();
@@ -47,7 +69,15 @@ class PortalMpInvoiceController extends GetxController {
 
   bool get dataAvailable => _dataAvailable.value;
   InvoiceJson get trx => _trx;
-  //String get value => _value.toString();
+  PortalMPInvoiceLineJson get trx1 => _trx1;
+
+  int get selectedCard => _selectedCard.value;
+  set selectedCard(index) => _selectedCard.value = index;
+
+  int get invoiceId => _invoicetId.value;
+  set invoiceId(id) => _invoicetId.value = id;
+
+  bool get showData => _showData.value;
 
   changeFilter() {
     filterCount++;
@@ -140,21 +170,23 @@ class PortalMpInvoiceController extends GetxController {
   }
 
   Future<void> getInvoices() async {
-    getBusinessPartner();
-    var now = DateTime.now();
+    await getBusinessPartner();
+    /* var now = DateTime.now();
     DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(now);
     String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"]; */
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_invoice?\$filter= IsSoTrx eq Y and DateInvoiced le \'$formattedDate 23:59:59\' and DateInvoiced ge \'$formattedNinetyDaysAgo 00:00:00\' and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateInvoiced desc');
+        '/api/v1/models/c_invoice?\$filter= DocStatus eq \'CO\'  and C_BPartner_ID eq $businessPartnerId&\$orderby= DateInvoiced desc');
     //SalesRep_ID eq ${GetStorage().read("userId")}
+    //and IsSoTrx eq Y and DateInvoiced le \'$formattedDate 23:59:59\' and DateInvoiced ge \'$formattedNinetyDaysAgo 00:00:00\'
+    //and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -163,20 +195,35 @@ class PortalMpInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
       _trx = InvoiceJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      _dataAvailable.value = _trx.records!.isNotEmpty;
     }
   }
 
-  /* void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
+  Future<void> getInvoiceLines() async {
+    _showData.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_InvoiceLine?\$filter= C_Invoice_ID eq $invoiceId');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      _trx1 = PortalMPInvoiceLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      
+      _showData.value = _trx1.records!.isNotEmpty;
+    } else {
+      _showData.value = false;
     }
-  } */
+
+  }
 
   // Data
   _Profile getProfil() {

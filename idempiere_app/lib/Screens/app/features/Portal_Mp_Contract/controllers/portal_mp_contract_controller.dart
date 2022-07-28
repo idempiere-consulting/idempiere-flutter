@@ -16,12 +16,12 @@ class PortalMpContractController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
-  var searchFieldController = TextEditingController();
-  var searchFilterValue = "".obs;
+  var contractSearchFieldController = TextEditingController();
+  var contractSearchFilterValue = "".obs;
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
 
-  var dropdownValue = "1".obs;
+  var contractDropdownValue = "1".obs;
 
   // ignore: prefer_final_fields
   var _selectedCard = 0.obs;
@@ -31,26 +31,38 @@ class PortalMpContractController extends GetxController {
   // ignore: prefer_final_fields
   var _showData = false.obs;
   
-  late List<Types> dropDownList;
+  late List<Types> contractDropDownList;
 
-  final json = {
+  final contractJson = {
     "types": [
       {"id": "1", "name": "DocumentNo".tr},
       {"id": "2", "name": "Business Partner".tr},
-      //{"id": "3", "name": "Phone N°"},
+    ]
+  };
+
+  var linesSearchFieldController = TextEditingController();
+  var linesSearchFilterValue = "".obs;
+  var linesDropdownValue = "1".obs;
+  late List<Types> linesDropDownList;
+  final linesJson = {
+    "types": [
+      {"id": "1", "name": "Product".tr},
+      {"id": "2", "name": "Name".tr},
+      {"id": "3", "name": "Amount".tr},
     ]
   };
 
   @override
   void onInit() {
     super.onInit();
-    dropDownList = getTypes()!;
+    contractDropDownList = getTypes(contractJson)!;
+    linesDropDownList = getTypes(linesJson)!;
     getContracts();
     //getADUserID();
     adUserId = GetStorage().read('userId');
   }
   
-  List<Types>? getTypes() {
+  List<Types>? getTypes(json) {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types;

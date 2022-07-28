@@ -11,6 +11,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Training_and_CourseList/models/trainingcourse_student_json.dart';
 import 'package:idempiere_app/Screens/app/features/Training_and_Course_CourseList/models/courselist_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -53,19 +54,10 @@ class PortalMpTrainingCourseCourseListScreen
     extends GetView<PortalMpTrainingCourseCourseListController> {
   const PortalMpTrainingCourseCourseListScreen({Key? key}) : super(key: key);
 
-  saveStudent(index) async {
+  updateOrCreateStudent(index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    final msg = jsonEncode({
-      'Name': controller.studentFields[0].text,
-      'SurName': controller.studentFields[1].text,
-      'BirthCity': controller.studentFields[2].text,
-      'Bithday': controller.studentFields[3].text,
-      'EMailUser': controller.studentFields[4].text,
-      'Description': controller.studentFields[5].text,
-      'Note': controller.studentFields[6].text
-    });
 
     //create new student
     if (controller.newStudent){
@@ -115,11 +107,19 @@ class PortalMpTrainingCourseCourseListScreen
 
     //update existing user
     } else {
+      final msg = jsonEncode({
+        'Name': controller.studentFields[0].text,
+        'SurName': controller.studentFields[1].text,
+        'BirthCity': controller.studentFields[2].text,
+        'Bithday': controller.studentFields[3].text,
+        'EMailUser': controller.studentFields[4].text,
+        'Description': controller.studentFields[5].text,
+        'Note': controller.studentFields[6].text
+      });
       var url =
         Uri.parse('$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/${
           controller.trxStudents.records![index].id
         }');
-      //print(msg);
       var response = await http.put(
         url,
         body: msg,
@@ -151,12 +151,68 @@ class PortalMpTrainingCourseCourseListScreen
         );
       }
     }
-    
-    
-    
+  }
+
+  deleteStudent(index) async {
+    if (!controller.newStudent){
+
+      final ip = GetStorage().read('ip');
+      String authorization = 'Bearer ' + GetStorage().read('token');
+      final protocol = GetStorage().read('protocol');
+      var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/${
+          controller.trxStudents.records![index].id
+        }');
+      var response = await http.delete(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        await Get.find<PortalMpTrainingCourseCourseListController>().getCourseStudents();
+        //if index = 0 will return 1 instead of -1 
+        index = (index -1).abs();
+        controller.initFieldsController(index, false);
+        print(controller.trxStudents.records![index].name);
+        controller.showStudentDetails = false;
+        controller.showStudentDetails = true;
+        Get.snackbar(
+          "Done!".tr,
+          "The record has been deleted".tr,
+          isDismissible: true,
+          icon: const Icon(
+            Icons.delete,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        //print(response.body);
+        Get.snackbar(
+          "Error!".tr,
+          "Record not deleted".tr,
+          isDismissible: true,
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
+      }
+    } else {
+      Get.snackbar(
+          "Error!".tr,
+          "Select a student to delete".tr,
+          isDismissible: true,
+          icon: const Icon(
+            Icons.error,
+            color: Colors.yellow,
+          ),
+      );
+    }
   }
   
-  createStudent() async{
+  newStudentInput() async{
     controller.initFieldsController(0, true);
     if(controller.selectedCourse != 10000){
       controller.showStudentDetails = true;
@@ -171,6 +227,8 @@ class PortalMpTrainingCourseCourseListScreen
       );
     }
   }
+
+
 
 
   @override
@@ -205,7 +263,7 @@ class PortalMpTrainingCourseCourseListScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("COURSES: ".tr + "${controller.trxCourses.rowcount}")
+                          ? Text('COURSES: '.tr + "${controller.trxCourses.rowcount}")
                           : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -491,13 +549,13 @@ class PortalMpTrainingCourseCourseListScreen
                       _buildProfile(data: controller.getProfil()),
                       const Divider(thickness: 1),
                       //const SizedBox(height: kSpacing),
-                      //_buildMaintenanceFilter(),
+                      _buildCoursesFilter(),
                       Row(
                         children: [
                           Container(
                             child: Obx(() => controller.dataAvailable
-                              ? Text("COURSES".tr + ": ${controller.trxCourses.rowcount}")
-                              : Text("COURSES".tr + ": ")),
+                              ? Text("COURSES: ".tr + "${controller.trxCourses.rowcount}")
+                              : Text("COURSES: ".tr + "")),
                             margin: const EdgeInsets.only(left: 15),
                           ),
                           Container(
@@ -531,57 +589,42 @@ class PortalMpTrainingCourseCourseListScreen
                                       shrinkWrap: true,
                                       itemCount: controller.trxCourses.rowcount,
                                       itemBuilder: (BuildContext context, int index) {
-                                        return
-                                        /* return Obx(() => Visibility(
-                                  visible: controller.maintenanceSearchFilterValue.value ==
+                                        return Obx(() => Visibility(
+                                  visible: controller.courseSearchFilterValue.value ==
                                           ""
                                       ? true
-                                      : controller.maintenanceDropdownValue.value == "1"
-                                          ? (controller.trx.records![index].documentNo ?? "")
+                                      : controller.courseDropdownValue.value == "1"
+                                          ? (controller.trxCourses.records![index].documentNo ?? "")
                                               .toString()
                                               .toLowerCase()
                                               .contains(controller
-                                                  .maintenanceSearchFilterValue.value
+                                                  .courseSearchFilterValue.value
                                                   .toLowerCase())
-                                          : controller.maintenanceDropdownValue.value == "2"
+                                          : controller.courseDropdownValue.value == "2"
                                               ? (controller
-                                                  .trx.records![index].cBPartnerID?.identifier ?? "")
+                                                  .trxCourses.records![index].name ?? "")
                                                   .toString()
                                                   .toLowerCase()
                                                   .contains(controller
-                                                      .maintenanceSearchFilterValue.value
+                                                      .courseSearchFilterValue.value
                                                       .toLowerCase())
-                                          : controller.maintenanceDropdownValue.value == "3"
+                                          : controller.courseDropdownValue.value == "3"
                                               ?( controller
-                                                  .trx.records![index].billBPartnerID?.identifier ?? "" )
+                                                  .trxCourses.records![index].cBPartnerID?.identifier ?? "" )
                                                   .toString()
                                                   .toLowerCase()
                                                   .contains(controller
-                                                      .maintenanceSearchFilterValue.value
+                                                      .courseSearchFilterValue.value
                                                       .toLowerCase())
-                                              : controller.maintenanceDropdownValue.value == "4"
-                                                  ? (controller.trx
-                                                      .records![index].aDOrgID?.identifier ?? "")
-                                                      .toString()
-                                                      .toLowerCase()
-                                                      .contains(
-                                                          controller.maintenanceSearchFilterValue.value.toLowerCase())
-                                              : controller.maintenanceDropdownValue.value == "5"
-                                                  ? (controller.trx
-                                                      .records![index].cContractID?.identifier ?? "")
-                                                      .toString()
-                                                      .toLowerCase()
-                                                      .contains(
-                                                          controller.maintenanceSearchFilterValue.value.toLowerCase())
                                                   : true,
-                                  child: */Card(
+                                  child:Card(
                                           elevation: 8.0,
                                           margin: const EdgeInsets.symmetric(
                                             horizontal: 10.0, vertical: 6.0),
                                           child: Obx( () => controller.selectedCourse == index ? 
                                             _buildCourseCard(Theme.of(context).cardColor, context, index) : 
                                             _buildCourseCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
-                                        ));
+                                        ))));
                                       },
                                     ),
                                   ):
@@ -598,12 +641,13 @@ class PortalMpTrainingCourseCourseListScreen
                       const SizedBox(height: kSpacing),
                       _buildHeader(),
                       const SizedBox(height: kSpacing),
+                      _buildStudentsFilter(),
                       Row(
                         children: [
                           Container(
                             child: Obx(() => controller.dataAvailable1
-                              ? Text("STUDENTS".tr + ": ${controller.trxStudents.rowcount}")
-                              : Text("STUDENTS".tr + ": ")),
+                              ? Text("STUDENTS: ".tr + "${controller.trxStudents.rowcount}")
+                              : Text("STUDENTS: ".tr + "")),
                             margin: const EdgeInsets.only(left: 15),
                           ),
                           Container(
@@ -635,35 +679,36 @@ class PortalMpTrainingCourseCourseListScreen
                                       shrinkWrap: true,
                                       itemCount: controller.trxStudents.rowcount,
                                       itemBuilder: (BuildContext context, int index) {
-                                        return /* Obx(() => Visibility(
-                                  visible: controller.resourcesSearchFilterValue.value ==
+                                        return Obx(() => Visibility(
+                                  visible: controller.studentSearchFilterValue.value ==
                                           ""
                                       ? true
-                                      : controller.resourcesDropdownValue.value == "1"
-                                          ? (controller.trxStudents.records![index].mProductID?.identifier ?? "")
+                                      : controller.studentDropdownValue.value == "1"
+                                          ? ((controller.trxStudents.records![index].name ?? "") + 
+                                              (controller.trxStudents.records![index].surname ?? ""))
                                               .toString()
                                               .toLowerCase()
                                               .contains(controller
-                                                  .resourcesSearchFilterValue.value
+                                                  .studentSearchFilterValue.value
                                                   .toLowerCase())
-                                          : controller.resourcesDropdownValue.value == "2"
+                                          : controller.studentDropdownValue.value == "2"
                                               ? (controller
-                                                  .trxStudents.records![index].locationComment ?? "")
+                                                  .trxStudents.records![index].birthcity ?? "")
                                                   .toString()
                                                   .toLowerCase()
                                                   .contains(controller
-                                                      .resourcesSearchFilterValue.value
+                                                      .studentSearchFilterValue.value
                                                       .toLowerCase())
-                                          : controller.resourcesDropdownValue.value == "3"
+                                          : controller.studentDropdownValue.value == "3"
                                               ?( controller
-                                                  .trxStudents.records![index].value ?? "" )
+                                                  .trxStudents.records![index].birthday ?? "" )
                                                   .toString()
                                                   .toLowerCase()
                                                   .contains(controller
-                                                      .resourcesSearchFilterValue.value
+                                                      .studentSearchFilterValue.value
                                                       .toLowerCase())
                                                   : true,
-                                  child: */Card(
+                                  child:Card(
                                           elevation: 8.0,
                                           margin: const EdgeInsets.symmetric(
                                             horizontal: 10.0, vertical: 6.0),
@@ -671,7 +716,7 @@ class PortalMpTrainingCourseCourseListScreen
                                             _buildStudentCard(Theme.of(context).cardColor, context, index) : 
                                             _buildStudentCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
                                           ),
-                                        );
+                                        )));
                                       },
                                     ),
                                   ): Center(child: Text('No Course Selected'.tr)),
@@ -694,7 +739,7 @@ class PortalMpTrainingCourseCourseListScreen
                                             onPressed: () {
                                               //crea un nuovo studente quindi verrà fatta una richiesta post
                                               controller.newStudent = true;
-                                              createStudent();
+                                              newStudentInput();
                                             },
                                             icon: const Icon(Icons.person_add),
                                             color: Colors.green,
@@ -704,6 +749,7 @@ class PortalMpTrainingCourseCourseListScreen
                                         SizedBox(
                                           child: IconButton(
                                             onPressed: () {
+                                              deleteStudent(controller.selectedStudent);
                                             },
                                             icon: const Icon(Icons.delete),
                                             color: Colors.red,
@@ -713,7 +759,7 @@ class PortalMpTrainingCourseCourseListScreen
                                         SizedBox(
                                           child: IconButton(
                                             onPressed: () {
-                                              saveStudent(controller.selectedStudent);
+                                              updateOrCreateStudent(controller.selectedStudent);
                                             },
                                             icon: const Icon(Icons.save),
                                             color: Colors.white,
@@ -723,7 +769,7 @@ class PortalMpTrainingCourseCourseListScreen
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: kSpacing * 4.4),
+                                  const SizedBox(height: kSpacing * 3.8),
                                   Row(
                                     children: [
                                       Expanded(
@@ -1118,11 +1164,14 @@ class PortalMpTrainingCourseCourseListScreen
                       color: Colors.white,
                     )
                   ),
-                  Text(controller.trxCourses.records![index].cBPartnerID?.identifier ?? "",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold
-                  )),
+                  Flexible(
+                    child: Text(controller.trxCourses.records![index].cBPartnerID?.identifier ?? "",
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold
+                    )),
+                  ),
                 ],
               ),
               
@@ -1205,12 +1254,23 @@ class PortalMpTrainingCourseCourseListScreen
             controller.selectedStudent = index;
             controller.showStudentDetails = true;
           }),
-        title: Text(
-          (controller.trxStudents.records![index].name != null && controller.trxStudents.records![index].surname != null ? 
-          controller.trxStudents.records![index].name! + ' ' + controller.trxStudents.records![index].surname! : ''),
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold),
+        title: Row(
+          children: [
+            Text(
+              (controller.trxStudents.records![index].name != null ? 
+              controller.trxStudents.records![index].name! + ' ' : ''),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold),
+            ),
+            Text(
+              (controller.trxStudents.records![index].surname != null ?
+              controller.trxStudents.records![index].surname! : ''),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold)
+            )
+          ],
         ),
         subtitle: 
         Expanded(
@@ -1439,5 +1499,91 @@ class PortalMpTrainingCourseCourseListScreen
             ),
           ]),
       ));
+  }
+  Widget _buildCoursesFilter(){
+    return Row(children: [
+      Container(
+          margin: const EdgeInsets.all(10),
+          child: Obx(
+            () => DropdownButton(
+              icon: const Icon(Icons.filter_alt_sharp),
+              value: controller.courseDropdownValue.value,
+              elevation: 16,
+              onChanged: (String? newValue) {
+                controller.courseDropdownValue.value = newValue!;
+              },
+              items: controller.courseDropDownList.map((list) {
+                return DropdownMenuItem<String>(
+                  child: Text(
+                    list.name.toString(),
+                  ),
+                  value: list.id,
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        Flexible(
+          child: Container(
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            child: TextField(
+              controller: controller.courseSearchFieldController,
+              onSubmitted: (String? value) {
+                controller.courseSearchFilterValue.value =
+                    controller.courseSearchFieldController.text;
+              },
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search_outlined),
+                border: const OutlineInputBorder(),
+                hintText: 'Search'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
+        ),
+    ],);
+  }
+   Widget _buildStudentsFilter(){
+    return Row(children: [
+      Container(
+          margin: const EdgeInsets.all(10),
+          child: Obx(
+            () => DropdownButton(
+              icon: const Icon(Icons.filter_alt_sharp),
+              value: controller.studentDropdownValue.value,
+              elevation: 16,
+              onChanged: (String? newValue) {
+                controller.studentDropdownValue.value = newValue!;
+              },
+              items: controller.studentDropDownList.map((list) {
+                return DropdownMenuItem<String>(
+                  child: Text(
+                    list.name.toString(),
+                  ),
+                  value: list.id,
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        Flexible(
+          child: Container(
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            child: TextField(
+              controller: controller.studentSearchFieldController,
+              onSubmitted: (String? value) {
+                controller.studentSearchFilterValue.value =
+                    controller.studentSearchFieldController.text;
+              },
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search_outlined),
+                border: const OutlineInputBorder(),
+                hintText: 'Search'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
+        ),
+    ],);
   }
 }
