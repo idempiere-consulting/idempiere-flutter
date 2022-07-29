@@ -154,14 +154,14 @@ class PortalMpMaintenanceMpController extends GetxController {
     if (response.statusCode == 200) {
       _trx = LitMaintainJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      _dataAvailable.value = _trx.records!.isNotEmpty;
     } else {
-      _dataAvailable1.value = false;
+      _dataAvailable.value = false;
     }
   }
 
   Future<void> getResources() async {
-    // _dataAvailable1 = false.obs;
+    _dataAvailable1.value = false;
     var maintainId = _selectedMaintainID;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
