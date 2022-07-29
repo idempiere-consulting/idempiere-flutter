@@ -344,6 +344,39 @@ class CRMSalesOrderCreationController extends GetxController {
     }
   }
 
+  Future<void> createSalesOrder() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/sales-order');
+
+    var msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+      "C_BPartner_ID": {"id": businessPartnerId},
+      "C_DocTypeTarget_ID": {"id": int.parse(dropdownValue.value)},
+      "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
+      "PaymentRule": {"id": paymentRuleId.value},
+    });
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      print(response.body);
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   /* Future<void> getDefaultPaymentRulesFromBP() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');

@@ -760,6 +760,20 @@ class CRMSalesOrderCreationScreen
                     ),
                   ),
                 ),
+                TextButton(
+                    onPressed: () {
+                      Get.defaultDialog(
+                          title: "Send Quiz".tr,
+                          content: Text(
+                              "Are you sure you want to finish the Quiz?".tr),
+                          buttonColor: kNotifColor,
+                          textConfirm: "Send".tr,
+                          textCancel: "Cancel".tr,
+                          onConfirm: () {
+                            controller.createSalesOrder();
+                          });
+                    },
+                    child: Text('Confirm Order'.tr))
               ]);
             },
             tabletBuilder: (context, constraints) {
