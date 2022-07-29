@@ -74,10 +74,8 @@ class PortalMpMaintenanceMpController extends GetxController {
   final maintenanceJson = {
     "types": [
       {"id": "1", "name": "DocumentNo".tr},
-      {"id": "2", "name": "Business Partner".tr},
-      {"id": "3", "name": "Billing Partner".tr},
-      {"id": "4", "name": "Organization".tr},
-      {"id": "5", "name": "ContractNo".tr},
+      {"id": "2", "name": "Billing Partner".tr},
+      {"id": "3", "name": "ContractNo".tr},
     ]
   };
 
@@ -136,6 +134,7 @@ class PortalMpMaintenanceMpController extends GetxController {
   } */
 
   Future<void> getMPMaintain() async {
+    _dataAvailable.value = false;
     await getBusinessPartner();
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');

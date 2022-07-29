@@ -175,7 +175,6 @@ class PortalMpTrainingCourseCourseListScreen
         //if index = 0 will return 1 instead of -1 
         index = (index -1).abs();
         controller.initFieldsController(index, false);
-        print(controller.trxStudents.records![index].name);
         controller.showStudentDetails = false;
         controller.showStudentDetails = true;
         Get.snackbar(
