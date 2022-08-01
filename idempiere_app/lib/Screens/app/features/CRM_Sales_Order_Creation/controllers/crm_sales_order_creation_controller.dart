@@ -5,11 +5,14 @@ class CRMSalesOrderCreationController extends GetxController {
   late ProductListJson _trx;
   late PaymentTermsJson pTerms;
   late PaymentRuleJson pRules;
+  late BusinessPartnerLocationJson bpLocation;
+  late SalesOrderDefaultsJson defValues;
   //var _hasMailSupport = false;
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
   var docTypeFlag = false.obs;
   int businessPartnerId = 0;
+  var bpLocationId = "0".obs;
   var paymentTermId = "0".obs;
   var paymentRuleId = "B".obs;
   var businessPartnerName = "".obs;
@@ -35,6 +38,7 @@ class CRMSalesOrderCreationController extends GetxController {
   var pTermAvailable = false.obs;
 
   var pRuleAvailable = false.obs;
+  var bpLocationAvailable = false.obs;
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
@@ -99,6 +103,7 @@ class CRMSalesOrderCreationController extends GetxController {
     getProductLists();
     getPaymentTerms();
     getPaymentRules();
+    getLocationFromBP();
     getDocTypes();
     //getLeads();
     //getADUserID();
@@ -239,6 +244,33 @@ class CRMSalesOrderCreationController extends GetxController {
     }
   }
 
+  Future<void> getSalesOrderDefaultValues() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mobile_order_defaults_v?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    if (businessPartnerId != 0) {
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        print(response.body);
+        defValues = SalesOrderDefaultsJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+      }
+    }
+  }
+
   Future<void> getPaymentTerms() async {
     pTermAvailable.value = false;
     final ip = GetStorage().read('ip');
@@ -277,6 +309,45 @@ class CRMSalesOrderCreationController extends GetxController {
     }
   }
 
+  Future<void> getLocationFromBP() async {
+    bpLocationAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      bpLocation = BusinessPartnerLocationJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (bpLocation.rowcount! > 0) {
+        if (bpLocation.records![0].id != null) {
+          bpLocationId.value = bpLocation.records![0].id.toString();
+        }
+      }
+      //print(trx.rowcount);
+      //print(response.body);
+      //print(paymentTermId);
+      bpLocationAvailable.value = true;
+      // ignore: unnecessary_null_comparison
+      //pTermAvailable.value = pTerm != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<void> getDefaultPaymentTermsFromBP() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -292,7 +363,7 @@ class CRMSalesOrderCreationController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
       //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       var json = BusinessPartnerJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
@@ -304,7 +375,7 @@ class CRMSalesOrderCreationController extends GetxController {
       }
       //print(trx.rowcount);
       //print(response.body);
-      print(paymentTermId);
+      //print(paymentTermId);
       pTermAvailable.value = true;
       // ignore: unnecessary_null_comparison
       //pTermAvailable.value = pTerm != null;
@@ -332,7 +403,7 @@ class CRMSalesOrderCreationController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       pRules =
           PaymentRuleJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -350,12 +421,34 @@ class CRMSalesOrderCreationController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/sales-order');
 
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    //print(formattedDate);
+
     var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
       "C_BPartner_ID": {"id": businessPartnerId},
+      "C_BPartner_Location_ID": {"id": bpLocationId.value},
+      "Bill_BPartner_ID": {"id": businessPartnerId},
+      "Bill_Location_ID": {"id": defValues.records![0].cBPartnerLocationID!.id},
+      "Revision": defValues.records![0].revision,
+      "AD_User_ID": defValues.records![0].aDUserID!.id,
+      "Bill_User_ID": defValues.records![0].billUserID!.id,
       "C_DocTypeTarget_ID": {"id": int.parse(dropdownValue.value)},
+      "DateOrdered": "${formattedDate}T00:00:00Z",
+      "DatePromised": "${formattedDate}T00:00:00Z",
+      "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
+      "DeliveryRule": defValues.records![0].deliveryRule!.id,
+      "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
+      "FreightCostRule": defValues.records![0].freightCostRule!.id,
+      "PriorityRule": defValues.records![0].priorityRule!.id,
+      "InvoiceRule": defValues.records![0].invoiceRule!.id,
+      "M_PriceList_ID": defValues.records![0].mPriceListID!.id,
+      "SalesRep_ID": defValues.records![0].salesRepID!.id,
+      "C_Currency_ID": defValues.records![0].cCurrencyID!.id,
       "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
       "PaymentRule": {"id": paymentRuleId.value},
     });

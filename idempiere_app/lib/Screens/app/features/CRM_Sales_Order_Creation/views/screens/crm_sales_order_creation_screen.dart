@@ -13,11 +13,13 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/doctype_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_term_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/product_list_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -36,6 +38,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 // binding
@@ -363,6 +366,8 @@ class CRMSalesOrderCreationScreen
                                       controller.businessPartnerId =
                                           selection.id!;
                                       controller.getPaymentTerms();
+                                      controller.getLocationFromBP();
+                                      controller.getSalesOrderDefaultValues();
                                     },
                                   )
                                 : const Center(
@@ -662,6 +667,59 @@ class CRMSalesOrderCreationScreen
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
                         child: Text(
+                          "Location".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.bpLocationAvailable.value
+                          ? DropdownButton(
+                              value: controller.bpLocationId.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.bpLocationId.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.bpLocation.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                  value: list.id.toString(),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        child: Text(
                           "Payment Term".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
@@ -763,11 +821,11 @@ class CRMSalesOrderCreationScreen
                 TextButton(
                     onPressed: () {
                       Get.defaultDialog(
-                          title: "Send Quiz".tr,
+                          title: "Create Order".tr,
                           content: Text(
-                              "Are you sure you want to finish the Quiz?".tr),
+                              "Are you sure you want to create the Order?".tr),
                           buttonColor: kNotifColor,
-                          textConfirm: "Send".tr,
+                          textConfirm: "Create".tr,
                           textCancel: "Cancel".tr,
                           onConfirm: () {
                             controller.createSalesOrder();

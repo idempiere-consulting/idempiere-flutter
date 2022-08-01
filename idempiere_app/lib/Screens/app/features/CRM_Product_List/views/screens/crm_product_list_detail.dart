@@ -279,7 +279,7 @@ class _ProductListDetailState extends State<ProductListDetail>
   Widget _buildProductDetailsPage(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
-    return Container(
+    return SizedBox(
       height: screenSize.height,
       child: ListView(
         primary: true,
