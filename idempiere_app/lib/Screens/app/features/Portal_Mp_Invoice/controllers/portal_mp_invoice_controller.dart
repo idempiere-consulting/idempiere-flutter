@@ -34,8 +34,7 @@ class PortalMpInvoiceController extends GetxController {
     "types": [
       {"id": "1", "name": "DocumentNo".tr},
       {"id": "2", "name": "Date Invoiced".tr},
-      {"id": "3", "name": "Business Partner".tr},
-      {"id": "4", "name": "Description".tr}
+      {"id": "3", "name": "Document Type".tr},
     ]
   };
 

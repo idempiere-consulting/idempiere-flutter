@@ -218,7 +218,7 @@ class PortalMpTrainingCourseCourseListScreen
     } else {
       Get.snackbar(
         "Select a course".tr,
-        "Please select the course the student will be assigned to.".tr,
+        "Please select the course the student will be assigned to".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.yellow,

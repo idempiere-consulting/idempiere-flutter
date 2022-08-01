@@ -844,12 +844,21 @@ class PortalMpContractScreen extends GetView<PortalMpContractController> {
                                                         .toLowerCase())
                                             : controller.contractDropdownValue.value == "2"
                                                     ? (controller
-                                                        .trx.records![index].cBPartnerID?.identifier?? "")
+                                                        .trx.records![index].cDocTypeTargetID?.identifier ?? "")
                                                         .toString()
                                                         .toLowerCase()
                                                         .contains(controller
                                                             .contractSearchFilterValue.value
-                                                            .toLowerCase()): true,
+                                                            .toLowerCase())
+                                            : controller.contractDropdownValue.value == "3"
+                                                    ? (controller
+                                                        .trx.records![index].contractsigndate ?? "")
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .contains(controller
+                                                            .contractSearchFilterValue.value
+                                                            .toLowerCase())
+                                            : true,
                                     
                                       child: Card(
                                         elevation: 8.0,

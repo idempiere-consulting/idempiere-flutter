@@ -1418,7 +1418,7 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
               ),
               tilePadding: const EdgeInsets.symmetric(
                   horizontal: 20.0, vertical: 10.0),
-              leading: Container(
+              /* leading: Container(
                 padding: const EdgeInsets.only(right: 12.0),
                 decoration: const BoxDecoration(
                     border: Border(
@@ -1431,23 +1431,9 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
                   ),
                   tooltip: 'Edit Anomaly'.tr,
                   onPressed: () {
-                    //log("info button pressed");
-                    /* Get.to(const CRMEditSalesOrder(), arguments: {
-                      "id": controller
-                          .trx.records![index].id,
-                      "docNo": controller
-                            .trx.records![index].documentNo,
-                      "docTypeTargetId": controller.trx.records![index].cDocTypeTargetID!.id,
-                      "BPartnerLocationId": controller.trx.records![index].cBPartnerLocationID!.id,
-                      "bPartnerId": controller
-                            .trx
-                            .records![index]
-                            .cBPartnerID
-                            ?.id,
-                    }); */
                   },
                 ),
-              ),
+              ), */
               title: Text(
                 controller.trx.records![index].ncDescription!,
                 style: const TextStyle(

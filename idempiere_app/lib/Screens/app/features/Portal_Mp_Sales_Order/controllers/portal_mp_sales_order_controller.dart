@@ -3,6 +3,17 @@ part of dashboard;
 class PortalMpSalesOrderController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late SalesOrderJson _trx;
+  late PortalMPSalesOrderLineJson _trx1;
+
+  final SignatureController _signatureController = SignatureController(
+    penStrokeWidth: 1,
+    penColor: Colors.black,
+    exportBackgroundColor: Colors.white,
+  );
+  // ignore: prefer_final_fields
+  var _signatureNameController = TextEditingController();
+  // ignore: prefer_final_fields
+  var _canSign = false.obs;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -13,23 +24,45 @@ class PortalMpSalesOrderController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
-
-  var searchFieldController = TextEditingController();
-  var searchFilterValue = "".obs;
+  // ignore: prefer_final_fields
+  var _showData = false.obs;
+  
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
-  late List<Types> dropDownList;
-  var dropdownValue = "1".obs;
+  
+  // ignore: prefer_final_fields
+  var _selectedCard = 0.obs;
 
-  final json = {
+  // ignore: prefer_final_fields
+  var _salesOrderId = 0.obs;
+
+  var salesOrderSearchFieldController = TextEditingController();
+  var salesOrderSearchFilterValue = "".obs;
+  late List<Types> salesOrderDropDownList;
+  var salesOrderDropdownValue = "1".obs;
+  final salesOrderJson = {
     "types": [
       {"id": "1", "name": "DocumentNo".tr},
-      {"id": "2", "name": "Business Partner".tr},
-      //{"id": "3", "name": "SalesRep".tr},
+      {"id": "2", "name": "Document Type".tr},
+      {"id": "3", "name": "Date Ordered".tr},
     ]
   };
 
-  List<Types>? getTypes() {
+  var linesSearchFieldController = TextEditingController();
+  var linesSearchFilterValue = "".obs;
+  var linesDropdownValue = "1".obs;
+  late List<Types> linesDropDownList;
+  final linesJson = {
+    "types": [
+      {"id": "1", "name": "Product".tr},
+      {"id": "2", "name": "LineNo".tr},
+      {"id": "3", "name": "Name".tr},
+      {"id": "4", "name": "Line Amount".tr},
+    ]
+  };
+
+
+  List<Types>? getTypes(json) {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types;
@@ -37,15 +70,31 @@ class PortalMpSalesOrderController extends GetxController {
 
   @override
   void onInit() {
-    dropDownList = getTypes()!;
+    salesOrderDropDownList = getTypes(salesOrderJson)!;
+    linesDropDownList = getTypes(linesJson)!;
     super.onInit();
     getSalesOrders();
     getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  SalesOrderJson get trx => _trx;
-  //String get value => _value.toString();
+  bool get showData => _showData.value;
+  SalesOrderJson get trxSalesOrder => _trx;
+  PortalMPSalesOrderLineJson get trxLine => _trx1;
+
+  int get selectedCard => _selectedCard.value;
+  set selectedCard(index) => _selectedCard.value = index;
+
+  int get salesOrderId => _salesOrderId.value;
+  set salesOrderId(id) => _salesOrderId.value = id;
+
+  SignatureController get signatureController => _signatureController;
+  set signatureController(value) => _signatureController.value = value;
+  TextEditingController get signatureNameController => _signatureNameController;
+  //set signatureNameController(name) => _signatureNameController.text = name;
+  bool get canSign => _canSign.value;
+  set canSign(value) => _canSign.value = value;
+
 
   changeFilter() {
     filterCount++;
@@ -140,7 +189,8 @@ class PortalMpSalesOrderController extends GetxController {
   }
 
   Future<void> getSalesOrders() async {
-    getBusinessPartner();
+    await getBusinessPartner();
+    // ignore: unused_local_variable
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
@@ -148,7 +198,9 @@ class PortalMpSalesOrderController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and  C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateOrdered desc');
+        '/api/v1/models/c_order?\$filter=   C_BPartner_ID eq $businessPartnerId &\$orderby= DateOrdered desc');
+    //and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}
+    //IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and
     //SalesRep_ID eq ${GetStorage().read("userId")}
     var response = await http.get(
       url,
@@ -167,6 +219,34 @@ class PortalMpSalesOrderController extends GetxController {
       _dataAvailable.value = _trx != null;
     }
   }
+
+  Future<void> getSalesOrderLines() async {
+    _showData.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/c_order?\$filter= C_Order_ID eq $salesOrderId');
+    //SalesRep_ID eq ${GetStorage().read("userId")}
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      
+      _trx1 = PortalMPSalesOrderLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      _showData.value = _trx1.records!.isNotEmpty;
+    } else {
+      _showData.value = false;
+    }
+  }
+
+  
 
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {

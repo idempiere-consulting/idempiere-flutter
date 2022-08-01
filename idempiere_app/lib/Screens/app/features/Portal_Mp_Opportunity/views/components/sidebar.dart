@@ -47,7 +47,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Opportunity".tr,
+                  label: "Sales Order Request".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,

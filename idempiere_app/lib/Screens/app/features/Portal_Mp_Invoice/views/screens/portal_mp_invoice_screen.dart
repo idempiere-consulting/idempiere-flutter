@@ -743,12 +743,21 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                         .toLowerCase())
                                             : controller.invoiceDropdownValue.value == "2"
                                                     ? (controller
-                                                        .trx.records![index].cBPartnerID?.identifier?? "")
+                                                        .trx.records![index].dateInvoiced ?? "")
                                                         .toString()
                                                         .toLowerCase()
                                                         .contains(controller
                                                             .invoiceSearchFilterValue.value
-                                                            .toLowerCase()): true,
+                                                            .toLowerCase())
+                                            : controller.invoiceDropdownValue.value == "3"
+                                                    ? (controller
+                                                        .trx.records![index].cDocTypeID?.identifier ?? "")
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .contains(controller
+                                                            .invoiceSearchFilterValue.value
+                                                            .toLowerCase())
+                                            : true,
                                     
                                       child: Card(
                                         elevation: 8.0,

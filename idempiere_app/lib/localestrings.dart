@@ -343,6 +343,11 @@ class LocaleString extends Translations {
           'Line Amount': 'Line Amount',
           'Tax': 'Tax',
           'No Invoice Selected': 'No Invoice Selected',
+          'Select a course': 'Select a course',
+          'Please select the course the student will be assigned to': 'Please select the course the student will be assigned to',
+          'Select a student to delete': 'Select a student to delete',
+          'Sales Order Request': 'Sales Order Request',
+          'Please, fill the Name field to sign': 'Please, fill the Name field to sign',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -691,6 +696,11 @@ class LocaleString extends Translations {
           'Line Amount': 'Ammontare della riga',
           'Tax': 'Imposta',
           'No Invoice Selected': 'Nessun Fattura Selezionata',
+          'Select a course': 'Seleziona un corso',
+          'Please select the course the student will be assigned to': 'Seleziona un corso a cui assegnare lo studente',
+          'Select a student to delete': 'Seleziona uno studente da eliminare',
+          'Sales Order Request': 'Richiesta di Offerta',
+          'Please, fill the Name field to sign': 'Compilare il campo Nome prima di firmare',
         },
       };
 }

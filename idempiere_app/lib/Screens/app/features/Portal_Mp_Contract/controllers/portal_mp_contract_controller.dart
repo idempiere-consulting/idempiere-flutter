@@ -36,7 +36,8 @@ class PortalMpContractController extends GetxController {
   final contractJson = {
     "types": [
       {"id": "1", "name": "DocumentNo".tr},
-      {"id": "2", "name": "Business Partner".tr},
+      {"id": "2", "name": "Document Type".tr},
+      {"id": "3", "name": "Contract Date".tr},
     ]
   };
 

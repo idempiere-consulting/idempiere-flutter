@@ -1,12 +1,14 @@
 part of dashboard;
 
 class _Sidebar extends StatelessWidget {
-  const _Sidebar({
+  _Sidebar({
     required this.data,
     Key? key,
   }) : super(key: key);
 
   final ProjectCardData data;
+
+  final List<dynamic> list = GetStorage().read('permission');
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,11 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
                   label: "Dashboard",
+                  visible: int.parse(list[0], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
@@ -40,7 +47,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Opportunity".tr,
+                  label: "Sales Order Request".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
@@ -56,7 +63,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "MaintenanceMptask".tr,
+                  label: "Maintenance".tr,
                 ),
                 //Impianti dettaglio
                 SelectionButtonData(
