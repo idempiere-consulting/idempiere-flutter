@@ -13,6 +13,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/doctype_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
@@ -818,20 +819,30 @@ class CRMSalesOrderCreationScreen
                     ),
                   ),
                 ),
-                TextButton(
-                    onPressed: () {
-                      Get.defaultDialog(
-                          title: "Create Order".tr,
-                          content: Text(
-                              "Are you sure you want to create the Order?".tr),
-                          buttonColor: kNotifColor,
-                          textConfirm: "Create".tr,
-                          textCancel: "Cancel".tr,
-                          onConfirm: () {
-                            controller.createSalesOrder();
-                          });
-                    },
-                    child: Text('Confirm Order'.tr))
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: TextButton(
+                        onPressed: () {
+                          Get.defaultDialog(
+                              title: "Create Order".tr,
+                              content: Text(
+                                  "Are you sure you want to create the Order?"
+                                      .tr),
+                              buttonColor: kNotifColor,
+                              textConfirm: "Create".tr,
+                              textCancel: "Cancel".tr,
+                              onConfirm: () {
+                                controller.createSalesOrder();
+                              });
+                        },
+                        child: Text('Confirm Order'.tr),
+                      ),
+                    ),
+                  ),
+                ),
               ]);
             },
             tabletBuilder: (context, constraints) {

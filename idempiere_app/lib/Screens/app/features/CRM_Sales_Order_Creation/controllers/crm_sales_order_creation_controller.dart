@@ -16,6 +16,8 @@ class CRMSalesOrderCreationController extends GetxController {
   var paymentTermId = "0".obs;
   var paymentRuleId = "B".obs;
   var businessPartnerName = "".obs;
+  int cOrderId = 0;
+  int priceListVersionID = 0;
 
   List<ProductCheckout> productList = [];
 
@@ -78,9 +80,28 @@ class CRMSalesOrderCreationController extends GetxController {
   }
 
   changeFilterPlus() {
-    if (filterCount < 3) {
-      filterCount.value++;
-      value.value = filters[filterCount.value];
+    if (filterCount.value < 3) {
+      switch (filterCount.value) {
+        case 0:
+          if (businessPartnerId != 0) {
+            filterCount.value++;
+            value.value = filters[filterCount.value];
+          }
+          break;
+        case 2:
+          if (productList.isNotEmpty) {
+            filterCount.value++;
+            value.value = filters[filterCount.value];
+          }
+          break;
+        default:
+          filterCount.value++;
+          value.value = filters[filterCount.value];
+          break;
+      }
+
+      /* filterCount.value++;
+      value.value = filters[filterCount.value]; */
     }
     //print(object);
 
@@ -88,7 +109,7 @@ class CRMSalesOrderCreationController extends GetxController {
   }
 
   changeFilterMinus() {
-    if (filterCount > 0) {
+    if (filterCount.value > 0) {
       filterCount.value--;
       value.value = filters[filterCount.value];
     }
@@ -105,6 +126,7 @@ class CRMSalesOrderCreationController extends GetxController {
     getPaymentRules();
     getLocationFromBP();
     getDocTypes();
+    //getTabs();
     //getLeads();
     //getADUserID();
     //adUserId = GetStorage().read('userId');
@@ -260,9 +282,10 @@ class CRMSalesOrderCreationController extends GetxController {
         },
       );
       if (response.statusCode == 200) {
-        print(response.body);
+        //print(response.body);
         defValues = SalesOrderDefaultsJson.fromJson(
             jsonDecode(utf8.decode(response.bodyBytes)));
+        //getPriceListVersionID();
       } else {
         if (kDebugMode) {
           print(response.body);
@@ -415,7 +438,68 @@ class CRMSalesOrderCreationController extends GetxController {
     }
   }
 
+  Future<void> getPriceListVersionID() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_pricelist_version?\$select=M_PriceList_Version_ID&\$orderby=ValidFrom DESC&\$filter=M_PriceList_ID eq ${defValues.records![0].mPriceListID!.id} & ValidFrom le ${Get.arguments["dateOrdered"]}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      priceListVersionID = json["records"][0]["id"];
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  /* Future<void> getTabs() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/windows/sales-order/tabs');
+
+    var response = await http.get(
+      url,
+      //body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+
+      //var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      /* cOrderId = json["id"];
+      if (cOrderId != 0) {
+        createSalesOrderLine();
+      } */
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  } */
+
   Future<void> createSalesOrder() async {
+    Get.back();
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
@@ -425,6 +509,14 @@ class CRMSalesOrderCreationController extends GetxController {
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(now);
     //print(formattedDate);
+    List<Map<String, Object>> list = [];
+
+    for (var element in productList) {
+      list.add({
+        "M_Product_ID": {"id": element.id},
+        "qtyEntered": element.qty
+      });
+    }
 
     var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
@@ -451,6 +543,65 @@ class CRMSalesOrderCreationController extends GetxController {
       "C_Currency_ID": defValues.records![0].cCurrencyID!.id,
       "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
       "PaymentRule": {"id": paymentRuleId.value},
+      "order-line".tr: list,
+    });
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      //print(response.body);
+
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      Get.find<CRMSalesOrderController>().getSalesOrders();
+      Get.back();
+      //print("done!");
+      Get.snackbar(
+        "${json["DocumentNo"]}",
+        "The record has been created".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+
+      /* cOrderId = json["id"];
+      if (cOrderId != 0) {
+        createSalesOrderLine();
+      } */
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+        Get.snackbar(
+          "Error!".tr,
+          "Record not updated".tr,
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /* Future<void> createSalesOrderLine() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/windows/sales-order/$cOrderId/tabs/order-line');
+
+    var msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_Product_ID": {"id": productList[0].id},
     });
 
     var response = await http.post(
@@ -467,50 +618,6 @@ class CRMSalesOrderCreationController extends GetxController {
       if (kDebugMode) {
         print(response.body);
       }
-    }
-  }
-
-  /* Future<void> getDefaultPaymentRulesFromBP() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BPartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
-      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      var json = BusinessPartnerJson.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
-
-      if (json.rowcount! > 0) {
-        if (json.records![0].cPaymentTermID != null) {
-          paymentRuleId.value = json.records![0].pay;
-        }
-      }
-      //print(trx.rowcount);
-      //print(response.body);
-      print(paymentTermId);
-      pTermAvailable.value = true;
-      // ignore: unnecessary_null_comparison
-      //pTermAvailable.value = pTerm != null;
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
-    }
-  } */
-
-  /* void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
     }
   } */
 
