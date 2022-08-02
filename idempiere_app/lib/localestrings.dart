@@ -299,7 +299,7 @@ class LocaleString extends Translations {
           'Anomaly': 'Anomaly',
           'Edit Anomaly': 'Edit Anomaly',
           'Bill Business Partner': 'Bill Business Partner',
-          'Organization' : 'Organization',
+          'Organization': 'Organization',
           'Date Next Run': 'Date Next Run ',
           'Date Last Run': 'Date Last Run',
           'ContractNo': 'ContractNo',
@@ -331,7 +331,7 @@ class LocaleString extends Translations {
           'Birthplace': 'Birthplace',
           'TaxCode': 'TaxCoxe',
           'Position': 'Position',
-          'No Course Selected': 'No Course Selected', 
+          'No Course Selected': 'No Course Selected',
           'No Student Selected': 'No Student Selected',
           'Amount': 'Amount',
           'LINES: ': 'LINES: ',
@@ -344,10 +344,13 @@ class LocaleString extends Translations {
           'Tax': 'Tax',
           'No Invoice Selected': 'No Invoice Selected',
           'Select a course': 'Select a course',
-          'Please select the course the student will be assigned to': 'Please select the course the student will be assigned to',
+          'Please select the course the student will be assigned to':
+              'Please select the course the student will be assigned to',
           'Select a student to delete': 'Select a student to delete',
           'Sales Order Request': 'Sales Order Request',
-          'Please, fill the Name field to sign': 'Please, fill the Name field to sign',
+          'Please, fill the Name field to sign':
+              'Please, fill the Name field to sign',
+          "order-line": "order-line"
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -697,10 +700,13 @@ class LocaleString extends Translations {
           'Tax': 'Imposta',
           'No Invoice Selected': 'Nessun Fattura Selezionata',
           'Select a course': 'Seleziona un corso',
-          'Please select the course the student will be assigned to': 'Seleziona un corso a cui assegnare lo studente',
+          'Please select the course the student will be assigned to':
+              'Seleziona un corso a cui assegnare lo studente',
           'Select a student to delete': 'Seleziona uno studente da eliminare',
           'Sales Order Request': 'Richiesta di Offerta',
-          'Please, fill the Name field to sign': 'Compilare il campo Nome prima di firmare',
+          'Please, fill the Name field to sign':
+              'Compilare il campo Nome prima di firmare',
+          "order-line": "linee-ordine"
         },
       };
 }
