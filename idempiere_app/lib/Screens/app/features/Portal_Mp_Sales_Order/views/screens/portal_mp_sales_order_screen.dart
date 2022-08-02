@@ -10,8 +10,9 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
+
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/models/portal_mp_sales_order_line_json.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/models/sales_order_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -58,7 +59,54 @@ part '../components/team_member.dart';
 class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
   const PortalMpSalesOrderScreen({Key? key}) : super(key: key);
 
-  signOrder(id, String date) async {
+  approveSalesOrder(index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({"isApproved": true,});
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip +
+            '/api/v1/models/c_order/${controller.trxSalesOrder.records![index].id}');
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String,
+          String>{
+        'Content-Type':
+            'application/json',
+        'Authorization':
+            authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      controller.getSalesOrders();
+      Get.snackbar(
+        "Done!".tr,
+        "Sales Order approved"
+            .tr,
+        icon:
+            const Icon(
+          Icons.error,
+          color: Colors
+              .green,
+        ),
+      );
+    } else {
+      //print(response.body);
+      Get.snackbar(
+        "Error!".tr,
+        "Sales Order not approved"
+            .tr,
+        icon:
+            const Icon(
+          Icons.error,
+          color: Colors
+              .red,
+        ),
+      );
+    }
+  }
+
+  signOrder(id, String date, int index) async {
     var data = await controller.signatureController.toPngBytes();
     // ignore: unused_local_variable
     var image64 = base64.encode(data!);
@@ -68,7 +116,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
         jsonEncode({
           "name": "${date.replaceAll('-', '')}_${controller.signatureNameController.text.replaceAll(' ', '')}.jpg",
           "data": image64,
-          "Description": "${controller.signatureNameController.text} $date"
+          "description": "${controller.signatureNameController.text} $date"
           }
         );
     final protocol = GetStorage().read('protocol');
@@ -96,6 +144,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
       controller.signatureController.value = [];
       controller.signatureNameController.text = '';
       controller.canSign = false;
+      controller.canApprove = [index, true];
     } else {
       Get.snackbar(
         "Error!".tr,
@@ -1247,7 +1296,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                       ),
                                     ),
                                   )
-                              : Center(child: Text('No Sales Order Selected'.tr)) 
+                              : Center(child: Text('No Sales Order selected'.tr)) 
                               )),
                           ),
                         ],
@@ -1391,9 +1440,10 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
             Colors.green : Colors.yellow,
         ),
         trailing: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.article,
-            color: Colors.green,
+            color: controller.trxSalesOrder.records![index].isApproved == false ? 
+              Colors.green : Colors.blue,
           ),
           onPressed: () {
             controller.selectedCard = index;
@@ -1476,23 +1526,11 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                       mainAxisAlignment:
                           MainAxisAlignment.end,
                       children: [
+                        controller.trxSalesOrder.
+                            records![index].isApproved == false ? 
                         IconButton(
-                          tooltip: 'Sign',
+                          tooltip: 'Sign'.tr,
                           onPressed: () async {
-                            /* var isConnected =
-                                  await checkConnection();
-                              controller
-                                  .editWorkOrderResourceDateTesting(
-                                      isConnected,
-                                      index); */
-                            /* Get.to(
-                                const SignatureSalesOrderScreen(),
-                                arguments: {
-                                  "id": controller
-                                      .trxSalesOrder
-                                      .records![index]
-                                      .id,
-                                }); */
                               showDialog(context: context, 
                                 builder: (context) => AlertDialog(
                                   shape: const RoundedRectangleBorder(
@@ -1535,7 +1573,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                 ),
                                                 IconButton(
                                                   onPressed: () {
-                                                    signOrder(controller.trxSalesOrder.records![index].id, dateNow);
+                                                    signOrder(controller.trxSalesOrder.records![index].id, dateNow, index);
                                                   }, 
                                                   icon: const Icon(
                                                     Icons.save
@@ -1595,88 +1633,66 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                           },
                           icon: const Icon(
                               EvaIcons.edit2Outline),
-                        ),
-                        Visibility(
-                          visible: controller
-                                  .trxSalesOrder
-                                  .records![index]
-                                  .docStatus
-                                  ?.id !=
-                              'CO',
-                          child: ElevatedButton(
-                            child:
-                                Text("Complete".tr),
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty
-                                      .all(Colors
-                                          .green),
-                            ),
-                            onPressed: () async {
-                              Get.defaultDialog(
-                                title:
-                                    'Complete Action',
-                                content: const Text(
-                                    "Are you sure you want to complete the record?"),
-                                onCancel: () {},
-                                onConfirm: () async {
-                                  final ip =
-                                      GetStorage()
-                                          .read('ip');
-                                  String
-                                      authorization =
-                                      'Bearer ' +
-                                          GetStorage()
-                                              .read(
-                                                  'token');
-                                  final msg =
-                                      jsonEncode({
-                                    "DocAction": "CO",
-                                  });
-                                  final protocol =
-                                      GetStorage().read(
-                                          'protocol');
-                                  var url = Uri.parse(
-                                      '$protocol://' +
-                                          ip +
-                                          '/api/v1/models/c_order/${controller.trxSalesOrder.records![index].id}');
-                                  var response =
-                                      await http.put(
-                                    url,
-                                    body: msg,
-                                    headers: <String,
-                                        String>{
-                                      'Content-Type':
-                                          'application/json',
-                                      'Authorization':
-                                          authorization,
-                                    },
+                        ) : Text('Approved'.tr),
+                           Obx( () => controller.canApprove[index] ?
+                            Visibility(
+                              visible: controller
+                                      .trxSalesOrder
+                                      .records![index]
+                                      .isApproved == false,
+                              child: ElevatedButton(
+                                child:
+                                    Text("Approve".tr),
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty
+                                          .all(Colors
+                                              .green),
+                                ),
+                                onPressed: () async {
+                                  Get.defaultDialog(
+                                    title:
+                                        'Approve Sales Order',
+                                    content: const Text(
+                                        "Are you sure you want to approve this Sales Order?"),
+                                    onCancel: () {},
+                                    onConfirm: () async {
+                                      approveSalesOrder(index);
+                                      Navigator.of(context, rootNavigator: true).pop() ;
+                                    }
                                   );
-                                  if (response
-                                          .statusCode ==
-                                      200) {
-                                    //print("done!");
-                                    completeOrder(
-                                        index);
-                                  } else {
-                                    //print(response.body);
-                                    Get.snackbar(
-                                      "Error!".tr,
-                                      "Record not completed"
-                                          .tr,
-                                      icon:
-                                          const Icon(
-                                        Icons.error,
-                                        color: Colors
-                                            .red,
-                                      ),
-                                    );
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
+                                }
+                              ),
+                            ) : 
+                            Visibility(
+                              visible: controller
+                                      .trxSalesOrder
+                                      .records![index]
+                                      .isApproved == false,
+                              child: ElevatedButton(
+                                child:
+                                    Text("Approve".tr),
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty
+                                          .all(Colors
+                                              .grey),
+                                ),
+                                onPressed: () async {
+                                  Get.snackbar(
+                                    "Sign missing".tr,
+                                    "Please, sign this Sales Order to approve it".tr,
+                                    icon:
+                                        const Icon(
+                                      Icons.error,
+                                      color: Colors
+                                          .red,
+                                    ),
+                                  );
+                                }
+                              ),
+                            )
+                           )
                       ],
                     ),
                     /* Row(
@@ -1696,6 +1712,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
             ),
           );
   }
+  
   Widget _buildLineCard(context, index){
     return Container(
       decoration: const BoxDecoration(
@@ -1831,7 +1848,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
   }
 
   _buildSalesOrdersFilter(){
-    return Row(
+    return Row( 
       children: [
         Container(
           margin: const EdgeInsets.all(10),

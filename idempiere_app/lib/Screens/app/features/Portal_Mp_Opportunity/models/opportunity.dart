@@ -56,6 +56,7 @@ class Records {
   final String? modelname;
   final MProductID? mProductID;
   final String? description;
+  final String? comments;
 
   Records({
     this.id,
@@ -82,6 +83,7 @@ class Records {
     this.modelname,
     this.mProductID,
     this.description,
+    this.comments,
   });
 
   Records.fromJson(Map<String, dynamic> json)
@@ -132,7 +134,8 @@ class Records {
         isPublished = json['IsPublished'] as bool?,
         isFavourite = json['IsFavourite'] as bool?,
         modelname = json['model-name'] as String?,
-        description = json['Description'] as String?;
+        description = json['Description'] as String?,
+        comments = json['Comments'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -158,6 +161,7 @@ class Records {
         'IsFavourite': isFavourite,
         'model-name': modelname,
         'Description': description,
+        'Comments': comments,
       };
 }
 

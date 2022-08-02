@@ -15,6 +15,9 @@ class PortalMpSalesOrderController extends GetxController {
   // ignore: prefer_final_fields
   var _canSign = false.obs;
 
+  // ignore: prefer_final_fields
+  var _canApprove = (List<bool>.of([])).obs;
+
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
@@ -95,6 +98,8 @@ class PortalMpSalesOrderController extends GetxController {
   bool get canSign => _canSign.value;
   set canSign(value) => _canSign.value = value;
 
+  List<bool> get canApprove => _canApprove;
+  set canApprove(indexval) => _canApprove[indexval[0]] = indexval[1];
 
   changeFilter() {
     filterCount++;
@@ -193,6 +198,7 @@ class PortalMpSalesOrderController extends GetxController {
     // ignore: unused_local_variable
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
+    _showData.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
@@ -202,6 +208,7 @@ class PortalMpSalesOrderController extends GetxController {
     //and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}
     //IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and
     //SalesRep_ID eq ${GetStorage().read("userId")}
+    //lit_mobile_order_bploc_v
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -209,6 +216,7 @@ class PortalMpSalesOrderController extends GetxController {
         'Authorization': authorization,
       },
     );
+    print(response.body);
     if (response.statusCode == 200) {
       //print(response.body);
       _trx =
@@ -217,6 +225,14 @@ class PortalMpSalesOrderController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+
+      if(_canApprove.isEmpty){
+        for(int i = 0; i < _trx.records!.length; i++){
+          _canApprove.add(false);
+        }
+      }
+    } else {
+      _dataAvailable.value = false;
     }
   }
 

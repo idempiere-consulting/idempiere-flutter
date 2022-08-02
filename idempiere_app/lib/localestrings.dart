@@ -350,7 +350,19 @@ class LocaleString extends Translations {
           'Sales Order Request': 'Sales Order Request',
           'Please, fill the Name field to sign':
               'Please, fill the Name field to sign',
-          "order-line": "order-line"
+          "order-line": "order-line",
+          'Approve': 'Approve',
+          'Approve Sales Order': 'Approve Sales Order',
+          'Are you sure you want to approve this Sales Order?':
+          	'Are you sure you want to approve this Sales Order?',
+          'Sales Order approved': 'Sales Order approved',
+          'Sales Order not approved': 'Sales Order not approved',
+          'Approved': 'Approved',
+          'Sign missing': 'Sign missing',
+          'Please, sign this Sales Order to approve it':
+          	'Please, sign this Sales Order to approve it',
+          'No Sales Order selected': 'No Sales Order selected',
+          'Sign': 'Sign',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -706,7 +718,19 @@ class LocaleString extends Translations {
           'Sales Order Request': 'Richiesta di Offerta',
           'Please, fill the Name field to sign':
               'Compilare il campo Nome prima di firmare',
-          "order-line": "linee-ordine"
+          "order-line": "linee-ordine",
+          'Approve': 'Approva',
+          'Approve Sales Order': 'Approva Offerta',
+          'Are you sure you want to approve this Sales Order?':
+          	'Sei sicuro di voler approvare questa Offerta?',
+          'Sales Order approved': 'Offerta approvata',
+          'Sales Order not approved': 'Offerta non approvata',
+          'Approved': 'Approvato',
+          'Sign missing': 'Firma mancante',
+          'Please, sign this Sales Order to approve it': 
+          	Firma questa Offerta per approvarla',
+          'No Sales Order selected': 'Nessuna Offerta selezionata',
+          'Sign': 'Firma',
         },
       };
 }

@@ -60,7 +60,7 @@ class Records {
   final DeliveryViaRule? deliveryViaRule;
   final PriorityRule? priorityRule;
   final num? totalLines;
-  final double? grandTotal;
+  final num? grandTotal;
   final MWarehouseID? mWarehouseID;
   final MPriceListID? mPriceListID;
   final CBPartnerID? cBPartnerID;
@@ -223,7 +223,7 @@ class Records {
       deliveryViaRule = (json['DeliveryViaRule'] as Map<String,dynamic>?) != null ? DeliveryViaRule.fromJson(json['DeliveryViaRule'] as Map<String,dynamic>) : null,
       priorityRule = (json['PriorityRule'] as Map<String,dynamic>?) != null ? PriorityRule.fromJson(json['PriorityRule'] as Map<String,dynamic>) : null,
       totalLines = json['TotalLines'] as num?,
-      grandTotal = json['GrandTotal'] as double?,
+      grandTotal = json['GrandTotal'] as num?,
       mWarehouseID = (json['M_Warehouse_ID'] as Map<String,dynamic>?) != null ? MWarehouseID.fromJson(json['M_Warehouse_ID'] as Map<String,dynamic>) : null,
       mPriceListID = (json['M_PriceList_ID'] as Map<String,dynamic>?) != null ? MPriceListID.fromJson(json['M_PriceList_ID'] as Map<String,dynamic>) : null,
       cBPartnerID = (json['C_BPartner_ID'] as Map<String,dynamic>?) != null ? CBPartnerID.fromJson(json['C_BPartner_ID'] as Map<String,dynamic>) : null,

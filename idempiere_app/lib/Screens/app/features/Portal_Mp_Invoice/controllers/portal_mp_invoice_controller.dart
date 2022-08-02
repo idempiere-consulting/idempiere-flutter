@@ -177,6 +177,7 @@ class PortalMpInvoiceController extends GetxController {
     String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"]; */
     _dataAvailable.value = false;
+    _showData.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');

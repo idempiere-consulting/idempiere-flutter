@@ -148,6 +148,7 @@ class PortalMpContractController extends GetxController {
   Future<void> getContracts() async {
     await getBusinessPartner();
     _dataAvailable.value = false;
+    _showData.value = false;
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');

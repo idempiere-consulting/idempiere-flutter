@@ -6,25 +6,36 @@ class PortalMpOpportunityController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
-  var searchFieldController = TextEditingController();
-  var searchFilterValue = "".obs;
+  // ignore: prefer_final_fields
+  var _selectedCard = 0.obs;
 
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
 
-  late List<Types> dropDownList;
-  var dropdownValue = "1".obs;
+  // ignore: prefer_final_fields
+  var _opportunityId = 0.obs;
 
-  final json = {
+  // ignore: prefer_final_fields
+  var _showOpportunityDetails  = false.obs;
+
+  // ignore: prefer_final_fields
+  var _newOpportunity = false;
+
+  var opportunitySearchFieldController = TextEditingController();
+  var opportunitySearchFilterValue = "".obs;
+  late List<Types> opportunityDropDownList;
+  var opportunityDropdownValue = "1".obs;
+  final opportunityJson = {
     "types": [
-      {"id": "1", "name": "Business Partner".tr},
-      {"id": "2", "name": "Product".tr},
-      {"id": "3", "name": "SalesRep".tr},
-      {"id": "4", "name": "SalesStage".tr}
+      {"id": "1", "name": "DocumentNo".tr},
+      {"id": "2", "name": "Sales Stage".tr},
     ]
   };
 
-  List<Types>? getTypes() {
+  // ignore: prefer_final_fields
+  List<TextEditingController> _opportunityFields =  List.generate(2, (i) => TextEditingController());
+
+  List<Types>? getTypes(json) {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types;
@@ -32,13 +43,27 @@ class PortalMpOpportunityController extends GetxController {
 
   @override
   void onInit() {
-    dropDownList = getTypes()!;
+    opportunityDropDownList = getTypes(opportunityJson)!;
     super.onInit();
     getOpportunities();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  OpportunityJson get trx => _trx;
+  OpportunityJson get trxOpportunity => _trx;
+
+  int get selectedCard => _selectedCard.value;
+  set selectedCard(index) => _selectedCard.value = index;
+
+  int get opportunityId => _opportunityId.value;
+  set opportunityId(id) => _opportunityId.value = id;
+
+  List<TextEditingController> get opportunityFields => _opportunityFields;
+
+  bool get showOpportunityDetails => _showOpportunityDetails.value;
+  set showOpportunityDetails(show) => _showOpportunityDetails.value = show;
+
+  bool get newOpportunity => _newOpportunity;
+  set newOpportunity(newOp) => _newOpportunity = newOp;
 
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
@@ -70,7 +95,7 @@ class PortalMpOpportunityController extends GetxController {
   }
 
   Future<void> getOpportunities() async {
-    getBusinessPartner();
+    await getBusinessPartner();
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -87,19 +112,28 @@ class PortalMpOpportunityController extends GetxController {
       //print(response.body);
       _trx =
           OpportunityJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      //print(_trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      _dataAvailable.value = _trx.records!.isNotEmpty;
     }
   }
 
-  /* void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
-    }
-  } */
+  initFieldsController(index, newOpportunity) async{
+    if(businessPartnerId == null) await getBusinessPartner();
 
+    if(_opportunityFields.length != 4){
+      for (int i = 1; i < 5; i++) {_opportunityFields.add(TextEditingController());}
+    }
+    if(newOpportunity){
+      _opportunityFields[0].text = businessPartnerId.toString();
+      _opportunityFields[1].text = '';
+      _opportunityFields[2].text = '';
+      _opportunityFields[3].text = '';
+    } else{
+      _opportunityFields[0].text = businessPartnerId;
+      _opportunityFields[1].text = _trx.records?[index].cSalesStageID?.identifier ?? '';
+      _opportunityFields[2].text = _trx.records?[index].expectedCloseDate ?? '';
+      _opportunityFields[3].text = _trx.records?[index].comments ?? '';
+    }
+  }
   // Data
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
