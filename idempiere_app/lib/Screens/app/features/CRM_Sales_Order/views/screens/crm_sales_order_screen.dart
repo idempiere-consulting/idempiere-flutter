@@ -11,6 +11,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_pos_page.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -409,6 +410,28 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
+                                                  IconButton(
+                                                    tooltip: 'print',
+                                                    onPressed: () async {
+                                                      /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                      Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          });
+                                                    },
+                                                    icon: const Icon(
+                                                      EvaIcons.printerOutline,
+                                                    ),
+                                                  ),
                                                   IconButton(
                                                     tooltip: 'Sign',
                                                     onPressed: () async {
