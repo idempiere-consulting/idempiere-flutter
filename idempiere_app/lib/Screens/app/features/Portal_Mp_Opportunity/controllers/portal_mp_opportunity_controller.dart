@@ -3,6 +3,11 @@ part of dashboard;
 class PortalMpOpportunityController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late OpportunityJson _trx;
+
+  late SalesStageJson _salesStage;
+
+  late PortalMPAdUserJson _adUsers;
+
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
@@ -11,15 +16,17 @@ class PortalMpOpportunityController extends GetxController {
 
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
-
-  // ignore: prefer_final_fields
-  var _opportunityId = 0.obs;
+  // ignore: prefer_typing_uninitialized_variables
+  var businessPartnerName;
 
   // ignore: prefer_final_fields
   var _showOpportunityDetails  = false.obs;
 
   // ignore: prefer_final_fields
-  var _newOpportunity = false;
+  var _newOpportunity = false.obs;
+
+  // ignore: prefer_final_fields
+  var _userNotListed = false.obs;
 
   var opportunitySearchFieldController = TextEditingController();
   var opportunitySearchFilterValue = "".obs;
@@ -33,7 +40,7 @@ class PortalMpOpportunityController extends GetxController {
   };
 
   // ignore: prefer_final_fields
-  List<TextEditingController> _opportunityFields =  List.generate(2, (i) => TextEditingController());
+  List<TextEditingController> _opportunityFields =  List.generate(10, (i) => TextEditingController());
 
   List<Types>? getTypes(json) {
     var dJson = TypeJson.fromJson(json);
@@ -50,20 +57,22 @@ class PortalMpOpportunityController extends GetxController {
 
   bool get dataAvailable => _dataAvailable.value;
   OpportunityJson get trxOpportunity => _trx;
+  SalesStageJson get trxSalesStage => _salesStage;
+  PortalMPAdUserJson get adUsers => _adUsers;
 
   int get selectedCard => _selectedCard.value;
   set selectedCard(index) => _selectedCard.value = index;
-
-  int get opportunityId => _opportunityId.value;
-  set opportunityId(id) => _opportunityId.value = id;
 
   List<TextEditingController> get opportunityFields => _opportunityFields;
 
   bool get showOpportunityDetails => _showOpportunityDetails.value;
   set showOpportunityDetails(show) => _showOpportunityDetails.value = show;
 
-  bool get newOpportunity => _newOpportunity;
-  set newOpportunity(newOp) => _newOpportunity = newOp;
+  bool get newOpportunity => _newOpportunity.value;
+  set newOpportunity(newOp) => _newOpportunity.value = newOp;
+
+  bool get userNotListed => _userNotListed.value;
+  set userNotListed(listed) => _userNotListed.value = listed;
 
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
@@ -89,6 +98,28 @@ class PortalMpOpportunityController extends GetxController {
           'BusinessPartnerId', json["records"][0]["C_BPartner_ID"]["id"]);
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+      businessPartnerName = json["records"][0]["C_BPartner_ID"]["identifier"];
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> getAdUsers() async {
+    await getBusinessPartner();
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= C_BPartner_ID eq $businessPartnerId');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      _adUsers = PortalMPAdUserJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     } else {
       //print(response.body);
     }
@@ -97,6 +128,7 @@ class PortalMpOpportunityController extends GetxController {
   Future<void> getOpportunities() async {
     await getBusinessPartner();
     _dataAvailable.value = false;
+    _showOpportunityDetails.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
@@ -116,22 +148,74 @@ class PortalMpOpportunityController extends GetxController {
     }
   }
 
+  Future<void> getSalesStage() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/c_salesstage?\$filter= Probability eq 0');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      _salesStage = SalesStageJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      //print(response.body);
+    }
+  }
+
+  getExpectedCloseDate(){
+    DateTime now = DateTime.now();
+    int currentMonth = int.parse(DateFormat('MM').format(now));
+    int year = int.parse(DateFormat('yyyy').format(now));
+    int closingMonth = (currentMonth + 1) % 12;
+
+    if(closingMonth < currentMonth) {
+      year = year + 1;
+    }
+    //get last day of month
+    int day = int.parse(DateFormat('dd').format(DateTime(year, closingMonth +1, 0)));
+    String expectedCloseDate = DateFormat('yyyy-MM-dd').format(DateTime(year, closingMonth, day));
+    return expectedCloseDate;
+  }
+
   initFieldsController(index, newOpportunity) async{
     if(businessPartnerId == null) await getBusinessPartner();
+    await getSalesStage();
 
-    if(_opportunityFields.length != 4){
-      for (int i = 1; i < 5; i++) {_opportunityFields.add(TextEditingController());}
+    var expectedCloseDate = getExpectedCloseDate();
+    if(_opportunityFields.length != 9){
+      for (int i = 1; i < 10; i++) {_opportunityFields.add(TextEditingController());}
     }
+
+    getSalesStage();
     if(newOpportunity){
-      _opportunityFields[0].text = businessPartnerId.toString();
-      _opportunityFields[1].text = '';
-      _opportunityFields[2].text = '';
+      _opportunityFields[0].text = businessPartnerName;
+      _opportunityFields[1].text = _salesStage.records![0].name ?? "";
+      _opportunityFields[2].text = expectedCloseDate;
       _opportunityFields[3].text = '';
+      _opportunityFields[4].text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      _opportunityFields[5].text = '';
+      _opportunityFields[6].text = GetStorage().read('user') as String;
+      _opportunityFields[7].text = '';
+      _opportunityFields[8].text = '';
+      _opportunityFields[9].text = '';
     } else{
-      _opportunityFields[0].text = businessPartnerId;
-      _opportunityFields[1].text = _trx.records?[index].cSalesStageID?.identifier ?? '';
-      _opportunityFields[2].text = _trx.records?[index].expectedCloseDate ?? '';
-      _opportunityFields[3].text = _trx.records?[index].comments ?? '';
+      _opportunityFields[0].text = _trx.records![index].cBPartnerID?.identifier ?? '';
+      _opportunityFields[1].text = _trx.records![index].cSalesStageID?.identifier ?? '';
+      _opportunityFields[2].text = _trx.records![index].expectedCloseDate ?? '';
+      _opportunityFields[3].text = _trx.records![index].comments ?? '';
+      _opportunityFields[4].text = _trx.records![index].created!.split('T')[0];
+      _opportunityFields[5].text = _trx.records![index].description ?? '';
+      _opportunityFields[6].text = GetStorage().read('user');
+      _opportunityFields[7].text = _trx.records![index].note ?? '';
+      _opportunityFields[8].text = _trx.records![index].phone ?? '';
+      _opportunityFields[9].text = _trx.records![index].email ?? '';
+      _showOpportunityDetails.value = true;
     }
   }
   // Data

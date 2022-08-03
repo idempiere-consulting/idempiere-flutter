@@ -363,6 +363,10 @@ class LocaleString extends Translations {
           	'Please, sign this Sales Order to approve it',
           'No Sales Order selected': 'No Sales Order selected',
           'Sign': 'Sign',
+          'Select a request or create a new one': 'Select a request or create a new one',
+          'New Sales Order Request': 'New Sales Order Request',
+          'Request': 'Request',
+          'Not Listed': 'Not Listed',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -731,6 +735,10 @@ class LocaleString extends Translations {
           	'Firma questa Offerta per approvarla',
           'No Sales Order selected': 'Nessuna Offerta selezionata',
           'Sign': 'Firma',
+          'Select a request or create a new one': 'Seleziona una richiesta o creane una nuova',
+          'New Sales Order Request': 'Nuova Richiesta di Offerta',
+          'Request': 'Richiesta',
+          'Not Listed': 'Non in elenco',
         },
       };
 }

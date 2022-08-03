@@ -5,8 +5,10 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+//import 'dart:js';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/services.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -15,6 +17,8 @@ import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_create.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Opportunity/models/opportunity.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Opportunity/models/portal_mp_ad_user_json.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Opportunity/models/salestagejson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -32,6 +36,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:intl/intl.dart';
 
 // binding
 part '../../bindings/portal_mp_opportunity_binding.dart';
@@ -54,16 +59,28 @@ part '../components/team_member.dart';
 class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
   const PortalMpOpportunityScreen({Key? key}) : super(key: key);
 
-  updateOrCreateOpportunity(id) async {
+  createOpportunity() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "C_BPartner_ID": {"id": controller.opportunityFields[0].text},
-      "C_SalesStage_ID": {"id": controller.opportunityFields[1].text},
+      "Ad_User_ID": {"id": controller.userNotListed ?
+        GetStorage().read('user') : null},
+      "C_BPartner_ID": {"id": GetStorage().read("BusinessPartnerId")},
+      "C_SalesStage_ID": {"id": controller.trxSalesStage.records![0].id},
+      "OpportunityAmt": 0,
+      "C_Currency_ID": 102,
+      "Probability": 0,
       "ExpectedCloseDate": controller.opportunityFields[2].text,
-      "Description": controller.opportunityFields[3].text,
+      "Description": controller.opportunityFields[5].text,
+      "Comments": controller.opportunityFields[3].text, 
+      "Note": controller.userNotListed ? 
+        controller.opportunityFields[7].text : "",
+      "Phone": controller.userNotListed ? 
+        controller.opportunityFields[8].text : "",
+      "EMail": controller.userNotListed ?
+        controller.opportunityFields[9].text : ""
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/C_Opportunity/');
@@ -76,7 +93,7 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       Get.find<PortalMpOpportunityController>().getOpportunities();
       //print("done!");
       Get.snackbar(
@@ -91,6 +108,68 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
       Get.snackbar(
         "Error!".tr,
         "Record not created".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  updateOpportunity() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "C_BPartner_ID": {"id": GetStorage().read("BusinessPartnerId")},
+      "C_SalesStage_ID": {"id": controller.trxOpportunity.records!
+        [controller.selectedCard].cSalesStageID!.id},
+      "OpportunityAmt": controller.trxOpportunity.records!
+        [controller.selectedCard].opportunityAmt,
+      "C_Currency_ID": {"id": controller.trxOpportunity.records!
+        [controller.selectedCard].cCurrencyID!.id},
+      "Probability": controller.trxOpportunity.records!
+        [controller.selectedCard].probability,
+      "ExpectedCloseDate": controller.trxOpportunity.records!
+        [controller.selectedCard].expectedCloseDate,
+      "Description": controller.opportunityFields[5].text,
+      "Comments": controller.opportunityFields[3].text,
+      "Note": controller.userNotListed ? 
+        controller.opportunityFields[7].text : "",
+      "Phone": controller.userNotListed ? 
+        controller.opportunityFields[8].text : "",
+      "EMail": controller.userNotListed ?
+        controller.opportunityFields[9].text : ""
+    });
+    final opportunityId = controller.trxOpportunity.records!
+      [controller.selectedCard].id;
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/C_Opportunity/$opportunityId');
+    //print(msg);
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.find<PortalMpOpportunityController>().getOpportunities();
+      //print("done!");
+      Get.snackbar(
+        "Done!".tr,
+        "The record has been updated".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Error!".tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -829,7 +908,20 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                                   SizedBox(
                                     child: IconButton(
                                       onPressed: () {
-                                        updateOrCreateOpportunity(controller.selectedCard);
+                                        controller.showOpportunityDetails ? 
+
+                                          controller.newOpportunity ?
+                                            createOpportunity() :
+                                            updateOpportunity()
+                                          
+                                          : Get.snackbar(
+                                              "Error!".tr,
+                                              "Select a request or create a new one".tr,
+                                              icon: const Icon(
+                                                Icons.error,
+                                                color: Colors.red,
+                                              ),
+                                            );
                                       },
                                       icon: const Icon(Icons.save),
                                       color: Colors.white,
@@ -848,7 +940,10 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                                   height: MediaQuery.of(context).size.height / 1.3,
                                   child: 
                                   Obx( () => controller.showOpportunityDetails ? 
-                                     _buildOpportunityInput() : Center(child: Text('No Opportunity Selected'.tr)) 
+                                    SingleChildScrollView(
+                                      child: _buildOpportunityInput(context)
+                                    ) 
+                                      : Center(child: Text('No Request Selected'.tr)) 
                                     )),
                                 ),
                               ],
@@ -1109,13 +1204,14 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
         ),
         trailing: IconButton(
           icon: const Icon(
-            Icons.article,
+            Icons.edit,
             color: Colors.green 
           ),
           onPressed: () {
+            controller.showOpportunityDetails = false;
             controller.selectedCard = index;
-            controller.opportunityId = controller.trxOpportunity.records?[index].id;
-            controller.getOpportunities();
+            controller.newOpportunity = false;
+            controller.initFieldsController(index, false);
           },
         ),
         title: Text(
@@ -1172,13 +1268,40 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                 ],
               ),
             ),
+            
           ],
         ),
+        childrenPadding: const EdgeInsets.symmetric(
+            horizontal: 20.0, vertical: 10.0),
+          children: [
+          Column(
+            children: [
+              Row(
+                children: [
+                  controller.trxOpportunity.records![index].description != null ?
+                  Text(controller.trxOpportunity.records![index].description!,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                    : Text('No Subject'.tr, 
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w200
+                      ),),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(controller.trxOpportunity.records![index].comments ?? ''),
+                ],
+              ),
+            ],
+          )]
         ),
       );
   }
 
-  Widget _buildOpportunityInput() {
+  Widget _buildOpportunityInput(context) {
     return Container(
       //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
@@ -1187,6 +1310,159 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            Obx( () => controller.newOpportunity ?
+              Text("New Sales Order Request".tr,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold
+                ),) 
+                : Text("DocumentNo".tr + ' ' + 
+                  (controller.trxOpportunity.records![controller.selectedCard].documentNo ?? '???'),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold
+                  ),),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Obx( () => controller.userNotListed ? 
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(10),
+                            child: SizedBox(
+                              width: 300,
+                              child: TextField(
+                                style: const TextStyle(
+                                  color: Colors.white
+                                ),
+                                controller: controller.opportunityFields[7],
+                                decoration: InputDecoration(
+                                  hintStyle: const TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255)
+                                  ),
+                                  labelStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'Name'.tr,
+                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  enabled: true
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.all(10),
+                            child: SizedBox(
+                              width: 300,
+                              child: TextField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp("[0-9.-]"))
+                                ],
+                                style: const TextStyle(
+                                  color: Colors.white
+                                ),
+                                controller: controller.opportunityFields[8],
+                                decoration: InputDecoration(
+                                  hintStyle: const TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255)
+                                  ),
+                                  labelStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'Phone'.tr,
+                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  enabled: true
+                                  
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(10),
+                            child: SizedBox(
+                              width: 300,
+                              child: TextField(
+                                style: const TextStyle(
+                                  color: Colors.white
+                                ),
+                                controller: controller.opportunityFields[9],
+                                decoration: InputDecoration(
+                                  hintStyle: const TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255)
+                                  ),
+                                  labelStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'Email'.tr,
+                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  enabled: true
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+                  : Container(
+                    margin: const EdgeInsets.all(10),
+                    child: SizedBox(
+                      width: 300,
+                      child: TextField(
+                        style: const TextStyle(
+                          color: Colors.grey
+                        ),
+                        controller: controller.opportunityFields[6],
+                        decoration: InputDecoration(
+                          hintStyle: const TextStyle(
+                            color: Color.fromARGB(255, 255, 255, 255)
+                          ),
+                          labelStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          border: const OutlineInputBorder(),
+                          labelText: 'User/Contact'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          enabled: false
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: SizedBox(
+                    width: 200,
+                    child: CheckboxListTile(
+                      title: Text('Not Listed'.tr),
+                      value: controller.userNotListed,
+                      onChanged: (listed) {
+                        controller.userNotListed = listed;
+                      } ),
+                  ),
+                )
+              ],
+            ),
             Container(
               margin: const EdgeInsets.all(10),
               child: TextField(
@@ -1235,13 +1511,67 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                 ),
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: SizedBox(
+                    width: 300,
+                    child: TextField(
+                      style: const TextStyle(
+                        color: Colors.grey
+                      ),
+                      controller: controller.opportunityFields[4],
+                      decoration: InputDecoration(
+                        hintStyle: const TextStyle(
+                          color: Color.fromARGB(255, 255, 255, 255)
+                        ),
+                        labelStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Request Date'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        enabled: false,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: SizedBox(
+                    width: 300,
+                    child: TextField(
+                      style: const TextStyle(
+                        color: Colors.grey
+                      ),
+                      controller: controller.opportunityFields[2],
+                      decoration: InputDecoration(
+                        hintStyle: const TextStyle(
+                          color: Color.fromARGB(255, 255, 255, 255)
+                        ),
+                        labelStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Expected Close Date'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        enabled: false,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Container(
               margin: const EdgeInsets.all(10),
               child: TextField(
-                style: const TextStyle(
-                  color: Colors.grey
-                ),
-                controller: controller.opportunityFields[2],
+                controller: controller.opportunityFields[5],
                 decoration: InputDecoration(
                   hintStyle: const TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255)
@@ -1252,16 +1582,17 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                     fontWeight: FontWeight.bold,
                   ),
                   border: const OutlineInputBorder(),
-                  labelText: 'Expected Close Date'.tr,
+                  labelText: 'Subject'.tr,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  enabled: false,
+                  enabled: true,
                 ),
               ),
             ),
             Container(
               margin: const EdgeInsets.all(10),
               child: TextField(
-                controller: controller.opportunityFields[2],
+                maxLines: null,
+                controller: controller.opportunityFields[3],
                 decoration: InputDecoration(
                   hintStyle: const TextStyle(
                     color: Color.fromARGB(255, 255, 255, 255)
@@ -1272,7 +1603,7 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                     fontWeight: FontWeight.bold,
                   ),
                   border: const OutlineInputBorder(),
-                  labelText: 'Request'.tr,
+                  labelText: 'Request Details'.tr,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   enabled: true,
                 ),
