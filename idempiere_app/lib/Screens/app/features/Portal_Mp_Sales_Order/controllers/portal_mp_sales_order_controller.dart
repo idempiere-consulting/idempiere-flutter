@@ -216,7 +216,6 @@ class PortalMpSalesOrderController extends GetxController {
         'Authorization': authorization,
       },
     );
-    print(response.body);
     if (response.statusCode == 200) {
       //print(response.body);
       _trx =

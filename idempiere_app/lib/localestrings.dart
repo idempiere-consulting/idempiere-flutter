@@ -728,7 +728,7 @@ class LocaleString extends Translations {
           'Approved': 'Approvato',
           'Sign missing': 'Firma mancante',
           'Please, sign this Sales Order to approve it': 
-          	Firma questa Offerta per approvarla',
+          	'Firma questa Offerta per approvarla',
           'No Sales Order selected': 'Nessuna Offerta selezionata',
           'Sign': 'Firma',
         },
