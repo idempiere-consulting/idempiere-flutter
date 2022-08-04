@@ -7,14 +7,14 @@ import 'package:signature/signature.dart';
 import 'package:http/http.dart' as http; */
 
 /// example widget showing how to use signature widget
-class PrintPOSScreen extends StatefulWidget {
-  const PrintPOSScreen({Key? key}) : super(key: key);
+class PrintDocumentScreen extends StatefulWidget {
+  const PrintDocumentScreen({Key? key}) : super(key: key);
 
   @override
-  PrintPOSState createState() => PrintPOSState();
+  PrintDocumentState createState() => PrintDocumentState();
 }
 
-class PrintPOSState extends State<PrintPOSScreen> {
+class PrintDocumentState extends State<PrintDocumentScreen> {
   @override
   void initState() {
     super.initState();
@@ -26,7 +26,7 @@ class PrintPOSState extends State<PrintPOSScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Signature'.tr),
+          child: Text('Print'.tr),
         ),
       ),
       body: ListView(
