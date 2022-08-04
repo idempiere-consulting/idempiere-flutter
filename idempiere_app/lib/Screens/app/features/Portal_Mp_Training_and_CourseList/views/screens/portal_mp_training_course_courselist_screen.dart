@@ -395,137 +395,263 @@ class PortalMpTrainingCourseCourseListScreen
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: [
-                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
-                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
-                const SizedBox(height: kSpacing / 2),
-                const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("COURSES: ".tr + "${controller.trxCourses.rowcount}")
-                          : Text("COURSES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getCourseSurveys();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
+              return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(kBorderRadius),
+                        bottomRight: Radius.circular(kBorderRadius),
                       ),
-                    ),
-                  ],
+                      child: _Sidebar(data: controller.getSelectedProject())),
                 ),
-                const SizedBox(height: kSpacing),
-                Obx(
-                  () => controller.dataAvailable
-                      ? ListView.builder(
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: controller.trxCourses.rowcount,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.auto_stories,
-                                        color: Colors.green,
-                                      ),
-                                      tooltip: 'Take the Quiz'.tr,
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        Get.toNamed('/QuizCourse', arguments: {
-                                          "id":
-                                              controller.trxCourses.records![index].id,
-                                        });
+                Flexible(
+                  flex: 4,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: kSpacing / 2),
+                      _buildProfile(data: controller.getProfil()),
+                      const Divider(thickness: 1),
+                      //const SizedBox(height: kSpacing),
+                      _buildCoursesFilter(),
+                      Row(
+                        children: [
+                          Container(
+                            child: Obx(() => controller.dataAvailable
+                              ? Text("COURSES: ".tr + "${controller.trxCourses.rowcount}")
+                              : Text("COURSES: ".tr + "")),
+                            margin: const EdgeInsets.only(left: 15),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20),
+                            child: IconButton(
+                              onPressed: () {
+                                controller.getCourseSurveys();
+                                controller.dataAvailable1 = false;
+                                controller.showStudentDetails = false;
+                              },
+                              icon: const Icon(
+                                Icons.refresh,
+                                color: Colors.yellow,
+                              ),
+                            ),
+                          ),    
+                      ]),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              //height: kSpacing,
+                              height: MediaQuery.of(context).size.height / 1.3,
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: 
+                                Obx( () => controller.dataAvailable ? 
+                                  Scrollbar( 
+                                    child: ListView.builder(
+                                      primary: false,
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: controller.trxCourses.rowcount,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return Obx(() => Visibility(
+                                  visible: controller.courseSearchFilterValue.value ==
+                                          ""
+                                      ? true
+                                      : controller.courseDropdownValue.value == "1"
+                                          ? (controller.trxCourses.records![index].documentNo ?? "")
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .courseSearchFilterValue.value
+                                                  .toLowerCase())
+                                          : controller.courseDropdownValue.value == "2"
+                                              ? (controller
+                                                  .trxCourses.records![index].name ?? "")
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .courseSearchFilterValue.value
+                                                      .toLowerCase())
+                                          : controller.courseDropdownValue.value == "3"
+                                              ?( controller
+                                                  .trxCourses.records![index].cBPartnerID?.identifier ?? "" )
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .courseSearchFilterValue.value
+                                                      .toLowerCase())
+                                                  : true,
+                                  child:Card(
+                                          elevation: 8.0,
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 10.0, vertical: 6.0),
+                                          child: Obx( () => controller.selectedCourse == index ? 
+                                            _buildCourseCard(Theme.of(context).cardColor, context, index) : 
+                                            _buildCourseCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
+                                        ))));
                                       },
                                     ),
-                                  ),
-                                  title: Text(
-                                    controller.trxCourses.records![index].mProductID
-                                            ?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trxCourses.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                                  ):
+                                  const Center(child: CircularProgressIndicator()),
+                                ),
+                                              ),
+                          )],
+                  ),
+              ])),
+              Flexible(
+                  flex: 4,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: kSpacing),
+                      _buildHeader(),
+                      const SizedBox(height: kSpacing),
+                      _buildStudentsFilter(),
+                      Row(
+                        children: [
+                          Container(
+                            child: Obx(() => controller.dataAvailable1
+                              ? Text("STUDENTS: ".tr + "${controller.trxStudents.rowcount}")
+                              : Text("STUDENTS: ".tr + "")),
+                            margin: const EdgeInsets.only(left: 15),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20),
+                            child: IconButton(
+                              onPressed: () {
+                                controller.getCourseStudents();
+                              },
+                              icon: const Icon(
+                                Icons.refresh,
+                                color: Colors.yellow,
+                              ),
+                            ),
+                          ),    
+                      ]),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              //height: kSpacing,
+                              height: MediaQuery.of(context).size.height / 1.3,
+                              width: MediaQuery.of(context).size.width / 2,
+                              child: 
+                                Obx( () => controller.dataAvailable1 ? 
+                                  Scrollbar( 
+                                    child: ListView.builder(
+                                      primary: false,
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: controller.trxStudents.rowcount,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return Obx(() => Visibility(
+                                  visible: controller.studentSearchFilterValue.value ==
+                                          ""
+                                      ? true
+                                      : controller.studentDropdownValue.value == "1"
+                                          ? ((controller.trxStudents.records![index].name ?? "") + 
+                                              (controller.trxStudents.records![index].surname ?? ""))
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .studentSearchFilterValue.value
+                                                  .toLowerCase())
+                                          : controller.studentDropdownValue.value == "2"
+                                              ? (controller
+                                                  .trxStudents.records![index].birthcity ?? "")
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .studentSearchFilterValue.value
+                                                      .toLowerCase())
+                                          : controller.studentDropdownValue.value == "3"
+                                              ?( controller
+                                                  .trxStudents.records![index].birthday ?? "" )
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .studentSearchFilterValue.value
+                                                      .toLowerCase())
+                                                  : true,
+                                  child:Card(
+                                          elevation: 8.0,
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 10.0, vertical: 6.0),
+                                          child: Obx( () => controller.selectedStudent == index ? 
+                                            _buildStudentCard(Theme.of(context).cardColor, context, index) : 
+                                            _buildStudentCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
+                                          ),
+                                        )));
+                                      },
+                                    ),
+                                  ): Center(child: Text('No Course Selected'.tr)),
+                                              ),
+                      ))],
+                  ),
+              ])),
+                        Flexible(
+                          flex: 7,
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: kSpacing *1),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              //crea un nuovo studente quindi verrà fatta una richiesta post
+                                              controller.newStudent = true;
+                                              newStudentInput();
+                                            },
+                                            icon: const Icon(Icons.person_add),
+                                            color: Colors.green,
+                                            iconSize: 35
+                                          ),
                                         ),
+                                        SizedBox(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              deleteStudent(controller.selectedStudent);
+                                            },
+                                            icon: const Icon(Icons.delete),
+                                            color: Colors.red,
+                                            iconSize: 35
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              updateOrCreateStudent(controller.selectedStudent);
+                                            },
+                                            icon: const Icon(Icons.save),
+                                            color: Colors.white,
+                                            iconSize: 35
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: kSpacing * 3.8),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: SizedBox(
+                                        //width: 100,
+                                        height: MediaQuery.of(context).size.height / 1.3,
+                                        child: 
+                                        Obx( () => controller.showStudentDetails ? 
+                                           _buildStudentInput() : Center(child: Text('No Student Selected'.tr)) 
+                                          )),
                                       ),
                                     ],
                                   ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Description: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller.trxCourses.records![index]
-                                                      .description ??
-                                                  ""),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                ],
                               ),
-                            );
-                          },
-                        )
-                      : const Center(child: CircularProgressIndicator()),
-                ),
-              ]);
+                            )],);
             },
             desktopBuilder: (context, constraints) {
             return  Row(
@@ -785,149 +911,6 @@ class PortalMpTrainingCourseCourseListScreen
                                 ],
                               ),
                             )],);
-              /* return Column(children: [
-                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
-                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
-                const SizedBox(height: kSpacing / 2),
-                const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("COURSES: ".tr + "${controller.trx.rowcount}")
-                          : Text("COURSES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          //Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getCourseSurveys();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
-                Obx(
-                  () => controller.dataAvailable
-                      ? ListView.builder(
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.auto_stories,
-                                        color: Colors.green,
-                                      ),
-                                      tooltip: 'Take the Quiz'.tr,
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        Get.toNamed('/QuizCourse', arguments: {
-                                          "id":
-                                              controller.trx.records![index].id,
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  title: Text(
-                                    controller.trx.records![index].mProductID
-                                            ?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Description: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller.trx.records![index]
-                                                      .description ??
-                                                  ""),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      : const Center(child: CircularProgressIndicator()),
-                ),
-              ]); */
             },
           ),
         ),
