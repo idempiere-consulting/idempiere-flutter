@@ -134,6 +134,40 @@ class CRMSalesOrderController extends GetxController {
     }
   }
 
+  Future<void> getDocument(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/windows/sales-order/${_trx.records![index].id}/print');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      String pdfString = json["exportFile"];
+      //print(pdfString);
+
+      List<int> list = base64.decode(pdfString);
+      Uint8List bytes = Uint8List.fromList(list);
+      //print(bytes);
+
+      //final pdf = await rootBundle.load('document.pdf');
+      await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes);
+
+      //return json.records!;
+    } else {
+      throw Exception("Failed to load PDF");
+    }
+  }
+
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();

@@ -5,13 +5,13 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_document_page.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_pos_page.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -29,9 +29,12 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_edit_sales_order.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:pdf/pdf.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //model for sales_order_controller
@@ -420,17 +423,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             .editWorkOrderResourceDateTesting(
                                                                 isConnected,
                                                                 index); */
-                                                      Get.to(
+                                                      controller
+                                                          .getDocument(index);
+                                                      /* Get.to(
                                                           const PrintDocumentScreen(),
                                                           arguments: {
                                                             "id": controller
                                                                 .trx
                                                                 .records![index]
                                                                 .id,
-                                                          });
+                                                          }); */
                                                     },
-                                                    icon: const Icon(
-                                                        Icons.document_scanner),
+                                                    icon:
+                                                        const Icon(Icons.print),
                                                   ),
                                                   IconButton(
                                                     tooltip: 'print POS',
@@ -451,7 +456,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           });
                                                     },
                                                     icon: const Icon(
-                                                      EvaIcons.printerOutline,
+                                                      Icons.tag,
                                                     ),
                                                   ),
                                                   IconButton(
