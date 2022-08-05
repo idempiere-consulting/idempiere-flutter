@@ -5,7 +5,9 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -176,12 +178,17 @@ class SettingsScreen extends GetView<SettingsController> {
                           ),
                           SettingsSection(
                             margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Language'.tr),
+                            title: Text('Bluetooth Printer'.tr),
                             tiles: <SettingsTile>[
                               SettingsTile.navigation(
-                                leading: const Icon(Icons.language),
-                                title: Text('Language'.tr),
-                                value: Text('Italian'.tr),
+                                title: Text(controller.posPrinterName.value),
+                                leading: const Icon(Icons.receipt),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  if (Platform.isAndroid) {
+                                    controller.getBluetooth(context);
+                                  }
+                                },
                               ),
                             ],
                           ),

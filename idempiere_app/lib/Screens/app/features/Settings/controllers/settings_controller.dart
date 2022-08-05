@@ -23,6 +23,7 @@ class SettingsController extends GetxController {
     isProductSync.value = GetStorage().read('isProductSync') ?? true;
     isjpTODOSync.value = GetStorage().read('isjpTODOSync') ?? true;
     isWorkOrderSync.value = GetStorage().read('isWorkOrderSync') ?? true;
+    posPrinterName.value = GetStorage().read('posName') ?? 'None';
   }
 
   Future<void> reSyncAll() async {
@@ -372,6 +373,47 @@ class SettingsController extends GetxController {
     } else {
       //print(response.body); &\$orderby=
     }
+  }
+
+  var posPrinterName = "None".obs;
+  List availableBluetoothDevices = [];
+
+  Future<void> getBluetooth(BuildContext context) async {
+    final List? bluetooths = await BluetoothThermalPrinter.getBluetooths;
+    //print("Print $bluetooths");
+
+    availableBluetoothDevices = bluetooths!;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: ListView.builder(
+            itemCount: availableBluetoothDevices.isNotEmpty
+                ? availableBluetoothDevices.length
+                : 0,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {
+                  String select = availableBluetoothDevices[index];
+                  List list = select.split("#");
+                  posPrinterName.value = list[0];
+                  String mac = list[1];
+                  Get.back();
+                  GetStorage().write('posMacAddress', mac);
+                  GetStorage().write('posName', list[0]);
+
+                  //setConnect(mac);
+                },
+                title: Text('${availableBluetoothDevices[index]}'),
+                //subtitle: const Text("Click to connect"),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   // Data

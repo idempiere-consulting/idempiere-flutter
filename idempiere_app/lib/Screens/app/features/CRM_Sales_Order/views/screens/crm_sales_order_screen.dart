@@ -7,12 +7,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_pos_page.dart';
+//import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_pos_page.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -33,7 +35,7 @@ import 'package:pdf/pdf.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -446,18 +448,18 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             .editWorkOrderResourceDateTesting(
                                                                 isConnected,
                                                                 index); */
-                                                      Get.to(
+                                                      /* Get.to(
                                                           const PrintPOSScreen(),
                                                           arguments: {
                                                             "id": controller
                                                                 .trx
                                                                 .records![index]
                                                                 .id,
-                                                          });
+                                                          }); */
+                                                      controller.printTicket();
                                                     },
                                                     icon: const Icon(
-                                                      Icons.tag,
-                                                    ),
+                                                        Icons.receipt),
                                                   ),
                                                   IconButton(
                                                     tooltip: 'Sign',
