@@ -358,498 +358,287 @@ class PortalMpMaintenanceMpScreen extends GetView<PortalMpMaintenanceMpControlle
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                flex: 3/* (constraints.maxWidth < 1360) ? 4 : 3 */,
-                child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(kBorderRadius),
-                      bottomRight: Radius.circular(kBorderRadius),
-                    ),
-                    child: _Sidebar(data: controller.getSelectedProject())),
-              ),
-              Flexible(
-                flex: 3,
-                child: Column(
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
                   children: [
-                    const SizedBox(height: kSpacing / 2),
-                    _buildProfile(data: controller.getProfil()),
-
-                    Row(
-                      children: [
-                        Container(
-                          child: Obx(() => controller.dataAvailable
-                            ? Text("MAINTENANCES".tr + ": ${controller.trxMaintain.rowcount}")
-                            : Text("MAINTENANCES".tr + ": ")),
-                          margin: const EdgeInsets.only(left: 15),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(left: 20),
-                          child: IconButton(
-                            onPressed: () {
-                              controller.getMPMaintain();
-                            },
-                            icon: const Icon(
-                              Icons.refresh,
-                              color: Colors.yellow,
-                            ),
-                          ),
-                        ),    
-                    ]),
-                    _buildMaintainFilter(),
-                    const SizedBox(height: kSpacing),
-                    Obx( () => controller.dataAvailable ? 
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.height / 1.3,
-                              child: ListView.builder(
-                                primary: false,
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: controller.trxMaintain.rowcount,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Obx (() => Visibility(
-                                      visible: controller.maintenanceSearchFilterValue.value ==
-                                                ""
-                                            ? true
-                                            : controller.maintenanceDropdownValue.value == "1"
-                                                ? controller.trxMaintain.records![index].documentNo
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .contains(controller
-                                                        .maintenanceSearchFilterValue.value
-                                                        .toLowerCase())
-                                            : controller.maintenanceDropdownValue.value == "2"
-                                                    ? (controller
-                                                        .trxMaintain.records![index].billBPartnerID?.identifier ?? "")
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(controller
-                                                            .maintenanceSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : controller.maintenanceDropdownValue.value == "3"
-                                                    ? (controller
-                                                        .trxMaintain.records![index].cContractID?.identifier ?? "")
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(controller
-                                                            .maintenanceSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : true,
-                                    
-                                    child: Card(
-                                      elevation: 8.0,
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 6.0),
-                                      child: Obx( () => controller.selectedMaintenanceCard == index ? 
-                                        _buildMaintainCard(Theme.of(context).cardColor, context, index) : 
-                                        _buildMaintainCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
-                                      ),
-                                  )));
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ):
-                      const Center(child: CircularProgressIndicator()),
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("MAINTENANCES: ${controller.trxMaintain.rowcount}")
+                          : const Text("MAINTENANCES: ")),
+                      margin: const EdgeInsets.only(left: 15),
                     ),
-                    ]),
-                  ),
-            Flexible(
-              flex: 3,
-              child: Column(
-                children: [
-                  const SizedBox(height: kSpacing / 2),
-                  _buildHeader(),
-                  const SizedBox(height: kSpacing),
-                  Row(
-                    children: [
-                      Container(
-                        child: Obx(() => controller.dataAvailable1
-                          ? Text("RESOURCES".tr + ": ${controller.trxResources.rowcount}")
-                          : Text("RESOURCES".tr + ": ")),
-                        margin: const EdgeInsets.only(left: 15),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        onPressed: () {
+                          Get.to(const CreateMaintenanceMptask());
+                        },
+                        icon: const Icon(
+                          Icons.note_add_outlined,
+                          color: Colors.lightBlue,
+                        ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 20),
-                        child: IconButton(
+                    ), */
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getMPMaintain();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 30),
+                      child: Obx(
+                        () => TextButton(
                           onPressed: () {
-                            controller.getResources();
+                            controller.changeFilter();
+                            //print("hello");
                           },
-                          icon: const Icon(
-                            Icons.refresh,
-                            color: Colors.yellow,
-                          ),
+                          child: Text(controller.value.value),
                         ),
                       ),
-                      ],
-                  ),
-                  _buildResourcesFilter(),
-                  const SizedBox(height: kSpacing / 1.2),
-                  Obx( () => controller.dataAvailable1 ? 
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height / 1.3,
-                            child: ListView.builder(
-                              primary: false,
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: controller.trxResources.rowcount,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Obx (() => Visibility(
-                                      visible: controller.resourcesSearchFilterValue.value ==
-                                                ""
-                                            ? true
-                                            : controller.resourcesDropdownValue.value == "1"
-                                                ? (controller.trxResources.records![index].mProductID?.identifier ?? "")
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .contains(controller
-                                                        .resourcesSearchFilterValue.value
-                                                        .toLowerCase())
-                                            : controller.resourcesDropdownValue.value == "2"
-                                                    ? (controller
-                                                        .trxResources.records![index].locationComment ?? "")
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(controller
-                                                            .resourcesSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : controller.resourcesDropdownValue.value == "3"
-                                                    ? (controller
-                                                        .trxResources.records![index].value ?? "")
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(controller
-                                                            .resourcesSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : true,
-                                      child: Card(
-                                  elevation: 8.0,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                  child: Obx( () => controller.selectedResourceCard == index ? 
-                                    _buildResourceCard(Theme.of(context).cardColor, context, index) : 
-                                    _buildResourceCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
+                    ), */
+                  ],
+                ),
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trxMaintain.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  trailing: IconButton(
+                                    onPressed: () {
+                                      /* GetStorage().write(
+                                          'selectedWorkOrderId',
+                                          controller
+                                              .trx.records![index].id);
+                                      Get.toNamed('/MaintenanceMptaskLine'); */
+                                    },
+                                    icon: const Icon(
+                                      Icons.view_list,
+                                      color: Colors.green,
+                                    ),
                                   ),
-                                )));
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ): Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height / 1.3,
-                            child: Center(child: Text('No Maintenance Selected'.tr)
-                          ))),
-                      ],
-                    ),
-                  ),],
-                ),),
-                Flexible(
-                  flex: 4,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: kSpacing * 10),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: SizedBox(
-                                //width: 100,
-                                height: MediaQuery.of(context).size.height / 1.2,
-                                child: 
-                                Obx( () => controller.showResourceDetails ? 
-                                  SingleChildScrollView(
-                                    child: Container(
-                                      //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                      margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
-                                      color: const Color.fromRGBO(64, 75, 96, .9),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 8),
-                                        child: Column(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.work,
+                                      ),
+                                      tooltip: 'Edit MAINTENANCES',
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        /* Get.to(const EditMaintenanceMptask(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "bPartner": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier ??
+                                                  "",
+                                              "bPartnerLocationId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerLocationID
+                                                      ?.id ??
+                                                  "",
+                                              "resource":
+                                                  controller //serve id risorsa
+                                                          .trx
+                                                          .records![index]
+                                                          .mpOtAdUserName ??
+                                                      "",
+                                              "dateStart": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateWorkStart ??
+                                                  ""
+                                            }); */
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.trxMaintain.records![index].documentNo ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                          
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.event),
+                                      Text(
+                                        controller.trxMaintain.records![index]
+                                                .documentNo ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: Colors.white,
+                                      size: 30.0,
+                                    ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
                                           children: [
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Product'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trxResources.records![controller.selectedResourceCard].mProductID?.identifier ?? '',
-                                                  enabled: false
-                                                ),
+                                            const Text(
+                                              "Doc Number: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trxMaintain.records![index]
+                                                    .documentNo ??
+                                                "")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Status: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trxMaintain.records![index].documentNo}"
+                                                    .tr),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            /* const Text(
+                                              "BPartner: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ), */
+                                            Icon(Icons.location_pin,
+                                                color: Colors.red.shade700),
+                                            const Expanded(
+                                              child: Text(
+                                                  ""),//"${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              child:
+                                                  Text("Create Sales Order".tr),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
                                               ),
+                                              onPressed: () async {
+                                                /* Get.defaultDialog(
+                                                        title: 'Complete Action',
+                                                        content: const Text(
+                                                            "Are you sure you want to complete the record?"),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          final ip = GetStorage()
+                                                              .read('ip');
+                                                          String authorization =
+                                                              'Bearer ' +
+                                                                  GetStorage().read(
+                                                                      'token');
+                                                          final msg = jsonEncode({
+                                                            "DocAction": "CO",
+                                                          });
+                                                          final protocol =
+                                                              GetStorage()
+                                                                  .read('protocol');
+                                                          var url = Uri.parse(
+                                                              '$protocol://' +
+                                                                  ip +
+                                                                  '/api/v1/models/c_order/${controller.trx.records![index].id}');
+                            
+                                                          var response =
+                                                              await http.put(
+                                                            url,
+                                                            body: msg,
+                                                            headers: <String,
+                                                                String>{
+                                                              'Content-Type':
+                                                                  'application/json',
+                                                              'Authorization':
+                                                                  authorization,
+                                                            },
+                                                          );
+                                                          if (response.statusCode ==
+                                                              200) {
+                                                            //print("done!");
+                                                            completeOrder(index);
+                                                          } else {
+                                                            //print(response.body);
+                                                            Get.snackbar(
+                                                              "Error!".tr,
+                                                              "Record not completed".tr,
+                                                              icon: const Icon(
+                                                                Icons.error,
+                                                                color: Colors.red,
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
+                                                      ); */
+                                              },
                                             ),
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Maintenance Task'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trxResources.records![controller.selectedResourceCard].mPMaintainTaskID?.identifier ?? '',
-                                                  enabled: false
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Location'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trxResources.records![controller.selectedResourceCard].locationComment ?? '',
-                                                  enabled: false
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'Code/Position'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trxResources.records![controller.selectedResourceCard].value ?? '',
-                                                  enabled: false
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  hintStyle: const TextStyle(
-                                                    color: Color.fromARGB(255, 255, 255, 255)
-                                                  ),
-                                                  labelStyle: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  border: const OutlineInputBorder(),
-                                                  labelText: 'SerNo'.tr,
-                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                  hintText: controller.trxResources.records![controller.selectedResourceCard].serNo ?? '',
-                                                  enabled: false
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: SizedBox(
-                                                    width: 200,
-                                                    child: TextField(
-                                                      decoration: InputDecoration(
-                                                        hintStyle: const TextStyle(
-                                                          color: Color.fromARGB(255, 255, 255, 255)
-                                                        ),
-                                                        labelStyle: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                        border: const OutlineInputBorder(),
-                                                        labelText: 'Check Date'.tr,
-                                                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                        hintText: controller.trxResources.records![controller.selectedResourceCard].litControl1DateFrom ?? '',
-                                                        enabled: false
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ), 
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: SizedBox(
-                                                    width: 200,
-                                                    child: TextField(
-                                                      decoration: InputDecoration(
-                                                        hintStyle: const TextStyle(
-                                                          color: Color.fromARGB(255, 255, 255, 255)
-                                                        ),
-                                                        labelStyle: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                        border: const OutlineInputBorder(),
-                                                        labelText: 'Next Check Date'.tr,
-                                                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                        hintText: controller.trxResources.records![controller.selectedResourceCard].litControl1DateNext ?? '',
-                                                        enabled: false
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: SizedBox(
-                                                    width: 200,
-                                                    child: TextField(
-                                                      decoration: InputDecoration(
-                                                        hintStyle: const TextStyle(
-                                                          color: Color.fromARGB(255, 255, 255, 255)
-                                                        ),
-                                                        labelStyle: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                        border: const OutlineInputBorder(),
-                                                        labelText: 'Revision Date'.tr,
-                                                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                        hintText: controller.trxResources.records![controller.selectedResourceCard].litControl2DateFrom ?? '',
-                                                        enabled: false
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ), 
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: SizedBox(
-                                                    width: 200,
-                                                    child: TextField(
-                                                      decoration: InputDecoration(
-                                                        hintStyle: const TextStyle(
-                                                          color: Color.fromARGB(255, 255, 255, 255)
-                                                        ),
-                                                        labelStyle: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                        border: const OutlineInputBorder(),
-                                                        labelText: 'Next Revision Date'.tr,
-                                                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                        hintText: controller.trxResources.records![controller.selectedResourceCard].litControl2DateNext ?? '',
-                                                        enabled: false
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ), 
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: SizedBox(
-                                                    width: 200,
-                                                    child: TextField(
-                                                      decoration: InputDecoration(
-                                                        hintStyle: const TextStyle(
-                                                          color: Color.fromARGB(255, 255, 255, 255)
-                                                        ),
-                                                        labelStyle: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                        border: const OutlineInputBorder(),
-                                                        labelText: 'Testing Date'.tr,
-                                                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                        hintText: controller.trxResources.records![controller.selectedResourceCard].litControl3DateFrom ?? '',
-                                                        enabled: false
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ), 
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  child: SizedBox(
-                                                    width: 200,
-                                                    child: TextField(
-                                                      decoration: InputDecoration(
-                                                        hintStyle: const TextStyle(
-                                                          color: Color.fromARGB(255, 255, 255, 255)
-                                                        ),
-                                                        labelStyle: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold,
-                                                        ),
-                                                        border: const OutlineInputBorder(),
-                                                        labelText: 'Next Testing Date'.tr,
-                                                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                        hintText: controller.trxResources.records![controller.selectedResourceCard].litControl3DateNext ?? '',
-                                                        enabled: false
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ), 
-                                  
-                                  
-                                          ]),
-                                      )),
-                                  ) : Center(child: Text('No Resource Selected'.tr)) /* Container(
-                                        margin: const EdgeInsets.only(right: 10.0, left: 10.0, top: kSpacing * 7.7, bottom: 6.0),
-                                        color: const Color.fromRGBO(64, 75, 96, .9),
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Text('No Resource Selected'),
-                                        )) */
-                                  )),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-            ],); 
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
             desktopBuilder: (context, constraints) {
               return  Row(

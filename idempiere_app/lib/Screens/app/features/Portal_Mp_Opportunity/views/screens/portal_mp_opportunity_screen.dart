@@ -8,6 +8,7 @@ import 'dart:developer';
 //import 'dart:js';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -59,6 +60,38 @@ part '../components/team_member.dart';
 class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
   const PortalMpOpportunityScreen({Key? key}) : super(key: key);
 
+  sendAttachment(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final msg = jsonEncode({"name": controller.imageName.text, "data": controller.image64});
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/C_Opportunity/$id/attachments');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      
+    } else {
+      Get.snackbar(
+        "Error!".tr,
+        "Attachment not sent".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   createOpportunity() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -66,7 +99,7 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "Ad_User_ID": {"id": controller.userNotListed ?
-        GetStorage().read('user') : null},
+        null :  int.parse(controller.userDropDownValue)},
       "C_BPartner_ID": {"id": GetStorage().read("BusinessPartnerId")},
       "C_SalesStage_ID": {"id": controller.trxSalesStage.records![0].id},
       "OpportunityAmt": 0,
@@ -96,6 +129,9 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
     if (response.statusCode == 201) {
       Get.find<PortalMpOpportunityController>().getOpportunities();
       //print("done!");
+      Map<String, dynamic> responseJson = json.decode(response.body);
+      int id = responseJson["id"];
+      
       Get.snackbar(
         "Done!".tr,
         "The record has been created".tr,
@@ -104,6 +140,9 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
           color: Colors.green,
         ),
       );
+      if(controller.image64 != ""){
+        sendAttachment(id);
+      }
     } else {
       Get.snackbar(
         "Error!".tr,
@@ -122,6 +161,8 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "Ad_User_ID": {"id": controller.userNotListed ?
+        null :  int.parse(controller.userDropDownValue)},
       "C_BPartner_ID": {"id": GetStorage().read("BusinessPartnerId")},
       "C_SalesStage_ID": {"id": controller.trxOpportunity.records!
         [controller.selectedCard].cSalesStageID!.id},
@@ -166,6 +207,9 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
           color: Colors.green,
         ),
       );
+      if(controller.image64 != ""){
+        sendAttachment(opportunityId!);
+      }
     } else {
       Get.snackbar(
         "Error!".tr,
@@ -817,8 +861,8 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                           children: [
                             Container(
                               child: Obx(() => controller.dataAvailable
-                                  ? Text("SALES ORDERS REQUESTS: ".tr + controller.trxOpportunity.rowcount.toString())
-                                  : Text("SALES ORDERS REQUESTS: ".tr)),
+                                  ? Text("SALES ORDERS REQUESTS".tr + ': ' + controller.trxOpportunity.rowcount.toString())
+                                  : Text("SALES ORDERS REQUESTS".tr + ': ')),
                               margin: const EdgeInsets.only(left: 15),
                             ),
                             Container(
@@ -858,7 +902,7 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                                                         .toLowerCase())
                                             : controller.opportunityDropdownValue.value == "2"
                                                     ? (controller
-                                                        .trxOpportunity.records![index].cSalesStageID?.identifier?? "")
+                                                        .trxOpportunity.records![index].created ?? "")
                                                         .toString()
                                                         .toLowerCase()
                                                         .contains(controller
@@ -898,6 +942,9 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                                         //crea una nuova opportunità quindi verrà fatta una richiesta post
                                         controller.showOpportunityDetails = true;
                                         controller.newOpportunity = true;
+                                        controller.image64 = "";
+                                        controller.imageName = "";
+                                        controller.userNotListed = false;
                                         newOpportunityInput();
                                       },
                                       icon: const Icon(Icons.person_add),
@@ -931,7 +978,7 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                                 ],
                               ),
                             ),
-                            const SizedBox(height: kSpacing * 3.8),
+                            const SizedBox(height: kSpacing * 2),
                             Row(
                               children: [
                                 Expanded(
@@ -1211,6 +1258,10 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
             controller.showOpportunityDetails = false;
             controller.selectedCard = index;
             controller.newOpportunity = false;
+            controller.image64 = "";
+            controller.imageName = "";
+            controller.userNotListed = controller.trxOpportunity.
+              records![index].note != null ? true : false;
             controller.initFieldsController(index, false);
           },
         ),
@@ -1237,7 +1288,7 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                   ),
                   Row(
                     children:[
-                      Text('Sales Stage'.tr + ': ',
+                      Text('SalesStage'.tr + ': ',
                         style: const TextStyle(
                           color: Colors.white
                         ),
@@ -1278,6 +1329,13 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
             children: [
               Row(
                 children: [
+                  Text('Request Date'.tr + ': '),
+                  Text(controller.trxOpportunity.records![index].created!.split('T')[0])
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Subject'.tr + ': '),
                   controller.trxOpportunity.records![index].description != null ?
                   Text(controller.trxOpportunity.records![index].description!,
                     style: const TextStyle(
@@ -1422,7 +1480,58 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                       )
                     ],
                   )
-                  : Container(
+                  : Column(
+                    children: [
+                      Container(
+                      padding: const EdgeInsets.only(left: 40),
+                      child: Align(
+                        child: Text(
+                          "User/Contact".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      width: 300,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAdUsers(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<AdRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? DropdownButton(
+                                    value: controller.userDropDownValue,
+                                    elevation: 16,
+                                    onChanged: (String? newValue) {
+                                        controller.userDropDownValue = newValue!;
+                                      //print(dropdownValue);
+                                    },
+                                    items: snapshot.data!.map((list) {
+                                      return DropdownMenuItem<String>(
+                                        child: Text(
+                                          list.name.toString(),
+                                        ),
+                                        value: list.id.toString(),
+                                      );
+                                    }).toList(),
+                                  )
+                        : const Center(
+                          child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                    ],
+                  ),
+                
+                  /* Container(
                     margin: const EdgeInsets.all(10),
                     child: SizedBox(
                       width: 300,
@@ -1447,7 +1556,7 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                         ),
                       ),
                     ),
-                  ),
+                  ), */
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
@@ -1503,7 +1612,7 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                     fontWeight: FontWeight.bold,
                   ),
                   border: const OutlineInputBorder(),
-                  labelText: 'Sales Stage'.tr,
+                  labelText: 'SalesStage'.tr,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   /* hintText: controller.trxStudents.records![controller.selectedStudent]
                   .surname ?? '', */
@@ -1606,6 +1715,53 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
                   labelText: 'Request Details'.tr,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   enabled: true,
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: TextField(
+                maxLines: null,
+                controller: controller.imageName,
+                decoration: InputDecoration(
+                  hintStyle: const TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255)
+                  ),
+                  labelStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  border: const OutlineInputBorder(),
+                  labelText: 'Attachment'.tr,
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  enabled: true,
+                  prefixIcon:  IconButton(
+                    onPressed: () {
+                      controller.attachImage();
+                    }, 
+                    icon: Obx( () => controller.image64 != "" ?
+                      const Icon(
+                        Icons.attach_file,
+                        color: Colors.green ,
+                    ) 
+                    : const Icon(
+                        Icons.attach_file,
+                        color: Colors.white,
+                      )
+                    ),
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      controller.image64 = "";
+                      controller.imageName = "";
+                    },
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Colors.red,
+                    ),
+                  )
+                  
                 ),
               ),
             ),

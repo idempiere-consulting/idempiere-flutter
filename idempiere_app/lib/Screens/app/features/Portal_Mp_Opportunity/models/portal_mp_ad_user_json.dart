@@ -3,7 +3,7 @@ class PortalMPAdUserJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<Records>? records;
+  final List<AdRecords>? records;
 
   PortalMPAdUserJson({
     this.pagecount,
@@ -18,7 +18,7 @@ class PortalMPAdUserJson {
       recordssize = json['records-size'] as int?,
       skiprecords = json['skip-records'] as int?,
       rowcount = json['row-count'] as int?,
-      records = (json['records'] as List?)?.map((dynamic e) => Records.fromJson(e as Map<String,dynamic>)).toList();
+      records = (json['records'] as List?)?.map((dynamic e) => AdRecords.fromJson(e as Map<String,dynamic>)).toList();
 
   Map<String, dynamic> toJson() => {
     'page-count' : pagecount,
@@ -29,7 +29,7 @@ class PortalMPAdUserJson {
   };
 }
 
-class Records {
+class AdRecords {
   final int? id;
   final String? uid;
   final String? name;
@@ -68,7 +68,7 @@ class Records {
   final bool? isMobileEnabled;
   final String? modelname;
 
-  Records({
+  AdRecords({
     this.id,
     this.uid,
     this.name,
@@ -108,7 +108,7 @@ class Records {
     this.modelname,
   });
 
-  Records.fromJson(Map<String, dynamic> json)
+  AdRecords.fromJson(Map<String, dynamic> json)
     : id = json['id'] as int?,
       uid = json['uid'] as String?,
       name = json['Name'] as String?,

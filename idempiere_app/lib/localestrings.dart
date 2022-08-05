@@ -367,6 +367,11 @@ class LocaleString extends Translations {
           'New Sales Order Request': 'New Sales Order Request',
           'Request': 'Request',
           'Not Listed': 'Not Listed',
+          'Request Date': 'Request Date',
+          'Expected Close Date': 'Expected Close Date',
+          'Subject': 'Subject',
+          'Request Details': 'Request Details',
+          'Sales Order Requests': 'Sales Order Requests',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -739,6 +744,11 @@ class LocaleString extends Translations {
           'New Sales Order Request': 'Nuova Richiesta di Offerta',
           'Request': 'Richiesta',
           'Not Listed': 'Non in elenco',
+          'Request Date': 'Data Richiesta',
+          'Expected Close Date': 'Data di Chiusura Attesa',
+          'Subject': 'Oggetto',
+          'Request Details': 'Dettagli Richiesta',
+          'Sales Order Requests': 'Richieste di Offerta',
         },
       };
 }

@@ -223,7 +223,7 @@ class PortalMpSalesOrderController extends GetxController {
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      _dataAvailable.value = _trx.records!.isNotEmpty;
 
       if(_canApprove.isEmpty){
         for(int i = 0; i < _trx.records!.length; i++){

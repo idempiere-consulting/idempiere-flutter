@@ -151,7 +151,7 @@ class PortalMpAnomalyController extends GetxController {
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      _dataAvailable.value = _trx.records!.isNotEmpty;
     }
   }
 

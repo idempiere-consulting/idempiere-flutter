@@ -439,641 +439,326 @@ class PortalMpContractScreen extends GetView<PortalMpContractController> {
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                    child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(kBorderRadius),
-                          bottomRight: Radius.circular(kBorderRadius),
-                        ),
-                        child: _Sidebar(data: controller.getSelectedProject())),
-                  ),
-                  Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(flex: 5, child: _buildProfile(data: controller.getProfil())),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              child: Obx(() => controller.dataAvailable
-                                  ? Text("CONTRACTS: ".tr + controller.trx.rowcount.toString())
-                                  : Text("CONTRACTS: ".tr)),
-                              margin: const EdgeInsets.only(left: 15),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              child: IconButton(
-                                onPressed: () {
-                                  controller.getContracts();
-                                },
-                                icon: const Icon(
-                                  Icons.refresh,
-                                  color: Colors.yellow,
-                                ),
-                              ),
-                            ),
-                            /* Container(
-                              margin: const EdgeInsets.only(left: 10),
-                              child: Obx(
-                                () => TextButton(
-                                  onPressed: () {
-                                    controller.changeFilter();
-                                    //print("hello");
-                                  },
-                                  child: Text(controller.value.value),
-                                ),
-                              ),
-                            ), */
-                            
-                            
-                          ],
-                        ),
-                        _buildContractsFilter(),
-                        const SizedBox(height: kSpacing),
-                        Obx(
-                          () => controller.dataAvailable
-                              ? ListView.builder(
-                                  primary: false,
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: controller.trx.rowcount,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Obx (() => Visibility(
-                                      visible: controller.contractSearchFilterValue.value ==
-                                                ""
-                                            ? true
-                                            : controller.contractDropdownValue.value == "1"
-                                                ? controller.trx.records![index].documentNo
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .contains(controller
-                                                        .contractSearchFilterValue.value
-                                                        .toLowerCase())
-                                            : controller.contractDropdownValue.value == "2"
-                                                    ? (controller
-                                                        .trx.records![index].cDocTypeTargetID?.identifier ?? "")
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(controller
-                                                            .contractSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : controller.contractDropdownValue.value == "3"
-                                                    ? (controller
-                                                        .trx.records![index].contractsigndate ?? "")
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(controller
-                                                            .contractSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : true,
-                                    
-                                      child: Card(
-                                        elevation: 8.0,
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 6.0),
-                                        child: Obx( () => controller.selectedCard == index ? 
-                                          _buildCard(Theme.of(context).cardColor, context, index) : 
-                                          _buildCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
-                                      ),
-                                    )));
-                                  },
-                                )
-                              : const Center(child: CircularProgressIndicator()),
-                        )
-                      ],
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
+                  children: [
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("CONTRACTS: ".tr + controller.trx.rowcount.toString())
+                          : Text("CONTRACTS: ".tr)),
+                      margin: const EdgeInsets.only(left: 15),
                     ),
-                  ),
-                  Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing ),
-                        _buildHeader(),
-                        const SizedBox(height: kSpacing * 6.5),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                              //width: 100,
-                              height: MediaQuery.of(context).size.height / 1.3,
-                              child: 
-                              Obx( () => controller.dataAvailable ? 
-                                SingleChildScrollView(
-                                  child: Container(
-                                    //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                    margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
-                                    color: const Color.fromRGBO(64, 75, 96, .9),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        children: [
-                                          Container( 
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'DocumentNo'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .documentNo ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Business Partner'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .cBPartnerID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Document Type'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .cDocTypeTargetID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Contract Date'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .contractsigndate ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Client'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .aDClientID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Name'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .name ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Description'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .description ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
-                                                    ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Valid from Date'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText: controller.trx.records![controller.selectedCard]
-                                                    .validfromdate?.replaceAll('T', ' ').replaceAll('Z', '') ?? '',
-                                                    enabled: false
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            //const SizedBox(width: kSpacing * 2,),
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
-                                                    ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Valid to Date'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText: controller.trx.records![controller.selectedCard]
-                                                    .validtodate?.replaceAll('T', ' ').replaceAll('Z', '') ?? '',
-                                                    enabled: false
-                                            ),
-                                          ),
-                                              ),
-                                        ), 
-                                          ],
-                                        ),
-                                          Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
-                                                    ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Frequency Next Date'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText: controller.trx.records![controller.selectedCard]
-                                                    .frequencyNextDate ?? '',
-                                                    enabled: false
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            //const SizedBox(width: kSpacing * 2,),
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
-                                                    ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Frequency Type'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText: controller.trx.records![controller.selectedCard]
-                                                    .frequencyType?.identifier ?? '',
-                                                    enabled: false
-                                            ),
-                                          ),
-                                              ),
-                                        ), 
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
-                                                    ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Payment Rule'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText: controller.trx.records![controller.selectedCard]
-                                                      .paymentRule?.identifier ?? '',
-                                                    enabled: false
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            //const SizedBox(width: kSpacing * 2,),
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
-                                                    ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Payment Term'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText: controller.trx.records![controller.selectedCard]
-                                                      .cPaymentTermID?.identifier ?? '',
-                                                    enabled: false
-                                            ),
-                                          ),
-                                              ),
-                                        ), 
-                                          ],
-                                        ),
-                                        ]),
-                                    )),
-                                ) : const Center(child: CircularProgressIndicator()) 
-                                )),
-                            ),
-                          ],
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getContracts();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
                         ),
-                      ]
-                    )),
-                  Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing * 3.3),
-                        Row(
-                          children: [
-                            Container(
-                              child: Obx(() => controller.showData
-                                  ? Text("LINES: ".tr + controller.trx1.rowcount.toString())
-                                  : Text("LINES: ".tr)),
-                              margin: const EdgeInsets.only(left: 15),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              child: IconButton(
-                                onPressed: () {
-                                  controller.getContractLines();
-                                },
-                                icon: const Icon(
-                                  Icons.refresh,
-                                  color: Colors.yellow,
-                                ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: Obx(
+                        () => TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                    
+                    
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      //padding: const EdgeInsets.all(10),
+                      //width: 20,
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: Obx(
+                        () => DropdownButton(
+                          icon: const Icon(Icons.filter_alt_sharp),
+                          value: controller.contractDropdownValue.value,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.contractDropdownValue.value = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: controller.contractDropDownList.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
                               ),
-                            ),
-                          ],
+                              value: list.id,
+                            );
+                          }).toList(),
                         ),
-                        _buildLinesFilter(),
-                        const SizedBox(height: kSpacing * 1.2),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                              //width: 100,
-                              height: MediaQuery.of(context).size.height / 1.3,
-                              child: 
-                              Obx( () => controller.showData ? 
-                              
-                                SingleChildScrollView(
-                                  child: ListView.builder(
-                                    primary: false,
-                                    scrollDirection: Axis.vertical,
-                                    shrinkWrap: true,
-                                    itemCount: controller.trx1.rowcount,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return Obx(() => Visibility(
-                                visible: controller.linesSearchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.linesDropdownValue.value == "1"
-                                        ? (controller.trx1.records![index].mProductID?.identifier ?? "")
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(controller
-                                                .linesSearchFilterValue.value
-                                                .toLowerCase())
-                                        : controller.linesDropdownValue.value == "2"
-                                            ? (controller
-                                                .trx1.records![index].name ?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .linesSearchFilterValue.value
-                                                    .toLowerCase())
-                                        : controller.linesDropdownValue.value == "3"
-                                            ?( controller
-                                                .trx1.records![index].amount ?? "" )
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .linesSearchFilterValue.value
-                                                    .toLowerCase())
-                                                : true,
-                                child:SizedBox(
-                                        child: SingleChildScrollView(
-                                          child: Container(
-                                            margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
-                                            color: const Color.fromRGBO(64, 75, 96, .9),
-                                            child: Row(
-                                              children: [
-                                                Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: Column(
-                                                      children: [
-                                                      Container(
-                                                      margin: const EdgeInsets.all(10),
-                                                      child: SizedBox(
-                                                        width: 450,
-                                                        child: TextField(
-                                                          decoration: InputDecoration(
-                                                            hintStyle: const TextStyle(
-                                                              color: Color.fromARGB(255, 255, 255, 255)
-                                                            ),
-                                                            labelStyle: const TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 20,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                            border: const OutlineInputBorder(),
-                                                            labelText: 'Product'.tr,
-                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                            hintText: controller.trx1.records![index]
-                                                            .mProductID?.identifier ?? '',
-                                                            enabled: false
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin: const EdgeInsets.all(10),
-                                                      child: SizedBox(
-                                                        width: 450,
-                                                        child: TextField(
-                                                          decoration: InputDecoration(
-                                                            hintStyle: const TextStyle(
-                                                              color: Color.fromARGB(255, 255, 255, 255)
-                                                            ),
-                                                            labelStyle: const TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 20,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                            border: const OutlineInputBorder(),
-                                                            labelText: 'Amount'.tr,
-                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                            hintText: (controller.trx1.records![index].amount 
-                                                            != null ? 
-                                                            controller.trx1.records![index].amount.toString() 
-                                                            : ''),
-                                                            enabled: false
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin: const EdgeInsets.all(10),
-                                                      child: SizedBox(
-                                                        width: 450,
-                                                        child: TextField(
-                                                          decoration: InputDecoration(
-                                                            hintStyle: const TextStyle(
-                                                              color: Color.fromARGB(255, 255, 255, 255)
-                                                            ),
-                                                            labelStyle: const TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 20,
-                                                              fontWeight: FontWeight.bold,
-                                                            ),
-                                                            border: const OutlineInputBorder(),
-                                                            labelText: 'Name'.tr,
-                                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                            hintText: controller.trx1.records![index]
-                                                            .name ?? '',
-                                                            enabled: false
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    ]
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )));
-                                    }
-                                  ),
-                                )
-                            : Center(child: Text('No Contract Selected'.tr)) 
-                            )),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: TextField(
+                          controller: controller.contractSearchFieldController,
+                          onSubmitted: (String? value) {
+                            controller.contractSearchFilterValue.value =
+                                controller.contractSearchFieldController.text;
+                          },
+                          decoration:  InputDecoration(
+                            prefixIcon: const Icon(Icons.search_outlined),
+                            border: const OutlineInputBorder(),
+                            //labelText: 'Product Value',
+                            hintText: 'Search'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-                ],
-              );
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Obx (() => Visibility(
+                              visible: controller.contractSearchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.contractDropdownValue.value == "1"
+                                        ? controller.trx.records![index].documentNo
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .contractSearchFilterValue.value
+                                                .toLowerCase())
+                                    : controller.contractDropdownValue.value == "2"
+                                            ? (controller
+                                                .trx.records![index].cBPartnerID?.identifier?? "")
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .contractSearchFilterValue.value
+                                                    .toLowerCase()): true,
+                            
+                              child: Card(
+                                elevation: 8.0,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 6.0),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(64, 75, 96, .9)),
+                                  child: ExpansionTile(
+                                    trailing: IconButton(
+                                      icon: const Icon(
+                                        Icons.article,
+                                        color: Colors.green,
+                                      ),
+                                      onPressed: () {
+                                        /* Get.toNamed('/SalesOrderLine',
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "bPartner": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.identifier,
+                                              "docNo": controller
+                                                  .trx.records![index].documentNo,
+                                              "priceListId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mPriceListID
+                                                  ?.id,
+                                              "dateOrdered": controller.trx
+                                                  .records![index].dateOrdered,
+                                            }); */
+                                      },
+                                    ),
+                                    tilePadding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0),
+                                    leading: Container(
+                                      padding: const EdgeInsets.only(right: 12.0),
+                                      decoration: const BoxDecoration(
+                                          border: Border(
+                                              right: BorderSide(
+                                                  width: 1.0,
+                                                  color: Colors.white24))),
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.edit,
+                                        ),
+                                        tooltip: 'Edit Contract'.tr,
+                                        onPressed: () {
+                                          //log("info button pressed");
+                                          /* Get.to(const CRMEditSalesOrder(), arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "docNo": controller
+                                                  .trx.records![index].documentNo,
+                                            "docTypeTargetId": controller.trx.records![index].cDocTypeTargetID!.id,
+                                            "BPartnerLocationId": controller.trx.records![index].cBPartnerLocationID!.id,
+                                            "bPartnerId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.id,
+                                          }); */
+                                        },
+                                      ),
+                                    ),
+                                    title: Text(
+                                      "Nr ${controller.trx.records![index].documentNo}",
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                            
+                                    subtitle: Row(
+                                      children: <Widget>[
+                                        const Icon(Icons.handshake,
+                                            color: Colors.yellowAccent),
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .cBPartnerID!.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                            
+                                    childrenPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0),
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Business Partner: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].cBPartnerID!.identifier}"),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Visibility(
+                                                visible: controller
+                                                        .trx
+                                                        .records![index].cDocTypeTargetID!.identifier !=
+                                                    '',
+                                                child: ElevatedButton(
+                                                  child: Text("Complete".tr),
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty.all(
+                                                            Colors.green),
+                                                  ),
+                                                  onPressed: () async {
+                                                    Get.defaultDialog(
+                                                      title: 'Complete Action',
+                                                      content: const Text(
+                                                          "Are you sure you want to complete the record?"),
+                                                      onCancel: () {},
+                                                      onConfirm: () async {
+                                                        final ip = GetStorage()
+                                                            .read('ip');
+                                                        String authorization =
+                                                            'Bearer ' +
+                                                                GetStorage().read(
+                                                                    'token');
+                                                        final msg = jsonEncode({
+                                                          "DocAction": "CO",
+                                                        });
+                                                        final protocol =
+                                                            GetStorage()
+                                                                .read('protocol');
+                                                        var url = Uri.parse(
+                                                            '$protocol://' +
+                                                                ip +
+                                                                '/api/v1/models/c_order/${controller.trx.records![index].id}');
+                            
+                                                        var response =
+                                                            await http.put(
+                                                          url,
+                                                          body: msg,
+                                                          headers: <String,
+                                                              String>{
+                                                            'Content-Type':
+                                                                'application/json',
+                                                            'Authorization':
+                                                                authorization,
+                                                          },
+                                                        );
+                                                        if (response.statusCode ==
+                                                            200) {
+                                                          //print("done!");
+                                                          completeOrder(index);
+                                                        } else {
+                                                          //print(response.body);
+                                                          Get.snackbar(
+                                                            "Error!".tr,
+                                                            "Record not completed".tr,
+                                                            icon: const Icon(
+                                                              Icons.error,
+                                                              color: Colors.red,
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ));
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
             desktopBuilder: (context, constraints) {
               return Row(

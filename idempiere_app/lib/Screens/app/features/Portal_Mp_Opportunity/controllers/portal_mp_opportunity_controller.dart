@@ -6,8 +6,6 @@ class PortalMpOpportunityController extends GetxController {
 
   late SalesStageJson _salesStage;
 
-  late PortalMPAdUserJson _adUsers;
-
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
@@ -23,10 +21,18 @@ class PortalMpOpportunityController extends GetxController {
   var _showOpportunityDetails  = false.obs;
 
   // ignore: prefer_final_fields
+  var _image64 = "".obs;
+  // ignore: prefer_final_fields
+  TextEditingController _imageName = TextEditingController();
+
+  // ignore: prefer_final_fields
   var _newOpportunity = false.obs;
 
   // ignore: prefer_final_fields
   var _userNotListed = false.obs;
+
+  // ignore: prefer_final_fields
+  String _userDropDownValue = GetStorage().read('userId').toString();
 
   var opportunitySearchFieldController = TextEditingController();
   var opportunitySearchFilterValue = "".obs;
@@ -35,7 +41,7 @@ class PortalMpOpportunityController extends GetxController {
   final opportunityJson = {
     "types": [
       {"id": "1", "name": "DocumentNo".tr},
-      {"id": "2", "name": "Sales Stage".tr},
+      {"id": "2", "name": "Request Date".tr},
     ]
   };
 
@@ -58,7 +64,6 @@ class PortalMpOpportunityController extends GetxController {
   bool get dataAvailable => _dataAvailable.value;
   OpportunityJson get trxOpportunity => _trx;
   SalesStageJson get trxSalesStage => _salesStage;
-  PortalMPAdUserJson get adUsers => _adUsers;
 
   int get selectedCard => _selectedCard.value;
   set selectedCard(index) => _selectedCard.value = index;
@@ -73,6 +78,14 @@ class PortalMpOpportunityController extends GetxController {
 
   bool get userNotListed => _userNotListed.value;
   set userNotListed(listed) => _userNotListed.value = listed;
+
+  String get userDropDownValue => _userDropDownValue;
+  set userDropDownValue(user) => _userDropDownValue = user;
+
+  String get image64 => _image64.value;
+  set image64(data) => _image64.value = data;
+  TextEditingController get imageName => _imageName;
+  set imageName(value) => _imageName.text = value;
 
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
@@ -104,7 +117,7 @@ class PortalMpOpportunityController extends GetxController {
     }
   }
 
-  Future<void> getAdUsers() async {
+  Future<List<AdRecords>> getAdUsers() async {
     await getBusinessPartner();
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -119,9 +132,11 @@ class PortalMpOpportunityController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _adUsers = PortalMPAdUserJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      //_adUsers = PortalMPAdUserJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      var json = PortalMPAdUserJson.fromJson(jsonDecode(response.body));
+      return json.records!;
     } else {
-      //print(response.body);
+      throw Exception("Failed to load users");
     }
   }
 
@@ -181,6 +196,16 @@ class PortalMpOpportunityController extends GetxController {
     int day = int.parse(DateFormat('dd').format(DateTime(year, closingMonth +1, 0)));
     String expectedCloseDate = DateFormat('yyyy-MM-dd').format(DateTime(year, closingMonth, day));
     return expectedCloseDate;
+  }
+
+  attachImage() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
+
+    if (result != null) {
+      _image64.value = base64.encode(result.files.first.bytes!);
+      _imageName.text = result.files.first.name;
+    }
   }
 
   initFieldsController(index, newOpportunity) async{

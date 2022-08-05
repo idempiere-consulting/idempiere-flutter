@@ -166,7 +166,7 @@ class PortalMpContractController extends GetxController {
     if (response.statusCode == 200) {
       _trx = PortalMPContractJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      _dataAvailable.value = _trx.records!.isNotEmpty;
     }
 
   }
