@@ -273,6 +273,7 @@ class CRMSalesOrderController extends GetxController {
           styles: const PosStyles(align: PosAlign.right, bold: true)),
     ]);
 
+    // ignore: unnecessary_null_comparison
     if (json != null) {
       for (var line in json.records!) {
         bytes += generator.row([
@@ -367,7 +368,7 @@ class CRMSalesOrderController extends GetxController {
     bytes += generator.text('Thank you!',
         styles: const PosStyles(align: PosAlign.center, bold: true));
 
-    DateTime now = DateTime.now();
+    //DateTime now = DateTime.now();
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
 
     bytes += generator.text(dateFormat.format(DateTime.now()),

@@ -82,6 +82,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                     "id": Get.arguments["id"],
                     "priceListId": Get.arguments["priceListId"],
                     "dateOrdered": Get.arguments["dateOrdered"],
+                    "activityId": Get.arguments["activityId"] ?? 0,
                   });
                 },
                 icon: const Icon(
@@ -159,8 +160,8 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         children: [
                                           Text(
                                             "Total Rows: ".tr,
-                                            style:
-                                                const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -325,8 +326,8 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         children: [
                                           Text(
                                             "Total Rows: ".tr,
-                                            style:
-                                                const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -491,8 +492,8 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                         children: [
                                           Text(
                                             "Total Rows: ".tr,
-                                            style:
-                                                const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",

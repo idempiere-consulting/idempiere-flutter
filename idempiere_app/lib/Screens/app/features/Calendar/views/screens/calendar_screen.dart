@@ -34,7 +34,7 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -126,16 +126,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Future<void> getAllEvents() async {
     var now = DateTime.now();
     DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
+    DateTime sixtyDaysLater = now.add(const Duration(days: 60));
     var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
+    //String formattedDate = formatter.format(now);
     String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
+    String formattedSixtyDaysLater = formatter.format(sixtyDaysLater);
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mobile_jp_todo_v?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedDate 23:59:59\'');
+        '/api/v1/models/lit_mobile_jp_todo_v?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedSixtyDaysLater 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -211,7 +213,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       //print(json.rowcount);
     } else {
-      throw Exception("Failed to load events");
+      //throw Exception("Failed to load events");
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
 
     //print(list[0].eMail);

@@ -319,6 +319,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       .trx
                                                       .records![index]
                                                       .dateOrdered,
+                                                  "activityId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cActivityID
+                                                          ?.id ??
+                                                      0,
                                                 });
                                           },
                                         ),

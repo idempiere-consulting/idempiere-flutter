@@ -25,25 +25,52 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
   createSalesOrderLine() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    // ignore: prefer_typing_uninitialized_variables
+    var msg;
 
-    final msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "C_Order_ID": {"id": Get.arguments["id"]},
-      "M_Product_ID": {"id": productId},
-      "Name": nameFieldController.text,
-      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
-      "QtyEntered": double.parse(qtyFieldController.text),
-      "QtyOrdered": double.parse(qtyFieldController.text),
-      "PriceEntered": double.parse(priceFieldController.text),
-      "PriceList": productPriceList,
-      "PriceActual": double.parse(priceFieldController.text),
-      "C_UOM_ID": {"id": uomID},
-      "C_Tax_ID": {"id": 1000319},
-      "M_AttributeSetInstance_ID": {"id": instAttrId},
-      "LIT_StockInTrade": "test",
-      "DatePromised": date,
-    });
+    if (Get.arguments["activityId"] != null ||
+        Get.arguments["activityId"] != 0) {
+      msg = jsonEncode({
+        "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+        "AD_Client_ID": {"id": GetStorage().read("clientid")},
+        "C_Order_ID": {"id": Get.arguments["id"]},
+        "M_Product_ID": {"id": productId},
+        "Name": nameFieldController.text,
+        "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+        "QtyEntered": double.parse(qtyFieldController.text),
+        "QtyOrdered": double.parse(qtyFieldController.text),
+        "PriceEntered": double.parse(priceFieldController.text),
+        "PriceList": productPriceList,
+        "PriceActual": double.parse(priceFieldController.text),
+        "C_UOM_ID": {"id": uomID},
+        "C_Tax_ID": {"id": 1000319},
+        "M_AttributeSetInstance_ID": {"id": instAttrId},
+        "LIT_StockInTrade": "test",
+        "DatePromised": date,
+        "Description": descriptionFieldController.text,
+      });
+    } else {
+      msg = jsonEncode({
+        "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+        "AD_Client_ID": {"id": GetStorage().read("clientid")},
+        "C_Order_ID": {"id": Get.arguments["id"]},
+        "M_Product_ID": {"id": productId},
+        "Name": nameFieldController.text,
+        "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+        "QtyEntered": double.parse(qtyFieldController.text),
+        "QtyOrdered": double.parse(qtyFieldController.text),
+        "PriceEntered": double.parse(priceFieldController.text),
+        "PriceList": productPriceList,
+        "PriceActual": double.parse(priceFieldController.text),
+        "C_UOM_ID": {"id": uomID},
+        "C_Tax_ID": {"id": 1000319},
+        "M_AttributeSetInstance_ID": {"id": instAttrId},
+        "LIT_StockInTrade": "test",
+        "DatePromised": date,
+        "C_Activity_ID": {"id": Get.arguments["activityId"]},
+        "Description": descriptionFieldController.text,
+      });
+    }
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_orderline/');
     //print(msg);
@@ -405,6 +432,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
     attrFieldVisible = false;
     attrFieldAvailable = false;
     attrValue = "0";
+    //print(Get.arguments["activityId"]);
     //fillFields();
   }
 
@@ -448,8 +476,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: Align(
                     child: Text(
                       "Search by code".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -474,8 +502,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: Align(
                     child: Text(
                       "Search by product".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -539,7 +567,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.wallet_travel),
                       border: const OutlineInputBorder(),
                       labelText: 'Product Value'.tr,
@@ -586,7 +614,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields_rounded),
                       border: const OutlineInputBorder(),
                       labelText: 'Price'.tr,
@@ -654,6 +682,21 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 2,
+                    maxLines: 2,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   width: size.width,
                   decoration: BoxDecoration(
@@ -664,8 +707,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue:
-                        DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                    initialValue: DateFormat('yyyy-MM-dd')
+                        .format(DateTime.parse(Get.arguments["dateOrdered"])),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Promised Date'.tr,
@@ -700,8 +743,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: Align(
                     child: Text(
                       "Search by code".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -726,8 +769,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: Align(
                     child: Text(
                       "Search by product".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -791,7 +834,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.wallet_travel),
                       border: const OutlineInputBorder(),
                       labelText: 'Product Value'.tr,
@@ -838,7 +881,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields_rounded),
                       border: const OutlineInputBorder(),
                       labelText: 'Price'.tr,
@@ -906,6 +949,21 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 2,
+                    maxLines: 2,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   width: size.width,
                   decoration: BoxDecoration(
@@ -916,8 +974,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue:
-                        DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                    initialValue: DateFormat('yyyy-MM-dd')
+                        .format(DateTime.parse(Get.arguments["dateOrdered"])),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Promised Date'.tr,
@@ -952,8 +1010,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: Align(
                     child: Text(
                       "Search by code".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -978,8 +1036,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: Align(
                     child: Text(
                       "Search by product".tr,
-                      style:
-                          const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -1043,7 +1101,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: TextField(
                     readOnly: true,
                     controller: valueFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.wallet_travel),
                       border: const OutlineInputBorder(),
                       labelText: 'Product Value'.tr,
@@ -1090,7 +1148,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields_rounded),
                       border: const OutlineInputBorder(),
                       labelText: 'Price'.tr,
@@ -1158,6 +1216,21 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.wallet_travel),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 2,
+                    maxLines: 2,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   width: size.width,
                   decoration: BoxDecoration(
@@ -1168,8 +1241,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue:
-                        DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                    initialValue: DateFormat('yyyy-MM-dd')
+                        .format(DateTime.parse(Get.arguments["dateOrdered"])),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Promised Date'.tr,
