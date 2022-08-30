@@ -415,6 +415,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   static int _setIdForOption(Records option) => option.id!;
 
+  var perm2 = GetStorage().read('permission2');
+
   @override
   void initState() {
     super.initState();
@@ -432,6 +434,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
     attrFieldVisible = false;
     attrFieldAvailable = false;
     attrValue = "0";
+    date = perm2 != ''
+        ? perm2[0] == 'Y'
+            ? DateFormat('yyyy-MM-dd').format(DateTime.now())
+            : Get.arguments["dateOrdered"]
+        : Get.arguments["dateOrdered"];
     //print(Get.arguments["activityId"]);
     //fillFields();
   }
@@ -707,8 +714,13 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: DateFormat('yyyy-MM-dd')
-                        .format(DateTime.parse(Get.arguments["dateOrdered"])),
+                    initialValue: perm2 != ''
+                        ? perm2[0] == 'Y'
+                            ? DateFormat('yyyy-MM-dd').format(DateTime.now())
+                            : DateFormat('yyyy-MM-dd').format(
+                                DateTime.parse(Get.arguments["dateOrdered"]))
+                        : DateFormat('yyyy-MM-dd').format(
+                            DateTime.parse(Get.arguments["dateOrdered"])),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Promised Date'.tr,
@@ -974,8 +986,13 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: DateFormat('yyyy-MM-dd')
-                        .format(DateTime.parse(Get.arguments["dateOrdered"])),
+                    initialValue: perm2 != ''
+                        ? perm2[0] == 'Y'
+                            ? DateFormat('yyyy-MM-dd').format(DateTime.now())
+                            : DateFormat('yyyy-MM-dd').format(
+                                DateTime.parse(Get.arguments["dateOrdered"]))
+                        : DateFormat('yyyy-MM-dd').format(
+                            DateTime.parse(Get.arguments["dateOrdered"])),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Promised Date'.tr,
@@ -1241,8 +1258,13 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: DateFormat('yyyy-MM-dd')
-                        .format(DateTime.parse(Get.arguments["dateOrdered"])),
+                    initialValue: perm2 != ''
+                        ? perm2[0] == 'Y'
+                            ? DateFormat('yyyy-MM-dd').format(DateTime.now())
+                            : DateFormat('yyyy-MM-dd').format(
+                                DateTime.parse(Get.arguments["dateOrdered"]))
+                        : DateFormat('yyyy-MM-dd').format(
+                            DateTime.parse(Get.arguments["dateOrdered"])),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Promised Date'.tr,

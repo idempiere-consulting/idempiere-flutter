@@ -412,8 +412,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       var json = jsonDecode(response.body);
       if (json["records"][0]["IsMobileEnabled"] == true) {
         String permissions = json["records"][0]["lit_mobilerole"];
+        String permissions2 = json["records"][0]["lit_mobile_perm"] ?? "";
         List<String> list = permissions.split("-");
         GetStorage().write('permission', list);
+        GetStorage().write('permission2', permissions2);
         if (GetStorage().read('products') != null) {
           Get.offAllNamed('/Dashboard');
         } else {
