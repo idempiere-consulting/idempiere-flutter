@@ -341,13 +341,6 @@ class CRMInvoiceController extends GetxController {
     bytes += generator.text(dateFormat.format(DateTime.now()),
         styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
 
-    bytes += generator.text("Firma___________________",
-        styles: const PosStyles(
-          align: PosAlign.left,
-          height: PosTextSize.size2,
-          width: PosTextSize.size2,
-        ),
-        linesAfter: 1);
     bytes += generator.cut();
     return bytes;
   }
