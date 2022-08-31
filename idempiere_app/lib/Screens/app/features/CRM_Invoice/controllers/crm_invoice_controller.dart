@@ -153,6 +153,365 @@ class CRMInvoiceController extends GetxController {
     }
     //printTicket();
   }
+
+  Future<void> printTicket(int index) async {
+    late SalesOrderLineJson json;
+    String? isConnected = await BluetoothThermalPrinter.connectionStatus;
+    if (isConnected == "true") {
+      final ip = GetStorage().read('ip');
+      String authorization = 'Bearer ' + GetStorage().read('token');
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/c_invoiceline?\$filter= C_Invoice_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+      //print(Get.arguments["id"]);
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        //print(response.body);
+        json = SalesOrderLineJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+        //print(trx.rowcount);
+        //print(response.body);
+        // ignore: unnecessary_null_comparison
+        //_dataAvailable.value = _trx != null;
+      }
+      try {
+        List<int> bytes = await getPOSSalesOrder(index, json);
+        // ignore: unused_local_variable
+        final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      } catch (e) {
+        if (kDebugMode) {
+          print('nope');
+        }
+      }
+      //print("Print $result");
+    } else {
+      //Hadnle Not Connected Senario
+    }
+  }
+
+  Future<List<int>> getPOSSalesOrder(int index, SalesOrderLineJson json) async {
+    List<int> bytes = [];
+    CapabilityProfile profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm80, profile);
+
+    bytes += generator.text("${GetStorage().read('clientname') ?? "???"}",
+        styles: const PosStyles(
+          align: PosAlign.center,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+
+    bytes += generator.text("VIA DEL MARANGON, 10",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text("MESCOLINO-MINELLE (TV)",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text("PARTITA IVA 43892049842",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+
+    bytes += generator.text(
+        "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text(
+        'Document: '.tr + '${trx.records![index].documentNo}',
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.hr();
+    bytes += generator.row([
+      PosColumn(
+          text: 'Product',
+          width: 8,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: 'IVA',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Price',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.right, bold: true)),
+    ]);
+
+    // ignore: unnecessary_null_comparison
+    if (json != null) {
+      for (var line in json.records!) {
+        bytes += generator.row([
+          PosColumn(
+              text: "${line.name}",
+              width: 8,
+              styles: const PosStyles(
+                align: PosAlign.left,
+              )),
+          PosColumn(
+              text: "${line.cTaxID!.identifier}",
+              width: 2,
+              styles: const PosStyles(align: PosAlign.center)),
+          PosColumn(
+              text:
+                  (double.parse(line.lineNetAmt.toString())).toStringAsFixed(2),
+              width: 2,
+              styles: const PosStyles(align: PosAlign.right)),
+        ]);
+        if (line.qtyEntered! > 1) {
+          bytes += generator.text(
+              "*  ${line.qtyEntered} X ${line.priceEntered!.toStringAsFixed(2)}",
+              styles: const PosStyles(align: PosAlign.center));
+        }
+      }
+    }
+
+    /*  bytes += generator.row([
+      PosColumn(text: "1", width: 1),
+      PosColumn(
+          text: "Tea",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "10",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "10", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]); */
+
+    bytes += generator.hr();
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Totale',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+      PosColumn(
+          text: trx.records![index].grandTotal!.toStringAsFixed(2),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: 'di cui IVA',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+      PosColumn(
+          text: (double.parse(trx.records![index].grandTotal!.toString()) -
+                  double.parse(trx.records![index].totalLines!.toString()))
+              .toStringAsFixed(2),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+    ]);
+
+    bytes += generator.hr(ch: '=', linesAfter: 1);
+
+    // ticket.feed(2);
+    bytes += generator.text('Thank you!',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    //DateTime now = DateTime.now();
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+    bytes += generator.text(dateFormat.format(DateTime.now()),
+        styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
+
+    bytes += generator.text("Firma___________________",
+        styles: const PosStyles(
+          align: PosAlign.left,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+    bytes += generator.cut();
+    return bytes;
+  }
+
+  Future<List<int>> getTicket() async {
+    List<int> bytes = [];
+    CapabilityProfile profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm80, profile);
+
+    bytes += generator.text("Demo Shop",
+        styles: const PosStyles(
+          align: PosAlign.center,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+
+    bytes += generator.text(
+        "18th Main Road, 2nd Phase, J. P. Nagar, Bengaluru, Karnataka 560078",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text('Tel: +919591708470',
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.hr();
+    bytes += generator.row([
+      PosColumn(
+          text: 'No',
+          width: 1,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: 'Item',
+          width: 5,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: 'Price',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Qty',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Total',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.right, bold: true)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(text: "1", width: 1),
+      PosColumn(
+          text: "Tea",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "10",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "10", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(text: "2", width: 1),
+      PosColumn(
+          text: "Sada Dosa",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "30",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "30", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(text: "3", width: 1),
+      PosColumn(
+          text: "Masala Dosa",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "50",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "50", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(text: "4", width: 1),
+      PosColumn(
+          text: "Rova Dosa",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "70",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "70", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]);
+
+    bytes += generator.hr();
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'TOTAL',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size4,
+            width: PosTextSize.size4,
+          )),
+      PosColumn(
+          text: "160",
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size4,
+            width: PosTextSize.size4,
+          )),
+    ]);
+
+    bytes += generator.hr(ch: '=', linesAfter: 1);
+
+    // ticket.feed(2);
+    bytes += generator.text('Thank you!',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    bytes += generator.text("26-11-2020 15:22:45",
+        styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
+
+    bytes += generator.text(
+        'Note: Goods once sold will not be taken back or exchanged.',
+        styles: const PosStyles(align: PosAlign.center, bold: false));
+    bytes += generator.cut();
+    return bytes;
+  }
+
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();

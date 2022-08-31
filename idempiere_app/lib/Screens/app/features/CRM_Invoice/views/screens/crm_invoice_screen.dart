@@ -7,11 +7,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/invoice_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -375,6 +377,8 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                                     IconButton(
                                                       tooltip: 'print POS',
                                                       onPressed: () async {
+                                                        controller
+                                                            .printTicket(index);
                                                         /* var isConnected =
                                                             await checkConnection();
                                                         controller
