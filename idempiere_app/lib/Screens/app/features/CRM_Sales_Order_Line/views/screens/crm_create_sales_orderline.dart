@@ -28,8 +28,8 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
     // ignore: prefer_typing_uninitialized_variables
     var msg;
 
-    if (Get.arguments["activityId"] != null ||
-        Get.arguments["activityId"] != 0) {
+    if (Get.arguments["activityId"] == null ||
+        Get.arguments["activityId"] == 0) {
       msg = jsonEncode({
         "AD_Org_ID": {"id": GetStorage().read("organizationid")},
         "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -200,7 +200,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and DateLastInventory neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and DateLastInventory neq null and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -285,7 +285,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and DateLastInventory neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and DateLastInventory neq null and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,

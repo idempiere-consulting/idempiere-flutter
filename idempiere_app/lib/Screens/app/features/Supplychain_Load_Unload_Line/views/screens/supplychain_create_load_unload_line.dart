@@ -53,7 +53,7 @@ class _CreateSupplychainLoadUnloadLineState
       //print("done!");
       Get.snackbar(
         "Done!".tr,
-		"The record has been created" .tr,	
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -144,7 +144,7 @@ class _CreateSupplychainLoadUnloadLineState
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and DateLastInventory neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and DateLastInventory neq null and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -236,7 +236,7 @@ class _CreateSupplychainLoadUnloadLineState
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and DateLastInventory neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and DateLastInventory neq null and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,

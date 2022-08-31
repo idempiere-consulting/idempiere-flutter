@@ -610,6 +610,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
                         onPressed: () {
+                          //controller.getSalesOrders();
+                          Get.toNamed('/SalesOrderCreation');
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
                           controller.getSalesOrders();
                         },
                         icon: const Icon(
@@ -765,6 +778,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       .trx
                                                       .records![index]
                                                       .dateOrdered,
+                                                  "activityId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cActivityID
+                                                          ?.id ??
+                                                      0,
                                                 });
                                           },
                                         ),
@@ -864,6 +883,73 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
+                                                  IconButton(
+                                                    tooltip: 'print Document',
+                                                    onPressed: () async {
+                                                      /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                      controller
+                                                          .getDocument(index);
+                                                      /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.print),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip: 'print POS',
+                                                    onPressed: () async {
+                                                      /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                      /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                      controller
+                                                          .printTicket(index);
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.receipt),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip: 'Sign',
+                                                    onPressed: () async {
+                                                      /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                      Get.to(
+                                                          const SignatureSalesOrderScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          });
+                                                    },
+                                                    icon: const Icon(
+                                                        EvaIcons.edit2Outline),
+                                                  ),
                                                   Visibility(
                                                     visible: controller
                                                             .trx
