@@ -18,6 +18,7 @@ class CRMInvoiceLineController extends GetxController {
   void onInit() {
     super.onInit();
     getInvoices();
+    setConnect();
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -55,6 +56,20 @@ class CRMInvoiceLineController extends GetxController {
       scaffoldKey.currentState!.openDrawer();
     }
   } */
+
+  Future<void> setConnect() async {
+    try {
+      final String? result = await BluetoothThermalPrinter.connect(
+          GetStorage().read('posMacAddress'));
+      //print("state conneected $result");
+      if (result == "true") {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('nope');
+      }
+    }
+    //printTicket();
+  }
 
   // Data
   _Profile getProfil() {

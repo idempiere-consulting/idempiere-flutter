@@ -6,7 +6,9 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -165,8 +167,8 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         children: [
                                           Text(
                                             "Total Rows: ".tr,
-                                            style:
-                                                const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -330,8 +332,8 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         children: [
                                           Text(
                                             "Total Rows: ".tr,
-                                            style:
-                                                const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",
@@ -495,8 +497,8 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
                                         children: [
                                           Text(
                                             "Total Rows: ".tr,
-                                            style:
-                                                const TextStyle(color: Colors.white),
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                           Text(
                                             "€${controller.trx.records![index].lineNetAmt}",

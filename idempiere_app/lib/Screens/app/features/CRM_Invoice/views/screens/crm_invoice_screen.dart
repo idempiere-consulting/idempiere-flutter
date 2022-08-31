@@ -64,12 +64,13 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -85,7 +86,8 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
+                          ? Text("INVOICES: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("INVOICES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -169,7 +171,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -365,6 +367,34 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      tooltip: 'print POS',
+                                                      onPressed: () async {
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                        /* controller
+                                                        .printTicket(index); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.receipt),
+                                                    ),
+                                                  ]),
                                             ],
                                           ),
                                         ],
@@ -391,7 +421,8 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
+                          ? Text("INVOICES: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("INVOICES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -475,7 +506,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -697,7 +728,8 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
+                          ? Text("INVOICES: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("INVOICES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -781,7 +813,7 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                             controller.searchFilterValue.value =
                                 controller.searchFieldController.text;
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
