@@ -365,11 +365,13 @@ class CRMInvoiceController extends GetxController {
         ),
         linesAfter: 1);
 
-    bytes += generator.text("VIA DEL MARANGON, 10",
+    bytes += generator.text(frombpartner.records![0].address1!,
         styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.text("MESCOLINO-MINELLE (TV)",
+    bytes += generator.text(
+        frombpartner.records![0].city! +
+            " (${frombpartner.records![0].regionName})",
         styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.text("PARTITA IVA 43892049842",
+    bytes += generator.text("P. IVA ${frombpartner.records![0].taxID}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.hr();
 
