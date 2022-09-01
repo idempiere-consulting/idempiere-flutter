@@ -399,6 +399,32 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                                       icon: const Icon(
                                                           Icons.receipt),
                                                     ),
+                                                    IconButton(
+                                                        tooltip:
+                                                            'print POS invoice',
+                                                        onPressed: () async {
+                                                          controller
+                                                              .getBusinessPartner(
+                                                                  index);
+                                                          /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                          /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                          /* controller
+                                                        .printTicket(index); */
+                                                        },
+                                                        icon: const Icon(
+                                                            Icons.textsms)),
                                                   ]),
                                             ],
                                           ),

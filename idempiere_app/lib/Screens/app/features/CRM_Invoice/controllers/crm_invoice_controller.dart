@@ -510,6 +510,105 @@ class CRMInvoiceController extends GetxController {
       scaffoldKey.currentState!.openDrawer();
     }
   } */
+  Future<void> getBpData(int index, int bpID) async {
+    //late SalesOrderLineJson json;
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    //print(Get.arguments["id"]);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      /* json = SalesOrderLineJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes))); */
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    }
+
+    //print("Print $result");
+  }
+
+  Future<void> getInvoiceData(int index) async {
+    late SalesOrderLineJson json;
+    String? isConnected = await BluetoothThermalPrinter.connectionStatus;
+    if (isConnected == "true") {
+      final ip = GetStorage().read('ip');
+      String authorization = 'Bearer ' + GetStorage().read('token');
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/lit_rep_c_invoice_v?\$filter= C_Invoice_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+      //print(Get.arguments["id"]);
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        //print(response.body);
+        json = SalesOrderLineJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+        //print(trx.rowcount);
+        //print(response.body);
+        // ignore: unnecessary_null_comparison
+        //_dataAvailable.value = _trx != null;
+      }
+      try {
+        List<int> bytes = await getPOSSalesOrder(index, json);
+        // ignore: unused_local_variable
+        final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      } catch (e) {
+        if (kDebugMode) {
+          print('nope');
+        }
+      }
+      //print("Print $result");
+    } else {
+      //Hadnle Not Connected Senario
+    }
+  }
+
+  Future<void> getBusinessPartner(int index) async {
+    var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+      getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
+
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
 
   // Data
   _Profile getProfil() {
