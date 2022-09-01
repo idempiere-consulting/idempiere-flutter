@@ -380,7 +380,41 @@ class CRMInvoiceController extends GetxController {
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text(
         'Document: '.tr + '${trx.records![index].documentNo}',
-        styles: const PosStyles(align: PosAlign.center));
+        styles: const PosStyles(align: PosAlign.center),
+        linesAfter: 1);
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Spett.',
+          width: 4,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: tobpartner.records![0].name!,
+          width: 8,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+          text: '',
+          width: 4,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: tobpartner.records![0].address1!,
+          width: 8,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: '',
+          width: 4,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: tobpartner.records![0].city! +
+              " (${tobpartner.records![0].regionName})",
+          width: 8,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+    ]);
 
     bytes += generator.hr();
     bytes += generator.row([
