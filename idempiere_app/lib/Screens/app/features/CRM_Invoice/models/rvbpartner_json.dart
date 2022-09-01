@@ -35,9 +35,9 @@ class Records {
   final int? id;
   final String? name;
   final bool? isCustomer;
-  final double? sOCreditUsed;
-  final double? sOCreditAvailable;
-  final int? sOCreditLimit;
+  final num? sOCreditUsed;
+  final num? sOCreditAvailable;
+  final num? sOCreditLimit;
   final ADClientID? aDClientID;
   final bool? isVendor;
   final String? city;
@@ -46,7 +46,7 @@ class Records {
   final ADOrgID? aDOrgID;
   final String? eMail;
   final bool? isActive;
-  final double? totalOpenBalance;
+  final num? totalOpenBalance;
   final ADUserID? aDUserID;
   final CBPartnerLocationID? cBPartnerLocationID;
   final String? countryName;
@@ -67,12 +67,12 @@ class Records {
   final ADLanguage? aDLanguage;
   final String? taxID;
   final bool? isTaxExempt;
-  final int? salesVolume;
+  final num? salesVolume;
   final String? firstSale;
-  final int? acqusitionCost;
-  final int? potentialLifeTimeValue;
-  final double? actualLifeTimeValue;
-  final int? shareOfCustomer;
+  final num? acqusitionCost;
+  final num? potentialLifeTimeValue;
+  final num? actualLifeTimeValue;
+  final num? shareOfCustomer;
   final CPaymentTermID? cPaymentTermID;
   final MPriceListID? mPriceListID;
   final bool? isDiscountPrinted;
@@ -218,9 +218,9 @@ class Records {
       : id = json['id'] as int?,
         name = json['Name'] as String?,
         isCustomer = json['IsCustomer'] as bool?,
-        sOCreditUsed = json['SO_CreditUsed'] as double?,
-        sOCreditAvailable = json['SO_CreditAvailable'] as double?,
-        sOCreditLimit = json['SO_CreditLimit'] as int?,
+        sOCreditUsed = json['SO_CreditUsed'] as num?,
+        sOCreditAvailable = json['SO_CreditAvailable'] as num?,
+        sOCreditLimit = json['SO_CreditLimit'] as num?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
@@ -233,7 +233,7 @@ class Records {
             : null,
         eMail = json['EMail'] as String?,
         isActive = json['IsActive'] as bool?,
-        totalOpenBalance = json['TotalOpenBalance'] as double?,
+        totalOpenBalance = json['TotalOpenBalance'] as num?,
         aDUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
             ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
             : null,
@@ -272,12 +272,12 @@ class Records {
             : null,
         taxID = json['TaxID'] as String?,
         isTaxExempt = json['IsTaxExempt'] as bool?,
-        salesVolume = json['SalesVolume'] as int?,
+        salesVolume = json['SalesVolume'] as num?,
         firstSale = json['FirstSale'] as String?,
-        acqusitionCost = json['AcqusitionCost'] as int?,
-        potentialLifeTimeValue = json['PotentialLifeTimeValue'] as int?,
-        actualLifeTimeValue = json['ActualLifeTimeValue'] as double?,
-        shareOfCustomer = json['ShareOfCustomer'] as int?,
+        acqusitionCost = json['AcqusitionCost'] as num?,
+        potentialLifeTimeValue = json['PotentialLifeTimeValue'] as num?,
+        actualLifeTimeValue = json['ActualLifeTimeValue'] as num?,
+        shareOfCustomer = json['ShareOfCustomer'] as num?,
         cPaymentTermID =
             (json['C_PaymentTerm_ID'] as Map<String, dynamic>?) != null
                 ? CPaymentTermID.fromJson(

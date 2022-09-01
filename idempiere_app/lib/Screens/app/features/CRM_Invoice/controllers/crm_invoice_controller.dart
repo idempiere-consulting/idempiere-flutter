@@ -519,7 +519,8 @@ class CRMInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
+      print('getbpdata');
       var json =
           RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       getInvoiceData(index, json);
@@ -551,7 +552,8 @@ class CRMInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
+      print('gettobpdata');
       var jsonTobpartner =
           RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       try {
@@ -561,7 +563,7 @@ class CRMInvoiceController extends GetxController {
         final result = await BluetoothThermalPrinter.writeBytes(bytes);
       } catch (e) {
         if (kDebugMode) {
-          print('nope');
+          print('nope1');
         }
       }
 
@@ -577,38 +579,37 @@ class CRMInvoiceController extends GetxController {
 
   Future<void> getInvoiceData(int index, RVbpartnerJSON bpdata) async {
     late SalesOrderLineJson jsonLines;
-    String? isConnected = await BluetoothThermalPrinter.connectionStatus;
-    if (isConnected == "true") {
-      final ip = GetStorage().read('ip');
-      String authorization = 'Bearer ' + GetStorage().read('token');
-      final protocol = GetStorage().read('protocol');
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/lit_rep_c_invoice_v?\$filter= C_Invoice_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
-      //print(Get.arguments["id"]);
-      var response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        //print(response.body);
-        jsonLines = SalesOrderLineJson.fromJson(
-            jsonDecode(utf8.decode(response.bodyBytes)));
-        getToBPdata(
-            index, jsonLines.records![0].cBPartnerID!.id!, bpdata, jsonLines);
-        //print(trx.rowcount);
-        //print(response.body);
-        // ignore: unnecessary_null_comparison
-        //_dataAvailable.value = _trx != null;
-      }
+    //String? isConnected = await BluetoothThermalPrinter.connectionStatus;
 
-      //print("Print $result");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/c_invoiceline?\$filter= C_Invoice_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    //print(Get.arguments["id"]);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      print('getinvoicedata');
+      jsonLines = SalesOrderLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      getToBPdata(index, _trx.records![0].cBPartnerID!.id!, bpdata, jsonLines);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
     } else {
-      //Hadnle Not Connected Senario
+      print(response.body);
     }
+
+    //print("Print $result");
   }
 
   Future<void> getBusinessPartner(int index) async {
@@ -627,6 +628,7 @@ class CRMInvoiceController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
+      print('getbusinesspartner');
       var json = jsonDecode(response.body);
       getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
 
