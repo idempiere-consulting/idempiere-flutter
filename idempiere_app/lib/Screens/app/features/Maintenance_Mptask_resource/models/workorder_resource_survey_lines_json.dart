@@ -48,7 +48,7 @@ class Records {
   final bool? isValid;
   final String? group1;
   final String? dateValue;
-  final num? valueNumber;
+  final String? valueNumber;
   final String? lITText1;
   final String? lITText2;
   final String? lITText3;
@@ -117,7 +117,7 @@ class Records {
         isValid = json['IsValid'] as bool?,
         group1 = json['Group1'] as String?,
         dateValue = json['DateValue'] as String?,
-        valueNumber = json['ValueNumber'] as num?,
+        valueNumber = json['ValueNumber'] as String?,
         lITText1 = json['LIT_Text1'] as String?,
         lITText2 = json['LIT_Text2'] as String?,
         lITText3 = json['LIT_Text3'] as String?,
