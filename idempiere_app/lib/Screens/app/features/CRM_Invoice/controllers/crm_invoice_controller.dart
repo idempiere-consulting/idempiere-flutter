@@ -345,12 +345,19 @@ class CRMInvoiceController extends GetxController {
     return bytes;
   }
 
-  Future<List<int>> getTicket() async {
+  /* void openDrawer() {
+    if (scaffoldKey.currentState != null) {
+      scaffoldKey.currentState!.openDrawer();
+    }
+  } */
+
+  Future<List<int>> getInvoiceTicket(int index, SalesOrderLineJson json,
+      RVbpartnerJSON frombpartner, RVbpartnerJSON tobpartner) async {
     List<int> bytes = [];
     CapabilityProfile profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm80, profile);
 
-    bytes += generator.text("Demo Shop",
+    bytes += generator.text("${GetStorage().read('clientname') ?? "???"}",
         styles: const PosStyles(
           align: PosAlign.center,
           height: PosTextSize.size2,
@@ -358,37 +365,66 @@ class CRMInvoiceController extends GetxController {
         ),
         linesAfter: 1);
 
-    bytes += generator.text(
-        "18th Main Road, 2nd Phase, J. P. Nagar, Bengaluru, Karnataka 560078",
+    bytes += generator.text("VIA DEL MARANGON, 10",
         styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.text('Tel: +919591708470',
+    bytes += generator.text("MESCOLINO-MINELLE (TV)",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text("PARTITA IVA 43892049842",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+
+    bytes += generator.text(
+        "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text(
+        'Document: '.tr + '${trx.records![index].documentNo}',
         styles: const PosStyles(align: PosAlign.center));
 
     bytes += generator.hr();
     bytes += generator.row([
       PosColumn(
-          text: 'No',
-          width: 1,
+          text: 'Product',
+          width: 8,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
-          text: 'Item',
-          width: 5,
-          styles: const PosStyles(align: PosAlign.left, bold: true)),
+          text: 'IVA',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
       PosColumn(
           text: 'Price',
-          width: 2,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
-      PosColumn(
-          text: 'Qty',
-          width: 2,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
-      PosColumn(
-          text: 'Total',
           width: 2,
           styles: const PosStyles(align: PosAlign.right, bold: true)),
     ]);
 
-    bytes += generator.row([
+    // ignore: unnecessary_null_comparison
+    if (json != null) {
+      for (var line in json.records!) {
+        bytes += generator.row([
+          PosColumn(
+              text: "${line.name}",
+              width: 8,
+              styles: const PosStyles(
+                align: PosAlign.left,
+              )),
+          PosColumn(
+              text: "${line.cTaxID!.identifier}",
+              width: 2,
+              styles: const PosStyles(align: PosAlign.center)),
+          PosColumn(
+              text:
+                  (double.parse(line.lineNetAmt.toString())).toStringAsFixed(2),
+              width: 2,
+              styles: const PosStyles(align: PosAlign.right)),
+        ]);
+        if (line.qtyEntered! > 1) {
+          bytes += generator.text(
+              "*  ${line.qtyEntered} X ${line.priceEntered!.toStringAsFixed(2)}",
+              styles: const PosStyles(align: PosAlign.center));
+        }
+      }
+    }
+
+    /*  bytes += generator.row([
       PosColumn(text: "1", width: 1),
       PosColumn(
           text: "Tea",
@@ -406,86 +442,46 @@ class CRMInvoiceController extends GetxController {
           text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
       PosColumn(
           text: "10", width: 2, styles: const PosStyles(align: PosAlign.right)),
-    ]);
-
-    bytes += generator.row([
-      PosColumn(text: "2", width: 1),
-      PosColumn(
-          text: "Sada Dosa",
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
-      PosColumn(
-          text: "30",
-          width: 2,
-          styles: const PosStyles(
-            align: PosAlign.center,
-          )),
-      PosColumn(
-          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
-      PosColumn(
-          text: "30", width: 2, styles: const PosStyles(align: PosAlign.right)),
-    ]);
-
-    bytes += generator.row([
-      PosColumn(text: "3", width: 1),
-      PosColumn(
-          text: "Masala Dosa",
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
-      PosColumn(
-          text: "50",
-          width: 2,
-          styles: const PosStyles(
-            align: PosAlign.center,
-          )),
-      PosColumn(
-          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
-      PosColumn(
-          text: "50", width: 2, styles: const PosStyles(align: PosAlign.right)),
-    ]);
-
-    bytes += generator.row([
-      PosColumn(text: "4", width: 1),
-      PosColumn(
-          text: "Rova Dosa",
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
-      PosColumn(
-          text: "70",
-          width: 2,
-          styles: const PosStyles(
-            align: PosAlign.center,
-          )),
-      PosColumn(
-          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
-      PosColumn(
-          text: "70", width: 2, styles: const PosStyles(align: PosAlign.right)),
-    ]);
+    ]); */
 
     bytes += generator.hr();
 
     bytes += generator.row([
       PosColumn(
-          text: 'TOTAL',
+          text: 'Totale',
           width: 6,
           styles: const PosStyles(
             align: PosAlign.left,
-            height: PosTextSize.size4,
-            width: PosTextSize.size4,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
           )),
       PosColumn(
-          text: "160",
+          text: trx.records![index].grandTotal!.toStringAsFixed(2),
           width: 6,
           styles: const PosStyles(
             align: PosAlign.right,
-            height: PosTextSize.size4,
-            width: PosTextSize.size4,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: 'di cui IVA',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+      PosColumn(
+          text: (double.parse(trx.records![index].grandTotal!.toString()) -
+                  double.parse(trx.records![index].totalLines!.toString()))
+              .toStringAsFixed(2),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
           )),
     ]);
 
@@ -495,21 +491,16 @@ class CRMInvoiceController extends GetxController {
     bytes += generator.text('Thank you!',
         styles: const PosStyles(align: PosAlign.center, bold: true));
 
-    bytes += generator.text("26-11-2020 15:22:45",
+    //DateTime now = DateTime.now();
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+    bytes += generator.text(dateFormat.format(DateTime.now()),
         styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
 
-    bytes += generator.text(
-        'Note: Goods once sold will not be taken back or exchanged.',
-        styles: const PosStyles(align: PosAlign.center, bold: false));
     bytes += generator.cut();
     return bytes;
   }
 
-  /* void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
-    }
-  } */
   Future<void> getBpData(int index, int bpID) async {
     //late SalesOrderLineJson json;
 
@@ -518,7 +509,7 @@ class CRMInvoiceController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq \'Y\' and AD_Client_ID eq ${GetStorage().read("clientid")}');
     //print(Get.arguments["id"]);
     var response = await http.get(
       url,
@@ -529,8 +520,9 @@ class CRMInvoiceController extends GetxController {
     );
     if (response.statusCode == 200) {
       print(response.body);
-      /* json = SalesOrderLineJson.fromJson(
-            jsonDecode(utf8.decode(response.bodyBytes))); */
+      var json =
+          RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      getInvoiceData(index, json);
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
@@ -540,8 +532,51 @@ class CRMInvoiceController extends GetxController {
     //print("Print $result");
   }
 
-  Future<void> getInvoiceData(int index) async {
-    late SalesOrderLineJson json;
+  Future<void> getToBPdata(int index, int bpID, RVbpartnerJSON frombpartner,
+      SalesOrderLineJson jsonLines) async {
+    //late SalesOrderLineJson json;
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq \'Y\' and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    //print(Get.arguments["id"]);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      var jsonTobpartner =
+          RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      try {
+        List<int> bytes = await getInvoiceTicket(
+            index, jsonLines, frombpartner, jsonTobpartner);
+        // ignore: unused_local_variable
+        final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      } catch (e) {
+        if (kDebugMode) {
+          print('nope');
+        }
+      }
+
+      //getInvoiceData(index, json);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    }
+
+    //print("Print $result");
+  }
+
+  Future<void> getInvoiceData(int index, RVbpartnerJSON bpdata) async {
+    late SalesOrderLineJson jsonLines;
     String? isConnected = await BluetoothThermalPrinter.connectionStatus;
     if (isConnected == "true") {
       final ip = GetStorage().read('ip');
@@ -560,22 +595,16 @@ class CRMInvoiceController extends GetxController {
       );
       if (response.statusCode == 200) {
         //print(response.body);
-        json = SalesOrderLineJson.fromJson(
+        jsonLines = SalesOrderLineJson.fromJson(
             jsonDecode(utf8.decode(response.bodyBytes)));
+        getToBPdata(
+            index, jsonLines.records![0].cBPartnerID!.id!, bpdata, jsonLines);
         //print(trx.rowcount);
         //print(response.body);
         // ignore: unnecessary_null_comparison
         //_dataAvailable.value = _trx != null;
       }
-      try {
-        List<int> bytes = await getPOSSalesOrder(index, json);
-        // ignore: unused_local_variable
-        final result = await BluetoothThermalPrinter.writeBytes(bytes);
-      } catch (e) {
-        if (kDebugMode) {
-          print('nope');
-        }
-      }
+
       //print("Print $result");
     } else {
       //Hadnle Not Connected Senario

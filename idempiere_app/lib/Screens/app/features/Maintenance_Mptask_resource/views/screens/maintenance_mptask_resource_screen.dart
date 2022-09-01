@@ -43,7 +43,6 @@ part '../../models/profile.dart';
 part '../components/header.dart';
 //part '../components/overview_header.dart';
 part '../components/profile_tile.dart';
-part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
