@@ -161,7 +161,25 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                     horizontal: 20.0, vertical: 10.0),
                                 children: [
                                   Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].url !=
+                                            null,
+                                        child: Container(
+                                          width: 300,
+                                          padding: const EdgeInsets.only(
+                                              top: 10, bottom: 10),
+                                          child: Image.network(
+                                            controller
+                                                    .trx.records![index].url ??
+                                                "",
+                                            fit: BoxFit.fitWidth,
+                                          ),
+                                        ),
+                                      ),
                                       Obx(
                                         () => Visibility(
                                           visible: controller
@@ -464,7 +482,25 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                     horizontal: 20.0, vertical: 10.0),
                                 children: [
                                   Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].url !=
+                                            null,
+                                        child: Container(
+                                          width: 300,
+                                          padding: const EdgeInsets.only(
+                                              top: 10, bottom: 10),
+                                          child: Image.network(
+                                            controller
+                                                    .trx.records![index].url ??
+                                                "",
+                                            fit: BoxFit.fitWidth,
+                                          ),
+                                        ),
+                                      ),
                                       Obx(
                                         () => Visibility(
                                           visible: controller
@@ -527,9 +563,14 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText2 !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText2 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText2}"),
@@ -544,9 +585,14 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText3 !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText3 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText3}"),
@@ -561,9 +607,14 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText4 !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText4 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText4}"),
@@ -578,9 +629,14 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText5 !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText5 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText5}"),
@@ -747,7 +803,25 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                     horizontal: 20.0, vertical: 10.0),
                                 children: [
                                   Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].url !=
+                                            null,
+                                        child: Container(
+                                          width: 300,
+                                          padding: const EdgeInsets.only(
+                                              top: 10, bottom: 10),
+                                          child: Image.network(
+                                            controller
+                                                    .trx.records![index].url ??
+                                                "",
+                                            fit: BoxFit.fitWidth,
+                                          ),
+                                        ),
+                                      ),
                                       Obx(
                                         () => Visibility(
                                           visible: controller
@@ -810,9 +884,14 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText2 !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText2 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText2}"),
@@ -827,9 +906,14 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText3 !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText3 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText3}"),
@@ -844,9 +928,14 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText4 !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText4 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText4}"),
@@ -861,9 +950,14 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
                                       ),
                                       Obx(
                                         () => Visibility(
-                                          visible: controller.trx
-                                                  .records![index].lITText5 !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITText5 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .lITSurveyType?.id ==
+                                                  'M',
                                           child: RadioListTile<int>(
                                               title: Text(
                                                   "${controller.trx.records![index].lITText5}"),

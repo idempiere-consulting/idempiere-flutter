@@ -57,6 +57,7 @@ class Records {
   final String? lITCorrectAnswerValue;
   final MPMaintainResourceID? mPMaintainResourceID;
   final LITSurveyType? lITSurveyType;
+  final String? url;
   final String? modelname;
 
   Records({
@@ -85,6 +86,7 @@ class Records {
     this.lITCorrectAnswerValue,
     this.mPMaintainResourceID,
     this.lITSurveyType,
+    this.url,
     this.modelname,
   });
 
@@ -134,6 +136,7 @@ class Records {
                 ? LITSurveyType.fromJson(
                     json['LIT_SurveyType'] as Map<String, dynamic>)
                 : null,
+        url = json['URL'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -161,6 +164,7 @@ class Records {
         'LIT_Text5': lITText5,
         'MP_Maintain_Resource_ID': mPMaintainResourceID?.toJson(),
         'LIT_SurveyType': lITSurveyType?.toJson(),
+        'URL': url,
         'model-name': modelname
       };
 }

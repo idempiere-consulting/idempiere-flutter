@@ -10,8 +10,12 @@ class CourseQuizController extends GetxController {
 
   late RxList<String> dateValue;
 
-  late List<TextEditingController> numberfieldController;
-  late List<TextEditingController> textfieldController;
+  late RxList<String> openAnswerText;
+
+  List<TextEditingController> _controller = [];
+
+  List<TextEditingController> numberfieldController = [];
+  List<TextEditingController> textfieldController = [];
 
   //final List<TextInputFormatter>? inputFormatters;
 
@@ -248,10 +252,11 @@ class CourseQuizController extends GetxController {
       selectedValue = RxList<int>.filled(_trx.records!.length, 0);
       checkValue = RxList<int>.filled(_trx.records!.length, 2);
       dateValue = RxList<String>.filled(_trx.records!.length, "");
-      numberfieldController = List<TextEditingController>.filled(
-          _trx.records!.length, TextEditingController());
-      textfieldController = List<TextEditingController>.filled(
-          _trx.records!.length, TextEditingController());
+      openAnswerText = RxList<String>.filled(_trx.records!.length, "");
+      numberfieldController =
+          List.generate(_trx.records!.length, (i) => TextEditingController());
+      textfieldController =
+          List.generate(_trx.records!.length, (i) => TextEditingController());
 
       _dataAvailable.value = true;
     }
