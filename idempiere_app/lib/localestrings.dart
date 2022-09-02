@@ -381,7 +381,7 @@ class LocaleString extends Translations {
           'Thank you!': 'Thank you!',
           'Total': 'Total',
           'VAT': 'VAT',
-          'of which VAT': 'of which VAT',
+          'of which VAT': 'VAT',
         },
         //ITALIAN LANGUAGE
         'it_IT': {

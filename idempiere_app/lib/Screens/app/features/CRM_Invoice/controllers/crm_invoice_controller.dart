@@ -310,7 +310,7 @@ class CRMInvoiceController extends GetxController {
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'of which VAT'.tr,
+          text: 'VAT'.tr,
           width: 6,
           styles: const PosStyles(
             align: PosAlign.left,
@@ -386,7 +386,7 @@ class CRMInvoiceController extends GetxController {
 
     bytes += generator.row([
       PosColumn(
-          text: 'Cust'.tr,
+          text: 'Cust.'.tr,
           width: 2,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
@@ -503,7 +503,7 @@ class CRMInvoiceController extends GetxController {
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'of which VAT'.tr,
+          text: 'VAT'.tr,
           width: 6,
           styles: const PosStyles(
             align: PosAlign.left,
