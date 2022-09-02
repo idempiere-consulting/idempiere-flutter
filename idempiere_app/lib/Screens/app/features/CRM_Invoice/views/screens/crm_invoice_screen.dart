@@ -13,6 +13,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/invoice_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/rvbpartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
