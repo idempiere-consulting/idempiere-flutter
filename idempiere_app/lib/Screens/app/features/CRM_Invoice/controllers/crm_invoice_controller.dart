@@ -386,34 +386,34 @@ class CRMInvoiceController extends GetxController {
     bytes += generator.row([
       PosColumn(
           text: 'Spett.',
-          width: 4,
+          width: 2,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
           text: tobpartner.records![0].name ?? "???",
-          width: 8,
+          width: 10,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
     ]);
 
     bytes += generator.row([
       PosColumn(
           text: ' ',
-          width: 4,
+          width: 2,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
           text: tobpartner.records![0].address1 ?? "???",
-          width: 8,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+          width: 10,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
     ]);
     bytes += generator.row([
       PosColumn(
           text: ' ',
-          width: 4,
+          width: 2,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
-          text: (tobpartner.records![0].city ?? "???") +
-              " (${tobpartner.records![0].regionName ?? "???"})",
-          width: 8,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+          text:
+              " ${tobpartner.records![0].postal} ${tobpartner.records![0].city} (${tobpartner.records![0].regionName})",
+          width: 10,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
     ]);
 
     bytes += generator.hr();
