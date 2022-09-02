@@ -357,6 +357,10 @@ class CRMInvoiceController extends GetxController {
     CapabilityProfile profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm80, profile);
 
+    var dateString = trx.records![index].dateInvoiced;
+    DateTime date = DateTime.parse(dateString!);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(date);
+
     bytes += generator.text("${_trx.records![index].aDOrgID!.identifier}",
         styles: const PosStyles(
           align: PosAlign.center,
@@ -376,8 +380,7 @@ class CRMInvoiceController extends GetxController {
         "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text(
-        'Document: '.tr +
-            '${trx.records![index].documentNo} ${trx.records![index].dateInvoiced}',
+        'Document: '.tr + '${trx.records![index].documentNo} $formattedDate',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 1);
 
