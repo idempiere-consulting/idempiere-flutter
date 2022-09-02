@@ -389,29 +389,29 @@ class CRMInvoiceController extends GetxController {
           width: 4,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
-          text: tobpartner.records![0].name!,
+          text: tobpartner.records![0].name ?? "???",
           width: 8,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
     ]);
 
     bytes += generator.row([
       PosColumn(
-          text: '',
+          text: ' ',
           width: 4,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
-          text: tobpartner.records![0].address1!,
+          text: tobpartner.records![0].address1 ?? "???",
           width: 8,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
     ]);
     bytes += generator.row([
       PosColumn(
-          text: '',
+          text: ' ',
           width: 4,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
-          text: tobpartner.records![0].city! +
-              " (${tobpartner.records![0].regionName})",
+          text: (tobpartner.records![0].city ?? "???") +
+              " (${tobpartner.records![0].regionName ?? "???"})",
           width: 8,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
     ]);
@@ -578,7 +578,7 @@ class CRMInvoiceController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq \'Y\' and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
     //print(Get.arguments["id"]);
     var response = await http.get(
       url,
@@ -588,7 +588,7 @@ class CRMInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       print('gettobpdata');
       var jsonTobpartner =
           RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -636,7 +636,8 @@ class CRMInvoiceController extends GetxController {
       print('getinvoicedata');
       jsonLines = SalesOrderLineJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
-      getToBPdata(index, _trx.records![0].cBPartnerID!.id!, bpdata, jsonLines);
+      getToBPdata(
+          index, _trx.records![index].cBPartnerID!.id!, bpdata, jsonLines);
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
