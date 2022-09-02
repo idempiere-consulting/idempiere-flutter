@@ -391,7 +391,7 @@ class CRMInvoiceController extends GetxController {
       PosColumn(
           text: tobpartner.records![0].name ?? "???",
           width: 10,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
     ]);
 
     bytes += generator.row([
