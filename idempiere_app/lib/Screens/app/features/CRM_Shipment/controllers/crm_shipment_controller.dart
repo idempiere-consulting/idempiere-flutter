@@ -265,6 +265,10 @@ class CRMShipmentController extends GetxController {
     CapabilityProfile profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm80, profile);
 
+    var dateString = trx.records![index].movementDate;
+    DateTime date = DateTime.parse(dateString!);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(date);
+
     bytes += generator.text("${_trx.records![index].aDOrgID!.identifier}",
         styles: const PosStyles(
           align: PosAlign.center,
@@ -284,8 +288,7 @@ class CRMShipmentController extends GetxController {
         "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text(
-        'Document: '.tr +
-            '${trx.records![index].documentNo} ${trx.records![index].movementDate}',
+        'Document: '.tr + '${trx.records![index].documentNo} $formattedDate',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 1);
 
