@@ -25,6 +25,21 @@ class CRMShipmentController extends GetxController {
 
     getShipments();
     getADUserID();
+    setConnect();
+  }
+
+  Future<void> setConnect() async {
+    try {
+      final String? result = await BluetoothThermalPrinter.connect(
+          GetStorage().read('posMacAddress'));
+      //print("state conneected $result");
+      if (result == "true") {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('nope');
+      }
+    }
+    //printTicket();
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -132,6 +147,255 @@ class CRMShipmentController extends GetxController {
       scaffoldKey.currentState!.openDrawer();
     }
   } */
+
+  Future<void> getBusinessPartner(int index) async {
+    var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      print('getbusinesspartner');
+
+      //getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
+      var json =
+          OrgInfoJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      getShipmentData(index, json);
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> getShipmentData(int index, OrgInfoJSON bpdata) async {
+    late ShipmentLineJson jsonLines;
+    //String? isConnected = await BluetoothThermalPrinter.connectionStatus;
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/M_InOutLine?\$filter= M_InOut_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    //print(Get.arguments["id"]);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      print('getshipmentdata');
+      jsonLines = ShipmentLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      getToBPdata(
+          index, _trx.records![index].cBPartnerID!.id!, bpdata, jsonLines);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    } else {
+      print(response.body);
+    }
+
+    //print("Print $result");
+  }
+
+  Future<void> getToBPdata(int index, int bpID, OrgInfoJSON frombpartner,
+      ShipmentLineJson jsonLines) async {
+    //late SalesOrderLineJson json;
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    //print(Get.arguments["id"]);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      print('gettobpdata');
+      var jsonTobpartner =
+          RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      try {
+        List<int> bytes = await getShipmentTicket(
+            index, jsonLines, frombpartner, jsonTobpartner);
+        // ignore: unused_local_variable
+        final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      } catch (e) {
+        if (kDebugMode) {
+          print('nope1');
+        }
+      }
+
+      //getInvoiceData(index, json);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    }
+
+    //print("Print $result");
+  }
+
+  Future<List<int>> getShipmentTicket(int index, ShipmentLineJson json,
+      OrgInfoJSON frombpartner, RVbpartnerJSON tobpartner) async {
+    List<int> bytes = [];
+    CapabilityProfile profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm80, profile);
+
+    bytes += generator.text("${_trx.records![index].aDOrgID!.identifier}",
+        styles: const PosStyles(
+          align: PosAlign.center,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+
+    bytes += generator.text(frombpartner.records![0].cLocationID!.identifier!,
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.text("P. IVA ${frombpartner.records![0].taxID}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+
+    bytes += generator.text(
+        "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text(
+        'Document: '.tr +
+            '${trx.records![index].documentNo} ${trx.records![index].movementDate}',
+        styles: const PosStyles(align: PosAlign.center),
+        linesAfter: 1);
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Spett.',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: tobpartner.records![0].name ?? "???",
+          width: 10,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+          text: ' ',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: tobpartner.records![0].address1 ?? "???",
+          width: 10,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: ' ',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text:
+              "${tobpartner.records![0].postal} ${tobpartner.records![0].city} (${tobpartner.records![0].regionName})",
+          width: 10,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+    ]);
+
+    bytes += generator.hr();
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Prodotto',
+          width: 8,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: 'U.d.M',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Qta',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.right, bold: true)),
+    ]);
+
+    // ignore: unnecessary_null_comparison
+    if (json != null) {
+      for (var line in json.records!) {
+        bytes += generator.row([
+          PosColumn(
+              text: "${line.mProductID!.identifier}",
+              width: 8,
+              styles: const PosStyles(
+                align: PosAlign.left,
+              )),
+          PosColumn(
+              text: "${line.cUOMID!.identifier}",
+              width: 2,
+              styles: const PosStyles(align: PosAlign.center)),
+          PosColumn(
+              text: line.qtyEntered.toString(),
+              width: 2,
+              styles: const PosStyles(align: PosAlign.right)),
+        ]);
+      }
+    }
+
+    /*  bytes += generator.row([
+      PosColumn(text: "1", width: 1),
+      PosColumn(
+          text: "Tea",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "10",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "10", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]); */
+
+    bytes += generator.hr(ch: '=', linesAfter: 1);
+
+    // ticket.feed(2);
+    bytes += generator.text('Thank you!',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    //DateTime now = DateTime.now();
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+    bytes += generator.text(dateFormat.format(DateTime.now()),
+        styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
+
+    bytes += generator.cut();
+    return bytes;
+  }
 
   // Data
   _Profile getProfil() {

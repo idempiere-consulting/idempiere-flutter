@@ -6,13 +6,18 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/rvbpartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/shipment_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_edit.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -29,7 +34,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -65,12 +70,13 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -86,7 +92,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Shipment: ".tr + controller.trx.rowcount.toString())
+                          ? Text("Shipment: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("Shipment: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -253,6 +260,18 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             ),
                                           ],
                                         ),
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                                tooltip: 'print POS invoice',
+                                                onPressed: () async {
+                                                  controller.getBusinessPartner(
+                                                      index);
+                                                },
+                                                icon:
+                                                    const Icon(Icons.textsms)),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -278,7 +297,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Shipment: ".tr + controller.trx.rowcount.toString())
+                          ? Text("Shipment: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("Shipment: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -470,7 +490,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("Shipment: ".tr + controller.trx.rowcount.toString())
+                          ? Text("Shipment: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("Shipment: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
