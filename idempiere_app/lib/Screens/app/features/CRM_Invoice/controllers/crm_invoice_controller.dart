@@ -352,12 +352,12 @@ class CRMInvoiceController extends GetxController {
   } */
 
   Future<List<int>> getInvoiceTicket(int index, SalesOrderLineJson json,
-      RVbpartnerJSON frombpartner, RVbpartnerJSON tobpartner) async {
+      OrgInfoJSON frombpartner, RVbpartnerJSON tobpartner) async {
     List<int> bytes = [];
     CapabilityProfile profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm80, profile);
 
-    bytes += generator.text("${GetStorage().read('clientname') ?? "???"}",
+    bytes += generator.text("${_trx.records![index].aDOrgID!.identifier}",
         styles: const PosStyles(
           align: PosAlign.center,
           height: PosTextSize.size2,
@@ -365,12 +365,9 @@ class CRMInvoiceController extends GetxController {
         ),
         linesAfter: 1);
 
-    bytes += generator.text(frombpartner.records![0].address1!,
+    bytes += generator.text(frombpartner.records![0].cLocationID!.identifier!,
         styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.text(
-        frombpartner.records![0].city! +
-            " (${frombpartner.records![0].regionName})",
-        styles: const PosStyles(align: PosAlign.center));
+
     bytes += generator.text("P. IVA ${frombpartner.records![0].taxID}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.hr();
@@ -411,7 +408,7 @@ class CRMInvoiceController extends GetxController {
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
           text:
-              " ${tobpartner.records![0].postal} ${tobpartner.records![0].city} (${tobpartner.records![0].regionName})",
+              "${tobpartner.records![0].postal} ${tobpartner.records![0].city} (${tobpartner.records![0].regionName})",
           width: 10,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
     ]);
@@ -537,7 +534,7 @@ class CRMInvoiceController extends GetxController {
     return bytes;
   }
 
-  Future<void> getBpData(int index, int bpID) async {
+  /* Future<void> getBpData(int index, int bpID) async {
     //late SalesOrderLineJson json;
 
     final ip = GetStorage().read('ip');
@@ -567,9 +564,9 @@ class CRMInvoiceController extends GetxController {
     }
 
     //print("Print $result");
-  }
+  } */
 
-  Future<void> getToBPdata(int index, int bpID, RVbpartnerJSON frombpartner,
+  Future<void> getToBPdata(int index, int bpID, OrgInfoJSON frombpartner,
       SalesOrderLineJson jsonLines) async {
     //late SalesOrderLineJson json;
 
@@ -613,7 +610,7 @@ class CRMInvoiceController extends GetxController {
     //print("Print $result");
   }
 
-  Future<void> getInvoiceData(int index, RVbpartnerJSON bpdata) async {
+  Future<void> getInvoiceData(int index, OrgInfoJSON bpdata) async {
     late SalesOrderLineJson jsonLines;
     //String? isConnected = await BluetoothThermalPrinter.connectionStatus;
 
@@ -655,7 +652,7 @@ class CRMInvoiceController extends GetxController {
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -664,11 +661,13 @@ class CRMInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       print('getbusinesspartner');
-      var json = jsonDecode(response.body);
-      getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
 
+      //getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
+      var json =
+          OrgInfoJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      getInvoiceData(index, json);
       //print(businessPartnerId);
       //print(trx.rowcount);
       //print(response.body);
