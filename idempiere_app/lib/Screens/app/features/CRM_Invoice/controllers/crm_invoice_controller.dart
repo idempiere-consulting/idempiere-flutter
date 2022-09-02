@@ -227,15 +227,15 @@ class CRMInvoiceController extends GetxController {
     bytes += generator.hr();
     bytes += generator.row([
       PosColumn(
-          text: 'Product',
+          text: 'Product'.tr,
           width: 8,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
-          text: 'IVA',
+          text: 'VAT'.tr,
           width: 2,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
       PosColumn(
-          text: 'Price',
+          text: 'Price'.tr,
           width: 2,
           styles: const PosStyles(align: PosAlign.right, bold: true)),
     ]);
@@ -292,7 +292,7 @@ class CRMInvoiceController extends GetxController {
 
     bytes += generator.row([
       PosColumn(
-          text: 'Totale',
+          text: 'Total'.tr,
           width: 6,
           styles: const PosStyles(
             align: PosAlign.left,
@@ -310,7 +310,7 @@ class CRMInvoiceController extends GetxController {
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'di cui IVA',
+          text: 'of which VAT'.tr,
           width: 6,
           styles: const PosStyles(
             align: PosAlign.left,
@@ -332,7 +332,7 @@ class CRMInvoiceController extends GetxController {
     bytes += generator.hr(ch: '=', linesAfter: 1);
 
     // ticket.feed(2);
-    bytes += generator.text('Thank you!',
+    bytes += generator.text('Thank you!'.tr,
         styles: const PosStyles(align: PosAlign.center, bold: true));
 
     //DateTime now = DateTime.now();
@@ -386,7 +386,7 @@ class CRMInvoiceController extends GetxController {
 
     bytes += generator.row([
       PosColumn(
-          text: 'Spett.',
+          text: 'Cust'.tr,
           width: 2,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
@@ -420,15 +420,15 @@ class CRMInvoiceController extends GetxController {
     bytes += generator.hr();
     bytes += generator.row([
       PosColumn(
-          text: 'Product',
+          text: 'Product'.tr,
           width: 8,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
-          text: 'IVA',
+          text: 'VAT'.tr,
           width: 2,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
       PosColumn(
-          text: 'Price',
+          text: 'Price'.tr,
           width: 2,
           styles: const PosStyles(align: PosAlign.right, bold: true)),
     ]);
@@ -485,7 +485,7 @@ class CRMInvoiceController extends GetxController {
 
     bytes += generator.row([
       PosColumn(
-          text: 'Totale',
+          text: 'Total'.tr,
           width: 6,
           styles: const PosStyles(
             align: PosAlign.left,
@@ -503,7 +503,7 @@ class CRMInvoiceController extends GetxController {
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'di cui IVA',
+          text: 'of which VAT'.tr,
           width: 6,
           styles: const PosStyles(
             align: PosAlign.left,
@@ -525,7 +525,7 @@ class CRMInvoiceController extends GetxController {
     bytes += generator.hr(ch: '=', linesAfter: 1);
 
     // ticket.feed(2);
-    bytes += generator.text('Thank you!',
+    bytes += generator.text('Thank you!'.tr,
         styles: const PosStyles(align: PosAlign.center, bold: true));
 
     //DateTime now = DateTime.now();
@@ -589,8 +589,8 @@ class CRMInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
-      print('gettobpdata');
+      //print(response.body);
+      //print('gettobpdata');
       var jsonTobpartner =
           RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       try {
@@ -634,7 +634,7 @@ class CRMInvoiceController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      print('getinvoicedata');
+      //print('getinvoicedata');
       jsonLines = SalesOrderLineJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       getToBPdata(
@@ -644,14 +644,15 @@ class CRMInvoiceController extends GetxController {
       // ignore: unnecessary_null_comparison
       //_dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
 
     //print("Print $result");
   }
 
   Future<void> getBusinessPartner(int index) async {
-    var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
@@ -665,8 +666,8 @@ class CRMInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
-      print('getbusinesspartner');
+      //print(response.body);
+      //print('getbusinesspartner');
 
       //getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
       var json =

@@ -12,8 +12,6 @@ class CourseQuizController extends GetxController {
 
   late RxList<String> openAnswerText;
 
-  List<TextEditingController> _controller = [];
-
   List<TextEditingController> numberfieldController = [];
   List<TextEditingController> textfieldController = [];
 

@@ -149,7 +149,6 @@ class CRMShipmentController extends GetxController {
   } */
 
   Future<void> getBusinessPartner(int index) async {
-    var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
@@ -163,8 +162,8 @@ class CRMShipmentController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
-      print('getbusinesspartner');
+      //print(response.body);
+      //print('getbusinesspartner');
 
       //getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
       var json =
@@ -199,7 +198,7 @@ class CRMShipmentController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      print('getshipmentdata');
+      //print('getshipmentdata');
       jsonLines = ShipmentLineJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       getToBPdata(
@@ -209,7 +208,9 @@ class CRMShipmentController extends GetxController {
       // ignore: unnecessary_null_comparison
       //_dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
 
     //print("Print $result");
@@ -234,8 +235,8 @@ class CRMShipmentController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
-      print('gettobpdata');
+      //print(response.body);
+      //print('gettobpdata');
       var jsonTobpartner =
           RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       try {
@@ -294,7 +295,7 @@ class CRMShipmentController extends GetxController {
 
     bytes += generator.row([
       PosColumn(
-          text: 'Spett.',
+          text: 'Cust.'.tr,
           width: 2,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
@@ -329,15 +330,15 @@ class CRMShipmentController extends GetxController {
 
     bytes += generator.row([
       PosColumn(
-          text: 'Prodotto',
+          text: 'Product'.tr,
           width: 8,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
-          text: 'U.d.M',
+          text: 'U.o.M'.tr,
           width: 2,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
       PosColumn(
-          text: 'Qta',
+          text: 'Qty'.tr,
           width: 2,
           styles: const PosStyles(align: PosAlign.right, bold: true)),
     ]);
@@ -387,7 +388,7 @@ class CRMShipmentController extends GetxController {
     bytes += generator.hr(ch: '=', linesAfter: 1);
 
     // ticket.feed(2);
-    bytes += generator.text('Thank you!',
+    bytes += generator.text('Thank you!'.tr,
         styles: const PosStyles(align: PosAlign.center, bold: true));
 
     //DateTime now = DateTime.now();

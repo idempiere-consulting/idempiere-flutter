@@ -354,16 +354,17 @@ class LocaleString extends Translations {
           'Approve': 'Approve',
           'Approve Sales Order': 'Approve Sales Order',
           'Are you sure you want to approve this Sales Order?':
-          	'Are you sure you want to approve this Sales Order?',
+              'Are you sure you want to approve this Sales Order?',
           'Sales Order approved': 'Sales Order approved',
           'Sales Order not approved': 'Sales Order not approved',
           'Approved': 'Approved',
           'Sign missing': 'Sign missing',
           'Please, sign this Sales Order to approve it':
-          	'Please, sign this Sales Order to approve it',
+              'Please, sign this Sales Order to approve it',
           'No Sales Order selected': 'No Sales Order selected',
           'Sign': 'Sign',
-          'Select a request or create a new one': 'Select a request or create a new one',
+          'Select a request or create a new one':
+              'Select a request or create a new one',
           'New Sales Order Request': 'New Sales Order Request',
           'Request': 'Request',
           'Not Listed': 'Not Listed',
@@ -372,6 +373,15 @@ class LocaleString extends Translations {
           'Subject': 'Subject',
           'Request Details': 'Request Details',
           'Sales Order Requests': 'Sales Order Requests',
+          'Document Type: ': 'Document Type: ',
+          'Document: ': 'Document: ',
+          'Cust.': 'Cust.',
+          'U.o.M': 'U.o.M',
+          'Qty': 'Qty',
+          'Thank you!': 'Thank you!',
+          'Total': 'Total',
+          'VAT': 'VAT',
+          'of which VAT': 'of which VAT',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -731,16 +741,17 @@ class LocaleString extends Translations {
           'Approve': 'Approva',
           'Approve Sales Order': 'Approva Offerta',
           'Are you sure you want to approve this Sales Order?':
-          	'Sei sicuro di voler approvare questa Offerta?',
+              'Sei sicuro di voler approvare questa Offerta?',
           'Sales Order approved': 'Offerta approvata',
           'Sales Order not approved': 'Offerta non approvata',
           'Approved': 'Approvato',
           'Sign missing': 'Firma mancante',
-          'Please, sign this Sales Order to approve it': 
-          	'Firma questa Offerta per approvarla',
+          'Please, sign this Sales Order to approve it':
+              'Firma questa Offerta per approvarla',
           'No Sales Order selected': 'Nessuna Offerta selezionata',
           'Sign': 'Firma',
-          'Select a request or create a new one': 'Seleziona una richiesta o creane una nuova',
+          'Select a request or create a new one':
+              'Seleziona una richiesta o creane una nuova',
           'New Sales Order Request': 'Nuova Richiesta di Offerta',
           'Request': 'Richiesta',
           'Not Listed': 'Non in elenco',
@@ -749,6 +760,15 @@ class LocaleString extends Translations {
           'Subject': 'Oggetto',
           'Request Details': 'Dettagli Richiesta',
           'Sales Order Requests': 'Richieste di Offerta',
+          'Document Type: ': 'Tipo Documento: ',
+          'Document: ': 'Documento: ',
+          'Cust.': 'Spett.',
+          'U.o.M': 'U.d.M',
+          'Qty': 'Qta',
+          'Thank you!': 'Grazie!',
+          'Total': 'Totale',
+          'VAT': 'IVA',
+          'of which VAT': 'di cui IVA',
         },
       };
 }
