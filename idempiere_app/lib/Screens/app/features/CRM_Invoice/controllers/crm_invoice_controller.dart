@@ -376,7 +376,8 @@ class CRMInvoiceController extends GetxController {
         "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text(
-        'Document: '.tr + '${trx.records![index].documentNo}',
+        'Document: '.tr +
+            '${trx.records![index].documentNo} ${trx.records![index].dateInvoiced}',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 1);
 
