@@ -48,7 +48,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.email,
                   icon: EvaIcons.emailOutline,
                   label: "Email".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[1], radix: 16)
                                   .toRadixString(2)
                                   .padLeft(4, "0")

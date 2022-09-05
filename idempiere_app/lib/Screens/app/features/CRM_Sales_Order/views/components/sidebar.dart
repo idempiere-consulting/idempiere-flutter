@@ -61,7 +61,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.contact_mail,
                   icon: Icons.contact_mail_outlined,
                   label: "ContactBP".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[4], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -74,7 +73,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.domain,
                   icon: Icons.domain_outlined,
                   label: "CustomerBP".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[5], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -87,7 +85,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.task,
                   icon: Icons.task_outlined,
                   label: "Task".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[6], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -100,7 +97,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.ballot,
                   icon: Icons.ballot_outlined,
                   label: "ProductList".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[9], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -113,7 +109,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.description,
                   icon: Icons.description_outlined,
                   label: "SalesOrder".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[8], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -126,7 +121,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.local_shipping,
                   icon: Icons.local_shipping_outlined,
                   label: "Shipment".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[10], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -139,7 +133,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.receipt,
                   icon: Icons.receipt_outlined,
                   label: "Invoice".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[11], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -152,7 +145,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.payments,
                   icon: Icons.payments_outlined,
                   label: "Payment".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[12], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -165,7 +157,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.request_quote,
                   icon: Icons.request_quote_outlined,
                   label: "Commission".tr,
-                  totalNotif: 20,
                   visible: int.parse(list[13], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")

@@ -64,7 +64,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.contact_mail,
                   icon: Icons.contact_mail_outlined,
                   label: "Quiz",
-                  totalNotif: 20,
                   visible: int.parse(list[54], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -77,7 +76,6 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.contact_mail,
                   icon: Icons.contact_mail_outlined,
                   label: "Score",
-                  totalNotif: 20,
                   visible: int.parse(list[55], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
