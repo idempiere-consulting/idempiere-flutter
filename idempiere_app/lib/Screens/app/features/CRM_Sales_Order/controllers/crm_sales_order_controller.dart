@@ -183,7 +183,37 @@ class CRMSalesOrderController extends GetxController {
     //printTicket();
   }
 
-  Future<void> printTicket(int index) async {
+  Future<void> getBusinessPartner(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //print('getbusinesspartner');
+
+      //getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
+      var json =
+          OrgInfoJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      printTicket(index, json);
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> printTicket(int index, OrgInfoJSON jsonBP) async {
     late SalesOrderLineJson json;
     String? isConnected = await BluetoothThermalPrinter.connectionStatus;
     if (isConnected == "true") {
@@ -211,7 +241,7 @@ class CRMSalesOrderController extends GetxController {
         //_dataAvailable.value = _trx != null;
       }
       try {
-        List<int> bytes = await getPOSSalesOrder(index, json);
+        List<int> bytes = await getPOSSalesOrder(index, json, jsonBP);
         // ignore: unused_local_variable
         final result = await BluetoothThermalPrinter.writeBytes(bytes);
       } catch (e) {
@@ -229,12 +259,17 @@ class CRMSalesOrderController extends GetxController {
     _dataAvailable.value = false;
   }
 
-  Future<List<int>> getPOSSalesOrder(int index, SalesOrderLineJson json) async {
+  Future<List<int>> getPOSSalesOrder(
+      int index, SalesOrderLineJson json, OrgInfoJSON jsonBP) async {
     List<int> bytes = [];
     CapabilityProfile profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm80, profile);
 
-    bytes += generator.text("${GetStorage().read('clientname') ?? "???"}",
+    var dateString = trx.records![index].dateOrdered;
+    DateTime date = DateTime.parse(dateString!);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(date);
+
+    bytes += generator.text("${_trx.records![index].aDOrgID!.identifier}",
         styles: const PosStyles(
           align: PosAlign.center,
           height: PosTextSize.size2,
@@ -242,11 +277,10 @@ class CRMSalesOrderController extends GetxController {
         ),
         linesAfter: 1);
 
-    bytes += generator.text("VIA DEL MARANGON, 10",
+    bytes += generator.text(jsonBP.records![0].cLocationID!.identifier!,
         styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.text("MESCOLINO-MINELLE (TV)",
-        styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.text("PARTITA IVA 43892049842",
+
+    bytes += generator.text("P. IVA ${jsonBP.records![0].taxID}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.hr();
 
@@ -254,10 +288,9 @@ class CRMSalesOrderController extends GetxController {
         "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text(
-        'Document: '.tr + '${trx.records![index].documentNo}',
-        styles: const PosStyles(align: PosAlign.center));
-
-    bytes += generator.hr();
+        'Document: '.tr + '${trx.records![index].documentNo} $formattedDate',
+        styles: const PosStyles(align: PosAlign.center),
+        linesAfter: 1);
     bytes += generator.row([
       PosColumn(
           text: 'Product',

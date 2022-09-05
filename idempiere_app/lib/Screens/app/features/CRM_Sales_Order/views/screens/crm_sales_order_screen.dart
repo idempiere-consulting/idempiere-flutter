@@ -13,6 +13,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
 //import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_pos_page.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
@@ -465,7 +466,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 .id,
                                                           }); */
                                                       controller
-                                                          .printTicket(index);
+                                                          .getBusinessPartner(
+                                                              index);
                                                     },
                                                     icon: const Icon(
                                                         Icons.receipt),
@@ -924,7 +926,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 .id,
                                                           }); */
                                                       controller
-                                                          .printTicket(index);
+                                                          .getBusinessPartner(
+                                                              index);
                                                     },
                                                     icon: const Icon(
                                                         Icons.receipt),
