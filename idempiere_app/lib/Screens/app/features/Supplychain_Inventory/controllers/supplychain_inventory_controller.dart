@@ -16,6 +16,50 @@ class SupplychainInventoryController extends GetxController {
   bool get dataAvailable => _dataAvailable.value;
   LoadUnloadJson get trx => _trx;
 
+  completeInventory(int index) async {
+    Get.back();
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "record-id": _trx.records![index].id,
+    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/processes/m-inventory-process');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      getInventories();
+      //print("done!");
+
+      Get.snackbar(
+        "Done!".tr,
+        "Record has been completed".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      //print(response.body);
+      Get.snackbar(
+        "Error!".tr,
+        "Record not completed".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   Future<void> getInventories() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');

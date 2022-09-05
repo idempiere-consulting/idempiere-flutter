@@ -141,14 +141,30 @@ class SupplychainInventoryScreen
                                   ),
                                   tooltip: 'Edit Inventory'.tr,
                                   onPressed: () {
-                                    Get.to(const EditSupplychainInventory(), arguments: {
-                                      "id": controller.trx.records![index].id,
-                                      "documentNo": controller.trx.records![index].documentNo,
-                                      //"MovementDate": controller.trx.records![index].movementDate,
-                                      "description": controller.trx.records![index].description ?? "",
-                                      "activity": controller.trx.records![index].cActivityID?.identifier ?? "",
-                                      "movementDate": controller.trx.records![index].movementDate ?? "??",
-                                    });
+                                    Get.to(const EditSupplychainInventory(),
+                                        arguments: {
+                                          "id":
+                                              controller.trx.records![index].id,
+                                          "documentNo": controller
+                                              .trx.records![index].documentNo,
+                                          //"MovementDate": controller.trx.records![index].movementDate,
+                                          "description": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .description ??
+                                              "",
+                                          "activity": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cActivityID
+                                                  ?.identifier ??
+                                              "",
+                                          "movementDate": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .movementDate ??
+                                              "??",
+                                        });
                                     log("info button pressed".tr);
                                   },
                                 ),
@@ -232,6 +248,80 @@ class SupplychainInventoryScreen
                                             ""),
                                       ],
                                     ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id !=
+                                              'CO',
+                                          child: ElevatedButton(
+                                            child: Text("Complete".tr),
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Complete Action',
+                                                content: const Text(
+                                                    "Are you sure you want to complete the record?"),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  final ip =
+                                                      GetStorage().read('ip');
+                                                  String authorization =
+                                                      'Bearer ' +
+                                                          GetStorage()
+                                                              .read('token');
+                                                  final msg = jsonEncode({
+                                                    "DocAction": "CO",
+                                                  });
+                                                  final protocol = GetStorage()
+                                                      .read('protocol');
+                                                  var url = Uri.parse(
+                                                      '$protocol://' +
+                                                          ip +
+                                                          '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+
+                                                  var response = await http.put(
+                                                    url,
+                                                    body: msg,
+                                                    headers: <String, String>{
+                                                      'Content-Type':
+                                                          'application/json',
+                                                      'Authorization':
+                                                          authorization,
+                                                    },
+                                                  );
+                                                  if (response.statusCode ==
+                                                      200) {
+                                                    //print("done!");
+                                                    controller
+                                                        .completeInventory(
+                                                            index);
+                                                  } else {
+                                                    //print(response.body);
+                                                    Get.snackbar(
+                                                      "Error!".tr,
+                                                      "Record not completed".tr,
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.red,
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ],
@@ -317,14 +407,30 @@ class SupplychainInventoryScreen
                                   ),
                                   tooltip: 'Edit Inventory'.tr,
                                   onPressed: () {
-                                    Get.to(const EditSupplychainInventory(), arguments: {
-                                      "id": controller.trx.records![index].id,
-                                      "documentNo": controller.trx.records![index].documentNo,
-                                      //"MovementDate": controller.trx.records![index].movementDate,
-                                      "description": controller.trx.records![index].description ?? "",
-                                      "activity": controller.trx.records![index].cActivityID?.identifier ?? "",
-                                      "movementDate": controller.trx.records![index].movementDate ?? "??",
-                                    });
+                                    Get.to(const EditSupplychainInventory(),
+                                        arguments: {
+                                          "id":
+                                              controller.trx.records![index].id,
+                                          "documentNo": controller
+                                              .trx.records![index].documentNo,
+                                          //"MovementDate": controller.trx.records![index].movementDate,
+                                          "description": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .description ??
+                                              "",
+                                          "activity": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cActivityID
+                                                  ?.identifier ??
+                                              "",
+                                          "movementDate": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .movementDate ??
+                                              "??",
+                                        });
                                     log("info button pressed".tr);
                                   },
                                 ),
@@ -493,14 +599,30 @@ class SupplychainInventoryScreen
                                   ),
                                   tooltip: 'Edit Inventory'.tr,
                                   onPressed: () {
-                                    Get.to(const EditSupplychainInventory(), arguments: {
-                                      "id": controller.trx.records![index].id,
-                                      "documentNo": controller.trx.records![index].documentNo,
-                                      //"MovementDate": controller.trx.records![index].movementDate,
-                                      "description": controller.trx.records![index].description ?? "",
-                                      "activity": controller.trx.records![index].cActivityID?.identifier ?? "",
-                                      "movementDate": controller.trx.records![index].movementDate ?? "??",
-                                    });
+                                    Get.to(const EditSupplychainInventory(),
+                                        arguments: {
+                                          "id":
+                                              controller.trx.records![index].id,
+                                          "documentNo": controller
+                                              .trx.records![index].documentNo,
+                                          //"MovementDate": controller.trx.records![index].movementDate,
+                                          "description": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .description ??
+                                              "",
+                                          "activity": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cActivityID
+                                                  ?.identifier ??
+                                              "",
+                                          "movementDate": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .movementDate ??
+                                              "??",
+                                        });
                                     log("info button pressed".tr);
                                   },
                                 ),

@@ -130,9 +130,9 @@ class SupplychainInventoryLineScreen
                                                 "Are you sure you want to delete the record?"
                                                     .tr),
                                             onConfirm: () {
-                                              /* controller.deleteLoadUnloadLine(
+                                              controller.deleteLoadUnloadLine(
                                                   controller
-                                                      .trx.records![index].id!); */
+                                                      .trx.records![index].id!);
                                             },
                                             onCancel: () {});
                                       },
