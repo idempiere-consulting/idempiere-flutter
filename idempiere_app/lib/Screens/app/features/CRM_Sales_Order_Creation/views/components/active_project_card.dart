@@ -52,7 +52,7 @@ class _ActiveProjectCard extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       child: Text("See All".tr),
-      style: TextButton.styleFrom(primary: kFontColorPallets[1]),
+      style: TextButton.styleFrom(foregroundColor: kFontColorPallets[1]),
     );
   }
 }

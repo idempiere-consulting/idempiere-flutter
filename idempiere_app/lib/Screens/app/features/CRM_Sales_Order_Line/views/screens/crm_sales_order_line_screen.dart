@@ -63,7 +63,9 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
         //key: controller.scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text('${Get.arguments["bPartner"]} ${Get.arguments["docNo"]}'),
+          title: Expanded(
+              child: Text(
+                  '${Get.arguments["bPartner"]} ${Get.arguments["docNo"]}')),
           leading: IconButton(
             icon: const Icon(Icons.chevron_left),
             onPressed: () {

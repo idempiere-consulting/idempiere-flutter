@@ -14,7 +14,7 @@ class AppTheme {
         primarySwatch: Colors.deepPurple,
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-          primary: const Color.fromRGBO(128, 109, 255, 1),
+          backgroundColor: const Color.fromRGBO(128, 109, 255, 1),
         ).merge(
           ButtonStyle(elevation: MaterialStateProperty.all(0)),
         )),
