@@ -63,9 +63,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
         //key: controller.scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Expanded(
-              child: Text(
-                  '${Get.arguments["bPartner"]} ${Get.arguments["docNo"]}')),
+          title: Text('${Get.arguments["bPartner"]} ${Get.arguments["docNo"]}'),
           leading: IconButton(
             icon: const Icon(Icons.chevron_left),
             onPressed: () {
@@ -98,7 +96,35 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
               return Column(children: [
-                const SizedBox(height: kSpacing),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: controller.bpFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    //maxLines: 5,
+                    controller: controller.documentFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                //const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
