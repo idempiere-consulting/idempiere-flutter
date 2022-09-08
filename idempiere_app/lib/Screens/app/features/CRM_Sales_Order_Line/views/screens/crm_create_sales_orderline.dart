@@ -3,6 +3,7 @@ import 'dart:io';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -611,7 +612,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(Icons.scale),
                       border: const OutlineInputBorder(),
                       labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -628,7 +629,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(EvaIcons.pricetagsOutline),
                       border: const OutlineInputBorder(),
                       labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -699,7 +700,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     //readOnly: true,
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.wallet_travel),
+                      prefixIcon: const Icon(EvaIcons.textOutline),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -883,7 +884,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(Icons.scale),
                       border: const OutlineInputBorder(),
                       labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -900,7 +901,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(EvaIcons.pricetagsOutline),
                       border: const OutlineInputBorder(),
                       labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -971,7 +972,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     //readOnly: true,
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.wallet_travel),
+                      prefixIcon: const Icon(EvaIcons.textOutline),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -1155,7 +1156,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(Icons.scale),
                       border: const OutlineInputBorder(),
                       labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -1172,7 +1173,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(EvaIcons.pricetagsOutline),
                       border: const OutlineInputBorder(),
                       labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -1243,7 +1244,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                     //readOnly: true,
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.wallet_travel),
+                      prefixIcon: const Icon(EvaIcons.textOutline),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,

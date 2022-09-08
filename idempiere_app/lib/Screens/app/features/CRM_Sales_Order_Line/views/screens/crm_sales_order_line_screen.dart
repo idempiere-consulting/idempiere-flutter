@@ -103,7 +103,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                     readOnly: true,
                     controller: controller.bpFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields),
+                      prefixIcon: const Icon(Icons.handshake),
                       border: const OutlineInputBorder(),
                       labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -117,7 +117,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                     //maxLines: 5,
                     controller: controller.documentFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields),
+                      prefixIcon: const Icon(Icons.note_alt),
                       border: const OutlineInputBorder(),
                       labelText: 'Document N°'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,

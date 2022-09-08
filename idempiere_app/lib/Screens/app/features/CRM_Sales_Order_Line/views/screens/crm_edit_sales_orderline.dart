@@ -2,6 +2,7 @@ import 'dart:convert';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -170,8 +171,8 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                 //deleteSalesOrderLine();
                 Get.defaultDialog(
                     title: "Delete".tr,
-                    content: Text(
-                        "Are you sure you want to delete the record?".tr),
+                    content:
+                        Text("Are you sure you want to delete the record?".tr),
                     onConfirm: () {
                       deleteSalesOrderLine();
                     },
@@ -213,8 +214,8 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration:  InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.scale),
                       border: const OutlineInputBorder(),
                       labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -231,7 +232,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(EvaIcons.pricetagsOutline),
                       border: const OutlineInputBorder(),
                       labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -289,7 +290,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields_rounded),
                       border: const OutlineInputBorder(),
                       labelText: 'Quantity'.tr,
@@ -365,7 +366,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields_rounded),
                       border: const OutlineInputBorder(),
                       labelText: 'Quantity'.tr,

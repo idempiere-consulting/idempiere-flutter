@@ -63,12 +63,13 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -84,7 +85,8 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("COMMISSIONS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("COMMISSIONS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("COMMISSIONS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -203,12 +205,14 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            '??',
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              '??',
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -274,7 +278,8 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("COMMISSIONS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("COMMISSIONS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("COMMISSIONS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -464,7 +469,8 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("COMMISSIONS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("COMMISSIONS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("COMMISSIONS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),

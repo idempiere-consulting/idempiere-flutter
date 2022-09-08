@@ -281,12 +281,14 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                         children: <Widget>[
                                           const Icon(Icons.linear_scale,
                                               color: Colors.yellowAccent),
-                                          Text(
-                                            controller.trx.records![index]
-                                                    .cBPartnerID!.identifier ??
-                                                "??",
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .cBPartnerID!.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
                                           ),
                                         ],
                                       ),

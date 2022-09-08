@@ -45,7 +45,6 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
       },
     );
     if (response.statusCode == 200) {
-       
       Get.find<CRMSalesOrderController>().getSalesOrders();
       //print("done!");
       Get.snackbar(
@@ -263,7 +262,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                   child: TextField(
                     controller: docNoFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      prefixIcon: const Icon(Icons.note_alt),
                       border: const OutlineInputBorder(),
                       labelText: 'DocumentNo'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -380,7 +379,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                   child: TextField(
                     controller: docNoFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      prefixIcon: const Icon(Icons.note_alt),
                       border: const OutlineInputBorder(),
                       labelText: 'DocumentNo'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -497,7 +496,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                   child: TextField(
                     controller: docNoFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      prefixIcon: const Icon(Icons.note_alt),
                       border: const OutlineInputBorder(),
                       labelText: 'DocumentNo'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,

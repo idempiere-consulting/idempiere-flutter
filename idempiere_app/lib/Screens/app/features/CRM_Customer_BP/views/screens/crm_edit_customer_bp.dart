@@ -26,9 +26,9 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
       "Value": valueController.text,
       "C_BP_Group_ID": int.parse(dropdownValue),
     });
-  final protocol = GetStorage().read('protocol');
+    final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://'  + ip + '/api/v1/models/C_BPartner/${args["id"]}');
+        '$protocol://' + ip + '/api/v1/models/C_BPartner/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -39,7 +39,6 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
       },
     );
     if (response.statusCode == 200) {
-       
       Get.find<CRMCustomerBPController>().getCustomers();
       //print("done!");
       Get.snackbar(
@@ -66,8 +65,8 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -157,303 +156,294 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text('Edit Customer'.tr),
+        appBar: AppBar(
+          title: Center(
+            child: Text('Edit Customer'.tr),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                onPressed: () {
+                  Get.defaultDialog(
+                    title: "Record deletion".tr,
+                    middleText: "Are you sure to delete the record?".tr,
+                    backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
+                    //titleStyle: TextStyle(color: Colors.white),
+                    //middleTextStyle: TextStyle(color: Colors.white),
+                    textConfirm: "Delete".tr,
+                    textCancel: "Cancel".tr,
+                    cancelTextColor: Colors.white,
+                    confirmTextColor: Colors.white,
+                    buttonColor: const Color.fromRGBO(31, 29, 44, 1),
+                    barrierDismissible: false,
+                    onConfirm: () {
+                      deleteCustomer();
+                    },
+                    //radius: 50,
+                  );
+                  //editLead();
+                },
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                onPressed: () {
+                  editCustomer();
+                },
+                icon: const Icon(
+                  Icons.save,
+                ),
+              ),
+            ),
+          ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: IconButton(
-              onPressed: () {
-                Get.defaultDialog(
-                  title: "Record deletion".tr,
-                  middleText: "Are you sure to delete the record?".tr,
-                  backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
-                  //titleStyle: TextStyle(color: Colors.white),
-                  //middleTextStyle: TextStyle(color: Colors.white),
-                  textConfirm: "Delete".tr,
-                  textCancel: "Cancel".tr,
-                  cancelTextColor: Colors.white,
-                  confirmTextColor: Colors.white,
-                  buttonColor: const Color.fromRGBO(31, 29, 44, 1),
-                  barrierDismissible: false,
-                  onConfirm: () {
-                    deleteCustomer();
-                  },
-                  //radius: 50,
-                );
-                //editLead();
-              },
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: IconButton(
-              onPressed: () {
-                editCustomer();
-              },
-              icon: const Icon(
-                Icons.save,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: ResponsiveBuilder(
-          mobileBuilder: (context, constraints) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: valueController,
-                    decoration:  InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                       
-                      labelText: 'Value'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    child: Text(
-                      'Gruppo Business Partner'.tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllBPGroups(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                    value: list.id.toString(),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-              ],
-            );
-          },
-          tabletBuilder: (context, constraints) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: valueController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                       
-                      labelText: 'Value'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    child: Text(
-                      'Gruppo Business Partner'.tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllBPGroups(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                    value: list.id.toString(),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-              ],
-            );
-          },
-          desktopBuilder: (context, cons) {
+        body: SingleChildScrollView(
+            child: ResponsiveBuilder(mobileBuilder: (context, constraints) {
           return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: nameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Name'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: nameFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.badge),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Name'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: valueController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                       
-                      labelText: 'Value'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: valueController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Value'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    child: Text(
-                      'Gruppo Business Partner'.tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 40),
+                child: Align(
+                  child: Text(
+                    'Gruppo Business Partner'.tr,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getAllBPGroups(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<Records>> snapshot) =>
+                      snapshot.hasData
+                          ? DropdownButton(
+                              value: dropdownValue,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropdownValue = newValue!;
+                                });
+                                //print(dropdownValue);
+                              },
+                              items: snapshot.data!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                  value: list.id.toString(),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                ),
+              ),
+            ],
+          );
+        }, tabletBuilder: (context, constraints) {
+          return Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: nameFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.badge),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Name'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllBPGroups(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                    value: list.id.toString(),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: valueController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Value'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                 ),
-              ],
-            );
-          }
-        )
-      )
-    );
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 40),
+                child: Align(
+                  child: Text(
+                    'Gruppo Business Partner'.tr,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getAllBPGroups(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<Records>> snapshot) =>
+                      snapshot.hasData
+                          ? DropdownButton(
+                              value: dropdownValue,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropdownValue = newValue!;
+                                });
+                                //print(dropdownValue);
+                              },
+                              items: snapshot.data!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                  value: list.id.toString(),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                ),
+              ),
+            ],
+          );
+        }, desktopBuilder: (context, cons) {
+          return Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: nameFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.badge),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Name'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: valueController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Value'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 40),
+                child: Align(
+                  child: Text(
+                    'Gruppo Business Partner'.tr,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getAllBPGroups(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<Records>> snapshot) =>
+                      snapshot.hasData
+                          ? DropdownButton(
+                              value: dropdownValue,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropdownValue = newValue!;
+                                });
+                                //print(dropdownValue);
+                              },
+                              items: snapshot.data!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                  value: list.id.toString(),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                ),
+              ),
+            ],
+          );
+        })));
   }
 }

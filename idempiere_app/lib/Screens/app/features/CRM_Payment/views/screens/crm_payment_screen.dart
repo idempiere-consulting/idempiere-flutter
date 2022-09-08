@@ -64,12 +64,13 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -85,7 +86,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("RECEIPTS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("RECEIPTS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("RECEIPTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -158,7 +160,10 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: controller.trx.records![index].isReceipt! ? 'Edit Receipt'.tr : 'Edit Payment'.tr,
+                                      tooltip: controller
+                                              .trx.records![index].isReceipt!
+                                          ? 'Edit Receipt'.tr
+                                          : 'Edit Payment'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -249,12 +254,14 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                                 //log("info button pressed");
                                               },
                                             ),
-                                            Text(controller
-                                                    .trx
-                                                    .records![index]
-                                                    .cBankAccountID
-                                                    ?.identifier ??
-                                                "??"),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBankAccountID
+                                                      ?.identifier ??
+                                                  "??"),
+                                            ),
                                           ],
                                         ),
                                         Row(
@@ -274,7 +281,10 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         Row(
                                           children: [
                                             Text(
-                                              controller.trx.records![index].isReceipt! ? "Receipt: ".tr : "Payment: ".tr,
+                                              controller.trx.records![index]
+                                                      .isReceipt!
+                                                  ? "Receipt: ".tr
+                                                  : "Payment: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -323,7 +333,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("RECEIPTS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("RECEIPTS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("RECEIPTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -396,7 +407,10 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: controller.trx.records![index].isReceipt! ? 'Edit Receipt'.tr : 'Edit Payment'.tr,
+                                      tooltip: controller
+                                              .trx.records![index].isReceipt!
+                                          ? 'Edit Receipt'.tr
+                                          : 'Edit Payment'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -512,7 +526,10 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         Row(
                                           children: [
                                             Text(
-                                              controller.trx.records![index].isReceipt! ? "Receipt: ".tr : "Payment: ".tr,
+                                              controller.trx.records![index]
+                                                      .isReceipt!
+                                                  ? "Receipt: ".tr
+                                                  : "Payment: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -561,7 +578,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("RECEIPTS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("RECEIPTS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("RECEIPTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -634,7 +652,10 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: controller.trx.records![index].isReceipt! ? 'Edit Receipt'.tr : 'Edit Payment'.tr,
+                                      tooltip: controller
+                                              .trx.records![index].isReceipt!
+                                          ? 'Edit Receipt'.tr
+                                          : 'Edit Payment'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -750,7 +771,10 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         Row(
                                           children: [
                                             Text(
-                                              controller.trx.records![index].isReceipt! ? "Receipt: ".tr : "Payment: ".tr,
+                                              controller.trx.records![index]
+                                                      .isReceipt!
+                                                  ? "Receipt: ".tr
+                                                  : "Payment: ".tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
