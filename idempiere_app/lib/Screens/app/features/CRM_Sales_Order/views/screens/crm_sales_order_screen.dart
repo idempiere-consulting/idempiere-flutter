@@ -307,6 +307,28 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       .records![index]
                                                       .cBPartnerID
                                                       ?.identifier,
+                                                  "bPartnerId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.id,
+                                                  "cLocationBPartner":
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerLocationID
+                                                          ?.id,
+                                                  "dateOrdered": controller.trx.records![index].dateOrdered,
+                                                  "warehouseId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mWarehouseID
+                                                      ?.id,
+                                                  "currencyId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cCurrencyID
+                                                      ?.id,
                                                   "docNo": controller
                                                       .trx
                                                       .records![index]

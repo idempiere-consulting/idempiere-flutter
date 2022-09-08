@@ -51,6 +51,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
         "LIT_StockInTrade": "test",
         "DatePromised": date,
         "Description": descriptionFieldController.text,
+        "C_BPartner_ID": {"id": Get.arguments["bPartnerId"]},
+        "C_BPartner_Location_ID": {"id": Get.arguments["cLocationBPartner"]},
+        "C_Currency_ID": {"id": Get.arguments["currencyId"]},
+        "DateOrdered": Get.arguments["dateOrdered"],
       });
     } else {
       msg = jsonEncode({
@@ -72,6 +76,10 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
         "DatePromised": date,
         "C_Activity_ID": {"id": Get.arguments["activityId"]},
         "Description": descriptionFieldController.text,
+        "C_BPartner_ID": {"id": Get.arguments["bPartnerId"]},
+        "C_BPartner_Location_ID": {"id": Get.arguments["cLocationBPartner"]},
+        "C_Currency_ID": {"id": Get.arguments["currencyId"]},
+        "DateOrdered": Get.arguments["dateOrdered"],
       });
     }
     final protocol = GetStorage().read('protocol');

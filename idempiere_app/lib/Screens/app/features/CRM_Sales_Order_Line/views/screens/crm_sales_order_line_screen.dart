@@ -83,6 +83,10 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                     "priceListId": Get.arguments["priceListId"],
                     "dateOrdered": Get.arguments["dateOrdered"],
                     "activityId": Get.arguments["activityId"] ?? 0,
+                    "bPartnerId": Get.arguments["bPartnerId"],
+                    "cLocationBPartner": Get.arguments["cLocationBPartner"],
+                    "warehouseId": Get.arguments["warehouseId"],
+                    "currencyId": Get.arguments["currencyId"],
                   });
                 },
                 icon: const Icon(
