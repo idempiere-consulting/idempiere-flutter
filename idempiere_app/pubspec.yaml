@@ -63,7 +63,7 @@ dependencies:
   nfc_manager: ^3.1.1
   #analog_clock: ^0.1.0
   #nextcloud: ^3.0.2
-  path_provider: ^2.0.9
+  path_provider: ^2.0.11
   graphic: ^0.10.5
   step_progress_indicator: ^1.0.2
   animate_do: ^2.1.0

@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:idempiere_app/constants.dart';
+import 'package:path_provider/path_provider.dart';
 
 class LoginWarehouses extends StatefulWidget {
   const LoginWarehouses({Key? key}) : super(key: key);
@@ -68,7 +70,12 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('jpTODOSync', response.body);
+      const filename = "calendar";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
+
+      //GetStorage().write('jpTODOSync', response.body);
       if (kDebugMode) {
         print('jpToDo Checked');
       }
@@ -96,8 +103,11 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      GetStorage()
-          .write('userPreferencesSync', utf8.decode(response.bodyBytes));
+      const filename = "userpreferences";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
+
       userPreferencesSync = false;
       if (kDebugMode) {
         print('User Preferences Checked');
@@ -123,8 +133,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      GetStorage()
-          .write('businessPartnerSync', utf8.decode(response.bodyBytes));
+      const filename = "businesspartner";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
       businessPartnerSync = false;
       if (kDebugMode) {
         print('BusinessPartner Checked');
@@ -150,7 +162,11 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('productSync', utf8.decode(response.bodyBytes));
+      const filename = "products";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
+      //GetStorage().write('productSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
         print('Products Checked');
       }
@@ -177,7 +193,11 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
+      const filename = "workorder";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
+      //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
         print('WorkOrder Checked');
       }
@@ -205,9 +225,13 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
+      const filename = "workorderresource";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
       //print(response.body);
-      GetStorage()
-          .write('workOrderResourceSync', utf8.decode(response.bodyBytes));
+      /* GetStorage()
+          .write('workOrderResourceSync', utf8.decode(response.bodyBytes)); */
       if (kDebugMode) {
         print('WorkOrderResource Checked');
       }
@@ -254,8 +278,12 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage()
-            .write('refListResourceType', utf8.decode(response2.bodyBytes));
+        const filename = "reflistresourcetype";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(response.body);
+        /*  GetStorage()
+            .write('refListResourceType', utf8.decode(response2.bodyBytes)); */
         if (kDebugMode) {
           print('refListResourceType Checked');
         }
@@ -308,8 +336,12 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage().write(
-            'refListResourceTypeCategory', utf8.decode(response2.bodyBytes));
+        const filename = "reflistresourcetypecategory";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(response.body);
+        /* GetStorage().write(
+            'refListResourceTypeCategory', utf8.decode(response2.bodyBytes)); */
         if (kDebugMode) {
           print('refListResourceTypeCategory Checked');
         }
@@ -345,6 +377,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       //print(response.body);
+      const filename = "workorderresourcesurveylines";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
       GetStorage().write(
           'workOrderResourceSurveyLinesSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -11,6 +12,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/views/screens/supplychain_load_unload_line_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class CreateSupplychainLoadUnloadLine extends StatefulWidget {
   const CreateSupplychainLoadUnloadLine({Key? key}) : super(key: key);
@@ -100,7 +102,11 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<List<Records>> getAllProducts() async {
     //print(response.body);
-    var jsondecoded = jsonDecode(GetStorage().read('productSync'));
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsondecoded = jsonDecode(await file.readAsString());
     var jsonResources = ProductJson.fromJson(jsondecoded);
     //print(jsonResources.rowcount);
     return jsonResources.records!;

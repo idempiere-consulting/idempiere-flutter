@@ -344,7 +344,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
-                                                    .salesRepID!.identifier ??
+                                                    .salesRepID?.identifier ??
                                                 ""),
                                           ],
                                         ),

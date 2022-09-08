@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
@@ -13,6 +14,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CreateSalesOrderLine extends StatefulWidget {
   const CreateSalesOrderLine({Key? key}) : super(key: key);
@@ -200,7 +202,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and DateLastInventory neq null and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -285,7 +287,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and DateLastInventory neq null and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -351,7 +353,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<List<Records>> getAllProducts() async {
     //print(response.body);
-    var jsondecoded = jsonDecode(GetStorage().read('productSync'));
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsondecoded = jsonDecode(await file.readAsString());
     var jsonResources = ProductJson.fromJson(jsondecoded);
     //print(jsonResources.rowcount);
     return jsonResources.records!;
