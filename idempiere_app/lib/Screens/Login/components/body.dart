@@ -88,7 +88,6 @@ class _BodyState extends State<Body> {
         DateTime now = DateTime.now();
         DateTime date = DateTime(now.year, now.month, now.day);
         GetStorage().write('lastLoginDate', date.toString());
-
         switch (value) {
           case "0":
             Get.offAllNamed("/Dashboard");
@@ -216,7 +215,8 @@ class _BodyState extends State<Body> {
         Get.offAllNamed('/Dashboard');
         Get.snackbar(
           "Offline!",
-          "You are offline due to no internet connection, there will be limitations.".tr,
+          "You are offline due to no internet connection, there will be limitations."
+              .tr,
           icon: const Icon(
             Icons.wifi_lock,
             color: Colors.red,
@@ -225,7 +225,8 @@ class _BodyState extends State<Body> {
       } else {
         Get.snackbar(
           "Offline!",
-          "You are offline due to no internet connection and not your last login is not recent enough.".tr,
+          "You are offline due to no internet connection and not your last login is not recent enough."
+              .tr,
           icon: const Icon(
             Icons.lock,
             color: Colors.red,
