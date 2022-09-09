@@ -55,7 +55,7 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("DDT > DDT Lines"),
+        title: const Text("Shipments Lines"),
         /* leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
@@ -76,18 +76,48 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
             return Column(children: [
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  //maxLines: 5,
+                  readOnly: true,
+                  controller: controller.bpFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.handshake),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Business Partner'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  //maxLines: 5,
+                  controller: controller.documentFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.note_alt),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Document N°'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+
               /* const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
               _buildHeader(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
               _buildProfile(data: controller.getProfil()), */
-              const SizedBox(height: kSpacing),
+
               Row(
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("Shipment Lines: ".tr + controller.trx.rowcount.toString())
+                        ? Text("Shipment Lines: ".tr +
+                            controller.trx.rowcount.toString())
                         : Text("Shipment Lines: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
@@ -291,18 +321,47 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
           },
           tabletBuilder: (context, constraints) {
             return Column(children: [
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  //maxLines: 5,
+                  readOnly: true,
+                  controller: controller.bpFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.handshake),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Business Partner'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  //maxLines: 5,
+                  controller: controller.documentFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.note_alt),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Document N°'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
               /* const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
               _buildHeader(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
               _buildProfile(data: controller.getProfil()), */
-              const SizedBox(height: kSpacing),
+
               Row(
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("Shipment Lines: ".tr + controller.trx.rowcount.toString())
+                        ? Text("Shipment Lines: ".tr +
+                            controller.trx.rowcount.toString())
                         : Text("Shipment Lines: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),
@@ -506,18 +565,47 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
           },
           desktopBuilder: (context, constraints) {
             return Column(children: [
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  //maxLines: 5,
+                  readOnly: true,
+                  controller: controller.bpFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.handshake),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Business Partner'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  //maxLines: 5,
+                  controller: controller.documentFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.note_alt),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Document N°'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
               /* const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
               _buildHeader(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
               _buildProfile(data: controller.getProfil()), */
-              const SizedBox(height: kSpacing),
+
               Row(
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("Shipment Lines: ".tr + controller.trx.rowcount.toString())
+                        ? Text("Shipment Lines: ".tr +
+                            controller.trx.rowcount.toString())
                         : Text("Shipment Lines: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
                   ),

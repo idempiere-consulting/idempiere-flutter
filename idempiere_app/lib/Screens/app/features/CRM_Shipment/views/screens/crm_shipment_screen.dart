@@ -170,6 +170,13 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                     onPressed: () {
                                       Get.toNamed('/ShipmentLine', arguments: {
                                         "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "bPartner": controller
+                                            .trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
                                       });
                                     },
                                   ),

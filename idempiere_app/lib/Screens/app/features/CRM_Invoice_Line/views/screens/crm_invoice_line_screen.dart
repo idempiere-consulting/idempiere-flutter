@@ -87,7 +87,34 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
               return Column(children: [
-                const SizedBox(height: kSpacing),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: controller.bpFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.handshake),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    //maxLines: 5,
+                    controller: controller.documentFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -252,7 +279,34 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
             },
             tabletBuilder: (context, constraints) {
               return Column(children: [
-                const SizedBox(height: kSpacing),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: controller.bpFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.handshake),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    //maxLines: 5,
+                    controller: controller.documentFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -417,7 +471,34 @@ class CRMInvoiceLineScreen extends GetView<CRMInvoiceLineController> {
             },
             desktopBuilder: (context, constraints) {
               return Column(children: [
-                const SizedBox(height: kSpacing),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: controller.bpFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.handshake),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    //maxLines: 5,
+                    controller: controller.documentFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
