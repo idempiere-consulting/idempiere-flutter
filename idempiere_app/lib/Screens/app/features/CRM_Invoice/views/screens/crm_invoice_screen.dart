@@ -5,6 +5,7 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
@@ -36,7 +37,9 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 
 import 'package:intl/intl.dart';
+import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:pdf/pdf.dart';
 
 // binding
 part '../../bindings/crm_invoice_binding.dart';
@@ -378,6 +381,29 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                                       MainAxisAlignment.end,
                                                   children: [
                                                     IconButton(
+                                                      tooltip: 'print Document',
+                                                      onPressed: () async {
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        controller
+                                                            .getDocument(index);
+                                                        /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.print),
+                                                    ),
+                                                    IconButton(
                                                       tooltip: 'print POS',
                                                       onPressed: () async {
                                                         controller
@@ -426,8 +452,8 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                                           /* controller
                                                         .printTicket(index); */
                                                         },
-                                                        icon: const Icon(
-                                                            Icons.textsms)),
+                                                        icon: const Icon(Icons
+                                                            .receipt_long)),
                                                   ]),
                                             ],
                                           ),

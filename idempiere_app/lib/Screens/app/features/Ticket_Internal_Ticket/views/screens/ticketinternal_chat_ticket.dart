@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -110,7 +111,9 @@ class TicketInternalChatState extends State<TicketInternalChat> {
     if (response.statusCode == 200) {
       _addMessage(textMessage);
     } else {
-      //print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
