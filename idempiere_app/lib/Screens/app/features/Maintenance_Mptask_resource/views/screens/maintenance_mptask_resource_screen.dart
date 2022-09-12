@@ -688,34 +688,40 @@ class MaintenanceMpResourceScreen
                   Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Obx(
-                      () => DropdownButton(
-                        value: controller.dropDownValue2.value,
-                        style: const TextStyle(fontSize: 12.0),
-                        elevation: 16,
-                        onChanged: (String? newValue) {
-                          controller.dropDownValue2.value = newValue!;
-                          controller.getWorkOrders();
-                        },
-                        items: controller._tt2.records!.map((list) {
-                          return DropdownMenuItem<String>(
-                            child: Text(
-                              list.name.toString(),
-                            ),
-                            value: list.value,
-                          );
-                        }).toList(),
+                      () => Visibility(
+                        visible: controller.filter1Available.value,
+                        child: DropdownButton(
+                          value: controller.dropDownValue2.value,
+                          style: const TextStyle(fontSize: 12.0),
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropDownValue2.value = newValue!;
+                            controller.getWorkOrders();
+                          },
+                          items: controller._tt2.records!.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.value,
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Obx(
-                      () => TextButton(
-                        onPressed: () {
-                          controller.changeFilter();
-                          //print("hello");
-                        },
-                        child: Text(controller.value.value),
+                      () => Visibility(
+                        visible: controller.filter2Available.value,
+                        child: TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
                       ),
                     ),
                   ),
