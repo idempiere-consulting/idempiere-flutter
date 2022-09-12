@@ -249,7 +249,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/AD_Reference?\$filter= Name eq \'LIT_ResourceType\'');
+        '/api/v1/models/AD_Reference?\$filter= Name eq \'MP ResourceType\'');
 
     var response = await http.get(
       url,
@@ -281,7 +281,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         const filename = "reflistresourcetype";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        file.writeAsString(response.body);
+        file.writeAsString(response2.body);
         /*  GetStorage()
             .write('refListResourceType', utf8.decode(response2.bodyBytes)); */
         if (kDebugMode) {
@@ -339,7 +339,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         const filename = "reflistresourcetypecategory";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        file.writeAsString(response.body);
+        file.writeAsString(response2.body);
         /* GetStorage().write(
             'refListResourceTypeCategory', utf8.decode(response2.bodyBytes)); */
         if (kDebugMode) {

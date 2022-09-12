@@ -382,6 +382,15 @@ class LocaleString extends Translations {
           'Total': 'Total',
           'VAT': 'VAT',
           'of which VAT': 'VAT',
+          'Business Partner': 'Business Partner',
+          'Document N°': 'Document N°',
+          'The record was deleted': 'The record was deleted',
+          'The record was not deleted': 'The record was not deleted',
+          'The record has not been changed': 'The record has not been changed',
+          'Failed to load bp location': 'Failed to load bp location',
+          'Record deletion ': 'Record deletion ',
+          'Erase': 'Erase',
+          'Send Quiz': 'Send Quiz',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -769,6 +778,15 @@ class LocaleString extends Translations {
           'Total': 'Totale',
           'VAT': 'IVA',
           'of which VAT': 'di cui IVA',
+          'Business Partner': 'Business Partner',
+          'Document N°': ' N° Documento',
+          'The record was deleted': 'Il record è stato cancellato',
+          'The record was not deleted': 'Il record non è stato cancellato',
+          'The record has not been changed': 'Il record non è stato modificato',
+          'Failed to load bp location': 'Impossibile caricare la bp location',
+          'Record deletion ': 'Cancellazione record',
+          'Erase': 'Cancella',
+          'Send Quiz': 'Invia Quiz',
         },
       };
 }

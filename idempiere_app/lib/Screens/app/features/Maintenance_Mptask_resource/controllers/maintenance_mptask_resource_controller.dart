@@ -4,10 +4,14 @@ class MaintenanceMpResourceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late WorkOrderResourceLocalJson _trx;
   late WorkOrderResourceLocalJson _trx2;
-  final RefListResourceTypeJson _tt = RefListResourceTypeJson.fromJson(
-      jsonDecode(GetStorage().read('refListResourceTypeCategory')));
-  final RefListResourceTypeJson _tt2 = RefListResourceTypeJson.fromJson(
-      jsonDecode(GetStorage().read('refListResourceTypeCategory')));
+  late RefListResourceTypeJson
+      _tt /* = RefListResourceTypeJson.fromJson(
+      jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
+      ;
+  late RefListResourceTypeJson
+      _tt2 /* = RefListResourceTypeJson.fromJson(
+      jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
+      ;
   //var _hasMailSupport = false;
 
   var offline = -1;
@@ -25,10 +29,13 @@ class MaintenanceMpResourceController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+  var filter1Available = false.obs;
+  var filter2Available = false.obs;
 
   @override
   void onInit() {
-    _tt2.records?.add(Records(value: "0", name: "All"));
+    initializeFilters();
+
     super.onInit();
 
     getWorkOrders();
@@ -41,6 +48,20 @@ class MaintenanceMpResourceController extends GetxController {
   RefListResourceTypeJson get tt => _tt;
   RefListResourceTypeJson get tt2 => _tt2;
   //String get value => _value.toString();
+
+  Future<void> initializeFilters() async {
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/reflistresourcetype.json');
+
+    _tt2 =
+        RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    _tt = RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    _tt2.records?.insert(0, Records(value: "0", name: "All"));
+    filter1Available.value = true;
+    filter2Available.value = true;
+  }
 
   changeFilter() {
     filterCount++;

@@ -118,12 +118,14 @@ class MaintenanceMptaskLineController extends GetxController {
     _dataAvailable.value = false;
     //print(GetStorage().read('workOrderSync'));
     //print(GetStorage().read('userId'));
-    if (GetStorage().read('workOrderSync') != null) {
-      _trx = WorkOrderLocalJson.fromJson(
-          jsonDecode(GetStorage().read('workOrderSync')));
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
-    }
+    const filename = "workorder";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsondecoded = jsonDecode(await file.readAsString());
+    _trx = WorkOrderLocalJson.fromJson(jsondecoded);
+    // ignore: unnecessary_null_comparison
+    _dataAvailable.value = _trx != null;
   }
 
   /* void openDrawer() {
