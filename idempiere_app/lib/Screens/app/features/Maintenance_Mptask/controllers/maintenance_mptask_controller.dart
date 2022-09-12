@@ -70,12 +70,15 @@ class MaintenanceMptaskController extends GetxController {
     _dataAvailable.value = false;
     //print(GetStorage().read('workOrderSync'));
     //print(GetStorage().read('userId'));
-    if (GetStorage().read('workOrderSync') != null) {
-      _trx = WorkOrderLocalJson.fromJson(
-          jsonDecode(GetStorage().read('workOrderSync')));
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
-    }
+
+    const filename = "workorder";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsondecoded = jsonDecode(await file.readAsString());
+    _trx = WorkOrderLocalJson.fromJson(jsondecoded);
+    // ignore: unnecessary_null_comparison
+    _dataAvailable.value = _trx != null;
   }
 
   Future<void> syncWorkOrder() async {
@@ -104,7 +107,11 @@ class MaintenanceMptaskController extends GetxController {
 
       if (response.statusCode == 200) {
         //print(response.body);
-        GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
+        const filename = "workorder";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(response.body);
+        //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
         //isWorkOrderSyncing.value = false;
         syncWorkOrderResource();
       }
@@ -138,8 +145,12 @@ class MaintenanceMptaskController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage()
-          .write('workOrderResourceSync', utf8.decode(response.bodyBytes));
+      const filename = "workorderresource";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
+      /*  GetStorage()
+          .write('workOrderResourceSync', utf8.decode(response.bodyBytes)); */
       getWorkOrders();
     }
   }
