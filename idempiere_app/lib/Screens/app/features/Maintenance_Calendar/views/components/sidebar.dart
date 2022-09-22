@@ -1,5 +1,6 @@
 part of dashboard;
 
+// ignore: unused_element
 class _Sidebar extends StatelessWidget {
   const _Sidebar({
     required this.data,
@@ -66,6 +67,11 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.personOutline,
                   label: "MaintenanceMpimportitem".tr,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "MaintenanceMpContracts".tr,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -95,6 +101,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 7:
                     Get.offNamed('/MaintenanceMpimportitem');
+                    break;
+                  case 8:
+                    Get.offNamed('/MaintenanceMpContracts');
                     break;
 
                   default:

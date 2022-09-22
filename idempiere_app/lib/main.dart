@@ -38,6 +38,7 @@ import 'package:idempiere_app/Screens/app/features/Human_Resource_Work_Hours/vie
 import 'package:idempiere_app/Screens/app/features/Maintenance/views/screens/maintenance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/maintenance_calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Internaluseinventory/views/screens/maintenance_internaluseinventory_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/views/screens/crm_maintenance_mpcontacts_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpimportitem/views/screens/maintenance_mpimportitem_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/screens/maintenance_mpanomaly_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mppicking/views/screens/maintenance_mppicking_screen.dart';
@@ -332,6 +333,11 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceMptask',
           page: () => const MaintenanceMptaskScreen(),
           binding: MaintenanceMptaskBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceMpContracts',
+          page: () => const MaintenanceMpContractsScreen(),
+          binding: MaintenanceMpContractsBinding(),
         ),
         GetPage(
           name: '/MaintenanceMptaskAnomalyReview',

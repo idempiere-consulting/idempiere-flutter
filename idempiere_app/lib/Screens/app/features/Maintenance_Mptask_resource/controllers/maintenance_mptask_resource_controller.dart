@@ -38,8 +38,6 @@ class MaintenanceMpResourceController extends GetxController {
 
     super.onInit();
 
-    getWorkOrders();
-
     //getADUserID();
   }
 
@@ -61,6 +59,7 @@ class MaintenanceMpResourceController extends GetxController {
     _tt2.records?.insert(0, Records(value: "0", name: "All"));
     filter1Available.value = true;
     filter2Available.value = true;
+    getWorkOrders();
   }
 
   changeFilter() {
@@ -523,59 +522,62 @@ class MaintenanceMpResourceController extends GetxController {
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(now);
     //print(GetStorage().read('workOrderResourceSync'));
-    if (GetStorage().read('workOrderSync') != null) {
-      _trx = WorkOrderResourceLocalJson.fromJson(
-          jsonDecode(GetStorage().read('workOrderResourceSync')));
-      _trx2 = WorkOrderResourceLocalJson.fromJson(
-          jsonDecode(GetStorage().read('workOrderResourceSync')));
 
-      if (dropDownValue2.value != "0") {
-        temp = (_trx.records!.where((element) =>
-            element.eDIType?.id == dropDownValue2.value &&
-            element.mpOtDocumentno ==
-                GetStorage().read('selectedTaskDocNo'))).toList();
-        //print(temp);
-        _trx.records = temp;
-        _trx.rowcount = _trx.records?.length;
-        flag = false;
-      }
-      if (filterCount != 0) {
-        switch (filterCount) {
-          case 1:
-            temp = (_trx.records!.where((element) =>
-                element.lITControl1DateFrom != formattedDate &&
-                element.mpOtDocumentno ==
-                    GetStorage().read('selectedTaskDocNo'))).toList();
-            //print(temp);
-            _trx.records = temp;
-            _trx.rowcount = _trx.records?.length;
-            flag = false;
-            break;
-          case 2:
-            temp = (_trx.records!.where((element) =>
-                element.lITControl1DateFrom == formattedDate &&
-                element.mpOtDocumentno ==
-                    GetStorage().read('selectedTaskDocNo'))).toList();
-            //print(temp);
-            _trx.records = temp;
-            _trx.rowcount = _trx.records?.length;
-            flag = false;
-            break;
-          default:
-        }
-      }
-      if (flag) {
-        temp = (_trx.records!.where((element) =>
-            element.mpOtDocumentno ==
-            GetStorage().read('selectedTaskDocNo'))).toList();
-        //print(temp);
-        _trx.records = temp;
-        _trx.rowcount = _trx.records?.length;
-      }
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+    print(file.readAsStringSync());
+    print(GetStorage().read('selectedTaskDocNo'));
+    _trx = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(file.readAsStringSync()));
+    _trx2 = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(file.readAsStringSync()));
 
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+    if (dropDownValue2.value != "0") {
+      temp = (_trx.records!.where((element) =>
+              element.eDIType?.id == dropDownValue2.value &&
+              element.mpOtDocumentno == GetStorage().read('selectedTaskDocNo')))
+          .toList();
+      //print(temp);
+      _trx.records = temp;
+      _trx.rowcount = _trx.records?.length;
+      flag = false;
     }
+    if (filterCount != 0) {
+      switch (filterCount) {
+        case 1:
+          temp = (_trx.records!.where((element) =>
+              element.lITControl1DateFrom != formattedDate &&
+              element.mpOtDocumentno ==
+                  GetStorage().read('selectedTaskDocNo'))).toList();
+          //print(temp);
+          _trx.records = temp;
+          _trx.rowcount = _trx.records?.length;
+          flag = false;
+          break;
+        case 2:
+          temp = (_trx.records!.where((element) =>
+              element.lITControl1DateFrom == formattedDate &&
+              element.mpOtDocumentno ==
+                  GetStorage().read('selectedTaskDocNo'))).toList();
+          //print(temp);
+          _trx.records = temp;
+          _trx.rowcount = _trx.records?.length;
+          flag = false;
+          break;
+        default:
+      }
+    }
+    if (flag) {
+      temp = (_trx.records!.where((element) =>
+              element.mpOtDocumentno == GetStorage().read('selectedTaskDocNo')))
+          .toList();
+      //print(temp);
+      _trx.records = temp;
+      _trx.rowcount = _trx.records?.length;
+    }
+
+    // ignore: unnecessary_null_comparison
+    _dataAvailable.value = _trx != null;
   }
 
   // Data
