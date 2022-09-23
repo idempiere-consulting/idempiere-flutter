@@ -229,7 +229,7 @@ class _EditMaintenanceMpContractsState
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/mp_maintain_resource?\$filter= MP_Maintain_ID eq ${Get.arguments['maintainId']} and MP_Maintain_Resource_ID neq null and ${GetStorage().read('clientid')}');
+        '/api/v1/models/mp_maintain_resource?\$filter= MP_Maintain_ID eq ${Get.arguments['maintainId']} and MP_Maintain_Resource_ID neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
