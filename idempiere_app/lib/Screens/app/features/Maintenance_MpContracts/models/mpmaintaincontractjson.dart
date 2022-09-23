@@ -58,6 +58,7 @@ class Records {
   final String? phone;
   final String? userNameBp;
   final CBPartnerLocationID? cbPartnerLocationID;
+  final MPMaintainTaskID? mPMaintainTaskID;
 
   Records({
     this.id,
@@ -86,6 +87,7 @@ class Records {
     this.phone,
     this.userNameBp,
     this.cbPartnerLocationID,
+    this.mPMaintainTaskID,
   });
 
   Records.fromJson(Map<String, dynamic> json)
@@ -135,6 +137,11 @@ class Records {
             (json['C_BPartner_Location_ID'] as Map<String, dynamic>?) != null
                 ? CBPartnerLocationID.fromJson(
                     json['C_BPartner_Location_ID'] as Map<String, dynamic>)
+                : null,
+        mPMaintainTaskID =
+            (json['MP_Maintain_Task_ID'] as Map<String, dynamic>?) != null
+                ? MPMaintainTaskID.fromJson(
+                    json['MP_Maintain_Task_ID'] as Map<String, dynamic>)
                 : null;
 
   Map<String, dynamic> toJson() => {
@@ -367,6 +374,33 @@ class CBPartnerLocationID {
   });
 
   CBPartnerLocationID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MPMaintainTaskID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MPMaintainTaskID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MPMaintainTaskID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

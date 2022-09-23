@@ -249,7 +249,11 @@ class MaintenanceMpContractsScreen
                                           tooltip: 'Edit Lead'.tr,
                                           onPressed: () {
                                             Get.to(
-                                                const EditMaintenanceMpContracts());
+                                                const EditMaintenanceMpContracts(),
+                                                arguments: {
+                                                  "maintainId": controller
+                                                      .trx.records![index].id
+                                                });
                                             //log("info button pressed");
                                             /*   Get.to(const EditLead(),
                                                 arguments: {

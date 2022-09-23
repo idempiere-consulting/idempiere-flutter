@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 //import 'dart:developer';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -203,6 +205,9 @@ class _EditMaintenanceMpContractsState
   var mailFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
+  // ignore: prefer_typing_uninitialized_variables
+  var taskFieldController;
+  List<ProductCheckout> productList = [];
 
   @override
   void initState() {
@@ -211,9 +216,32 @@ class _EditMaintenanceMpContractsState
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
+    taskFieldController = TextEditingController();
+    getContractResource();
+
     //dropdownValue = Get.arguments["leadStatus"];
     fillFields();
     getAllLeadStatuses();
+  }
+
+  getContractResource() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var url = Uri.parse('http://' +
+        ip +
+        '/api/v1/models/mp_maintain_resource?\$filter= MP_Maintain_ID eq ${Get.arguments['maintainId']} and MP_Maintain_Resource_ID neq null and ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
   }
 
   static String _displayStringForOption(Records option) => option.name!;
@@ -228,7 +256,7 @@ class _EditMaintenanceMpContractsState
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Edit Lead'.tr),
+          child: Text('Edit Contract'.tr),
         ),
         actions: [
           Padding(
@@ -338,6 +366,39 @@ class _EditMaintenanceMpContractsState
                   ),
                 ),
                 Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: DateTime.now().toString(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Contract Date'.tr,
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      /* setState(() {
+                          date = val.substring(0, 10);
+                        }); */
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
@@ -395,37 +456,132 @@ class _EditMaintenanceMpContractsState
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                  child: TextField(
+                    //maxLines: 5,
+                    controller: taskFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Task'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    //locale: Locale('languageCalendar'.tr),
-                    type: DateTimePickerType.date,
-                    initialValue: DateTime.now().toString(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Contract Date'.tr,
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      /* setState(() {
-                          date = val.substring(0, 10);
-                        }); */
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    //onSaved: (val) => print(val),
                   ),
                 ),
+                ListView.builder(
+                    primary: false,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: productList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = productList[index].id.toString();
+                      return FadeInDown(
+                        duration: Duration(milliseconds: 350 * index),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Dismissible(
+                            key: Key(item),
+                            onDismissed: (direction) {
+                              /* productList.removeWhere(
+                                      (element) =>
+                                          element.id.toString() ==
+                                          controller.productList[index].id
+                                              .toString());
+                                  controller.updateTotal();
+                                  controller.updateCounter(); */
+                            },
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey,
+                                          /* boxShadow: [BoxShadow(
+                                                          spreadRadius: 0.5,
+                                                          color: black.withOpacity(0.1),
+                                                          blurRadius: 1
+                                                        )], */
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10,
+                                            left: 10,
+                                            right: 10,
+                                            bottom: 10),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Center(
+                                              child: Container(
+                                                width: 120,
+                                                height: 70,
+                                                decoration: const BoxDecoration(
+                                                    image: DecorationImage(
+                                                        image: AssetImage(
+                                                            "assets/images/404.png"),
+                                                        fit: BoxFit.cover)),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                        child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          productList[index].name,
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              "€ " +
+                                                  productList[index]
+                                                      .cost
+                                                      .toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  right: 10),
+                                              child: Text(
+                                                "x${productList[index].qty}",
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+
                 /* Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
