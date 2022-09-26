@@ -252,7 +252,13 @@ class MaintenanceMpContractsScreen
                                                 const EditMaintenanceMpContracts(),
                                                 arguments: {
                                                   "maintainId": controller
-                                                      .trx.records![index].id
+                                                      .trx.records![index].id,
+                                                  "businesspartnerId":
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.id,
                                                 });
                                             //log("info button pressed");
                                             /*   Get.to(const EditLead(),
@@ -306,11 +312,11 @@ class MaintenanceMpContractsScreen
 
                                       subtitle: Row(
                                         children: <Widget>[
-                                          const Icon(Icons.linear_scale,
+                                          const Icon(EvaIcons.hashOutline,
                                               color: Colors.yellowAccent),
                                           Text(
                                             controller.trx.records![index]
-                                                    .docStatus?.identifier ??
+                                                    .documentNo ??
                                                 "??",
                                             style: const TextStyle(
                                                 color: Colors.white),
@@ -673,7 +679,7 @@ class MaintenanceMpContractsScreen
                                               color: Colors.yellowAccent),
                                           Text(
                                             controller.trx.records![index]
-                                                    .docStatus?.identifier ??
+                                                    .documentNo ??
                                                 "??",
                                             style: const TextStyle(
                                                 color: Colors.white),
@@ -1032,7 +1038,7 @@ class MaintenanceMpContractsScreen
                                               color: Colors.yellowAccent),
                                           Text(
                                             controller.trx.records![index]
-                                                    .docStatus?.identifier ??
+                                                    .documentNo ??
                                                 "??",
                                             style: const TextStyle(
                                                 color: Colors.white),
