@@ -8,22 +8,18 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+//import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/doctype_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_term_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/product_list_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
-import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -40,35 +36,37 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:path_provider/path_provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
+import '../../../CRM_Contact_BP/models/contact.dart';
+
 // binding
-part '../../bindings/crm_sales_order_creation_binding.dart';
+part '../../bindings/maintenance_mpcontracts_create_contract_binding.dart';
 
 // controller
-part '../../controllers/crm_sales_order_creation_controller.dart';
+part '../../controllers/maintenance_mpcontacts_create_contract_controller.dart';
 
 // models
 part '../../models/profile.dart';
 
 // component
-part '../components/active_project_card.dart';
+//part '../components/active_project_card.dart';
 part '../components/header.dart';
-part '../components/overview_header.dart';
+//part '../components/overview_header.dart';
 part '../components/profile_tile.dart';
 part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class CRMSalesOrderCreationScreen
-    extends GetView<CRMSalesOrderCreationController> {
-  const CRMSalesOrderCreationScreen({Key? key}) : super(key: key);
+class MaintenanceMpContractsCreateContractScreen
+    extends GetView<MaintenanceMpContractsCreateContractController> {
+  const MaintenanceMpContractsCreateContractScreen({Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
         Get.offNamed('/Dashboard');
@@ -78,7 +76,7 @@ class CRMSalesOrderCreationScreen
         //key: controller.scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Sales Order Creation'.tr),
+          title: Text('MP Contract Creation'.tr),
           leading: IconButton(
             icon: const Icon(Icons.chevron_left),
             onPressed: () {
@@ -105,6 +103,7 @@ class CRMSalesOrderCreationScreen
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
               return Column(children: [
+                //const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
                 Container(
                   margin: const EdgeInsets.symmetric(
                       horizontal: 10.0, vertical: 10.0),
@@ -136,7 +135,7 @@ class CRMSalesOrderCreationScreen
                                   ? Container(
                                       color: color,
                                       child: const Icon(
-                                        Icons.shopping_cart,
+                                        Icons.build,
                                         color: Colors.white,
                                       ),
                                     )
@@ -228,7 +227,7 @@ class CRMSalesOrderCreationScreen
                                   ? Container(
                                       color: color,
                                       child: const Icon(
-                                        Icons.shopping_cart,
+                                        Icons.build,
                                         color: Colors.white,
                                       ),
                                     )
@@ -368,9 +367,7 @@ class CRMSalesOrderCreationScreen
                                     onSelected: (BPRecords selection) {
                                       controller.businessPartnerId =
                                           selection.id!;
-                                      controller.getPaymentTerms();
-                                      controller.getLocationFromBP();
-                                      controller.getSalesOrderDefaultValues();
+                                      controller.getBusinessPartner();
                                     },
                                   )
                                 : const Center(
@@ -382,13 +379,98 @@ class CRMSalesOrderCreationScreen
                 ),
                 Obx(
                   () => Visibility(
-                    visible: controller.filterCount.value == 0,
+                    visible: controller.filterCount.value == 0 ||
+                        controller.filterCount.value == 3,
                     child: Container(
-                      margin: const EdgeInsets.only(top: 30),
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.nameFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.badge),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.ivaFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.payments),
+                          border: const OutlineInputBorder(),
+                          labelText: 'P. IVA'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.addressFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.home),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Address'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                      visible: controller.filterCount.value == 3,
+                      child: const Divider()),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.technicianFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.build),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Technician'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 1,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
                         child: Text(
-                          "Document Type".tr,
+                          "Technician".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
                         alignment: Alignment.centerLeft,
@@ -398,54 +480,114 @@ class CRMSalesOrderCreationScreen
                 ),
                 Obx(
                   () => Visibility(
-                    visible: controller.filterCount.value == 0,
+                    visible: controller.filterCount.value == 1,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      width: size.width,
+                      padding: const EdgeInsets.all(10),
                       /* decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey, 
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ), */
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ), */
                       margin: const EdgeInsets.all(10),
-                      child: controller.docTypeFlag.value
-                          ? DropdownButton(
-                              value: controller.dropdownValue.value,
-                              elevation: 16,
-                              onChanged: (String? newValue) {
-                                controller.dropdownValue.value = newValue!;
+                      child: FutureBuilder(
+                        future: controller.getAllTechnicians(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<Records>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<Records>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .technicianFieldController.text),
+                                    displayStringForOption:
+                                        controller.displayTechStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<Records>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((Records option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (Records selection) {
+                                      //debugPrint(
+                                      //'You just selected ${_displayStringForOption(selection)}');
+                                      controller.technicianFieldController
+                                          .text = selection.name!;
+                                      controller.technicianId = selection.id!;
 
-                                //print(dropdownValue);
-                              },
-                              items: controller.dropDownList.map((list) {
-                                return DropdownMenuItem<String>(
-                                  child: Text(
-                                    list.name.toString(),
+                                      //print(salesrepValue);
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
                                   ),
-                                  value: list.id.toString(),
-                                );
-                              }).toList(),
-                            )
-                          : const Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                      ),
                     ),
                   ),
                 ),
                 Obx(
                   () => Visibility(
+                    visible: controller.filterCount.value == 1 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                          right: 20, left: 20, top: 10, bottom: 20),
+                      /*  decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: DateTimePicker(
+                        //locale: Locale('languageCalendar'.tr),
+                        type: DateTimePickerType.date,
+                        initialValue: DateTime.now().toString(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                        dateLabelText: 'Contract Date'.tr,
+                        icon: const Icon(Icons.event),
+                        onChanged: (val) {
+                          //print(DateTime.parse(val));
+                          //print(val);
+
+                          controller.date = val.substring(0, 10);
+
+                          //print(date);
+                        },
+                        validator: (val) {
+                          //print(val);
+                          return null;
+                        },
+                        //onSaved: (val) => print(val),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                      visible: controller.filterCount.value == 3,
+                      child: const Divider()),
+                ),
+                Obx(
+                  () => Visibility(
                     visible: controller.dataAvailable &&
-                        controller.filterCount.value == 1,
+                        controller.filterCount.value == 2,
                     child: controller.dataAvailable
                         ? SizedBox(
                             //margin: const EdgeInsets.only(top: 10),
-                            height: size.height,
+                            //height: size.height,
                             width: double.infinity,
                             child: MasonryGridView.count(
                               shrinkWrap: true,
                               crossAxisCount: 2,
-                              itemCount: controller.trx.records?.length ?? 0,
+                              itemCount: controller._trx.records?.length ?? 0,
                               crossAxisSpacing: 8,
                               mainAxisSpacing: 8,
                               itemBuilder: (BuildContext context, index) =>
@@ -459,7 +601,7 @@ class CRMSalesOrderCreationScreen
                 ),
                 Obx(
                   () => Visibility(
-                    visible: controller.filterCount.value == 2,
+                    visible: controller.filterCount.value == 3,
                     child: ListView.builder(
                         primary: false,
                         scrollDirection: Axis.vertical,
@@ -581,225 +723,6 @@ class CRMSalesOrderCreationScreen
                         }),
                   ),
                 ),
-                Obx(() => Visibility(
-                      visible: controller.filterCount.value == 2,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30, right: 30),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                const Text(
-                                  "Total",
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Obx(
-                                  () => Text(
-                                    "€ ${controller.total.value}",
-                                    style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                        ],
-                      ),
-                    )),
-                Obx(
-                  () => Visibility(
-                    visible: controller.filterCount.value == 3,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 30),
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Align(
-                        child: Text(
-                          "Location".tr,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        alignment: Alignment.centerLeft,
-                      ),
-                    ),
-                  ),
-                ),
-                Obx(
-                  () => Visibility(
-                    visible: controller.filterCount.value == 3,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      width: size.width,
-                      /* decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey, 
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ), */
-                      margin: const EdgeInsets.all(10),
-                      child: controller.bpLocationAvailable.value
-                          ? DropdownButton(
-                              value: controller.bpLocationId.value,
-                              elevation: 16,
-                              onChanged: (String? newValue) {
-                                controller.bpLocationId.value = newValue!;
-
-                                //print(dropdownValue);
-                              },
-                              items: controller.bpLocation.records!.map((list) {
-                                return DropdownMenuItem<String>(
-                                  child: Text(
-                                    list.name.toString(),
-                                  ),
-                                  value: list.id.toString(),
-                                );
-                              }).toList(),
-                            )
-                          : const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                    ),
-                  ),
-                ),
-                Obx(
-                  () => Visibility(
-                    visible: controller.filterCount.value == 3,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 30),
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Align(
-                        child: Text(
-                          "Payment Term".tr,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        alignment: Alignment.centerLeft,
-                      ),
-                    ),
-                  ),
-                ),
-                Obx(
-                  () => Visibility(
-                    visible: controller.filterCount.value == 3,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      width: size.width,
-                      /* decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey, 
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ), */
-                      margin: const EdgeInsets.all(10),
-                      child: controller.pTermAvailable.value
-                          ? DropdownButton(
-                              value: controller.paymentTermId.value,
-                              elevation: 16,
-                              onChanged: (String? newValue) {
-                                controller.paymentTermId.value = newValue!;
-
-                                //print(dropdownValue);
-                              },
-                              items: controller.pTerms.records!.map((list) {
-                                return DropdownMenuItem<String>(
-                                  child: Text(
-                                    list.name.toString(),
-                                  ),
-                                  value: list.id.toString(),
-                                );
-                              }).toList(),
-                            )
-                          : const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                    ),
-                  ),
-                ),
-                Obx(
-                  () => Visibility(
-                    visible: controller.filterCount.value == 3,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 30),
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Align(
-                        child: Text(
-                          "Payment Rule".tr,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        alignment: Alignment.centerLeft,
-                      ),
-                    ),
-                  ),
-                ),
-                Obx(
-                  () => Visibility(
-                    visible: controller.filterCount.value == 3,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      width: size.width,
-                      /* decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey, 
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ), */
-                      margin: const EdgeInsets.all(10),
-                      child: controller.pRuleAvailable.value
-                          ? DropdownButton(
-                              value: controller.paymentRuleId.value,
-                              elevation: 16,
-                              onChanged: (String? newValue) {
-                                controller.paymentRuleId.value = newValue!;
-
-                                //print(dropdownValue);
-                              },
-                              items: controller.pRules.records!.map((list) {
-                                return DropdownMenuItem<String>(
-                                  child: Text(
-                                    list.name.toString(),
-                                  ),
-                                  value: list.value,
-                                );
-                              }).toList(),
-                            )
-                          : const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                    ),
-                  ),
-                ),
-                Obx(
-                  () => Visibility(
-                    visible: controller.filterCount.value == 3,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 20),
-                      child: TextButton(
-                        onPressed: () {
-                          Get.defaultDialog(
-                              title: "Create Order".tr,
-                              content: Text(
-                                  "Are you sure you want to create the Order?"
-                                      .tr),
-                              buttonColor: kNotifColor,
-                              textConfirm: "Create".tr,
-                              textCancel: "Cancel".tr,
-                              onConfirm: () {
-                                controller.createSalesOrder();
-                              });
-                        },
-                        child: Text('Confirm Order'.tr),
-                      ),
-                    ),
-                  ),
-                ),
               ]);
             },
             tabletBuilder: (context, constraints) {
@@ -813,6 +736,64 @@ class CRMSalesOrderCreationScreen
       ),
     );
   }
+
+  Widget buildImageCard(int index) => GestureDetector(
+        onTap: () {
+          Get.to(const ProductListDetail(), arguments: {
+            "id": controller._trx.records![index].id,
+            "add": true,
+            "priceStd": controller._trx.records![index].price,
+            "priceList": controller._trx.records![index].pricelist,
+            "page": "createContract",
+          });
+        },
+        child: Card(
+          //color: Color.fromRGBO(38, 40, 55, 1),
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: controller._trx.records![index].imageData != null
+                      ? Image.memory(
+                          const Base64Codec().decode(
+                              (controller._trx.records![index].imageData!)
+                                  .replaceAll(RegExp(r'\n'), '')),
+                          fit: BoxFit.cover,
+                        )
+                      : const Text("no image"),
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "  €" + controller._trx.records![index].price.toString(),
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Column(
+                  children: [
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            controller._trx.records![index].name ?? "??",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildHeader({Function()? onPressedMenu}) {
     return Padding(
@@ -992,60 +973,4 @@ class CRMSalesOrderCreationScreen
           .toList(),
     ]);
   }
-
-  Widget buildImageCard(int index) => GestureDetector(
-        onTap: () {
-          Get.to(const ProductListDetail(), arguments: {
-            "id": controller.trx.records![index].id,
-            "add": true,
-            "priceStd": controller.trx.records![index].price,
-            "priceList": controller.trx.records![index].pricelist,
-          });
-        },
-        child: Card(
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.all(8),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: controller.trx.records![index].imageData != null
-                      ? Image.memory(
-                          const Base64Codec().decode(
-                              (controller.trx.records![index].imageData!)
-                                  .replaceAll(RegExp(r'\n'), '')),
-                          fit: BoxFit.cover,
-                        )
-                      : const Text("no image"),
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "  €" + controller.trx.records![index].price.toString(),
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Column(
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            controller.trx.records![index].name ?? "??",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
 }

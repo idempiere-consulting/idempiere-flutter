@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/vi
 
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class CreateSupplychainInventoryLine extends StatefulWidget {
   const CreateSupplychainInventoryLine({Key? key}) : super(key: key);
@@ -22,7 +24,10 @@ class _CreateSupplychainInventoryLineState
     extends State<CreateSupplychainInventoryLine> {
   Future<List<Records>> getAllProducts() async {
     //print(response.body);
-    var jsondecoded = jsonDecode(GetStorage().read('productSync'));
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
     var jsonResources = ProductJson.fromJson(jsondecoded);
     //print(jsonResources.rowcount);
     return jsonResources.records!;

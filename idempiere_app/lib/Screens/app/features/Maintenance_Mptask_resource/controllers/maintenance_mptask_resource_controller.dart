@@ -525,8 +525,8 @@ class MaintenanceMpResourceController extends GetxController {
 
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
-    print(file.readAsStringSync());
-    print(GetStorage().read('selectedTaskDocNo'));
+    //print(file.readAsStringSync());
+    //print(GetStorage().read('selectedTaskDocNo'));
     _trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
     _trx2 = WorkOrderResourceLocalJson.fromJson(

@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/views/screens/crm_sales_order_creation_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts_Create_Contract/views/screens/crm_maintenance_mpcontacts_create_contract_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
@@ -511,14 +512,36 @@ class _ProductListDetailState extends State<ProductListDetail>
                 if (flagAvailable) {
                   ProductCheckout prod = ProductCheckout(
                       id: prodId,
-                      name: nameFieldController.text,
+                      name: nameFieldController
+                          .text, //MaintenanceMpContractsCreateContractController
                       qty: quantity,
                       cost: cost);
-                  Get.find<CRMSalesOrderCreationController>()
-                      .productList
-                      .add(prod);
-                  Get.find<CRMSalesOrderCreationController>().updateCounter();
-                  Get.find<CRMSalesOrderCreationController>().updateTotal();
+                  switch (Get.arguments["page"]) {
+                    case null:
+                      Get.find<CRMSalesOrderCreationController>()
+                          .productList
+                          .add(prod);
+                      Get.find<CRMSalesOrderCreationController>()
+                          .updateCounter();
+                      Get.find<CRMSalesOrderCreationController>().updateTotal();
+                      break;
+                    case "createContract":
+                      Get.find<MaintenanceMpContractsCreateContractController>()
+                          .productList
+                          .add(prod);
+                      Get.find<MaintenanceMpContractsCreateContractController>()
+                          .updateCounter();
+                      Get.find<MaintenanceMpContractsCreateContractController>()
+                          .updateTotal();
+                      break;
+                    default:
+                      Get.find<CRMSalesOrderCreationController>()
+                          .productList
+                          .add(prod);
+                      Get.find<CRMSalesOrderCreationController>()
+                          .updateCounter();
+                      Get.find<CRMSalesOrderCreationController>().updateTotal();
+                  }
                 }
               },
               child: flagAvailable

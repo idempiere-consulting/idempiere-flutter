@@ -24,8 +24,8 @@ class MaintenanceMpContractsController extends GetxController {
 
   final json = {
     "types": [
-      {"id": "1", "name": "Name"},
-      {"id": "2", "name": "Mail"},
+      {"id": "1", "name": "Business Partner"},
+      {"id": "2", "name": "N° Doc"},
       {"id": "3", "name": "Phone N°"},
     ]
   };
@@ -140,7 +140,7 @@ class MaintenanceMpContractsController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       _trx = MPMaintainContractJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
@@ -148,7 +148,9 @@ class MaintenanceMpContractsController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

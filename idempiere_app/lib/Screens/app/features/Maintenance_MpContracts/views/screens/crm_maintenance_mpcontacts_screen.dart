@@ -11,7 +11,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/models/mpmaintaincontractjson.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/views/screens/crm_edit_lmaintenance_mpcontacts.dart';
@@ -31,7 +30,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -97,10 +96,11 @@ class MaintenanceMpContractsScreen
                       margin: const EdgeInsets.only(left: 40),
                       child: IconButton(
                         onPressed: () {
-                          Get.to(const CreateLead());
+                          //Get.to(const CreateLead());
+                          Get.toNamed("/MaintenanceMpContractsCreateContract");
                         },
                         icon: const Icon(
-                          Icons.person_add,
+                          Icons.add,
                           color: Colors.lightBlue,
                         ),
                       ),
@@ -259,6 +259,20 @@ class MaintenanceMpContractsScreen
                                                           .records![index]
                                                           .cBPartnerID
                                                           ?.id,
+                                                  "date": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateNextRun,
+                                                  "technicianId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .adUserID
+                                                      ?.id,
+                                                  "technicianName": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .adUserID
+                                                      ?.identifier,
                                                 });
                                             //log("info button pressed");
                                             /*   Get.to(const EditLead(),

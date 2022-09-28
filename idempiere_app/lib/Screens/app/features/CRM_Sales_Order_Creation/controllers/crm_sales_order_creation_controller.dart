@@ -181,7 +181,10 @@ class CRMSalesOrderCreationController extends GetxController {
   Future<List<BPRecords>> getAllBPs() async {
     //await getBusinessPartner();
     //print(response.body);
-    var jsondecoded = jsonDecode(GetStorage().read('businessPartnerSync'));
+    const filename = "businesspartner";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
 
     var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
 

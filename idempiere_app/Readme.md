@@ -1574,7 +1574,7 @@ CRUD=1111=F
  28 Prelievo            : F 
  29 Carico/scarico      : F
  30 carico scheda tecnica
- 31 ..
+ 31 Contratti
  32 ..
  33 Portale cliente*****: 1 *** 4 Portale Cliente 
  -- sezione dashboard

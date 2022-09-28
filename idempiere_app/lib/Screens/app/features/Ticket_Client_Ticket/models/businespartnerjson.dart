@@ -81,6 +81,7 @@ class BPRecords {
   final int? lITKm;
   final bool? lITNoInvoiceXMLVendor;
   final bool? isValid;
+  final String? litTaxID;
   final String? modelname;
 
   BPRecords({
@@ -133,6 +134,7 @@ class BPRecords {
     this.lITKm,
     this.lITNoInvoiceXMLVendor,
     this.isValid,
+    this.litTaxID,
     this.modelname,
   });
 
@@ -218,6 +220,7 @@ class BPRecords {
         lITKm = json['LIT_Km'] as int?,
         lITNoInvoiceXMLVendor = json['LIT_NoInvoiceXMLVendor'] as bool?,
         isValid = json['IsValid'] as bool?,
+        litTaxID = json['LIT_TaxID'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -585,6 +588,33 @@ class LITTaxTypeBPPartnerID {
   });
 
   LITTaxTypeBPPartnerID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITTaxID {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITTaxID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITTaxID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
         identifier = json['identifier'] as String?,

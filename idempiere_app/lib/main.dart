@@ -39,6 +39,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance/views/screens/mai
 import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/maintenance_calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Internaluseinventory/views/screens/maintenance_internaluseinventory_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/views/screens/crm_maintenance_mpcontacts_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts_Create_Contract/views/screens/crm_maintenance_mpcontacts_create_contract_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpimportitem/views/screens/maintenance_mpimportitem_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/screens/maintenance_mpanomaly_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mppicking/views/screens/maintenance_mppicking_screen.dart';
@@ -338,6 +339,11 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceMpContracts',
           page: () => const MaintenanceMpContractsScreen(),
           binding: MaintenanceMpContractsBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceMpContractsCreateContract',
+          page: () => const MaintenanceMpContractsCreateContractScreen(),
+          binding: MaintenanceMpContractsCreateContractBinding(),
         ),
         GetPage(
           name: '/MaintenanceMptaskAnomalyReview',

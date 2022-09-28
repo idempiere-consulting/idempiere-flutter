@@ -4,15 +4,15 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/models/mpmaintainresourcejson.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/views/screens/crm_maintenance_mpcontacts_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -28,22 +28,25 @@ class EditMaintenanceMpContracts extends StatefulWidget {
 
 class _EditMaintenanceMpContractsState
     extends State<EditMaintenanceMpContracts> {
-  editLead() async {
+  edit() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    final msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "Name": nameFieldController.text,
-      "BPName": bPartnerFieldController.text,
-      "Phone": phoneFieldController.text,
-      "EMail": mailFieldController.text,
-      "SalesRep_ID": {"identifier": salesrepValue},
-      "LeadStatus": {"id": dropdownValue}
+    var msg = jsonEncode({
+      "DateNextRun": "${date}T00:00:00Z",
+      "AD_User_ID": {"id": technicianId},
+      "C_BPartner_ID": {"id": businesspartnerId},
     });
+    if (technicianId == 0) {
+      msg = jsonEncode({
+        "DateNextRun": "${date}T00:00:00Z",
+        "C_BPartner_ID": {"id": businesspartnerId},
+      });
+    }
+    //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/MP_Maintain/${args["maintainId"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -54,7 +57,7 @@ class _EditMaintenanceMpContractsState
       },
     );
     if (response.statusCode == 200) {
-      Get.find<CRMLeadController>().getLeads();
+      Get.find<MaintenanceMpContractsController>().getContracts();
       //print("done!");
       Get.snackbar(
         "Done!".tr,
@@ -80,8 +83,9 @@ class _EditMaintenanceMpContractsState
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/MP_Maintain/${args["maintainId"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -91,7 +95,8 @@ class _EditMaintenanceMpContractsState
       },
     );
     if (response.statusCode == 200) {
-      Get.find<CRMLeadController>().getLeads();
+      Get.find<MaintenanceMpContractsController>().getContracts();
+      Get.back();
       //print("done!");
       Get.back();
       Get.back();
@@ -207,12 +212,16 @@ class _EditMaintenanceMpContractsState
   var mailFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
+  String date = (Get.arguments["date"]).substring(0, 10);
   // ignore: prefer_typing_uninitialized_variables
   var taskFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var ivaFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var addressFieldController;
-  var cityFieldController;
+  //var cityFieldController;
   var businesspartnerId = 0;
+  var technicianId = 0;
 
   List<MPRRecords> productList = [];
 
@@ -223,6 +232,7 @@ class _EditMaintenanceMpContractsState
     super.initState();
     flagResources = false;
     businesspartnerId = Get.arguments['businesspartnerId'];
+    technicianId = Get.arguments["technicianId"] ?? 0;
     nameFieldController = TextEditingController();
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
@@ -230,7 +240,7 @@ class _EditMaintenanceMpContractsState
     taskFieldController = TextEditingController();
     ivaFieldController = TextEditingController();
     addressFieldController = TextEditingController();
-    cityFieldController = TextEditingController();
+    //cityFieldController = TextEditingController();
     getContractResource();
     getBusinessPartner();
 
@@ -261,7 +271,9 @@ class _EditMaintenanceMpContractsState
         flagResources = true;
       });
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -279,13 +291,16 @@ class _EditMaintenanceMpContractsState
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var json = BusinessPartnerJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       nameFieldController.text = json.records![0].name;
+      ivaFieldController.text = (json.records![0].litTaxID) ?? "";
       getBusinessPartnerLocation();
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -294,7 +309,7 @@ class _EditMaintenanceMpContractsState
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/models/c_bpartner_location?\$filter= C_BPartner_Location_ID eq $businesspartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/c_bpartner_location?\$filter= C_BPartner_ID eq $businesspartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -303,12 +318,15 @@ class _EditMaintenanceMpContractsState
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var json = BusinessPartnerLocationJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
-      addressFieldController.text = json.records![0].name;
+      addressFieldController.text =
+          json.records![0].cLocationID?.identifier ?? "";
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -360,7 +378,7 @@ class _EditMaintenanceMpContractsState
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                //editLead();
+                edit();
               },
               icon: const Icon(
                 Icons.save,
@@ -378,7 +396,7 @@ class _EditMaintenanceMpContractsState
                   height: 10,
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 10),
                   padding: const EdgeInsets.only(left: 20),
                   child: Align(
                     child: Text(
@@ -403,7 +421,7 @@ class _EditMaintenanceMpContractsState
                             AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
-                                initialValue: TextEditingValue(text: ''),
+                                initialValue: const TextEditingValue(text: ''),
                                 displayStringForOption:
                                     _displayBPStringForOption,
                                 optionsBuilder:
@@ -421,11 +439,8 @@ class _EditMaintenanceMpContractsState
                                   });
                                 },
                                 onSelected: (BPRecords selection) {
-                                  /*  controller.businessPartnerId =
-                                          selection.id!;
-                                      controller.getPaymentTerms();
-                                      controller.getLocationFromBP();
-                                      controller.getSalesOrderDefaultValues(); */
+                                  businesspartnerId = selection.id!;
+                                  getBusinessPartner();
                                 },
                               )
                             : const Center(
@@ -437,6 +452,7 @@ class _EditMaintenanceMpContractsState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //maxLines: 5,
+                    readOnly: true,
                     controller: nameFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.badge),
@@ -450,6 +466,7 @@ class _EditMaintenanceMpContractsState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //maxLines: 5,
+                    readOnly: true,
                     controller: ivaFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.payments),
@@ -463,6 +480,7 @@ class _EditMaintenanceMpContractsState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //maxLines: 5,
+                    readOnly: true,
                     controller: addressFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.home),
@@ -472,19 +490,7 @@ class _EditMaintenanceMpContractsState
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    //maxLines: 5,
-                    controller: cityFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.apartment),
-                      border: const OutlineInputBorder(),
-                      labelText: 'City'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
+                const Divider(),
                 Container(
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
@@ -498,7 +504,7 @@ class _EditMaintenanceMpContractsState
                   child: DateTimePicker(
                     //locale: Locale('languageCalendar'.tr),
                     type: DateTimePickerType.date,
-                    initialValue: DateTime.now().toString(),
+                    initialValue: Get.arguments['date'],
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Contract Date'.tr,
@@ -506,9 +512,9 @@ class _EditMaintenanceMpContractsState
                     onChanged: (val) {
                       //print(DateTime.parse(val));
                       //print(val);
-                      /* setState(() {
-                          date = val.substring(0, 10);
-                        }); */
+
+                      date = val.substring(0, 10);
+
                       //print(date);
                     },
                     validator: (val) {
@@ -518,6 +524,7 @@ class _EditMaintenanceMpContractsState
                     //onSaved: (val) => print(val),
                   ),
                 ),
+                const Divider(),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
@@ -543,7 +550,9 @@ class _EditMaintenanceMpContractsState
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
-                                initialValue: TextEditingValue(text: ''),
+                                initialValue: TextEditingValue(
+                                    text: (Get.arguments["technicianName"]) ??
+                                        ""),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -562,8 +571,7 @@ class _EditMaintenanceMpContractsState
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
+                                    technicianId = selection.id!;
                                   });
 
                                   //print(salesrepValue);
@@ -574,7 +582,7 @@ class _EditMaintenanceMpContractsState
                               ),
                   ),
                 ),
-                Container(
+                /* Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //maxLines: 5,
@@ -586,7 +594,7 @@ class _EditMaintenanceMpContractsState
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                ),
+                ), */
                 Visibility(
                   visible: flagResources,
                   child: ListView.builder(
@@ -756,7 +764,7 @@ class _EditMaintenanceMpContractsState
                   height: 10,
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 10),
                   padding: const EdgeInsets.only(left: 20),
                   child: Align(
                     child: Text(
@@ -781,7 +789,7 @@ class _EditMaintenanceMpContractsState
                             AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
-                                initialValue: TextEditingValue(text: ''),
+                                initialValue: const TextEditingValue(text: ''),
                                 displayStringForOption:
                                     _displayBPStringForOption,
                                 optionsBuilder:
@@ -799,11 +807,8 @@ class _EditMaintenanceMpContractsState
                                   });
                                 },
                                 onSelected: (BPRecords selection) {
-                                  /*  controller.businessPartnerId =
-                                          selection.id!;
-                                      controller.getPaymentTerms();
-                                      controller.getLocationFromBP();
-                                      controller.getSalesOrderDefaultValues(); */
+                                  businesspartnerId = selection.id!;
+                                  getBusinessPartner();
                                 },
                               )
                             : const Center(
@@ -812,10 +817,87 @@ class _EditMaintenanceMpContractsState
                   ),
                 ),
                 Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.badge),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: ivaFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.payments),
+                      border: const OutlineInputBorder(),
+                      labelText: 'P. IVA'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: addressFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.home),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Address'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                const Divider(),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: Get.arguments['date'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Contract Date'.tr,
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+
+                      date = val.substring(0, 10);
+
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
+                  ),
+                ),
+                const Divider(),
+                Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
-                      "SalesRep".tr,
+                      "Technician".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -836,8 +918,9 @@ class _EditMaintenanceMpContractsState
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: args["salesRep"]),
+                                initialValue: TextEditingValue(
+                                    text: (Get.arguments["technicianName"]) ??
+                                        ""),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -856,8 +939,7 @@ class _EditMaintenanceMpContractsState
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
+                                    technicianId = selection.id!;
                                   });
 
                                   //print(salesrepValue);
@@ -868,6 +950,130 @@ class _EditMaintenanceMpContractsState
                               ),
                   ),
                 ),
+                /* Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    controller: taskFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Task'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ), */
+                Visibility(
+                  visible: flagResources,
+                  child: ListView.builder(
+                      primary: false,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: productList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final item = productList[index].id.toString();
+                        return FadeInDown(
+                          duration: Duration(milliseconds: 350 * index),
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Dismissible(
+                              key: Key(item),
+                              onDismissed: (direction) {
+                                /* productList.removeWhere(
+                                        (element) =>
+                                            element.id.toString() ==
+                                            controller.productList[index].id
+                                                .toString());
+                                    controller.updateTotal();
+                                    controller.updateCounter(); */
+                              },
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            /* boxShadow: [BoxShadow(
+                                                            spreadRadius: 0.5,
+                                                            color: black.withOpacity(0.1),
+                                                            blurRadius: 1
+                                                          )], */
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10,
+                                              left: 10,
+                                              right: 10,
+                                              bottom: 10),
+                                          child: Column(
+                                            children: <Widget>[
+                                              Center(
+                                                child: Container(
+                                                  width: 120,
+                                                  height: 70,
+                                                  decoration: const BoxDecoration(
+                                                      image: DecorationImage(
+                                                          image: AssetImage(
+                                                              "assets/images/404.png"),
+                                                          fit: BoxFit.cover)),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                          child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            productList[index]
+                                                .mProductID!
+                                                .identifier!,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 10),
+                                                child: Text(
+                                                  "x${productList[index].resourceQty}",
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                ),
+
                 /* Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
@@ -926,7 +1132,7 @@ class _EditMaintenanceMpContractsState
                   height: 10,
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 10),
                   padding: const EdgeInsets.only(left: 20),
                   child: Align(
                     child: Text(
@@ -951,7 +1157,7 @@ class _EditMaintenanceMpContractsState
                             AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<BPRecords>(
-                                initialValue: TextEditingValue(text: ''),
+                                initialValue: const TextEditingValue(text: ''),
                                 displayStringForOption:
                                     _displayBPStringForOption,
                                 optionsBuilder:
@@ -969,11 +1175,8 @@ class _EditMaintenanceMpContractsState
                                   });
                                 },
                                 onSelected: (BPRecords selection) {
-                                  /*  controller.businessPartnerId =
-                                          selection.id!;
-                                      controller.getPaymentTerms();
-                                      controller.getLocationFromBP();
-                                      controller.getSalesOrderDefaultValues(); */
+                                  businesspartnerId = selection.id!;
+                                  getBusinessPartner();
                                 },
                               )
                             : const Center(
@@ -982,10 +1185,87 @@ class _EditMaintenanceMpContractsState
                   ),
                 ),
                 Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: nameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.badge),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: ivaFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.payments),
+                      border: const OutlineInputBorder(),
+                      labelText: 'P. IVA'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: addressFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.home),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Address'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                const Divider(),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: Get.arguments['date'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Contract Date'.tr,
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+
+                      date = val.substring(0, 10);
+
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
+                  ),
+                ),
+                const Divider(),
+                Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
-                      "SalesRep".tr,
+                      "Technician".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
@@ -1006,8 +1286,9 @@ class _EditMaintenanceMpContractsState
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: args["salesRep"]),
+                                initialValue: TextEditingValue(
+                                    text: (Get.arguments["technicianName"]) ??
+                                        ""),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
@@ -1026,8 +1307,7 @@ class _EditMaintenanceMpContractsState
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
+                                    technicianId = selection.id!;
                                   });
 
                                   //print(salesrepValue);
@@ -1038,7 +1318,131 @@ class _EditMaintenanceMpContractsState
                               ),
                   ),
                 ),
-                /*  Container(
+                /* Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    controller: taskFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Task'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ), */
+                Visibility(
+                  visible: flagResources,
+                  child: ListView.builder(
+                      primary: false,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: productList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final item = productList[index].id.toString();
+                        return FadeInDown(
+                          duration: Duration(milliseconds: 350 * index),
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Dismissible(
+                              key: Key(item),
+                              onDismissed: (direction) {
+                                /* productList.removeWhere(
+                                        (element) =>
+                                            element.id.toString() ==
+                                            controller.productList[index].id
+                                                .toString());
+                                    controller.updateTotal();
+                                    controller.updateCounter(); */
+                              },
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            /* boxShadow: [BoxShadow(
+                                                            spreadRadius: 0.5,
+                                                            color: black.withOpacity(0.1),
+                                                            blurRadius: 1
+                                                          )], */
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10,
+                                              left: 10,
+                                              right: 10,
+                                              bottom: 10),
+                                          child: Column(
+                                            children: <Widget>[
+                                              Center(
+                                                child: Container(
+                                                  width: 120,
+                                                  height: 70,
+                                                  decoration: const BoxDecoration(
+                                                      image: DecorationImage(
+                                                          image: AssetImage(
+                                                              "assets/images/404.png"),
+                                                          fit: BoxFit.cover)),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                          child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            productList[index]
+                                                .mProductID!
+                                                .identifier!,
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 10),
+                                                child: Text(
+                                                  "x${productList[index].resourceQty}",
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                ),
+
+                /* Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
