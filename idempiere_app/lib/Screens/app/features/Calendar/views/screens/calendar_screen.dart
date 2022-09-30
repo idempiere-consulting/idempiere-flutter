@@ -365,35 +365,44 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   builder: (BuildContext ctx,
                           AsyncSnapshot<List<Records>> snapshot) =>
                       snapshot.hasData
-                          ? Autocomplete<Records>(
-                              initialValue: TextEditingValue(
-                                  text: GetStorage().read('user') ?? ""),
-                              displayStringForOption: _displayStringForOption,
-                              optionsBuilder:
-                                  (TextEditingValue textEditingValue) {
-                                if (textEditingValue.text == '') {
-                                  return const Iterable<Records>.empty();
-                                }
-                                return snapshot.data!.where((Records option) {
-                                  return option.name!
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(
-                                          textEditingValue.text.toLowerCase());
-                                });
-                              },
-                              onSelected: (Records selection) {
-                                //debugPrint(
-                                //'You just selected ${_displayStringForOption(selection)}');
-                                setState(() {
-                                  flag = false;
-                                  adUserId = selection.id!;
-                                  //flag = true;
-                                });
-                                getAllEvents();
+                          ? Visibility(
+                              visible: int.parse(list[0], radix: 16)
+                                          .toRadixString(2)
+                                          .padLeft(8, "0")
+                                          .toString()[7] ==
+                                      "1"
+                                  ? true
+                                  : false,
+                              child: Autocomplete<Records>(
+                                initialValue: TextEditingValue(
+                                    text: GetStorage().read('user') ?? ""),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    flag = false;
+                                    adUserId = selection.id!;
+                                    //flag = true;
+                                  });
+                                  getAllEvents();
 
-                                //print(salesrepValue);
-                              },
+                                  //print(salesrepValue);
+                                },
+                              ),
                             )
                           : Visibility(
                               visible: int.parse(list[0], radix: 16)

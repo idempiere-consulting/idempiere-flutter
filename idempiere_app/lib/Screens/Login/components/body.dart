@@ -150,8 +150,10 @@ class _BodyState extends State<Body> {
         },
         body: msg,
       );
-      var jsonFinal = LoginAuthentication.fromJson(jsonDecode(response.body));
+      // ignore: prefer_typing_uninitialized_variables
+      var jsonFinal;
       if (response.statusCode == 200) {
+        print(response.body);
         jsonFinal = LoginAuthentication.fromJson(jsonDecode(response.body));
         GetStorage().write('user', userFieldController.text);
         GetStorage().write('password', passwordFieldController.text);
@@ -215,6 +217,15 @@ class _BodyState extends State<Body> {
           GetStorage().write('clientlist', response.body);
           Get.to(() => const LoginClient());
         }
+      } else {
+        Get.snackbar(
+          "Error!".tr,
+          "Wrong Username or Password".tr,
+          icon: const Icon(
+            Icons.lock,
+            color: Colors.red,
+          ),
+        );
       }
     } else {
       DateTime now = DateTime.now();

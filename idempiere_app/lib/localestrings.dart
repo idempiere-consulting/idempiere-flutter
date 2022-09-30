@@ -391,6 +391,7 @@ class LocaleString extends Translations {
           'Record deletion ': 'Record deletion ',
           'Erase': 'Erase',
           'Send Quiz': 'Send Quiz',
+          'Wrong Username or Password': 'Wrong Username or Password'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -787,6 +788,7 @@ class LocaleString extends Translations {
           'Record deletion ': 'Cancellazione record',
           'Erase': 'Cancella',
           'Send Quiz': 'Invia Quiz',
+          'Wrong Username or Password': 'Nome Utente e/o Password errati'
         },
       };
 }
