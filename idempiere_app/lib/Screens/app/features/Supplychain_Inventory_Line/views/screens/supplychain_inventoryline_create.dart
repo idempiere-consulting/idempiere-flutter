@@ -37,13 +37,13 @@ class _CreateSupplychainInventoryLineState
     //print(json.);
   }
 
-  Future<void> createInventoryLine() async {
+  Future<void> createInventoryLine(int type) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/windows/physical-inventory/tabs/inventory-count/1000008/inventory-count-line/');
+        '/api/v1/windows/physical-inventory/tabs/inventory-count/${Get.arguments["id"]}/inventory-count-line/');
     // physical-inventory/conteggio-inventario-if00/tabs/
     // physical-inventory/tabs/inventory-count/1000008/
     // inventory-count-line/
@@ -68,6 +68,18 @@ class _CreateSupplychainInventoryLineState
     );
     if (response.statusCode == 201) {
       Get.find<SupplychainInventoryLineController>().getInventoryLines();
+      switch (type) {
+        case 0:
+          Get.back();
+          Get.to(const CreateSupplychainInventoryLine(), arguments: {
+            "id": Get.arguments["id"],
+            "warehouseId": Get.arguments["warehouseId"]
+          });
+          break;
+
+        default:
+      }
+
       if (kDebugMode) {
         print(utf8.decode(response.bodyBytes));
       }
@@ -102,12 +114,14 @@ class _CreateSupplychainInventoryLineState
 
   var warehouseId = "1000000";
   String productValue = "";
+  late FocusNode focusNode;
 
   /* late WarehouseJson trx; */
 
   @override
   void initState() {
     super.initState();
+    focusNode = FocusNode();
     warehouseId = Get.arguments["warehouseId"].toString();
     quantityFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
@@ -117,7 +131,8 @@ class _CreateSupplychainInventoryLineState
     //getAllProducts();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  static String _displayStringForOption(Records option) =>
+      "${option.value}_${option.name}";
 
   //static String _displayStringForOption(Records option) => option.name!;
   //late List<Records> salesrepRecord;
@@ -137,10 +152,21 @@ class _CreateSupplychainInventoryLineState
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createInventoryLine();
+                createInventoryLine(0);
               },
               icon: const Icon(
-                Icons.save,
+                Icons.playlist_add,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
+                createInventoryLine(1);
+              },
+              icon: const Icon(
+                Icons.save_as,
               ),
             ),
           ),
@@ -186,7 +212,7 @@ class _CreateSupplychainInventoryLineState
                                     return const Iterable<Records>.empty();
                                   }
                                   return snapshot.data!.where((Records option) {
-                                    return option.name!
+                                    return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
@@ -198,6 +224,7 @@ class _CreateSupplychainInventoryLineState
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
                                     productValue = selection.id.toString();
+                                    focusNode.requestFocus();
                                   });
 
                                   //print(productValue);
@@ -211,6 +238,7 @@ class _CreateSupplychainInventoryLineState
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    focusNode: focusNode,
                     controller: quantityFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
@@ -276,7 +304,7 @@ class _CreateSupplychainInventoryLineState
                                     return const Iterable<Records>.empty();
                                   }
                                   return snapshot.data!.where((Records option) {
-                                    return option.name!
+                                    return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
@@ -288,6 +316,7 @@ class _CreateSupplychainInventoryLineState
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
                                     productValue = selection.id.toString();
+                                    focusNode.requestFocus();
                                   });
 
                                   //print(productValue);
@@ -301,6 +330,7 @@ class _CreateSupplychainInventoryLineState
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    focusNode: focusNode,
                     controller: quantityFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
@@ -366,7 +396,7 @@ class _CreateSupplychainInventoryLineState
                                     return const Iterable<Records>.empty();
                                   }
                                   return snapshot.data!.where((Records option) {
-                                    return option.name!
+                                    return ("${option.value}_${option.name}")
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
@@ -378,6 +408,7 @@ class _CreateSupplychainInventoryLineState
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
                                     productValue = selection.id.toString();
+                                    focusNode.requestFocus();
                                   });
 
                                   //print(productValue);
@@ -391,6 +422,7 @@ class _CreateSupplychainInventoryLineState
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    focusNode: focusNode,
                     controller: quantityFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),

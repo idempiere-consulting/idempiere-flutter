@@ -52,12 +52,13 @@ class SupplychainScreen extends GetView<SupplychainController> {
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
           child: ResponsiveBuilder(
         mobileBuilder: (context, constraints) {
@@ -68,7 +69,7 @@ class SupplychainScreen extends GetView<SupplychainController> {
             const SizedBox(height: kSpacing / 2),
             const Divider(),
             _buildProfile(data: controller.getProfil()),
-            const SizedBox(height: kSpacing),
+            /* const SizedBox(height: kSpacing),
             _buildProgress(axis: Axis.vertical),
             const SizedBox(height: kSpacing),
             _buildTeamMember(data: controller.getMember()),
@@ -76,7 +77,7 @@ class SupplychainScreen extends GetView<SupplychainController> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kSpacing),
               child: GetPremiumCard(onPressed: () {}),
-            ),
+            ), */
             /* const SizedBox(height: kSpacing * 2),
             _buildTaskOverview(
               data: controller.getAllTask(),
@@ -90,8 +91,8 @@ class SupplychainScreen extends GetView<SupplychainController> {
               crossAxisCount: 6,
               crossAxisCellCount: 6,
             ), */
-            const SizedBox(height: kSpacing),
-            _buildRecentMessages(data: controller.getChatting()),
+            /* const SizedBox(height: kSpacing),
+            _buildRecentMessages(data: controller.getChatting()), */
           ]);
         },
         tabletBuilder: (context, constraints) {

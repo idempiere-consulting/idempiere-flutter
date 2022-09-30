@@ -104,6 +104,9 @@ class _BodyState extends State<Body> {
           case "22":
             Get.offAllNamed("/Maintenance");
             break;
+          case "69":
+            Get.offAllNamed("/SupplychainLoadUnload");
+            break;
           default:
         }
       } else {

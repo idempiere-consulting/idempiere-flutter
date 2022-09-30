@@ -62,12 +62,17 @@ class SupplychainInventoryController extends GetxController {
 
   Future<void> getInventories() async {
     _dataAvailable.value = false;
+    var now = DateTime.now();
+    DateTime thirtyDaysAgo = now.subtract(const Duration(days: 30));
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedthirtyDaysAgo = formatter.format(thirtyDaysAgo);
+    String formattedNow = formatter.format(now);
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_Inventory?\$filter= C_DocType_ID eq $idDoc and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/M_Inventory?\$filter= C_DocType_ID eq $idDoc and DocStatus neq \'CO\' and MovementDate le \'$formattedNow 23:59:59\' and MovementDate ge \'$formattedthirtyDaysAgo 00:00:00\' and AD_Client_ID eq ${GetStorage().read('clientid')}&\$orderby= MovementDate desc');
     var response = await http.get(
       url,
       headers: <String, String>{

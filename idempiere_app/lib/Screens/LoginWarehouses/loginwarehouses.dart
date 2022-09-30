@@ -419,6 +419,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         case "32":
           Get.offAllNamed("/PortalMp");
           break;
+        case "69":
+          Get.offAllNamed("/SupplychainLoadUnload");
+          break;
         default:
           Get.offAllNamed("/Dashboard");
           break;

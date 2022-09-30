@@ -11,6 +11,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/edit_supplychain_inventory.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_create_inventory.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/models/loadunloadjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -29,6 +30,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:intl/intl.dart';
 
 // binding
 part '../../bindings/supplychain_inventory_binding.dart';
@@ -88,16 +90,19 @@ class SupplychainInventoryScreen
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
-                        //Get.to(const CreateLead());
+                        Get.to(const CreateSupplychainInventory(), arguments: {
+                          "idDoc": controller.idDoc,
+                          "warehouseId": GetStorage().read("warehouseid")
+                        });
                       },
                       icon: const Icon(
-                        Icons.person_add,
+                        Icons.add,
                         color: Colors.lightBlue,
                       ),
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(left: 20),
+                    margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
                         controller.getInventories();
@@ -113,6 +118,7 @@ class SupplychainInventoryScreen
               const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
+                      primary: false,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: controller.trx.rowcount,
