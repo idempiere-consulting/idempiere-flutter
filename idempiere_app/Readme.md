@@ -7,14 +7,9 @@ pre: "<b>90. </b>"
 ---
 # Progetto iDempiere Flutter
 
- ## Funzionalità da vedere !!! (Vincenzo)
-
-
-
-          
+## Funzionalità da vedere !!!
 
 ## Login ! (Vincenzo)
-
 
 * [Wait] Spostare Utente in alto a Sx  
 * [Wait] Su setup "Cancella dati (anche offline) e cache e Esci
