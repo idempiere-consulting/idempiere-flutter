@@ -124,6 +124,10 @@ class NotificationController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

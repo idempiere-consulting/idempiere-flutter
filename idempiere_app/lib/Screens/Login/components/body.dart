@@ -153,7 +153,7 @@ class _BodyState extends State<Body> {
       // ignore: prefer_typing_uninitialized_variables
       var jsonFinal;
       if (response.statusCode == 200) {
-        print(response.body);
+        //print(response.body);
         jsonFinal = LoginAuthentication.fromJson(jsonDecode(response.body));
         GetStorage().write('user', userFieldController.text);
         GetStorage().write('password', passwordFieldController.text);
