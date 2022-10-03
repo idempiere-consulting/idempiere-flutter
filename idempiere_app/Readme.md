@@ -11,8 +11,7 @@ pre: "<b>90. </b>"
 
 ## Login ! (Vincenzo)
 
-* [Wait] Spostare Utente in alto a Sx  
-* [Wait] Su setup "Cancella dati (anche offline) e cache e Esci
+
 
 ## Dashboard (Vincenzo/Matteo)
 
@@ -40,11 +39,6 @@ Select 'PROJECT',count(*),SalesRep from C_Project where status
   - Task Lead
   - Task Business Partner
 
-
-### BI Vendite (S2)
-
-* [ ] Grafico Chart Fatturato (Vincenzo)
-   https://pub.dev/packages/charts_flutter
 
 ### Risorse Aziendali !!! (Matteo)
 
