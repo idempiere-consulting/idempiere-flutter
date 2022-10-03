@@ -9,14 +9,13 @@ pre: "<b>90. </b>"
 
  ## Funzionalità da vedere !!! (Vincenzo)
 
-* [Wait ] Attivare Acquisizione Fotocamera 
-* [Wait] Stampa report (da idempiere)  da vedere con AC (TOP)
-* [Wait] Stampa Diretta Bluetooth o IP https://pub.dev/packages/bluetooth_print
+
+
           
 
 ## Login ! (Vincenzo)
 
-* [!] Logo App , immagini login - Video Esplicativo - (icona+3 immagini)
+
 * [Wait] Spostare Utente in alto a Sx  
 * [Wait] Su setup "Cancella dati (anche offline) e cache e Esci
 
