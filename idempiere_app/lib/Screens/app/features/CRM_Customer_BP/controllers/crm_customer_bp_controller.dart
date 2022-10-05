@@ -1,5 +1,5 @@
 part of dashboard;
- 
+
 class CRMCustomerBPController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late CustomerBpJson _trx;
@@ -15,6 +15,8 @@ class CRMCustomerBPController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
@@ -123,7 +125,7 @@ class CRMCustomerBPController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/C_BPartner?\$filter= IsCustomer eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/C_BPartner?\$filter= IsCustomer eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$skip=${pagesCount.value}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -135,7 +137,7 @@ class CRMCustomerBPController extends GetxController {
       //print(response.body);
       _trx =
           CustomerBpJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      //print(trx.rowcount);
+      //print(trx.records);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;

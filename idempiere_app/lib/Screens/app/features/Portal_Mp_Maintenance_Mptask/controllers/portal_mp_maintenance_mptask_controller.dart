@@ -49,7 +49,7 @@ class PortalMpMaintenanceMptaskController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_ot_v?\$filter= c_bpartner_id eq $businessPartnerId ');//mp_ot_ad_user_id eq $userId 
+        '/api/v1/models/lit_mp_ot_v?\$filter= c_bpartner_id eq $businessPartnerId '); //mp_ot_ad_user_id eq $userId
 
     var response = await http.get(
       url,
@@ -59,7 +59,6 @@ class PortalMpMaintenanceMptaskController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      
       //print(response.body);
       GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
       //isWorkOrderSyncing.value = false;

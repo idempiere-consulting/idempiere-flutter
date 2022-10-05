@@ -79,7 +79,7 @@ class MaintenanceMpResourceScreen
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
-            Get.offNamed('/MaintenanceMptaskLine');
+            Get.offNamed('/MaintenanceMptask');
           },
         ),
       ),

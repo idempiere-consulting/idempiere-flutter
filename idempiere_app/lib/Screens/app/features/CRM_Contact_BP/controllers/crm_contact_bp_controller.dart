@@ -9,6 +9,9 @@ class CRMContactBPController extends GetxController {
 
   var value = "Tutti".obs;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
   var filters = ["Tutti", "Miei" /* , "Team" */];
   var filterCount = 0;
   // ignore: prefer_final_fields
@@ -110,13 +113,14 @@ class CRMContactBPController extends GetxController {
 
   Future<void> getContacts() async {
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    //var userFilters = [];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/ad_user?\$filter=C_BPartner_ID neq null and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/ad_user?\$filter=C_BPartner_ID neq null and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -127,7 +131,8 @@ class CRMContactBPController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = ContactJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      //print(trx.rowcount);
+      pagesTot.value = _trx.pagecount!;
+      //print(trx.records!.length);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;

@@ -48,9 +48,10 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class PortalMpMaintenanceMptaskScreen extends GetView<PortalMpMaintenanceMptaskController> {
+class PortalMpMaintenanceMptaskScreen
+    extends GetView<PortalMpMaintenanceMptaskController> {
   const PortalMpMaintenanceMptaskScreen({Key? key}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     controller.syncWorkOrder();
@@ -213,7 +214,7 @@ class PortalMpMaintenanceMptaskScreen extends GetView<PortalMpMaintenanceMptaskC
                                         fontWeight: FontWeight.bold),
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-                                          
+
                                   subtitle: Row(
                                     children: <Widget>[
                                       const Icon(Icons.event),

@@ -49,7 +49,7 @@ class MaintenanceMpResourceController extends GetxController {
 
   Future<void> initializeFilters() async {
     final file = File(
-        '${(await getApplicationDocumentsDirectory()).path}/reflistresourcetype.json');
+        '${(await getApplicationDocumentsDirectory()).path}/reflistresourcetypecategory.json');
 
     _tt2 =
         RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));

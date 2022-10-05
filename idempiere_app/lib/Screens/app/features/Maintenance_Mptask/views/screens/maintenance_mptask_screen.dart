@@ -148,11 +148,25 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
-                                      GetStorage().write(
+                                      /*  GetStorage().write(
                                           'selectedWorkOrderId',
                                           controller
                                               .trx.records![index].mPOTID!.id);
-                                      Get.toNamed('/MaintenanceMptaskLine');
+                                      Get.toNamed('/MaintenanceMptaskLine'); */
+                                      GetStorage().write(
+                                          'selectedTaskDocNo',
+                                          controller
+                                              .trx.records![index].documentNo);
+                                      GetStorage().write(
+                                          'selectedTaskBP',
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "");
+                                      /* GetStorage().write(
+                                          'selectedTaskId',
+                                          controller.trx.records![index]
+                                              .mPMaintainTaskID!.id); */
+                                      Get.toNamed('/MaintenanceMpResource');
                                     },
                                     icon: const Icon(
                                       Icons.view_list,

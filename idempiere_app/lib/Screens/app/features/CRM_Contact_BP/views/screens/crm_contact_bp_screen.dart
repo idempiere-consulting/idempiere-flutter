@@ -65,12 +65,10 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            :  */Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            :  */
+            Drawer(
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -80,13 +78,14 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
+                /* _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing), */
                 Row(
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CONTACTS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("CONTACTS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("CONTACTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -106,6 +105,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
                         onPressed: () {
+                          controller.pagesCount.value = 1;
                           controller.getContacts();
                         },
                         icon: const Icon(
@@ -182,14 +182,39 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                     ),
                   ],
                 ),
-                const SizedBox(height: kSpacing),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        if (controller.pagesCount > 1) {
+                          controller.pagesCount.value -= 1;
+                          controller.getContacts();
+                        }
+                      },
+                      icon: const Icon(Icons.skip_previous),
+                    ),
+                    Obx(() => Text(
+                        "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                    IconButton(
+                      onPressed: () {
+                        if (controller.pagesCount < controller.pagesTot.value) {
+                          controller.pagesCount.value += 1;
+                          controller.getContacts();
+                        }
+                      },
+                      icon: const Icon(Icons.skip_next),
+                    )
+                  ],
+                ),
+                //const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(
                               () => Visibility(
@@ -204,29 +229,24 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                                 .searchFilterValue.value
                                                 .toLowerCase())
                                         : controller.dropdownValue.value == "2"
-                                            ? controller
-                                                .trx.records![index].cBPartnerID!.identifier
+                                            ? controller.trx.records![index]
+                                                .cBPartnerID!.identifier
                                                 .toString()
                                                 .toLowerCase()
                                                 .contains(controller
                                                     .searchFilterValue.value
                                                     .toLowerCase())
-                                        : controller.dropdownValue.value == "3"
-                                            ? controller
-                                                .trx.records![index].phone
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .searchFilterValue.value
-                                                    .toLowerCase())
-                                            : controller.dropdownValue.value == "4"
-                                                ? controller.trx
-                                                    .records![index].eMail
+                                            : controller.dropdownValue.value ==
+                                                    "3"
+                                                ? controller
+                                                    .trx.records![index].phone
                                                     .toString()
                                                     .toLowerCase()
                                                     .contains(
                                                         controller.searchFilterValue.value.toLowerCase())
-                                                : true,
+                                                : controller.dropdownValue.value == "4"
+                                                    ? controller.trx.records![index].eMail.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                    : true,
                                 child: Card(
                                   elevation: 8.0,
                                   margin: const EdgeInsets.symmetric(
@@ -253,18 +273,22 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                           tooltip: 'Edit Contact'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
-                                            Get.to(const EditContactBP(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                .trx.records![index].name,
-                                            "bpName": controller
-                                                .trx.records![index].cBPartnerID!.identifier,
-                                            "Tel": controller
-                                                .trx.records![index].phone,
-                                            "eMail": controller
-                                                .trx.records![index].eMail,
-                                          });
+                                            Get.to(const EditContactBP(),
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "name": controller
+                                                      .trx.records![index].name,
+                                                  "bpName": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID!
+                                                      .identifier,
+                                                  "Tel": controller.trx
+                                                      .records![index].phone,
+                                                  "eMail": controller.trx
+                                                      .records![index].eMail,
+                                                });
                                           },
                                         ),
                                       ),
@@ -283,8 +307,11 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                               color: Colors.yellowAccent),
                                           Expanded(
                                             child: Text(
-                                              controller.trx.records![index]
-                                                      .cBPartnerID!.identifier ??
+                                              controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID!
+                                                      .identifier ??
                                                   "??",
                                               style: const TextStyle(
                                                   color: Colors.white),
@@ -395,7 +422,8 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CONTACTS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("CONTACTS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("CONTACTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -513,29 +541,24 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                                 .searchFilterValue.value
                                                 .toLowerCase())
                                         : controller.dropdownValue.value == "2"
-                                            ? controller
-                                                .trx.records![index].cBPartnerID!.identifier
+                                            ? controller.trx.records![index]
+                                                .cBPartnerID!.identifier
                                                 .toString()
                                                 .toLowerCase()
                                                 .contains(controller
                                                     .searchFilterValue.value
                                                     .toLowerCase())
-                                        : controller.dropdownValue.value == "3"
-                                            ? controller
-                                                .trx.records![index].phone
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .searchFilterValue.value
-                                                    .toLowerCase())
-                                            : controller.dropdownValue.value == "4"
-                                                ? controller.trx
-                                                    .records![index].eMail
+                                            : controller.dropdownValue.value ==
+                                                    "3"
+                                                ? controller
+                                                    .trx.records![index].phone
                                                     .toString()
                                                     .toLowerCase()
                                                     .contains(
                                                         controller.searchFilterValue.value.toLowerCase())
-                                                : true,
+                                                : controller.dropdownValue.value == "4"
+                                                    ? controller.trx.records![index].eMail.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                    : true,
                                 child: Card(
                                   elevation: 8.0,
                                   margin: const EdgeInsets.symmetric(
@@ -562,18 +585,22 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                           tooltip: 'Edit Contact'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
-                                            Get.to(const EditContactBP(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                .trx.records![index].name,
-                                            "bpName": controller
-                                                .trx.records![index].cBPartnerID!.identifier,
-                                            "Tel": controller
-                                                .trx.records![index].phone,
-                                            "eMail": controller
-                                                .trx.records![index].eMail,
-                                          });
+                                            Get.to(const EditContactBP(),
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "name": controller
+                                                      .trx.records![index].name,
+                                                  "bpName": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID!
+                                                      .identifier,
+                                                  "Tel": controller.trx
+                                                      .records![index].phone,
+                                                  "eMail": controller.trx
+                                                      .records![index].eMail,
+                                                });
                                           },
                                         ),
                                       ),
@@ -702,7 +729,8 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CONTACTS: ".tr + controller.trx.rowcount.toString())
+                          ? Text("CONTACTS: ".tr +
+                              controller.trx.rowcount.toString())
                           : Text("CONTACTS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -820,29 +848,24 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                                 .searchFilterValue.value
                                                 .toLowerCase())
                                         : controller.dropdownValue.value == "2"
-                                            ? controller
-                                                .trx.records![index].cBPartnerID!.identifier
+                                            ? controller.trx.records![index]
+                                                .cBPartnerID!.identifier
                                                 .toString()
                                                 .toLowerCase()
                                                 .contains(controller
                                                     .searchFilterValue.value
                                                     .toLowerCase())
-                                        : controller.dropdownValue.value == "3"
-                                            ? controller
-                                                .trx.records![index].phone
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .searchFilterValue.value
-                                                    .toLowerCase())
-                                            : controller.dropdownValue.value == "4"
-                                                ? controller.trx
-                                                    .records![index].eMail
+                                            : controller.dropdownValue.value ==
+                                                    "3"
+                                                ? controller
+                                                    .trx.records![index].phone
                                                     .toString()
                                                     .toLowerCase()
                                                     .contains(
                                                         controller.searchFilterValue.value.toLowerCase())
-                                                : true,
+                                                : controller.dropdownValue.value == "4"
+                                                    ? controller.trx.records![index].eMail.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                    : true,
                                 child: Card(
                                   elevation: 8.0,
                                   margin: const EdgeInsets.symmetric(
@@ -869,18 +892,22 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                           tooltip: 'Edit Contact'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
-                                            Get.to(const EditContactBP(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                .trx.records![index].name,
-                                            "bpName": controller
-                                                .trx.records![index].cBPartnerID!.identifier,
-                                            "Tel": controller
-                                                .trx.records![index].phone,
-                                            "eMail": controller
-                                                .trx.records![index].eMail,
-                                          });
+                                            Get.to(const EditContactBP(),
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "name": controller
+                                                      .trx.records![index].name,
+                                                  "bpName": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID!
+                                                      .identifier,
+                                                  "Tel": controller.trx
+                                                      .records![index].phone,
+                                                  "eMail": controller.trx
+                                                      .records![index].eMail,
+                                                });
                                           },
                                         ),
                                       ),

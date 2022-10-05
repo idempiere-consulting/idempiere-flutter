@@ -5,8 +5,13 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/constants.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../app/features/CRM_Opportunity/models/product_json.dart';
 
 class LoginWarehouses extends StatefulWidget {
   const LoginWarehouses({Key? key}) : super(key: key);
@@ -133,15 +138,63 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      const filename = "businesspartner";
-      final file = File(
-          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-      file.writeAsString(response.body);
-      businessPartnerSync = false;
-      if (kDebugMode) {
-        print('BusinessPartner Checked');
+      var json = BusinessPartnerJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncBusinessPartnerPages(json, index);
+      } else {
+        const filename = "businesspartner";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        businessPartnerSync = false;
+        if (kDebugMode) {
+          print('BusinessPartner Checked');
+        }
+        checkSyncData();
       }
-      checkSyncData();
+    }
+  }
+
+  syncBusinessPartnerPages(BusinessPartnerJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = BusinessPartnerJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncBusinessPartnerPages(json, index);
+      } else {
+        print(json.records!.length);
+        const filename = "businesspartner";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        businessPartnerSync = false;
+        if (kDebugMode) {
+          print('BusinessPartner Checked');
+        }
+        checkSyncData();
+      }
     }
   }
 
@@ -162,16 +215,63 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      const filename = "products";
-      final file = File(
-          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-      file.writeAsString(response.body);
-      //GetStorage().write('productSync', utf8.decode(response.bodyBytes));
-      if (kDebugMode) {
-        print('Products Checked');
+      var json =
+          ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncProductPages(json, index);
+      } else {
+        const filename = "products";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        productSync = false;
+        if (kDebugMode) {
+          print('Products Checked');
+        }
+        checkSyncData();
       }
-      productSync = false;
-      checkSyncData();
+    }
+  }
+
+  syncProductPages(ProductJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncProductPages(json, index);
+      } else {
+        print(json.records!.length);
+        const filename = "products";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        productSync = false;
+        if (kDebugMode) {
+          print('Products Checked');
+        }
+        checkSyncData();
+      }
     }
   }
 
@@ -225,7 +325,23 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      const filename = "workorderresource";
+      var json = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+      }
+      /* const filename = "workorderresource";
       final file = File(
           '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
       file.writeAsString(response.body);
@@ -234,8 +350,53 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
           .write('workOrderResourceSync', utf8.decode(response.bodyBytes)); */
       if (kDebugMode) {
         print('WorkOrderResource Checked');
-      }
+      } */
       syncWorkOrderResourceSurveyLines();
+    } else {
+      workOrderSync = false;
+      checkSyncData();
+    }
+  }
+
+  syncWorkOrderResourcePages(WorkOrderResourceLocalJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        print(json.records!.length);
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+        syncWorkOrderResourceSurveyLines();
+      }
     } else {
       workOrderSync = false;
       checkSyncData();
@@ -376,19 +537,64 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      //print(response.body);
-      const filename = "workorderresourcesurveylines";
-      final file = File(
-          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-      file.writeAsString(response.body);
-      GetStorage().write(
-          'workOrderResourceSurveyLinesSync', utf8.decode(response.bodyBytes));
-      if (kDebugMode) {
-        print('workOrderResourceSurveyLinesSync Checked');
+      var json = WorkOrderResourceSurveyLinesJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderResourceSurveyLinesPages(json, index);
+      } else {
+        const filename = "workorderresourcesurveylines";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        workOrderSync = false;
+        if (kDebugMode) {
+          print('workOrderResourceSurveyLinesSync Checked');
+        }
+        checkSyncData();
+      }
+    }
+  }
+
+  syncWorkOrderResourceSurveyLinesPages(
+      WorkOrderResourceSurveyLinesJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderResourceSurveyLinesJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
       }
 
-      workOrderSync = false;
-      checkSyncData();
+      if (json.pagecount! > index) {
+        syncWorkOrderResourceSurveyLinesPages(json, index);
+      } else {
+        print(json.records!.length);
+        const filename = "workorderresourcesurveylines";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        workOrderSync = false;
+        if (kDebugMode) {
+          print('workOrderResourceSurveyLinesSync Checked');
+        }
+        checkSyncData();
+      }
     }
   }
 
