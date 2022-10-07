@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -13,6 +14,7 @@ import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.d
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CreateResAnomaly extends StatefulWidget {
   const CreateResAnomaly({Key? key}) : super(key: key);
@@ -32,7 +34,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       "AD_Client_ID": {
         "id": GetStorage().read("clientid")
       }, //selectedWorkOrderId
-      "MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+      //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
       "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
       "MP_Maintain_Resource_ID": {"id": args["id"]},
       "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
@@ -51,7 +53,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       msg = jsonEncode({
         "AD_Org_ID": {"id": GetStorage().read("organizationid")},
         "AD_Client_ID": {"id": GetStorage().read("clientid")},
-        "MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+        //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
         "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
         "MP_Maintain_Resource_ID": {"id": args["id"]},
         "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
@@ -65,6 +67,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         "IsClosed": isClosed,
       });
     }
+    //print(msg);
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NC/');
     //print(msg);
@@ -156,7 +159,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     );
 
     if (response.statusCode == 200) {
-      var userpref = jsonDecode(GetStorage().read('userPreferencesSync'));
+      const filename = "userpreferences";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      var userpref = jsonDecode(file.readAsStringSync());
       if (userpref["row-count"] > 0 &&
           userpref["records"][0]["M_Locator_ID"] != null) {
         locatorInitialValue = TextEditingValue(
@@ -180,7 +186,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   }
 
   getProductStock(int id) async {
-    var userpref = jsonDecode(GetStorage().read('userPreferencesSync'));
+    const filename = "userpreferences";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var userpref = jsonDecode(file.readAsStringSync());
 
     var locId = "";
 
@@ -254,6 +263,9 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   }
 
   getProductBOMLines(int id) async {
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
@@ -274,7 +286,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       var json =
           BOMLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       var jsonResources =
-          ProductJson.fromJson(jsonDecode(GetStorage().read('productSync')));
+          ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
 
       bomList = [];
 

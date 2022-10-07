@@ -192,7 +192,7 @@ class MaintenanceMpResourceScreen
                         itemBuilder: (BuildContext context, int index) {
                           return Visibility(
                             visible: GetStorage().read('selectedTaskDocNo') ==
-                                controller.trx.records![index].mpOtDocumentno,
+                                controller.trx.records![index].mpMaintainID?.id,
                             child: Card(
                               elevation: 8.0,
                               margin: const EdgeInsets.symmetric(
@@ -237,7 +237,7 @@ class MaintenanceMpResourceScreen
                                         color: Colors.green,
                                       ),
                                       tooltip: 'Edit Resource',
-                                      onPressed: () {
+                                      onPressed: () async {
                                         switch (controller
                                             .trx.records![index].eDIType?.id) {
                                           case "A1":
@@ -334,7 +334,11 @@ class MaintenanceMpResourceScreen
                                             break;
                                           case 'A2':
                                             Get.toNamed(
-                                                '/MaintenanceMpResourceFireExtinguisherGrid');
+                                                '/MaintenanceMpResourceFireExtinguisherGrid',
+                                                arguments: {
+                                                  "products": File(
+                                                      '${(await getApplicationDocumentsDirectory()).path}/products.json')
+                                                });
                                             break;
                                           default:
                                         }
@@ -738,7 +742,7 @@ class MaintenanceMpResourceScreen
                         itemBuilder: (BuildContext context, int index) {
                           return Visibility(
                             visible: GetStorage().read('selectedTaskDocNo') ==
-                                controller.trx.records![index].mpOtDocumentno,
+                                controller.trx.records![index].mpMaintainID?.id,
                             child: Card(
                               elevation: 8.0,
                               margin: const EdgeInsets.symmetric(
@@ -783,7 +787,7 @@ class MaintenanceMpResourceScreen
                                         color: Colors.green,
                                       ),
                                       tooltip: 'Edit Resource',
-                                      onPressed: () {
+                                      onPressed: () async {
                                         switch (controller
                                             .trx.records![index].eDIType?.id) {
                                           case "A1":
@@ -880,7 +884,11 @@ class MaintenanceMpResourceScreen
                                             break;
                                           case 'A2':
                                             Get.toNamed(
-                                                '/MaintenanceMpResourceFireExtinguisherGrid');
+                                                '/MaintenanceMpResourceFireExtinguisherGrid',
+                                                arguments: {
+                                                  "products": File(
+                                                      '${(await getApplicationDocumentsDirectory()).path}/products.json')
+                                                });
                                             break;
                                           default:
                                         }
@@ -938,12 +946,14 @@ class MaintenanceMpResourceScreen
                                     children: <Widget>[
                                       const Icon(
                                           Icons.settings_input_component),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .resourceType?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .resourceType?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -1022,55 +1032,146 @@ class MaintenanceMpResourceScreen
                                                   .lITControl3DateNext ??
                                               "??"),
                                         ]),
-                                        Visibility(
-                                          visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .eDIType
-                                                  ?.id ==
-                                              "A2",
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                IconButton(
-                                                  tooltip: 'Check',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateCheck(
-                                                            isConnected, index);
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.content_paste),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Revision',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateRevision(
-                                                            isConnected, index);
-                                                  },
-                                                  icon:
-                                                      const Icon(Icons.search),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Testing',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateTesting(
-                                                            isConnected, index);
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.gavel_sharp),
-                                                ),
-                                              ]),
-                                        ),
+                                        controller.trx.records![index].eDIType
+                                                    ?.id ==
+                                                "A2"
+                                            ? Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                    IconButton(
+                                                      tooltip: 'Check',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateCheck(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.content_paste),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Revision',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateRevision(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.search),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Testing',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.gavel_sharp),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Anomaly',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        if (isConnected) {
+                                                          await emptyPostCallStack();
+                                                          await emptyEditAPICallStack();
+                                                          await emptyDeleteCallStack();
+
+                                                          Get.to(
+                                                              const CreateResAnomaly(),
+                                                              arguments: {
+                                                                "id": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .id,
+                                                                "docNo": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mpOtDocumentno ??
+                                                                    "",
+                                                                "productId": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mProductID
+                                                                        ?.id ??
+                                                                    0,
+                                                                "productName": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mProductID
+                                                                        ?.identifier ??
+                                                                    "",
+                                                              });
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.warning,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ])
+                                            : Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  IconButton(
+                                                    tooltip: 'Anomaly',
+                                                    onPressed: () async {
+                                                      var isConnected =
+                                                          await checkConnection();
+                                                      if (isConnected) {
+                                                        await emptyPostCallStack();
+                                                        await emptyEditAPICallStack();
+                                                        await emptyDeleteCallStack();
+
+                                                        Get.to(
+                                                            const CreateResAnomaly(),
+                                                            arguments: {
+                                                              "docNo": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mpOtDocumentno ??
+                                                                  "",
+                                                              "productId": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.id ??
+                                                                  0,
+                                                              "productName": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.identifier ??
+                                                                  "",
+                                                            });
+                                                      }
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.warning,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                       ],
                                     ),
                                   ],
@@ -1141,34 +1242,40 @@ class MaintenanceMpResourceScreen
                   Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Obx(
-                      () => DropdownButton(
-                        value: controller.dropDownValue2.value,
-                        style: const TextStyle(fontSize: 12.0),
-                        elevation: 16,
-                        onChanged: (String? newValue) {
-                          controller.dropDownValue2.value = newValue!;
-                          controller.getWorkOrders();
-                        },
-                        items: controller._tt2.records!.map((list) {
-                          return DropdownMenuItem<String>(
-                            child: Text(
-                              list.name.toString(),
-                            ),
-                            value: list.value,
-                          );
-                        }).toList(),
+                      () => Visibility(
+                        visible: controller.filter1Available.value,
+                        child: DropdownButton(
+                          value: controller.dropDownValue2.value,
+                          style: const TextStyle(fontSize: 12.0),
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropDownValue2.value = newValue!;
+                            controller.getWorkOrders();
+                          },
+                          items: controller._tt2.records!.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.value,
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Obx(
-                      () => TextButton(
-                        onPressed: () {
-                          controller.changeFilter();
-                          //print("hello");
-                        },
-                        child: Text(controller.value.value),
+                      () => Visibility(
+                        visible: controller.filter2Available.value,
+                        child: TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
                       ),
                     ),
                   ),
@@ -1185,7 +1292,7 @@ class MaintenanceMpResourceScreen
                         itemBuilder: (BuildContext context, int index) {
                           return Visibility(
                             visible: GetStorage().read('selectedTaskDocNo') ==
-                                controller.trx.records![index].mpOtDocumentno,
+                                controller.trx.records![index].mpMaintainID?.id,
                             child: Card(
                               elevation: 8.0,
                               margin: const EdgeInsets.symmetric(
@@ -1230,7 +1337,7 @@ class MaintenanceMpResourceScreen
                                         color: Colors.green,
                                       ),
                                       tooltip: 'Edit Resource',
-                                      onPressed: () {
+                                      onPressed: () async {
                                         switch (controller
                                             .trx.records![index].eDIType?.id) {
                                           case "A1":
@@ -1327,7 +1434,11 @@ class MaintenanceMpResourceScreen
                                             break;
                                           case 'A2':
                                             Get.toNamed(
-                                                '/MaintenanceMpResourceFireExtinguisherGrid');
+                                                '/MaintenanceMpResourceFireExtinguisherGrid',
+                                                arguments: {
+                                                  "products": File(
+                                                      '${(await getApplicationDocumentsDirectory()).path}/products.json')
+                                                });
                                             break;
                                           default:
                                         }
@@ -1385,12 +1496,14 @@ class MaintenanceMpResourceScreen
                                     children: <Widget>[
                                       const Icon(
                                           Icons.settings_input_component),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .resourceType?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .resourceType?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -1469,55 +1582,146 @@ class MaintenanceMpResourceScreen
                                                   .lITControl3DateNext ??
                                               "??"),
                                         ]),
-                                        Visibility(
-                                          visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .eDIType
-                                                  ?.id ==
-                                              "A2",
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                IconButton(
-                                                  tooltip: 'Check',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateCheck(
-                                                            isConnected, index);
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.content_paste),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Revision',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateRevision(
-                                                            isConnected, index);
-                                                  },
-                                                  icon:
-                                                      const Icon(Icons.search),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Testing',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateTesting(
-                                                            isConnected, index);
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.gavel_sharp),
-                                                ),
-                                              ]),
-                                        ),
+                                        controller.trx.records![index].eDIType
+                                                    ?.id ==
+                                                "A2"
+                                            ? Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                    IconButton(
+                                                      tooltip: 'Check',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateCheck(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.content_paste),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Revision',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateRevision(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.search),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Testing',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.gavel_sharp),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Anomaly',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        if (isConnected) {
+                                                          await emptyPostCallStack();
+                                                          await emptyEditAPICallStack();
+                                                          await emptyDeleteCallStack();
+
+                                                          Get.to(
+                                                              const CreateResAnomaly(),
+                                                              arguments: {
+                                                                "id": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .id,
+                                                                "docNo": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mpOtDocumentno ??
+                                                                    "",
+                                                                "productId": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mProductID
+                                                                        ?.id ??
+                                                                    0,
+                                                                "productName": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mProductID
+                                                                        ?.identifier ??
+                                                                    "",
+                                                              });
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.warning,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ])
+                                            : Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  IconButton(
+                                                    tooltip: 'Anomaly',
+                                                    onPressed: () async {
+                                                      var isConnected =
+                                                          await checkConnection();
+                                                      if (isConnected) {
+                                                        await emptyPostCallStack();
+                                                        await emptyEditAPICallStack();
+                                                        await emptyDeleteCallStack();
+
+                                                        Get.to(
+                                                            const CreateResAnomaly(),
+                                                            arguments: {
+                                                              "docNo": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mpOtDocumentno ??
+                                                                  "",
+                                                              "productId": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.id ??
+                                                                  0,
+                                                              "productName": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.identifier ??
+                                                                  "",
+                                                            });
+                                                      }
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.warning,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                       ],
                                     ),
                                   ],

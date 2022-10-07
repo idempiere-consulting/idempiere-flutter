@@ -159,7 +159,7 @@ class MaintenanceMpResourceController extends GetxController {
 
       var url = Uri.parse('http://' +
           ip +
-          '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}');
+          '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -173,7 +173,10 @@ class MaintenanceMpResourceController extends GetxController {
         if (response.statusCode == 200) {
           _dataAvailable.value = false;
           var data = jsonEncode(_trx2.toJson());
-          GetStorage().write('workOrderResourceSync', data);
+          final file = File(
+              '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+          file.writeAsStringSync(data);
+          //GetStorage().write('workOrderResourceSync', data);
           getWorkOrders();
           //print("done!");
           //Get.back();
@@ -199,19 +202,22 @@ class MaintenanceMpResourceController extends GetxController {
         }
       } else {
         var data = jsonEncode(_trx2.toJson());
-        GetStorage().write('workOrderSync', data);
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/workorder.json');
+        file.writeAsStringSync(data);
+        //GetStorage().write('workOrderSync', data);
         getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['http://' +
                   ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
           calls['http://' +
                   ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
               msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
@@ -286,7 +292,7 @@ class MaintenanceMpResourceController extends GetxController {
 
       var url = Uri.parse('http://' +
           ip +
-          '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}');
+          '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -299,7 +305,10 @@ class MaintenanceMpResourceController extends GetxController {
         );
         if (response.statusCode == 200) {
           var data = jsonEncode(_trx2.toJson());
-          GetStorage().write('workOrderResourceSync', data);
+          final file = File(
+              '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+          file.writeAsStringSync(data);
+          //GetStorage().write('workOrderResourceSync', data);
           getWorkOrders();
           //print("done!");
           //Get.back();
@@ -325,19 +334,22 @@ class MaintenanceMpResourceController extends GetxController {
         }
       } else {
         var data = jsonEncode(_trx2.toJson());
-        GetStorage().write('workOrderSync', data);
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/workorderr.json');
+        file.writeAsStringSync(data);
+        //GetStorage().write('workOrderSync', data);
         getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['http://' +
                   ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
           calls['http://' +
                   ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
               msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
@@ -415,7 +427,7 @@ class MaintenanceMpResourceController extends GetxController {
 
       var url = Uri.parse('http://' +
           ip +
-          '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}');
+          '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -428,7 +440,10 @@ class MaintenanceMpResourceController extends GetxController {
         );
         if (response.statusCode == 200) {
           var data = jsonEncode(_trx2.toJson());
-          GetStorage().write('workOrderResourceSync', data);
+          final file = File(
+              '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+          file.writeAsStringSync(data);
+          //GetStorage().write('workOrderResourceSync', data);
           getWorkOrders();
           //print("done!");
           //Get.back();
@@ -454,19 +469,22 @@ class MaintenanceMpResourceController extends GetxController {
         }
       } else {
         var data = jsonEncode(_trx2.toJson());
-        GetStorage().write('workOrderSync', data);
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/workorder.json');
+        file.writeAsStringSync(data);
+        //GetStorage().write('workOrderSync', data);
         getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['http://' +
                   ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
           calls['http://' +
                   ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
               msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
@@ -515,6 +533,7 @@ class MaintenanceMpResourceController extends GetxController {
   }
 
   Future<void> getWorkOrders() async {
+    //print(GetStorage().read('selectedTaskDocNo'));
     _dataAvailable.value = false;
     late List<RRecords> temp;
     var flag = true;
@@ -534,9 +553,9 @@ class MaintenanceMpResourceController extends GetxController {
 
     if (dropDownValue2.value != "0") {
       temp = (_trx.records!.where((element) =>
-              element.eDIType?.id == dropDownValue2.value &&
-              element.mpOtDocumentno == GetStorage().read('selectedTaskDocNo')))
-          .toList();
+          element.eDIType?.id == dropDownValue2.value &&
+          element.mpMaintainID?.id ==
+              GetStorage().read('selectedTaskDocNo'))).toList();
       //print(temp);
       _trx.records = temp;
       _trx.rowcount = _trx.records?.length;
@@ -547,7 +566,7 @@ class MaintenanceMpResourceController extends GetxController {
         case 1:
           temp = (_trx.records!.where((element) =>
               element.lITControl1DateFrom != formattedDate &&
-              element.mpOtDocumentno ==
+              element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo'))).toList();
           //print(temp);
           _trx.records = temp;
@@ -557,7 +576,7 @@ class MaintenanceMpResourceController extends GetxController {
         case 2:
           temp = (_trx.records!.where((element) =>
               element.lITControl1DateFrom == formattedDate &&
-              element.mpOtDocumentno ==
+              element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo'))).toList();
           //print(temp);
           _trx.records = temp;
@@ -569,8 +588,8 @@ class MaintenanceMpResourceController extends GetxController {
     }
     if (flag) {
       temp = (_trx.records!.where((element) =>
-              element.mpOtDocumentno == GetStorage().read('selectedTaskDocNo')))
-          .toList();
+          element.mpMaintainID?.id ==
+          GetStorage().read('selectedTaskDocNo'))).toList();
       //print(temp);
       _trx.records = temp;
       _trx.rowcount = _trx.records?.length;

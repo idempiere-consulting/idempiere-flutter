@@ -184,7 +184,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (json.pagecount! > index) {
         syncBusinessPartnerPages(json, index);
       } else {
-        print(json.records!.length);
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
         const filename = "businesspartner";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
@@ -261,7 +263,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (json.pagecount! > index) {
         syncProductPages(json, index);
       } else {
-        print(json.records!.length);
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
         const filename = "products";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
@@ -385,7 +389,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (json.pagecount! > index) {
         syncWorkOrderResourcePages(json, index);
       } else {
-        print(json.records!.length);
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
         const filename = "workorderresource";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
@@ -584,7 +590,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (json.pagecount! > index) {
         syncWorkOrderResourceSurveyLinesPages(json, index);
       } else {
-        print(json.records!.length);
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
         const filename = "workorderresourcesurveylines";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
@@ -621,6 +629,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       switch (value) {
         case "0":
           Get.offAllNamed("/Dashboard");
+          break;
+        case "8":
+          Get.offAllNamed("/SalesOrder");
           break;
         case "32":
           Get.offAllNamed("/PortalMp");

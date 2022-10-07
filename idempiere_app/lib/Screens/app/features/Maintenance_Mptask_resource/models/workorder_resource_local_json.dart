@@ -77,6 +77,7 @@ class RRecords {
   int? offlineId;
   bool? filtered;
   bool? checked;
+  MPMaintainID? mpMaintainID;
 
   RRecords({
     this.id,
@@ -123,6 +124,7 @@ class RRecords {
     this.textDetails,
     this.offlineId,
     this.checked,
+    this.mpMaintainID,
   });
 
   RRecords.fromJson(Map<String, dynamic> json)
@@ -193,7 +195,11 @@ class RRecords {
         textDetails = json['TextDetails'] as String?,
         offlineId = json['offlineId'] as int?,
         checked = false,
-        filtered = false;
+        filtered = false,
+        mpMaintainID = (json['MP_Maintain_ID'] as Map<String, dynamic>?) != null
+            ? MPMaintainID.fromJson(
+                json['MP_Maintain_ID'] as Map<String, dynamic>)
+            : null;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -240,7 +246,8 @@ class RRecords {
         'ProdCode': prodCode,
         'TextDetails': textDetails,
         'Checked': checked,
-        'Filtered': filtered
+        'Filtered': filtered,
+        'MP_Maintain_ID': mpMaintainID?.toJson(),
       };
 }
 
@@ -476,6 +483,33 @@ class LITResourceType {
   LITResourceType.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MPMaintainID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MPMaintainID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MPMaintainID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

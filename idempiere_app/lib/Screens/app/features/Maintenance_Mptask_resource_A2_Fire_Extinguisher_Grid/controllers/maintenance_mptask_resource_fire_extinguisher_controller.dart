@@ -11,19 +11,39 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
   WorkOrderResourceLocalJson get trx => _trx;
   //String get value => _value.toString();
 
+  @override
+  void onInit() {
+    getProds();
+
+    super.onInit();
+
+    //getADUserID();
+  }
+
+  getProds() async {
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/products.json');
+
+    prod = ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
+  }
+
   Future<void> getWorkOrders() async {
     _dataAvailable.value = false;
-
-    String docNo = GetStorage().read('selectedTaskDocNo');
+    final wk = File(
+        '${(await getApplicationDocumentsDirectory()).path}/workorder.json');
+    final res = File(
+        '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+    int maintainId = GetStorage().read('selectedTaskDocNo');
     //print(GetStorage().read('workOrderResourceSync'));
     List<PlutoRow> newRows = [];
     int count = 0;
-    if (GetStorage().read('workOrderSync') != null) {
+    // ignore: unnecessary_null_comparison
+    if (wk.readAsStringSync() != null) {
       _trx = WorkOrderResourceLocalJson.fromJson(
-          jsonDecode(GetStorage().read('workOrderResourceSync')));
+          jsonDecode(res.readAsStringSync()));
 
       for (var i = 0; i < _trx.records!.length; i++) {
-        if (_trx.records![i].mpOtDocumentno == docNo &&
+        if (_trx.records![i].mpMaintainID?.id == maintainId &&
             _trx.records![i].eDIType?.id == 'A2') {
           count++;
           PlutoRow row = PlutoRow(cells: {
@@ -67,8 +87,11 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
 
   //test grid
 
-  ProductJson prod =
-      ProductJson.fromJson(jsonDecode(GetStorage().read('productSync')));
+  //const filename = "products";
+
+  //file.writeAsString(jsonEncode(json.toJson()));
+
+  ProductJson prod = ProductJson();
 
   final List<PlutoColumn> columns = <PlutoColumn>[
     PlutoColumn(
@@ -102,14 +125,14 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       //readOnly: true,
       title: 'Resource',
       field: 'M_Product_ID',
-      type: PlutoColumnType.select(
-          ((ProductJson.fromJson(jsonDecode(GetStorage().read('productSync'))))
-                  .records!
-                  .map((e) {
+      type: PlutoColumnType.select(((ProductJson.fromJson(
+                  jsonDecode((Get.arguments["products"]).readAsStringSync())))
+              .records!
+              .map((e) {
         return e.name!;
       }).toList())
-              .where((element) => element.startsWith('EST.'))
-              .toList()),
+          .where((element) => element.startsWith('EST.'))
+          .toList()),
     ),
     PlutoColumn(
       title: 'Location',
@@ -221,8 +244,11 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
 
     var msg = jsonEncode({"id": id, field: value});
 
-    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
-        jsonDecode(GetStorage().read('workOrderResourceSync')));
+    final res = File(
+        '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+
+    WorkOrderResourceLocalJson trx =
+        WorkOrderResourceLocalJson.fromJson(jsonDecode(res.readAsStringSync()));
 
     // ignore: unnecessary_null_comparison
     if (id != null && offline == -1) {
@@ -276,7 +302,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
 
       var url = Uri.parse('http://' +
           ip +
-          '/api/v1/windows/preventive-maintenance/tabs/resources/$id');
+          '/api/v1/windows/maintenance-item/tabs/mp-resources/$id');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -289,7 +315,11 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
         );
         if (response.statusCode == 200) {
           var data = jsonEncode(trx.toJson());
-          GetStorage().write('workOrderResourceSync', data);
+
+          final res = File(
+              '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+          res.writeAsStringSync(data);
+          //GetStorage().write('workOrderResourceSync', data);
           //getWorkOrders();
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
           //print("done!");
@@ -316,21 +346,22 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
         }
       } else {
         var data = jsonEncode(trx.toJson());
-        GetStorage().write('workOrderSync', data);
+        final wk = File(
+            '${(await getApplicationDocumentsDirectory()).path}/workorder.json');
+        wk.writeAsStringSync(data);
+        //GetStorage().write('workOrderSync', data);
         //getWorkOrders();
         Get.find<MaintenanceMpResourceController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['http://' +
-                  ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/$id'] =
-              msg;
+              ip +
+              '/api/v1/windows/maintenance-item/tabs/mp-resources/$id'] = msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
           calls['http://' +
-                  ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/$id'] =
-              msg;
+              ip +
+              '/api/v1/windows/maintenance-item/tabs/mp-resources/$id'] = msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
         Get.snackbar(
@@ -394,8 +425,11 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
-    WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
-        jsonDecode(GetStorage().read('workOrderResourceSync')));
+    final res = File(
+        '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+
+    WorkOrderResourceLocalJson trx =
+        WorkOrderResourceLocalJson.fromJson(jsonDecode(res.readAsStringSync()));
 
     var url =
         Uri.parse('http://' + ip + '/api/v1/models/MP_Maintain_Resource/$id');
@@ -475,7 +509,8 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     trx.records!.removeAt(index);
     trx.rowcount = trx.rowcount! - 1;
     var data = jsonEncode(trx.toJson());
-    GetStorage().write('workOrderResourceSync', data);
+    res.writeAsStringSync(data);
+    //GetStorage().write('workOrderResourceSync', data);
     Get.find<MaintenanceMpResourceController>().getWorkOrders();
   }
 

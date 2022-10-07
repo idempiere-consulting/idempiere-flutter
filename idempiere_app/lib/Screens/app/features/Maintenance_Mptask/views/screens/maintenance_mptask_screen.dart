@@ -136,7 +136,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,
@@ -155,8 +155,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       Get.toNamed('/MaintenanceMptaskLine'); */
                                       GetStorage().write(
                                           'selectedTaskDocNo',
-                                          controller
-                                              .trx.records![index].documentNo);
+                                          controller.trx.records![index]
+                                              .mPMaintainID?.id);
                                       GetStorage().write(
                                           'selectedTaskBP',
                                           controller.trx.records![index]
@@ -403,7 +403,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,
@@ -415,11 +415,25 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
-                                      GetStorage().write(
+                                      /*  GetStorage().write(
                                           'selectedWorkOrderId',
                                           controller
                                               .trx.records![index].mPOTID!.id);
-                                      Get.toNamed('/MaintenanceMptaskLine');
+                                      Get.toNamed('/MaintenanceMptaskLine'); */
+                                      GetStorage().write(
+                                          'selectedTaskDocNo',
+                                          controller.trx.records![index]
+                                              .mPMaintainID?.id);
+                                      GetStorage().write(
+                                          'selectedTaskBP',
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "");
+                                      /* GetStorage().write(
+                                          'selectedTaskId',
+                                          controller.trx.records![index]
+                                              .mPMaintainTaskID!.id); */
+                                      Get.toNamed('/MaintenanceMpResource');
                                     },
                                     icon: const Icon(
                                       Icons.view_list,
@@ -538,8 +552,10 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ), */
                                             Icon(Icons.location_pin,
                                                 color: Colors.red.shade700),
-                                            Text(
-                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                            Expanded(
+                                              child: Text(
+                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                            ),
                                           ],
                                         ),
                                         Row(
@@ -654,7 +670,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,
@@ -666,11 +682,25 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
-                                      GetStorage().write(
+                                      /*  GetStorage().write(
                                           'selectedWorkOrderId',
                                           controller
                                               .trx.records![index].mPOTID!.id);
-                                      Get.toNamed('/MaintenanceMptaskLine');
+                                      Get.toNamed('/MaintenanceMptaskLine'); */
+                                      GetStorage().write(
+                                          'selectedTaskDocNo',
+                                          controller.trx.records![index]
+                                              .mPMaintainID?.id);
+                                      GetStorage().write(
+                                          'selectedTaskBP',
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "");
+                                      /* GetStorage().write(
+                                          'selectedTaskId',
+                                          controller.trx.records![index]
+                                              .mPMaintainTaskID!.id); */
+                                      Get.toNamed('/MaintenanceMpResource');
                                     },
                                     icon: const Icon(
                                       Icons.view_list,
