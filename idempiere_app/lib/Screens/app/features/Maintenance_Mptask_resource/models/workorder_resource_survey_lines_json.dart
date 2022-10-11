@@ -3,7 +3,7 @@ class WorkOrderResourceSurveyLinesJson {
   final int? recordssize;
   final int? skiprecords;
   int? rowcount;
-  List<Records>? records;
+  List<SRecords>? records;
 
   WorkOrderResourceSurveyLinesJson({
     this.pagecount,
@@ -19,7 +19,7 @@ class WorkOrderResourceSurveyLinesJson {
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => SRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class WorkOrderResourceSurveyLinesJson {
       };
 }
 
-class Records {
+class SRecords {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
@@ -60,7 +60,7 @@ class Records {
   final String? url;
   final String? modelname;
 
-  Records({
+  SRecords({
     this.id,
     this.uid,
     this.aDClientID,
@@ -90,7 +90,7 @@ class Records {
     this.modelname,
   });
 
-  Records.fromJson(Map<String, dynamic> json)
+  SRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null

@@ -39,6 +39,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     int count = 0;
     // ignore: unnecessary_null_comparison
     if (wk.readAsStringSync() != null) {
+      //print(wk.readAsStringSync());
       _trx = WorkOrderResourceLocalJson.fromJson(
           jsonDecode(res.readAsStringSync()));
 
@@ -50,7 +51,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
             'offlineid': PlutoCell(value: _trx.records![i].offlineId ?? -1),
             'index': PlutoCell(value: i),
             'id': PlutoCell(value: _trx.records![i].id),
-            'N°': PlutoCell(value: count.toString()),
+            'V_Number': PlutoCell(value: _trx.records![i].number.toString()),
             'LocationComment':
                 PlutoCell(value: _trx.records![i].locationComment ?? ''),
             'ProdCode': PlutoCell(value: _trx.records![i].prodCode ?? ''),
@@ -60,8 +61,6 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
                 PlutoCell(value: _trx.records![i].manufacturer ?? ''),
             'ManufacturedYear':
                 PlutoCell(value: _trx.records![i].manufacturedYear),
-            'ShutDownType': PlutoCell(value: ''),
-            'Type': PlutoCell(value: ''),
             'LIT_Control1DateFrom':
                 PlutoCell(value: _trx.records![i].lITControl1DateNext ?? ''),
             'LIT_Control2DateFrom':
@@ -116,9 +115,9 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       type: PlutoColumnType.number(),
     ),
     PlutoColumn(
-      readOnly: true,
+      //readOnly: true,
       title: 'N°',
-      field: 'N°',
+      field: 'V_Number',
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
@@ -150,11 +149,6 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
-      title: 'Cartel',
-      field: 'TextDetails',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
       title: 'Manufacturer',
       field: 'Manufacturer',
       type: PlutoColumnType.text(),
@@ -163,16 +157,6 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       title: 'Year',
       field: 'ManufacturedYear',
       type: PlutoColumnType.number(),
-    ),
-    PlutoColumn(
-      title: 'ShutDown Type',
-      field: 'ShutDownType',
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Type',
-      field: 'Type',
-      type: PlutoColumnType.text(),
     ),
     PlutoColumn(
       title: 'Check',
@@ -211,7 +195,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
   /// columnGroups that can group columns can be omitted.
   final List<PlutoColumnGroup> columnGroups = [
     PlutoColumnGroup(title: 'Identification', fields: [
-      'N°',
+      'V_Number',
       'M_Product_ID'
           'LocationComment',
       'ProdCode',
@@ -221,8 +205,6 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       'ManufacturedYear'
     ]),
     PlutoColumnGroup(title: 'Activities', fields: [
-      'ShutDownType',
-      'Type',
       'LIT_Control1DateFrom',
       'LIT_Control2DateFrom',
       'LIT_Control3DateFrom'
@@ -255,6 +237,9 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       //trx.records![index]. = value;
 
       switch (field) {
+        case 'V_Number':
+          trx.records![index].number = value;
+          break;
         case 'LocationComment':
           trx.records![index].locationComment = value;
           break;
@@ -512,6 +497,28 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     res.writeAsStringSync(data);
     //GetStorage().write('workOrderResourceSync', data);
     Get.find<MaintenanceMpResourceController>().getWorkOrders();
+  }
+
+  void handleAddRows() {
+    final newRows = stateManager.getNewRows(count: 1);
+
+    /* for (var e in newRows) {
+      e.cells['status']!.value = 'created';
+    } */
+
+    stateManager.appendRows(newRows);
+
+    stateManager.setCurrentCell(
+      newRows.first.cells.entries.first.value,
+      stateManager.refRows.length - 1,
+    );
+
+    stateManager.moveScrollByRow(
+      PlutoMoveDirection.down,
+      stateManager.refRows.length - 2,
+    );
+
+    stateManager.setKeepFocus(true);
   }
 
   //end test grid

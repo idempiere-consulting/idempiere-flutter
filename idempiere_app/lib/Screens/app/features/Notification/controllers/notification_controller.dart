@@ -47,6 +47,28 @@ class NotificationController extends GetxController {
           "Updated": _trx.records![index].updated
         });
         break;
+      case "ODV":
+        msg = jsonEncode({
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_User_ID": {"id": GetStorage().read("userId")},
+          "DocTypeName": "ODV",
+          "Record_ID": {"id": _trx.records![index].id},
+          "AD_Table_ID": "642",
+          "Updated": _trx.records![index].updated
+        });
+        break;
+      case "FDV":
+        msg = jsonEncode({
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_User_ID": {"id": GetStorage().read("userId")},
+          "DocTypeName": "FDV",
+          "Record_ID": {"id": _trx.records![index].id},
+          "AD_Table_ID": "642",
+          "Updated": _trx.records![index].updated
+        });
+        break;
       default:
     }
     final protocol = GetStorage().read('protocol');
@@ -97,8 +119,19 @@ class NotificationController extends GetxController {
             arguments: {"notificationId": _trx.records![index].id});
 
         break;
+      case "FDV":
+        Get.offNamed('/SalesOrder',
+            arguments: {"notificationId": _trx.records![index].id});
+
+        break;
+      case "ODV":
+        Get.offNamed('/SalesOrder',
+            arguments: {"notificationId": _trx.records![index].id});
+
+        break;
       default:
     }
+    Get.find<DashboardController>().getNotificationCounter();
   }
 
   Future<void> getNotifications() async {

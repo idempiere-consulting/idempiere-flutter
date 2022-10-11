@@ -24,6 +24,7 @@ import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
@@ -31,6 +32,11 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+
+import '../../../CRM_Opportunity/models/businesspartner_json.dart';
+import '../../../CRM_Opportunity/models/product_json.dart';
+import '../../../Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
+import '../../../Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
 
 // binding
 part '../../bindings/settings_binding.dart';

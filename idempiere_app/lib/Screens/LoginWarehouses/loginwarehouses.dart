@@ -329,6 +329,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
+      print(response.body);
       var json = WorkOrderResourceLocalJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       if (json.pagecount! > 1) {
@@ -345,16 +346,6 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         }
         //checkSyncData();
       }
-      /* const filename = "workorderresource";
-      final file = File(
-          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-      file.writeAsString(response.body);
-      //print(response.body);
-      /* GetStorage()
-          .write('workOrderResourceSync', utf8.decode(response.bodyBytes)); */
-      if (kDebugMode) {
-        print('WorkOrderResource Checked');
-      } */
       syncWorkOrderResourceSurveyLines();
     } else {
       workOrderSync = false;

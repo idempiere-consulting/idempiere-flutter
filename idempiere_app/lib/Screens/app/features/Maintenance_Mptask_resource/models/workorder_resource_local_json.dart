@@ -78,54 +78,57 @@ class RRecords {
   bool? filtered;
   bool? checked;
   MPMaintainID? mpMaintainID;
+  String? number;
+  int? lineNo;
 
-  RRecords({
-    this.id,
-    this.mpOtDocumentno,
-    this.mpDateworkstart,
-    this.aDClientID,
-    this.updatedBy,
-    this.costAmt,
-    this.created,
-    this.createdBy,
-    this.isActive,
-    this.isValid,
-    this.resourceQty,
-    this.resourceType,
-    this.updated,
-    this.aDOrgID,
-    this.mProductID,
-    this.discount,
-    this.value,
-    this.name,
-    this.description,
-    this.serNo,
-    this.lITControl3DateFrom,
-    this.lITControl3DateNext,
-    this.lITControl2DateFrom,
-    this.lITControl2DateNext,
-    this.lITControl1DateFrom,
-    this.lITControl1DateNext,
-    this.lITSurveySheetsID,
-    this.eDIType,
-    this.lot,
-    this.locationComment,
-    this.manufacturedYear,
-    this.userName,
-    this.serviceDate,
-    this.endDate,
-    this.manufacturer,
-    this.useLifeYears,
-    this.lITProductModel,
-    this.dateOrdered,
-    this.lITResourceType,
-    this.modelname,
-    this.prodCode,
-    this.textDetails,
-    this.offlineId,
-    this.checked,
-    this.mpMaintainID,
-  });
+  RRecords(
+      {this.id,
+      this.mpOtDocumentno,
+      this.mpDateworkstart,
+      this.aDClientID,
+      this.updatedBy,
+      this.costAmt,
+      this.created,
+      this.createdBy,
+      this.isActive,
+      this.isValid,
+      this.resourceQty,
+      this.resourceType,
+      this.updated,
+      this.aDOrgID,
+      this.mProductID,
+      this.discount,
+      this.value,
+      this.name,
+      this.description,
+      this.serNo,
+      this.lITControl3DateFrom,
+      this.lITControl3DateNext,
+      this.lITControl2DateFrom,
+      this.lITControl2DateNext,
+      this.lITControl1DateFrom,
+      this.lITControl1DateNext,
+      this.lITSurveySheetsID,
+      this.eDIType,
+      this.lot,
+      this.locationComment,
+      this.manufacturedYear,
+      this.userName,
+      this.serviceDate,
+      this.endDate,
+      this.manufacturer,
+      this.useLifeYears,
+      this.lITProductModel,
+      this.dateOrdered,
+      this.lITResourceType,
+      this.modelname,
+      this.prodCode,
+      this.textDetails,
+      this.offlineId,
+      this.checked,
+      this.mpMaintainID,
+      this.number,
+      this.lineNo});
 
   RRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -199,7 +202,9 @@ class RRecords {
         mpMaintainID = (json['MP_Maintain_ID'] as Map<String, dynamic>?) != null
             ? MPMaintainID.fromJson(
                 json['MP_Maintain_ID'] as Map<String, dynamic>)
-            : null;
+            : null,
+        number = json['V_Number'] as String?,
+        lineNo = json['LineNo'] as int?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -248,6 +253,8 @@ class RRecords {
         'Checked': checked,
         'Filtered': filtered,
         'MP_Maintain_ID': mpMaintainID?.toJson(),
+        'LineNo': lineNo,
+        'V_Number': number,
       };
 }
 

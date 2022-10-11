@@ -61,6 +61,15 @@ class MaintenanceMpResourceFireExtinguisherScreen
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
+                controller.handleAddRows();
+              },
+              icon: const Icon(Icons.add),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () {
                 if (controller.stateManager.currentRow != null) {
                   controller.handleRemoveCurrentRowButton();
                 }

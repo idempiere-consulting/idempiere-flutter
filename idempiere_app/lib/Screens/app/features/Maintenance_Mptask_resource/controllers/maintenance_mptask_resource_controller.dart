@@ -106,11 +106,16 @@ class MaintenanceMpResourceController extends GetxController {
         value: dropDownValue,
         style: const TextStyle(fontSize: 12.0),
         elevation: 16,
-        onChanged: (String? newValue) {
+        onChanged: (String? newValue) async {
           dropDownValue = newValue!;
           Get.back();
-          Get.to(const CreateMaintenanceMpResource(),
-              arguments: {"id": dropDownValue});
+          const filename = "reflistresourcetype";
+          final file = File(
+              '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+          Get.to(const CreateMaintenanceMpResource(), arguments: {
+            "id": dropDownValue,
+            "reflistresourcetype": file,
+          });
         },
         items: _tt.records!.map((list) {
           return DropdownMenuItem<String>(

@@ -71,7 +71,10 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('jpTODOSync', utf8.decode(response.bodyBytes));
+      const filename = "calendar";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
       isjpTODOSyncing.value = false;
     }
   }
@@ -92,8 +95,10 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      GetStorage()
-          .write('userPreferencesSync', utf8.decode(response.bodyBytes));
+      const filename = "userpreferences";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
       isUserPreferencesSyncing.value = false;
     }
   }
@@ -115,10 +120,64 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
+      var json = BusinessPartnerJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
       //print(response.body);
-      GetStorage()
-          .write('businessPartnerSync', utf8.decode(response.bodyBytes));
-      isBusinessPartnerSyncing.value = false;
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncBusinessPartnerPages(json, index);
+      } else {
+        const filename = "businesspartner";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        isBusinessPartnerSyncing.value = false;
+      }
+      /* GetStorage()
+          .write('businessPartnerSync', utf8.decode(response.bodyBytes)); */
+
+    }
+  }
+
+  syncBusinessPartnerPages(BusinessPartnerJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = BusinessPartnerJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncBusinessPartnerPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "businesspartner";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        isBusinessPartnerSyncing.value = false;
+        if (kDebugMode) {
+          print('BusinessPartner Checked');
+        }
+      }
     }
   }
 
@@ -139,9 +198,67 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
+      var json =
+          ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncProductPages(json, index);
+      } else {
+        const filename = "products";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        isProductSyncing.value = false;
+        if (kDebugMode) {
+          print('Products Checked');
+        }
+      }
       //print(response.body);
-      GetStorage().write('productSync', utf8.decode(response.bodyBytes));
-      isProductSyncing.value = false;
+      /* GetStorage().write('productSync', utf8.decode(response.bodyBytes));
+      isProductSyncing.value = false; */
+    }
+  }
+
+  syncProductPages(ProductJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncProductPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "products";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        isProductSyncing.value = false;
+        if (kDebugMode) {
+          print('Products Checked');
+        }
+        //checkSyncData();
+      }
     }
   }
 
@@ -164,7 +281,10 @@ class SettingsController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
+      const filename = "workorder";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
       //isWorkOrderSyncing.value = false;
       syncWorkOrderResource();
       syncWorkOrderRefListResource();
@@ -189,11 +309,71 @@ class SettingsController extends GetxController {
     );
 
     if (response.statusCode == 200) {
+      var json = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+      }
       //print(response.body);
-      GetStorage()
-          .write('workOrderResourceSync', utf8.decode(response.bodyBytes));
+      /* GetStorage()
+          .write('workOrderResourceSync', utf8.decode(response.bodyBytes)); */
       syncWorkOrderResourceSurveyLines();
       syncWorkOrderResourceType();
+    }
+  }
+
+  syncWorkOrderResourcePages(WorkOrderResourceLocalJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
+      }
     }
   }
 
@@ -233,8 +413,10 @@ class SettingsController extends GetxController {
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage()
-            .write('refListResourceType', utf8.decode(response2.bodyBytes));
+        const filename = "reflistresourcetype";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(response2.body);
 
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
@@ -284,8 +466,10 @@ class SettingsController extends GetxController {
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage().write(
-            'refListResourceTypeCategory', utf8.decode(response2.bodyBytes));
+        const filename = "reflistresourcetypecategory";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(response2.body);
 
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
@@ -318,9 +502,67 @@ class SettingsController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write(
-          'workOrderResourceSurveyLinesSync', utf8.decode(response.bodyBytes));
-      isWorkOrderSyncing.value = false;
+      var json = WorkOrderResourceSurveyLinesJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderResourceSurveyLinesPages(json, index);
+      } else {
+        const filename = "workorderresourcesurveylines";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        isWorkOrderSyncing.value = false;
+        if (kDebugMode) {
+          print('workOrderResourceSurveyLinesSync Checked');
+        }
+        //checkSyncData();
+      }
+      //isWorkOrderSyncing.value = false;
+    }
+  }
+
+  syncWorkOrderResourceSurveyLinesPages(
+      WorkOrderResourceSurveyLinesJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderResourceSurveyLinesJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderResourceSurveyLinesPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "workorderresourcesurveylines";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        isWorkOrderSyncing.value = false;
+        if (kDebugMode) {
+          print('workOrderResourceSurveyLinesSync Checked');
+        }
+        //checkSyncData();
+      }
     }
   }
 

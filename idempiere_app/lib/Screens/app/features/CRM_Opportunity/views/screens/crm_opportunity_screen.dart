@@ -400,6 +400,77 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                   ""),
                                             ],
                                           ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              ElevatedButton(
+                                                child: Text(
+                                                    "Create Sales Order".tr),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  Get.defaultDialog(
+                                                    title: 'Create Sales Order',
+                                                    content: const Text(
+                                                        "Are you sure you want to create a Sales Order from Opportunity?"),
+                                                    onCancel: () {},
+                                                    onConfirm: () async {
+                                                      final ip = GetStorage()
+                                                          .read('ip');
+                                                      String authorization =
+                                                          'Bearer ' +
+                                                              GetStorage().read(
+                                                                  'token');
+                                                      final msg = jsonEncode({
+                                                        "DocAction": "CO",
+                                                      });
+                                                      final protocol =
+                                                          GetStorage()
+                                                              .read('protocol');
+                                                      var url = Uri.parse(
+                                                          '$protocol://' +
+                                                              ip +
+                                                              '/api/v1/models/c_opportunity/${controller.trx.records![index].id}');
+
+                                                      var response =
+                                                          await http.put(
+                                                        url,
+                                                        body: msg,
+                                                        headers: <String,
+                                                            String>{
+                                                          'Content-Type':
+                                                              'application/json',
+                                                          'Authorization':
+                                                              authorization,
+                                                        },
+                                                      );
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                        //print("done!");
+                                                        /* completeOrder(
+                                                                  index); */
+                                                      } else {
+                                                        //print(response.body);
+                                                        Get.snackbar(
+                                                          "Error!".tr,
+                                                          "Record not completed"
+                                                              .tr,
+                                                          icon: const Icon(
+                                                            Icons.error,
+                                                            color: Colors.red,
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ],

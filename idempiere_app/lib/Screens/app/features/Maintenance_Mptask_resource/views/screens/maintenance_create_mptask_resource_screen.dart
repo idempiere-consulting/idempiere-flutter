@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
@@ -12,10 +13,12 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/resource_type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CreateMaintenanceMpResource extends StatefulWidget {
   const CreateMaintenanceMpResource({Key? key}) : super(key: key);
@@ -45,12 +48,16 @@ class _CreateMaintenanceMpResourceState
     );
 
     if (response.statusCode == 200) {
-      GetStorage().write('workOrderSync', response.body);
+      const filename = "workorder";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
+      //GetStorage().write('workOrderSync', response.body);
       syncWorkOrderResource();
     }
   }
 
-  Future<void> syncWorkOrderResource() async {
+  /* Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -71,6 +78,82 @@ class _CreateMaintenanceMpResourceState
       GetStorage().write('workOrderResourceSync', response.body);
       //syncWorkOrderResourceSurveyLines();
       syncWorkOrderRefListResource();
+    }
+  } */
+
+  Future<void> syncWorkOrderResource() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+
+        //checkSyncData();
+      }
+      syncWorkOrderRefListResource();
+    }
+  }
+
+  syncWorkOrderResourcePages(WorkOrderResourceLocalJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+        syncWorkOrderRefListResource();
+      }
     }
   }
 
@@ -110,7 +193,11 @@ class _CreateMaintenanceMpResourceState
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage().write('refListResourceType', response2.body);
+        const filename = "reflistresourcetype";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsStringSync(response2.body);
+        //GetStorage().write('refListResourceType', response2.body);
         syncWorkOrderRefListResourceCategory();
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
@@ -160,7 +247,11 @@ class _CreateMaintenanceMpResourceState
 
       if (response2.statusCode == 200) {
         //print(response2.body);
-        GetStorage().write('refListResourceTypeCategory', response2.body);
+        const filename = "reflistresourcetypecategory";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsStringSync(response2.body);
+        //GetStorage().write('refListResourceTypeCategory', response2.body);
         syncWorkOrderResourceSurveyLines();
         /* var json = jsonDecode(response.body);
       var id = json["records"][0]["id"]; */
@@ -174,7 +265,7 @@ class _CreateMaintenanceMpResourceState
     }
   }
 
-  Future<void> syncWorkOrderResourceSurveyLines() async {
+  /* Future<void> syncWorkOrderResourceSurveyLines() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -193,7 +284,11 @@ class _CreateMaintenanceMpResourceState
 
     if (response.statusCode == 200) {
       //print(response.body);
-      GetStorage().write('workOrderResourceSurveyLinesSync', response.body);
+      const filename = "workorderresourcesurveylines";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      //GetStorage().write('workOrderResourceSurveyLinesSync', response.body);
+      file.writeAsStringSync(response.body);
       Get.find<MaintenanceMpResourceController>().getWorkOrders();
       Get.snackbar(
         "Done!".tr,
@@ -204,11 +299,101 @@ class _CreateMaintenanceMpResourceState
         ),
       );
     }
+  } */
+  Future<void> syncWorkOrderResourceSurveyLines() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/mp_resource_survey_line?\$orderby= LineNo asc');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json = WorkOrderResourceSurveyLinesJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderResourceSurveyLinesPages(json, index);
+      } else {
+        const filename = "workorderresourcesurveylines";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        Get.snackbar(
+          "Done!".tr,
+          "The record has been created".tr,
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+      }
+    }
+  }
+
+  syncWorkOrderResourceSurveyLinesPages(
+      WorkOrderResourceSurveyLinesJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderResourceSurveyLinesJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderResourceSurveyLinesPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "workorderresourcesurveylines";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        Get.snackbar(
+          "Done!".tr,
+          "The record has been created".tr,
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+      }
+    }
   }
 
   createWorkOrderResource(bool isConnected) async {
     //print(now);
-
+    const filename = "reflistresourcetype";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
     //print(GetStorage().read('selectedTaskId'));
 
     final ip = GetStorage().read('ip');
@@ -216,6 +401,7 @@ class _CreateMaintenanceMpResourceState
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
       "M_Product_ID": {"id": productId},
       "IsActive": true,
       "ResourceType": {"id": "BP"},
@@ -241,7 +427,7 @@ class _CreateMaintenanceMpResourceState
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
-        jsonDecode(GetStorage().read('workOrderResourceSync')));
+        jsonDecode(file.readAsStringSync()));
     MProductID prod = MProductID(id: productId, identifier: productName);
     ResourceType res =
         ResourceType(id: "BP", identifier: "Parti Scheda Prodotto");
@@ -249,7 +435,8 @@ class _CreateMaintenanceMpResourceState
     EDIType edt = EDIType(id: Get.arguments["id"]);
     RRecords record = RRecords(
         mProductID: prod,
-        mpOtDocumentno: GetStorage().read('selectedTaskDocNo'),
+        mpMaintainID: MPMaintainID(id: GetStorage().read('selectedTaskDocNo')),
+        //mpOtDocumentno: GetStorage().read('selectedTaskDocNo'),
         resourceType: res,
         resourceQty: 1,
         eDIType: edt,
@@ -273,9 +460,11 @@ class _CreateMaintenanceMpResourceState
 
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/windows/preventive-maintenance/tabs/tasks/${GetStorage().read('selectedTaskId')}/resources');
-
+        '/api/v1/windows/maintenance-item/tabs/maintenance/${GetStorage().read('selectedTaskDocNo')}/mp-resources');
     if (isConnected) {
+      if (kDebugMode) {
+        print(msg);
+      }
       emptyAPICallStak();
       var response = await http.post(
         url,
@@ -287,22 +476,25 @@ class _CreateMaintenanceMpResourceState
       );
       if (response.statusCode == 201) {
         //print("done!");
+        if (kDebugMode) {
+          print(response.body);
+        }
         syncWorkOrder();
-        Get.snackbar(
-        "Done!".tr,
-        "The record has been created".tr,
-        icon: const Icon(
-          Icons.done,
-          color: Colors.green,
-        ),
-      );
+        /* Get.snackbar(
+          "Done!".tr,
+          "The record has been created".tr,
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        ); */
       } else {
         if (kDebugMode) {
           print(response.body);
         }
         Get.snackbar(
           "Error!".tr,
-        "Record not created".tr,
+          "Record not created".tr,
           icon: const Icon(
             Icons.error,
             color: Colors.red,
@@ -317,9 +509,10 @@ class _CreateMaintenanceMpResourceState
           "offlineid": GetStorage().read('postCallId'),
           "url": 'http://' +
               ip +
-              '/api/v1/windows/preventive-maintenance/tabs/tasks/${GetStorage().read('selectedTaskId')}/resources',
+              '/api/v1/windows/maintenance-item/tabs/maintenance/${GetStorage().read('selectedTaskDocNo')}/mp-resources',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
           "M_Product_ID": {"id": productId},
           "IsActive": true,
           "ResourceType": {"id": "BP"},
@@ -351,9 +544,10 @@ class _CreateMaintenanceMpResourceState
           "offlineid": GetStorage().read('postCallId'),
           "url": 'http://' +
               ip +
-              '/api/v1/windows/preventive-maintenance/tabs/tasks/${GetStorage().read('selectedTaskId')}/resources',
+              '/api/v1/windows/maintenance-item/tabs/maintenance/${GetStorage().read('selectedTaskDocNo')}/mp-resources',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
           "M_Product_ID": {"id": productId},
           "IsActive": true,
           "ResourceType": {"id": "BP"},
@@ -391,16 +585,19 @@ class _CreateMaintenanceMpResourceState
       trx.records!.add(record);
       trx.rowcount = trx.rowcount! + 1;
       var data = jsonEncode(trx.toJson());
-      GetStorage().write('workOrderResourceSync', data);
+      file.writeAsStringSync(data);
       Get.find<MaintenanceMpResourceController>().getWorkOrders();
     }
   }
 
   Future<List<Records>> getAllProducts() async {
     //print(response.body);
-    var jsondecoded = jsonDecode(GetStorage().read('productSync'));
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
-    var jsonResources = ProductJson.fromJson(jsondecoded);
+    var jsonResources =
+        ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
 
     return jsonResources.records!;
 
@@ -452,7 +649,7 @@ class _CreateMaintenanceMpResourceState
     super.initState();
     dropDownValue = "1.1.2";
     tt = ResourceTypeJson.fromJson(
-        jsonDecode(GetStorage().read('refListResourceType')));
+        jsonDecode((Get.arguments["reflistresourcetype"]).readAsStringSync()));
     noteFieldController = TextEditingController();
     valueFieldController = TextEditingController();
     locationFieldController = TextEditingController();
@@ -517,7 +714,7 @@ class _CreateMaintenanceMpResourceState
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child:  Align(
+                  child: Align(
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
@@ -582,7 +779,7 @@ class _CreateMaintenanceMpResourceState
                     ),
                   ),
                 ),
-                Container(
+                /* Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     child: Text(
@@ -620,7 +817,7 @@ class _CreateMaintenanceMpResourceState
                       );
                     }).toList(),
                   ),
-                ),
+                ), */
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
@@ -673,7 +870,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationCodeFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'LocationCode'.tr,
@@ -685,7 +882,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Location'.tr,
@@ -697,7 +894,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: manufacturerFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Manufacturer'.tr,
@@ -721,7 +918,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: useLifeYearsFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Due Year'.tr,
@@ -898,7 +1095,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: userNameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'User Name'.tr,
@@ -929,7 +1126,7 @@ class _CreateMaintenanceMpResourceState
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child:  Align(
+                  child: Align(
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
@@ -1085,7 +1282,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationCodeFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'LocationCode'.tr,
@@ -1097,7 +1294,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Location'.tr,
@@ -1109,7 +1306,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: manufacturerFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Manufacturer'.tr,
@@ -1133,7 +1330,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: useLifeYearsFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Due Year'.tr,
@@ -1310,7 +1507,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: userNameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'User Name'.tr,
@@ -1341,7 +1538,7 @@ class _CreateMaintenanceMpResourceState
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child:  Align(
+                  child: Align(
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
@@ -1497,7 +1694,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationCodeFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'LocationCode'.tr,
@@ -1509,7 +1706,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: locationFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Location'.tr,
@@ -1521,7 +1718,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: manufacturerFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Manufacturer'.tr,
@@ -1545,7 +1742,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: useLifeYearsFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Due Year'.tr,
@@ -1722,7 +1919,7 @@ class _CreateMaintenanceMpResourceState
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: userNameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'User Name'.tr,

@@ -65,12 +65,13 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -417,6 +418,79 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                                         .salesRepID
                                                         ?.identifier ??
                                                     ""),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                ElevatedButton(
+                                                  child:
+                                                      Text("Convert Lead".tr),
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(Colors.green),
+                                                  ),
+                                                  onPressed: () async {
+                                                    Get.defaultDialog(
+                                                      title: 'Convert Action',
+                                                      content: const Text(
+                                                          "Are you sure you want to convert the record?"),
+                                                      onCancel: () {},
+                                                      onConfirm: () async {
+                                                        final ip = GetStorage()
+                                                            .read('ip');
+                                                        String authorization =
+                                                            'Bearer ' +
+                                                                GetStorage()
+                                                                    .read(
+                                                                        'token');
+                                                        final msg = jsonEncode({
+                                                          "DocAction": "CO",
+                                                        });
+                                                        final protocol =
+                                                            GetStorage().read(
+                                                                'protocol');
+                                                        var url = Uri.parse(
+                                                            '$protocol://' +
+                                                                ip +
+                                                                '/api/v1/models/ad_user/${controller.trx.windowrecords![index].id}');
+
+                                                        var response =
+                                                            await http.put(
+                                                          url,
+                                                          body: msg,
+                                                          headers: <String,
+                                                              String>{
+                                                            'Content-Type':
+                                                                'application/json',
+                                                            'Authorization':
+                                                                authorization,
+                                                          },
+                                                        );
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                          //print("done!");
+                                                          /* completeOrder(
+                                                                  index); */
+                                                        } else {
+                                                          //print(response.body);
+                                                          Get.snackbar(
+                                                            "Error!".tr,
+                                                            "Record not completed"
+                                                                .tr,
+                                                            icon: const Icon(
+                                                              Icons.error,
+                                                              color: Colors.red,
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
+                                                    );
+                                                  },
+                                                ),
                                               ],
                                             ),
                                           ],

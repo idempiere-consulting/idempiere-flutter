@@ -43,20 +43,22 @@ class CRMController extends GetxController {
       /* _trx = LeadFunnelDataJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
       var json = LeadFunnelDataJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
-      for (int i = 0; i < json.records!.length; i++) {
-        if (int.parse(json.records![i].tot!) > charScale) {
-          charScale = int.parse(json.records![i].tot!);
-        }
+      if (json.records!.isNotEmpty) {
+        for (int i = 0; i < json.records!.length; i++) {
+          if (int.parse(json.records![i].tot!) > charScale) {
+            charScale = int.parse(json.records![i].tot!);
+          }
 
-        var funnelMap = {
-          "Name": json.records![i].name,
-          "tot": num.parse(json.records![i].tot!)
-        };
-        //print('Name : ${json.records![i].name}, tot: ${num.parse(json.records![i].tot!)} ');
-        funnelData.add(funnelMap);
+          var funnelMap = {
+            "Name": json.records![i].name,
+            "tot": num.parse(json.records![i].tot!)
+          };
+          //print('Name : ${json.records![i].name}, tot: ${num.parse(json.records![i].tot!)} ');
+          funnelData.add(funnelMap);
+        }
+        //_dataAvailable.value = _trx != null;
+        _dataAvailable.value = true;
       }
-      //_dataAvailable.value = _trx != null;
-      _dataAvailable.value = true;
     } else {
       //print(utf8.decode(response.bodyBytes));
     }

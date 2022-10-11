@@ -683,18 +683,532 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Anomaly Type".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: anomalyTypesAvailable
+                      ? DropdownButton(
+                          value: dropdownValue,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              missingPartFlag = false;
+                              dropdownValue = newValue!;
+                            });
+                            if (kDebugMode) {
+                              print(newValue);
+                            }
+
+                            if (newValue == missingPartId) {
+                              getProductBOM();
+                            }
+                          },
+                          items: list
+                              .map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name ?? "???",
+                                  ),
+                                  value: list.id.toString(),
+                                );
+                              })
+                              .toSet()
+                              .toList(),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: productFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Managed by the Customer'.tr),
+                  value: manByCustomer,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      manByCustomer = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                Visibility(
+                  visible: missingPartFlag && manByCustomer != true,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Replacement".tr,
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: missingPartFlag && manByCustomer != true,
+                  child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      margin: const EdgeInsets.all(10),
+                      child: missingPartFlag
+                          ? Autocomplete<Records>(
+                              displayStringForOption: _displayStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<Records>.empty();
+                                }
+                                return bomList.where((Records option) {
+                                  return ("${option.value}_${option.name}")
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (Records selection) {
+                                //print(salesrepValue);
+                                replacementId = selection.id!;
+                              },
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            )),
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: CheckboxListTile(
+                    contentPadding: const EdgeInsets.only(left: 30),
+                    title: Text('Is Charged'.tr),
+                    value: isCharged,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isCharged = value!;
+                        //GetStorage().write('checkboxLogin', checkboxState);
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: CheckboxListTile(
+                    contentPadding: const EdgeInsets.only(left: 30),
+                    title: Text('Is being Replaced Now'.tr),
+                    value: isReplacedNow,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isReplacedNow = value!;
+                        //GetStorage().write('checkboxLogin', checkboxState);
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+                Visibility(
+                  visible: locatorAvailable && manByCustomer != true,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Stock Area".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: locatorAvailable && manByCustomer != true,
+                  child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      margin: const EdgeInsets.all(10),
+                      child: locatorAvailable
+                          ? Autocomplete<LRecords>(
+                              initialValue: locatorInitialValue,
+                              displayStringForOption:
+                                  _displayLocatorStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<LRecords>.empty();
+                                }
+                                return listLocators.where((LRecords option) {
+                                  return ("${option.value}")
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (LRecords selection) {
+                                getProductStock(selection.id!);
+                                //print(salesrepValue);
+                              },
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            )),
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      readOnly: true,
+                      controller: stockFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Stock'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: noteFieldController,
+                    minLines: 2,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Closed'.tr),
+                  value: isClosed,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isClosed = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Anomaly Type".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: anomalyTypesAvailable
+                      ? DropdownButton(
+                          value: dropdownValue,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              missingPartFlag = false;
+                              dropdownValue = newValue!;
+                            });
+                            if (kDebugMode) {
+                              print(newValue);
+                            }
+
+                            if (newValue == missingPartId) {
+                              getProductBOM();
+                            }
+                          },
+                          items: list
+                              .map((list) {
+                                return DropdownMenuItem<String>(
+                                  child: Text(
+                                    list.name ?? "???",
+                                  ),
+                                  value: list.id.toString(),
+                                );
+                              })
+                              .toSet()
+                              .toList(),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: productFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Managed by the Customer'.tr),
+                  value: manByCustomer,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      manByCustomer = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                Visibility(
+                  visible: missingPartFlag && manByCustomer != true,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Replacement".tr,
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: missingPartFlag && manByCustomer != true,
+                  child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      margin: const EdgeInsets.all(10),
+                      child: missingPartFlag
+                          ? Autocomplete<Records>(
+                              displayStringForOption: _displayStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<Records>.empty();
+                                }
+                                return bomList.where((Records option) {
+                                  return ("${option.value}_${option.name}")
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (Records selection) {
+                                //print(salesrepValue);
+                                replacementId = selection.id!;
+                              },
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            )),
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: CheckboxListTile(
+                    contentPadding: const EdgeInsets.only(left: 30),
+                    title: Text('Is Charged'.tr),
+                    value: isCharged,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isCharged = value!;
+                        //GetStorage().write('checkboxLogin', checkboxState);
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: CheckboxListTile(
+                    contentPadding: const EdgeInsets.only(left: 30),
+                    title: Text('Is being Replaced Now'.tr),
+                    value: isReplacedNow,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isReplacedNow = value!;
+                        //GetStorage().write('checkboxLogin', checkboxState);
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+                Visibility(
+                  visible: locatorAvailable && manByCustomer != true,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Stock Area".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: locatorAvailable && manByCustomer != true,
+                  child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      margin: const EdgeInsets.all(10),
+                      child: locatorAvailable
+                          ? Autocomplete<LRecords>(
+                              initialValue: locatorInitialValue,
+                              displayStringForOption:
+                                  _displayLocatorStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<LRecords>.empty();
+                                }
+                                return listLocators.where((LRecords option) {
+                                  return ("${option.value}")
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (LRecords selection) {
+                                getProductStock(selection.id!);
+                                //print(salesrepValue);
+                              },
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            )),
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      readOnly: true,
+                      controller: stockFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Stock'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: noteFieldController,
+                    minLines: 2,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Closed'.tr),
+                  value: isClosed,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isClosed = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ],
             );
