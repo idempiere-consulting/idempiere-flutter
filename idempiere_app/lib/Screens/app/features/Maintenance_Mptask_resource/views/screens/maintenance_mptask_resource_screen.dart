@@ -333,7 +333,7 @@ class MaintenanceMpResourceScreen
 
                                             break;
                                           case 'A2':
-                                            Get.toNamed(
+                                            Get.offNamed(
                                                 '/MaintenanceMpResourceFireExtinguisherGrid',
                                                 arguments: {
                                                   "products": File(
@@ -382,29 +382,67 @@ class MaintenanceMpResourceScreen
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index].mProductID
-                                            ?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "NR. ${controller.trx.records![index].number} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo} L. ${controller.trx.records![index].lineNo}",
+                                            style: const TextStyle(
+                                              color:
+                                                  kNotifColor, /* fontWeight: FontWeight.bold */
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .mProductID?.identifier ??
+                                                  "???",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(
-                                          Icons.settings_input_component),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .resourceType?.identifier ??
-                                              "??",
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(
+                                            Icons.location_city,
+                                            color: Colors.white,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .locationComment ??
+                                                  "",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(children: [
+                                        Text(
+                                          'Quantity: '.tr,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Text(
+                                          "${controller.trx.records![index].resourceQty}",
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
-                                      ),
+                                      ]),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -418,68 +456,72 @@ class MaintenanceMpResourceScreen
                                     Column(
                                       children: [
                                         Row(children: [
-                                          const Text('Quantity: '),
-                                          Text(
-                                              "${controller.trx.records![index].resourceQty}"),
-                                        ]),
-                                        Row(children: [
                                           const Text('Note: '),
                                           Text(controller
                                                   .trx.records![index].name ??
                                               "??"),
                                         ]),
-                                        Row(children: [
+                                        /* Row(children: [
                                           const Text('SerNo: '),
                                           Text(controller
                                                   .trx.records![index].serNo ??
                                               "??"),
-                                        ]),
+                                        ]), */
                                         Row(children: [
                                           const Text('Descrizione: '),
                                           Text(controller.trx.records![index]
                                                   .description ??
                                               "??"),
                                         ]),
-                                        Row(children: [
+                                        /* Row(children: [
                                           const Text('Location Code: '),
                                           Text(controller
                                                   .trx.records![index].value ??
                                               "??"),
-                                        ]),
-                                        Row(children: [
+                                        ]), */
+                                        /* Row(children: [
                                           const Text('Check Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl1DateFrom ??
                                               "??"),
-                                        ]),
+                                        ]), */
                                         Row(children: [
-                                          const Text('Next Check Date: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl1DateNext ??
-                                              "??"),
+                                          const Text('Check Date: '),
+                                          Text(
+                                              "${controller.trx.records![index].lITControl1DateFrom} - ${controller.trx.records![index].lITControl1DateNext}"),
                                         ]),
-                                        Row(children: [
+                                        /* Row(children: [
                                           const Text('Revision Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl2DateFrom ??
                                               "??"),
-                                        ]),
+                                        ]), */
                                         Row(children: [
-                                          const Text('Next Revision Date: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl2DateNext ??
-                                              "??"),
+                                          const Text('Revision Date: '),
+                                          Text(
+                                              "${controller.trx.records![index].lITControl2DateFrom} - ${controller.trx.records![index].lITControl2DateNext}"),
                                         ]),
-                                        Row(children: [
+                                        /*  Row(children: [
                                           const Text('Testing Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl3DateFrom ??
                                               "??"),
+                                        ]), */
+                                        Row(children: [
+                                          const Text('Testing Date: '),
+                                          Text(
+                                              "${controller.trx.records![index].lITControl3DateFrom} - ${controller.trx.records![index].lITControl3DateNext}"),
                                         ]),
                                         Row(children: [
-                                          const Text('Next Testing Date: '),
+                                          const Text('Manufactured Year: '),
                                           Text(controller.trx.records![index]
-                                                  .lITControl3DateNext ??
+                                              .manufacturedYear
+                                              .toString()),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Manufacturer: '),
+                                          Text(controller.trx.records![index]
+                                                  .manufacturer ??
                                               "??"),
                                         ]),
                                         controller.trx.records![index].eDIType
@@ -883,7 +925,7 @@ class MaintenanceMpResourceScreen
 
                                             break;
                                           case 'A2':
-                                            Get.toNamed(
+                                            Get.offNamed(
                                                 '/MaintenanceMpResourceFireExtinguisherGrid',
                                                 arguments: {
                                                   "products": File(
@@ -932,29 +974,67 @@ class MaintenanceMpResourceScreen
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index].mProductID
-                                            ?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "NR. ${controller.trx.records![index].number} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo} L. ${controller.trx.records![index].lineNo}",
+                                            style: const TextStyle(
+                                              color:
+                                                  kNotifColor, /* fontWeight: FontWeight.bold */
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .mProductID?.identifier ??
+                                                  "???",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(
-                                          Icons.settings_input_component),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .resourceType?.identifier ??
-                                              "??",
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(
+                                            Icons.location_city,
+                                            color: Colors.white,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .locationComment ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(children: [
+                                        const Text(
+                                          'Quantity: ',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Text(
+                                          "${controller.trx.records![index].resourceQty}",
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
-                                      ),
+                                      ]),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -968,68 +1048,72 @@ class MaintenanceMpResourceScreen
                                     Column(
                                       children: [
                                         Row(children: [
-                                          const Text('Quantity: '),
-                                          Text(
-                                              "${controller.trx.records![index].resourceQty}"),
-                                        ]),
-                                        Row(children: [
                                           const Text('Note: '),
                                           Text(controller
                                                   .trx.records![index].name ??
                                               "??"),
                                         ]),
-                                        Row(children: [
+                                        /* Row(children: [
                                           const Text('SerNo: '),
                                           Text(controller
                                                   .trx.records![index].serNo ??
                                               "??"),
-                                        ]),
+                                        ]), */
                                         Row(children: [
                                           const Text('Descrizione: '),
                                           Text(controller.trx.records![index]
                                                   .description ??
                                               "??"),
                                         ]),
-                                        Row(children: [
+                                        /* Row(children: [
                                           const Text('Location Code: '),
                                           Text(controller
                                                   .trx.records![index].value ??
                                               "??"),
-                                        ]),
-                                        Row(children: [
+                                        ]), */
+                                        /* Row(children: [
                                           const Text('Check Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl1DateFrom ??
                                               "??"),
-                                        ]),
+                                        ]), */
                                         Row(children: [
-                                          const Text('Next Check Date: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl1DateNext ??
-                                              "??"),
+                                          const Text('Check Date: '),
+                                          Text(
+                                              "${controller.trx.records![index].lITControl1DateFrom} - ${controller.trx.records![index].lITControl1DateNext}"),
                                         ]),
-                                        Row(children: [
+                                        /* Row(children: [
                                           const Text('Revision Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl2DateFrom ??
                                               "??"),
-                                        ]),
+                                        ]), */
                                         Row(children: [
-                                          const Text('Next Revision Date: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl2DateNext ??
-                                              "??"),
+                                          const Text('Revision Date: '),
+                                          Text(
+                                              "${controller.trx.records![index].lITControl2DateFrom} - ${controller.trx.records![index].lITControl2DateNext}"),
                                         ]),
-                                        Row(children: [
+                                        /*  Row(children: [
                                           const Text('Testing Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl3DateFrom ??
                                               "??"),
+                                        ]), */
+                                        Row(children: [
+                                          const Text('Testing Date: '),
+                                          Text(
+                                              "${controller.trx.records![index].lITControl3DateFrom} - ${controller.trx.records![index].lITControl3DateNext}"),
                                         ]),
                                         Row(children: [
-                                          const Text('Next Testing Date: '),
+                                          const Text('Manufactured Year: '),
                                           Text(controller.trx.records![index]
-                                                  .lITControl3DateNext ??
+                                              .manufacturedYear
+                                              .toString()),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Manufacturer: '),
+                                          Text(controller.trx.records![index]
+                                                  .manufacturer ??
                                               "??"),
                                         ]),
                                         controller.trx.records![index].eDIType
@@ -1433,7 +1517,7 @@ class MaintenanceMpResourceScreen
 
                                             break;
                                           case 'A2':
-                                            Get.toNamed(
+                                            Get.offNamed(
                                                 '/MaintenanceMpResourceFireExtinguisherGrid',
                                                 arguments: {
                                                   "products": File(
@@ -1482,29 +1566,67 @@ class MaintenanceMpResourceScreen
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index].mProductID
-                                            ?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "NR. ${controller.trx.records![index].number} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo} L. ${controller.trx.records![index].lineNo}",
+                                            style: const TextStyle(
+                                              color:
+                                                  kNotifColor, /* fontWeight: FontWeight.bold */
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .mProductID?.identifier ??
+                                                  "???",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(
-                                          Icons.settings_input_component),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .resourceType?.identifier ??
-                                              "??",
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(
+                                            Icons.location_city,
+                                            color: Colors.white,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .locationComment ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(children: [
+                                        const Text(
+                                          'Quantity: ',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Text(
+                                          "${controller.trx.records![index].resourceQty}",
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
-                                      ),
+                                      ]),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -1518,68 +1640,72 @@ class MaintenanceMpResourceScreen
                                     Column(
                                       children: [
                                         Row(children: [
-                                          const Text('Quantity: '),
-                                          Text(
-                                              "${controller.trx.records![index].resourceQty}"),
-                                        ]),
-                                        Row(children: [
                                           const Text('Note: '),
                                           Text(controller
                                                   .trx.records![index].name ??
                                               "??"),
                                         ]),
-                                        Row(children: [
+                                        /* Row(children: [
                                           const Text('SerNo: '),
                                           Text(controller
                                                   .trx.records![index].serNo ??
                                               "??"),
-                                        ]),
+                                        ]), */
                                         Row(children: [
                                           const Text('Descrizione: '),
                                           Text(controller.trx.records![index]
                                                   .description ??
                                               "??"),
                                         ]),
-                                        Row(children: [
+                                        /* Row(children: [
                                           const Text('Location Code: '),
                                           Text(controller
                                                   .trx.records![index].value ??
                                               "??"),
-                                        ]),
-                                        Row(children: [
+                                        ]), */
+                                        /* Row(children: [
                                           const Text('Check Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl1DateFrom ??
                                               "??"),
-                                        ]),
+                                        ]), */
                                         Row(children: [
-                                          const Text('Next Check Date: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl1DateNext ??
-                                              "??"),
+                                          const Text('Check Date: '),
+                                          Text(
+                                              "${controller.trx.records![index].lITControl1DateFrom} - ${controller.trx.records![index].lITControl1DateNext}"),
                                         ]),
-                                        Row(children: [
+                                        /* Row(children: [
                                           const Text('Revision Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl2DateFrom ??
                                               "??"),
-                                        ]),
+                                        ]), */
                                         Row(children: [
-                                          const Text('Next Revision Date: '),
-                                          Text(controller.trx.records![index]
-                                                  .lITControl2DateNext ??
-                                              "??"),
+                                          const Text('Revision Date: '),
+                                          Text(
+                                              "${controller.trx.records![index].lITControl2DateFrom} - ${controller.trx.records![index].lITControl2DateNext}"),
                                         ]),
-                                        Row(children: [
+                                        /*  Row(children: [
                                           const Text('Testing Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl3DateFrom ??
                                               "??"),
+                                        ]), */
+                                        Row(children: [
+                                          const Text('Testing Date: '),
+                                          Text(
+                                              "${controller.trx.records![index].lITControl3DateFrom} - ${controller.trx.records![index].lITControl3DateNext}"),
                                         ]),
                                         Row(children: [
-                                          const Text('Next Testing Date: '),
+                                          const Text('Manufactured Year: '),
                                           Text(controller.trx.records![index]
-                                                  .lITControl3DateNext ??
+                                              .manufacturedYear
+                                              .toString()),
+                                        ]),
+                                        Row(children: [
+                                          const Text('Manufacturer: '),
+                                          Text(controller.trx.records![index]
+                                                  .manufacturer ??
                                               "??"),
                                         ]),
                                         controller.trx.records![index].eDIType

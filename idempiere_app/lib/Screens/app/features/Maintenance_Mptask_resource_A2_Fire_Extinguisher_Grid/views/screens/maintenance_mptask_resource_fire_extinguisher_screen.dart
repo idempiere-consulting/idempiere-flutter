@@ -56,12 +56,21 @@ class MaintenanceMpResourceFireExtinguisherScreen
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async {
+            //controller.handleAddRows();
+            Get.offNamed('/MaintenanceMpResource');
+          },
+          icon: const Icon(Icons.chevron_left),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
-              onPressed: () {
-                controller.handleAddRows();
+              onPressed: () async {
+                //controller.handleAddRows();
+                bool status = await checkConnection();
+                controller.createWorkOrderResource(status);
               },
               icon: const Icon(Icons.add),
             ),
@@ -84,12 +93,6 @@ class MaintenanceMpResourceFireExtinguisherScreen
             Text("${GetStorage().read('selectedTaskDocNo')}"),
             Text("${GetStorage().read('selectedTaskBP')}"),
           ],
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () {
-            Get.back();
-          },
         ),
       ),
       body: SingleChildScrollView(

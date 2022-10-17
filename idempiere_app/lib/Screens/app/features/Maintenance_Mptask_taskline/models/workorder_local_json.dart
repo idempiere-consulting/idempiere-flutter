@@ -66,43 +66,62 @@ class Records {
   final MPOTTaskID? mPOTTaskID;
   final MPMaintainTaskID? mPMaintainTaskID;
   final String? modelname;
+  final String? phone;
+  final String? phone2;
+  final String? refname;
+  final String? ref2name;
+  final String? team;
+  final String? jpToDoStartDate;
+  final String? jpToDoEndDate;
+  final String? jpToDoStartTime;
+  final String? jpToDoEndTime;
+  final String? litMpMaintainHelp;
 
-  Records({
-    this.id,
-    this.mPOTID,
-    this.aDClientID,
-    this.documentNo,
-    this.updatedBy,
-    this.created,
-    this.createdBy,
-    this.dateTrx,
-    this.description,
-    this.docStatus,
-    this.isActive,
-    this.mPMaintainID,
-    this.processed,
-    this.updated,
-    this.aDOrgID,
-    this.cDocTypeID,
-    this.mPOTUU,
-    this.dateWorkStart,
-    this.cBPartnerID,
-    this.cBPartnerLocationID,
-    this.jPTeamID,
-    this.mpOtAdUserName,
-    this.mpOtTaskQty,
-    this.mpOtTaskStatus,
-    this.cBpartnerLocationPhone,
-    this.cBpartnerLocationEmail,
-    this.cBpartnerLocationName,
-    this.cLocationAddress1,
-    this.cLocationCity,
-    this.cLocationPostal,
-    this.cCountryTrlName,
-    this.mPOTTaskID,
-    this.mPMaintainTaskID,
-    this.modelname,
-  });
+  Records(
+      {this.id,
+      this.mPOTID,
+      this.aDClientID,
+      this.documentNo,
+      this.updatedBy,
+      this.created,
+      this.createdBy,
+      this.dateTrx,
+      this.description,
+      this.docStatus,
+      this.isActive,
+      this.mPMaintainID,
+      this.processed,
+      this.updated,
+      this.aDOrgID,
+      this.cDocTypeID,
+      this.mPOTUU,
+      this.dateWorkStart,
+      this.cBPartnerID,
+      this.cBPartnerLocationID,
+      this.jPTeamID,
+      this.mpOtAdUserName,
+      this.mpOtTaskQty,
+      this.mpOtTaskStatus,
+      this.cBpartnerLocationPhone,
+      this.cBpartnerLocationEmail,
+      this.cBpartnerLocationName,
+      this.cLocationAddress1,
+      this.cLocationCity,
+      this.cLocationPostal,
+      this.cCountryTrlName,
+      this.mPOTTaskID,
+      this.mPMaintainTaskID,
+      this.modelname,
+      this.phone,
+      this.phone2,
+      this.refname,
+      this.ref2name,
+      this.team,
+      this.jpToDoStartDate,
+      this.jpToDoEndDate,
+      this.jpToDoStartTime,
+      this.jpToDoEndTime,
+      this.litMpMaintainHelp});
 
   Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -170,7 +189,17 @@ class Records {
                 ? MPMaintainTaskID.fromJson(
                     json['MP_Maintain_Task_ID'] as Map<String, dynamic>)
                 : null,
-        modelname = json['model-name'] as String?;
+        phone = json['Phone'] as String?,
+        phone2 = json['Phone2'] as String?,
+        refname = json['ref_name'] as String?,
+        ref2name = json['ref2_name'] as String?,
+        modelname = json['model-name'] as String?,
+        team = json['team'] as String?,
+        jpToDoStartDate = json['JP_ToDo_ScheduledStartDate'] as String?,
+        jpToDoEndDate = json['JP_ToDo_ScheduledEndDate'] as String?,
+        jpToDoStartTime = json['JP_ToDo_ScheduledStartTime'] as String?,
+        jpToDoEndTime = json['JP_ToDo_ScheduledEndTime'] as String?,
+        litMpMaintainHelp = json['mp_maintain_help'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -206,7 +235,12 @@ class Records {
         'c_country_trl_name': cCountryTrlName,
         'MP_OT_Task_ID': mPOTTaskID?.toJson(),
         'MP_Maintain_Task_ID': mPMaintainTaskID?.toJson(),
-        'model-name': modelname
+        'Phone': phone,
+        'Phone2': phone2,
+        'ref_name': refname,
+        'ref2_name': ref2name,
+        'model-name': modelname,
+        'team': team,
       };
 }
 

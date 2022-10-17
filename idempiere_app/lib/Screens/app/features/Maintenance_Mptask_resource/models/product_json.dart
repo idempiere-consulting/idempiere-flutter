@@ -292,6 +292,7 @@ class Records {
         'LIT_IsProductConfigurable': lITIsProductConfigurable,
         'model-name': modelname,
         'M_Locator_ID': mLocatorID?.toJson(),
+        'M_AttributeSet_ID': mAttributeSetID?.toJson(),
       };
 }
 

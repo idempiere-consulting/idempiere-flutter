@@ -114,6 +114,8 @@ class MaintenanceMptaskController extends GetxController {
         //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
         //isWorkOrderSyncing.value = false;
         syncWorkOrderResource();
+      } else {
+        //print(response.body);
       }
     } else {
       Get.snackbar(

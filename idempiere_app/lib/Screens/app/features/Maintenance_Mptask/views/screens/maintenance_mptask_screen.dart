@@ -221,8 +221,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].cBPartnerID
-                                            ?.identifier ??
+                                    controller.trx.records![index]
+                                            .jpToDoStartDate ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -232,13 +232,18 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.event),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .dateWorkStart ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      const Icon(
+                                        Icons.handshake,
+                                        color: Colors.yellow,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -267,6 +272,61 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         Row(
                                           children: [
                                             const Text(
+                                              "Doc Type: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .cDocTypeID?.identifier ??
+                                                "")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Time:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Note Plant:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .litMpMaintainHelp ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Note WO:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .description ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        /* Row(
+                                          children: [
+                                            const Text(
                                               "Status: ",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
@@ -275,7 +335,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 "${controller.trx.records![index].mpOtTaskStatus}"
                                                     .tr),
                                           ],
-                                        ),
+                                        ), */
                                         Row(
                                           children: [
                                             /* const Text(
@@ -289,6 +349,110 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               child: Text(
                                                   "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                             ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "AD User: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].refname}"
+                                                    .tr),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Phone: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.call,
+                                                color: Colors.green,
+                                              ),
+                                              tooltip: 'Call',
+                                              onPressed: () {
+                                                //log("info button pressed");
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .phone !=
+                                                    null) {
+                                                  controller.makePhoneCall(
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone!);
+                                                }
+                                              },
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .phone ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "AD User 2: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].ref2name}"
+                                                    .tr),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Phone 2: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.call,
+                                                color: Colors.green,
+                                              ),
+                                              tooltip: 'Call',
+                                              onPressed: () {
+                                                //log("info button pressed");
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .phone2 !=
+                                                    null) {
+                                                  controller.makePhoneCall(
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone2!);
+                                                }
+                                              },
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .phone2 ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Team:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller.trx
+                                                      .records![index].team ??
+                                                  ""),
+                                            )
                                           ],
                                         ),
                                         Row(
@@ -326,6 +490,19 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                           "",
                                                     });
                                               },
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8),
+                                              child: ElevatedButton(
+                                                child: Text("Complete".tr),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {},
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -488,8 +665,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].cBPartnerID
-                                            ?.identifier ??
+                                    controller.trx.records![index]
+                                            .jpToDoStartDate ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -499,13 +676,18 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.event),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .dateWorkStart ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      const Icon(
+                                        Icons.handshake,
+                                        color: Colors.yellow,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -534,6 +716,61 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         Row(
                                           children: [
                                             const Text(
+                                              "Doc Type: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .cDocTypeID?.identifier ??
+                                                "")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Time:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Note Plant:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .litMpMaintainHelp ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Note WO:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .description ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        /* Row(
+                                          children: [
+                                            const Text(
                                               "Status: ",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
@@ -542,7 +779,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 "${controller.trx.records![index].mpOtTaskStatus}"
                                                     .tr),
                                           ],
-                                        ),
+                                        ), */
                                         Row(
                                           children: [
                                             /* const Text(
@@ -556,6 +793,110 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               child: Text(
                                                   "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                             ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "AD User: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].refname}"
+                                                    .tr),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Phone: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.call,
+                                                color: Colors.green,
+                                              ),
+                                              tooltip: 'Call',
+                                              onPressed: () {
+                                                //log("info button pressed");
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .phone !=
+                                                    null) {
+                                                  controller.makePhoneCall(
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone!);
+                                                }
+                                              },
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .phone ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "AD User 2: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].ref2name}"
+                                                    .tr),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Phone 2: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.call,
+                                                color: Colors.green,
+                                              ),
+                                              tooltip: 'Call',
+                                              onPressed: () {
+                                                //log("info button pressed");
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .phone2 !=
+                                                    null) {
+                                                  controller.makePhoneCall(
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone2!);
+                                                }
+                                              },
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .phone2 ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Team:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller.trx
+                                                      .records![index].team ??
+                                                  ""),
+                                            )
                                           ],
                                         ),
                                         Row(
@@ -593,6 +934,19 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                           "",
                                                     });
                                               },
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8),
+                                              child: ElevatedButton(
+                                                child: Text("Complete".tr),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {},
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -755,8 +1109,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].cBPartnerID
-                                            ?.identifier ??
+                                    controller.trx.records![index]
+                                            .jpToDoStartDate ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -766,13 +1120,18 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.event),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .dateWorkStart ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      const Icon(
+                                        Icons.handshake,
+                                        color: Colors.yellow,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -801,6 +1160,61 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         Row(
                                           children: [
                                             const Text(
+                                              "Doc Type: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .cDocTypeID?.identifier ??
+                                                "")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Time:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Note Plant:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .litMpMaintainHelp ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Note WO:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .description ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        /* Row(
+                                          children: [
+                                            const Text(
                                               "Status: ",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
@@ -809,7 +1223,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 "${controller.trx.records![index].mpOtTaskStatus}"
                                                     .tr),
                                           ],
-                                        ),
+                                        ), */
                                         Row(
                                           children: [
                                             /* const Text(
@@ -823,6 +1237,110 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               child: Text(
                                                   "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                             ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "AD User: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].refname}"
+                                                    .tr),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Phone: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.call,
+                                                color: Colors.green,
+                                              ),
+                                              tooltip: 'Call',
+                                              onPressed: () {
+                                                //log("info button pressed");
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .phone !=
+                                                    null) {
+                                                  controller.makePhoneCall(
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone!);
+                                                }
+                                              },
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .phone ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "AD User 2: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].ref2name}"
+                                                    .tr),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Phone 2: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.call,
+                                                color: Colors.green,
+                                              ),
+                                              tooltip: 'Call',
+                                              onPressed: () {
+                                                //log("info button pressed");
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .phone2 !=
+                                                    null) {
+                                                  controller.makePhoneCall(
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone2!);
+                                                }
+                                              },
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .phone2 ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Team:  ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller.trx
+                                                      .records![index].team ??
+                                                  ""),
+                                            )
                                           ],
                                         ),
                                         Row(
@@ -860,6 +1378,19 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                           "",
                                                     });
                                               },
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8),
+                                              child: ElevatedButton(
+                                                child: Text("Complete".tr),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {},
+                                              ),
                                             ),
                                           ],
                                         ),

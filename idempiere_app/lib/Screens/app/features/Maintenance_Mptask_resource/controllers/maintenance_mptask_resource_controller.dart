@@ -164,7 +164,7 @@ class MaintenanceMpResourceController extends GetxController {
 
       var url = Uri.parse('http://' +
           ip +
-          '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}');
+          '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -194,7 +194,7 @@ class MaintenanceMpResourceController extends GetxController {
             ),
           );
         } else {
-          //print(response.body);
+          // print(response.body);
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",
@@ -216,13 +216,13 @@ class MaintenanceMpResourceController extends GetxController {
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['http://' +
                   ip +
-                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
           calls['http://' +
                   ip +
-                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
@@ -297,7 +297,7 @@ class MaintenanceMpResourceController extends GetxController {
 
       var url = Uri.parse('http://' +
           ip +
-          '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}');
+          '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -348,13 +348,13 @@ class MaintenanceMpResourceController extends GetxController {
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['http://' +
                   ip +
-                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
           calls['http://' +
                   ip +
-                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
@@ -432,7 +432,7 @@ class MaintenanceMpResourceController extends GetxController {
 
       var url = Uri.parse('http://' +
           ip +
-          '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}');
+          '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -483,13 +483,13 @@ class MaintenanceMpResourceController extends GetxController {
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['http://' +
                   ip +
-                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
           calls['http://' +
                   ip +
-                  '/api/v1/windows/maintenance-item/tabs/mp-resources/${_trx.records![index].id}'] =
+                  '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
         }
         GetStorage().write('storedEditAPICalls', calls);

@@ -391,7 +391,10 @@ class LocaleString extends Translations {
           'Record deletion ': 'Record deletion ',
           'Erase': 'Erase',
           'Send Quiz': 'Send Quiz',
-          'Wrong Username or Password': 'Wrong Username or Password'
+          'Wrong Username or Password': 'Wrong Username or Password',
+          'physical-inventory': 'physical-inventory',
+          'inventory-count': 'inventory-count',
+          'inventory-count-line': 'inventory-count-line',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -788,7 +791,12 @@ class LocaleString extends Translations {
           'Record deletion ': 'Cancellazione record',
           'Erase': 'Cancella',
           'Send Quiz': 'Invia Quiz',
-          'Wrong Username or Password': 'Nome Utente e/o Password errati'
+          'Wrong Username or Password': 'Nome Utente e/o Password errati',
+          /* 'physical-inventory': 'if00',
+          'inventory-count': 'inventory-count', */
+          'inventory-count-line': 'dettaglio-inventario-fisico',
+          'mp-resources': 'resources',
+          'maintenance': 'impianto-manutenzione-dispositivi',
         },
       };
 }

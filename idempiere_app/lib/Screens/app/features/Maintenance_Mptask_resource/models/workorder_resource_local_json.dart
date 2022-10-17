@@ -59,7 +59,7 @@ class RRecords {
   String? lITControl1DateFrom;
   String? lITControl1DateNext;
   final LITSurveySheetsID? lITSurveySheetsID;
-  final EDIType? eDIType;
+  EDIType? eDIType;
   String? lot;
   String? locationComment;
   int? manufacturedYear;
@@ -80,6 +80,7 @@ class RRecords {
   MPMaintainID? mpMaintainID;
   String? number;
   int? lineNo;
+  String? team;
 
   RRecords(
       {this.id,
@@ -128,7 +129,8 @@ class RRecords {
       this.checked,
       this.mpMaintainID,
       this.number,
-      this.lineNo});
+      this.lineNo,
+      this.team});
 
   RRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -204,7 +206,8 @@ class RRecords {
                 json['MP_Maintain_ID'] as Map<String, dynamic>)
             : null,
         number = json['V_Number'] as String?,
-        lineNo = json['LineNo'] as int?;
+        lineNo = json['LineNo'] as int?,
+        team = json['team'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -255,6 +258,7 @@ class RRecords {
         'MP_Maintain_ID': mpMaintainID?.toJson(),
         'LineNo': lineNo,
         'V_Number': number,
+        'team': team,
       };
 }
 
