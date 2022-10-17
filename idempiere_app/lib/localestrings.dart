@@ -395,6 +395,12 @@ class LocaleString extends Translations {
           'physical-inventory': 'physical-inventory',
           'inventory-count': 'inventory-count',
           'inventory-count-line': 'inventory-count-line',
+          'Check Date: ': 'Check Date: ',
+          'Revision Date: ': 'Revision Date: ',
+          'Testing Date: ': 'Testing Date: ',
+          'Manufactured Year: ': 'Manufactured Year: ',
+          'Manufacturer: ': 'Manufacturer: ',
+          'Managed by the Customer': 'Managed by the Customer'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -792,11 +798,15 @@ class LocaleString extends Translations {
           'Erase': 'Cancella',
           'Send Quiz': 'Invia Quiz',
           'Wrong Username or Password': 'Nome Utente e/o Password errati',
-          /* 'physical-inventory': 'if00',
-          'inventory-count': 'inventory-count', */
           'inventory-count-line': 'dettaglio-inventario-fisico',
           'mp-resources': 'resources',
           'maintenance': 'impianto-manutenzione-dispositivi',
+          'Check Date: ': 'Data Controllo: ',
+          'Revision Date: ': 'Data Revisione: ',
+          'Testing Date: ': 'Data Collaudo: ',
+          'Manufactured Year: ': 'Anno di Produzione: ',
+          'Manufacturer: ': 'Produttore: ',
+          'Managed by the Customer': 'Gestito dal Cliente'
         },
       };
 }

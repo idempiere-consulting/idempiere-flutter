@@ -11,6 +11,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -189,34 +190,47 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
                                         //log("info button pressed");
-                                        /* Get.to(const EditMaintenanceMptask(),
+                                        Get.to(const EditMaintenanceMptask(),
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
-                                              "bPartner": controller
+                                              "docNo": controller.trx
+                                                  .records![index].documentNo,
+                                              "businessPartner": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.identifier,
+                                              "date": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .jpToDoStartDate
+                                                  ?.substring(0, 10),
+                                              "timeStart": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .jpToDoStartTime
+                                                  ?.substring(1, 5),
+                                              "timeEnd": controller.trx
+                                                  .records![index].jpToDoEndTime
+                                                  ?.substring(1, 5),
+                                              "notePlant": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litMpMaintainHelp,
+                                              "noteWO": controller.trx
+                                                  .records![index].description,
+                                              "address":
+                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal ?? ""} ${controller.trx.records![index].cLocationCity}",
+                                              "representative": controller
                                                       .trx
                                                       .records![index]
-                                                      .cBPartnerID
-                                                      ?.identifier ??
-                                                  "",
-                                              "bPartnerLocationId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerLocationID
-                                                      ?.id ??
-                                                  "",
-                                              "resource":
-                                                  controller //serve id risorsa
-                                                          .trx
-                                                          .records![index]
-                                                          .mpOtAdUserName ??
-                                                      "",
-                                              "dateStart": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .dateWorkStart ??
-                                                  ""
-                                            }); */
+                                                      .refname ??
+                                                  controller.trx.records![index]
+                                                      .ref2name,
+                                              "team": controller
+                                                  .trx.records![index].team,
+                                            });
                                       },
                                     ),
                                   ),

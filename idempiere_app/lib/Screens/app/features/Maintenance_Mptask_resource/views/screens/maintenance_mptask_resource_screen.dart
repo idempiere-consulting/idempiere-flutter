@@ -435,7 +435,8 @@ class MaintenanceMpResourceScreen
                                       Row(children: [
                                         Text(
                                           'Quantity: '.tr,
-                                          style: TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                         Text(
                                           "${controller.trx.records![index].resourceQty}",
@@ -456,10 +457,10 @@ class MaintenanceMpResourceScreen
                                     Column(
                                       children: [
                                         Row(children: [
-                                          const Text('Note: '),
+                                          Text('Note: '.tr),
                                           Text(controller
                                                   .trx.records![index].name ??
-                                              "??"),
+                                              ""),
                                         ]),
                                         /* Row(children: [
                                           const Text('SerNo: '),
@@ -468,10 +469,10 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Descrizione: '),
+                                          Text('Description: '.tr),
                                           Text(controller.trx.records![index]
                                                   .description ??
-                                              "??"),
+                                              ""),
                                         ]),
                                         /* Row(children: [
                                           const Text('Location Code: '),
@@ -486,7 +487,7 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Check Date: '),
+                                          Text('Check Date: '.tr),
                                           Text(
                                               "${controller.trx.records![index].lITControl1DateFrom} - ${controller.trx.records![index].lITControl1DateNext}"),
                                         ]),
@@ -497,7 +498,7 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Revision Date: '),
+                                          Text('Revision Date: '.tr),
                                           Text(
                                               "${controller.trx.records![index].lITControl2DateFrom} - ${controller.trx.records![index].lITControl2DateNext}"),
                                         ]),
@@ -508,21 +509,21 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Testing Date: '),
+                                          Text('Testing Date: '.tr),
                                           Text(
                                               "${controller.trx.records![index].lITControl3DateFrom} - ${controller.trx.records![index].lITControl3DateNext}"),
                                         ]),
                                         Row(children: [
-                                          const Text('Manufactured Year: '),
+                                          Text('Manufactured Year: '.tr),
                                           Text(controller.trx.records![index]
                                               .manufacturedYear
                                               .toString()),
                                         ]),
                                         Row(children: [
-                                          const Text('Manufacturer: '),
+                                          Text('Manufacturer: '.tr),
                                           Text(controller.trx.records![index]
                                                   .manufacturer ??
-                                              "??"),
+                                              ""),
                                         ]),
                                         controller.trx.records![index].eDIType
                                                     ?.id ==
