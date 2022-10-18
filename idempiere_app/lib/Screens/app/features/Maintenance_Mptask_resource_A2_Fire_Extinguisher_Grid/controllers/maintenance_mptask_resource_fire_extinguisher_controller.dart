@@ -222,13 +222,13 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
   late final PlutoGridStateManager stateManager;
   var offline = -1;
 
-  Future<void> handleEditTextRows(
-      int? id, dynamic value, String field, int index) async {
+  Future<void> handleEditTextRows(int? id, dynamic value, String field,
+      int index, PlutoGridOnChangedEvent event) async {
     var isConnected = await checkConnection();
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
-    var prodName = stateManager.currentRow!.cells['M_Product_ID']!.value;
+    var prodName = event.row?.cells['M_Product_ID']!.value;
     int? prodId = 0;
 
     for (var element in _trx.records!) {
@@ -250,32 +250,27 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       "ResourceType": {"id": "BP"},
       // "LIT_ResourceType": {"id": dropDownValue},
       "ResourceQty": 1,
-      "LIT_Control3DateFrom":
-          stateManager.currentRow!.cells['LIT_Control3DateFrom']!.value,
-      "LIT_Control2DateFrom":
-          stateManager.currentRow!.cells['LIT_Control2DateFrom']!.value,
-      "LIT_Control1DateFrom":
-          stateManager.currentRow!.cells['LIT_Control1DateFrom']!.value,
-      "V_Number": stateManager.currentRow!.cells['V_Number']!.value,
-      "Name": stateManager.currentRow!.cells['Name']!.value,
-      "SerNo": stateManager.currentRow!.cells['SerNo']!.value,
-      "LocationComment":
-          stateManager.currentRow!.cells['LocationComment']!.value,
+      "LIT_Control3DateFrom": event.row?.cells['LIT_Control3DateFrom']!.value,
+      "LIT_Control2DateFrom": event.row?.cells['LIT_Control2DateFrom']!.value,
+      "LIT_Control1DateFrom": event.row?.cells['LIT_Control1DateFrom']!.value,
+      "V_Number": event.row?.cells['V_Number']!.value,
+      "Name": event.row?.cells['Name']!.value,
+      "SerNo": event.row?.cells['SerNo']!.value,
+      "LocationComment": event.row?.cells['LocationComment']!.value,
       //"Value": locationCodeFieldController.text,
-      "Manufacturer": stateManager.currentRow!.cells['Manufacturer']!.value,
-      "ManufacturedYear":
-          stateManager.currentRow!.cells['ManufacturedYear']!.value,
+      "Manufacturer": event.row?.cells['Manufacturer']!.value,
+      "ManufacturedYear": event.row?.cells['ManufacturedYear']!.value,
       //"UseLifeYears": int.parse(useLifeYearsFieldController.text),
       //"LIT_ProductModel": productModelFieldController.text,
       //"Lot": lotFieldController.text,
       //"DateOrdered": dateOrdered,
       //"ServiceDate": firstUseDate,
       //"UserName": userNameFieldController.text,
-      "ProdCode": stateManager.currentRow!.cells['ProdCode']!.value,
+      "ProdCode": event.row?.cells['ProdCode']!.value,
       //"TextDetails": cartelFieldController.text
     });
 
-    print(msg);
+    //print(msg);
 
     final res = File(
         '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
@@ -366,7 +361,9 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
             ),
           );
         } else {
-          print(response.body);
+          if (kDebugMode) {
+            print(response.body);
+          }
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",
@@ -434,28 +431,25 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
             // "LIT_ResourceType": {"id": dropDownValue},
             "ResourceQty": 1,
             "LIT_Control3DateFrom":
-                stateManager.currentRow!.cells['LIT_Control3DateFrom']!.value,
+                event.row?.cells['LIT_Control3DateFrom']!.value,
             "LIT_Control2DateFrom":
-                stateManager.currentRow!.cells['LIT_Control2DateFrom']!.value,
+                event.row?.cells['LIT_Control2DateFrom']!.value,
             "LIT_Control1DateFrom":
-                stateManager.currentRow!.cells['LIT_Control1DateFrom']!.value,
-            "V_Number": stateManager.currentRow!.cells['V_Number']!.value,
-            "Name": stateManager.currentRow!.cells['Name']!.value,
-            "SerNo": stateManager.currentRow!.cells['SerNo']!.value,
-            "LocationComment":
-                stateManager.currentRow!.cells['LocationComment']!.value,
+                event.row?.cells['LIT_Control1DateFrom']!.value,
+            "V_Number": event.row?.cells['V_Number']!.value,
+            "Name": event.row?.cells['Name']!.value,
+            "SerNo": event.row?.cells['SerNo']!.value,
+            "LocationComment": event.row?.cells['LocationComment']!.value,
             //"Value": locationCodeFieldController.text,
-            "Manufacturer":
-                stateManager.currentRow!.cells['Manufacturer']!.value,
-            "ManufacturedYear":
-                stateManager.currentRow!.cells['ManufacturedYear']!.value,
+            "Manufacturer": event.row?.cells['Manufacturer']!.value,
+            "ManufacturedYear": event.row?.cells['ManufacturedYear']!.value,
             //"UseLifeYears": int.parse(useLifeYearsFieldController.text),
             //"LIT_ProductModel": productModelFieldController.text,
             //"Lot": lotFieldController.text,
             //"DateOrdered": dateOrdered,
             //"ServiceDate": firstUseDate,
             //"UserName": userNameFieldController.text,
-            "ProdCode": stateManager.currentRow!.cells['ProdCode']!.value,
+            "ProdCode": event.row?.cells['ProdCode']!.value,
             //"TextDetails": cartelFieldController.text
           });
 

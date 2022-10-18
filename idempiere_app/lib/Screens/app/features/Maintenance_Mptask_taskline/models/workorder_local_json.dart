@@ -40,7 +40,7 @@ class Records {
   final String? created;
   final CreatedBy? createdBy;
   final String? dateTrx;
-  final String? description;
+  String? description;
   final DocStatus? docStatus;
   final bool? isActive;
   final MPMaintainID? mPMaintainID;
@@ -241,6 +241,11 @@ class Records {
         'ref2_name': ref2name,
         'model-name': modelname,
         'team': team,
+        'JP_ToDo_ScheduledStartDate': jpToDoStartDate,
+        'JP_ToDo_ScheduledEndDate': jpToDoEndDate,
+        'JP_ToDo_ScheduledStartTime': jpToDoStartTime,
+        'JP_ToDo_ScheduledEndTime': jpToDoEndTime,
+        'mp_maintain_help': litMpMaintainHelp,
       };
 }
 

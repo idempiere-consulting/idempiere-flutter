@@ -194,6 +194,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
+                                              "index": index,
                                               "docNo": controller.trx
                                                   .records![index].documentNo,
                                               "businessPartner": controller

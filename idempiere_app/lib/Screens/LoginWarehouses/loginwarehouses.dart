@@ -328,7 +328,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       var json = WorkOrderResourceLocalJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       if (json.pagecount! > 1) {

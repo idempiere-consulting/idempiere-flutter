@@ -11,7 +11,6 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/project_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:idempiere_app/Screens/app/shared_components/search_field.dart';
@@ -115,7 +114,8 @@ class MaintenanceMpResourceFireExtinguisherScreen
                       event.row?.cells['id']?.value,
                       event.value,
                       event.column!.field,
-                      event.row?.cells['index']?.value);
+                      event.row?.cells['index']?.value,
+                      event);
                 },
                 configuration: const PlutoGridConfiguration(
                   enableColumnBorder: true,
@@ -141,7 +141,8 @@ class MaintenanceMpResourceFireExtinguisherScreen
                       event.row?.cells['id']?.value,
                       event.value,
                       event.column!.field,
-                      event.row?.cells['index']?.value);
+                      event.row?.cells['index']?.value,
+                      event);
                 },
                 configuration: const PlutoGridConfiguration(
                   enableColumnBorder: true,
@@ -167,7 +168,8 @@ class MaintenanceMpResourceFireExtinguisherScreen
                       event.row?.cells['id']?.value,
                       event.value,
                       event.column!.field,
-                      event.row?.cells['index']?.value);
+                      event.row?.cells['index']?.value,
+                      event);
                 },
                 configuration: const PlutoGridConfiguration(
                   enableColumnBorder: true,

@@ -44,7 +44,7 @@ class _CreateSupplychainInventoryLineState
     var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/windows/${"physical-inventory".tr}/tabs/${"inventory-count".tr}/${Get.arguments["id"]}/${"inventory-count-line".tr}/');
-    print(url.toString());
+    //print(url.toString());
     // physical-inventory/conteggio-inventario-if00/tabs/
     // physical-inventory/tabs/inventory-count/1000008/
     // inventory-count-line/

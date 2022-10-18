@@ -77,10 +77,7 @@ emptyPostCallStack() {
     list.forEach((element) async {
       var json = jsonDecode(element);
       var url = Uri.parse(json["url"]);
-      //print(element);
-      //print(json["url"]);
-      print(json["url"]);
-      print(element);
+
       // ignore: unused_local_variable
       var response = await http.post(
         url,
@@ -90,7 +87,7 @@ emptyPostCallStack() {
           'Authorization': authorization,
         },
       );
-      print(response.body);
+
       list.remove(element);
     });
     GetStorage().write('postCallList', list);
