@@ -120,9 +120,9 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
 
   final json = {
     "types": [
-      {"id": "CO", "name": "Completed"},
-      {"id": "NY", "name": "Not Yet Started"},
-      {"id": "WP", "name": "Work In Progress"},
+      {"id": "CO", "name": "Completed".tr},
+      {"id": "NY", "name": "Not Yet Started".tr},
+      {"id": "WP", "name": "Work In Progress".tr},
     ]
   };
 
@@ -317,8 +317,8 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Create Task'),
+        title: Center(
+          child: Text('Create Task'.tr),
         ),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),

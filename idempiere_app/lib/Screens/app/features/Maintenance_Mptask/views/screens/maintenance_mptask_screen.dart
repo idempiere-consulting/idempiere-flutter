@@ -186,7 +186,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 color: Colors.white24))),
                                     child: IconButton(
                                       icon: const Icon(
-                                        Icons.work,
+                                        Icons.edit,
                                       ),
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
@@ -367,85 +367,107 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ),
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Representative'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].refname}"
-                                                    .tr),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.call,
-                                                color: Colors.green,
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].refname !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Representative'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              tooltip: 'Call',
-                                              onPressed: () {
-                                                //log("info button pressed");
-                                                if (controller
-                                                        .trx
-                                                        .records![index]
-                                                        .phone !=
-                                                    null) {
-                                                  controller.makePhoneCall(
-                                                      controller
+                                              Text(
+                                                  "${controller.trx.records![index].refname}"
+                                                      .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].refname !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
                                                           .trx
                                                           .records![index]
-                                                          .phone!);
-                                                }
-                                              },
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .phone ??
-                                                ""),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Representative'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].ref2name}"
-                                                    .tr),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.call,
-                                                color: Colors.green,
+                                                          .phone !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .phone!);
+                                                  }
+                                                },
                                               ),
-                                              tooltip: 'Call',
-                                              onPressed: () {
-                                                //log("info button pressed");
-                                                if (controller
-                                                        .trx
-                                                        .records![index]
-                                                        .phone2 !=
-                                                    null) {
-                                                  controller.makePhoneCall(
-                                                      controller
+                                              Text(controller.trx
+                                                      .records![index].phone ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].ref2name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Representative'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].ref2name}"
+                                                      .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].ref2name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
                                                           .trx
                                                           .records![index]
-                                                          .phone2!);
-                                                }
-                                              },
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .phone2 ??
-                                                ""),
-                                          ],
+                                                          .phone2 !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .phone2!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller.trx
+                                                      .records![index].phone2 ??
+                                                  ""),
+                                            ],
+                                          ),
                                         ),
                                         Row(
                                           children: [
@@ -635,7 +657,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 color: Colors.white24))),
                                     child: IconButton(
                                       icon: const Icon(
-                                        Icons.work,
+                                        Icons.edit,
                                       ),
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
@@ -816,85 +838,107 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ),
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Representative'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].refname}"
-                                                    .tr),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.call,
-                                                color: Colors.green,
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].refname !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Representative'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              tooltip: 'Call',
-                                              onPressed: () {
-                                                //log("info button pressed");
-                                                if (controller
-                                                        .trx
-                                                        .records![index]
-                                                        .phone !=
-                                                    null) {
-                                                  controller.makePhoneCall(
-                                                      controller
+                                              Text(
+                                                  "${controller.trx.records![index].refname}"
+                                                      .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].refname !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
                                                           .trx
                                                           .records![index]
-                                                          .phone!);
-                                                }
-                                              },
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .phone ??
-                                                ""),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Representative'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].ref2name}"
-                                                    .tr),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.call,
-                                                color: Colors.green,
+                                                          .phone !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .phone!);
+                                                  }
+                                                },
                                               ),
-                                              tooltip: 'Call',
-                                              onPressed: () {
-                                                //log("info button pressed");
-                                                if (controller
-                                                        .trx
-                                                        .records![index]
-                                                        .phone2 !=
-                                                    null) {
-                                                  controller.makePhoneCall(
-                                                      controller
+                                              Text(controller.trx
+                                                      .records![index].phone ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].ref2name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Representative'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].ref2name}"
+                                                      .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].ref2name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
                                                           .trx
                                                           .records![index]
-                                                          .phone2!);
-                                                }
-                                              },
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .phone2 ??
-                                                ""),
-                                          ],
+                                                          .phone2 !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .phone2!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller.trx
+                                                      .records![index].phone2 ??
+                                                  ""),
+                                            ],
+                                          ),
                                         ),
                                         Row(
                                           children: [
@@ -1084,7 +1128,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 color: Colors.white24))),
                                     child: IconButton(
                                       icon: const Icon(
-                                        Icons.work,
+                                        Icons.edit,
                                       ),
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
@@ -1265,85 +1309,107 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ),
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Representative'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].refname}"
-                                                    .tr),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.call,
-                                                color: Colors.green,
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].refname !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Representative'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              tooltip: 'Call',
-                                              onPressed: () {
-                                                //log("info button pressed");
-                                                if (controller
-                                                        .trx
-                                                        .records![index]
-                                                        .phone !=
-                                                    null) {
-                                                  controller.makePhoneCall(
-                                                      controller
+                                              Text(
+                                                  "${controller.trx.records![index].refname}"
+                                                      .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].refname !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
                                                           .trx
                                                           .records![index]
-                                                          .phone!);
-                                                }
-                                              },
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .phone ??
-                                                ""),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Representative'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].ref2name}"
-                                                    .tr),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.call,
-                                                color: Colors.green,
+                                                          .phone !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .phone!);
+                                                  }
+                                                },
                                               ),
-                                              tooltip: 'Call',
-                                              onPressed: () {
-                                                //log("info button pressed");
-                                                if (controller
-                                                        .trx
-                                                        .records![index]
-                                                        .phone2 !=
-                                                    null) {
-                                                  controller.makePhoneCall(
-                                                      controller
+                                              Text(controller.trx
+                                                      .records![index].phone ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].ref2name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Representative'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].ref2name}"
+                                                      .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].ref2name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
                                                           .trx
                                                           .records![index]
-                                                          .phone2!);
-                                                }
-                                              },
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .phone2 ??
-                                                ""),
-                                          ],
+                                                          .phone2 !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .phone2!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller.trx
+                                                      .records![index].phone2 ??
+                                                  ""),
+                                            ],
+                                          ),
                                         ),
                                         Row(
                                           children: [

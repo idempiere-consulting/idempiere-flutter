@@ -95,6 +95,9 @@ class _BodyState extends State<Body> {
           case "8":
             Get.offAllNamed("/SalesOrder");
             break;
+          case "24":
+            Get.offAllNamed("/MaintenanceMptask");
+            break;
           case "32":
             Get.offAllNamed("/PortalMp");
             break;

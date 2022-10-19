@@ -414,6 +414,10 @@ class LocaleString extends Translations {
           'Identification': 'Identification',
           'Activities': 'Activities',
           'maintenance': 'maintenance',
+          'Completed': 'Completed',
+          'Not Yet Started': 'Not Yet Started',
+          'Work In Progress': 'Work In Progress',
+          'Create Task': 'Crea Attività'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -832,6 +836,10 @@ class LocaleString extends Translations {
           'Observations': 'Osservazioni',
           'Identification': 'Identificazione',
           'Activities': 'Attività',
+          'Completed': 'Completato',
+          'Not Yet Started': 'Da iniziare',
+          'Work In Progress': 'In corso',
+          'Create Task': 'Crea Attività'
         },
       };
 }

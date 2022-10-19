@@ -13,6 +13,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_create_resource_anomaly.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_edit_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/project_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -530,8 +531,112 @@ class MaintenanceMpResourceScreen
                                                 "A2"
                                             ? Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.end,
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
                                                 children: [
+                                                    IconButton(
+                                                      tooltip: 'Edit',
+                                                      onPressed: () async {
+                                                        Get.to(
+                                                            const EditMaintenanceMpResource(),
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .id,
+                                                              "number":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .number,
+                                                              "productName":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID!
+                                                                      .identifier,
+                                                              "productId":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID!
+                                                                      .id,
+                                                              "location": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .locationComment,
+                                                              "observation":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .name,
+                                                              "SerNo":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .serNo,
+                                                              "barcode":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .prodCode,
+                                                              "manufacturer":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .manufacturer,
+                                                              "year": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .manufacturedYear
+                                                                  .toString(),
+                                                              "Description":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .description,
+                                                              "date3": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl3DateFrom,
+                                                              "date2": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl2DateFrom,
+                                                              "date1": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl1DateFrom,
+                                                              "offlineid":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .offlineId,
+                                                              "index": index,
+                                                            });
+                                                        /* controller
+                                                            .editWorkOrderResourceDateCheck(
+                                                                isConnected,
+                                                                index); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit),
+                                                    ),
                                                     IconButton(
                                                       tooltip: 'Check',
                                                       onPressed: () async {

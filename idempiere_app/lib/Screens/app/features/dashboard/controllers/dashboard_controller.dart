@@ -84,9 +84,11 @@ class DashboardController extends GetxController {
         if (workStartFlag == false &&
             json.records![i].jPToDoStatus!.id != "NY") {
           DateFormat df = DateFormat('HH:mm');
-          var date = DateTime.parse(json.records![i].jPToDoScheduledStartDate!);
+          //var date = DateTime.parse(json.records![i].jPToDoScheduledStartTime!);
           workStartFlag = true;
-          workStartHour.value = df.format(date);
+          //workStartHour.value = df.format(date);
+          workStartHour.value =
+              json.records![i].jPToDoScheduledStartTime!.substring(0, 5);
         }
         switch (json.records![i].jPToDoStatus!.id) {
           case "NY":

@@ -1604,57 +1604,57 @@ CRUD=1111=F
  66 Spedizione Prodotti  :
  67 Entrata Merci        :
  68 Trasferimento        :
- 74 Inventario           :
- 75 Carico Scarico
- 69 Mezzi ***************: 1 *** 8 Mezzi e Attrezzatura
- 70 Mezzi
- 71 Attrezzatura
- 72 Presa in Carico/Spostamento
- 73 Scadenze
- 74
- 75
- 76 Prodzione*********** : 1 *** 9 Produzione
- 77 Ordine di Prodzione
- 78 Prelievo
- 79 Dichiarazione di Produzione
- 80 Preliveo e Dichiarazione
- 81 Avanzamento di Produzione
- 82
- 83
- 84 Contabilità********* : 1 *** 10 Contabilità
- 85 Fatture di Acquisto
- 86 Fatture di Vendita
- 87 Incassi e Pagamenti
- 88 Partite Aperte
- 89 Movimenti Bancari
- 90 Cash Flow
- 91
- 92
- 93 Risorse Umane ****** : 1 *** 11 Risorse Umane
- 94 Ritardi e Assenze 
- 95 Chat
- 96 Ticket HR
- 97 Scheda Dipendente
- 98 Dotazione Dipendente
- 99 Bacheca 
- 100 Ricerca Personale
- 101
- 102
+ 69 Inventario           :
+ 70 Carico Scarico
+ 71 Mezzi ***************: 1 *** 8 Mezzi e Attrezzatura
+ 72 Mezzi
+ 73 Attrezzatura
+ 74 Presa in Carico/Spostamento
+ 75 Scadenze
+ 76
+ 77
+ 78 Prodzione*********** : 1 *** 9 Produzione
+ 79 Ordine di Prodzione
+ 80 Prelievo
+ 81 Dichiarazione di Produzione
+ 82 Preliveo e Dichiarazione
+ 83 Avanzamento di Produzione
+ 84
+ 85
+ 86 Contabilità********* : 1 *** 10 Contabilità
+ 87 Fatture di Acquisto
+ 88 Fatture di Vendita
+ 89 Incassi e Pagamenti
+ 90 Partite Aperte
+ 91 Movimenti Bancari
+ 92 Cash Flow
+ 93
+ 94
+ 95 Risorse Umane ****** : 1 *** 11 Risorse Umane
+ 96 Ritardi e Assenze 
+ 97 Chat
+ 98 Ticket HR
+ 99 Scheda Dipendente
+ 100 Dotazione Dipendente
+ 101 Bacheca 
+ 102 Ricerca Personale
  103
- 104 Dipendente *******: 1 *** 12 Dipendente
- 105 Bacheca Personale
- 106 Timbracartellino : F3 (abilita anche timbra dashboard)
- 107 Richiesta Permesso
- 108 Sondaggi
- 109 Armadietto
- 110
- 111
- 112 Punto Vendita *** : 1 **  13 Punto Vendita
- 113 Ordine da PV
- 114 Trasferimento PV
- 115 Consumo PV
- 116 Reso Fornitore
- 117
+ 104
+ 105
+ 106 Dipendente *******: 1 *** 12 Dipendente
+ 107 Bacheca Personale
+ 108 Timbracartellino : F3 (abilita anche timbra dashboard)
+ 109 Richiesta Permesso
+ 110 Sondaggi
+ 111 Armadietto
+ 112
+ 113
+ 114 Punto Vendita *** : 1 **  13 Punto Vendita
+ 115 Ordine da PV
+ 116 Trasferimento PV
+ 117 Consumo PV
+ 118 Reso Fornitore
+ 119
 
 
 

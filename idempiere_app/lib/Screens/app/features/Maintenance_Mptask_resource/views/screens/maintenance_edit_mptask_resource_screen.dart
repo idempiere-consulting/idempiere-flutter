@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
@@ -13,6 +15,8 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/v
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
+import 'package:intl/number_symbols_data.dart';
+import 'package:path_provider/path_provider.dart';
 
 class EditMaintenanceMpResource extends StatefulWidget {
   const EditMaintenanceMpResource({Key? key}) : super(key: key);
@@ -26,29 +30,30 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   editWorkOrderResource(bool isConnected) async {
     //print(now);
 
+    const filename = "workorderresource";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "id": Get.arguments["id"],
-      "Mp_Maintain_Task_ID": GetStorage().read('selectedTaskId'),
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "M_Product_ID": {"id": productId},
-      "ResourceType": {"id": "BP"},
-      "ResourceQty": 1,
-      "CostAmt": 0,
-      "Discount": 0,
-      "UseLifeMonths": 0,
       "LIT_Control3DateFrom": date3,
       "LIT_Control2DateFrom": date2,
       "LIT_Control1DateFrom": date1,
       "Name": nameFieldController.text,
       "SerNo": sernoFieldController.text,
-      "Description": descriptionFieldController.text
+      "Description": descriptionFieldController.text,
+      "V_Number": numberFieldController.text,
+      "LocationComment": locationFieldController.text,
+      "Manufacturer": manufacturerFieldController.text,
+      "ManufacturedYear": int.parse(yearFieldController.text),
+      "ProdCode": barcodeFieldController.text,
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
-        jsonDecode(GetStorage().read('workOrderResourceSync')));
+        jsonDecode(file.readAsStringSync()));
 
     if (Get.arguments["id"] != null && offline == -1) {
       trx.records![Get.arguments["index"]].mProductID!.id = productId;
@@ -60,10 +65,19 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       trx.records![Get.arguments["index"]].serNo = sernoFieldController.text;
       trx.records![Get.arguments["index"]].description =
           descriptionFieldController.text;
+      trx.records![Get.arguments["index"]].number = numberFieldController.text;
+      trx.records![Get.arguments["index"]].locationComment =
+          locationFieldController.text;
+      trx.records![Get.arguments["index"]].manufacturer =
+          manufacturerFieldController.text;
+      trx.records![Get.arguments["index"]].manufacturedYear =
+          int.parse(yearFieldController.text);
+      trx.records![Get.arguments["index"]].prodCode =
+          barcodeFieldController.text;
 
       var url = Uri.parse('http://' +
           ip +
-          '/api/v1/windows/preventive-maintenance/tabs/resources/${Get.arguments["id"]}');
+          '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -76,7 +90,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
         );
         if (response.statusCode == 200) {
           var data = jsonEncode(trx.toJson());
-          GetStorage().write('workOrderResourceSync', data);
+          file.writeAsStringSync(data);
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
           //print("done!");
           //Get.back();
@@ -102,19 +116,20 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
         }
       } else {
         var data = jsonEncode(trx.toJson());
-        GetStorage().write('workOrderSync', data);
+        //GetStorage().write('workOrderSync', data);
+        file.writeAsStringSync(data);
         Get.find<MaintenanceMpResourceController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['http://' +
                   ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${Get.arguments["id"]}'] =
+                  '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
           calls['http://' +
                   ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${Get.arguments["id"]}'] =
+                  '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}'] =
               msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
@@ -145,6 +160,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             "url": url2,
             "AD_Org_ID": adorg,
             "AD_Client_ID": adclient,
+            "Mp_Maintain__ID": {"id": GetStorage().read('selectedTaskDocNo')},
             "M_Product_ID": {"id": productId},
             "IsActive": true,
             "ResourceType": {"id": "BP"},
@@ -155,9 +171,14 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             "LIT_Control3DateFrom": date3,
             "LIT_Control2DateFrom": date2,
             "LIT_Control1DateFrom": date1,
-            "Name": nameFieldController.text,
+            "Name": observationFieldController.text,
             "SerNo": sernoFieldController.text,
-            "Description": descriptionFieldController.text
+            "Description": descriptionFieldController.text,
+            "V_Number": numberFieldController.text,
+            "LocationComment": locationFieldController.text,
+            "Manufacturer": manufacturerFieldController.text,
+            "ManufacturedYear": int.parse(yearFieldController.text),
+            "ProdCode": barcodeFieldController.text,
           });
 
           list.removeAt(i);
@@ -178,7 +199,10 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
 
   Future<List<Records>> getAllProducts() async {
     //print(response.body);
-    var jsondecoded = jsonDecode(GetStorage().read('productSync'));
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
 
     var jsonResources = ProductJson.fromJson(jsondecoded);
 
@@ -200,10 +224,16 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   } */
 
   //dynamic args = Get.arguments;
+  var numberFieldController;
   var nameFieldController;
   var valueFieldController;
   var descriptionFieldController;
+  var barcodeFieldController;
   var sernoFieldController;
+  var locationFieldController;
+  var manufacturerFieldController;
+  var yearFieldController;
+  var observationFieldController;
   String date3 = "";
   int dateCalc3 = 0;
   String date2 = "";
@@ -219,6 +249,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     productId = Get.arguments["productId"] ?? 0;
     productName = Get.arguments["productName"] ?? "";
     super.initState();
+    numberFieldController = TextEditingController();
+    numberFieldController.text = Get.arguments["number"] ?? "0";
     nameFieldController = TextEditingController();
     nameFieldController.text = Get.arguments["name"] ?? "";
     valueFieldController = TextEditingController();
@@ -226,6 +258,16 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     descriptionFieldController.text = Get.arguments["Description"] ?? "";
     sernoFieldController = TextEditingController();
     sernoFieldController.text = Get.arguments["SerNo"] ?? "";
+    barcodeFieldController = TextEditingController();
+    barcodeFieldController.text = Get.arguments["barcode"] ?? "";
+    locationFieldController = TextEditingController();
+    locationFieldController.text = Get.arguments["location"] ?? "";
+    manufacturerFieldController = TextEditingController();
+    manufacturerFieldController.text = Get.arguments["manufacturer"] ?? "";
+    yearFieldController = TextEditingController();
+    yearFieldController.text = Get.arguments["year"] ?? "0";
+    observationFieldController = TextEditingController();
+    observationFieldController.text = Get.arguments["observation"] ?? "";
     date3 = Get.arguments["date3"] ?? "";
     dateCalc3 = 0;
     date2 = Get.arguments["date2"] ?? "";
@@ -273,6 +315,22 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
               children: [
                 const SizedBox(
                   height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //focusNode: focusNode,
+                    controller: numberFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: "N°".tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
@@ -345,11 +403,23 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Name',
+                    controller: locationFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Location'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: barcodeFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Barcode'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -358,10 +428,10 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: sernoFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'SerNo',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Serial N°'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -369,11 +439,39 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    controller: manufacturerFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manufacturer'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //focusNode: focusNode,
+                    controller: yearFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: "Year".tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
                     controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -390,16 +488,16 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: date3,
+                    initialValue: date1,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Control3DateFrom',
+                    dateLabelText: 'Check'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
                       //print(val);
                       setState(() {
-                        date3 = val.substring(0, 10);
+                        date1 = val.substring(0, 10);
                       });
                       //print(date);
                     },
@@ -426,7 +524,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                     initialValue: date2,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Control2DateFrom',
+                    dateLabelText: 'Revision'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -456,16 +554,16 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: date1,
+                    initialValue: date3,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Control1DateFrom',
+                    dateLabelText: 'Testing'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
                       //print(val);
                       setState(() {
-                        date1 = val.substring(0, 10);
+                        date3 = val.substring(0, 10);
                       });
                       //print(date);
                     },
@@ -475,6 +573,20 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                     },
                     // ignore: avoid_print
                     onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 3,
+                    maxLines: 3,
+                    controller: observationFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Observations'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
               ],

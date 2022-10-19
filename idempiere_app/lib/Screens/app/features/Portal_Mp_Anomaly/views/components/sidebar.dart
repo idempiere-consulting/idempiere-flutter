@@ -82,7 +82,6 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.personOutline,
                   label: "Contract".tr,
                 ),
-                
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -90,7 +89,6 @@ class _Sidebar extends StatelessWidget {
                 switch (index) {
                   case 0:
                     Get.offNamed('/Dashboard');
-
                     break;
 
                   case 1:
@@ -100,11 +98,11 @@ class _Sidebar extends StatelessWidget {
                   case 2:
                     Get.offNamed('/PortalMpOpportunity');
                     break;
-                  
+
                   case 3:
                     Get.offNamed('/PortalMpSalesOrder');
                     break;
-                  
+
                   case 4:
                     Get.offNamed('/PortalMpTrainingCourse');
                     break;

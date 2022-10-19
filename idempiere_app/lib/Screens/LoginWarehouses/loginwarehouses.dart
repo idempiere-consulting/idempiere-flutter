@@ -622,6 +622,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         case "0":
           Get.offAllNamed("/Dashboard");
           break;
+        case "24":
+          Get.offAllNamed("/MaintenanceMptask");
+          break;
         case "8":
           Get.offAllNamed("/SalesOrder");
           break;
