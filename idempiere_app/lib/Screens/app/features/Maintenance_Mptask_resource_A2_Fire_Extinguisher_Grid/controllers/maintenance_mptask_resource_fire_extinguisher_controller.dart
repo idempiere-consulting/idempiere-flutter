@@ -128,7 +128,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     ),
     PlutoColumn(
       //readOnly: true,
-      title: 'Resource',
+      title: 'Resource'.tr,
       field: 'M_Product_ID',
       type: PlutoColumnType.select(((ProductJson.fromJson(
                   jsonDecode((Get.arguments["products"]).readAsStringSync())))
@@ -140,47 +140,47 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
           .toList()),
     ),
     PlutoColumn(
-      title: 'Location',
+      title: 'Location'.tr,
       field: 'LocationComment',
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
-      title: 'Barcode',
+      title: 'Barcode'.tr,
       field: 'ProdCode',
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
-      title: 'Serial N°',
+      title: 'Serial N°'.tr,
       field: 'SerNo',
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
-      title: 'Manufacturer',
+      title: 'Manufacturer'.tr,
       field: 'Manufacturer',
       type: PlutoColumnType.text(),
     ),
     PlutoColumn(
-      title: 'Year',
+      title: 'Year'.tr,
       field: 'ManufacturedYear',
       type: PlutoColumnType.number(),
     ),
     PlutoColumn(
-      title: 'Check',
+      title: 'Check'.tr,
       field: 'LIT_Control1DateFrom',
       type: PlutoColumnType.date(),
     ),
     PlutoColumn(
-      title: 'Revision',
+      title: 'Revision'.tr,
       field: 'LIT_Control2DateFrom',
       type: PlutoColumnType.date(),
     ),
     PlutoColumn(
-      title: 'Testing',
+      title: 'Testing'.tr,
       field: 'LIT_Control3DateFrom',
       type: PlutoColumnType.date(),
     ),
     PlutoColumn(
-      title: 'Observations',
+      title: 'Observations'.tr,
       field: 'Name',
       type: PlutoColumnType.text(),
     ),
@@ -200,17 +200,17 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
 
   /// columnGroups that can group columns can be omitted.
   final List<PlutoColumnGroup> columnGroups = [
-    PlutoColumnGroup(title: 'Identification', fields: [
+    PlutoColumnGroup(title: 'Identification'.tr, fields: [
       'V_Number',
-      'M_Product_ID'
-          'LocationComment',
+      'M_Product_ID',
+      'LocationComment',
       'ProdCode',
       'SerNo',
       'TextDetails',
       'Manufacturer',
       'ManufacturedYear'
     ]),
-    PlutoColumnGroup(title: 'Activities', fields: [
+    PlutoColumnGroup(title: 'Activities'.tr, fields: [
       'LIT_Control1DateFrom',
       'LIT_Control2DateFrom',
       'LIT_Control3DateFrom'
@@ -391,8 +391,9 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
         } else {
           calls = GetStorage().read('storedEditAPICalls');
           calls['http://' +
-              ip +
-              '/api/v1/windows/maintenance-item/tabs/mp-resources/$id'] = msg;
+                  ip +
+                  '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/$id'] =
+              msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
         Get.snackbar(

@@ -460,7 +460,7 @@ class _CreateMaintenanceMpResourceState
 
     var url = Uri.parse('http://' +
         ip +
-        '/api/v1/windows/maintenance-item/tabs/maintenance/${GetStorage().read('selectedTaskDocNo')}/mp-resources');
+        '/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}');
     if (isConnected) {
       if (kDebugMode) {
         print(msg);
@@ -509,7 +509,7 @@ class _CreateMaintenanceMpResourceState
           "offlineid": GetStorage().read('postCallId'),
           "url": 'http://' +
               ip +
-              '/api/v1/windows/maintenance-item/tabs/maintenance/${GetStorage().read('selectedTaskDocNo')}/mp-resources',
+              '/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
@@ -544,7 +544,7 @@ class _CreateMaintenanceMpResourceState
           "offlineid": GetStorage().read('postCallId'),
           "url": 'http://' +
               ip +
-              '/api/v1/windows/maintenance-item/tabs/maintenance/${GetStorage().read('selectedTaskDocNo')}/mp-resources',
+              '/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},

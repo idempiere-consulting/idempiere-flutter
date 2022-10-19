@@ -400,7 +400,20 @@ class LocaleString extends Translations {
           'Testing Date: ': 'Testing Date: ',
           'Manufactured Year: ': 'Manufactured Year: ',
           'Manufacturer: ': 'Manufacturer: ',
-          'Managed by the Customer': 'Managed by the Customer'
+          'Managed by the Customer': 'Managed by the Customer',
+          'Representative': 'Representative',
+          'Team': 'Team',
+          'Note Plant': 'Note Plant',
+          'Time': 'Time',
+          'WORK ORDER': 'WORK ORDER',
+          'Year': 'Year',
+          'Check': 'Check',
+          'Revision': 'Revision',
+          'Testing': 'Testing',
+          'Observations': 'Observations',
+          'Identification': 'Identification',
+          'Activities': 'Activities',
+          'maintenance': 'maintenance',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -806,7 +819,19 @@ class LocaleString extends Translations {
           'Testing Date: ': 'Data Collaudo: ',
           'Manufactured Year: ': 'Anno di Produzione: ',
           'Manufacturer: ': 'Produttore: ',
-          'Managed by the Customer': 'Gestito dal Cliente'
+          'Managed by the Customer': 'Gestito dal Cliente',
+          'Representative': 'Rappresentante',
+          'Team': 'Squadra',
+          'Note Plant': 'Note Impianto',
+          'Time': 'Ora',
+          'WORK ORDER': 'ORDINE DI LAVORO',
+          'Year': 'Anno',
+          'Check': 'Controllo',
+          'Revision': 'Revisione',
+          'Testing': 'Collaudo',
+          'Observations': 'Osservazioni',
+          'Identification': 'Identificazione',
+          'Activities': 'Attività',
         },
       };
 }

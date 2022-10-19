@@ -134,7 +134,6 @@ class MyApp extends StatelessWidget {
           name: '/IntervalCharts',
           page: () => IntervalPage(),
         ),
-
         GetPage(
           name: '/Dashboard',
           page: () => const DashboardScreen(),

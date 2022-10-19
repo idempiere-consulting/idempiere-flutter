@@ -88,8 +88,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("WORK ORDER: ${controller.trx.rowcount}")
-                          : const Text("WORK ORDER: ")),
+                          ? Text(
+                              "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
+                          : Text("${"WORK ORDER".tr}: ")),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -274,9 +275,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Doc Number: ",
-                                              style: TextStyle(
+                                            Text(
+                                              'Document N°'.tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -286,9 +287,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Doc Type: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Document Type: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -298,9 +299,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Time:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Time'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -309,9 +310,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Note Plant:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Note Plant'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -325,9 +326,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Note WO:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Note Work Order'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -368,9 +369,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "AD User: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Representative'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -380,11 +381,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            Text(
-                                              "Phone: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
                                             IconButton(
                                               icon: const Icon(
                                                 Icons.call,
@@ -413,9 +409,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "AD User 2: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Representative'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -425,11 +421,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            Text(
-                                              "Phone 2: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
                                             IconButton(
                                               icon: const Icon(
                                                 Icons.call,
@@ -458,9 +449,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Team:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${"Team".tr}:  ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -546,8 +537,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("WORK ORDER: ${controller.trx.rowcount}")
-                          : const Text("WORK ORDER: ")),
+                          ? Text(
+                              "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
+                          : Text("${"WORK ORDER".tr}: ")),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -648,34 +640,48 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
                                         //log("info button pressed");
-                                        /* Get.to(const EditMaintenanceMptask(),
+                                        Get.to(const EditMaintenanceMptask(),
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
-                                              "bPartner": controller
+                                              "index": index,
+                                              "docNo": controller.trx
+                                                  .records![index].documentNo,
+                                              "businessPartner": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.identifier,
+                                              "date": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .jpToDoStartDate
+                                                  ?.substring(0, 10),
+                                              "timeStart": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .jpToDoStartTime
+                                                  ?.substring(1, 5),
+                                              "timeEnd": controller.trx
+                                                  .records![index].jpToDoEndTime
+                                                  ?.substring(1, 5),
+                                              "notePlant": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litMpMaintainHelp,
+                                              "noteWO": controller.trx
+                                                  .records![index].description,
+                                              "address":
+                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal ?? ""} ${controller.trx.records![index].cLocationCity}",
+                                              "representative": controller
                                                       .trx
                                                       .records![index]
-                                                      .cBPartnerID
-                                                      ?.identifier ??
-                                                  "",
-                                              "bPartnerLocationId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerLocationID
-                                                      ?.id ??
-                                                  "",
-                                              "resource":
-                                                  controller //serve id risorsa
-                                                          .trx
-                                                          .records![index]
-                                                          .mpOtAdUserName ??
-                                                      "",
-                                              "dateStart": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .dateWorkStart ??
-                                                  ""
-                                            }); */
+                                                      .refname ??
+                                                  controller.trx.records![index]
+                                                      .ref2name,
+                                              "team": controller
+                                                  .trx.records![index].team,
+                                            });
                                       },
                                     ),
                                   ),
@@ -718,9 +724,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Doc Number: ",
-                                              style: TextStyle(
+                                            Text(
+                                              'Document N°'.tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -730,9 +736,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Doc Type: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Document Type: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -742,9 +748,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Time:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Time'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -753,9 +759,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Note Plant:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Note Plant'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -769,9 +775,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Note WO:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Note Work Order'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -812,9 +818,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "AD User: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Representative'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -824,11 +830,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            Text(
-                                              "Phone: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
                                             IconButton(
                                               icon: const Icon(
                                                 Icons.call,
@@ -857,9 +858,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "AD User 2: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Representative'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -869,11 +870,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            Text(
-                                              "Phone 2: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
                                             IconButton(
                                               icon: const Icon(
                                                 Icons.call,
@@ -902,9 +898,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Team:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${"Team".tr}:  ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -990,8 +986,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("WORK ORDER: ${controller.trx.rowcount}")
-                          : const Text("WORK ORDER: ")),
+                          ? Text(
+                              "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
+                          : Text("${"WORK ORDER".tr}: ")),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
@@ -1092,34 +1089,48 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
                                         //log("info button pressed");
-                                        /* Get.to(const EditMaintenanceMptask(),
+                                        Get.to(const EditMaintenanceMptask(),
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
-                                              "bPartner": controller
+                                              "index": index,
+                                              "docNo": controller.trx
+                                                  .records![index].documentNo,
+                                              "businessPartner": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.identifier,
+                                              "date": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .jpToDoStartDate
+                                                  ?.substring(0, 10),
+                                              "timeStart": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .jpToDoStartTime
+                                                  ?.substring(1, 5),
+                                              "timeEnd": controller.trx
+                                                  .records![index].jpToDoEndTime
+                                                  ?.substring(1, 5),
+                                              "notePlant": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litMpMaintainHelp,
+                                              "noteWO": controller.trx
+                                                  .records![index].description,
+                                              "address":
+                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal ?? ""} ${controller.trx.records![index].cLocationCity}",
+                                              "representative": controller
                                                       .trx
                                                       .records![index]
-                                                      .cBPartnerID
-                                                      ?.identifier ??
-                                                  "",
-                                              "bPartnerLocationId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerLocationID
-                                                      ?.id ??
-                                                  "",
-                                              "resource":
-                                                  controller //serve id risorsa
-                                                          .trx
-                                                          .records![index]
-                                                          .mpOtAdUserName ??
-                                                      "",
-                                              "dateStart": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .dateWorkStart ??
-                                                  ""
-                                            }); */
+                                                      .refname ??
+                                                  controller.trx.records![index]
+                                                      .ref2name,
+                                              "team": controller
+                                                  .trx.records![index].team,
+                                            });
                                       },
                                     ),
                                   ),
@@ -1162,9 +1173,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       children: [
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Doc Number: ",
-                                              style: TextStyle(
+                                            Text(
+                                              'Document N°'.tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -1174,9 +1185,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Doc Type: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "Document Type: ".tr,
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(controller.trx.records![index]
@@ -1186,9 +1197,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Time:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Time'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -1197,9 +1208,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Note Plant:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Note Plant'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -1213,9 +1224,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Note WO:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Note Work Order'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
@@ -1256,9 +1267,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "AD User: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Representative'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -1268,11 +1279,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            Text(
-                                              "Phone: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
                                             IconButton(
                                               icon: const Icon(
                                                 Icons.call,
@@ -1301,9 +1307,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "AD User 2: ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${'Representative'.tr}: ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
@@ -1313,11 +1319,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            Text(
-                                              "Phone 2: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
                                             IconButton(
                                               icon: const Icon(
                                                 Icons.call,
@@ -1346,9 +1347,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         ),
                                         Row(
                                           children: [
-                                            const Text(
-                                              "Team:  ",
-                                              style: TextStyle(
+                                            Text(
+                                              "${"Team".tr}:  ",
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
