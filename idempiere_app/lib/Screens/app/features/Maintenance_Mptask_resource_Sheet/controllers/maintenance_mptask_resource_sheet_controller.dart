@@ -33,6 +33,8 @@ class MaintenanceMpResourceSheetController extends GetxController {
   var lotFieldController = TextEditingController();
   var serialNoFieldController = TextEditingController();
   var manufacturedYearFieldController = TextEditingController();
+  var numberFieldController = TextEditingController();
+  var lineFieldController = TextEditingController();
   //String date1 = "";
   var expectedDurationFieldController = TextEditingController();
   String date2 = "";
@@ -201,10 +203,13 @@ class MaintenanceMpResourceSheetController extends GetxController {
   }
 
   Future<void> getSurveyLines() async {
+    const filename = "workorderresourcesurveylines";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
     flagSurveyLines.value = false;
     WorkOrderResourceSurveyLinesJson surveyLines2 =
         WorkOrderResourceSurveyLinesJson.fromJson(
-            jsonDecode(GetStorage().read('workOrderResourceSurveyLinesSync')));
+            jsonDecode(file.readAsStringSync()));
     surveyLines2.records!.removeWhere(
         (element) => element.mPMaintainResourceID?.id != Get.arguments["id"]);
     surveyLines = surveyLines2;
@@ -218,13 +223,20 @@ class MaintenanceMpResourceSheetController extends GetxController {
   }
 
   Future<void> getRefListResourceType() async {
-    refList = RefListResourceTypeJson.fromJson(
-        jsonDecode(GetStorage().read('refListResourceType')));
+    const filename = "reflistresourcetype";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    refList =
+        RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
     flagRefList.value = true;
   }
 
   editWorkOrderResource(bool isConnected) async {
     //print(now);
+
+    const filename = "workorderresource";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -237,9 +249,9 @@ class MaintenanceMpResourceSheetController extends GetxController {
       "LIT_ResourceType": {"id": dropDownValue.value},
       "LocationComment": locationFieldController.text,
       "Manufacturer": manufacturerFieldController.text,
-      "Value": locationCodeFieldController.text,
+      //"Value": locationCodeFieldController.text,
       "SerNo": serialNoFieldController.text,
-      "Lot": lotFieldController.text,
+      //"Lot": lotFieldController.text,
       "ManufacturedYear": int.parse(manufacturedYearFieldController.text),
       "UseLifeYears": int.parse(expectedDurationFieldController.text),
       "Name": noteFieldController.text,
@@ -247,13 +259,16 @@ class MaintenanceMpResourceSheetController extends GetxController {
       "DateOrdered": date2.substring(0, 10),
       "ServiceDate": date3,
       "UserName": userFieldController.text,
-      "isValid": checkboxState.value
+      "isValid": checkboxState.value,
+      "V_Number": numberFieldController.text,
+      "LineNo": int.parse(
+          lineFieldController.text == "" ? "0" : lineFieldController.text),
     });
 
     //print(msg);
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
-        jsonDecode(GetStorage().read('workOrderResourceSync')));
+        jsonDecode(file.readAsStringSync()));
 
     if (Get.arguments["id"] != null && offline == -1) {
       trx.records![Get.arguments["index"]].mProductID!.id = productId;
@@ -264,10 +279,10 @@ class MaintenanceMpResourceSheetController extends GetxController {
           locationFieldController.text;
       trx.records![Get.arguments["index"]].manufacturer =
           manufacturerFieldController.text;
-      trx.records![Get.arguments["index"]].value =
-          locationCodeFieldController.text;
+      /* trx.records![Get.arguments["index"]].value =
+          locationCodeFieldController.text; */
       trx.records![Get.arguments["index"]].serNo = serialNoFieldController.text;
-      trx.records![Get.arguments["index"]].lot = lotFieldController.text;
+      //trx.records![Get.arguments["index"]].lot = lotFieldController.text;
       trx.records![Get.arguments["index"]].manufacturedYear =
           int.parse(manufacturedYearFieldController.text);
       trx.records![Get.arguments["index"]].useLifeYears =
@@ -279,6 +294,9 @@ class MaintenanceMpResourceSheetController extends GetxController {
       trx.records![Get.arguments["index"]].serviceDate = date3;
       trx.records![Get.arguments["index"]].userName = userFieldController.text;
       trx.records![Get.arguments["index"]].isValid = checkboxState.value;
+      trx.records![Get.arguments["index"]].number = numberFieldController.text;
+      trx.records![Get.arguments["index"]].lineNo = int.parse(
+          lineFieldController.text == "" ? "0" : lineFieldController.text);
 
       var url = Uri.parse('http://' +
           ip +
@@ -299,7 +317,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
           }
           sendSurveyLines();
           var data = jsonEncode(trx.toJson());
-          GetStorage().write('workOrderResourceSync', data);
+          file.writeAsStringSync(data);
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
           //print("done!");
           //Get.back();
@@ -329,7 +347,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
           sendAttachedImageOffline(Get.arguments["id"]);
         }
         var data = jsonEncode(trx.toJson());
-        GetStorage().write('workOrderResourceSync', data);
+        file.writeAsStringSync(data);
         Get.find<MaintenanceMpResourceController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
@@ -379,9 +397,9 @@ class MaintenanceMpResourceSheetController extends GetxController {
             "LIT_ResourceType": {"id": dropDownValue},
             "LocationComment": locationFieldController.text,
             "Manufacturer": manufacturerFieldController.text,
-            "Value": locationCodeFieldController.text,
+            //"Value": locationCodeFieldController.text,
             "SerNo": serialNoFieldController.text,
-            "Lot": lotFieldController.text,
+            //"Lot": lotFieldController.text,
             "ManufacturedYear": int.parse(manufacturedYearFieldController.text),
             "UseLifeYears": int.parse(expectedDurationFieldController.text),
             "Name": noteFieldController.text,
@@ -389,7 +407,11 @@ class MaintenanceMpResourceSheetController extends GetxController {
             "DateOrdered": date2,
             "ServiceDate": date3,
             "UserName": userFieldController.text,
-            "isValid": checkboxState.value
+            "isValid": checkboxState.value,
+            "V_Number": numberFieldController.text,
+            "LineNo": int.parse(lineFieldController.text == ""
+                ? "0"
+                : lineFieldController.text),
           });
 
           list.removeAt(i);

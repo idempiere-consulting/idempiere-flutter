@@ -684,7 +684,7 @@ class LocaleString extends Translations {
           'Cartel': 'Cartello',
           'Lot': 'Lotto',
           'LocationCode': 'Codice Posizione',
-          'Manufacturer': 'Fornitore',
+          'Manufacturer': 'Produttore',
           'Manufactured Year': 'Anno di Produzione',
           'Due Year': 'Anno di Scadenza',
           'Date Ordered': 'Data Ordine',

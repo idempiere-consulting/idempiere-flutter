@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -15,6 +16,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_A2_Fire_Extinguisher_Grid/models/reflist_resource_type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
@@ -30,6 +32,52 @@ class CreateMaintenanceMpResource extends StatefulWidget {
 
 class _CreateMaintenanceMpResourceState
     extends State<CreateMaintenanceMpResource> {
+  openResourceType() async {
+    var dropDownValue = "A1";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/reflistresourcetypecategory.json');
+
+    var _tt =
+        RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
+    Get.defaultDialog(
+      title: "Resource Type",
+      //middleText: "Choose the type of Ticket you want to create",
+      //contentPadding: const EdgeInsets.all(2.0),
+      content: DropdownButton(
+        value: dropDownValue,
+        style: const TextStyle(fontSize: 12.0),
+        elevation: 16,
+        onChanged: (String? newValue) async {
+          dropDownValue = newValue!;
+          Get.back();
+          const filename = "reflistresourcetype";
+          final file = File(
+              '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+          Get.to(const CreateMaintenanceMpResource(), arguments: {
+            "id": dropDownValue,
+            "reflistresourcetype": file,
+          });
+        },
+        items: _tt.records!.map((list) {
+          return DropdownMenuItem<String>(
+            child: Text(
+              list.name.toString(),
+            ),
+            value: list.value,
+          );
+        }).toList(),
+      ),
+      barrierDismissible: true,
+      /* textCancel: "Cancel",
+        textConfirm: "Confirm",
+        onConfirm: () {
+          Get.back();
+          Get.to(const CreateTicketClientTicket(),
+              arguments: {"id": dropdownValue});
+        } */
+    );
+  }
+
   Future<void> syncWorkOrder() async {
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
@@ -413,17 +461,24 @@ class _CreateMaintenanceMpResourceState
       "Name": noteFieldController.text,
       "SerNo": sernoFieldController.text,
       "LocationComment": locationFieldController.text,
-      "Value": locationCodeFieldController.text,
+      //"Value": locationCodeFieldController.text,
       "Manufacturer": manufacturerFieldController.text,
-      "ManufacturedYear": int.parse(manufacturedYearFieldController.text),
-      "UseLifeYears": int.parse(useLifeYearsFieldController.text),
+      "ManufacturedYear": int.parse(manufacturedYearFieldController.text == ""
+          ? "0"
+          : manufacturedYearFieldController.text),
+      "UseLifeYears": int.parse(useLifeYearsFieldController.text == ""
+          ? "0"
+          : useLifeYearsFieldController.text),
       "LIT_ProductModel": productModelFieldController.text,
-      "Lot": lotFieldController.text,
+      //"Lot": lotFieldController.text,
       "DateOrdered": dateOrdered,
       "ServiceDate": firstUseDate,
       "UserName": userNameFieldController.text,
       "ProdCode": barcodeFieldController.text,
-      "TextDetails": cartelFieldController.text
+      "TextDetails": cartelFieldController.text,
+      "V_Number": numberFieldController.text,
+      "LineNo": int.parse(
+          lineFieldController.text == "" ? "0" : lineFieldController.text),
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -446,12 +501,19 @@ class _CreateMaintenanceMpResourceState
         name: noteFieldController.text,
         serNo: sernoFieldController.text,
         locationComment: locationFieldController.text,
-        value: locationCodeFieldController.text,
+        //value: locationCodeFieldController.text,
         manufacturer: manufacturerFieldController.text,
-        manufacturedYear: int.parse(manufacturedYearFieldController.text),
-        useLifeYears: int.parse(useLifeYearsFieldController.text),
+        manufacturedYear: int.parse(manufacturedYearFieldController.text == ""
+            ? "0"
+            : manufacturedYearFieldController.text),
+        useLifeYears: int.parse(useLifeYearsFieldController.text == ""
+            ? "0"
+            : useLifeYearsFieldController.text),
         lITProductModel: productModelFieldController.text,
-        lot: lotFieldController.text,
+        number: numberFieldController.text,
+        lineNo: int.parse(
+            lineFieldController.text == "" ? "0" : lineFieldController.text),
+        //lot: lotFieldController.text,
         dateOrdered: dateOrdered,
         serviceDate: firstUseDate,
         userName: userNameFieldController.text,
@@ -479,6 +541,9 @@ class _CreateMaintenanceMpResourceState
         if (kDebugMode) {
           print(response.body);
         }
+        setState(() {
+          saveFlag = false;
+        });
         syncWorkOrder();
         /* Get.snackbar(
           "Done!".tr,
@@ -524,17 +589,25 @@ class _CreateMaintenanceMpResourceState
           "Name": noteFieldController.text,
           "SerNo": sernoFieldController.text,
           "LocationComment": locationFieldController.text,
-          "Value": locationCodeFieldController.text,
+          //"Value": locationCodeFieldController.text,
           "Manufacturer": manufacturerFieldController.text,
-          "ManufacturedYear": int.parse(manufacturedYearFieldController.text),
-          "UseLifeYears": int.parse(useLifeYearsFieldController.text),
+          "ManufacturedYear": int.parse(
+              manufacturedYearFieldController.text == ""
+                  ? "0"
+                  : manufacturedYearFieldController.text),
+          "UseLifeYears": int.parse(useLifeYearsFieldController.text == ""
+              ? "0"
+              : useLifeYearsFieldController.text),
           "LIT_ProductModel": productModelFieldController.text,
-          "Lot": lotFieldController.text,
+          //"Lot": lotFieldController.text,
           "DateOrdered": dateOrdered,
           "ServiceDate": firstUseDate,
           "UserName": userNameFieldController.text,
           "ProdCode": barcodeFieldController.text,
-          "TextDetails": cartelFieldController.text
+          "TextDetails": cartelFieldController.text,
+          "V_Number": numberFieldController.text,
+          "LineNo": int.parse(
+              lineFieldController.text == "" ? "0" : lineFieldController.text),
         });
 
         list.add(call);
@@ -559,16 +632,25 @@ class _CreateMaintenanceMpResourceState
           "Name": noteFieldController.text,
           "SerNo": sernoFieldController.text,
           "LocationComment": locationFieldController.text,
-          "Value": locationCodeFieldController.text,
+          //"Value": locationCodeFieldController.text,
           "Manufacturer": manufacturerFieldController.text,
-          "ManufacturedYear": int.parse(manufacturedYearFieldController.text),
-          "UseLifeYears": int.parse(useLifeYearsFieldController.text),
+          "ManufacturedYear": int.parse(
+              manufacturedYearFieldController.text == ""
+                  ? "0"
+                  : manufacturedYearFieldController.text),
+          "UseLifeYears": int.parse(useLifeYearsFieldController.text == ""
+              ? "0"
+              : useLifeYearsFieldController.text),
           "LIT_ProductModel": productModelFieldController.text,
-          "Lot": lotFieldController.text,
+          //"Lot": lotFieldController.text,
           "DateOrdered": dateOrdered,
           "ServiceDate": firstUseDate,
+          "UserName": userNameFieldController.text,
           "ProdCode": barcodeFieldController.text,
-          "TextDetails": cartelFieldController.text
+          "TextDetails": cartelFieldController.text,
+          "V_Number": numberFieldController.text,
+          "LineNo": int.parse(
+              lineFieldController.text == "" ? "0" : lineFieldController.text),
         });
         list.add(call);
       }
@@ -587,6 +669,9 @@ class _CreateMaintenanceMpResourceState
       var data = jsonEncode(trx.toJson());
       file.writeAsStringSync(data);
       Get.find<MaintenanceMpResourceController>().getWorkOrders();
+      setState(() {
+        saveFlag = false;
+      });
     }
   }
 
@@ -617,7 +702,7 @@ class _CreateMaintenanceMpResourceState
   } */
 
   //dynamic args = Get.arguments;
-
+  var numberFieldController;
   var noteFieldController;
   var valueFieldController;
   var locationFieldController;
@@ -631,6 +716,7 @@ class _CreateMaintenanceMpResourceState
   var userNameFieldController;
   var barcodeFieldController;
   var cartelFieldController;
+  var lineFieldController;
   String date3 = "";
   int dateCalc3 = 0;
   String date2 = "";
@@ -643,10 +729,12 @@ class _CreateMaintenanceMpResourceState
   String firstUseDate = "";
   late ResourceTypeJson tt;
   late String dropDownValue;
+  bool saveFlag = true;
 
   @override
   void initState() {
     super.initState();
+    saveFlag = true;
     dropDownValue = "1.1.2";
     tt = ResourceTypeJson.fromJson(
         jsonDecode((Get.arguments["reflistresourcetype"]).readAsStringSync()));
@@ -663,11 +751,13 @@ class _CreateMaintenanceMpResourceState
     userNameFieldController = TextEditingController();
     barcodeFieldController = TextEditingController();
     cartelFieldController = TextEditingController();
+    numberFieldController = TextEditingController();
+    lineFieldController = TextEditingController();
     date3 = "";
     dateCalc3 = 0;
     date2 = "";
     dateCalc3 = 0;
-    date1 = "";
+    date1 = (DateTime.now().toString()).substring(0, 10);
     dateCalc3 = 0;
     productId = 0;
     productName = "";
@@ -690,15 +780,48 @@ class _CreateMaintenanceMpResourceState
           child: Text('Add Resource'.tr),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: IconButton(
-              onPressed: () async {
-                var isConnected = await checkConnection();
-                createWorkOrderResource(isConnected);
-              },
-              icon: const Icon(
-                Icons.save,
+          Visibility(
+            visible: saveFlag == false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                onPressed: () async {
+                  Get.back();
+                  Get.find<MaintenanceMpResourceController>()
+                      .openResourceType();
+                },
+                icon: const Icon(
+                  Icons.add,
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            replacement: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                onPressed: () async {
+                  barcodeFieldController.text = "";
+                  setState(() {
+                    saveFlag = true;
+                  });
+                },
+                icon: const Icon(
+                  Icons.copy,
+                ),
+              ),
+            ),
+            visible: saveFlag,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                onPressed: () async {
+                  var isConnected = await checkConnection();
+                  createWorkOrderResource(isConnected);
+                },
+                icon: const Icon(
+                  Icons.save,
+                ),
               ),
             ),
           ),
@@ -711,6 +834,44 @@ class _CreateMaintenanceMpResourceState
               children: [
                 const SizedBox(
                   height: 10,
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[0] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: numberFieldController,
+                      onChanged: (value) {
+                        lineFieldController.text =
+                            (int.parse(numberFieldController.text) * 10)
+                                .toString();
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'N°'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: lineFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Line N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
@@ -770,62 +931,11 @@ class _CreateMaintenanceMpResourceState
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: productModelFieldController,
+                    controller: noteFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
-                      labelText: 'Product Model'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                /* Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    child: Text(
-                      "Type".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  width: size.width,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: DropdownButton(
-                    value: dropDownValue,
-                    style: const TextStyle(fontSize: 12.0),
-                    elevation: 16,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropDownValue = newValue!;
-                      });
-                    },
-                    items: tt.records!.map((list) {
-                      return DropdownMenuItem<String>(
-                        child: Text(
-                          list.name.toString(),
-                        ),
-                        value: list.value,
-                      );
-                    }).toList(),
-                  ),
-                ), */
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: sernoFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'SerNo'.tr,
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -845,6 +955,18 @@ class _CreateMaintenanceMpResourceState
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    controller: sernoFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'SerNo'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
                     controller: cartelFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
@@ -857,71 +979,11 @@ class _CreateMaintenanceMpResourceState
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: lotFieldController,
+                    controller: productModelFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
-                      labelText: 'Lot'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: locationCodeFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'LocationCode'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: locationFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Location'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: manufacturerFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Manufacturer'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: manufacturedYearFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Manufactured Year'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: useLifeYearsFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Due Year'.tr,
+                      labelText: 'Product Model'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -994,6 +1056,66 @@ class _CreateMaintenanceMpResourceState
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: userNameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'User Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: useLifeYearsFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Due Year'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: locationFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Location'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: manufacturerFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manufacturer'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: manufacturedYearFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manufactured Year'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   width: size.width,
                   decoration: BoxDecoration(
@@ -1004,7 +1126,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                   child: DateTimePicker(
                     type: DateTimePickerType.date,
-                    initialValue: '',
+                    initialValue: DateTime.now().toString(),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     dateLabelText: 'Check Date'.tr,
@@ -1089,30 +1211,6 @@ class _CreateMaintenanceMpResourceState
                     },
                     // ignore: avoid_print
                     onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: userNameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'User Name'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: noteFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Note'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
                   ),
                 ),
               ],

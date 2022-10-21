@@ -3,9 +3,11 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/reflist_resource_type_json.dart';
@@ -27,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:idempiere_app/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 
 // binding
@@ -112,13 +115,42 @@ class MaintenanceMpResourceSheetScreen
                     child: Container(
                       margin: const EdgeInsets.all(10),
                       child: TextField(
-                        controller: controller.locationCodeFieldController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.source),
-                          border: OutlineInputBorder(),
-                          labelText: 'Location Code',
+                        controller: controller.numberFieldController,
+                        onChanged: (value) {
+                          controller.lineFieldController.text = (int.parse(
+                                      controller.numberFieldController.text) *
+                                  10)
+                              .toString();
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.person_pin_outlined),
+                          border: const OutlineInputBorder(),
+                          labelText: 'N°'.tr,
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: controller.lineFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.person_pin_outlined),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Line N°'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                        ],
                       ),
                     ),
                   ),
@@ -130,17 +162,17 @@ class MaintenanceMpResourceSheetScreen
                       margin: const EdgeInsets.all(10),
                       child: TextField(
                         controller: controller.locationFieldController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.source),
-                          border: OutlineInputBorder(),
-                          labelText: 'Location',
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.source),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Location'.tr,
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
                       ),
                     ),
                   ),
                 ),
-                Obx(
+                /* Obx(
                   () => controller.flagRefList.value == true
                       ? Visibility(
                           visible: controller.filterCount.value == 0,
@@ -174,7 +206,7 @@ class MaintenanceMpResourceSheetScreen
                           ),
                         )
                       : const Center(child: CircularProgressIndicator()),
-                ),
+                ), */
                 Obx(
                   () => Visibility(
                     visible: controller.filterCount.value == 0,
@@ -182,10 +214,10 @@ class MaintenanceMpResourceSheetScreen
                       margin: const EdgeInsets.all(10),
                       child: TextField(
                         controller: controller.manufacturerFieldController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.source),
-                          border: OutlineInputBorder(),
-                          labelText: 'Marca',
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.source),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Manufacturer'.tr,
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
                       ),
@@ -232,28 +264,11 @@ class MaintenanceMpResourceSheetScreen
                     child: Container(
                       margin: const EdgeInsets.all(10),
                       child: TextField(
-                        controller: controller.lotFieldController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.source),
-                          border: OutlineInputBorder(),
-                          labelText: 'Lot number',
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Obx(
-                  () => Visibility(
-                    visible: controller.filterCount.value == 0,
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      child: TextField(
                         controller: controller.manufacturedYearFieldController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.timelapse_sharp),
-                          border: OutlineInputBorder(),
-                          labelText: 'Manufactured Year',
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.timelapse_sharp),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Manufactured Year'.tr,
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
                       ),
@@ -360,10 +375,10 @@ class MaintenanceMpResourceSheetScreen
                       margin: const EdgeInsets.all(10),
                       child: TextField(
                         controller: controller.userFieldController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.person_pin_outlined),
-                          border: OutlineInputBorder(),
-                          labelText: 'User Name',
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.person_pin_outlined),
+                          border: const OutlineInputBorder(),
+                          labelText: 'User Name'.tr,
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
                       ),
@@ -418,10 +433,10 @@ class MaintenanceMpResourceSheetScreen
                       child: TextField(
                         maxLines: 5,
                         controller: controller.noteFieldController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           //prefixIcon: Icon(Icons.person_pin_outlined),
-                          border: OutlineInputBorder(),
-                          labelText: 'Note',
+                          border: const OutlineInputBorder(),
+                          labelText: 'Note'.tr,
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
                       ),
@@ -455,7 +470,7 @@ class MaintenanceMpResourceSheetScreen
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
-                              tooltip: "Sign",
+                              tooltip: "Sign".tr,
                               onPressed: () {
                                 Get.to(
                                     const SignatureWorkOrderResourceScreen());
@@ -467,7 +482,7 @@ class MaintenanceMpResourceSheetScreen
                                     )
                                   : const Icon(EvaIcons.edit2Outline),
                             ),
-                            const Text("Sign"),
+                            Text("Sign".tr),
                           ]),
                     ),
                   ),

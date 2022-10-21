@@ -328,7 +328,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
                     ],
                   ),
                 ),

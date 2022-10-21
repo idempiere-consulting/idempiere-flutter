@@ -1,12 +1,15 @@
 library dashboard;
 
 //import 'dart:convert';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/event.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -20,10 +23,12 @@ import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 // binding
 part '../../bindings/portal_mp_binding.dart';
@@ -46,18 +51,24 @@ part '../components/team_member.dart';
 class PortalMpScreen extends GetView<PortalMpController> {
   const PortalMpScreen({Key? key}) : super(key: key);
 
+  List<Event> _getEventsfromDay(DateTime date) {
+    //print(selectedEvents.length);
+    return controller.selectedEvents[date] ?? [];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
           child: ResponsiveBuilder(
         mobileBuilder: (context, constraints) {
@@ -147,11 +158,11 @@ class PortalMpScreen extends GetView<PortalMpController> {
                   children: [
                     const SizedBox(height: kSpacing),
                     _buildHeader(),
-                    const SizedBox(height: kSpacing * 2),
+                    /*const SizedBox(height: kSpacing * 2),
                     _buildProgress(),
                     const SizedBox(height: kSpacing * 2),
                     const SizedBox(height: kSpacing * 2),
-                    const SizedBox(height: kSpacing),
+                    const SizedBox(height: kSpacing), */
                   ],
                 ),
               ),
@@ -163,22 +174,62 @@ class PortalMpScreen extends GetView<PortalMpController> {
                     _buildProfile(data: controller.getProfil()),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),
-                    _buildTeamMember(data: controller.getMember()),
-                    const SizedBox(height: kSpacing),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                      child: GetPremiumCard(onPressed: () {}),
-                    ),
-                    const SizedBox(height: kSpacing),
-                    const Divider(thickness: 1),
-                    const SizedBox(height: kSpacing),
-                    _buildRecentMessages(data: controller.getChatting()),
+                    Obx(() => Visibility(
+                          replacement: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          visible: controller.calendarFlag.value,
+                          child: Obx(
+                            () => TableCalendar(
+                              locale: 'languageCalendar'.tr,
+                              focusedDay: controller.focusedDay.value,
+                              firstDay: DateTime(2000),
+                              lastDay: DateTime(2100),
+                              calendarFormat: controller.format.value,
+                              calendarStyle: const CalendarStyle(
+                                markerDecoration: BoxDecoration(
+                                    color: Colors.yellow,
+                                    shape: BoxShape.circle),
+                                todayDecoration: BoxDecoration(
+                                  color: Colors.deepPurple,
+                                ),
+                              ),
+                              headerStyle: const HeaderStyle(
+                                //formatButtonVisible: false,
+                                formatButtonShowsNext: false,
+                              ),
+                              startingDayOfWeek: StartingDayOfWeek.monday,
+                              daysOfWeekVisible: true,
+                              onFormatChanged: (CalendarFormat _format) {
+                                controller.format.value = _format;
+                              },
+                              onDaySelected:
+                                  (DateTime selectDay, DateTime focusDay) {
+                                controller.selectedDay.value = selectDay;
+                                controller.focusedDay.value = focusDay;
+                                controller.eventFlag.value = false;
+                                controller.eventFlag.value = true;
+                              },
+                              selectedDayPredicate: (DateTime date) {
+                                return isSameDay(
+                                    controller.selectedDay.value, date);
+                              },
+                              onHeaderLongPressed: (date) {
+                                /* Get.off(const CreateCalendarEvent(),
+                            arguments: {"adUserId": adUserId}); */
+                              },
+                              eventLoader: _getEventsfromDay,
+                            ),
+                          ),
+                        )),
+                    Obx(() => Visibility(
+                        visible: controller.eventFlag.value,
+                        child: _buildDayEvents())),
                   ],
                 ),
               )
             ],
           );
-
 
           /* Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
@@ -212,7 +263,8 @@ class PortalMpScreen extends GetView<PortalMpController> {
             const SizedBox(height: kSpacing),
             _buildRecentMessages(data: controller.getChatting()),
           ]);
- */        },
+ */
+        },
       )),
     );
   }
@@ -379,6 +431,186 @@ class PortalMpScreen extends GetView<PortalMpController> {
         ],
       ),
     );
+  }
+
+  Widget _buildDayEvents() {
+    return Column(children: [
+      ..._getEventsfromDay(controller.selectedDay.value).map(
+        (Event event) => /* ListTile(
+                title: Text(
+                  event.title,
+                ),
+              ), */
+            Card(
+          elevation: 8.0,
+          margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child: Container(
+            decoration:
+                const BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+            child: ExpansionTile(
+              tilePadding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              leading: Container(
+                padding: const EdgeInsets.only(right: 12.0),
+                decoration: const BoxDecoration(
+                    border: Border(
+                        right: BorderSide(width: 1.0, color: Colors.white24))),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.edit,
+                    color: Colors.green,
+                  ),
+                  tooltip: 'Edit Event'.tr,
+                  onPressed: () {
+                    /* Get.off(const EditCalendarEvent(), arguments: {
+                            "id": event.id,
+                            "name": event.title,
+                            "description": event.description,
+                            "typeId": event.typeId,
+                            "startDate": event.scheduledStartDate,
+                            "startTime": event.scheduledStartTime,
+                            "endTime": event.scheduledEndTime,
+                            "statusId": event.statusId,
+                          }); */
+                  },
+                ),
+              ),
+              title: Text(
+                event.cBPartner,
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              trailing: IconButton(
+                icon: Icon(
+                  Icons.timelapse,
+                  color: event.statusId == "DR"
+                      ? Colors.yellow
+                      : event.statusId == "CO"
+                          ? Colors.green
+                          : event.statusId == "IN"
+                              ? Colors.grey
+                              : event.statusId == "PR"
+                                  ? Colors.orange
+                                  : event.statusId == "IP"
+                                      ? Colors.white
+                                      : event.statusId == "CF"
+                                          ? Colors.lightGreen
+                                          : event.statusId == "NY"
+                                              ? Colors.red
+                                              : event.statusId == "WP"
+                                                  ? Colors.yellow
+                                                  : Colors.red,
+                ),
+                onPressed: () {},
+              ),
+              subtitle: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        event.title,
+                        style: const TextStyle(color: Colors.white),
+                      )),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      const Icon(
+                        Icons.event,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        '${event.startDate}   ${event.scheduledStartTime} - ${event.scheduledEndTime}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              children: [
+                Visibility(
+                  visible: event.refname != 'N/A' ? true : false,
+                  child: Row(
+                    children: [
+                      Text(
+                        "User : ".tr,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(event.refname),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: event.phone != 'N/A' ? true : false,
+                  child: Row(
+                    children: [
+                      Text(
+                        "Phone: ".tr,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.call,
+                          color: Colors.green,
+                        ),
+                        tooltip: 'Call',
+                        onPressed: () {
+                          //log("info button pressed");
+                          if (event.phone != 'N/A') {
+                            //makePhoneCall(event.phone.toString());
+                          }
+                        },
+                      ),
+                      Text(event.phone),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: event.ref2name != 'N/A' ? true : false,
+                  child: Row(
+                    children: [
+                      Text(
+                        "User 2: ".tr,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(event.ref2name),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: event.phone2 != 'N/A' ? true : false,
+                  child: Row(
+                    children: [
+                      Text(
+                        "Phone 2: ".tr,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.call,
+                          color: Colors.green,
+                        ),
+                        tooltip: 'Call',
+                        onPressed: () {
+                          //log("info button pressed");
+                          if (event.phone != 'N/A') {
+                            //makePhoneCall(event.phone.toString());
+                          }
+                        },
+                      ),
+                      Text(event.phone2),
+                    ],
+                  ),
+                ),
+              ],
+              childrenPadding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            ),
+          ),
+        ),
+      ),
+    ]);
   }
 
   Widget _buildRecentMessages({required List<ChattingCardData> data}) {

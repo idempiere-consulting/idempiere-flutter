@@ -87,10 +87,15 @@ class MaintenanceMpResourceController extends GetxController {
           const filename = "reflistresourcetype";
           final file = File(
               '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-          Get.to(const CreateMaintenanceMpResource(), arguments: {
-            "id": dropDownValue,
-            "reflistresourcetype": file,
-          });
+          for (var i = 0; i < _tt.records!.length; i++) {
+            if (_tt.records![i].value == newValue) {
+              Get.to(const CreateMaintenanceMpResource(), arguments: {
+                "id": dropDownValue,
+                "reflistresourcetype": file,
+                "perm": _tt.records![i].parameterValue,
+              });
+            }
+          }
         },
         items: _tt.records!.map((list) {
           return DropdownMenuItem<String>(
