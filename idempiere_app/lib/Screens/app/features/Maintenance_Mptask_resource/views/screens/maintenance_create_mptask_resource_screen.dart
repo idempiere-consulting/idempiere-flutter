@@ -684,6 +684,8 @@ class _CreateMaintenanceMpResourceState
     var jsonResources =
         ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
 
+    //jsonResources.records.removeWhere((element) => element.mProductCategoryID)
+
     return jsonResources.records!;
 
     //print(list[0].eMail);
@@ -858,19 +860,22 @@ class _CreateMaintenanceMpResourceState
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: lineFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Line N°'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[1] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: lineFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Line N°'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
                     ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                    ],
                   ),
                 ),
                 Container(
@@ -928,289 +933,334 @@ class _CreateMaintenanceMpResourceState
                               ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: noteFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Note'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[3] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: noteFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Note'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: barcodeFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Barcode'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[4] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: barcodeFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Barcode'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: sernoFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'SerNo'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[5] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: sernoFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'SerNo'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: cartelFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Cartel'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[6] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: cartelFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Cartel'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: productModelFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Product Model'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[7] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: productModelFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Product Model'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                Visibility(
+                  visible: (Get.arguments["perm"])[8] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Date Ordered'.tr,
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        dateOrdered = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'First Use Date'.tr,
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        firstUseDate = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: userNameFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'User Name'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Date Ordered'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateOrdered = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: useLifeYearsFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Due Year'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[9] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'First Use Date'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          firstUseDate = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: locationFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Location'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[10] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: userNameFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'User Name'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: manufacturerFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Manufacturer'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[11] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: useLifeYearsFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Due Year'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: manufacturedYearFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Manufactured Year'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[12] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: locationFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Location'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                Visibility(
+                  visible: (Get.arguments["perm"])[13] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: manufacturerFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Manufacturer'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: DateTime.now().toString(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Check Date'.tr,
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date1 = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                Visibility(
+                  visible: (Get.arguments["perm"])[14] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: manufacturedYearFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Manufactured Year'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Revision Date'.tr,
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date2 = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                Visibility(
+                  visible: (Get.arguments["perm"])[15] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    borderRadius: BorderRadius.circular(5),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: DateTime.now().toString(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Check Date'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          date1 = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
                   ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Testing Date'.tr,
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date3 = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[16] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Revision Date'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          date2 = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[17] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Testing Date'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          date3 = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
                   ),
                 ),
               ],
