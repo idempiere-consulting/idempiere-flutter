@@ -117,7 +117,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                         ),
                       ),
                     ),
-                    /* Container(
+                    Container(
                       margin: const EdgeInsets.only(left: 30),
                       child: Obx(
                         () => TextButton(
@@ -128,7 +128,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                           child: Text(controller.value.value),
                         ),
                       ),
-                    ), */
+                    ),
                   ],
                 ),
                 const SizedBox(height: kSpacing),
@@ -164,11 +164,16 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           controller.trx.records![index]
                                                   .cBPartnerID?.identifier ??
                                               "");
+
                                       /* GetStorage().write(
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
-                                      Get.toNamed('/MaintenanceMpResource');
+                                      Get.toNamed('/MaintenanceMpResource',
+                                          arguments: {
+                                            "docN": controller
+                                                .trx.records![index].documentNo,
+                                          });
                                     },
                                     icon: const Icon(
                                       Icons.view_list,
@@ -1059,7 +1064,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                         ),
                       ),
                     ),
-                    /* Container(
+                    Container(
                       margin: const EdgeInsets.only(left: 30),
                       child: Obx(
                         () => TextButton(
@@ -1070,7 +1075,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                           child: Text(controller.value.value),
                         ),
                       ),
-                    ), */
+                    ),
                   ],
                 ),
                 const SizedBox(height: kSpacing),

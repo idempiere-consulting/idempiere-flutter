@@ -47,7 +47,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
 
       for (var i = 0; i < _trx.records!.length; i++) {
         if (_trx.records![i].mpMaintainID?.id == maintainId &&
-            _trx.records![i].eDIType?.id == 'A2') {
+            _trx.records![i].eDIType?.id == 'A02') {
           count++;
           PlutoRow row = PlutoRow(cells: {
             'offlineid': PlutoCell(value: _trx.records![i].offlineId ?? -1),
@@ -640,7 +640,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
     ResourceType res =
         ResourceType(id: "BP", identifier: "Parti Scheda Prodotto");
 
-    EDIType edt = EDIType(id: "A2");
+    EDIType edt = EDIType(id: "A02");
     RRecords record = RRecords(
         mProductID: prod,
         mpMaintainID: MPMaintainID(id: GetStorage().read('selectedTaskDocNo')),
@@ -688,7 +688,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
         var record = RRecords.fromJson(jsonDecode(response.body));
         //lastIndex += 1;
         //var edi = EDIType(id: "A2");
-        record.eDIType = EDIType(id: "A2");
+        record.eDIType = EDIType(id: "A02");
         _trx.records!.add(record);
         final res = File(
             '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
@@ -871,7 +871,7 @@ class MaintenanceMpResourceFireExtinguisherController extends GetxController {
       );
       final res = File(
           '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
-      record.eDIType = EDIType(id: "A2");
+      record.eDIType = EDIType(id: "A02");
       _trx.records!.add(record);
       //_trx.rowcount = trx.rowcount! + 1;
       var data = jsonEncode(trx.toJson());

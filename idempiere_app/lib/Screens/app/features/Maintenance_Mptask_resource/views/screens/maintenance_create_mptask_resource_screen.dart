@@ -684,7 +684,18 @@ class _CreateMaintenanceMpResourceState
     var jsonResources =
         ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    //jsonResources.records.removeWhere((element) => element.mProductCategoryID)
+    /* for (var i = 0; i < jsonResources.records!.length; i++) {
+      if (((jsonResources.records![i].mProductCategoryID?.identifier ?? "")
+          .contains((Get.arguments["id"] as String).tr))) {
+        print(jsonResources.records![i].mProductCategoryID?.identifier);
+      }
+    } */
+
+    jsonResources.records!.retainWhere((element) =>
+        (element.mProductCategoryID?.identifier ?? "")
+            .contains(Get.arguments["id"]));
+
+    //print(jsonResources.records!.length);
 
     return jsonResources.records!;
 
@@ -765,10 +776,11 @@ class _CreateMaintenanceMpResourceState
     productName = "";
     dateOrdered = "";
     firstUseDate = "";
-    getAllProducts();
+    //getAllProducts();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  static String _displayStringForOption(Records option) =>
+      "${option.value}_${option.name}";
 
   static int _setIdForOption(Records option) => option.id!;
 
@@ -911,7 +923,7 @@ class _CreateMaintenanceMpResourceState
                                     return const Iterable<Records>.empty();
                                   }
                                   return snapshot.data!.where((Records option) {
-                                    return option.name!
+                                    return "${option.value}_${option.name}"
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text

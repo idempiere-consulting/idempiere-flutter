@@ -15,7 +15,6 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/v
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
-import 'package:intl/number_symbols_data.dart';
 import 'package:path_provider/path_provider.dart';
 
 class EditMaintenanceMpResource extends StatefulWidget {

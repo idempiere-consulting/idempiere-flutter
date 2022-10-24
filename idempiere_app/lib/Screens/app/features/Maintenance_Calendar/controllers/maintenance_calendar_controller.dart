@@ -2,41 +2,6 @@ part of dashboard;
 
 class MaintenanceCalendarController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late LeadJson _trx;
-  // ignore: prefer_final_fields
-  var _dataAvailable = false.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    getLeads();
-  }
-
-  bool get dataAvailable => _dataAvailable.value;
-  LeadJson get trx => _trx;
-
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      _trx = LeadJson.fromJson(jsonDecode(response.body));
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
-    }
-  }
 
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
@@ -207,8 +172,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

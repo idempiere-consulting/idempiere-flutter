@@ -16,7 +16,7 @@ class MaintenanceMpResourceController extends GetxController {
 
   var offline = -1;
 
-  var dropDownValue = "A1";
+  var dropDownValue = "A01";
   var dropDownValue2 = "0".obs;
 
   // ignore: prefer_typing_uninitialized_variables

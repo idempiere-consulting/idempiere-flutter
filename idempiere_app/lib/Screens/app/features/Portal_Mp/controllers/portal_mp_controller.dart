@@ -39,7 +39,7 @@ class PortalMpController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var json =
           EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       List<EventRecords>? list = json.records;

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 //import 'dart:developer';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -81,6 +82,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     );
     if (response.statusCode == 201) {
       Get.back();
+      var json = jsonDecode(response.body);
+      if (imageName != "" && image64 != "") {
+        sendTicketAttachedImage(json["id"]);
+        //print(response.body);
+      }
       //print("done!");
       Get.snackbar(
         "Done!".tr,
@@ -102,6 +108,46 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           color: Colors.red,
         ),
       );
+    }
+  }
+
+  attachImage() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
+
+    if (result != null) {
+      //File file = File(result.files.first.bytes!);
+      setState(() {
+        image64 = base64.encode(result.files.first.bytes!);
+        imageName = result.files.first.name;
+      });
+      //print(image64);
+      //print(imageName);
+    }
+  }
+
+  sendTicketAttachedImage(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final msg = jsonEncode({"name": "anomalyimage.jpg", "data": image64});
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/LIT_NC/$id/attachments');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      //print(response.body);
+    } else {
+      //print(response.body);
     }
   }
 
@@ -330,6 +376,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   var mailFieldController;
   String dropdownValue = "";
   String salesrepValue = ""; */
+  String imageName = "";
+  String image64 = "";
   late TextEditingController productFieldController;
   late TextEditingController stockFieldController;
   late TextEditingController noteFieldController;
@@ -368,6 +416,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     list = [];
     listLocators = [];
     dropdownValue = "0";
+    image64 = "";
+    imageName = "";
 
     getAnomalyTypes();
     getProductStock(0);
@@ -678,6 +728,14 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   },
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
+                IconButton(
+                    onPressed: () {
+                      attachImage();
+                    },
+                    icon: Icon(
+                      Icons.attach_file,
+                      color: image64 != "" ? Colors.green : Colors.white,
+                    )),
               ],
             );
           },

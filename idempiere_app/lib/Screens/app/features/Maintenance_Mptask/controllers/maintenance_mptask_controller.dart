@@ -9,9 +9,9 @@ class MaintenanceMptaskController extends GetxController {
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
-  var value = "Tutti".obs;
+  var value = (("Today").tr).obs;
 
-  var filters = ["Tutti", "Miei" /* , "Team" */];
+  var filters = ["Today".tr, "All" /* , "Team" */];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
@@ -77,6 +77,14 @@ class MaintenanceMptaskController extends GetxController {
 
     var jsondecoded = jsonDecode(await file.readAsString());
     _trx = WorkOrderLocalJson.fromJson(jsondecoded);
+
+    print(value.value);
+
+    if (value.value == "Today".tr) {
+      _trx.records!.retainWhere((element) =>
+          DateTime.now().toString().substring(0, 10) ==
+          element.jpToDoStartDate);
+    }
     // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;
   }

@@ -73,7 +73,7 @@ class MaintenanceMpResourceScreen
         centerTitle: true,
         title: Column(
           children: [
-            Text("${GetStorage().read('selectedTaskDocNo')}"),
+            Text("${Get.arguments["docN"]}"),
             Text("${GetStorage().read('selectedTaskBP')}"),
           ],
         ),
@@ -93,8 +93,8 @@ class MaintenanceMpResourceScreen
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("RESOURCES: ${controller.trx.rowcount}")
-                        : const Text("RESOURCES: ")),
+                        ? Text("${"RESOURCES".tr}: ${controller.trx.rowcount}")
+                        : Text("${"RESOURCES".tr}: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
@@ -232,7 +232,7 @@ class MaintenanceMpResourceScreen
                                       icon: Icon(
                                         controller.trx.records![index].eDIType
                                                     ?.id ==
-                                                'A2'
+                                                'A02'
                                             ? Icons.grid_4x4_outlined
                                             : Icons.edit,
                                         color: Colors.green,
@@ -241,7 +241,7 @@ class MaintenanceMpResourceScreen
                                       onPressed: () async {
                                         switch (controller
                                             .trx.records![index].eDIType?.id) {
-                                          case "A1":
+                                          case "A01":
                                             if (controller.trx.records![index]
                                                     .offlineId ==
                                                 null) {
@@ -333,7 +333,7 @@ class MaintenanceMpResourceScreen
                                             }
 
                                             break;
-                                          case 'A2':
+                                          case 'A02':
                                             Get.offNamed(
                                                 '/MaintenanceMpResourceFireExtinguisherGrid',
                                                 arguments: {
@@ -387,11 +387,13 @@ class MaintenanceMpResourceScreen
                                     children: [
                                       Row(
                                         children: [
-                                          Text(
-                                            "NR. ${controller.trx.records![index].number} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo} L. ${controller.trx.records![index].lineNo}",
-                                            style: const TextStyle(
-                                              color:
-                                                  kNotifColor, /* fontWeight: FontWeight.bold */
+                                          Expanded(
+                                            child: Text(
+                                              "NR. ${controller.trx.records![index].number} L. ${controller.trx.records![index].lineNo} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo}",
+                                              style: const TextStyle(
+                                                color:
+                                                    kNotifColor, /* fontWeight: FontWeight.bold */
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -528,7 +530,7 @@ class MaintenanceMpResourceScreen
                                         ]),
                                         controller.trx.records![index].eDIType
                                                     ?.id ==
-                                                "A2"
+                                                "A02"
                                             ? Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -647,8 +649,8 @@ class MaintenanceMpResourceScreen
                                                                 isConnected,
                                                                 index);
                                                       },
-                                                      icon: const Icon(
-                                                          Icons.content_paste),
+                                                      icon: const Icon(Icons
+                                                          .check_circle_outline),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Revision',
@@ -660,8 +662,8 @@ class MaintenanceMpResourceScreen
                                                                 isConnected,
                                                                 index);
                                                       },
-                                                      icon: const Icon(
-                                                          Icons.search),
+                                                      icon: const Icon(Icons
+                                                          .handyman_outlined),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Testing',
@@ -674,7 +676,7 @@ class MaintenanceMpResourceScreen
                                                                 index);
                                                       },
                                                       icon: const Icon(
-                                                          Icons.gavel_sharp),
+                                                          Icons.gavel_outlined),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Anomaly',
@@ -790,8 +792,8 @@ class MaintenanceMpResourceScreen
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("RESOURCES: ${controller.trx.rowcount}")
-                        : const Text("RESOURCES: ")),
+                        ? Text("${"RESOURCES".tr}: ${controller.trx.rowcount}")
+                        : Text("${"RESOURCES".tr}: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
@@ -929,7 +931,7 @@ class MaintenanceMpResourceScreen
                                       icon: Icon(
                                         controller.trx.records![index].eDIType
                                                     ?.id ==
-                                                'A2'
+                                                'A02'
                                             ? Icons.grid_4x4_outlined
                                             : Icons.edit,
                                         color: Colors.green,
@@ -938,7 +940,7 @@ class MaintenanceMpResourceScreen
                                       onPressed: () async {
                                         switch (controller
                                             .trx.records![index].eDIType?.id) {
-                                          case "A1":
+                                          case "A01":
                                             if (controller.trx.records![index]
                                                     .offlineId ==
                                                 null) {
@@ -1030,7 +1032,7 @@ class MaintenanceMpResourceScreen
                                             }
 
                                             break;
-                                          case 'A2':
+                                          case 'A02':
                                             Get.offNamed(
                                                 '/MaintenanceMpResourceFireExtinguisherGrid',
                                                 arguments: {
@@ -1084,11 +1086,13 @@ class MaintenanceMpResourceScreen
                                     children: [
                                       Row(
                                         children: [
-                                          Text(
-                                            "NR. ${controller.trx.records![index].number} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo} L. ${controller.trx.records![index].lineNo}",
-                                            style: const TextStyle(
-                                              color:
-                                                  kNotifColor, /* fontWeight: FontWeight.bold */
+                                          Expanded(
+                                            child: Text(
+                                              "NR. ${controller.trx.records![index].number} L. ${controller.trx.records![index].lineNo} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo}",
+                                              style: const TextStyle(
+                                                color:
+                                                    kNotifColor, /* fontWeight: FontWeight.bold */
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -1123,7 +1127,7 @@ class MaintenanceMpResourceScreen
                                             child: Text(
                                               controller.trx.records![index]
                                                       .locationComment ??
-                                                  "??",
+                                                  "",
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
@@ -1131,9 +1135,10 @@ class MaintenanceMpResourceScreen
                                         ],
                                       ),
                                       Row(children: [
-                                        const Text(
-                                          'Quantity: ',
-                                          style: TextStyle(color: Colors.white),
+                                        Text(
+                                          'Quantity: '.tr,
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                         Text(
                                           "${controller.trx.records![index].resourceQty}",
@@ -1154,10 +1159,10 @@ class MaintenanceMpResourceScreen
                                     Column(
                                       children: [
                                         Row(children: [
-                                          const Text('Note: '),
+                                          Text('Note: '.tr),
                                           Text(controller
                                                   .trx.records![index].name ??
-                                              "??"),
+                                              ""),
                                         ]),
                                         /* Row(children: [
                                           const Text('SerNo: '),
@@ -1166,10 +1171,10 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Descrizione: '),
+                                          Text('Description: '.tr),
                                           Text(controller.trx.records![index]
                                                   .description ??
-                                              "??"),
+                                              ""),
                                         ]),
                                         /* Row(children: [
                                           const Text('Location Code: '),
@@ -1184,7 +1189,7 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Check Date: '),
+                                          Text('Check Date: '.tr),
                                           Text(
                                               "${controller.trx.records![index].lITControl1DateFrom} - ${controller.trx.records![index].lITControl1DateNext}"),
                                         ]),
@@ -1195,7 +1200,7 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Revision Date: '),
+                                          Text('Revision Date: '.tr),
                                           Text(
                                               "${controller.trx.records![index].lITControl2DateFrom} - ${controller.trx.records![index].lITControl2DateNext}"),
                                         ]),
@@ -1206,29 +1211,133 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Testing Date: '),
+                                          Text('Testing Date: '.tr),
                                           Text(
                                               "${controller.trx.records![index].lITControl3DateFrom} - ${controller.trx.records![index].lITControl3DateNext}"),
                                         ]),
                                         Row(children: [
-                                          const Text('Manufactured Year: '),
+                                          Text('Manufactured Year: '.tr),
                                           Text(controller.trx.records![index]
                                               .manufacturedYear
                                               .toString()),
                                         ]),
                                         Row(children: [
-                                          const Text('Manufacturer: '),
+                                          Text('Manufacturer: '.tr),
                                           Text(controller.trx.records![index]
                                                   .manufacturer ??
-                                              "??"),
+                                              ""),
                                         ]),
                                         controller.trx.records![index].eDIType
                                                     ?.id ==
-                                                "A2"
+                                                "A02"
                                             ? Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.end,
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
                                                 children: [
+                                                    IconButton(
+                                                      tooltip: 'Edit',
+                                                      onPressed: () async {
+                                                        Get.to(
+                                                            const EditMaintenanceMpResource(),
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .id,
+                                                              "number":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .number,
+                                                              "productName":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID!
+                                                                      .identifier,
+                                                              "productId":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID!
+                                                                      .id,
+                                                              "location": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .locationComment,
+                                                              "observation":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .name,
+                                                              "SerNo":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .serNo,
+                                                              "barcode":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .prodCode,
+                                                              "manufacturer":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .manufacturer,
+                                                              "year": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .manufacturedYear
+                                                                  .toString(),
+                                                              "Description":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .description,
+                                                              "date3": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl3DateFrom,
+                                                              "date2": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl2DateFrom,
+                                                              "date1": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl1DateFrom,
+                                                              "offlineid":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .offlineId,
+                                                              "index": index,
+                                                            });
+                                                        /* controller
+                                                            .editWorkOrderResourceDateCheck(
+                                                                isConnected,
+                                                                index); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit),
+                                                    ),
                                                     IconButton(
                                                       tooltip: 'Check',
                                                       onPressed: () async {
@@ -1239,8 +1348,8 @@ class MaintenanceMpResourceScreen
                                                                 isConnected,
                                                                 index);
                                                       },
-                                                      icon: const Icon(
-                                                          Icons.content_paste),
+                                                      icon: const Icon(Icons
+                                                          .check_circle_outline),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Revision',
@@ -1252,8 +1361,8 @@ class MaintenanceMpResourceScreen
                                                                 isConnected,
                                                                 index);
                                                       },
-                                                      icon: const Icon(
-                                                          Icons.search),
+                                                      icon: const Icon(Icons
+                                                          .handyman_outlined),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Testing',
@@ -1266,7 +1375,7 @@ class MaintenanceMpResourceScreen
                                                                 index);
                                                       },
                                                       icon: const Icon(
-                                                          Icons.gavel_sharp),
+                                                          Icons.gavel_outlined),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Anomaly',
@@ -1382,8 +1491,8 @@ class MaintenanceMpResourceScreen
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("RESOURCES: ${controller.trx.rowcount}")
-                        : const Text("RESOURCES: ")),
+                        ? Text("${"RESOURCES".tr}: ${controller.trx.rowcount}")
+                        : Text("${"RESOURCES".tr}: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
@@ -1521,7 +1630,7 @@ class MaintenanceMpResourceScreen
                                       icon: Icon(
                                         controller.trx.records![index].eDIType
                                                     ?.id ==
-                                                'A2'
+                                                'A02'
                                             ? Icons.grid_4x4_outlined
                                             : Icons.edit,
                                         color: Colors.green,
@@ -1530,7 +1639,7 @@ class MaintenanceMpResourceScreen
                                       onPressed: () async {
                                         switch (controller
                                             .trx.records![index].eDIType?.id) {
-                                          case "A1":
+                                          case "A01":
                                             if (controller.trx.records![index]
                                                     .offlineId ==
                                                 null) {
@@ -1622,7 +1731,7 @@ class MaintenanceMpResourceScreen
                                             }
 
                                             break;
-                                          case 'A2':
+                                          case 'A02':
                                             Get.offNamed(
                                                 '/MaintenanceMpResourceFireExtinguisherGrid',
                                                 arguments: {
@@ -1676,11 +1785,13 @@ class MaintenanceMpResourceScreen
                                     children: [
                                       Row(
                                         children: [
-                                          Text(
-                                            "NR. ${controller.trx.records![index].number} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo} L. ${controller.trx.records![index].lineNo}",
-                                            style: const TextStyle(
-                                              color:
-                                                  kNotifColor, /* fontWeight: FontWeight.bold */
+                                          Expanded(
+                                            child: Text(
+                                              "NR. ${controller.trx.records![index].number} L. ${controller.trx.records![index].lineNo} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo}",
+                                              style: const TextStyle(
+                                                color:
+                                                    kNotifColor, /* fontWeight: FontWeight.bold */
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -1715,7 +1826,7 @@ class MaintenanceMpResourceScreen
                                             child: Text(
                                               controller.trx.records![index]
                                                       .locationComment ??
-                                                  "??",
+                                                  "",
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
@@ -1723,9 +1834,10 @@ class MaintenanceMpResourceScreen
                                         ],
                                       ),
                                       Row(children: [
-                                        const Text(
-                                          'Quantity: ',
-                                          style: TextStyle(color: Colors.white),
+                                        Text(
+                                          'Quantity: '.tr,
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                         Text(
                                           "${controller.trx.records![index].resourceQty}",
@@ -1746,10 +1858,10 @@ class MaintenanceMpResourceScreen
                                     Column(
                                       children: [
                                         Row(children: [
-                                          const Text('Note: '),
+                                          Text('Note: '.tr),
                                           Text(controller
                                                   .trx.records![index].name ??
-                                              "??"),
+                                              ""),
                                         ]),
                                         /* Row(children: [
                                           const Text('SerNo: '),
@@ -1758,10 +1870,10 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Descrizione: '),
+                                          Text('Description: '.tr),
                                           Text(controller.trx.records![index]
                                                   .description ??
-                                              "??"),
+                                              ""),
                                         ]),
                                         /* Row(children: [
                                           const Text('Location Code: '),
@@ -1776,7 +1888,7 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Check Date: '),
+                                          Text('Check Date: '.tr),
                                           Text(
                                               "${controller.trx.records![index].lITControl1DateFrom} - ${controller.trx.records![index].lITControl1DateNext}"),
                                         ]),
@@ -1787,7 +1899,7 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Revision Date: '),
+                                          Text('Revision Date: '.tr),
                                           Text(
                                               "${controller.trx.records![index].lITControl2DateFrom} - ${controller.trx.records![index].lITControl2DateNext}"),
                                         ]),
@@ -1798,29 +1910,133 @@ class MaintenanceMpResourceScreen
                                               "??"),
                                         ]), */
                                         Row(children: [
-                                          const Text('Testing Date: '),
+                                          Text('Testing Date: '.tr),
                                           Text(
                                               "${controller.trx.records![index].lITControl3DateFrom} - ${controller.trx.records![index].lITControl3DateNext}"),
                                         ]),
                                         Row(children: [
-                                          const Text('Manufactured Year: '),
+                                          Text('Manufactured Year: '.tr),
                                           Text(controller.trx.records![index]
                                               .manufacturedYear
                                               .toString()),
                                         ]),
                                         Row(children: [
-                                          const Text('Manufacturer: '),
+                                          Text('Manufacturer: '.tr),
                                           Text(controller.trx.records![index]
                                                   .manufacturer ??
-                                              "??"),
+                                              ""),
                                         ]),
                                         controller.trx.records![index].eDIType
                                                     ?.id ==
-                                                "A2"
+                                                "A02"
                                             ? Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.end,
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
                                                 children: [
+                                                    IconButton(
+                                                      tooltip: 'Edit',
+                                                      onPressed: () async {
+                                                        Get.to(
+                                                            const EditMaintenanceMpResource(),
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .id,
+                                                              "number":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .number,
+                                                              "productName":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID!
+                                                                      .identifier,
+                                                              "productId":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID!
+                                                                      .id,
+                                                              "location": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .locationComment,
+                                                              "observation":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .name,
+                                                              "SerNo":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .serNo,
+                                                              "barcode":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .prodCode,
+                                                              "manufacturer":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .manufacturer,
+                                                              "year": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .manufacturedYear
+                                                                  .toString(),
+                                                              "Description":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .description,
+                                                              "date3": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl3DateFrom,
+                                                              "date2": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl2DateFrom,
+                                                              "date1": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl1DateFrom,
+                                                              "offlineid":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .offlineId,
+                                                              "index": index,
+                                                            });
+                                                        /* controller
+                                                            .editWorkOrderResourceDateCheck(
+                                                                isConnected,
+                                                                index); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit),
+                                                    ),
                                                     IconButton(
                                                       tooltip: 'Check',
                                                       onPressed: () async {
@@ -1831,8 +2047,8 @@ class MaintenanceMpResourceScreen
                                                                 isConnected,
                                                                 index);
                                                       },
-                                                      icon: const Icon(
-                                                          Icons.content_paste),
+                                                      icon: const Icon(Icons
+                                                          .check_circle_outline),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Revision',
@@ -1844,8 +2060,8 @@ class MaintenanceMpResourceScreen
                                                                 isConnected,
                                                                 index);
                                                       },
-                                                      icon: const Icon(
-                                                          Icons.search),
+                                                      icon: const Icon(Icons
+                                                          .handyman_outlined),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Testing',
@@ -1858,7 +2074,7 @@ class MaintenanceMpResourceScreen
                                                                 index);
                                                       },
                                                       icon: const Icon(
-                                                          Icons.gavel_sharp),
+                                                          Icons.gavel_outlined),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Anomaly',
