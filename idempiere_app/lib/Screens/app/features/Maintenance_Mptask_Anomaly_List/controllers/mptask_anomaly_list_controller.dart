@@ -1,33 +1,140 @@
 part of dashboard;
 
-class MaintenanceMptaskController extends GetxController {
+class AnomalyListController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late WorkOrderLocalJson _trx;
-  var _hasCallSupport = false;
+  late AnomalyJson _trx;
   //var _hasMailSupport = false;
-
+  dynamic args = Get.arguments;
+  int docId = 0;
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
-  var value = (("Today").tr).obs;
+  var value = ("Replacements Only".tr).obs;
 
-  var filters = ["Today".tr, "All" /* , "Team" */];
+  var filters = ["Replacements Only", "All" /* , "Team" */];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var searchFieldController = TextEditingController();
+  var searchFilterValue = "".obs;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  Future<void> getWarehouseDocType() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/C_DocType?\$filter= Name eq \'Warehouse Order\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (json["row-count"] > 0) {
+        docId = json["records"][0]["id"];
+      }
+
+      //_trx = AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    }
+  }
+
+  Future<void> createSalesOrderFromAnomaly() async {
+    Get.defaultDialog(
+      title: 'Create Sales Order'.tr,
+      content: Text("Are you sure you want to create a Sales Order?".tr),
+      onCancel: () {},
+      onConfirm: () async {
+        final ip = GetStorage().read('ip');
+        String authorization = 'Bearer ' + GetStorage().read('token');
+        final msg = jsonEncode({
+          "record-id": args["record-id"],
+          "model-name": args["model-name"],
+          "C_DocType_ID": docId,
+        });
+        //print(msg);
+        final protocol = GetStorage().read('protocol');
+        var url = Uri.parse('$protocol://' +
+            ip +
+            '/api/v1/processes/createsalesorderfromanomaly');
+
+        var response = await http.post(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          //print("done!");
+          Get.back();
+          //print(response.body);
+          Get.snackbar(
+            "Done!".tr,
+            "Sales Order has been created".tr,
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          if (kDebugMode) {
+            print(response.body);
+          }
+          Get.snackbar(
+            "Error!".tr,
+            "Sales Order not created".tr,
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  /* final json = {
+    "types": [
+      {"id": "1", "name": "Name"},
+      {"id": "2", "name": "Mail"},
+      {"id": "3", "name": "Phone N°"},
+    ]
+  }; */
+
+  /* List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
+  } */
+
   @override
   void onInit() {
+    //dropDownList = getTypes()!;
     super.onInit();
-    canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
-      _hasCallSupport = result;
-    });
-
-    getWorkOrders();
+    getWarehouseDocType();
+    getAnomalies();
+    //getADUserID();
+    adUserId = GetStorage().read('userId');
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  WorkOrderLocalJson get trx => _trx;
+  AnomalyJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -37,114 +144,35 @@ class MaintenanceMptaskController extends GetxController {
     }
 
     value.value = filters[filterCount];
-    getWorkOrders();
+    getAnomalies();
   }
 
-  Future<void> makePhoneCall(String phoneNumber) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    if (_hasCallSupport) {
-      final Uri launchUri = Uri(
-        scheme: 'tel',
-        path: phoneNumber,
-      );
-      await launchUrl(launchUri);
-    }
-  }
-
-  Future<void> writeMailTo(String receiver) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'mailto',
-      path: receiver,
-    );
-    await launchUrl(launchUri);
-  }
-
-  Future<void> getWorkOrders() async {
+  Future<void> getAnomalies() async {
     _dataAvailable.value = false;
-    //print(GetStorage().read('workOrderSync'));
-    //print(GetStorage().read('userId'));
+    var apiUrlFilter = ["", " and LIT_IsReplaced eq Y"];
 
-    const filename = "workorder";
+    const filename = "anomalies";
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
-    var jsondecoded = jsonDecode(await file.readAsString());
-    _trx = WorkOrderLocalJson.fromJson(jsondecoded);
+    var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    //print(value.value);
-
-    if (value.value == "Today".tr) {
-      _trx.records!.retainWhere((element) =>
-          DateTime.now().toString().substring(0, 10) ==
-          element.jpToDoStartDate);
-    }
-    // ignore: unnecessary_null_comparison
-    _dataAvailable.value = _trx != null;
-  }
-
-  Future<void> syncWorkOrder() async {
-    var isConnected = await checkConnection();
-
-    //print(isConnected);
-
-    if (isConnected) {
-      emptyAPICallStak();
-      _dataAvailable.value = false;
-      String ip = GetStorage().read('ip');
-      var userId = GetStorage().read('userId');
-      String authorization = 'Bearer ' + GetStorage().read('token');
-      final protocol = GetStorage().read('protocol');
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
-
-      var response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': authorization,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        //print(response.body);
-        const filename = "workorder";
-        final file = File(
-            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        file.writeAsString(response.body);
-        //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
-        //isWorkOrderSyncing.value = false;
-        syncWorkOrderResource();
-      } else {
-        //print(response.body);
+    json.records!.retainWhere(
+        (element) => element.mPMaintainResourceID?.id == args["id"]);
+    /*  var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and AD_User_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
       }
-    } else {
-      Get.snackbar(
-        "Connessione Internet assente!",
-        "Impossibile aggiornare i record.",
-        icon: const Icon(
-          Icons.signal_wifi_connected_no_internet_4,
-          color: Colors.red,
-        ),
-      );
-    }
-  }
-
-  Future<void> syncWorkOrderResource() async {
-    String ip = GetStorage().read('ip');
-    //var userId = GetStorage().read('userId');
+    } */
+    /* final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
-
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/LIT_NC?\$filter= MP_Maintain_Resource_ID eq ${args["id"]} and C_Order_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -152,17 +180,14 @@ class MaintenanceMptaskController extends GetxController {
         'Authorization': authorization,
       },
     );
-
-    if (response.statusCode == 200) {
-      //print(response.body);
-      const filename = "workorderresource";
-      final file = File(
-          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-      file.writeAsString(response.body);
-      /*  GetStorage()
-          .write('workOrderResourceSync', utf8.decode(response.bodyBytes)); */
-      getWorkOrders();
-    }
+    if (response.statusCode == 200) { */
+    //print(response.body);
+    _trx = json;
+    //print(trx.rowcount);
+    //print(response.body);
+    // ignore: unnecessary_null_comparison
+    _dataAvailable.value = _trx != null;
+    //}
   }
 
   /* void openDrawer() {
@@ -310,45 +335,5 @@ class MaintenanceMptaskController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

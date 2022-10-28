@@ -72,6 +72,15 @@ class MaintenanceMpResourceController extends GetxController {
     getWorkOrders();
   }
 
+  String getPerm(String type) {
+    for (var i = 0; i < _tt.records!.length; i++) {
+      if (_tt.records![i].value == type) {
+        return _tt.records![i].parameterValue!;
+      }
+    }
+    return "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN";
+  }
+
   openResourceType() {
     Get.defaultDialog(
       title: "Resource Type",

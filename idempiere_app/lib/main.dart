@@ -43,6 +43,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mpimportitem/view
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpnomaly/views/screens/maintenance_mpanomaly_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mppicking/views/screens/maintenance_mppicking_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/views/screens/mptask_anomaly_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_Review/views/screens/mptask_anomaly_review_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_A2_Fire_Extinguisher_Grid/views/screens/maintenance_mptask_resource_fire_extinguisher_screen.dart';
@@ -344,6 +345,11 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceMptaskAnomalyReview',
           page: () => const AnomalyReviewScreen(),
           binding: AnomalyReviewBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceMptaskAnomalyList',
+          page: () => const AnomalyListScreen(),
+          binding: AnomalyListBinding(),
         ),
         GetPage(
           name: '/MaintenanceMptaskLine',

@@ -542,6 +542,9 @@ class MaintenanceMpResourceScreen
                                                         Get.to(
                                                             const EditMaintenanceMpResource(),
                                                             arguments: {
+                                                              "perm": controller
+                                                                  .getPerm(
+                                                                      "A02"),
                                                               "id": controller
                                                                   .trx
                                                                   .records![
@@ -553,6 +556,45 @@ class MaintenanceMpResourceScreen
                                                                       .records![
                                                                           index]
                                                                       .number,
+                                                              "lineNo": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lineNo
+                                                                  .toString(),
+                                                              "cartel": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .textDetails,
+                                                              "model": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITProductModel,
+                                                              "dateOrder":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .dateOrdered,
+                                                              "years": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .useLifeYears
+                                                                  .toString(),
+                                                              "user": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .userName,
+                                                              "serviceDate":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .serviceDate,
                                                               "productName":
                                                                   controller
                                                                       .trx
@@ -687,61 +729,15 @@ class MaintenanceMpResourceScreen
                                                           await emptyPostCallStack();
                                                           await emptyEditAPICallStack();
                                                           await emptyDeleteCallStack();
-
-                                                          Get.to(
-                                                              const CreateResAnomaly(),
-                                                              arguments: {
-                                                                "id": controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .id,
-                                                                "docNo": controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .mpOtDocumentno ??
-                                                                    "",
-                                                                "productId": controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .mProductID
-                                                                        ?.id ??
-                                                                    0,
-                                                                "productName": controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .mProductID
-                                                                        ?.identifier ??
-                                                                    "",
-                                                              });
                                                         }
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.warning,
-                                                        color: Colors.red,
-                                                      ),
-                                                    ),
-                                                  ])
-                                            : Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  IconButton(
-                                                    tooltip: 'Anomaly',
-                                                    onPressed: () async {
-                                                      var isConnected =
-                                                          await checkConnection();
-                                                      if (isConnected) {
-                                                        await emptyPostCallStack();
-                                                        await emptyEditAPICallStack();
-                                                        await emptyDeleteCallStack();
-
                                                         Get.to(
                                                             const CreateResAnomaly(),
                                                             arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .id,
                                                               "docNo": controller
                                                                       .trx
                                                                       .records![
@@ -762,8 +758,105 @@ class MaintenanceMpResourceScreen
                                                                       .mProductID
                                                                       ?.identifier ??
                                                                   "",
+                                                              "isConnected":
+                                                                  isConnected,
                                                             });
+                                                      },
+                                                      icon: Stack(
+                                                        children: <Widget>[
+                                                          const Icon(
+                                                            Icons.warning,
+                                                            color: Colors.red,
+                                                          ),
+                                                          Visibility(
+                                                            visible: int.parse(controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .anomaliesCount!) !=
+                                                                    0
+                                                                ? true
+                                                                : false,
+                                                            child: Positioned(
+                                                              right: 1,
+                                                              top: 1,
+                                                              child: Container(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(1),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              6),
+                                                                ),
+                                                                constraints:
+                                                                    const BoxConstraints(
+                                                                  minWidth: 12,
+                                                                  minHeight: 12,
+                                                                ),
+                                                                child: Text(
+                                                                  '${controller.trx.records![index].anomaliesCount}',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 8,
+                                                                  ),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ])
+                                            : Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  IconButton(
+                                                    tooltip: 'Anomaly',
+                                                    onPressed: () async {
+                                                      var isConnected =
+                                                          await checkConnection();
+                                                      if (isConnected) {
+                                                        await emptyPostCallStack();
+                                                        await emptyEditAPICallStack();
+                                                        await emptyDeleteCallStack();
                                                       }
+                                                      Get.to(
+                                                          const CreateResAnomaly(),
+                                                          arguments: {
+                                                            "docNo": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mpOtDocumentno ??
+                                                                "",
+                                                            "productId": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mProductID
+                                                                    ?.id ??
+                                                                0,
+                                                            "productName": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mProductID
+                                                                    ?.identifier ??
+                                                                "",
+                                                            "isConnected":
+                                                                isConnected,
+                                                          });
                                                     },
                                                     icon: const Icon(
                                                       Icons.warning,

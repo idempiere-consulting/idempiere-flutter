@@ -45,10 +45,20 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       "SerNo": sernoFieldController.text,
       "Description": descriptionFieldController.text,
       "V_Number": numberFieldController.text,
+      "lineNo": int.parse(
+          lineFieldController.text == "" ? "0" : lineFieldController.text),
       "LocationComment": locationFieldController.text,
       "Manufacturer": manufacturerFieldController.text,
       "ManufacturedYear": int.parse(yearFieldController.text),
       "ProdCode": barcodeFieldController.text,
+      "TextDetails": cartelFieldController.text,
+      "LIT_ProductModel": productModelFieldController.text,
+      "DateOrdered": dateOrdered,
+      "ServiceDate": firstUseDate,
+      "UserName": userNameFieldController.text,
+      "UseLifeYears": int.parse(useLifeYearsFieldController.text == ""
+          ? "0"
+          : useLifeYearsFieldController.text),
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -65,6 +75,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       trx.records![Get.arguments["index"]].description =
           descriptionFieldController.text;
       trx.records![Get.arguments["index"]].number = numberFieldController.text;
+      trx.records![Get.arguments["index"]].lineNo = int.parse(
+          lineFieldController.text == "" ? "0" : lineFieldController.text);
       trx.records![Get.arguments["index"]].locationComment =
           locationFieldController.text;
       trx.records![Get.arguments["index"]].manufacturer =
@@ -73,7 +85,18 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           int.parse(yearFieldController.text);
       trx.records![Get.arguments["index"]].prodCode =
           barcodeFieldController.text;
-
+      trx.records![Get.arguments["index"]].textDetails =
+          cartelFieldController.text;
+      trx.records![Get.arguments["index"]].lITProductModel =
+          productModelFieldController.text;
+      trx.records![Get.arguments["index"]].dateOrdered = dateOrdered;
+      trx.records![Get.arguments["index"]].serviceDate = firstUseDate;
+      trx.records![Get.arguments["index"]].userName =
+          userNameFieldController.text;
+      trx.records![Get.arguments["index"]].useLifeYears = int.parse(
+          useLifeYearsFieldController.text == ""
+              ? "0"
+              : useLifeYearsFieldController.text);
       var url = Uri.parse('http://' +
           ip +
           '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}');
@@ -174,10 +197,21 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             "SerNo": sernoFieldController.text,
             "Description": descriptionFieldController.text,
             "V_Number": numberFieldController.text,
+            "lineNo": int.parse(lineFieldController.text == ""
+                ? "0"
+                : lineFieldController.text),
             "LocationComment": locationFieldController.text,
             "Manufacturer": manufacturerFieldController.text,
             "ManufacturedYear": int.parse(yearFieldController.text),
             "ProdCode": barcodeFieldController.text,
+            "TextDetails": cartelFieldController.text,
+            "LIT_ProductModel": productModelFieldController.text,
+            "DateOrdered": dateOrdered,
+            "ServiceDate": firstUseDate,
+            "UserName": userNameFieldController.text,
+            "UseLifeYears": int.parse(useLifeYearsFieldController.text == ""
+                ? "0"
+                : useLifeYearsFieldController.text),
           });
 
           list.removeAt(i);
@@ -224,6 +258,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
 
   //dynamic args = Get.arguments;
   var numberFieldController;
+  var lineFieldController;
   var nameFieldController;
   var valueFieldController;
   var descriptionFieldController;
@@ -233,6 +268,10 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   var manufacturerFieldController;
   var yearFieldController;
   var observationFieldController;
+  var cartelFieldController;
+  var productModelFieldController;
+  var userNameFieldController;
+  var useLifeYearsFieldController;
   String date3 = "";
   int dateCalc3 = 0;
   String date2 = "";
@@ -242,6 +281,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   var productId;
   var productName;
   var offline = -1;
+  String dateOrdered = Get.arguments["dateOrder"] ?? "";
+  String firstUseDate = Get.arguments["serviceDate"] ?? "";
 
   @override
   void initState() {
@@ -250,6 +291,16 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     super.initState();
     numberFieldController = TextEditingController();
     numberFieldController.text = Get.arguments["number"] ?? "0";
+    lineFieldController = TextEditingController();
+    lineFieldController.text = Get.arguments["lineNo"] ?? "0";
+    cartelFieldController = TextEditingController();
+    cartelFieldController.text = Get.arguments["cartel"] ?? "";
+    productModelFieldController = TextEditingController();
+    productModelFieldController = Get.arguments["model"];
+    userNameFieldController = TextEditingController();
+    userNameFieldController.text = Get.arguments["user"] ?? "";
+    useLifeYearsFieldController = TextEditingController();
+    useLifeYearsFieldController.text = Get.arguments["years"] ?? "0";
     nameFieldController = TextEditingController();
     nameFieldController.text = Get.arguments["name"] ?? "";
     valueFieldController = TextEditingController();
@@ -274,6 +325,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     date1 = Get.arguments["date1"] ?? "";
     dateCalc3 = 0;
     offline = Get.arguments["offlineid"] ?? -1;
+    dateOrdered = "";
+    firstUseDate = "";
     //print(Get.arguments["offlineid"]);
 
     //getAllProducts();
@@ -315,20 +368,41 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    //focusNode: focusNode,
-                    controller: numberFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: "N°".tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[0] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: numberFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "N°".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
                     ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[1] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: lineFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Line N°'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
                   ),
                 ),
                 Container(
@@ -399,27 +473,35 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                     ),
                   ),
                 ), */
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: locationFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Location'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[3] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      minLines: 3,
+                      maxLines: 3,
+                      controller: observationFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Note'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: barcodeFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Barcode'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[4] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: barcodeFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Barcode'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
@@ -435,32 +517,185 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: manufacturerFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Manufacturer'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[6] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: cartelFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Cartel'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    //focusNode: focusNode,
-                    controller: yearFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: "Year".tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                Visibility(
+                  visible: (Get.arguments["perm"])[7] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: productModelFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Product Model'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[8] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Date Ordered'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          dateOrdered = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[9] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: '',
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'First Use Date'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          firstUseDate = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[10] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: userNameFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'User Name'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[11] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: useLifeYearsFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Due Year'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[12] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: locationFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Location'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[13] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: manufacturerFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Manufacturer'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[14] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: yearFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Manufactured Year".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
                   ),
                 ),
                 Container(
@@ -475,116 +710,111 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                Visibility(
+                  visible: (Get.arguments["perm"])[15] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: date1,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Check'.tr,
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date1 = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: date1,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Check'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          date1 = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                Visibility(
+                  visible: (Get.arguments["perm"])[16] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: date2,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Revision'.tr,
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date2 = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: date2,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Revision'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          date2 = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
+                    ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                Visibility(
+                  visible: (Get.arguments["perm"])[17] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: date3,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Testing'.tr,
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date3 = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    minLines: 3,
-                    maxLines: 3,
-                    controller: observationFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_pin_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Observations'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      initialValue: date3,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      dateLabelText: 'Testing'.tr,
+                      icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+                        setState(() {
+                          date3 = val.substring(0, 10);
+                        });
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
                     ),
                   ),
                 ),

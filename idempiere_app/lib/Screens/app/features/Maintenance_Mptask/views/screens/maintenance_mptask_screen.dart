@@ -150,11 +150,11 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
-                                      /*  GetStorage().write(
+                                      GetStorage().write(
                                           'selectedWorkOrderId',
                                           controller
                                               .trx.records![index].mPOTID!.id);
-                                      Get.toNamed('/MaintenanceMptaskLine'); */
+
                                       GetStorage().write(
                                           'selectedTaskDocNo',
                                           controller.trx.records![index]
@@ -488,10 +488,21 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             )
                                           ],
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
+                                        ButtonBar(
+                                          alignment: MainAxisAlignment.center,
+                                          overflowDirection:
+                                              VerticalDirection.down,
+                                          overflowButtonSpacing: 5,
                                           children: [
+                                            ElevatedButton(
+                                              child: Text("Complete".tr),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {},
+                                            ),
                                             ElevatedButton(
                                               child:
                                                   Text("Anomalies Review".tr),
@@ -524,17 +535,31 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                     });
                                               },
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8),
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cOrderID !=
+                                                  null,
                                               child: ElevatedButton(
-                                                child: Text("Complete".tr),
+                                                child:
+                                                    Text("Sales Order Zoom".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
                                                           Colors.green),
                                                 ),
-                                                onPressed: () async {},
+                                                onPressed: () async {
+                                                  Get.offNamed('/SalesOrder',
+                                                      arguments: {
+                                                        "notificationId":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cOrderID
+                                                                ?.id
+                                                      });
+                                                },
                                               ),
                                             ),
                                           ],

@@ -7,10 +7,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/models/anomaly_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/anomaly_type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/bom_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/bom_line_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/locator_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
@@ -26,34 +29,22 @@ class CreateResAnomaly extends StatefulWidget {
 
 class _CreateResAnomalyState extends State<CreateResAnomaly> {
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  createResAnomaly() async {
+  createResAnomaly(bool isConnected) async {
     final ip = GetStorage().read('ip');
-    String authorization =
-        'Bearer ' + GetStorage().read('token'); //selectedTaskId
-    var msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {
-        "id": GetStorage().read("clientid")
-      }, //selectedWorkOrderId
-      //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
-      "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
-      "MP_Maintain_Resource_ID": {"id": args["id"]},
-      "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
-      "AD_User_ID": {"id": GetStorage().read("userId")},
-      "Name": "anomaly",
-      "Description": noteFieldController.text,
-      "IsInvoiced": isCharged,
-      "LIT_IsReplaced": isReplacedNow,
-      "M_Product_ID": {"id": replacementId},
-      "DateDoc": "${formattedDate}T00:00:00Z",
-      "LIT_IsManagedByCustomer": manByCustomer,
-      "IsClosed": isClosed,
-    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NC/');
 
-    if (manByCustomer) {
-      msg = jsonEncode({
+    const filename = "anomalies";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    if (isConnected) {
+      String authorization =
+          'Bearer ' + GetStorage().read('token'); //selectedTaskId
+      var msg = jsonEncode({
         "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-        "AD_Client_ID": {"id": GetStorage().read("clientid")},
+        "AD_Client_ID": {
+          "id": GetStorage().read("clientid")
+        }, //selectedWorkOrderId
         //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
         "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
         "MP_Maintain_Resource_ID": {"id": args["id"]},
@@ -63,51 +54,169 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         "Description": noteFieldController.text,
         "IsInvoiced": isCharged,
         "LIT_IsReplaced": isReplacedNow,
+        "M_Product_ID": {"id": replacementId},
         "DateDoc": "${formattedDate}T00:00:00Z",
         "LIT_IsManagedByCustomer": manByCustomer,
         "IsClosed": isClosed,
       });
-    }
-    //print(msg);
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NC/');
-    //print(msg);
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 201) {
-      Get.back();
-      var json = jsonDecode(response.body);
-      if (imageName != "" && image64 != "") {
-        sendTicketAttachedImage(json["id"]);
-        //print(response.body);
+
+      if (manByCustomer) {
+        msg = jsonEncode({
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+          "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
+          "MP_Maintain_Resource_ID": {"id": args["id"]},
+          "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
+          "AD_User_ID": {"id": GetStorage().read("userId")},
+          "Name": "anomaly",
+          "Description": noteFieldController.text,
+          "IsInvoiced": isCharged,
+          "LIT_IsReplaced": isReplacedNow,
+          "DateDoc": "${formattedDate}T00:00:00Z",
+          "LIT_IsManagedByCustomer": manByCustomer,
+          "IsClosed": isClosed,
+        });
       }
-      //print("done!");
-      Get.snackbar(
-        "Done!".tr,
-        "The record has been created".tr,
-        icon: const Icon(
-          Icons.done,
-          color: Colors.green,
-        ),
+      //print(msg);
+
+      //print(msg);
+      var response = await http.post(
+        url,
+        body: msg,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
       );
-    } else {
-      if (kDebugMode) {
-        print(response.body);
+      if (response.statusCode == 201) {
+        var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
+        var record =
+            ANRecords.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+        json.records!.add(record);
+
+        file.writeAsStringSync(jsonEncode(json.toJson()));
+        Get.back();
+        var json2 = jsonDecode(response.body);
+        if (imageName != "" && image64 != "") {
+          sendTicketAttachedImage(json2["id"]);
+          //print(response.body);
+        }
+        //print("done!");
+        Get.snackbar(
+          "Done!".tr,
+          "The record has been created".tr,
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+        Get.snackbar(
+          "Error!".tr,
+          "Record not created".tr,
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
       }
+    } else {
+      var record = ANRecords();
+      var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+      record.offlineId = GetStorage().read('postCallId');
+      record.mPMaintainResourceID = MPMaintainResourceID.fromJson({
+        "MP_Maintain_Resource_ID": {"id": args["id"]}
+      });
+      record.lITNCFaultTypeID = LITNCFaultTypeID.fromJson({
+        "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)}
+      });
+      record.aDUserID = ADUserID.fromJson({
+        "AD_User_ID": {"id": GetStorage().read("userId")}
+      });
+      record.description = noteFieldController.text;
+      record.isInvoiced = isCharged;
+      record.lITIsReplaced = isReplacedNow;
+      if (manByCustomer) {
+        record.mProductID = AMProductID.fromJson({
+          "M_Product_ID": {"id": replacementId},
+        });
+      }
+
+      record.dateDoc = "${formattedDate}T00:00:00Z";
+      record.lITIsManagedByCustomer = manByCustomer;
+      record.isClosed = isClosed;
+
+      List<dynamic> list = [];
+
+      var msg = jsonEncode({
+        "offlineid": GetStorage().read('postCallId'),
+        "url": '$protocol://' + ip + '/api/v1/models/LIT_NC/',
+        "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+        "AD_Client_ID": {
+          "id": GetStorage().read("clientid")
+        }, //selectedWorkOrderId
+        //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+        "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
+        "MP_Maintain_Resource_ID": {"id": args["id"]},
+        "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
+        "AD_User_ID": {"id": GetStorage().read("userId")},
+        "Name": "anomaly",
+        "Description": noteFieldController.text,
+        "IsInvoiced": isCharged,
+        "LIT_IsReplaced": isReplacedNow,
+        "M_Product_ID": {"id": replacementId},
+        "DateDoc": "${formattedDate}T00:00:00Z",
+        "LIT_IsManagedByCustomer": manByCustomer,
+        "IsClosed": isClosed,
+      });
+
+      if (manByCustomer) {
+        msg = jsonEncode({
+          "offlineid": GetStorage().read('postCallId'),
+          "url": '$protocol://' + ip + '/api/v1/models/LIT_NC/',
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+          "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
+          "MP_Maintain_Resource_ID": {"id": args["id"]},
+          "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
+          "AD_User_ID": {"id": GetStorage().read("userId")},
+          "Name": "anomaly",
+          "Description": noteFieldController.text,
+          "IsInvoiced": isCharged,
+          "LIT_IsReplaced": isReplacedNow,
+          "DateDoc": "${formattedDate}T00:00:00Z",
+          "LIT_IsManagedByCustomer": manByCustomer,
+          "IsClosed": isClosed,
+        });
+      }
+      if (GetStorage().read('postCallList') == null) {
+        list.add(msg);
+      } else {
+        list = GetStorage().read('postCallList');
+
+        list.add(msg);
+      }
+      GetStorage().write('postCallId', GetStorage().read('postCallId') + 1);
+      GetStorage().write('postCallList', list);
       Get.snackbar(
-        "Error!".tr,
-        "Record not created".tr,
+        "Saved!".tr,
+        "The record has been saved locally waiting for internet connection".tr,
         icon: const Icon(
-          Icons.error,
+          Icons.save,
           color: Colors.red,
         ),
       );
+      json.records!.add(record);
+      //json.rowcount = json.rowcount! + 1;
+      var data = jsonEncode(json.toJson());
+      file.writeAsStringSync(data);
+      Get.find<MaintenanceMpResourceController>().getWorkOrders();
     }
   }
 
@@ -145,47 +254,31 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       },
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      //print(response.body);
+      print(response.body);
     } else {
-      //print(response.body);
+      print(response.body);
     }
   }
 
   getAnomalyTypes() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NCFaultType/');
+    const filename = "anomalytype";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    //print(response.body);
+    var json = AnomalyTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
+    list = json.records!;
+    list.insert(0, ARecords(id: 0, name: ""));
 
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json =
-          AnomalyTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-
-      list = json.records!;
-      list.insert(0, ARecords(id: 0, name: ""));
-
-      for (var element in list) {
-        if (element.name == 'Parte Mancante') {
-          missingPartId = element.id.toString();
-        }
+    for (var element in list) {
+      if (element.name == 'Parte Mancante') {
+        missingPartId = element.id.toString();
       }
-
-      setState(() {
-        anomalyTypesAvailable = true;
-      });
-    } else {
-      throw Exception("Failed to load anomaly types");
     }
+
+    setState(() {
+      anomalyTypesAvailable = true;
+    });
   }
 
   getLocators() async {
@@ -279,7 +372,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   }
 
   getProductBOM() async {
-    final ip = GetStorage().read('ip');
+    /* final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
@@ -292,19 +385,21 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         'Content-Type': 'application/json',
         'Authorization': authorization,
       },
-    );
+    ); */
 
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
+    const filename = "productsBOM";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var json = ProductBOMJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-      if (json["row-count"] > 0) {
-        getProductBOMLines(json["records"][0]["id"]);
-      }
-    } else {
-      if (kDebugMode) {
-        print(utf8.decode(response.bodyBytes));
-      }
+    json.records!
+        .retainWhere((element) => element.mProductID?.id == args["productId"]);
+
+    //print(response.body);
+    //var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+    if (json.records!.isNotEmpty) {
+      getProductBOMLines(json.records![0].id!);
     }
   }
 
@@ -312,7 +407,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     const filename = "products";
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-    final ip = GetStorage().read('ip');
+    const filename2 = "productsBOMline";
+    final file2 = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename2.json');
+    /* final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
@@ -325,34 +423,27 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         'Content-Type': 'application/json',
         'Authorization': authorization,
       },
-    );
+    ); */
 
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json =
-          BOMLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      var jsonResources =
-          ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
+    //print(response.body);
+    var json = BOMLineJson.fromJson(jsonDecode(file2.readAsStringSync()));
+    var jsonResources =
+        ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-      bomList = [];
+    bomList = [];
 
-      for (var element in json.records!) {
-        for (var i = 0; i < jsonResources.records!.length; i++) {
-          if (element.mProductCategoryID?.id ==
-              jsonResources.records![i].mProductCategoryID?.id) {
-            bomList.add(jsonResources.records![i]);
-          }
+    for (var element in json.records!) {
+      for (var i = 0; i < jsonResources.records!.length; i++) {
+        if (element.mProductCategoryID?.id ==
+            jsonResources.records![i].mProductCategoryID?.id) {
+          bomList.add(jsonResources.records![i]);
         }
-        //print(element.mProductCategoryID?.identifier ?? "nothing");
       }
-      setState(() {
-        missingPartFlag = true;
-      });
-    } else {
-      if (kDebugMode) {
-        print(utf8.decode(response.bodyBytes));
-      }
+      //print(element.mProductCategoryID?.identifier ?? "nothing");
     }
+    setState(() {
+      missingPartFlag = true;
+    });
   }
 
   /* void fillFields() {
@@ -420,8 +511,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     imageName = "";
 
     getAnomalyTypes();
-    getProductStock(0);
-    getLocators();
+    if (Get.arguments["isConnected"]) {
+      getProductStock(0);
+      getLocators();
+    }
+
     /* nameFieldController = TextEditingController();
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
@@ -454,7 +548,21 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createResAnomaly();
+                //createResAnomaly();
+                Get.offNamed('/MaintenanceMptaskAnomalyList', arguments: {
+                  "id": Get.arguments["id"],
+                });
+              },
+              icon: const Icon(
+                Icons.list,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () async {
+                createResAnomaly(await checkConnection());
               },
               icon: const Icon(
                 Icons.save,
@@ -551,7 +659,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
                 Visibility(
-                  visible: missingPartFlag && manByCustomer != true,
+                  visible: /* missingPartFlag && */ manByCustomer != true,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(

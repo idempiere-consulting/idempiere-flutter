@@ -5,6 +5,10 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/models/anomaly_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/anomaly_type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/bom_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/bom_line_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
@@ -51,6 +55,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (GetStorage().read('isProductSync') ?? true) {
       productSync = true;
       syncProduct();
+      //syncProductBOM();
     }
     if (GetStorage().read('isWorkOrderSync') ?? true) {
       workOrderSync = true;
@@ -226,11 +231,12 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(utf8.decode(response.bodyBytes));
-        productSync = false;
+        //productSync = false;
+        syncProductBOM();
         if (kDebugMode) {
           print('Products Checked');
         }
-        checkSyncData();
+        //checkSyncData();
       }
     }
   }
@@ -269,9 +275,329 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(jsonEncode(json.toJson()));
-        productSync = false;
+        //productSync = false;
+        syncProductBOM();
         if (kDebugMode) {
           print('Products Checked');
+        }
+        //checkSyncData();
+      }
+    }
+  }
+
+  Future<void> syncProductBOM() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/PP_Product_BOM');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          ProductBOMJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncProductBOMPages(json, index);
+      } else {
+        const filename = "productsBOM";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        syncProductBOMLines();
+        if (kDebugMode) {
+          print('ProductsBOM Checked');
+        }
+        //checkSyncData();
+      }
+    }
+  }
+
+  syncProductBOMPages(ProductBOMJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/PP_Product_BOM?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          ProductBOMJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncProductBOMPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "productsBOM";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        //productSync = false;
+        syncProductBOMLines();
+        if (kDebugMode) {
+          print('ProductsBOM Checked');
+        }
+        //checkSyncData();
+      }
+    }
+  }
+
+  Future<void> syncProductBOMLines() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/PP_Product_BOMLine');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          BOMLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncProductBOMLinesPages(json, index);
+      } else {
+        const filename = "productsBOMline";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        syncAnomalies();
+        if (kDebugMode) {
+          print('ProductsBOMline Checked');
+        }
+        //checkSyncData();
+      }
+    }
+  }
+
+  syncProductBOMLinesPages(BOMLineJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/PP_Product_BOMLine?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          BOMLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncProductBOMLinesPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "productsBOMline";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        syncAnomalies();
+        //productSync = false;
+        if (kDebugMode) {
+          print('ProductsBOMline Checked');
+        }
+        //checkSyncData();
+      }
+    }
+  }
+
+  Future<void> syncAnomalies() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NC');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncAnomaliesPages(json, index);
+      } else {
+        const filename = "anomalies";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        syncAnomalyTypes();
+        if (kDebugMode) {
+          print('Anomalies Checked');
+        }
+        //checkSyncData();
+      }
+    }
+  }
+
+  syncAnomaliesPages(AnomalyJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/LIT_NC?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncAnomaliesPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "anomalies";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        //productSync = false;
+        syncAnomalyTypes();
+        if (kDebugMode) {
+          print('Anomalies Checked');
+        }
+        //checkSyncData();
+      }
+    }
+  }
+
+  Future<void> syncAnomalyTypes() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NCFaultType');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          AnomalyTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncAnomalyTypePages(json, index);
+      } else {
+        const filename = "anomalytype";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        productSync = false;
+        if (kDebugMode) {
+          print('Anomaly type Checked');
+        }
+        checkSyncData();
+      }
+    }
+  }
+
+  syncAnomalyTypePages(AnomalyTypeJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/LIT_NCFaultType?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          AnomalyTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncAnomalyTypePages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "anomalytype";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        productSync = false;
+        if (kDebugMode) {
+          print('Anomaly type Checked');
         }
         checkSyncData();
       }

@@ -109,6 +109,8 @@ emptyEditAPICallStack() {
     String authorization = 'Bearer ' + GetStorage().read('token');
     calls.forEach((call, msg) async {
       var url = Uri.parse(call);
+      print(url);
+      print(msg);
       // ignore: unused_local_variable
       var response = await http.put(
         url,

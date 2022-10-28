@@ -76,6 +76,7 @@ class Records {
   final String? jpToDoStartTime;
   final String? jpToDoEndTime;
   final String? litMpMaintainHelp;
+  final COrderID? cOrderID;
 
   Records(
       {this.id,
@@ -121,7 +122,8 @@ class Records {
       this.jpToDoEndDate,
       this.jpToDoStartTime,
       this.jpToDoEndTime,
-      this.litMpMaintainHelp});
+      this.litMpMaintainHelp,
+      this.cOrderID});
 
   Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -184,6 +186,9 @@ class Records {
         mPOTTaskID = (json['MP_OT_Task_ID'] as Map<String, dynamic>?) != null
             ? MPOTTaskID.fromJson(json['MP_OT_Task_ID'] as Map<String, dynamic>)
             : null,
+        cOrderID = (json['C_Order_ID'] as Map<String, dynamic>?) != null
+            ? COrderID.fromJson(json['C_Order_ID'] as Map<String, dynamic>)
+            : null,
         mPMaintainTaskID =
             (json['MP_Maintain_Task_ID'] as Map<String, dynamic>?) != null
                 ? MPMaintainTaskID.fromJson(
@@ -223,6 +228,7 @@ class Records {
         'C_BPartner_ID': cBPartnerID?.toJson(),
         'C_BPartner_Location_ID': cBPartnerLocationID?.toJson(),
         'JP_Team_ID': jPTeamID?.toJson(),
+        'C_Order_ID': cOrderID?.toJson(),
         'mp_ot_ad_user_name': mpOtAdUserName,
         'mp_ot_task_qty': mpOtTaskQty,
         'mp_ot_task_status': mpOtTaskStatus,
@@ -452,6 +458,33 @@ class CDocTypeID {
   });
 
   CDocTypeID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class COrderID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  COrderID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  COrderID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

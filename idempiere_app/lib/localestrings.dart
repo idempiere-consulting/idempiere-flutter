@@ -417,7 +417,9 @@ class LocaleString extends Translations {
           'Completed': 'Completed',
           'Not Yet Started': 'Not Yet Started',
           'Work In Progress': 'Work In Progress',
-          'Create Task': 'Crea Attività'
+          'Create Task': 'Crea Attività',
+          'Anomalies Review': 'Anomalies Review',
+          'Sales Order Zoom': 'Sales Order'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -556,7 +558,7 @@ class LocaleString extends Translations {
           'Quantity: ': 'Quantita: ',
           'Activity: ': 'Attivita: ',
           'Warehouse: ': 'Magazzino',
-          'Complete': 'Completato',
+          'Complete': 'Completa',
           'Complete Action': 'Azione completata',
           'Are you sure you want to complete the record?':
               'Sei sicuro di voler completare il record?',
@@ -640,7 +642,7 @@ class LocaleString extends Translations {
           'Create Opportunity': 'Crea Opportunità',
           'OPPORTUNITY: ': 'OPPORTUNITA: ',
           'Bank': 'Banca',
-          'Product Detail': 'Dettaglio Prododtto',
+          'Product Detail': 'Dettaglio Prodotto',
           'Available': 'Disponibile',
           'Not Available': 'Non Disponibile',
           'Product List: ': 'Lista Prodotti',
@@ -796,7 +798,7 @@ class LocaleString extends Translations {
           'Subject': 'Oggetto',
           'Request Details': 'Dettagli Richiesta',
           'Sales Order Requests': 'Richieste di Offerta',
-          'Document Type: ': 'Tipo Documento: ',
+          'Document Type: ': 'Tipo Doc: ',
           'Document: ': 'Documento: ',
           'Cust.': 'Spett.',
           'U.o.M': 'U.d.M',
@@ -843,6 +845,8 @@ class LocaleString extends Translations {
           'A02': 'Estintori/Idranti',
           'MaintenanceMpContracts': 'Contratti di Manutenzione',
           'Note Work Order': 'Note ODL',
+          'Anomalies Review': 'Elenco Anomalie',
+          'Sales Order Zoom': 'Ordine/Offerta'
         },
       };
 }
