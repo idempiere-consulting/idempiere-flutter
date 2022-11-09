@@ -281,7 +281,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         Row(
                                           children: [
                                             Text(
-                                              'Document N°'.tr,
+                                              'N° Work Order'.tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -311,6 +311,22 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ),
                                             Text(
                                                 "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${'N° Maintenance'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .documentNo2 ??
+                                                  ""),
+                                            )
                                           ],
                                         ),
                                         Row(

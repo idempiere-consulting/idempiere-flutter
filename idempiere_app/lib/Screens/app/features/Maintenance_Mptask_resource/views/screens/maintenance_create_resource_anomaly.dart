@@ -254,9 +254,9 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       },
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(response.body);
+      //print(response.body);
     } else {
-      print(response.body);
+      //print(response.body);
     }
   }
 

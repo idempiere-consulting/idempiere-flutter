@@ -4,15 +4,11 @@ import 'dart:convert';
 import 'dart:io';
 //import 'dart:developer';
 
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/models/anomaly_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/views/screens/mptask_anomaly_list_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -205,14 +201,14 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
     offline = Get.arguments["offlineid"] ?? -1;
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  // static String _displayStringForOption(Records option) => option.name!;
 
-  static int _setIdForOption(Records option) => option.id!;
+  // static int _setIdForOption(Records option) => option.id!;
 
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -238,7 +234,7 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
           mobileBuilder: (context, constraints) {
             return Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Container(

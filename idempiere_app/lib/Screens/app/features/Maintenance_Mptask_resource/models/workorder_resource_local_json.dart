@@ -78,6 +78,7 @@ class RRecords {
   bool? filtered;
   bool? checked;
   MPMaintainID? mpMaintainID;
+  ResourceStatus? resourceStatus;
   String? number;
   int? lineNo;
   String? team;
@@ -129,6 +130,7 @@ class RRecords {
       this.offlineId,
       this.checked,
       this.mpMaintainID,
+      this.resourceStatus,
       this.number,
       this.lineNo,
       this.team,
@@ -207,6 +209,11 @@ class RRecords {
             ? MPMaintainID.fromJson(
                 json['MP_Maintain_ID'] as Map<String, dynamic>)
             : null,
+        resourceStatus =
+            (json['LIT_ResourceStatus'] as Map<String, dynamic>?) != null
+                ? ResourceStatus.fromJson(
+                    json['LIT_ResourceStatus'] as Map<String, dynamic>)
+                : null,
         number = json['V_Number'] as String?,
         lineNo = json['LineNo'] as int?,
         anomaliesCount = json['anomalies_count'] as String?,
@@ -259,6 +266,7 @@ class RRecords {
         'Checked': checked,
         'Filtered': filtered,
         'MP_Maintain_ID': mpMaintainID?.toJson(),
+        'LIT_ResourceStatus': resourceStatus?.toJson(),
         'LineNo': lineNo,
         'V_Number': number,
         'anomalies_count': anomaliesCount,
@@ -361,6 +369,33 @@ class ResourceType {
   });
 
   ResourceType.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ResourceStatus {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  ResourceStatus({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ResourceStatus.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
         identifier = json['identifier'] as String?,
@@ -511,8 +546,8 @@ class LITResourceType {
 
 class MPMaintainID {
   final String? propertyLabel;
-  final int? id;
-  final String? identifier;
+  int? id;
+  String? identifier;
   final String? modelname;
 
   MPMaintainID({

@@ -62,7 +62,7 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
         title: Center(
           child: Text('Anomaly List'.tr),
         ),
-        actions: [
+        actions: const [
           /* Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(

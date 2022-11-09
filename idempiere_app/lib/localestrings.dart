@@ -419,7 +419,14 @@ class LocaleString extends Translations {
           'Work In Progress': 'Work In Progress',
           'Create Task': 'Crea Attività',
           'Anomalies Review': 'Anomalies Review',
-          'Sales Order Zoom': 'Sales Order'
+          'Sales Order Zoom': 'Sales Order',
+          'IRV': 'In Revisioning',
+          'IRR': 'In Withdrawing to Salvage',
+          'IRX': 'In Withdrawing to Dispose',
+          'REV': 'Revisioned',
+          'INS': 'Installed',
+          'DEL': 'Disposed',
+          'Status: ': 'Status: '
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -846,7 +853,14 @@ class LocaleString extends Translations {
           'MaintenanceMpContracts': 'Contratti di Manutenzione',
           'Note Work Order': 'Note ODL',
           'Anomalies Review': 'Elenco Anomalie',
-          'Sales Order Zoom': 'Ordine/Offerta'
+          'Sales Order Zoom': 'Ordine/Offerta',
+          'IRV': 'In Revisione',
+          'IRR': 'In Ritiro da Recuperare',
+          'IRX': 'In Ritiro da Smaltire',
+          'REV': 'Revisionato',
+          'INS': 'Installato',
+          'DEL': 'Smaltito/Eliminato',
+          'Status: ': 'Stato: '
         },
       };
 }

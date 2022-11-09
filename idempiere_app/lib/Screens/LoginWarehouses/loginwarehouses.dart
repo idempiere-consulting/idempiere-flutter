@@ -622,6 +622,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
+      //print(response.body);
       const filename = "workorder";
       final file = File(
           '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
@@ -632,6 +633,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       }
       syncWorkOrderResource();
     } else {
+      //print(response.body);
       workOrderSync = false;
       checkSyncData();
     }
@@ -675,6 +677,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       }
       syncWorkOrderResourceSurveyLines();
     } else {
+      //print(response.body);
       workOrderSync = false;
       checkSyncData();
     }

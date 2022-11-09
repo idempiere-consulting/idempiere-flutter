@@ -149,7 +149,7 @@ class AnomalyListController extends GetxController {
 
   Future<void> getAnomalies() async {
     _dataAvailable.value = false;
-    var apiUrlFilter = ["", " and LIT_IsReplaced eq Y"];
+    //var apiUrlFilter = ["", " and LIT_IsReplaced eq Y"];
 
     const filename = "anomalies";
     final file = File(

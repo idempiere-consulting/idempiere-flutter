@@ -36,6 +36,7 @@ class Records {
   final MPOTID? mPOTID;
   final ADClientID? aDClientID;
   final String? documentNo;
+  final String? documentNo2;
   final UpdatedBy? updatedBy;
   final String? created;
   final CreatedBy? createdBy;
@@ -83,6 +84,7 @@ class Records {
       this.mPOTID,
       this.aDClientID,
       this.documentNo,
+      this.documentNo2,
       this.updatedBy,
       this.created,
       this.createdBy,
@@ -134,6 +136,7 @@ class Records {
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
         documentNo = json['DocumentNo'] as String?,
+        documentNo2 = json['maintain_documentno'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
@@ -211,6 +214,7 @@ class Records {
         'MP_OT_ID': mPOTID?.toJson(),
         'AD_Client_ID': aDClientID?.toJson(),
         'DocumentNo': documentNo,
+        'maintain_documentno': documentNo2,
         'UpdatedBy': updatedBy?.toJson(),
         'Created': created,
         'CreatedBy': createdBy?.toJson(),

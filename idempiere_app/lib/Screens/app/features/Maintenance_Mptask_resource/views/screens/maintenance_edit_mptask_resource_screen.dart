@@ -182,7 +182,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             "url": url2,
             "AD_Org_ID": adorg,
             "AD_Client_ID": adclient,
-            "Mp_Maintain__ID": {"id": GetStorage().read('selectedTaskDocNo')},
+            "Mp_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
             "M_Product_ID": {"id": productId},
             "IsActive": true,
             "ResourceType": {"id": "BP"},

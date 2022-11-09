@@ -76,6 +76,7 @@ class MaintenanceMpContractsCreateContractController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
+    // ignore: unused_local_variable
     var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
