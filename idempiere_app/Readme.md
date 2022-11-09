@@ -360,6 +360,21 @@ Select count(*),
 * [ ] (U)Modificare (tutto)
 * [ ] (P)Completare Documento
 
+#### - Partite Aperte
+
+* Stato/note :  / 10%
+* Nome Oggetto :
+* API model :   .. Filtro fisso :
+
+* [ ] Filtro Base = ???
+* [ ] Filtri Avanzata: ???
+* [ ] Ricerca : 
+* [ ] (R)Visualizzare Pagamento
+    [ ] Nr Documento
+* [ ] (C)Crea a mano DA QUI O PROCESSO A PARTE . ?
+* [ ] (U)Modificare ...
+* [ ] (P)...
+
 ### Provvigione [R] ()
 
 * Stato/note : Definito / 10%
@@ -1546,7 +1561,7 @@ CRUD=1111=F
  12 Fatt.di Vendita 	: 4
  13 Incasso		        : F3
  14 Provvigione		    : 4
- 15 ..			        : 0 
+ 15 Partite Aperte      : 0 
  16 ..			        : 0
  17 Ticket**************: 1 *** 2 Ticket 
  18 Ticketnew/Request	: F3
