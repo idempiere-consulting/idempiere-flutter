@@ -165,6 +165,18 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.request_quote,
+                  icon: Icons.request_quote_outlined,
+                  label: "Open Items".tr,
+                  visible: int.parse(list[14], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -205,6 +217,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 11:
                     Get.offNamed('/Commission');
+                    break;
+                  case 12:
+                    Get.offNamed('/OpenItems');
                     break;
                   default:
                 }

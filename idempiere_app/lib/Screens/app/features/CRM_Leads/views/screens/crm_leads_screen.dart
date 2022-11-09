@@ -190,7 +190,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.windowrecords!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(
                               () => Visibility(

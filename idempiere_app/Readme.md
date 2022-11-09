@@ -1561,7 +1561,7 @@ CRUD=1111=F
  12 Fatt.di Vendita 	: 4
  13 Incasso		        : F3
  14 Provvigione		    : 4
- 15 Partite Aperte      : 0 
+ 15 Partite Aperte      : F3 
  16 ..			        : 0
  17 Ticket**************: 1 *** 2 Ticket 
  18 Ticketnew/Request	: F3

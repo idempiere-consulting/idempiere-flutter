@@ -5,6 +5,11 @@ class CRMOpenItemsController extends GetxController {
 
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
+  var businessPartnerName = "".obs;
+  var businessPartnerId = 0.obs;
+  var orgName = "".obs;
+  var orgId = 0.obs;
+  var args = Get.arguments;
 
   // ignore: prefer_typing_uninitialized_variables
 
@@ -14,7 +19,6 @@ class CRMOpenItemsController extends GetxController {
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
-
     //getADUserID();
   }
 
@@ -44,6 +48,88 @@ class CRMOpenItemsController extends GetxController {
       path: receiver,
     );
     await launchUrl(launchUri);
+  }
+
+  Future<List<BPRecords>> getAllBPs() async {
+    businessPartnerId.value = Get.arguments["bpId"] ?? 0;
+    businessPartnerName.value = Get.arguments["bpName"] ?? "";
+    //await getBusinessPartner();
+    //print(response.body);
+    const filename = "businesspartner";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
+
+    var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    return jsonbps.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<Records>> getAllOrgs() async {
+    List<Records> list = [];
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/ad_org?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      //_trx = LeadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      var json = OrganizationJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      list = json.records!;
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    }
+    return list;
+  }
+
+  static String _displayStringForOption(BPRecords option) => option.name!;
+  get displayStringForOption => _displayStringForOption;
+
+  static String _displayStringOrgForOption(Records option) => option.name!;
+  get displayStringOrgForOption => _displayStringOrgForOption;
+
+  getOpenItem() async {
+    var filter = "";
+    filter = orgId.value != 0
+        ? "C_BPartner_ID eq $businessPartnerId and AD_Org_ID eq $orgId and AD_Client_ID eq ${GetStorage().read('clientid')}"
+        : "C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}";
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/rv_openitem?\$filter= $filter');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      //_trx = LeadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    }
   }
 
   /* void openDrawer() {
