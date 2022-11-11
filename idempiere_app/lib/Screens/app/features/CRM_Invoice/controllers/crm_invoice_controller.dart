@@ -116,7 +116,8 @@ class CRMInvoiceController extends GetxController {
     String formattedDate = formatter.format(now);
     String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
-    var notificationFilter = "";
+    var notificationFilter =
+        ' and IsSoTrx eq Y and DateInvoiced le \'$formattedDate 23:59:59\' and DateInvoiced ge \'$formattedNinetyDaysAgo 00:00:00\'';
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
         notificationFilter =
@@ -130,7 +131,7 @@ class CRMInvoiceController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/c_invoice?\$filter= IsSoTrx eq Y and DateInvoiced le \'$formattedDate 23:59:59\' and DateInvoiced ge \'$formattedNinetyDaysAgo 00:00:00\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter&\$orderby= DateInvoiced desc');
+        '/api/v1/models/c_invoice?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter&\$orderby= DateInvoiced desc');
     var response = await http.get(
       url,
       headers: <String, String>{

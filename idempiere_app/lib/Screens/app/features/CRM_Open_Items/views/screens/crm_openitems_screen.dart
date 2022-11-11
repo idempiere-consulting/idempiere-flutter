@@ -6,17 +6,16 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Open_Items/models/openitem_json.dart';
+
 import 'package:idempiere_app/Screens/app/features/CRM_Open_Items/models/organization_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
-import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -33,7 +32,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -68,14 +67,24 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
       child: Scaffold(
         floatingActionButton: Obx(
           () => Visibility(
-            visible: controller.businessPartnerId.value != 0,
+            visible: controller.businessPartnerId.value > 0,
             child: FloatingActionButton(
               backgroundColor: kNotifColor,
               //foregroundColor: kNotifColor,
-              onPressed: () {},
-              child: const Icon(
-                Icons.find_in_page,
-                color: Colors.white,
+              onPressed: () {
+                if (controller._dataAvailable.value) {
+                  controller._dataAvailable.value = false;
+                } else {
+                  controller.getOpenItem();
+                }
+              },
+              child: Obx(
+                () => Icon(
+                  controller._dataAvailable.value == false
+                      ? Icons.find_in_page
+                      : Icons.skip_previous,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -101,111 +110,350 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                 const Divider(),
                 _buildProfile(data: controller.getProfil()),
                 const SizedBox(height: kSpacing),
-                Container(
-                  margin: const EdgeInsets.only(top: 40),
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Align(
-                    child: Text(
-                      "Business Partner".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
+                Obx(
+                  () => Visibility(
+                      visible: controller._dataAvailable.value &&
+                          controller._trx.records!.isNotEmpty,
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              kNotifColor)),
+                                  onPressed: () {},
+                                  child: Text(
+                                      "${"Total".tr}: ${controller.currency.value} ${controller.tot.value}"),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              kNotifColor)),
+                                  onPressed: () {},
+                                  child: Text(
+                                      "${"Open Total".tr}: ${controller.currency.value} ${controller.opentot.value}"),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: controller.getAllBPs(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<BPRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<BPRecords>(
-                                initialValue: TextEditingValue(
-                                    text: controller.businessPartnerName.value),
-                                displayStringForOption:
-                                    controller.displayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<BPRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (BPRecords selection) {
-                                  controller.businessPartnerId.value =
-                                      selection.id!;
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
+                      )),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 40),
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Align(
-                    child: Text(
-                      "Organization".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
+                Obx(
+                  () => Visibility(
+                    visible: controller._dataAvailable.value == false,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        child: Text(
+                          "Business Partner".tr,
+                          style: const TextStyle(fontSize: 12),
                         ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: controller.getAllOrgs(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<Records>(
-                                initialValue: TextEditingValue(
-                                    text: controller.businessPartnerName.value),
-                                displayStringForOption:
-                                    controller.displayStringOrgForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
-                                  }
-                                  return snapshot.data!.where((Records option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (Records selection) {
-                                  controller.orgId.value = selection.id!;
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ),
                   ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._dataAvailable.value == false,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<BPRecords>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .businessPartnerName.value),
+                                    displayStringForOption:
+                                        controller.displayStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<
+                                            BPRecords>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((BPRecords option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (BPRecords selection) {
+                                      controller.businessPartnerId.value =
+                                          selection.id!;
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._dataAvailable.value == false,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        child: Text(
+                          "Organization".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._dataAvailable.value == false,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllOrgs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<Records>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<Records>(
+                                    initialValue: TextEditingValue(
+                                        text: controller.orgName.value),
+                                    displayStringForOption:
+                                        controller.displayStringOrgForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<Records>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((Records option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (Records selection) {
+                                      controller.orgId.value = selection.id!;
+                                    },
+                                  )
+                                : const SizedBox(),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => controller._dataAvailable.value
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller._trx.records!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Obx(
+                              () => Visibility(
+                                visible: controller._dataAvailable.value,
+                                child: Card(
+                                  elevation: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: ExpansionTile(
+                                      tilePadding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.search,
+                                            color: Colors.green,
+                                          ),
+                                          tooltip: 'Show Invoice'.tr,
+                                          onPressed: () {
+                                            Get.offNamed('/Invoice',
+                                                arguments: {
+                                                  "notificationId": controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cInvoiceID
+                                                      ?.id,
+                                                });
+                                            //log("info button pressed");
+                                          },
+                                        ),
+                                      ),
+                                      title: Text(
+                                        "Doc Nr° ${controller._trx.records![index].documentNo} ${"of".tr} ${controller._trx.records![index].dateInvoiced} ${"Due Date".tr} ${controller._trx.records![index].dueDate}",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Column(
+                                        children: [
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                "${"Total".tr}: ",
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                (controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cCurrencyID
+                                                            ?.identifier ??
+                                                        "??") +
+                                                    " ",
+                                                style: const TextStyle(
+                                                    color: Colors.greenAccent,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                controller._trx.records![index]
+                                                    .grandTotal
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                "${"Open".tr}: ",
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                (controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cCurrencyID
+                                                            ?.identifier ??
+                                                        "??") +
+                                                    " ",
+                                                style: const TextStyle(
+                                                    color: Colors.greenAccent,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                controller._trx.records![index]
+                                                    .openAmt
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Document Type".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(
+                                                    "${controller._trx.records![index].cDocTypeID?.identifier}"),
+                                              ],
+                                            ),
+
+                                            /* Row(
+                                              children: [
+                                                IconButton(
+                                                    onPressed: () {
+                                                      /* Get.offNamed('/OpenItems',
+                                                          arguments: {
+                                                            "bpId": controller
+                                                                ._trx
+                                                                .records![index]
+                                                                .id,
+                                                            "bpName": controller
+                                                                ._trx
+                                                                .records![index]
+                                                                .name,
+                                                          }); */
+                                                    },
+                                                    icon: const Icon(Icons
+                                                        .currency_exchange)) 
+                                              ],
+                                            ), */
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const SizedBox(),
                 ),
                 /* IconButton(
                   color: kNotifColor,

@@ -344,6 +344,26 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                                     ""),
                                               ],
                                             ),
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                    onPressed: () {
+                                                      Get.offNamed('/OpenItems',
+                                                          arguments: {
+                                                            "bpId": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                            "bpName": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .name,
+                                                          });
+                                                    },
+                                                    icon: const Icon(Icons
+                                                        .currency_exchange))
+                                              ],
+                                            ),
                                           ],
                                         ),
                                       ],

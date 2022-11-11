@@ -1,8 +1,10 @@
+// ignore_for_file: prefer_final_fields
+
 part of dashboard;
 
 class CRMOpenItemsController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-
+  var _dataAvailable = false.obs;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
   var businessPartnerName = "".obs;
@@ -10,12 +12,21 @@ class CRMOpenItemsController extends GetxController {
   var orgName = "".obs;
   var orgId = 0.obs;
   var args = Get.arguments;
+  var opentot = 0.0.obs;
+  var tot = 0.0.obs;
+  var currency = "".obs;
+
+  OpenItemJson _trx = OpenItemJson();
 
   // ignore: prefer_typing_uninitialized_variables
 
   @override
   void onInit() {
     super.onInit();
+    if (args != null) {
+      businessPartnerId.value = args["bpId"] ?? 0;
+      businessPartnerName.value = args["bpName"] ?? "";
+    }
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
@@ -51,8 +62,11 @@ class CRMOpenItemsController extends GetxController {
   }
 
   Future<List<BPRecords>> getAllBPs() async {
-    businessPartnerId.value = Get.arguments["bpId"] ?? 0;
-    businessPartnerName.value = Get.arguments["bpName"] ?? "";
+    if (args != null) {
+      businessPartnerId.value = args["bpId"] ?? 0;
+      businessPartnerName.value = args["bpName"] ?? "";
+    }
+
     //await getBusinessPartner();
     //print(response.body);
     const filename = "businesspartner";
@@ -85,7 +99,7 @@ class CRMOpenItemsController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       //_trx = LeadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       var json = OrganizationJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
@@ -105,6 +119,9 @@ class CRMOpenItemsController extends GetxController {
   get displayStringOrgForOption => _displayStringOrgForOption;
 
   getOpenItem() async {
+    _dataAvailable.value = false;
+    opentot.value = 0.0;
+    tot.value = 0.0;
     var filter = "";
     filter = orgId.value != 0
         ? "C_BPartner_ID eq $businessPartnerId and AD_Org_ID eq $orgId and AD_Client_ID eq ${GetStorage().read('clientid')}"
@@ -113,8 +130,9 @@ class CRMOpenItemsController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/rv_openitem?\$filter= $filter');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mobile_openitem_v?\$filter= $filter');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -124,11 +142,70 @@ class CRMOpenItemsController extends GetxController {
     );
     if (response.statusCode == 200) {
       print(response.body);
+      var json =
+          OpenItemJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        getOpenItemPages(json, index, filter);
+      } else {
+        for (var record in json.records!) {
+          opentot.value += record.openAmt!;
+          tot.value = record.grandTotal!;
+          currency.value = record.cCurrencyID!.identifier!;
+        }
+        _trx = json;
+        _dataAvailable.value = true;
+      }
+
+      //print(json.records![0].chargeAmt);
       //_trx = LeadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       //_dataAvailable.value = _trx != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  getOpenItemPages(OpenItemJson json, int index, String filter) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mobile_openitem_v?\$filter= $filter&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          OpenItemJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        getOpenItemPages(json, index, filter);
+      } else {
+        for (var record in json.records!) {
+          opentot.value += record.openAmt!;
+          tot.value = record.grandTotal!;
+          currency.value = record.cCurrencyID!.identifier!;
+        }
+        _trx = json;
+        _dataAvailable.value = true;
+        //checkSyncData();
+      }
     }
   }
 

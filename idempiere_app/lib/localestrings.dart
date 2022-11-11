@@ -426,7 +426,12 @@ class LocaleString extends Translations {
           'REV': 'Revisioned',
           'INS': 'Installed',
           'DEL': 'Disposed',
-          'Status: ': 'Status: '
+          'Status: ': 'Status: ',
+          'of': 'of',
+          'Open Total': 'Open Total',
+          'Due Date': 'Due Date',
+          'Open': 'Open',
+          'Row Total': 'Row Total',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -860,7 +865,12 @@ class LocaleString extends Translations {
           'REV': 'Revisionato',
           'INS': 'Installato',
           'DEL': 'Smaltito/Eliminato',
-          'Status: ': 'Stato: '
+          'Status: ': 'Stato: ',
+          'of': 'del',
+          'Open Total': 'Totale Aperto',
+          'Due Date': 'Data Scadenza',
+          'Open': 'Aperto',
+          'Row Total': 'Totale Riga',
         },
       };
 }
