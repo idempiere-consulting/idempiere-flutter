@@ -1562,7 +1562,7 @@ CRUD=1111=F
  13 Incasso		        : F3
  14 Provvigione		    : 4
  15 Partite Aperte      : F3 
- 16 ..			        : 0
+ 16 Listino Prezzi	    : F3
  17 Ticket**************: 1 *** 2 Ticket 
  18 Ticketnew/Request	: F3
  19 TaskTodo		    : F3

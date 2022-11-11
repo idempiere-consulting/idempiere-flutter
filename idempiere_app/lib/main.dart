@@ -20,6 +20,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_l
 import 'package:idempiere_app/Screens/app/features/CRM_Open_Items/views/screens/crm_openitems_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm_payment_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Price_List/views/screens/crm_price_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/views/screens/crm_sales_order_creation_screen.dart';
@@ -205,6 +206,11 @@ class MyApp extends StatelessWidget {
           name: '/ProductList',
           page: () => const CRMProductListScreen(),
           binding: CRMProductListBinding(),
+        ),
+        GetPage(
+          name: '/PriceList',
+          page: () => const CRMPriceListScreen(),
+          binding: CRMPriceListBinding(),
         ),
         GetPage(
           name: '/Invoice',

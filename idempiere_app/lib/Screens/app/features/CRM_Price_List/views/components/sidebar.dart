@@ -26,7 +26,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 4,
+              initialSelected: 6,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -177,18 +177,6 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
-                SelectionButtonData(
-                  activeIcon: Icons.request_quote,
-                  icon: Icons.request_quote_outlined,
-                  label: "Price List".tr,
-                  visible: int.parse(list[15], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
-                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -232,9 +220,6 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 12:
                     Get.offNamed('/OpenItems');
-                    break;
-                  case 13:
-                    Get.offNamed('/PriceList');
                     break;
                   default:
                 }
