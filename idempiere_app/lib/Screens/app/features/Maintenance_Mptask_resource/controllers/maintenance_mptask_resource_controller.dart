@@ -244,7 +244,9 @@ class MaintenanceMpResourceController extends GetxController {
                     },
                   );
                   if (response.statusCode == 200) {
-                    print(response.body);
+                    if (kDebugMode) {
+                      print(response.body);
+                    }
                     var data = jsonEncode(_trx2.toJson());
                     file.writeAsStringSync(data);
                     //getWorkOrders();
@@ -456,7 +458,7 @@ class MaintenanceMpResourceController extends GetxController {
                     },
                   );
                   if (response.statusCode == 200) {
-                    print(response.body);
+                    //print(response.body);
                     var data = jsonEncode(_trx2.toJson());
                     file.writeAsStringSync(data);
                     //getWorkOrders();

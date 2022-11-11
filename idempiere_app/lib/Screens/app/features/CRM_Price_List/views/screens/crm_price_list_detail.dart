@@ -15,14 +15,14 @@ import 'package:idempiere_app/constants.dart';
 
 import '../../../Maintenance_Mptask_resource/models/product_json.dart';
 
-class ProductListDetail extends StatefulWidget {
-  const ProductListDetail({Key? key}) : super(key: key);
+class PriceListDetail extends StatefulWidget {
+  const PriceListDetail({Key? key}) : super(key: key);
 
   @override
-  State<ProductListDetail> createState() => _ProductListDetailState();
+  State<PriceListDetail> createState() => _PriceListDetailState();
 }
 
-class _ProductListDetailState extends State<ProductListDetail>
+class _PriceListDetailState extends State<PriceListDetail>
     with TickerProviderStateMixin {
   Future<void> getProduct() async {
     final ip = GetStorage().read('ip');
@@ -97,7 +97,7 @@ class _ProductListDetailState extends State<ProductListDetail>
     flagAvailable = false;
     quantity = 1;
     super.initState();
-    cost = args["priceStd"] ?? 0;
+    cost = args["price"] ?? 0;
     imagesController = TabController(length: 3, vsync: this);
     nameFieldController = TextEditingController();
     valueFieldController = TextEditingController();
@@ -299,10 +299,10 @@ class _ProductListDetailState extends State<ProductListDetail>
                   const SizedBox(height: 12.0),
                   _buildPriceWidgets(),
                   const SizedBox(height: 12.0),
-                  _buildDivider(screenSize),
-                  const SizedBox(height: 12.0),
-                  _buildFurtherInfoWidget(),
-                  const SizedBox(height: 12.0),
+                  //_buildDivider(screenSize),
+                  //const SizedBox(height: 12.0),
+                  //_buildFurtherInfoWidget(),
+                  //const SizedBox(height: 12.0),
                   _buildDivider(screenSize),
                   const SizedBox(height: 12.0),
                   /* _buildSizeChartWidgets(),
@@ -357,9 +357,15 @@ class _ProductListDetailState extends State<ProductListDetail>
                 TabBarView(
                   controller: imagesController,
                   children: <Widget>[
-                    Image.network(
-                      "https://assets.myntassets.com/h_240,q_90,w_180/v1/assets/images/1304671/2016/4/14/11460624898615-Hancock-Men-Shirts-8481460624898035-1_mini.jpg",
-                    ),
+                    args["image"] == null
+                        ? Image.network(
+                            "https://assets.myntassets.com/h_240,q_90,w_180/v1/assets/images/1304671/2016/4/14/11460624898615-Hancock-Men-Shirts-8481460624898035-1_mini.jpg",
+                          )
+                        : Image.memory(
+                            const Base64Codec().decode(
+                                (args["image"]).replaceAll(RegExp(r'\n'), '')),
+                            fit: BoxFit.cover,
+                          ),
                     Image.network(
                       "https://n1.sdlcdn.com/imgs/c/9/8/Lambency-Brown-Solid-Casual-Blazers-SDL781227769-1-1b660.jpg",
                     ),
@@ -411,7 +417,7 @@ class _ProductListDetailState extends State<ProductListDetail>
           const SizedBox(
             width: 8.0,
           ),
-          const Text(
+          /* const Text(
             "€1299",
             style: TextStyle(
               fontSize: 12.0,
@@ -428,7 +434,7 @@ class _ProductListDetailState extends State<ProductListDetail>
               fontSize: 12.0,
               color: kNotifColor,
             ),
-          ),
+          ), */
         ],
       ),
     );
@@ -634,8 +640,8 @@ class _ProductListDetailState extends State<ProductListDetail>
                   color: Colors.white,
                 ),
               ),
-              const Text(
-                "86% acrylic, 9% polyster, 1% metallic yarn Hand-wash cold",
+              Text(
+                helpFieldController.text,
                 style: TextStyle(
                   color: Colors.white,
                 ),

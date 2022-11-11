@@ -141,7 +141,9 @@ class CRMOpenItemsController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       var json =
           OpenItemJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       if (json.pagecount! > 1) {

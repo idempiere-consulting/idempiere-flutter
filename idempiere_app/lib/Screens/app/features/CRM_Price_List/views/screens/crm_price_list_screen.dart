@@ -5,12 +5,15 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Product_List/models/product_list_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Price_List/models/price_list_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Price_List/views/screens/crm_price_list_detail.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -29,6 +32,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:path_provider/path_provider.dart';
 
 // binding
 part '../../bindings/crm_price_list_binding.dart';
@@ -60,6 +64,33 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
         return false;
       },
       child: Scaffold(
+        floatingActionButton: Obx(
+          () => Visibility(
+            visible: controller.businessPartnerId.value > 0 &&
+                controller.priceListId > 0,
+            child: FloatingActionButton(
+              backgroundColor: kNotifColor,
+              //foregroundColor: kNotifColor,
+              onPressed: () {
+                if (controller._isListShown.value) {
+                  controller._isListShown.value = false;
+                } else {
+                  //controller.getPriceList();
+                  controller._isListShown.value = true;
+                  controller.getPriceList();
+                }
+              },
+              child: Obx(
+                () => Icon(
+                  controller._isListShown.value == false
+                      ? Icons.find_in_page
+                      : Icons.skip_previous,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -79,96 +110,126 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                //_buildProfile(data: controller.getProfil()),
-                //const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Product List: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getProductLists();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            for (var i = 0; i < controller.trx.rowcount!; i++) {
-                              if (value.toString().toLowerCase() ==
-                                  controller.trx.records![i].value!
-                                      .toLowerCase()) {
-                                Get.to(const ProductListDetail(), arguments: {
-                                  "id": controller.trx.records![i].id,
-                                });
-                              }
-                            }
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Product Value'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 10),
                 Obx(
-                  () => controller.dataAvailable
-                      ? SizedBox(
-                          height: size.height,
-                          width: double.infinity,
-                          child: /* StaggeredGridView.countBuilder(
-                              shrinkWrap: true,
-                              crossAxisCount: 2,
-                              itemCount: controller.trx.records?.length ?? 0,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                              itemBuilder: (BuildContext context, index) =>
-                                  buildImageCard(index),
-                              staggeredTileBuilder: (index) =>
-                                  const StaggeredTile.fit(1)), */
-                              MasonryGridView.count(
-                            shrinkWrap: true,
-                            itemCount: controller.trx.records?.length ?? 0,
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            itemBuilder: (context, index) {
-                              return buildImageCard(index);
-                            },
-                          ))
-                      : const Center(child: CircularProgressIndicator()),
+                  () => Visibility(
+                    visible: controller._isListShown.value == true,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      child: TextField(
+                        controller: controller.searchFieldController,
+                        onSubmitted: (String? value) {
+                          for (var i = 0; i < controller.trx.rowcount!; i++) {
+                            if (value.toString().toLowerCase() ==
+                                controller.trx.records![i].value!
+                                    .toLowerCase()) {
+                              Get.to(const ProductListDetail(), arguments: {
+                                "id": controller.trx.records![i].mProductID?.id,
+                                "price": controller.trx.records![i].priceList,
+                              });
+                            }
+                          }
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.search_outlined),
+                          border: const OutlineInputBorder(),
+                          //labelText: 'Product Value',
+                          hintText: 'Product Value'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._isListShown.value == false,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        child: Text(
+                          "Business Partner".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._isListShown.value == false,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<BPRecords>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .businessPartnerName.value),
+                                    displayStringForOption:
+                                        controller.displayStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<
+                                            BPRecords>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((BPRecords option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (BPRecords selection) {
+                                      controller.businessPartnerId.value =
+                                          selection.id!;
+                                      controller.priceListId.value =
+                                          selection.mPriceListID!.id!;
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._isListShown.value,
+                    child: Obx(
+                      () => controller.dataAvailable
+                          ? SizedBox(
+                              height: size.height,
+                              width: double.infinity,
+                              child: MasonryGridView.count(
+                                shrinkWrap: true,
+                                itemCount: controller.trx.records?.length ?? 0,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                itemBuilder: (context, index) {
+                                  return buildImageCard(index);
+                                },
+                              ))
+                          : const Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
                 ),
               ]);
             },
@@ -206,7 +267,7 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
                         onPressed: () {
-                          controller.getProductLists();
+                          controller.getPriceList();
                         },
                         icon: const Icon(
                           Icons.refresh,
@@ -296,7 +357,7 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
                         onPressed: () {
-                          controller.getProductLists();
+                          controller.getPriceList();
                         },
                         icon: const Icon(
                           Icons.refresh,
@@ -433,68 +494,6 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
     );
   }
 
-  /* Widget _buildTaskOverview({
-    required List<TaskCardData> data,
-    int crossAxisCount = 6,
-    int crossAxisCellCount = 2,
-    Axis headerAxis = Axis.horizontal,
-  }) {
-    return StaggeredGridView.countBuilder(
-      crossAxisCount: crossAxisCount,
-      itemCount: data.length + 1,
-      addAutomaticKeepAlives: false,
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return (index == 0)
-            ? Padding(
-                padding: const EdgeInsets.only(bottom: kSpacing),
-                child: _OverviewHeader(
-                  axis: headerAxis,
-                  onSelected: (task) {},
-                ),
-              )
-            : TaskCard(
-                data: data[index - 1],
-                onPressedMore: () {},
-                onPressedTask: () {},
-                onPressedContributors: () {},
-                onPressedComments: () {},
-              );
-      },
-      staggeredTileBuilder: (int index) =>
-          StaggeredTile.fit((index == 0) ? crossAxisCount : crossAxisCellCount),
-    );
-  }
-
-  Widget _buildActiveProject({
-    required List<ProjectCardData> data,
-    int crossAxisCount = 6,
-    int crossAxisCellCount = 2,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: _ActiveProjectCard(
-        onPressedSeeAll: () {},
-        child: StaggeredGridView.countBuilder(
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: crossAxisCount,
-          itemCount: data.length,
-          addAutomaticKeepAlives: false,
-          mainAxisSpacing: kSpacing,
-          crossAxisSpacing: kSpacing,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return ProjectCard(data: data[index]);
-          },
-          staggeredTileBuilder: (int index) =>
-              StaggeredTile.fit(crossAxisCellCount),
-        ),
-      ),
-    );
-  } */
-
   Widget _buildProfile({required _Profile data}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
@@ -539,9 +538,11 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
 
   Widget buildImageCard(int index) => GestureDetector(
         onTap: () {
-          Get.to(const ProductListDetail(), arguments: {
-            "id": controller.trx.records![index].id,
+          Get.to(const PriceListDetail(), arguments: {
+            "id": controller.trx.records![index].mProductID?.id,
+            "price": controller.trx.records![index].priceList,
             "add": false,
+            "image": controller.trx.records![index].imageData,
           });
         },
         child: Card(
@@ -567,7 +568,8 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
               ),
               ListTile(
                 title: Text(
-                  "  €" + controller.trx.records![index].price.toString(),
+                  "  ${controller.trx.records![index].cCurrencyID?.identifier ?? "?"} " +
+                      controller.trx.records![index].priceList.toString(),
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),

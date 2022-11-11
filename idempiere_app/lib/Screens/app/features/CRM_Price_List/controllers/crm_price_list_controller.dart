@@ -2,7 +2,7 @@ part of dashboard;
 
 class CRMPriceListController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late ProductListJson _trx;
+  late PriceListJson _trx;
   //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
@@ -16,16 +16,22 @@ class CRMPriceListController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+  // ignore: prefer_final_fields
+  var _isListShown = false.obs;
+  var businessPartnerName = "".obs;
+  var businessPartnerId = 0.obs;
+  var priceListId = 0.obs;
+  var args = Get.arguments;
 
   @override
   void onInit() {
     super.onInit();
 
-    getProductLists();
+    getPriceList();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  ProductListJson get trx => _trx;
+  PriceListJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -35,17 +41,42 @@ class CRMPriceListController extends GetxController {
     }
 
     value.value = filters[filterCount];
-    getProductLists();
+    //getPriceList();
   }
 
-  Future<void> getProductLists() async {
+  static String _displayStringForOption(BPRecords option) => option.name!;
+  get displayStringForOption => _displayStringForOption;
+
+  Future<List<BPRecords>> getAllBPs() async {
+    if (args != null) {
+      businessPartnerId.value = args["bpId"] ?? 0;
+      businessPartnerName.value = args["bpName"] ?? "";
+    }
+
+    //await getBusinessPartner();
+    //print(response.body);
+    const filename = "businesspartner";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
+
+    var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    return jsonbps.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<void> getPriceList() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_product_list_v?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '/api/v1/models/lit_pricelist_v?\$filter= M_PriceList_ID eq ${priceListId.value} and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -58,7 +89,7 @@ class CRMPriceListController extends GetxController {
         print(response.body);
       }
       _trx =
-          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+          PriceListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
