@@ -1621,14 +1621,14 @@ CRUD=1111=F
  68 Trasferimento        :
  69 Inventario           :
  70 Carico Scarico
- 71 Mezzi ***************: 1 *** 8 Mezzi e Attrezzatura
- 72 Mezzi
- 73 Attrezzatura
- 74 Presa in Carico/Spostamento
- 75 Scadenze
+ 71 Inventario con Lotto : F3
+ 72
+ 73
+ 74
+ 75
  76
  77
- 78 Prodzione*********** : 1 *** 9 Produzione
+ 78 Produzione*********** : 1 *** 9 Produzione
  79 Ordine di Prodzione
  80 Prelievo
  81 Dichiarazione di Produzione
@@ -1670,6 +1670,13 @@ CRUD=1111=F
  117 Consumo PV
  118 Reso Fornitore
  119
+ 120
+ 121
+ 122 Mezzi ***************: 1 *** 8 Mezzi e Attrezzatura
+ 123 Mezzi
+ 124 Attrezzatura
+ 125 Presa in Carico/Spostamento
+ 126 Scadenze
 
 
 

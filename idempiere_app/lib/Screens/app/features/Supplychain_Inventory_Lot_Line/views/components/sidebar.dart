@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 part of dashboard;
 
 class _Sidebar extends StatelessWidget {
@@ -26,7 +28,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 4,
+              initialSelected: 0,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -81,18 +83,6 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Inventory with Lot".tr,
-                  visible: int.parse(list[74], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
-                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -115,9 +105,6 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 4:
                     Get.offNamed('/SupplychainLoadUnload');
-                    break;
-                  case 5:
-                    Get.offNamed('/SupplychainInventoryLot');
                     break;
                   default:
                 }

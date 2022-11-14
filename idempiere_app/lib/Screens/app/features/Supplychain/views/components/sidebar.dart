@@ -81,6 +81,18 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Inventory with Lot".tr,
+                  visible: int.parse(list[74], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -103,6 +115,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 4:
                     Get.offNamed('/SupplychainLoadUnload');
+                    break;
+                  case 5:
+                    Get.offNamed('/SupplychainInventoryLot');
                     break;
                   default:
                 }

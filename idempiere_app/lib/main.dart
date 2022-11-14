@@ -71,6 +71,8 @@ import 'package:idempiere_app/Screens/app/features/Signature/signature_page.dart
 import 'package:idempiere_app/Screens/app/features/Supplychain/views/screens/supplychain_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_inventory_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/views/screens/supplychain_inventoryline_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot/views/screens/supplychain_inventory_lot_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot_Line/views/screens/supplychain_inventory_lot_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/views/screens/supplychain_load_unload_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/views/screens/supplychain_load_unload_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
@@ -500,6 +502,16 @@ class MyApp extends StatelessWidget {
           name: '/SupplychainInventoryLine',
           page: () => const SupplychainInventoryLineScreen(),
           binding: SupplychainInventoryLineBinding(),
+        ),
+        GetPage(
+          name: '/SupplychainInventoryLot',
+          page: () => const SupplychainInventoryLotScreen(),
+          binding: SupplychainInventoryLotBinding(),
+        ),
+        GetPage(
+          name: '/SupplychainInventoryLotLine',
+          page: () => const SupplychainInventoryLotLineScreen(),
+          binding: SupplychainInventoryLotLineBinding(),
         ),
         GetPage(
           name: '/SupplychainMaterialreceipt',

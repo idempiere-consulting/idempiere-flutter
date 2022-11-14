@@ -432,6 +432,7 @@ class LocaleString extends Translations {
           'Due Date': 'Due Date',
           'Open': 'Open',
           'Row Total': 'Row Total',
+          'Inventory with Lot': 'Inventory with Lot',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -871,6 +872,7 @@ class LocaleString extends Translations {
           'Due Date': 'Data Scadenza',
           'Open': 'Aperto',
           'Row Total': 'Totale Riga',
+          'Inventory with Lot': 'Inventario con Lotto',
         },
       };
 }
