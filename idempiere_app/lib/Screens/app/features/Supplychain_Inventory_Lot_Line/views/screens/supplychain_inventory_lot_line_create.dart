@@ -5,23 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/storageonhand_json.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/views/screens/supplychain_inventoryline_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot_Line/views/screens/supplychain_inventory_lot_line_screen.dart';
 
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
-class CreateSupplychainInventoryLine extends StatefulWidget {
-  const CreateSupplychainInventoryLine({Key? key}) : super(key: key);
+class CreateSupplychainInventoryLotLine extends StatefulWidget {
+  const CreateSupplychainInventoryLotLine({Key? key}) : super(key: key);
 
   @override
-  State<CreateSupplychainInventoryLine> createState() =>
-      _CreateSupplychainInventoryLineState();
+  State<CreateSupplychainInventoryLotLine> createState() =>
+      _CreateSupplychainInventoryLotLineState();
 }
 
-class _CreateSupplychainInventoryLineState
-    extends State<CreateSupplychainInventoryLine> {
+class _CreateSupplychainInventoryLotLineState
+    extends State<CreateSupplychainInventoryLotLine> {
   Future<List<Records>> getAllProducts() async {
     //print(response.body);
     const filename = "products";
@@ -37,6 +39,52 @@ class _CreateSupplychainInventoryLineState
     //print(json.);
   }
 
+  Future<void> getInstAttr(int id) async {
+    print('hello');
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        attrFieldAvailable = false;
+        attrFieldVisible = false;
+      });
+      print(utf8.decode(response.bodyBytes));
+      attrList = StorageOnHandJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (attrList.rowcount! > 0) {
+        attrList.records!
+            .removeWhere((element) => element.mAttributeSetInstanceID?.id == 0);
+        SOORecords record = SOORecords(
+            mAttributeSetInstanceID:
+                MAttributeSetInstance2ID(id: 0, identifier: ""));
+        attrList.records!.add(record);
+
+        setState(() {
+          attrFieldAvailable = true;
+          attrFieldVisible = true;
+        });
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<void> createInventoryLine(int type) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -50,7 +98,8 @@ class _CreateSupplychainInventoryLineState
     // inventory-count-line/
     // 1000008
     // 1000159
-    final msg = jsonEncode({
+
+    var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "M_Locator_ID": warehouseId,
@@ -59,6 +108,19 @@ class _CreateSupplychainInventoryLineState
       "Description": descriptionFieldController.text,
       "InventoryType": "D"
     });
+    if (instAttrId > 0) {
+      msg = jsonEncode({
+        "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+        "AD_Client_ID": {"id": GetStorage().read("clientid")},
+        "M_Locator_ID": warehouseId,
+        "M_Product_ID": productValue,
+        "QtyCount": double.parse(quantityFieldController.text),
+        "Description": descriptionFieldController.text,
+        "InventoryType": "D",
+        "M_AttributeSetInstance_ID": {"id": instAttrId},
+      });
+    }
+    print(msg);
     var response = await http.post(
       url,
       body: msg,
@@ -68,11 +130,11 @@ class _CreateSupplychainInventoryLineState
       },
     );
     if (response.statusCode == 201) {
-      Get.find<SupplychainInventoryLineController>().getInventoryLines();
+      Get.find<SupplychainInventoryLotLineController>().getInventoryLines();
       switch (type) {
         case 0:
           Get.back();
-          Get.to(const CreateSupplychainInventoryLine(), arguments: {
+          Get.to(const CreateSupplychainInventoryLotLine(), arguments: {
             "id": Get.arguments["id"],
             "warehouseId": Get.arguments["warehouseId"]
           });
@@ -113,9 +175,19 @@ class _CreateSupplychainInventoryLineState
   // ignore: prefer_typing_uninitialized_variables
   var descriptionFieldController;
 
+  var instAttrId = 0;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var attrValue;
+
+  var attrFieldVisible = false;
+
+  var attrFieldAvailable = false;
+
   var warehouseId = "1000000";
   String productValue = "";
   late FocusNode focusNode;
+  late StorageOnHandJson attrList;
 
   /* late WarehouseJson trx; */
 
@@ -126,6 +198,10 @@ class _CreateSupplychainInventoryLineState
     warehouseId = Get.arguments["warehouseId"].toString();
     quantityFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
+    //initialValue = const TextEditingValue(text: '');
+    attrFieldVisible = false;
+    attrFieldAvailable = false;
+    attrValue = "0";
     //getWarehouses();
     //fillFields();
     //createInventoryLine();
@@ -142,7 +218,7 @@ class _CreateSupplychainInventoryLineState
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
-/*     Size size = MediaQuery.of(context).size; */
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -223,9 +299,13 @@ class _CreateSupplychainInventoryLineState
                                 onSelected: (Records selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
+                                  //print('hallo');
+                                  instAttrId = 0;
+                                  getInstAttr(selection.id!);
                                   setState(() {
                                     productValue = selection.id.toString();
                                     focusNode.requestFocus();
+                                    //print('hallo');
                                   });
 
                                   //print(productValue);
@@ -262,6 +342,64 @@ class _CreateSupplychainInventoryLineState
                       labelText: "Description".tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Attribute Instance".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: attrFieldVisible,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: attrFieldAvailable
+                        ? DropdownButton(
+                            value: attrValue as String,
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              instAttrId = int.parse(newValue!);
+                              setState(() {
+                                attrValue = newValue;
+                              });
+                              if (kDebugMode) {
+                                print(newValue);
+                              }
+                            },
+                            items: attrList.records!
+                                .map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.mAttributeSetInstanceID
+                                              ?.identifier ??
+                                          "???",
+                                    ),
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
+                                  );
+                                })
+                                .toSet()
+                                .toList(),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                   ),
                 ),
               ],

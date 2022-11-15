@@ -11,6 +11,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/views/screens/supplychain_inventoryline_create.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot_Line/views/screens/supplychain_inventory_lot_line_create.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/models/loadunloadjsonline.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -74,7 +75,7 @@ class SupplychainInventoryLotLineScreen
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: IconButton(
                 onPressed: () {
-                  Get.to(const CreateSupplychainInventoryLine(), arguments: {
+                  Get.to(const CreateSupplychainInventoryLotLine(), arguments: {
                     "id": Get.arguments["id"],
                     "warehouseId": Get.arguments["warehouseId"]
                   });
@@ -148,7 +149,7 @@ class SupplychainInventoryLotLineScreen
                                   ),
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale_outlined),
+                                      const Icon(Icons.receipt_long_outlined),
                                       Text(
                                         controller
                                                 .trx
