@@ -1,17 +1,23 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
-import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/business_partner_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/resource_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:http/http.dart' as http;
+import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CreateMaintenanceMptask extends StatefulWidget {
   const CreateMaintenanceMptask({Key? key}) : super(key: key);
@@ -22,211 +28,150 @@ class CreateMaintenanceMptask extends StatefulWidget {
 }
 
 class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
-  createWorkOrder() async {
-    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-    String now = dateFormat.format(DateTime.now());
-
-    //print(now);
-
+  createWorkOrder(bool isConnected) async {
+    const filename = "workordertask";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    final protocol = GetStorage().read('protocol');
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "C_DocType_ID": {"id": docId},
-      "DateTrx": "${now}T00:00:00Z",
-      "C_BPartner_ID": {"identifier": businessPartnerValue},
-      "C_BPartner_Location_ID": {"id": bPLocation},
-      "AD_User_ID": {"id": GetStorage().read('userId')},
-      "S_Resource_ID": {"identifier": resourceName},
-      "DateWorkStart": date
+      "M_Product_ID": {"id": productId},
+      "Qty": int.parse(qtyFieldController.text),
+      "Description": descriptionFieldController.text,
+      "C_UOM_ID": {"id": 100},
     });
-    var url = Uri.parse('http://' + ip + '/api/v1/models/mp_ot/');
-    //print(msg);
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
+
+    WorkOrderTaskLocalJson trx =
+        WorkOrderTaskLocalJson.fromJson(jsonDecode(file.readAsStringSync()));
+    MProductID prod = MProductID(id: productId, identifier: productName);
+    TRecords record = TRecords(
+      mProductID: prod,
+      qty: int.parse(qtyFieldController.text),
+      description: descriptionFieldController.text,
     );
-    if (response.statusCode == 201) {
-      Get.find<MaintenanceMptaskController>().getWorkOrders();
-      //print("done!");
-      Get.snackbar(
-        "Done!".tr,
-        "The record has been created".tr,
-        icon: const Icon(
-          Icons.done,
-          color: Colors.green,
-        ),
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/windows/work-order-extinguisher/tabs/work-order-maintenance/${Get.arguments["id"]}/${"tasks".tr}');
+    if (isConnected) {
+      if (kDebugMode) {
+        print(msg);
+      }
+      emptyAPICallStak();
+      var response = await http.post(
+        url,
+        body: msg,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
       );
+      if (response.statusCode == 201) {
+        //print("done!");
+        if (kDebugMode) {
+          print(response.body);
+        }
+        TRecords res =
+            TRecords.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+        trx.records!.add(res);
+        //trx.rowcount = trx.rowcount! + 1;
+        var data = jsonEncode(trx.toJson());
+        file.writeAsStringSync(data);
+        /* setState(() {
+          saveFlag = false;
+        });
+        syncWorkOrder(); */
+        Get.snackbar(
+          "Done!".tr,
+          "The record has been created".tr,
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+        Get.snackbar(
+          "Error!".tr,
+          "Record not created".tr,
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
+      }
     } else {
-      //print(response.body);
+      record.offlineId = GetStorage().read('postCallId');
+      List<dynamic> list = [];
+      if (GetStorage().read('postCallList') == null) {
+        var call = jsonEncode({
+          "offlineid": GetStorage().read('postCallId'),
+          "url": '$protocol://' + ip + '/api/v1/models/MP_OT_Task',
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "M_Product_ID": {"id": productId},
+          "Qty": int.parse(qtyFieldController.text),
+          "Description": descriptionFieldController.text,
+          "C_UOM_ID": {"id": 100},
+        });
+
+        list.add(call);
+      } else {
+        list = GetStorage().read('postCallList');
+        var call = jsonEncode({
+          "offlineid": GetStorage().read('postCallId'),
+          "url": '$protocol://' + ip + '/api/v1/models/MP_OT_Task',
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "M_Product_ID": {"id": productId},
+          "Qty": int.parse(qtyFieldController.text),
+          "Description": descriptionFieldController.text,
+          "C_UOM_ID": {"id": 100},
+        });
+        list.add(call);
+      }
+      GetStorage().write('postCallId', GetStorage().read('postCallId') + 1);
+      GetStorage().write('postCallList', list);
       Get.snackbar(
-        "Error!".tr,
-        "Record not created".tr,
+        "Saved!".tr,
+        "The record has been saved locally waiting for internet connection".tr,
         icon: const Icon(
-          Icons.error,
+          Icons.save,
           color: Colors.red,
         ),
       );
+      trx.records!.add(record);
+      //trx.rowcount = trx.rowcount! + 1;
+      var data = jsonEncode(trx.toJson());
+      file.writeAsStringSync(data);
     }
+    Get.find<MaintenanceMptaskLineController>().getWorkOrders();
   }
 
-  getResourceName() async {
-    final userId = GetStorage().read('userId');
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/s_resource?\$filter=AD_User_ID eq $userId');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
+  Future<List<Records>> getAllProducts() async {
+    //print(response.body);
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
-    if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-      setState(() {
-        resourceName = jsondecoded['records'][0]['Name'].toString();
-      });
-    } else {
-      throw Exception("Failed to load resource name");
-    }
-  }
+    var jsonResources =
+        ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-  getSelectedBPLocation(int id) async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/C_BPartner_Location?\$filter=C_BPartner_ID eq $id');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      //print(response.body);
-
-      var jsondecoded = jsonDecode(response.body);
-
-      if (jsondecoded['row-count'] != 0) {
-        setState(() {
-          bPLocation = jsondecoded['records'][0]['id'].toString();
-        });
-      } else {
-        setState(() {
-          bPLocation = "";
-        });
+    /* for (var i = 0; i < jsonResources.records!.length; i++) {
+      if (((jsonResources.records![i].mProductCategoryID?.identifier ?? "")
+          .contains((Get.arguments["id"] as String).tr))) {
+        print(jsonResources.records![i].mProductCategoryID?.identifier);
       }
-      //print(bPLocation);
-    } else {
-      throw Exception("Failed to load bp location");
-    }
-  }
+    } */
 
-  getDocType() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/AD_SysConfig?\$filter=Name eq \'LIT_Maintenance_Order_Doc_ID\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
+    //print(jsonResources.records!.length);
 
-    if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-      setState(() {
-        docId = jsondecoded['records'][0]['Value'].toString();
-      });
-    } else {
-      throw Exception("Failed to load doctype id");
-    }
-  }
-
-  Future<List<BPRecords>> getAllBusinessPartners() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/c_bpartner');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-      var jsonBPs = BPJson.fromJson(jsondecoded);
-      return jsonBPs.records!;
-    } else {
-      throw Exception("Failed to load sales reps");
-    }
-  }
-
-  Future<List<RRecords>> getAllResources() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/s_resource');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var jsondecoded = jsonDecode(response.body);
-
-      var jsonResources = ResourceJson.fromJson(jsondecoded);
-
-      return jsonResources.records!;
-    } else {
-      throw Exception("Failed to load sales reps");
-    }
-
-    //print(list[0].eMail);
-
-    //print(json.);
-  }
-
-  Future<List<Records>> getAllSalesRep() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' + ip + '/api/v1/models/ad_user');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-
-      var jsonContacts = ContactsJson.fromJson(jsondecoded);
-
-      return jsonContacts.records!;
-    } else {
-      throw Exception("Failed to load sales reps");
-    }
+    return jsonResources.records!;
 
     //print(list[0].eMail);
 
@@ -245,13 +190,8 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
 
   //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
-  var nameFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var bPartnerFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var phoneFieldController;
-  // ignore: prefer_typing_uninitialized_variables
-  var mailFieldController;
+  var descriptionFieldController;
+  var qtyFieldController;
 
   // ignore: prefer_typing_uninitialized_variables
   var resourceFieldController;
@@ -262,29 +202,18 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   String docId = "";
   String resourceName = "";
   String bPLocation = "";
+  int productId = 0;
+  String productName = "";
 
   @override
   void initState() {
     super.initState();
-    nameFieldController = TextEditingController();
-    phoneFieldController = TextEditingController();
-    bPartnerFieldController = TextEditingController();
-    mailFieldController = TextEditingController();
-    resourceFieldController = TextEditingController();
-    dropdownValue = "N";
-    businessPartnerValue = "";
-    date = "";
-    docId = "";
-    resourceName = "";
-    bPLocation = "";
-    getDocType();
-    getResourceName();
-    getAllResources();
+    descriptionFieldController = TextEditingController();
+    qtyFieldController = TextEditingController(text: "1");
   }
 
-  static String _bPdisplayStringForOption(BPRecords option) => option.name!;
-
-  static String _rdisplayStringForOption(RRecords option) => option.name!;
+  static String _displayStringForOption(Records option) =>
+      "${option.value}_${option.name}";
 
   @override
   Widget build(BuildContext context) {
@@ -293,14 +222,15 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Add WorkOrder'),
+          child: Text('Add WorkOrder Task'),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
-              onPressed: () {
-                createWorkOrder();
+              onPressed: () async {
+                var isConnected = await checkConnection();
+                createWorkOrder(isConnected);
               },
               icon: const Icon(
                 Icons.save,
@@ -318,44 +248,11 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                   height: 10,
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     child: Text(
-                      "Risorsa",
-                      style: TextStyle(fontSize: 12),
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -370,33 +267,32 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                   ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
-                    future: getAllResources(),
+                    future: getAllProducts(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<RRecords>> snapshot) =>
+                            AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<RRecords>(
-                                initialValue:
-                                    TextEditingValue(text: resourceName),
-                                displayStringForOption:
-                                    _rdisplayStringForOption,
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<RRecords>.empty();
+                                    return const Iterable<Records>.empty();
                                   }
-                                  return snapshot.data!
-                                      .where((RRecords option) {
-                                    return option.name!
+                                  return snapshot.data!.where((Records option) {
+                                    return "${option.value}_${option.name}"
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (RRecords selection) {
+                                onSelected: (Records selection) {
                                   setState(() {
-                                    resourceName =
-                                        _rdisplayStringForOption(selection);
+                                    productId = selection.id!;
+                                    productName = selection.name!;
+                                    descriptionFieldController.text =
+                                        selection.description;
                                   });
 
                                   //print(salesrepValue);
@@ -408,62 +304,30 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Business Partner",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllBusinessPartners(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<BPRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<BPRecords>(
-                                displayStringForOption:
-                                    _bPdisplayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<BPRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (BPRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  setState(() {
-                                    businessPartnerValue =
-                                        _bPdisplayStringForOption(selection);
-                                  });
-
-                                  getSelectedBPLocation(selection.id!);
-
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
                   ),
                 ),
               ],
@@ -475,155 +339,6 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Risorsa",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllResources(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<RRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<RRecords>(
-                                initialValue:
-                                    TextEditingValue(text: resourceName),
-                                displayStringForOption:
-                                    _rdisplayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<RRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((RRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (RRecords selection) {
-                                  setState(() {
-                                    resourceName =
-                                        _rdisplayStringForOption(selection);
-                                  });
-
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Business Partner",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllBusinessPartners(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<BPRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<BPRecords>(
-                                displayStringForOption:
-                                    _bPdisplayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<BPRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (BPRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  setState(() {
-                                    businessPartnerValue =
-                                        _bPdisplayStringForOption(selection);
-                                  });
-
-                                  getSelectedBPLocation(selection.id!);
-
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
               ],
             );
           },
@@ -632,155 +347,6 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
               children: [
                 const SizedBox(
                   height: 10,
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.date,
-                    initialValue: '',
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    dateLabelText: 'Data',
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) {
-                      //print(DateTime.parse(val));
-                      //print(val);
-                      setState(() {
-                        date = val.substring(0, 10);
-                      });
-                      //print(date);
-                    },
-                    validator: (val) {
-                      //print(val);
-                      return null;
-                    },
-                    // ignore: avoid_print
-                    onSaved: (val) => print(val),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Risorsa",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllResources(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<RRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<RRecords>(
-                                initialValue:
-                                    TextEditingValue(text: resourceName),
-                                displayStringForOption:
-                                    _rdisplayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<RRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((RRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (RRecords selection) {
-                                  setState(() {
-                                    resourceName =
-                                        _rdisplayStringForOption(selection);
-                                  });
-
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    child: Text(
-                      "Business Partner",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllBusinessPartners(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<BPRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<BPRecords>(
-                                displayStringForOption:
-                                    _bPdisplayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<BPRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (BPRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  setState(() {
-                                    businessPartnerValue =
-                                        _bPdisplayStringForOption(selection);
-                                  });
-
-                                  getSelectedBPLocation(selection.id!);
-
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
                 ),
               ],
             );

@@ -77,7 +77,10 @@ class Records {
   final String? jpToDoStartTime;
   final String? jpToDoEndTime;
   final String? litMpMaintainHelp;
+  final String? note;
+  final String? manualNote;
   final COrderID? cOrderID;
+  String? attachment;
 
   Records(
       {this.id,
@@ -125,6 +128,9 @@ class Records {
       this.jpToDoStartTime,
       this.jpToDoEndTime,
       this.litMpMaintainHelp,
+      this.note,
+      this.manualNote,
+      this.attachment,
       this.cOrderID});
 
   Records.fromJson(Map<String, dynamic> json)
@@ -207,6 +213,9 @@ class Records {
         jpToDoEndDate = json['JP_ToDo_ScheduledEndDate'] as String?,
         jpToDoStartTime = json['JP_ToDo_ScheduledStartTime'] as String?,
         jpToDoEndTime = json['JP_ToDo_ScheduledEndTime'] as String?,
+        note = json['Note'] as String?,
+        manualNote = json['ManualNote'] as String?,
+        attachment = json['attachment'] as String?,
         litMpMaintainHelp = json['mp_maintain_help'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -255,6 +264,9 @@ class Records {
         'JP_ToDo_ScheduledEndDate': jpToDoEndDate,
         'JP_ToDo_ScheduledStartTime': jpToDoStartTime,
         'JP_ToDo_ScheduledEndTime': jpToDoEndTime,
+        'Note': note,
+        'ManualNote': manualNote,
+        'attachment': attachment,
         'mp_maintain_help': litMpMaintainHelp,
       };
 }

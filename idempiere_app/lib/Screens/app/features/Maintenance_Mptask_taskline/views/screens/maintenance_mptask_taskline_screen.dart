@@ -7,11 +7,17 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_create_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_edit_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -28,6 +34,7 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -55,9 +62,16 @@ class MaintenanceMptaskLineScreen
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Work Order > Task"),
+        centerTitle: true,
+        title: Column(
+          children: [
+            Text("${Get.arguments["docN"]}"),
+            Text("${Get.arguments["bPartner"]}"),
+          ],
+        ),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
@@ -70,157 +84,195 @@ class MaintenanceMptaskLineScreen
           mobileBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing),
+              Container(
+                color: Colors.grey[600],
+                width: screenSize.width,
+                height: 0.25,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    tooltip: "Add".tr,
+                    onPressed: () {
+                      Get.to(const CreateMaintenanceMptask(), arguments: {
+                        "id": Get.arguments["id"],
+                      });
+                    },
+                    icon: const Icon(EvaIcons.fileAddOutline),
+                  ),
+                  IconButton(
+                    tooltip: "Print".tr,
+                    onPressed: () {},
+                    icon: const Icon(EvaIcons.printerOutline),
+                  ),
+                  IconButton(
+                    tooltip: "Report".tr,
+                    onPressed: () {
+                      controller.printWorkOrderTasksTicket();
+                    },
+                    icon: const Icon(Icons.receipt),
+                  ),
+                  IconButton(
+                    tooltip: "Attach Image".tr,
+                    onPressed: () {},
+                    icon: const Icon(Icons.attach_file_outlined),
+                  ),
+                ],
+              ),
+              Container(
+                color: Colors.grey[600],
+                width: screenSize.width,
+                height: 0.25,
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  minLines: 1,
+                  maxLines: 4,
+                  controller: controller.requestFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Request Description'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  minLines: 1,
+                  maxLines: 4,
+                  controller: controller.noteFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Activity To Do'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  minLines: 1,
+                  maxLines: 4,
+                  controller: controller.manualNoteFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Activity Done'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
               Obx(
                 () => controller.dataAvailable
                     ? ListView.builder(
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
+                        itemCount: controller.trx.records!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Visibility(
-                            visible:
-                                controller.trx.records![index].mPOTID!.id !=
-                                        GetStorage().read('selectedWorkOrderId')
-                                    ? false
-                                    : true,
-                            child: Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  trailing: IconButton(
-                                    onPressed: () {
-                                      GetStorage().write(
-                                          'selectedTaskDocNo',
-                                          controller
-                                              .trx.records![index].documentNo);
-                                      GetStorage().write(
-                                          'selectedTaskBP',
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "");
-                                      GetStorage().write(
-                                          'selectedTaskId',
-                                          controller.trx.records![index]
-                                              .mPMaintainTaskID!.id);
-                                      Get.toNamed('/MaintenanceMpResource');
-                                    },
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    /* GetStorage().write(
+                                        'selectedTaskDocNo',
+                                        controller
+                                            .trx.records![index].documentNo);
+                                    GetStorage().write(
+                                        'selectedTaskBP',
+                                        controller.trx.records![index]
+                                                .cBPartnerID?.identifier ??
+                                            "");
+                                    GetStorage().write(
+                                        'selectedTaskId',
+                                        controller.trx.records![index]
+                                            .mPMaintainTaskID!.id);
+                                    Get.toNamed('/MaintenanceMpResource'); */
+                                  },
+                                  icon: const Icon(
+                                    Icons.view_list,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
                                     icon: const Icon(
-                                      Icons.view_list,
+                                      Icons.edit,
                                       color: Colors.green,
                                     ),
+                                    tooltip: 'Edit Work Order',
+                                    onPressed: () {
+                                      //log("info button pressed");
+                                      /* Get.to(
+                                          const EditMaintenanceMptaskLine(),
+                                          arguments: {
+                                            "id": controller
+                                                .trx
+                                                .records![index]
+                                                .mPOTTaskID!
+                                                .id,
+                                            "completed": controller
+                                                .trx
+                                                .records![index]
+                                                .mpOtTaskStatus,
+                                            "index": index,
+                                          }); */
+                                    },
                                   ),
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                      tooltip: 'Edit Work Order',
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        Get.to(
-                                            const EditMaintenanceMptaskLine(),
-                                            arguments: {
-                                              "id": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mPOTTaskID!
-                                                  .id,
-                                              "completed": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mpOtTaskStatus,
-                                              "index": index,
-                                            });
-                                      },
-                                    ),
-                                  ),
-                                  title: Text(
-                                    controller.trx.records![index].cBPartnerID
-                                            ?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.event),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .dateWorkStart ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].mProductID
+                                          ?.identifier ??
+                                      "",
+                                  style: const TextStyle(
                                       color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Column(
                                   children: [
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Doc Number: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .documentNo ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Status: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].mpOtTaskStatus}"
-                                                    .tr),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            /* const Text(
-                                              "BPartner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ), */
-                                            Icon(Icons.location_pin,
-                                                color: Colors.red.shade700),
-                                            Text(
-                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
-                                          ],
+                                    Row(
+                                      children: <Widget>[
+                                        const Icon(Icons.event),
+                                        Text(
+                                          "${"Qty".tr}: ${controller.trx.records![index].qty}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                       ],
                                     ),
                                   ],
                                 ),
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [],
                               ),
                             ),
                           );
@@ -257,7 +309,7 @@ class MaintenanceMptaskLineScreen
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
-                                      GetStorage().write(
+                                      /* GetStorage().write(
                                           'selectedTaskDocNo',
                                           controller
                                               .trx.records![index].documentNo);
@@ -270,7 +322,7 @@ class MaintenanceMptaskLineScreen
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id);
-                                      Get.toNamed('/MaintenanceMpResource');
+                                      Get.toNamed('/MaintenanceMpResource'); */
                                     },
                                     icon: const Icon(
                                       Icons.view_list,
@@ -294,7 +346,7 @@ class MaintenanceMptaskLineScreen
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
                                         //log("info button pressed");
-                                        Get.to(
+                                        /* Get.to(
                                             const EditMaintenanceMptaskLine(),
                                             arguments: {
                                               "id": controller
@@ -307,14 +359,12 @@ class MaintenanceMptaskLineScreen
                                                   .records![index]
                                                   .mpOtTaskStatus,
                                               "index": index,
-                                            });
+                                            }); */
                                       },
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].cBPartnerID
-                                            ?.identifier ??
-                                        "???",
+                                    controller.trx.records![index].name ?? "",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -325,8 +375,8 @@ class MaintenanceMptaskLineScreen
                                     children: <Widget>[
                                       const Icon(Icons.event),
                                       Text(
-                                        controller.trx.records![index]
-                                                .dateWorkStart ??
+                                        controller.trx.records![index].createdBy
+                                                ?.identifier ??
                                             "??",
                                         style: const TextStyle(
                                             color: Colors.white),
@@ -340,49 +390,7 @@ class MaintenanceMptaskLineScreen
                                     ), */
                                   childrenPadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Doc Number: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .documentNo ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Status: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].mpOtTaskStatus}"
-                                                    .tr),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            /* const Text(
-                                              "BPartner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ), */
-                                            Icon(Icons.location_pin,
-                                                color: Colors.red.shade700),
-                                            Text(
-                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  children: [],
                                 ),
                               ),
                             ),
@@ -420,7 +428,7 @@ class MaintenanceMptaskLineScreen
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
-                                      GetStorage().write(
+                                      /* GetStorage().write(
                                           'selectedTaskDocNo',
                                           controller
                                               .trx.records![index].documentNo);
@@ -433,7 +441,7 @@ class MaintenanceMptaskLineScreen
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id);
-                                      Get.toNamed('/MaintenanceMpResource');
+                                      Get.toNamed('/MaintenanceMpResource'); */
                                     },
                                     icon: const Icon(
                                       Icons.view_list,
@@ -457,7 +465,7 @@ class MaintenanceMptaskLineScreen
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
                                         //log("info button pressed");
-                                        Get.to(
+                                        /* Get.to(
                                             const EditMaintenanceMptaskLine(),
                                             arguments: {
                                               "id": controller
@@ -470,14 +478,12 @@ class MaintenanceMptaskLineScreen
                                                   .records![index]
                                                   .mpOtTaskStatus,
                                               "index": index,
-                                            });
+                                            }); */
                                       },
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].cBPartnerID
-                                            ?.identifier ??
-                                        "???",
+                                    controller.trx.records![index].name ?? "",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -488,8 +494,8 @@ class MaintenanceMptaskLineScreen
                                     children: <Widget>[
                                       const Icon(Icons.event),
                                       Text(
-                                        controller.trx.records![index]
-                                                .dateWorkStart ??
+                                        controller.trx.records![index].createdBy
+                                                ?.identifier ??
                                             "??",
                                         style: const TextStyle(
                                             color: Colors.white),
@@ -503,49 +509,7 @@ class MaintenanceMptaskLineScreen
                                     ), */
                                   childrenPadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Doc Number: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .documentNo ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Status: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].mpOtTaskStatus}"
-                                                    .tr),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            /* const Text(
-                                              "BPartner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ), */
-                                            Icon(Icons.location_pin,
-                                                color: Colors.red.shade700),
-                                            Text(
-                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  children: [],
                                 ),
                               ),
                             ),

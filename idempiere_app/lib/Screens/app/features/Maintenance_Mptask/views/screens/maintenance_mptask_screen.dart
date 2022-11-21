@@ -13,6 +13,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Signature_WorkOrder/signature_page.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -31,8 +32,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:idempiere_app/constants.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:pdf/pdf.dart';
+import 'dart:typed_data';
 
 // binding
 part '../../bindings/maintenance_mptask_binding.dart';
@@ -76,6 +81,593 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing),
+                Row(
+                  children: [
+                    Container(
+                      child: Obx(() => controller.dataAvailable
+                          ? Text(
+                              "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
+                          : Text("${"WORK ORDER".tr}: ")),
+                      margin: const EdgeInsets.only(left: 15),
+                    ),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        onPressed: () {
+                          Get.to(const CreateMaintenanceMptask());
+                        },
+                        icon: const Icon(
+                          Icons.note_add_outlined,
+                          color: Colors.lightBlue,
+                        ),
+                      ),
+                    ), */
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.syncWorkOrder();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 30),
+                      child: Obx(
+                        () => TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.records!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  trailing: IconButton(
+                                    onPressed: () {
+                                      GetStorage().write(
+                                          'selectedWorkOrderId',
+                                          controller
+                                              .trx.records![index].mPOTID!.id);
+
+                                      GetStorage().write(
+                                          'selectedTaskDocNo',
+                                          controller.trx.records![index]
+                                              .mPMaintainID?.id);
+                                      GetStorage().write(
+                                          'selectedTaskBP',
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "");
+
+                                      /* GetStorage().write(
+                                          'selectedTaskId',
+                                          controller.trx.records![index]
+                                              .mPMaintainTaskID!.id); */
+                                      if (controller.trx.records![index]
+                                              .cDocTypeID?.identifier ==
+                                          'Special Order'.tr) {
+                                        Get.toNamed('/MaintenanceMptaskLine',
+                                            arguments: {
+                                              "bPartner": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.identifier,
+                                              "docN": controller.trx
+                                                  .records![index].documentNo,
+                                              "docType": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cDocTypeID
+                                                  ?.identifier,
+                                              "id": controller.trx
+                                                  .records![index].mPOTID!.id,
+                                              "note": controller
+                                                  .trx.records![index].note,
+                                              "manualNote": controller.trx
+                                                  .records![index].manualNote,
+                                              "request": controller.trx
+                                                  .records![index].description,
+                                              "index": index,
+                                              "date": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .dateWorkStart,
+                                              "org": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .aDOrgID
+                                                  ?.identifier,
+                                              "hasAttachment": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .attachment ??
+                                                  "false"
+                                            });
+                                      } else {
+                                        Get.toNamed('/MaintenanceMpResource',
+                                            arguments: {
+                                              "docN": controller.trx
+                                                  .records![index].documentNo,
+                                            });
+                                      }
+                                    },
+                                    icon: const Icon(
+                                      Icons.view_list,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                      ),
+                                      tooltip: 'Edit Work Order',
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        Get.to(const EditMaintenanceMptask(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "index": index,
+                                              "docNo": controller.trx
+                                                  .records![index].documentNo,
+                                              "businessPartner": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.identifier,
+                                              "date": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .jpToDoStartDate
+                                                  ?.substring(0, 10),
+                                              "timeStart": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .jpToDoStartTime
+                                                  ?.substring(1, 5),
+                                              "timeEnd": controller.trx
+                                                  .records![index].jpToDoEndTime
+                                                  ?.substring(1, 5),
+                                              "notePlant": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litMpMaintainHelp,
+                                              "noteWO": controller.trx
+                                                  .records![index].description,
+                                              "address":
+                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal ?? ""} ${controller.trx.records![index].cLocationCity}",
+                                              "representative": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .refname ??
+                                                  controller.trx.records![index]
+                                                      .ref2name,
+                                              "team": controller
+                                                  .trx.records![index].team,
+                                            });
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    DateFormat('dd-MM-yyyy').format(
+                                        DateTime.parse(controller.trx
+                                            .records![index].jpToDoStartDate!)),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(
+                                        Icons.handshake,
+                                        color: Colors.yellow,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: Colors.white,
+                                      size: 30.0,
+                                    ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'N° Work Order'.tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .documentNo ??
+                                                "")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Document Type: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .cDocTypeID?.identifier ??
+                                                "")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${'Time'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${'N° Maintenance'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .documentNo2 ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${'Note Plant'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .litMpMaintainHelp ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${'Note Work Order'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .description ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        /* Row(
+                                          children: [
+                                            const Text(
+                                              "Status: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].mpOtTaskStatus}"
+                                                    .tr),
+                                          ],
+                                        ), */
+                                        Row(
+                                          children: [
+                                            /* const Text(
+                                              "BPartner: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ), */
+                                            Icon(Icons.location_pin,
+                                                color: Colors.red.shade700),
+                                            Expanded(
+                                              child: Text(
+                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                            ),
+                                          ],
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].refname !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Representative'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].refname}"
+                                                      .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].refname !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .phone!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller.trx
+                                                      .records![index].phone ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].ref2name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Representative'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].ref2name}"
+                                                      .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].ref2name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone2 !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .phone2!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller.trx
+                                                      .records![index].phone2 ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Team".tr}:  ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller.trx
+                                                      .records![index].team ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              IconButton(
+                                                tooltip: "Sign".tr,
+                                                onPressed: () {
+                                                  Get.to(
+                                                      const SignatureWorkOrderScreen(),
+                                                      arguments: {
+                                                        "id": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mPOTID
+                                                            ?.id,
+                                                      });
+                                                },
+                                                icon: const Icon(
+                                                    EvaIcons.edit2Outline),
+                                              ),
+                                              IconButton(
+                                                tooltip: "Print".tr,
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                    EvaIcons.printer),
+                                              ),
+                                            ]),
+                                        ButtonBar(
+                                          alignment: MainAxisAlignment.center,
+                                          overflowDirection:
+                                              VerticalDirection.down,
+                                          overflowButtonSpacing: 5,
+                                          children: [
+                                            ElevatedButton(
+                                              child: Text("Complete".tr),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {},
+                                            ),
+                                            ElevatedButton(
+                                              child:
+                                                  Text("Anomalies Review".tr),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {
+                                                Get.toNamed(
+                                                    '/MaintenanceMptaskAnomalyReview',
+                                                    arguments: {
+                                                      "id": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mPMaintainTaskID
+                                                          ?.id,
+                                                      "record-id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID
+                                                              ?.id ??
+                                                          0,
+                                                      "model-name": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID
+                                                              ?.modelname ??
+                                                          "",
+                                                    });
+                                              },
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cOrderID !=
+                                                  null,
+                                              child: ElevatedButton(
+                                                child:
+                                                    Text("Sales Order Zoom".tr),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  Get.offNamed('/SalesOrder',
+                                                      arguments: {
+                                                        "notificationId":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cOrderID
+                                                                ?.id
+                                                      });
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
+            },
+            tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
                 _buildHeader(
@@ -242,9 +834,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index]
-                                            .jpToDoStartDate ??
-                                        "???",
+                                    DateFormat('dd-MM-yyyy').format(
+                                        DateTime.parse(controller.trx
+                                            .records![index].jpToDoStartDate!)),
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -592,477 +1184,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                 ),
               ]);
             },
-            tabletBuilder: (context, constraints) {
-              return Column(children: [
-                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
-                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
-                const SizedBox(height: kSpacing / 2),
-                const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text(
-                              "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
-                          : Text("${"WORK ORDER".tr}: ")),
-                      margin: const EdgeInsets.only(left: 15),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateMaintenanceMptask());
-                        },
-                        icon: const Icon(
-                          Icons.note_add_outlined,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.syncWorkOrder();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ), */
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
-                Obx(
-                  () => controller.dataAvailable
-                      ? ListView.builder(
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: controller.trx.records!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  trailing: IconButton(
-                                    onPressed: () {
-                                      /*  GetStorage().write(
-                                          'selectedWorkOrderId',
-                                          controller
-                                              .trx.records![index].mPOTID!.id);
-                                      Get.toNamed('/MaintenanceMptaskLine'); */
-                                      GetStorage().write(
-                                          'selectedTaskDocNo',
-                                          controller.trx.records![index]
-                                              .mPMaintainID?.id);
-                                      GetStorage().write(
-                                          'selectedTaskBP',
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "");
-                                      /* GetStorage().write(
-                                          'selectedTaskId',
-                                          controller.trx.records![index]
-                                              .mPMaintainTaskID!.id); */
-                                      Get.toNamed('/MaintenanceMpResource');
-                                    },
-                                    icon: const Icon(
-                                      Icons.view_list,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                      ),
-                                      tooltip: 'Edit Work Order',
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        Get.to(const EditMaintenanceMptask(),
-                                            arguments: {
-                                              "id": controller
-                                                  .trx.records![index].id,
-                                              "index": index,
-                                              "docNo": controller.trx
-                                                  .records![index].documentNo,
-                                              "businessPartner": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.identifier,
-                                              "date": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .jpToDoStartDate
-                                                  ?.substring(0, 10),
-                                              "timeStart": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .jpToDoStartTime
-                                                  ?.substring(1, 5),
-                                              "timeEnd": controller.trx
-                                                  .records![index].jpToDoEndTime
-                                                  ?.substring(1, 5),
-                                              "notePlant": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .litMpMaintainHelp,
-                                              "noteWO": controller.trx
-                                                  .records![index].description,
-                                              "address":
-                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal ?? ""} ${controller.trx.records![index].cLocationCity}",
-                                              "representative": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .refname ??
-                                                  controller.trx.records![index]
-                                                      .ref2name,
-                                              "team": controller
-                                                  .trx.records![index].team,
-                                            });
-                                      },
-                                    ),
-                                  ),
-                                  title: Text(
-                                    controller.trx.records![index]
-                                            .jpToDoStartDate ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(
-                                        Icons.handshake,
-                                        color: Colors.yellow,
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Document N°'.tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .documentNo ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Document Type: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .cDocTypeID?.identifier ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Time'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Note Plant'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .litMpMaintainHelp ??
-                                                  ""),
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Note Work Order'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .description ??
-                                                  ""),
-                                            )
-                                          ],
-                                        ),
-                                        /* Row(
-                                          children: [
-                                            const Text(
-                                              "Status: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].mpOtTaskStatus}"
-                                                    .tr),
-                                          ],
-                                        ), */
-                                        Row(
-                                          children: [
-                                            /* const Text(
-                                              "BPartner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ), */
-                                            Icon(Icons.location_pin,
-                                                color: Colors.red.shade700),
-                                            Expanded(
-                                              child: Text(
-                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
-                                            ),
-                                          ],
-                                        ),
-                                        Visibility(
-                                          visible: controller.trx
-                                                  .records![index].refname !=
-                                              null,
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "${'Representative'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "${controller.trx.records![index].refname}"
-                                                      .tr),
-                                            ],
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: controller.trx
-                                                  .records![index].refname !=
-                                              null,
-                                          child: Row(
-                                            children: [
-                                              IconButton(
-                                                icon: const Icon(
-                                                  Icons.call,
-                                                  color: Colors.green,
-                                                ),
-                                                tooltip: 'Call',
-                                                onPressed: () {
-                                                  //log("info button pressed");
-                                                  if (controller
-                                                          .trx
-                                                          .records![index]
-                                                          .phone !=
-                                                      null) {
-                                                    controller.makePhoneCall(
-                                                        controller
-                                                            .trx
-                                                            .records![index]
-                                                            .phone!);
-                                                  }
-                                                },
-                                              ),
-                                              Text(controller.trx
-                                                      .records![index].phone ??
-                                                  ""),
-                                            ],
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: controller.trx
-                                                  .records![index].ref2name !=
-                                              null,
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "${'Representative'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "${controller.trx.records![index].ref2name}"
-                                                      .tr),
-                                            ],
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: controller.trx
-                                                  .records![index].ref2name !=
-                                              null,
-                                          child: Row(
-                                            children: [
-                                              IconButton(
-                                                icon: const Icon(
-                                                  Icons.call,
-                                                  color: Colors.green,
-                                                ),
-                                                tooltip: 'Call',
-                                                onPressed: () {
-                                                  //log("info button pressed");
-                                                  if (controller
-                                                          .trx
-                                                          .records![index]
-                                                          .phone2 !=
-                                                      null) {
-                                                    controller.makePhoneCall(
-                                                        controller
-                                                            .trx
-                                                            .records![index]
-                                                            .phone2!);
-                                                  }
-                                                },
-                                              ),
-                                              Text(controller.trx
-                                                      .records![index].phone2 ??
-                                                  ""),
-                                            ],
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Team".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller.trx
-                                                      .records![index].team ??
-                                                  ""),
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            ElevatedButton(
-                                              child:
-                                                  Text("Anomalies Review".tr),
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.green),
-                                              ),
-                                              onPressed: () async {
-                                                Get.toNamed(
-                                                    '/MaintenanceMptaskAnomalyReview',
-                                                    arguments: {
-                                                      "id": controller
-                                                          .trx
-                                                          .records![index]
-                                                          .mPMaintainTaskID
-                                                          ?.id,
-                                                      "record-id": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .mPOTID
-                                                              ?.id ??
-                                                          0,
-                                                      "model-name": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .mPOTID
-                                                              ?.modelname ??
-                                                          "",
-                                                    });
-                                              },
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8),
-                                              child: ElevatedButton(
-                                                child: Text("Complete".tr),
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Colors.green),
-                                                ),
-                                                onPressed: () async {},
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      : const Center(child: CircularProgressIndicator()),
-                ),
-              ]);
-            },
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
@@ -1138,11 +1259,11 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                 child: ExpansionTile(
                                   trailing: IconButton(
                                     onPressed: () {
-                                      /*  GetStorage().write(
+                                      GetStorage().write(
                                           'selectedWorkOrderId',
                                           controller
                                               .trx.records![index].mPOTID!.id);
-                                      Get.toNamed('/MaintenanceMptaskLine'); */
+
                                       GetStorage().write(
                                           'selectedTaskDocNo',
                                           controller.trx.records![index]
@@ -1152,11 +1273,16 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           controller.trx.records![index]
                                                   .cBPartnerID?.identifier ??
                                               "");
+
                                       /* GetStorage().write(
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
-                                      Get.toNamed('/MaintenanceMpResource');
+                                      Get.toNamed('/MaintenanceMpResource',
+                                          arguments: {
+                                            "docN": controller
+                                                .trx.records![index].documentNo,
+                                          });
                                     },
                                     icon: const Icon(
                                       Icons.view_list,
@@ -1225,9 +1351,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index]
-                                            .jpToDoStartDate ??
-                                        "???",
+                                    DateFormat('dd-MM-yyyy').format(
+                                        DateTime.parse(controller.trx
+                                            .records![index].jpToDoStartDate!)),
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -1264,7 +1390,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         Row(
                                           children: [
                                             Text(
-                                              'Document N°'.tr,
+                                              'N° Work Order'.tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1294,6 +1420,22 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ),
                                             Text(
                                                 "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${'N° Maintenance'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .documentNo2 ??
+                                                  ""),
+                                            )
                                           ],
                                         ),
                                         Row(
@@ -1471,10 +1613,21 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             )
                                           ],
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
+                                        ButtonBar(
+                                          alignment: MainAxisAlignment.center,
+                                          overflowDirection:
+                                              VerticalDirection.down,
+                                          overflowButtonSpacing: 5,
                                           children: [
+                                            ElevatedButton(
+                                              child: Text("Complete".tr),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {},
+                                            ),
                                             ElevatedButton(
                                               child:
                                                   Text("Anomalies Review".tr),
@@ -1507,17 +1660,31 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                     });
                                               },
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8),
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cOrderID !=
+                                                  null,
                                               child: ElevatedButton(
-                                                child: Text("Complete".tr),
+                                                child:
+                                                    Text("Sales Order Zoom".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
                                                           Colors.green),
                                                 ),
-                                                onPressed: () async {},
+                                                onPressed: () async {
+                                                  Get.offNamed('/SalesOrder',
+                                                      arguments: {
+                                                        "notificationId":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cOrderID
+                                                                ?.id
+                                                      });
+                                                },
                                               ),
                                             ),
                                           ],

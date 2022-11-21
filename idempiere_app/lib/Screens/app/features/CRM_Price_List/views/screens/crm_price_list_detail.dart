@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:convert';
 //import 'dart:developer';
 
@@ -5,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/views/screens/crm_sales_order_creation_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts_Create_Contract/views/screens/crm_maintenance_mpcontacts_create_contract_screen.dart';
@@ -642,7 +643,7 @@ class _PriceListDetailState extends State<PriceListDetail>
               ),
               Text(
                 helpFieldController.text,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                 ),
               )

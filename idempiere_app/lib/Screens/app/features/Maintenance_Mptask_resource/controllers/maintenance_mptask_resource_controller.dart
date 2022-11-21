@@ -33,6 +33,10 @@ class MaintenanceMpResourceController extends GetxController {
   var filter2Available = false.obs;
 
   TextEditingController passwordFieldController = TextEditingController();
+  TextEditingController newLocationCommentFieldController =
+      TextEditingController();
+  TextEditingController numberFieldController = TextEditingController();
+  TextEditingController lineFieldController = TextEditingController();
 
   final json = {
     "types": [
@@ -309,6 +313,193 @@ class MaintenanceMpResourceController extends GetxController {
     );
   }
 
+  sellResource() {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    Get.defaultDialog(
+      title: "Resource Code:",
+      content: Column(
+        children: [
+          RoundedCodeField(
+            controller: passwordFieldController,
+            onChanged: (value) {},
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: TextField(
+              controller: numberFieldController,
+              onChanged: (value) {
+                lineFieldController.text =
+                    (int.parse(numberFieldController.text) * 10).toString();
+              },
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.person_pin_outlined),
+                border: const OutlineInputBorder(),
+                labelText: 'N°'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+              ],
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: TextField(
+              controller: lineFieldController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.person_pin_outlined),
+                border: const OutlineInputBorder(),
+                labelText: 'Line N°'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+              ],
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: TextField(
+              controller: newLocationCommentFieldController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.person_pin_outlined),
+                border: const OutlineInputBorder(),
+                labelText: 'Location'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
+        ],
+      ),
+      barrierDismissible: true,
+      textConfirm: 'Add'.tr,
+      buttonColor: kNotifColor,
+      onConfirm: () async {
+        DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+        String date = dateFormat.format(DateTime.now());
+
+        var isConnected = await checkConnection();
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+        // ignore: unused_local_variable
+        var res = WorkOrderResourceLocalJson.fromJson(
+            jsonDecode(file.readAsStringSync()));
+
+        for (var i = 0; i < _trx2.records!.length; i++) {
+          if (kDebugMode) {
+            print(res.records![i].prodCode);
+          }
+          if (_trx2.records![i].prodCode == passwordFieldController.text) {
+            var msg = jsonEncode({
+              "MP_Maintain_ID": {
+                "id": GetStorage().read('selectedTaskDocNo'),
+              },
+              "LIT_Control1DateFrom": date,
+              "LocationComment": newLocationCommentFieldController.text,
+              "V_Number": numberFieldController.text,
+              "LineNo": int.parse(lineFieldController.text == ""
+                  ? "0"
+                  : lineFieldController.text),
+              "LIT_ResourceStatus": {"id": "INS"},
+            });
+
+            _trx2.records![i].mpMaintainID =
+                GetStorage().read('selectedTaskDocNo');
+            _trx2.records![i].lITControl1DateFrom = date;
+            _trx2.records![i].number = numberFieldController.text;
+            _trx2.records![i].lineNo = int.parse(lineFieldController.text == ""
+                ? "0"
+                : lineFieldController.text);
+            _trx2.records![i].locationComment =
+                newLocationCommentFieldController.text;
+            _trx2.records![i].resourceStatus =
+                ResourceStatus(id: "INS", identifier: "INS".tr);
+
+            //print(_trx.records![index].mpMaintainID?.id);
+            /*  print('http://' +
+                ip +
+                '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'); */
+            var url = Uri.parse('http://' +
+                ip +
+                '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}');
+            if (isConnected) {
+              emptyAPICallStak();
+              var response = await http.put(
+                url,
+                body: msg,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Authorization': authorization,
+                },
+              );
+              if (response.statusCode == 200) {
+                //print(response.body);
+                var data = jsonEncode(_trx2.toJson());
+                file.writeAsStringSync(data);
+                //getWorkOrders();
+                //print("done!");
+                //Get.back();
+                Get.back();
+                Get.snackbar(
+                  "Fatto!",
+                  "Il record è stato modificato",
+                  icon: const Icon(
+                    Icons.done,
+                    color: Colors.green,
+                  ),
+                );
+              } else {
+                //print(response.body);
+                //print(response.statusCode);
+                Get.snackbar(
+                  "Errore!",
+                  "Il record non è stato modificato",
+                  icon: const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                );
+              }
+            } else {
+              var data = jsonEncode(_trx2.toJson());
+              //GetStorage().write('workOrderSync', data);
+              file.writeAsStringSync(data);
+              //getWorkOrders();
+              Map calls = {};
+              if (GetStorage().read('storedEditAPICalls') == null) {
+                calls['http://' +
+                        ip +
+                        '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
+                    msg;
+              } else {
+                calls = GetStorage().read('storedEditAPICalls');
+                calls['http://' +
+                        ip +
+                        '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
+                    msg;
+              }
+              GetStorage().write('storedEditAPICalls', calls);
+              Get.snackbar(
+                "Salvato!",
+                "Il record è stato salvato localmente in attesa di connessione internet.",
+                icon: const Icon(
+                  Icons.save,
+                  color: Colors.red,
+                ),
+              );
+            }
+
+            getWorkOrders();
+          }
+        }
+      },
+    );
+  }
+
   replaceResourceButton(int index) {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -533,18 +724,25 @@ class MaintenanceMpResourceController extends GetxController {
         elevation: 16,
         onChanged: (String? newValue) async {
           dropDownValue = newValue!;
+          //print(newValue);
           Get.back();
           const filename = "reflistresourcetype";
           final file = File(
               '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-          for (var i = 0; i < _tt.records!.length; i++) {
-            if (_tt.records![i].value == newValue) {
-              Get.to(const CreateMaintenanceMpResource(), arguments: {
-                "id": dropDownValue,
-                "reflistresourcetype": file,
-                "perm": _tt.records![i].parameterValue,
-              });
-            }
+          switch (newValue) {
+            case "A02NEW":
+              sellResource();
+              break;
+            default:
+              for (var i = 0; i < _tt.records!.length; i++) {
+                if (_tt.records![i].value == newValue) {
+                  Get.to(const CreateMaintenanceMpResource(), arguments: {
+                    "id": dropDownValue,
+                    "reflistresourcetype": file,
+                    "perm": _tt.records![i].parameterValue,
+                  });
+                }
+              }
           }
         },
         items: _tt.records!.map((list) {

@@ -12,6 +12,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/constants.dart';
 import 'package:path_provider/path_provider.dart';
@@ -152,7 +153,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(utf8.decode(response.bodyBytes));
-        businessPartnerSync = false;
+        syncADOrgInfo();
+        //businessPartnerSync = false;
         if (kDebugMode) {
           print('BusinessPartner Checked');
         }
@@ -195,12 +197,43 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(jsonEncode(json.toJson()));
-        businessPartnerSync = false;
+        syncADOrgInfo();
+        //businessPartnerSync = false;
         if (kDebugMode) {
           print('BusinessPartner Checked');
         }
         checkSyncData();
       }
+    }
+  }
+
+  syncADOrgInfo() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${GetStorage().read("organizationid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      const filename = "adorginfo";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
+      businessPartnerSync = false;
+      //userPreferencesSync = false;
+      if (kDebugMode) {
+        print('ADOrgInfo Checked');
+      }
+      checkSyncData();
     }
   }
 
@@ -626,14 +659,14 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       const filename = "workorder";
       final file = File(
           '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-      file.writeAsString(response.body);
+      file.writeAsString(jsonDecode(utf8.decode(response.bodyBytes)));
       //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
         print('WorkOrder Checked');
       }
       syncWorkOrderResource();
     } else {
-      //print(response.body);
+      print(response.body);
       workOrderSync = false;
       checkSyncData();
     }
@@ -657,7 +690,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       if (kDebugMode) {
-        print(response.body);
+        //print(response.body);
       }
       var json = WorkOrderResourceLocalJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
@@ -675,7 +708,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         }
         //checkSyncData();
       }
-      syncWorkOrderResourceSurveyLines();
+      //syncWorkOrderResourceSurveyLines();
+      syncWorkOrderTask();
     } else {
       //print(response.body);
       workOrderSync = false;
@@ -722,7 +756,101 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
           print('WorkOrderResource Checked');
         }
         //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
+        syncWorkOrderTask();
+      }
+    } else {
+      workOrderSync = false;
+      checkSyncData();
+    }
+  }
+
+  Future<void> syncWorkOrderTask() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_ot_task_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      var json = WorkOrderTaskLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderTaskPages(json, index);
+      } else {
+        const filename = "workordertask";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        if (kDebugMode) {
+          print('WorkOrderTask Checked');
+        }
+        //checkSyncData();
+      }
+      syncWorkOrderResourceSurveyLines();
+    } else {
+      //print(response.body);
+      workOrderSync = false;
+      checkSyncData();
+    }
+  }
+
+  syncWorkOrderTaskPages(WorkOrderTaskLocalJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderTaskLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderTaskPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "workordertask";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        if (kDebugMode) {
+          print('WorkOrderTask Checked');
+        }
+        //checkSyncData();
         syncWorkOrderResourceSurveyLines();
+        //syncWorkOrderTask();
       }
     } else {
       workOrderSync = false;

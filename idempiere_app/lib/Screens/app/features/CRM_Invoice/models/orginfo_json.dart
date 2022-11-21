@@ -36,6 +36,7 @@ class Records {
   final String? uid;
   final CLocationID? cLocationID;
   final ADClientID? aDClientID;
+  final ADOrgID? adOrgID;
   final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
@@ -69,6 +70,7 @@ class Records {
     this.uid,
     this.cLocationID,
     this.aDClientID,
+    this.adOrgID,
     this.isActive,
     this.created,
     this.createdBy,
@@ -107,6 +109,9 @@ class Records {
             : null,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
+            : null,
+        adOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
+            ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
         isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
@@ -186,6 +191,7 @@ class Records {
         'uid': uid,
         'C_Location_ID': cLocationID?.toJson(),
         'AD_Client_ID': aDClientID?.toJson(),
+        'AD_Org_ID': adOrgID?.toJson(),
         'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
@@ -257,6 +263,33 @@ class ADClientID {
   });
 
   ADClientID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADOrgID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADOrgID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADOrgID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

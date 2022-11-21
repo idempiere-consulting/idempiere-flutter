@@ -433,6 +433,15 @@ class LocaleString extends Translations {
           'Open': 'Open',
           'Row Total': 'Row Total',
           'Inventory with Lot': 'Inventory with Lot',
+          'PR': 'Pending Review',
+          'PT': 'Pending Testing',
+          'OK': 'OK',
+          'PSG': 'Pending Replacement',
+          'Special Order': 'Special Order',
+          'Request Description': 'Request Description',
+          'Activity To Do': 'Activity To Do',
+          'Activity Done': 'Activity Done',
+          'Product/Service': 'Product/Service',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -873,6 +882,15 @@ class LocaleString extends Translations {
           'Open': 'Aperto',
           'Row Total': 'Totale Riga',
           'Inventory with Lot': 'Inventario con Lotto',
+          'PR': 'In Attesa di Revisione',
+          'PT': 'In Attesa di Collaudo',
+          'OK': 'OK',
+          'PSG': 'In Attesa di Sostituzione',
+          'Special Order': 'Intervento Straordinario',
+          'Request Description': 'Descrizione Richiesta',
+          'Activity To Do': 'Attivita\' da Svolgere',
+          'Activity Done': 'Attivita\' Svolta',
+          'Product/Service': 'Prodotto/Servizio'
         },
       };
 }

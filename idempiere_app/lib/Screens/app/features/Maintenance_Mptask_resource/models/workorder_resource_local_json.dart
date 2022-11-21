@@ -83,6 +83,7 @@ class RRecords {
   int? lineNo;
   String? team;
   String? anomaliesCount;
+  String? toDoAction;
 
   RRecords(
       {this.id,
@@ -134,7 +135,8 @@ class RRecords {
       this.number,
       this.lineNo,
       this.team,
-      this.anomaliesCount});
+      this.anomaliesCount,
+      this.toDoAction});
 
   RRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -217,6 +219,7 @@ class RRecords {
         number = json['V_Number'] as String?,
         lineNo = json['LineNo'] as int?,
         anomaliesCount = json['anomalies_count'] as String?,
+        toDoAction = json['todo_action'] as String?,
         team = json['team'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -270,6 +273,7 @@ class RRecords {
         'LineNo': lineNo,
         'V_Number': number,
         'anomalies_count': anomaliesCount,
+        'todo_action': toDoAction,
         'team': team,
       };
 }

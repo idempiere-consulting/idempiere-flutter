@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/storageonhand_json.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/models/product_json.dart';
-import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Line/views/screens/supplychain_inventoryline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot_Line/views/screens/supplychain_inventory_lot_line_screen.dart';
 
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';

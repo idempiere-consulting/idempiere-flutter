@@ -2,13 +2,21 @@ part of dashboard;
 
 class MaintenanceMptaskLineController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late WorkOrderLocalJson _trx;
+  late WorkOrderTaskLocalJson _trx;
+  late WorkOrderTaskLocalJson _trx2;
   var _hasCallSupport = false;
+  var args = Get.arguments;
+  late OrgInfoJSON orgInfo;
   //var _hasMailSupport = false;
-
+  //var args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   //var adUserId;
-
+  TextEditingController noteFieldController =
+      TextEditingController(text: Get.arguments["note"]);
+  TextEditingController manualNoteFieldController =
+      TextEditingController(text: Get.arguments["manualNote"]);
+  TextEditingController requestFieldController =
+      TextEditingController(text: Get.arguments["request"]);
   var value = "Tutti".obs;
 
   var filters = ["Tutti", "Miei" /* , "Team" */];
@@ -24,11 +32,27 @@ class MaintenanceMptaskLineController extends GetxController {
     });
     //print(GetStorage().read('workOrderSync'));
     getWorkOrders();
+    setConnect();
+    getOrgInfo();
     //getADUserID();
   }
 
+  Future<void> setConnect() async {
+    try {
+      final String? result = await BluetoothThermalPrinter.connect(
+          GetStorage().read('posMacAddress'));
+      //print("state conneected $result");
+      if (result == "true") {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('nope');
+      }
+    }
+    //printTicket();
+  }
+
   bool get dataAvailable => _dataAvailable.value;
-  WorkOrderLocalJson get trx => _trx;
+  WorkOrderTaskLocalJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -41,30 +65,109 @@ class MaintenanceMptaskLineController extends GetxController {
     getWorkOrders();
   }
 
-/*   Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
+  getOrgInfo() async {
+    const filename = "adorginfo";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
-      adUserId = json["records"][0]["id"];
+    orgInfo = OrgInfoJSON.fromJson(jsonDecode(file.readAsStringSync()));
+  }
 
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
+  Future<void> printWorkOrderTasksTicket() async {
+    String? isConnected = await BluetoothThermalPrinter.connectionStatus;
+    if (isConnected == "true") {
+      try {
+        List<int> bytes = await getWorkOrderTasks();
+        // ignore: unused_local_variable
+        final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      } catch (e) {
+        if (kDebugMode) {
+          print('nope');
+        }
+      }
+      //print("Print $result");
+    } else {
+      //Hadnle Not Connected Senario
     }
-  } */
+  }
+
+  Future<List<int>> getWorkOrderTasks() async {
+    List<int> bytes = [];
+    CapabilityProfile profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm80, profile);
+
+    var dateString = args["date"];
+    DateTime date = DateTime.parse(dateString!);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(date);
+
+    bytes += generator.text("${args["org"]}",
+        styles: const PosStyles(
+          align: PosAlign.center,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+    bytes += generator.text(orgInfo.records![0].cLocationID!.identifier!,
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.text("P. IVA ${orgInfo.records![0].taxID}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+    bytes += generator.text("Document Type: ".tr + "${args["docType"]}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text('Document: '.tr + '${args["docN"]} $formattedDate',
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+    bytes += generator.text(
+        'Request Description'.tr + ': ${requestFieldController.text}',
+        styles: const PosStyles(align: PosAlign.left),
+        linesAfter: 1);
+    bytes += generator.text(
+        'Activity To Do'.tr + ': ${noteFieldController.text}',
+        styles: const PosStyles(align: PosAlign.left),
+        linesAfter: 1);
+    bytes += generator.text(
+        'Activity Done'.tr + ': ${manualNoteFieldController.text}',
+        styles: const PosStyles(align: PosAlign.left));
+    bytes += generator.hr(ch: '=');
+
+    bytes += generator.text("Product/Service".tr,
+        styles: const PosStyles(align: PosAlign.left, bold: true));
+    if (_trx != null) {
+      for (var line in _trx.records!) {
+        bytes += generator.text("${line.mProductID?.identifier}",
+            styles: const PosStyles(align: PosAlign.left));
+        bytes += generator.text(
+            "U.M. ${line.cUOMID?.identifier}    ${"Qty".tr} ${line.qty}",
+            styles: const PosStyles(align: PosAlign.center));
+        bytes += generator.hr();
+      }
+    }
+    bytes += generator.hr(ch: '=', linesAfter: 1);
+
+    // ticket.feed(2);
+    bytes += generator.text('Thank you!',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    //DateTime now = DateTime.now();
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+    bytes += generator.text(dateFormat.format(DateTime.now()),
+        styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
+
+    if (args["hasAttachment"] == "true") {
+      bytes += generator.text("Firma___________________",
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          ),
+          linesAfter: 1);
+    }
+
+    bytes += generator.cut();
+    return bytes;
+  }
 
   Future<void> makePhoneCall(String phoneNumber) async {
     // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
@@ -118,12 +221,15 @@ class MaintenanceMptaskLineController extends GetxController {
     _dataAvailable.value = false;
     //print(GetStorage().read('workOrderSync'));
     //print(GetStorage().read('userId'));
-    const filename = "workorder";
+    const filename = "workordertask";
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
     var jsondecoded = jsonDecode(await file.readAsString());
-    _trx = WorkOrderLocalJson.fromJson(jsondecoded);
+    _trx = WorkOrderTaskLocalJson.fromJson(jsondecoded);
+    _trx2 = WorkOrderTaskLocalJson.fromJson(jsondecoded);
+
+    _trx.records!.removeWhere((element) => element.mPOTID?.id != args["id"]);
     // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;
   }
