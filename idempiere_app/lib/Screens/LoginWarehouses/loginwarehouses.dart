@@ -223,7 +223,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       const filename = "adorginfo";
       final file = File(
           '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
@@ -656,17 +656,20 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       //print(response.body);
+      //print(utf8.decode(response.bodyBytes));
       const filename = "workorder";
       final file = File(
           '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-      file.writeAsString(jsonDecode(utf8.decode(response.bodyBytes)));
+      file.writeAsString(utf8.decode(response.bodyBytes));
       //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
         print('WorkOrder Checked');
       }
       syncWorkOrderResource();
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       workOrderSync = false;
       checkSyncData();
     }

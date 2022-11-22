@@ -169,6 +169,183 @@ class MaintenanceMptaskLineController extends GetxController {
     return bytes;
   }
 
+  deleteTask(int id, int index) async {
+    const filename = "workordertask";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/MP_OT_Task/$id');
+
+    if (await checkConnection()) {
+      emptyAPICallStak();
+      var response = await http.delete(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        //print("done!");
+        Get.snackbar(
+          "Fatto!",
+          "Il record è stato eliminato",
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+        Get.snackbar(
+          "Errore!",
+          "Record non eliminato",
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
+      }
+    } else {
+      List<dynamic> list = [];
+      if (GetStorage().read('deleteCallList') == null) {
+        var call = jsonEncode({
+          "url":
+              '$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/$id',
+        });
+
+        list.add(call);
+      } else {
+        list = GetStorage().read('deleteCallList');
+        var call = jsonEncode({
+          "url":
+              '$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/$id',
+        });
+        list.add(call);
+      }
+      GetStorage().write('deleteCallList', list);
+      Get.snackbar(
+        "Salvato!",
+        "Il record è stato salvato localmente in attesa di connessione internet.",
+        icon: const Icon(
+          Icons.save,
+          color: Colors.red,
+        ),
+      );
+    }
+    if (GetStorage().read('postCallList') != null &&
+        (GetStorage().read('postCallList')).isEmpty == false) {
+      List<dynamic> list2 = GetStorage().read('postCallList');
+
+      for (var element in list2) {
+        var json = jsonDecode(element);
+        if (json["offlineid"] == _trx.records![index].offlineId) {
+          list2.remove(element);
+        }
+        //print(element);
+        //print(json["url"]);
+      }
+      GetStorage().write('postCallList', list2);
+    }
+    _trx2.records!
+        .removeWhere((element) => element.id == _trx.records![index].id);
+    var data = jsonEncode(_trx2.toJson());
+    file.writeAsStringSync(data);
+    //_dataAvailable.value = false;
+    getWorkOrders();
+    //GetStorage().write('workOrderResourceSync', data);
+    //Get.find<MaintenanceMpResourceController>().getWorkOrders();
+  }
+
+  editManualNote() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "ManualNote": manualNoteFieldController.text,
+    });
+    final protocol = GetStorage().read('protocol');
+
+    const filename = "workorder";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    WorkOrderLocalJson wo =
+        WorkOrderLocalJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    for (var element in wo.records!) {
+      if (element.id == args["id"]) {
+        element.manualNote = manualNoteFieldController.text;
+      }
+    }
+
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
+    if (await checkConnection()) {
+      emptyAPICallStak();
+      var response = await http.put(
+        url,
+        body: msg,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonEncode(wo.toJson());
+        file.writeAsStringSync(data);
+        Get.find<MaintenanceMptaskController>().getWorkOrders();
+        //print("done!");
+        //Get.back();
+        Get.snackbar(
+          "Fatto!",
+          "Il record è stato modificato",
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+        //print(response.statusCode);
+        Get.snackbar(
+          "Errore!",
+          "Il record non è stato modificato",
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
+      }
+    } else {
+      var data = jsonEncode(wo.toJson());
+      file.writeAsStringSync(data);
+      Get.find<MaintenanceMptaskController>().getWorkOrders();
+      Map calls = {};
+      if (GetStorage().read('storedEditAPICalls') == null) {
+        calls['$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}'] = msg;
+      } else {
+        calls = GetStorage().read('storedEditAPICalls');
+        calls['$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}'] = msg;
+      }
+      GetStorage().write('storedEditAPICalls', calls);
+      Get.snackbar(
+        "Salvato!",
+        "Il record è stato salvato localmente in attesa di connessione internet.",
+        icon: const Icon(
+          Icons.save,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   Future<void> makePhoneCall(String phoneNumber) async {
     // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
     // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,

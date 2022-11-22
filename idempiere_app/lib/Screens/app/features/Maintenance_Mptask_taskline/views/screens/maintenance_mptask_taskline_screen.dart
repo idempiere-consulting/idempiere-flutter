@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_create_mptask_taskline_screen.dart';
@@ -34,9 +35,11 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 // binding
 part '../../bindings/maintenance_mptask_taskline_binding.dart';
@@ -92,6 +95,13 @@ class MaintenanceMptaskLineScreen
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  IconButton(
+                    tooltip: "Save".tr,
+                    onPressed: () {
+                      controller.editManualNote();
+                    },
+                    icon: const Icon(Icons.save),
+                  ),
                   IconButton(
                     tooltip: "Add".tr,
                     onPressed: () {
@@ -218,26 +228,14 @@ class MaintenanceMptaskLineScreen
                                               color: Colors.white24))),
                                   child: IconButton(
                                     icon: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
+                                      Icons.delete,
+                                      color: Colors.red,
                                     ),
-                                    tooltip: 'Edit Work Order',
+                                    tooltip: 'Delete Task',
                                     onPressed: () {
-                                      //log("info button pressed");
-                                      /* Get.to(
-                                          const EditMaintenanceMptaskLine(),
-                                          arguments: {
-                                            "id": controller
-                                                .trx
-                                                .records![index]
-                                                .mPOTTaskID!
-                                                .id,
-                                            "completed": controller
-                                                .trx
-                                                .records![index]
-                                                .mpOtTaskStatus,
-                                            "index": index,
-                                          }); */
+                                      controller.deleteTask(
+                                          controller._trx.records![index].id!,
+                                          index);
                                     },
                                   ),
                                 ),

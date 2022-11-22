@@ -78,7 +78,7 @@ class Records {
   final String? jpToDoEndTime;
   final String? litMpMaintainHelp;
   final String? note;
-  final String? manualNote;
+  String? manualNote;
   final COrderID? cOrderID;
   String? attachment;
 
