@@ -40,6 +40,43 @@ class MaintenanceMptaskController extends GetxController {
     getWorkOrders();
   }
 
+  completeToDo(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/JP_ToDo/${_trx.records![index].jPToDoID?.id}');
+
+    var msg = jsonEncode({
+      'JP_ToDo_Status': {"id": "CO"}
+    });
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      syncWorkOrder();
+
+      Get.snackbar(
+        "Done!".tr,
+        "The Record has been Completed".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<void> getDocument(int index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -197,6 +234,70 @@ class MaintenanceMptaskController extends GetxController {
           .write('workOrderResourceSync', utf8.decode(response.bodyBytes)); */
       getWorkOrders();
     }
+  }
+
+  Future<void> createSalesOrderFromWorkOrder(int index) async {
+    Get.defaultDialog(
+      title: 'Create Sales Order'.tr,
+      content: Text("Are you sure you want to create a Sales Order?".tr),
+      onCancel: () {},
+      onConfirm: () async {
+        final ip = GetStorage().read('ip');
+        String authorization = 'Bearer ' + GetStorage().read('token');
+        var msg = jsonEncode({
+          "record-id": _trx.records![index].id,
+          "C_DocType_ID": _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
+        });
+
+        if (_trx.records![index].cOrderID != null) {
+          msg = jsonEncode({
+            "record-id": _trx.records![index].id,
+            "C_DocType_ID":
+                _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
+            "C_Order_ID": _trx.records![index].cOrderID?.id,
+            "IsExistingOrder": true,
+          });
+        }
+        //print(msg);
+        final protocol = GetStorage().read('protocol');
+        var url = Uri.parse(
+            '$protocol://' + ip + '/api/v1/processes/createorderfromwo');
+
+        var response = await http.post(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          //print("done!");
+          Get.back();
+          print(response.body);
+          Get.snackbar(
+            "Done!".tr,
+            "Sales Order has been created".tr,
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          if (kDebugMode) {
+            print(response.body);
+          }
+          Get.snackbar(
+            "Error!".tr,
+            "Sales Order not created".tr,
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      },
+    );
   }
 
   /* void openDrawer() {

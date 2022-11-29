@@ -30,7 +30,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -240,6 +240,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     child: IconButton(
                                       icon: const Icon(
                                         Icons.edit,
+                                        color: Colors.green,
                                       ),
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
@@ -301,9 +302,13 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(
+                                      Icon(
                                         Icons.handshake,
-                                        color: Colors.yellow,
+                                        color: controller._trx.records![index]
+                                                    .cDocTypeID?.identifier ==
+                                                'Special Order'.tr
+                                            ? Colors.orange
+                                            : Colors.yellow,
                                       ),
                                       Expanded(
                                         child: Text(
@@ -578,6 +583,75 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 icon: const Icon(
                                                     EvaIcons.printer),
                                               ),
+                                              Visibility(
+                                                visible: controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cDocTypeID
+                                                        ?.identifier !=
+                                                    'Special Order'.tr,
+                                                child: IconButton(
+                                                  tooltip: "Tasks".tr,
+                                                  onPressed: () {
+                                                    Get.toNamed(
+                                                        '/MaintenanceMptaskLine',
+                                                        arguments: {
+                                                          "bPartner": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerID
+                                                              ?.identifier,
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                          "docType": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier,
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID!
+                                                              .id,
+                                                          "note": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .note,
+                                                          "manualNote":
+                                                              controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .manualNote,
+                                                          "request": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .description,
+                                                          "index": index,
+                                                          "date": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .dateWorkStart,
+                                                          "org": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .aDOrgID
+                                                              ?.identifier,
+                                                          "hasAttachment":
+                                                              controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .attachment ??
+                                                                  "false"
+                                                        });
+                                                  },
+                                                  icon: const Icon(Icons
+                                                      .document_scanner_outlined),
+                                                ),
+                                              ),
                                             ]),
                                         ButtonBar(
                                           alignment: MainAxisAlignment.center,
@@ -585,14 +659,33 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               VerticalDirection.down,
                                           overflowButtonSpacing: 5,
                                           children: [
-                                            ElevatedButton(
-                                              child: Text("Complete".tr),
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.green),
+                                            Visibility(
+                                              visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .jpToDoStatus
+                                                      ?.id !=
+                                                  'CO',
+                                              child: ElevatedButton(
+                                                child: Text("Complete".tr),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  var isConnected =
+                                                      await checkConnection();
+
+                                                  if (isConnected) {
+                                                    print('si.');
+                                                    controller
+                                                        .completeToDo(index);
+                                                  } else {
+                                                    print('no.');
+                                                  }
+                                                },
                                               ),
-                                              onPressed: () async {},
                                             ),
                                             ElevatedButton(
                                               child:
@@ -624,6 +717,21 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                               ?.modelname ??
                                                           "",
                                                     });
+                                              },
+                                            ),
+                                            ElevatedButton(
+                                              child: Text(
+                                                  "Create ODV from Work Order"
+                                                      .tr),
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {
+                                                controller
+                                                    .createSalesOrderFromWorkOrder(
+                                                        index);
                                               },
                                             ),
                                             Visibility(

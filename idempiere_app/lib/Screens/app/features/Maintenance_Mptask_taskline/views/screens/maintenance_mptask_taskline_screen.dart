@@ -103,7 +103,223 @@ class MaintenanceMptaskLineScreen
                     icon: const Icon(Icons.save),
                   ),
                   IconButton(
-                    tooltip: "Add".tr,
+                    tooltip: "Add Task".tr,
+                    onPressed: () {
+                      Get.to(const CreateMaintenanceMptask(), arguments: {
+                        "id": Get.arguments["id"],
+                      });
+                    },
+                    icon: const Icon(EvaIcons.fileAddOutline),
+                  ),
+                  IconButton(
+                    tooltip: "Print".tr,
+                    onPressed: () {},
+                    icon: const Icon(EvaIcons.printerOutline),
+                  ),
+                  IconButton(
+                    tooltip: "Report".tr,
+                    onPressed: () {
+                      controller.printWorkOrderTasksTicket();
+                    },
+                    icon: const Icon(Icons.receipt),
+                  ),
+                  IconButton(
+                    tooltip: "Attach Image".tr,
+                    onPressed: () {},
+                    icon: const Icon(Icons.attach_file_outlined),
+                  ),
+                ],
+              ),
+              Container(
+                color: Colors.grey[600],
+                width: screenSize.width,
+                height: 0.25,
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  minLines: 1,
+                  maxLines: 4,
+                  controller: controller.requestFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Request Description'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  minLines: 1,
+                  maxLines: 4,
+                  controller: controller.noteFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Activity To Do'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  minLines: 1,
+                  maxLines: 4,
+                  controller: controller.manualNoteFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Activity Done'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.trx.records!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    int taskindex = 0;
+                                    for (var i = 0;
+                                        i < controller._trx2.records!.length;
+                                        i++) {
+                                      if (controller._trx2.records![i].id ==
+                                          controller._trx.records![index].id) {
+                                        taskindex = i;
+                                      }
+                                    }
+                                    print(taskindex);
+                                    Get.to(const EditMaintenanceMptaskLine(),
+                                        arguments: {
+                                          "index": taskindex,
+                                          "id": controller
+                                              ._trx.records![index].id,
+                                          "qtyEntered": controller
+                                              ._trx.records![index].qtyEntered
+                                              .toString(),
+                                          "resourceQty": controller
+                                              ._trx.records![index].resourceQty
+                                              .toString(),
+                                          "description": controller
+                                              ._trx.records![index].description,
+                                          "qty": controller
+                                              ._trx.records![index].qty
+                                              .toString(),
+                                          "offlineid": controller
+                                              ._trx.records![index].offlineId,
+                                          "prod": controller
+                                              ._trx
+                                              .records![index]
+                                              .mProductID
+                                              ?.identifier,
+                                        });
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    tooltip: 'Delete Task',
+                                    onPressed: () {
+                                      controller.deleteTask(
+                                          controller._trx.records![index].id!,
+                                          index);
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].mProductID
+                                          ?.identifier ??
+                                      "",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        const Icon(Icons.event),
+                                        Text(
+                                          "${"Qty".tr}: ${controller.trx.records![index].qty}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: const [],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);
+          },
+          tabletBuilder: (context, constraints) {
+            return Column(children: [
+              const SizedBox(height: kSpacing),
+              Container(
+                color: Colors.grey[600],
+                width: screenSize.width,
+                height: 0.25,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    tooltip: "Save".tr,
+                    onPressed: () {
+                      controller.editManualNote();
+                    },
+                    icon: const Icon(Icons.save),
+                  ),
+                  IconButton(
+                    tooltip: "Add Task".tr,
                     onPressed: () {
                       Get.to(const CreateMaintenanceMptask(), arguments: {
                         "id": Get.arguments["id"],
@@ -270,126 +486,7 @@ class MaintenanceMptaskLineScreen
                                   ), */
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                children: [],
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ),
-            ]);
-          },
-          tabletBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing),
-              Obx(
-                () => controller.dataAvailable
-                    ? ListView.builder(
-                        primary: false,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Visibility(
-                            visible:
-                                controller.trx.records![index].mPOTID!.id !=
-                                        GetStorage().read('selectedWorkOrderId')
-                                    ? false
-                                    : true,
-                            child: Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  trailing: IconButton(
-                                    onPressed: () {
-                                      /* GetStorage().write(
-                                          'selectedTaskDocNo',
-                                          controller
-                                              .trx.records![index].documentNo);
-                                      GetStorage().write(
-                                          'selectedTaskBP',
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "");
-                                      GetStorage().write(
-                                          'selectedTaskId',
-                                          controller.trx.records![index]
-                                              .mPMaintainTaskID!.id);
-                                      Get.toNamed('/MaintenanceMpResource'); */
-                                    },
-                                    icon: const Icon(
-                                      Icons.view_list,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                      tooltip: 'Edit Work Order',
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        /* Get.to(
-                                            const EditMaintenanceMptaskLine(),
-                                            arguments: {
-                                              "id": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mPOTTaskID!
-                                                  .id,
-                                              "completed": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mpOtTaskStatus,
-                                              "index": index,
-                                            }); */
-                                      },
-                                    ),
-                                  ),
-                                  title: Text(
-                                    controller.trx.records![index].name ?? "",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.event),
-                                      Text(
-                                        controller.trx.records![index].createdBy
-                                                ?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [],
-                                ),
+                                children: const [],
                               ),
                             ),
                           );
@@ -402,113 +499,177 @@ class MaintenanceMptaskLineScreen
           desktopBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing),
+              Container(
+                color: Colors.grey[600],
+                width: screenSize.width,
+                height: 0.25,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    tooltip: "Save".tr,
+                    onPressed: () {
+                      controller.editManualNote();
+                    },
+                    icon: const Icon(Icons.save),
+                  ),
+                  IconButton(
+                    tooltip: "Add Task".tr,
+                    onPressed: () {
+                      Get.to(const CreateMaintenanceMptask(), arguments: {
+                        "id": Get.arguments["id"],
+                      });
+                    },
+                    icon: const Icon(EvaIcons.fileAddOutline),
+                  ),
+                  IconButton(
+                    tooltip: "Print".tr,
+                    onPressed: () {},
+                    icon: const Icon(EvaIcons.printerOutline),
+                  ),
+                  IconButton(
+                    tooltip: "Report".tr,
+                    onPressed: () {
+                      controller.printWorkOrderTasksTicket();
+                    },
+                    icon: const Icon(Icons.receipt),
+                  ),
+                  IconButton(
+                    tooltip: "Attach Image".tr,
+                    onPressed: () {},
+                    icon: const Icon(Icons.attach_file_outlined),
+                  ),
+                ],
+              ),
+              Container(
+                color: Colors.grey[600],
+                width: screenSize.width,
+                height: 0.25,
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  minLines: 1,
+                  maxLines: 4,
+                  controller: controller.requestFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Request Description'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  minLines: 1,
+                  maxLines: 4,
+                  controller: controller.noteFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Activity To Do'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  minLines: 1,
+                  maxLines: 4,
+                  controller: controller.manualNoteFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Activity Done'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
               Obx(
                 () => controller.dataAvailable
                     ? ListView.builder(
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
+                        itemCount: controller.trx.records!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Visibility(
-                            visible:
-                                controller.trx.records![index].mPOTID!.id !=
-                                        GetStorage().read('selectedWorkOrderId')
-                                    ? false
-                                    : true,
-                            child: Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  trailing: IconButton(
-                                    onPressed: () {
-                                      /* GetStorage().write(
-                                          'selectedTaskDocNo',
-                                          controller
-                                              .trx.records![index].documentNo);
-                                      GetStorage().write(
-                                          'selectedTaskBP',
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "");
-                                      GetStorage().write(
-                                          'selectedTaskId',
-                                          controller.trx.records![index]
-                                              .mPMaintainTaskID!.id);
-                                      Get.toNamed('/MaintenanceMpResource'); */
-                                    },
-                                    icon: const Icon(
-                                      Icons.view_list,
-                                      color: Colors.green,
-                                    ),
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    Get.to(const EditMaintenanceMptaskLine());
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.green,
                                   ),
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                      tooltip: 'Edit Work Order',
-                                      onPressed: () {
-                                        //log("info button pressed");
-                                        /* Get.to(
-                                            const EditMaintenanceMptaskLine(),
-                                            arguments: {
-                                              "id": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mPOTTaskID!
-                                                  .id,
-                                              "completed": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mpOtTaskStatus,
-                                              "index": index,
-                                            }); */
-                                      },
-                                    ),
-                                  ),
-                                  title: Text(
-                                    controller.trx.records![index].name ?? "",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.event),
-                                      Text(
-                                        controller.trx.records![index].createdBy
-                                                ?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: Colors.white,
-                                      size: 30.0,
-                                    ), */
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [],
                                 ),
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    tooltip: 'Delete Task',
+                                    onPressed: () {
+                                      controller.deleteTask(
+                                          controller._trx.records![index].id!,
+                                          index);
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].mProductID
+                                          ?.identifier ??
+                                      "",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        const Icon(Icons.event),
+                                        Text(
+                                          "${"Qty".tr}: ${controller.trx.records![index].qty}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: const [],
                               ),
                             ),
                           );

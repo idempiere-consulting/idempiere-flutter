@@ -437,11 +437,19 @@ class LocaleString extends Translations {
           'PT': 'Pending Testing',
           'OK': 'OK',
           'PSG': 'Pending Replacement',
+          'PX': 'Expired',
           'Special Order': 'Special Order',
           'Request Description': 'Request Description',
           'Activity To Do': 'Activity To Do',
           'Activity Done': 'Activity Done',
           'Product/Service': 'Product/Service',
+          'Save': 'Save',
+          'Add Task': 'Add Task',
+          'Print': 'Print',
+          'Attach Image': 'Attach Image',
+          'work-order-maintenance': 'work-order-maintenance',
+          'tasks': 'tasks',
+          'Object': 'Object',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -886,11 +894,19 @@ class LocaleString extends Translations {
           'PT': 'In Attesa di Collaudo',
           'OK': 'OK',
           'PSG': 'In Attesa di Sostituzione',
+          'PX': 'Fine Omologazione',
           'Special Order': 'Intervento Straordinario',
           'Request Description': 'Descrizione Richiesta',
           'Activity To Do': 'Attivita\' da Svolgere',
           'Activity Done': 'Attivita\' Svolta',
-          'Product/Service': 'Prodotto/Servizio'
+          'Product/Service': 'Prodotto/Servizio',
+          'Save': 'Salva',
+          'Add Task': 'Aggiungi Task',
+          'Print': 'Stampa',
+          'Attach Image': 'Allega Immagine',
+          'work-order-maintenance': 'ordine-di-lavoro-manutenzione',
+          'tasks': 'attivita',
+          'Object': 'Oggetto'
         },
       };
 }

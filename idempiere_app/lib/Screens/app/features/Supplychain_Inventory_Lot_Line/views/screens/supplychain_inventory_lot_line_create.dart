@@ -39,7 +39,6 @@ class _CreateSupplychainInventoryLotLineState
   }
 
   Future<void> getInstAttr(int id) async {
-    print('hello');
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
@@ -60,7 +59,6 @@ class _CreateSupplychainInventoryLotLineState
         attrFieldAvailable = false;
         attrFieldVisible = false;
       });
-      print(utf8.decode(response.bodyBytes));
       attrList = StorageOnHandJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
@@ -119,7 +117,7 @@ class _CreateSupplychainInventoryLotLineState
         "M_AttributeSetInstance_ID": {"id": instAttrId},
       });
     }
-    print(msg);
+    //print(msg);
     var response = await http.post(
       url,
       body: msg,

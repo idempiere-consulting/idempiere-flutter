@@ -133,6 +133,7 @@ class MaintenanceMptaskLineController extends GetxController {
 
     bytes += generator.text("Product/Service".tr,
         styles: const PosStyles(align: PosAlign.left, bold: true));
+    // ignore: unnecessary_null_comparison
     if (_trx != null) {
       for (var line in _trx.records!) {
         bytes += generator.text("${line.mProductID?.identifier}",
@@ -215,16 +216,14 @@ class MaintenanceMptaskLineController extends GetxController {
       List<dynamic> list = [];
       if (GetStorage().read('deleteCallList') == null) {
         var call = jsonEncode({
-          "url":
-              '$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/$id',
+          "url": '$protocol://' + ip + '/api/v1/models/MP_OT_Task/$id',
         });
 
         list.add(call);
       } else {
         list = GetStorage().read('deleteCallList');
         var call = jsonEncode({
-          "url":
-              '$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/$id',
+          "url": '$protocol://' + ip + '/api/v1/models/MP_OT_Task/$id',
         });
         list.add(call);
       }
@@ -407,6 +406,7 @@ class MaintenanceMptaskLineController extends GetxController {
     _trx2 = WorkOrderTaskLocalJson.fromJson(jsondecoded);
 
     _trx.records!.removeWhere((element) => element.mPOTID?.id != args["id"]);
+    //print(_trx.records![0.]);
     // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;
   }

@@ -5,7 +5,7 @@ class PortalMpController extends GetxController {
   var eventFlag = false.obs;
   var focusedDay = (DateTime.now()).obs;
   var selectedDay = (DateTime.now()).obs;
-
+  final _monthDayFormat = DateFormat('MM-dd');
   Rx<CalendarFormat> format = (CalendarFormat.month).obs;
 
   @override

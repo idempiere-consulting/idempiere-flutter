@@ -6,6 +6,10 @@ class MaintenanceMpContractsController extends GetxController {
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
+  String endDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String startDate = "";
+  String startTime = "8:00";
+  String endTime = "18:00";
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
@@ -38,6 +42,7 @@ class MaintenanceMpContractsController extends GetxController {
 
   @override
   void onInit() {
+    startDate = endDate;
     dropDownList = getTypes()!;
     super.onInit();
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
@@ -114,6 +119,179 @@ class MaintenanceMpContractsController extends GetxController {
     await launchUrl(launchUri);
   }
 
+  Future<void> createWorkOrder(int index) async {
+    Get.defaultDialog(
+      title: 'Create Work Order'.tr,
+      content: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
+            child: DateTimePicker(
+              type: DateTimePickerType.date,
+              initialValue: startDate,
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+              dateLabelText: 'Start Date'.tr,
+              icon: const Icon(Icons.event),
+              onChanged: (val) {
+                startDate = val.substring(0, 10);
+                //print(DateTime.parse(val));
+                //print(val);
+                /* setState(() {
+                          dateOrdered = val.substring(0, 10);
+                        }); */
+                //print(date);
+              },
+              validator: (val) {
+                //print(val);
+                return null;
+              },
+              // ignore: avoid_print
+              onSaved: (val) => print(val),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
+            child: DateTimePicker(
+              type: DateTimePickerType.date,
+              initialValue: startDate,
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+              dateLabelText: 'End Date'.tr,
+              icon: const Icon(Icons.event),
+              onChanged: (val) {
+                endDate = val.substring(0, 10);
+                //print(DateTime.parse(val));
+                //print(val);
+                /* setState(() {
+                          dateOrdered = val.substring(0, 10);
+                        }); */
+                //print(date);
+              },
+              validator: (val) {
+                //print(val);
+                return null;
+              },
+              // ignore: avoid_print
+              onSaved: (val) => print(val),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
+            child: DateTimePicker(
+              type: DateTimePickerType.time,
+              initialValue: "08:00",
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+              timeLabelText: 'Start Time'.tr,
+              //dateLabelText: 'End Date'.tr,
+              icon: const Icon(Icons.timer_outlined),
+              onChanged: (val) {
+                startTime = val;
+                //print(startTime);
+              },
+              validator: (val) {
+                //print(val);
+                return null;
+              },
+              // ignore: avoid_print
+              onSaved: (val) => print(val),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
+            child: DateTimePicker(
+              type: DateTimePickerType.time,
+              initialValue: "18:00",
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+              timeLabelText: 'End Time'.tr,
+              //dateLabelText: 'End Date'.tr,
+              icon: const Icon(Icons.timer_outlined),
+              onChanged: (val) {
+                startTime = val;
+                //print(DateTime.parse(val));
+                //print(val);
+                /* setState(() {
+                          dateOrdered = val.substring(0, 10);
+                        }); */
+                //print(date);
+              },
+              validator: (val) {
+                //print(val);
+                return null;
+              },
+              // ignore: avoid_print
+              onSaved: (val) => print(val),
+            ),
+          ),
+        ],
+      ),
+      onCancel: () {},
+      onConfirm: () async {
+        final ip = GetStorage().read('ip');
+        String authorization = 'Bearer ' + GetStorage().read('token');
+        var msg = jsonEncode({
+          "record-id": _trx.records![index].mPMaintainID2,
+          "isCreateCalendar": true,
+          "DateTrx": startDate,
+          "DateTo": endDate,
+          "C_DocType_ID": 1000037,
+          "StartTime": "$startTime:00Z",
+          "EndTime": "$endTime:00Z",
+          "AD_User_ID": GetStorage().read('userId'),
+
+          //"C_DocType_ID": _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
+        });
+
+        print(msg);
+        final protocol = GetStorage().read('protocol');
+        var url = Uri.parse(
+            '$protocol://' + ip + '/api/v1/processes/generateworkorder');
+
+        var response = await http.post(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          //print("done!");
+          Get.back();
+          if (kDebugMode) {
+            print(response.body);
+          }
+          Get.snackbar(
+            "Done!".tr,
+            "Sales Order has been created".tr,
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          if (kDebugMode) {
+            print(response.body);
+          }
+          Get.snackbar(
+            "Error!".tr,
+            "Sales Order not created".tr,
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      },
+    );
+  }
+
   Future<void> getContracts() async {
     _dataAvailable.value = false;
     //var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
@@ -131,7 +309,8 @@ class MaintenanceMpContractsController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_maintain_contracts_v?\$filter= C_BPartner_Location_ID neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/lit_mp_maintain_contracts_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    print(url);
     var response = await http.get(
       url,
       headers: <String, String>{

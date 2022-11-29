@@ -170,3 +170,13 @@ emptyDeleteCallStack() {
     );
   }
 }
+
+const areaStackGradientData2 = [
+  {'day': 'Mon', 'value': 140, 'group': 1},
+  {'day': 'Tue', 'value': 232, 'group': 1},
+  {'day': 'Wed', 'value': 101, 'group': 1},
+  {'day': 'Thu', 'value': 264, 'group': 1},
+  {'day': 'Fri', 'value': 90, 'group': 1},
+  {'day': 'Sat', 'value': 340, 'group': 1},
+  {'day': 'Sun', 'value': 250, 'group': 1},
+];

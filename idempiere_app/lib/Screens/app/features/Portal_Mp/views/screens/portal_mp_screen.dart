@@ -5,11 +5,16 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:graphic/graphic.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
+import 'package:idempiere_app/Screens/app/features/Charts/data.dart';
+import 'package:idempiere_app/Screens/app/features/Charts/echarts_data.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/get_premium_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -27,6 +32,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:idempiere_app/constants.dart';
+import 'package:quiver/iterables.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -153,28 +160,1142 @@ class PortalMpScreen extends GetView<PortalMpController> {
                     child: _Sidebar(data: controller.getSelectedProject())),
               ),
               Flexible(
-                flex: 9,
-                child: Column(
-                  children: [
-                    const SizedBox(height: kSpacing),
-                    _buildHeader(),
-                    /*const SizedBox(height: kSpacing * 2),
-                    _buildProgress(),
-                    const SizedBox(height: kSpacing * 2),
-                    const SizedBox(height: kSpacing * 2),
-                    const SizedBox(height: kSpacing), */
-                  ],
+                flex: 10,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: kSpacing),
+                      _buildHeader(),
+                      const SizedBox(height: kSpacing * 2),
+                      /*_buildProgress(),
+                      const SizedBox(height: kSpacing * 2),
+                      const SizedBox(height: kSpacing * 2),
+                      const SizedBox(height: kSpacing), */
+                      StaggeredGrid.count(
+                        crossAxisCount: 10,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        children: [
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 6,
+                            mainAxisCellCount: 3,
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              width: 350,
+                              height: 300,
+                              child: Chart(
+                                data: lineMarkerData,
+                                variables: {
+                                  'day': Variable(
+                                    accessor: (Map datum) =>
+                                        datum['day'] as String,
+                                    scale: OrdinalScale(inflate: true),
+                                  ),
+                                  'value': Variable(
+                                    accessor: (Map datum) =>
+                                        datum['value'] as num,
+                                    scale: LinearScale(
+                                      max: 15,
+                                      min: -3,
+                                      tickCount: 7,
+                                      formatter: (v) => '${v.toInt()} ℃',
+                                    ),
+                                  ),
+                                  'group': Variable(
+                                    accessor: (Map datum) =>
+                                        datum['group'] as String,
+                                  ),
+                                },
+                                elements: [
+                                  LineElement(
+                                    position: Varset('day') *
+                                        Varset('value') /
+                                        Varset('group'),
+                                    color: ColorAttr(
+                                      variable: 'group',
+                                      values: [
+                                        const Color(0xff5470c6),
+                                        const Color(0xff91cc75),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                                axes: [
+                                  Defaults.horizontalAxis,
+                                  Defaults.verticalAxis,
+                                ],
+                                selections: {
+                                  'tooltipMouse': PointSelection(on: {
+                                    GestureType.hover,
+                                  }, devices: {
+                                    PointerDeviceKind.mouse
+                                  }, variable: 'day', dim: Dim.x),
+                                  'tooltipTouch': PointSelection(on: {
+                                    GestureType.scaleUpdate,
+                                    GestureType.tapDown,
+                                    GestureType.longPressMoveUpdate
+                                  }, devices: {
+                                    PointerDeviceKind.touch
+                                  }, variable: 'day', dim: Dim.x),
+                                },
+                                tooltip: TooltipGuide(
+                                  followPointer: [true, true],
+                                  align: Alignment.topLeft,
+                                  variables: ['group', 'value'],
+                                ),
+                                crosshair: CrosshairGuide(
+                                  followPointer: [false, true],
+                                ),
+                                annotations: [
+                                  LineAnnotation(
+                                    dim: Dim.y,
+                                    value: 11.14,
+                                    style: StrokeStyle(
+                                      color: const Color(0xff5470c6)
+                                          .withAlpha(100),
+                                      dash: [2],
+                                    ),
+                                  ),
+                                  LineAnnotation(
+                                    dim: Dim.y,
+                                    value: 1.57,
+                                    style: StrokeStyle(
+                                      color: const Color(0xff91cc75)
+                                          .withAlpha(100),
+                                      dash: [2],
+                                    ),
+                                  ),
+                                  MarkAnnotation(
+                                    relativePath: Paths.circle(
+                                        center: Offset.zero, radius: 5),
+                                    style: Paint()
+                                      ..color = const Color(0xff5470c6),
+                                    values: ['Wed', 13],
+                                  ),
+                                  MarkAnnotation(
+                                    relativePath: Paths.circle(
+                                        center: Offset.zero, radius: 5),
+                                    style: Paint()
+                                      ..color = const Color(0xff5470c6),
+                                    values: ['Sun', 9],
+                                  ),
+                                  MarkAnnotation(
+                                    relativePath: Paths.circle(
+                                        center: Offset.zero, radius: 5),
+                                    style: Paint()
+                                      ..color = const Color(0xff91cc75),
+                                    values: ['Tue', -2],
+                                  ),
+                                  MarkAnnotation(
+                                    relativePath: Paths.circle(
+                                        center: Offset.zero, radius: 5),
+                                    style: Paint()
+                                      ..color = const Color(0xff91cc75),
+                                    values: ['Thu', 5],
+                                  ),
+                                  TagAnnotation(
+                                    label: Label(
+                                        '13',
+                                        LabelStyle(
+                                          style: Defaults.textStyle,
+                                          offset: const Offset(0, -10),
+                                        )),
+                                    values: ['Wed', 13],
+                                  ),
+                                  TagAnnotation(
+                                    label: Label(
+                                        '9',
+                                        LabelStyle(
+                                          style: Defaults.textStyle,
+                                          offset: const Offset(0, -10),
+                                        )),
+                                    values: ['Sun', 9],
+                                  ),
+                                  TagAnnotation(
+                                    label: Label(
+                                        '-2',
+                                        LabelStyle(
+                                          style: Defaults.textStyle,
+                                          offset: const Offset(0, -10),
+                                        )),
+                                    values: ['Tue', -2],
+                                  ),
+                                  TagAnnotation(
+                                    label: Label(
+                                        '5',
+                                        LabelStyle(
+                                          style: Defaults.textStyle,
+                                          offset: const Offset(0, -10),
+                                        )),
+                                    values: ['Thu', 5],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 4,
+                            mainAxisCellCount: 3,
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              width: 350,
+                              height: 300,
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 10),
+                                width: 350,
+                                height: 300,
+                                child: Chart(
+                                  data: basicData,
+                                  variables: {
+                                    'genre': Variable(
+                                      accessor: (Map map) =>
+                                          map['genre'] as String,
+                                    ),
+                                    'sold': Variable(
+                                      accessor: (Map map) => map['sold'] as num,
+                                    ),
+                                  },
+                                  elements: [
+                                    IntervalElement(
+                                      label: LabelAttr(
+                                          encoder: (tuple) =>
+                                              Label(tuple['sold'].toString())),
+                                      elevation:
+                                          ElevationAttr(value: 0, updaters: {
+                                        'tap': {true: (_) => 5}
+                                      }),
+                                      color: ColorAttr(
+                                          value: Defaults.primaryColor,
+                                          updaters: {
+                                            'tap': {
+                                              false: (color) =>
+                                                  color.withAlpha(100)
+                                            }
+                                          }),
+                                    )
+                                  ],
+                                  axes: [
+                                    Defaults.horizontalAxis,
+                                    Defaults.verticalAxis,
+                                  ],
+                                  selections: {
+                                    'tap': PointSelection(dim: Dim.x)
+                                  },
+                                  tooltip: TooltipGuide(),
+                                  crosshair: CrosshairGuide(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 2,
+                            mainAxisCellCount: 1,
+                            child: Stack(
+                              children: [
+                                Chart(
+                                  data: areaStackGradientData,
+                                  variables: {
+                                    'day': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['day'] as String,
+                                      scale: OrdinalScale(inflate: true),
+                                    ),
+                                    'value': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['value'] as num,
+                                      scale: LinearScale(min: 0, max: 1500),
+                                    ),
+                                    'group': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['group'].toString(),
+                                    ),
+                                  },
+                                  elements: [
+                                    AreaElement(
+                                      position: Varset('day') *
+                                          Varset('value') /
+                                          Varset('group'),
+                                      shape: ShapeAttr(
+                                          value: BasicAreaShape(smooth: true)),
+                                      gradient: GradientAttr(
+                                        variable: 'group',
+                                        values: [
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(
+                                                  204, 128, 255, 165),
+                                              Color.fromARGB(204, 1, 191, 236),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 0, 221, 255),
+                                              Color.fromARGB(204, 77, 119, 255),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 55, 162, 255),
+                                              Color.fromARGB(204, 116, 21, 219),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 0, 135),
+                                              Color.fromARGB(204, 135, 0, 157),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 191, 0),
+                                              Color.fromARGB(204, 224, 62, 76),
+                                            ],
+                                          ),
+                                        ],
+                                        updaters: {
+                                          'groupMouse': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                          'groupTouch': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                        },
+                                      ),
+                                      modifiers: [StackModifier()],
+                                    ),
+                                  ],
+                                  axes: [
+                                    Defaults.horizontalAxis,
+                                    Defaults.verticalAxis,
+                                  ],
+                                  selections: {
+                                    'tooltipMouse': PointSelection(on: {
+                                      GestureType.hover,
+                                    }, devices: {
+                                      PointerDeviceKind.mouse
+                                    }, variable: 'day'),
+                                    'groupMouse': PointSelection(
+                                        on: {
+                                          GestureType.hover,
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.mouse}),
+                                    'tooltipTouch': PointSelection(on: {
+                                      GestureType.scaleUpdate,
+                                      GestureType.tapDown,
+                                      GestureType.longPressMoveUpdate
+                                    }, devices: {
+                                      PointerDeviceKind.touch
+                                    }, variable: 'day'),
+                                    'groupTouch': PointSelection(
+                                        on: {
+                                          GestureType.scaleUpdate,
+                                          GestureType.tapDown,
+                                          GestureType.longPressMoveUpdate
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.touch}),
+                                  },
+                                  tooltip: TooltipGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [true, true],
+                                    align: Alignment.topLeft,
+                                  ),
+                                  crosshair: CrosshairGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [false, true],
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    "50",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 40),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 2,
+                            mainAxisCellCount: 1,
+                            child: Stack(
+                              children: [
+                                Chart(
+                                  data: areaStackGradientData,
+                                  variables: {
+                                    'day': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['day'] as String,
+                                      scale: OrdinalScale(inflate: true),
+                                    ),
+                                    'value': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['value'] as num,
+                                      scale: LinearScale(min: 0, max: 1500),
+                                    ),
+                                    'group': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['group'].toString(),
+                                    ),
+                                  },
+                                  elements: [
+                                    AreaElement(
+                                      position: Varset('day') *
+                                          Varset('value') /
+                                          Varset('group'),
+                                      shape: ShapeAttr(
+                                          value: BasicAreaShape(smooth: true)),
+                                      gradient: GradientAttr(
+                                        variable: 'group',
+                                        values: [
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(
+                                                  204, 128, 255, 165),
+                                              Color.fromARGB(204, 1, 191, 236),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 0, 221, 255),
+                                              Color.fromARGB(204, 77, 119, 255),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 55, 162, 255),
+                                              Color.fromARGB(204, 116, 21, 219),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 0, 135),
+                                              Color.fromARGB(204, 135, 0, 157),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 191, 0),
+                                              Color.fromARGB(204, 224, 62, 76),
+                                            ],
+                                          ),
+                                        ],
+                                        updaters: {
+                                          'groupMouse': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                          'groupTouch': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                        },
+                                      ),
+                                      modifiers: [StackModifier()],
+                                    ),
+                                  ],
+                                  axes: [
+                                    Defaults.horizontalAxis,
+                                    Defaults.verticalAxis,
+                                  ],
+                                  selections: {
+                                    'tooltipMouse': PointSelection(on: {
+                                      GestureType.hover,
+                                    }, devices: {
+                                      PointerDeviceKind.mouse
+                                    }, variable: 'day'),
+                                    'groupMouse': PointSelection(
+                                        on: {
+                                          GestureType.hover,
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.mouse}),
+                                    'tooltipTouch': PointSelection(on: {
+                                      GestureType.scaleUpdate,
+                                      GestureType.tapDown,
+                                      GestureType.longPressMoveUpdate
+                                    }, devices: {
+                                      PointerDeviceKind.touch
+                                    }, variable: 'day'),
+                                    'groupTouch': PointSelection(
+                                        on: {
+                                          GestureType.scaleUpdate,
+                                          GestureType.tapDown,
+                                          GestureType.longPressMoveUpdate
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.touch}),
+                                  },
+                                  tooltip: TooltipGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [true, true],
+                                    align: Alignment.topLeft,
+                                  ),
+                                  crosshair: CrosshairGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [false, true],
+                                  ),
+                                ),
+                                const Center(
+                                  child: Text(
+                                    "50",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 40),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 2,
+                            mainAxisCellCount: 1,
+                            child: Stack(
+                              children: [
+                                Chart(
+                                  data: areaStackGradientData,
+                                  variables: {
+                                    'day': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['day'] as String,
+                                      scale: OrdinalScale(inflate: true),
+                                    ),
+                                    'value': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['value'] as num,
+                                      scale: LinearScale(min: 0, max: 1500),
+                                    ),
+                                    'group': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['group'].toString(),
+                                    ),
+                                  },
+                                  elements: [
+                                    AreaElement(
+                                      position: Varset('day') *
+                                          Varset('value') /
+                                          Varset('group'),
+                                      shape: ShapeAttr(
+                                          value: BasicAreaShape(smooth: true)),
+                                      gradient: GradientAttr(
+                                        variable: 'group',
+                                        values: [
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(
+                                                  204, 128, 255, 165),
+                                              Color.fromARGB(204, 1, 191, 236),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 0, 221, 255),
+                                              Color.fromARGB(204, 77, 119, 255),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 55, 162, 255),
+                                              Color.fromARGB(204, 116, 21, 219),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 0, 135),
+                                              Color.fromARGB(204, 135, 0, 157),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 191, 0),
+                                              Color.fromARGB(204, 224, 62, 76),
+                                            ],
+                                          ),
+                                        ],
+                                        updaters: {
+                                          'groupMouse': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                          'groupTouch': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                        },
+                                      ),
+                                      modifiers: [StackModifier()],
+                                    ),
+                                  ],
+                                  axes: [
+                                    Defaults.horizontalAxis,
+                                    Defaults.verticalAxis,
+                                  ],
+                                  selections: {
+                                    'tooltipMouse': PointSelection(on: {
+                                      GestureType.hover,
+                                    }, devices: {
+                                      PointerDeviceKind.mouse
+                                    }, variable: 'day'),
+                                    'groupMouse': PointSelection(
+                                        on: {
+                                          GestureType.hover,
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.mouse}),
+                                    'tooltipTouch': PointSelection(on: {
+                                      GestureType.scaleUpdate,
+                                      GestureType.tapDown,
+                                      GestureType.longPressMoveUpdate
+                                    }, devices: {
+                                      PointerDeviceKind.touch
+                                    }, variable: 'day'),
+                                    'groupTouch': PointSelection(
+                                        on: {
+                                          GestureType.scaleUpdate,
+                                          GestureType.tapDown,
+                                          GestureType.longPressMoveUpdate
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.touch}),
+                                  },
+                                  tooltip: TooltipGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [true, true],
+                                    align: Alignment.topLeft,
+                                  ),
+                                  crosshair: CrosshairGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [false, true],
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    "50",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 40),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 2,
+                            mainAxisCellCount: 1,
+                            child: Stack(
+                              children: [
+                                Chart(
+                                  data: areaStackGradientData,
+                                  variables: {
+                                    'day': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['day'] as String,
+                                      scale: OrdinalScale(inflate: true),
+                                    ),
+                                    'value': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['value'] as num,
+                                      scale: LinearScale(min: 0, max: 1500),
+                                    ),
+                                    'group': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['group'].toString(),
+                                    ),
+                                  },
+                                  elements: [
+                                    AreaElement(
+                                      position: Varset('day') *
+                                          Varset('value') /
+                                          Varset('group'),
+                                      shape: ShapeAttr(
+                                          value: BasicAreaShape(smooth: true)),
+                                      gradient: GradientAttr(
+                                        variable: 'group',
+                                        values: [
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(
+                                                  204, 128, 255, 165),
+                                              Color.fromARGB(204, 1, 191, 236),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 0, 221, 255),
+                                              Color.fromARGB(204, 77, 119, 255),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 55, 162, 255),
+                                              Color.fromARGB(204, 116, 21, 219),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 0, 135),
+                                              Color.fromARGB(204, 135, 0, 157),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 191, 0),
+                                              Color.fromARGB(204, 224, 62, 76),
+                                            ],
+                                          ),
+                                        ],
+                                        updaters: {
+                                          'groupMouse': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                          'groupTouch': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                        },
+                                      ),
+                                      modifiers: [StackModifier()],
+                                    ),
+                                  ],
+                                  axes: [
+                                    Defaults.horizontalAxis,
+                                    Defaults.verticalAxis,
+                                  ],
+                                  selections: {
+                                    'tooltipMouse': PointSelection(on: {
+                                      GestureType.hover,
+                                    }, devices: {
+                                      PointerDeviceKind.mouse
+                                    }, variable: 'day'),
+                                    'groupMouse': PointSelection(
+                                        on: {
+                                          GestureType.hover,
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.mouse}),
+                                    'tooltipTouch': PointSelection(on: {
+                                      GestureType.scaleUpdate,
+                                      GestureType.tapDown,
+                                      GestureType.longPressMoveUpdate
+                                    }, devices: {
+                                      PointerDeviceKind.touch
+                                    }, variable: 'day'),
+                                    'groupTouch': PointSelection(
+                                        on: {
+                                          GestureType.scaleUpdate,
+                                          GestureType.tapDown,
+                                          GestureType.longPressMoveUpdate
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.touch}),
+                                  },
+                                  tooltip: TooltipGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [true, true],
+                                    align: Alignment.topLeft,
+                                  ),
+                                  crosshair: CrosshairGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [false, true],
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    "50",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 40),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 2,
+                            mainAxisCellCount: 1,
+                            child: Stack(
+                              children: [
+                                Chart(
+                                  data: areaStackGradientData,
+                                  variables: {
+                                    'day': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['day'] as String,
+                                      scale: OrdinalScale(inflate: true),
+                                    ),
+                                    'value': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['value'] as num,
+                                      scale: LinearScale(min: 0, max: 1500),
+                                    ),
+                                    'group': Variable(
+                                      accessor: (Map datum) =>
+                                          datum['group'].toString(),
+                                    ),
+                                  },
+                                  elements: [
+                                    AreaElement(
+                                      position: Varset('day') *
+                                          Varset('value') /
+                                          Varset('group'),
+                                      shape: ShapeAttr(
+                                          value: BasicAreaShape(smooth: true)),
+                                      gradient: GradientAttr(
+                                        variable: 'group',
+                                        values: [
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(
+                                                  204, 128, 255, 165),
+                                              Color.fromARGB(204, 1, 191, 236),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 0, 221, 255),
+                                              Color.fromARGB(204, 77, 119, 255),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 55, 162, 255),
+                                              Color.fromARGB(204, 116, 21, 219),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 0, 135),
+                                              Color.fromARGB(204, 135, 0, 157),
+                                            ],
+                                          ),
+                                          const LinearGradient(
+                                            begin: Alignment(0, 0),
+                                            end: Alignment(0, 1),
+                                            colors: [
+                                              Color.fromARGB(204, 255, 191, 0),
+                                              Color.fromARGB(204, 224, 62, 76),
+                                            ],
+                                          ),
+                                        ],
+                                        updaters: {
+                                          'groupMouse': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                          'groupTouch': {
+                                            false: (gradient) => LinearGradient(
+                                                  begin: const Alignment(0, 0),
+                                                  end: const Alignment(0, 1),
+                                                  colors: [
+                                                    gradient.colors.first
+                                                        .withAlpha(25),
+                                                    gradient.colors.last
+                                                        .withAlpha(25),
+                                                  ],
+                                                ),
+                                          },
+                                        },
+                                      ),
+                                      modifiers: [StackModifier()],
+                                    ),
+                                  ],
+                                  axes: [
+                                    Defaults.horizontalAxis,
+                                    Defaults.verticalAxis,
+                                  ],
+                                  selections: {
+                                    'tooltipMouse': PointSelection(on: {
+                                      GestureType.hover,
+                                    }, devices: {
+                                      PointerDeviceKind.mouse
+                                    }, variable: 'day'),
+                                    'groupMouse': PointSelection(
+                                        on: {
+                                          GestureType.hover,
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.mouse}),
+                                    'tooltipTouch': PointSelection(on: {
+                                      GestureType.scaleUpdate,
+                                      GestureType.tapDown,
+                                      GestureType.longPressMoveUpdate
+                                    }, devices: {
+                                      PointerDeviceKind.touch
+                                    }, variable: 'day'),
+                                    'groupTouch': PointSelection(
+                                        on: {
+                                          GestureType.scaleUpdate,
+                                          GestureType.tapDown,
+                                          GestureType.longPressMoveUpdate
+                                        },
+                                        variable: 'group',
+                                        devices: {PointerDeviceKind.touch}),
+                                  },
+                                  tooltip: TooltipGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [true, true],
+                                    align: Alignment.topLeft,
+                                  ),
+                                  crosshair: CrosshairGuide(
+                                    selections: {
+                                      'tooltipTouch',
+                                      'tooltipMouse'
+                                    },
+                                    followPointer: [false, true],
+                                  ),
+                                ),
+                                const Center(
+                                  child: Text(
+                                    "50",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 40),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 3,
+                            mainAxisCellCount: 4,
+                            child: _buildRecentMessages(
+                                data: controller.getChatting()),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 4,
+                            mainAxisCellCount: 4,
+                            child: Obx(() => Visibility(
+                                  replacement: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  visible: controller.calendarFlag.value,
+                                  child: Obx(
+                                    () => TableCalendar(
+                                      locale: 'languageCalendar'.tr,
+                                      focusedDay: controller.focusedDay.value,
+                                      firstDay: DateTime(2000),
+                                      lastDay: DateTime(2100),
+                                      calendarFormat: controller.format.value,
+                                      calendarStyle: const CalendarStyle(
+                                        markerDecoration: BoxDecoration(
+                                            color: Colors.yellow,
+                                            shape: BoxShape.circle),
+                                        todayDecoration: BoxDecoration(
+                                          color: Colors.deepPurple,
+                                        ),
+                                      ),
+                                      headerStyle: const HeaderStyle(
+                                        //formatButtonVisible: false,
+                                        formatButtonShowsNext: false,
+                                      ),
+                                      startingDayOfWeek:
+                                          StartingDayOfWeek.monday,
+                                      daysOfWeekVisible: true,
+                                      onFormatChanged:
+                                          (CalendarFormat _format) {
+                                        controller.format.value = _format;
+                                      },
+                                      onDaySelected: (DateTime selectDay,
+                                          DateTime focusDay) {
+                                        controller.selectedDay.value =
+                                            selectDay;
+                                        controller.focusedDay.value = focusDay;
+                                        controller.eventFlag.value = false;
+                                        controller.eventFlag.value = true;
+                                      },
+                                      selectedDayPredicate: (DateTime date) {
+                                        return isSameDay(
+                                            controller.selectedDay.value, date);
+                                      },
+                                      onHeaderLongPressed: (date) {
+                                        /* Get.off(const CreateCalendarEvent(),
+                              arguments: {"adUserId": adUserId}); */
+                                      },
+                                      eventLoader: _getEventsfromDay,
+                                    ),
+                                  ),
+                                )),
+                          ),
+                          StaggeredGridTile.count(
+                            crossAxisCellCount: 3,
+                            mainAxisCellCount: 4,
+                            child: Obx(() => Visibility(
+                                visible: controller.eventFlag.value,
+                                child: _buildDayEvents())),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               Flexible(
-                flex: 4,
+                flex: 3,
                 child: Column(
                   children: [
                     const SizedBox(height: kSpacing / 2),
                     _buildProfile(data: controller.getProfil()),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),
-                    Obx(() => Visibility(
+                    /*  Obx(() => Visibility(
                           replacement: const Center(
                             child: CircularProgressIndicator(),
                           ),
@@ -221,10 +1342,10 @@ class PortalMpScreen extends GetView<PortalMpController> {
                               eventLoader: _getEventsfromDay,
                             ),
                           ),
-                        )),
-                    Obx(() => Visibility(
+                        )), */
+                    /*  Obx(() => Visibility(
                         visible: controller.eventFlag.value,
-                        child: _buildDayEvents())),
+                        child: _buildDayEvents())), */
                   ],
                 ),
               )
@@ -443,7 +1564,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
               ), */
             Card(
           elevation: 8.0,
-          margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
           child: Container(
             decoration:
                 const BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
@@ -626,5 +1747,51 @@ class PortalMpScreen extends GetView<PortalMpController> {
           )
           .toList(),
     ]);
+  }
+}
+
+class Tile extends StatelessWidget {
+  const Tile({
+    Key? key,
+    required this.index,
+    this.extent,
+    this.backgroundColor,
+    this.bottomSpace,
+  }) : super(key: key);
+
+  final int index;
+  final double? extent;
+  final double? bottomSpace;
+  final Color? backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final child = Container(
+      color: backgroundColor ?? kNotifColor,
+      height: extent,
+      child: Center(
+        child: CircleAvatar(
+          minRadius: 20,
+          maxRadius: 20,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          child: Text('$index', style: const TextStyle(fontSize: 20)),
+        ),
+      ),
+    );
+
+    if (bottomSpace == null) {
+      return child;
+    }
+
+    return Column(
+      children: [
+        Expanded(child: child),
+        Container(
+          height: bottomSpace,
+          color: Colors.green,
+        )
+      ],
+    );
   }
 }

@@ -476,7 +476,7 @@ class MaintenanceMpResourceScreen
                                                                 .records![index]
                                                                 .toDoAction! ==
                                                             "PR"
-                                                        ? Color.fromARGB(
+                                                        ? const Color.fromARGB(
                                                             255, 209, 189, 4)
                                                         : controller
                                                                     .trx
@@ -492,7 +492,15 @@ class MaintenanceMpResourceScreen
                                                                         .toDoAction! ==
                                                                     "PSG"
                                                                 ? Colors.red
-                                                                : kNotifColor,
+                                                                : controller
+                                                                            .trx
+                                                                            .records![
+                                                                                index]
+                                                                            .toDoAction! ==
+                                                                        "PX"
+                                                                    ? Colors
+                                                                        .black
+                                                                    : kNotifColor,
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
@@ -754,8 +762,11 @@ class MaintenanceMpResourceScreen
                                                 IconButton(
                                                   tooltip: 'Revision',
                                                   onPressed: () async {
+                                                    var isConnected =
+                                                        await checkConnection();
                                                     controller
-                                                        .replaceResource(index);
+                                                        .editWorkOrderResourceDateRevision(
+                                                            isConnected, index);
                                                     /* var isConnected =
                                                               await checkConnection();
                                                           controller

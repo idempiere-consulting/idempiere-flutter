@@ -1,17 +1,21 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
+import 'package:path_provider/path_provider.dart';
 
 class EditMaintenanceMptaskLine extends StatefulWidget {
   const EditMaintenanceMptaskLine({Key? key}) : super(key: key);
@@ -22,7 +26,7 @@ class EditMaintenanceMptaskLine extends StatefulWidget {
 }
 
 class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
-  deleteWorkOrder() async {
+  /* deleteWorkOrder() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
@@ -57,84 +61,147 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
         ),
       );
     }
-  }
+  } */
 
-  editWorkOrder(bool isConnected) async {
+  editWorkOrderTask(bool isConnected) async {
     //print(now);
 
+    const filename = "workordertask";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
     final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
-      "Status": {"id": dropdownValue},
+      "Description": descriptionFieldController.text,
+      "ResourceQty": double.parse(resourceQtyFieldController.text),
+      "QtyEntered": double.parse(qtyEnteredFieldController.text),
+      "Qty": double.parse(qtyFieldController.text),
     });
-    var url =
-        Uri.parse('http://' + ip + '/api/v1/models/MP_OT_Task/${args["id"]}');
-    //print(msg);
 
-    WorkOrderLocalJson trx = WorkOrderLocalJson.fromJson(
-        jsonDecode(GetStorage().read('workOrderSync')));
+    WorkOrderTaskLocalJson trx =
+        WorkOrderTaskLocalJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    trx.records![args["index"]].mpOtTaskStatus = dropdownValue;
+    if (Get.arguments["id"] != null && offline == -1) {
+      trx.records![Get.arguments["index"]].description =
+          descriptionFieldController.text;
+      trx.records![Get.arguments["index"]].resourceQty =
+          double.parse(resourceQtyFieldController.text);
+      trx.records![Get.arguments["index"]].qtyEntered =
+          double.parse(qtyEnteredFieldController.text);
+      trx.records![Get.arguments["index"]].qty =
+          double.parse(qtyFieldController.text);
 
-    //print(trx.records![args["index"]].mpOtTaskStatus = dropdownValue);
-    var data = jsonEncode(trx.toJson());
-
-    GetStorage().write('workOrderSync', data);
-
-    Get.find<MaintenanceMptaskLineController>().getWorkOrders();
-    Get.find<MaintenanceMptaskController>().getWorkOrders();
-
-    //print(qwe);
-    if (isConnected) {
-      emptyAPICallStak();
-      var response = await http.put(
-        url,
-        body: msg,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        //Get.find<MaintenanceMptaskController>().getWorkOrders();
-        //print("done!");
-        //Get.back();
-        Get.snackbar(
-          "Fatto!",
-          "Il record è stato modificato",
-          icon: const Icon(
-            Icons.done,
-            color: Colors.green,
-          ),
+      var url = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/mp_ot_task/${Get.arguments["id"]}');
+      if (isConnected) {
+        emptyAPICallStak();
+        var response = await http.put(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
         );
+        if (response.statusCode == 200) {
+          var data = jsonEncode(trx.toJson());
+          file.writeAsStringSync(data);
+          Get.find<MaintenanceMptaskLineController>().getWorkOrders();
+          //print("done!");
+          //Get.back();
+          Get.snackbar(
+            "Fatto!",
+            "Il record è stato modificato",
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          //print(response.body);
+          //print(response.statusCode);
+          Get.snackbar(
+            "Errore!",
+            "Il record non è stato modificato",
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
       } else {
-        //print(response.body);
+        var data = jsonEncode(trx.toJson());
+        //GetStorage().write('workOrderSync', data);
+        file.writeAsStringSync(data);
+        Get.find<MaintenanceMptaskLineController>().getWorkOrders();
+        Map calls = {};
+        if (GetStorage().read('storedEditAPICalls') == null) {
+          calls['$protocol://' +
+              ip +
+              '/api/v1/models/mp_ot_task/${Get.arguments["id"]}'] = msg;
+        } else {
+          calls = GetStorage().read('storedEditAPICalls');
+          calls['$protocol://' +
+              ip +
+              '/api/v1/models/mp_ot_task/${Get.arguments["id"]}'] = msg;
+        }
+        GetStorage().write('storedEditAPICalls', calls);
         Get.snackbar(
-          "Errore!",
-          "Il record non è stato modificato",
+          "Salvato!",
+          "Il record è stato salvato localmente in attesa di connessione internet.",
           icon: const Icon(
-            Icons.error,
+            Icons.save,
             color: Colors.red,
           ),
         );
       }
-    } else {
-      Map calls = {};
-      if (GetStorage().read('storedEditAPICalls') == null) {
-        calls['http://' + ip + '/api/v1/models/MP_OT_Task/${args["id"]}'] = msg;
-      } else {
-        calls = GetStorage().read('storedEditAPICalls');
-        calls['http://' + ip + '/api/v1/models/MP_OT_Task/${args["id"]}'] = msg;
+    }
+
+    if (offline != -1) {
+      List<dynamic> list = GetStorage().read('postCallList');
+
+      for (var i = 0; i < list.length; i++) {
+        var json = jsonDecode(list[i]);
+        if (json["offlineid"] == Get.arguments?["offlineid"]) {
+          var url2 = json["url"];
+          var offlineid2 = json["offlineid"];
+          var adorg = json["AD_Org_ID"];
+          var adclient = json["AD_Client_ID"];
+          var product = json["M_Product_ID"];
+          var resourceQty = json["ResourceQty"];
+          var qtyEntered = json["QtyEntered"];
+          var uom = json["C_UOM_ID"];
+
+          var call = jsonEncode({
+            "offlineid": offlineid2,
+            "url": url2,
+            "AD_Org_ID": adorg,
+            "AD_Client_ID": adclient,
+            "MP_OT_ID": {"id": args["MPOTId"]},
+            "M_Product_ID": {"id": product},
+            "Description": descriptionFieldController.text,
+            "ResourceQty": resourceQty,
+            "QtyEntered": qtyEntered,
+            "C_UOM_ID": uom,
+            "Qty": double.parse(qtyFieldController.text),
+          });
+
+          list.removeAt(i);
+          list.add(call);
+          GetStorage().write('postCallList', list);
+          Get.snackbar(
+            "Salvato!",
+            "Il record è stato salvato localmente in attesa di connessione internet.",
+            icon: const Icon(
+              Icons.save,
+              color: Colors.red,
+            ),
+          );
+        }
       }
-      GetStorage().write('storedEditAPICalls', calls);
-      Get.snackbar(
-        "Salvato!",
-        "Il record è stato salvato localmente in attesa di connessione internet.",
-        icon: const Icon(
-          Icons.save,
-          color: Colors.red,
-        ),
-      );
     }
   }
 
@@ -158,12 +225,33 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
 
   dynamic args = Get.arguments;
 
+  // ignore: prefer_typing_uninitialized_variables
+  var descriptionFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var qtyFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var qtyEnteredFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var resourceQtyFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var productFieldController;
+
+  var offline = -1;
+
   @override
   void initState() {
     dropdownValue = args["completed"] ?? "NS";
     dropDownList = getTypes()!;
     super.initState();
-
+    descriptionFieldController = TextEditingController();
+    qtyFieldController = TextEditingController(text: args["qty"] ?? "1.0");
+    qtyEnteredFieldController =
+        TextEditingController(text: args["qtyEntered"] ?? "1.0");
+    resourceQtyFieldController =
+        TextEditingController(text: args["resourceQty"] ?? "1");
+    offline = Get.arguments["offlineid"] ?? -1;
+    productFieldController =
+        TextEditingController(text: Get.arguments["prod"] ?? "");
     //getDocType();
     //getResourceName();
     //getAllResources();
@@ -213,7 +301,7 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
             child: IconButton(
               onPressed: () async {
                 var isConnected = await checkConnection();
-                editWorkOrder(isConnected);
+                editWorkOrderTask(isConnected);
               },
               icon: const Icon(
                 Icons.save,
@@ -230,34 +318,86 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text("Stato Completamento"),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                  child: TextField(
+                    readOnly: true,
+                    controller: productFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                    borderRadius: BorderRadius.circular(5),
                   ),
-                  child: DropdownButton(
-                    value: dropdownValue,
-                    elevation: 16,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                      //print(dropdownValue);
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
                     },
-                    items: dropDownList.map((list) {
-                      return DropdownMenuItem<String>(
-                        child: Text(
-                          list.name.toString(),
-                        ),
-                        value: list.id,
-                      );
-                    }).toList(),
+                    controller: resourceQtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'N° Technicians'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: qtyEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Total Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
                   ),
                 ),
               ],
@@ -269,36 +409,6 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text("Stato Completamento"),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DropdownButton(
-                    value: dropdownValue,
-                    elevation: 16,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                      //print(dropdownValue);
-                    },
-                    items: dropDownList.map((list) {
-                      return DropdownMenuItem<String>(
-                        child: Text(
-                          list.name.toString(),
-                        ),
-                        value: list.id,
-                      );
-                    }).toList(),
-                  ),
-                ),
               ],
             );
           },
@@ -307,36 +417,6 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
               children: [
                 const SizedBox(
                   height: 10,
-                ),
-                const Text("Stato Completamento"),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DropdownButton(
-                    value: dropdownValue,
-                    elevation: 16,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                      //print(dropdownValue);
-                    },
-                    items: dropDownList.map((list) {
-                      return DropdownMenuItem<String>(
-                        child: Text(
-                          list.name.toString(),
-                        ),
-                        value: list.id,
-                      );
-                    }).toList(),
-                  ),
                 ),
               ],
             );

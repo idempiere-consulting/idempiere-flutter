@@ -80,7 +80,10 @@ class Records {
   final String? note;
   String? manualNote;
   final COrderID? cOrderID;
+  final LITCDocTypeODVID? litcDocTypeODVID;
   String? attachment;
+  JPToDoID? jPToDoID;
+  JPToDoStatus? jpToDoStatus;
 
   Records(
       {this.id,
@@ -131,6 +134,9 @@ class Records {
       this.note,
       this.manualNote,
       this.attachment,
+      this.litcDocTypeODVID,
+      this.jPToDoID,
+      this.jpToDoStatus,
       this.cOrderID});
 
   Records.fromJson(Map<String, dynamic> json)
@@ -216,6 +222,18 @@ class Records {
         note = json['Note'] as String?,
         manualNote = json['ManualNote'] as String?,
         attachment = json['attachment'] as String?,
+        litcDocTypeODVID =
+            (json['LIT_C_DocTypeODV_ID'] as Map<String, dynamic>?) != null
+                ? LITCDocTypeODVID.fromJson(
+                    json['LIT_C_DocTypeODV_ID'] as Map<String, dynamic>)
+                : null,
+        jPToDoID = (json['JP_ToDo_ID'] as Map<String, dynamic>?) != null
+            ? JPToDoID.fromJson(json['JP_ToDo_ID'] as Map<String, dynamic>)
+            : null,
+        jpToDoStatus = (json['JP_ToDo_Status'] as Map<String, dynamic>?) != null
+            ? JPToDoStatus.fromJson(
+                json['JP_ToDo_Status'] as Map<String, dynamic>)
+            : null,
         litMpMaintainHelp = json['mp_maintain_help'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -268,6 +286,8 @@ class Records {
         'ManualNote': manualNote,
         'attachment': attachment,
         'mp_maintain_help': litMpMaintainHelp,
+        'JP_ToDo_ID': jPToDoID?.toJson(),
+        'JP_ToDo_Status': jpToDoStatus?.toJson(),
       };
 }
 
@@ -287,6 +307,60 @@ class MPOTID {
   MPOTID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class JPToDoID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  JPToDoID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  JPToDoID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class JPToDoStatus {
+  final String? propertyLabel;
+  String? id;
+  String? identifier;
+  final String? modelname;
+
+  JPToDoStatus({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  JPToDoStatus.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
@@ -420,6 +494,33 @@ class MPMaintainID {
   });
 
   MPMaintainID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITCDocTypeODVID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITCDocTypeODVID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITCDocTypeODVID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

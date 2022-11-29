@@ -153,6 +153,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                       child: IconButton(
                         onPressed: () {
                           //controller.getSalesOrders();
+                          Get.toNamed('/SalesOrderContractCreation');
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.lightBlue,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          //controller.getSalesOrders();
                           Get.toNamed('/SalesOrderCreation');
                         },
                         icon: const Icon(

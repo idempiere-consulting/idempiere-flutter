@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_inventory_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot/views/screens/supplychain_inventory_lot_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/models/warehouse_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';

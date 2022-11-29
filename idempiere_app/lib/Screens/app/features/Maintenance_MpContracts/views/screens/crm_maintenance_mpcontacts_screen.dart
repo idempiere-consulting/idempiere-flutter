@@ -6,6 +6,7 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -31,6 +32,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -362,8 +364,8 @@ class MaintenanceMpContractsScreen
                                                   child: Text(controller
                                                           .trx
                                                           .records![index]
-                                                          .cbPartnerLocationID!
-                                                          .identifier ??
+                                                          .cbPartnerLocationID
+                                                          ?.identifier ??
                                                       ""),
                                                 ),
                                               ],
@@ -401,6 +403,28 @@ class MaintenanceMpContractsScreen
                                                     ""),
                                               ],
                                             ),
+                                            ButtonBar(
+                                              alignment:
+                                                  MainAxisAlignment.center,
+                                              overflowDirection:
+                                                  VerticalDirection.down,
+                                              overflowButtonSpacing: 5,
+                                              children: [
+                                                ElevatedButton(
+                                                  child: Text(
+                                                      "Create Work Order".tr),
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(Colors.green),
+                                                  ),
+                                                  onPressed: () async {
+                                                    controller
+                                                        .createWorkOrder(index);
+                                                  },
+                                                ),
+                                              ],
+                                            )
                                             /* Row(
                                               children: [
                                                 IconButton(

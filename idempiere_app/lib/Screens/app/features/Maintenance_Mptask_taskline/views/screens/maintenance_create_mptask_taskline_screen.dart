@@ -7,16 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/business_partner_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/resource_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
-import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CreateMaintenanceMptask extends StatefulWidget {
@@ -39,9 +35,11 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "M_Product_ID": {"id": productId},
-      "Qty": int.parse(qtyFieldController.text),
+      "Qty": double.parse(qtyFieldController.text),
       "Description": descriptionFieldController.text,
       "C_UOM_ID": {"id": 100},
+      "ResourceQty": double.parse(resourceQtyFieldController.text),
+      "QtyEntered": double.parse(qtyEnteredFieldController.text),
     });
 
     WorkOrderTaskLocalJson trx =
@@ -49,13 +47,15 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     MProductID prod = MProductID(id: productId, identifier: productName);
     TRecords record = TRecords(
       mProductID: prod,
-      qty: int.parse(qtyFieldController.text),
+      qty: double.parse(qtyFieldController.text),
       description: descriptionFieldController.text,
+      qtyEntered: double.parse(qtyEnteredFieldController.text),
+      resourceQty: double.parse(resourceQtyFieldController.text),
     );
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/windows/work-order-extinguisher/tabs/work-order-maintenance/${Get.arguments["id"]}/${"tasks".tr}');
+        '/api/v1/windows/work-order-extinguisher/tabs/${"work-order-maintenance".tr}/${Get.arguments["id"]}/${"tasks".tr}');
     if (isConnected) {
       if (kDebugMode) {
         print(msg);
@@ -115,9 +115,11 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           "M_Product_ID": {"id": productId},
-          "Qty": int.parse(qtyFieldController.text),
+          "Qty": double.parse(qtyFieldController.text),
           "Description": descriptionFieldController.text,
           "C_UOM_ID": {"id": 100},
+          "ResourceQty": double.parse(resourceQtyFieldController.text),
+          "QtyEntered": double.parse(qtyEnteredFieldController.text),
         });
 
         list.add(call);
@@ -129,9 +131,11 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           "M_Product_ID": {"id": productId},
-          "Qty": int.parse(qtyFieldController.text),
+          "Qty": double.parse(qtyFieldController.text),
           "Description": descriptionFieldController.text,
           "C_UOM_ID": {"id": 100},
+          "ResourceQty": double.parse(resourceQtyFieldController.text),
+          "QtyEntered": double.parse(qtyEnteredFieldController.text),
         });
         list.add(call);
       }
@@ -191,7 +195,12 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   //dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var descriptionFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var qtyFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var qtyEnteredFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var resourceQtyFieldController;
 
   // ignore: prefer_typing_uninitialized_variables
   var resourceFieldController;
@@ -210,6 +219,8 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
     super.initState();
     descriptionFieldController = TextEditingController();
     qtyFieldController = TextEditingController(text: "1");
+    qtyEnteredFieldController = TextEditingController(text: "1");
+    resourceQtyFieldController = TextEditingController(text: "1");
   }
 
   static String _displayStringForOption(Records option) =>
@@ -218,7 +229,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -318,6 +329,140 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: resourceQtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'N° Technicians'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: qtyEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Total Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+          tabletBuilder: (context, constraints) {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return "${option.value}_${option.name}"
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = selection.id!;
+                                    productName = selection.name!;
+                                    descriptionFieldController.text =
+                                        selection.description;
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
                     controller: qtyFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
@@ -333,20 +478,94 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
               ],
             );
           },
-          tabletBuilder: (context, constraints) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            );
-          },
           desktopBuilder: (context, constraints) {
             return Column(
               children: [
                 const SizedBox(
                   height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return "${option.value}_${option.name}"
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = selection.id!;
+                                    productName = selection.name!;
+                                    descriptionFieldController.text =
+                                        selection.description;
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
                 ),
               ],
             );

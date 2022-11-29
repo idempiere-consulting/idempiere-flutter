@@ -1,11 +1,11 @@
-class WorkOrderTaskLocalJson {
+class ContactsJson {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<TRecords>? records;
+  final List<Records>? records;
 
-  WorkOrderTaskLocalJson({
+  ContactsJson({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
@@ -13,13 +13,13 @@ class WorkOrderTaskLocalJson {
     this.records,
   });
 
-  WorkOrderTaskLocalJson.fromJson(Map<String, dynamic> json)
+  ContactsJson.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => TRecords.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,153 +31,183 @@ class WorkOrderTaskLocalJson {
       };
 }
 
-class TRecords {
+class Records {
   final int? id;
-  final MPOTTaskID? mPOTTaskID;
+  final String? uid;
+  final String? name;
+  final String? description;
   final ADClientID? aDClientID;
-  final UpdatedBy? updatedBy;
-  final CUOMID? cUOMID;
+  final ADOrgID? aDOrgID;
+  final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
-  final bool? isActive;
-  final MPOTID? mPOTID;
-  final bool? processed;
-  final Status? status;
   final String? updated;
-  final ADOrgID? aDOrgID;
-  final String? mPOTTaskUU;
-  num? qty;
-  final MProductID? mProductID;
-  final MPMaintainID? mPMaintainID;
-  String? name;
-  String? description;
-  int? offlineId;
-  num? resourceQty;
-  num? qtyEntered;
+  final UpdatedBy? updatedBy;
+  final String? eMail;
+  final SupervisorID? supervisorID;
+  final NotificationType? notificationType;
+  final bool? isFullBPAccess;
+  final String? value;
+  final bool? isInPayroll;
+  final bool? isSalesLead;
+  final bool? isLocked;
+  final int? failedLoginCount;
+  final String? dateLastLogin;
+  final bool? isNoPasswordReset;
+  final bool? isExpired;
+  final bool? isAddMailTextAutomatically;
+  final bool? isNoExpire;
+  final bool? isSupportUser;
+  final bool? isShipTo;
+  final bool? isBillTo;
+  final bool? isVendorLead;
+  final bool? isLegalUser;
+  final bool? lITIsWebTicket;
+  final bool? lITIsMailReader;
+  final bool? lITIsPartner;
+  final bool? isPublic;
+  final bool? isFavourite;
   final String? modelname;
+  final CBPartnerID? cbPartnerID;
 
-  TRecords({
+  Records({
     this.id,
-    this.mPOTTaskID,
-    this.aDClientID,
-    this.updatedBy,
-    this.cUOMID,
-    this.created,
-    this.createdBy,
-    this.isActive,
-    this.mPOTID,
-    this.processed,
-    this.status,
-    this.updated,
-    this.aDOrgID,
-    this.mPOTTaskUU,
-    this.qty,
-    this.mProductID,
-    this.mPMaintainID,
+    this.uid,
     this.name,
     this.description,
-    this.offlineId,
-    this.resourceQty,
-    this.qtyEntered,
+    this.aDClientID,
+    this.aDOrgID,
+    this.isActive,
+    this.created,
+    this.createdBy,
+    this.updated,
+    this.updatedBy,
+    this.eMail,
+    this.supervisorID,
+    this.notificationType,
+    this.isFullBPAccess,
+    this.value,
+    this.isInPayroll,
+    this.isSalesLead,
+    this.isLocked,
+    this.failedLoginCount,
+    this.dateLastLogin,
+    this.isNoPasswordReset,
+    this.isExpired,
+    this.isAddMailTextAutomatically,
+    this.isNoExpire,
+    this.isSupportUser,
+    this.isShipTo,
+    this.isBillTo,
+    this.isVendorLead,
+    this.isLegalUser,
+    this.lITIsWebTicket,
+    this.lITIsMailReader,
+    this.lITIsPartner,
+    this.isPublic,
+    this.isFavourite,
     this.modelname,
+    this.cbPartnerID,
   });
 
-  TRecords.fromJson(Map<String, dynamic> json)
+  String get getname => name as String;
+
+  /*  @override
+  int get hashCode => hashValues(name); */
+
+  Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
-        mPOTTaskID = (json['MP_OT_Task_ID'] as Map<String, dynamic>?) != null
-            ? MPOTTaskID.fromJson(json['MP_OT_Task_ID'] as Map<String, dynamic>)
-            : null,
+        uid = json['uid'] as String?,
+        name = json['Name'] as String?,
+        description = json['Description'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
-        updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
-            ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
+        aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
+            ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
-        cUOMID = (json['C_UOM_ID'] as Map<String, dynamic>?) != null
-            ? CUOMID.fromJson(json['C_UOM_ID'] as Map<String, dynamic>)
-            : null,
+        isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
-        isActive = json['IsActive'] as bool?,
-        mPOTID = (json['MP_OT_ID'] as Map<String, dynamic>?) != null
-            ? MPOTID.fromJson(json['MP_OT_ID'] as Map<String, dynamic>)
-            : null,
-        processed = json['Processed'] as bool?,
-        status = (json['Status'] as Map<String, dynamic>?) != null
-            ? Status.fromJson(json['Status'] as Map<String, dynamic>)
-            : null,
         updated = json['Updated'] as String?,
-        aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
-            ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
+        updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
+            ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        mPOTTaskUU = json['MP_OT_Task_UU'] as String?,
-        qty = json['Qty'] as num?,
-        mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
-            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
+        eMail = json['EMail'] as String?,
+        supervisorID = (json['Supervisor_ID'] as Map<String, dynamic>?) != null
+            ? SupervisorID.fromJson(
+                json['Supervisor_ID'] as Map<String, dynamic>)
             : null,
-        mPMaintainID = (json['MP_Maintain_ID'] as Map<String, dynamic>?) != null
-            ? MPMaintainID.fromJson(
-                json['MP_Maintain_ID'] as Map<String, dynamic>)
+        notificationType =
+            (json['NotificationType'] as Map<String, dynamic>?) != null
+                ? NotificationType.fromJson(
+                    json['NotificationType'] as Map<String, dynamic>)
+                : null,
+        isFullBPAccess = json['IsFullBPAccess'] as bool?,
+        value = json['Value'] as String?,
+        isInPayroll = json['IsInPayroll'] as bool?,
+        isSalesLead = json['IsSalesLead'] as bool?,
+        isLocked = json['IsLocked'] as bool?,
+        failedLoginCount = json['FailedLoginCount'] as int?,
+        dateLastLogin = json['DateLastLogin'] as String?,
+        isNoPasswordReset = json['IsNoPasswordReset'] as bool?,
+        isExpired = json['IsExpired'] as bool?,
+        isAddMailTextAutomatically =
+            json['IsAddMailTextAutomatically'] as bool?,
+        isNoExpire = json['IsNoExpire'] as bool?,
+        isSupportUser = json['IsSupportUser'] as bool?,
+        isShipTo = json['IsShipTo'] as bool?,
+        isBillTo = json['IsBillTo'] as bool?,
+        isVendorLead = json['IsVendorLead'] as bool?,
+        isLegalUser = json['isLegalUser'] as bool?,
+        lITIsWebTicket = json['LIT_isWebTicket'] as bool?,
+        lITIsMailReader = json['LIT_isMailReader'] as bool?,
+        lITIsPartner = json['LIT_IsPartner'] as bool?,
+        isPublic = json['IsPublic'] as bool?,
+        isFavourite = json['IsFavourite'] as bool?,
+        cbPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
+            ? CBPartnerID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
-        name = json['Name'] as String?,
-        description = json['Description'] as String?,
-        offlineId = json['offlineId'] as int?,
-        resourceQty = json['ResourceQty'] as num?,
-        qtyEntered = json['QtyEntered'] as num?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'MP_OT_Task_ID': mPOTTaskID?.toJson(),
-        'AD_Client_ID': aDClientID?.toJson(),
-        'UpdatedBy': updatedBy?.toJson(),
-        'C_UOM_ID': cUOMID?.toJson(),
-        'Created': created,
-        'CreatedBy': createdBy?.toJson(),
-        'IsActive': isActive,
-        'MP_OT_ID': mPOTID?.toJson(),
-        'Processed': processed,
-        'Status': status?.toJson(),
-        'Updated': updated,
-        'AD_Org_ID': aDOrgID?.toJson(),
-        'MP_OT_Task_UU': mPOTTaskUU,
-        'Qty': qty,
-        'M_Product_ID': mProductID?.toJson(),
-        'MP_Maintain_ID': mPMaintainID?.toJson(),
+        'uid': uid,
         'Name': name,
         'Description': description,
-        'offlineId': offlineId,
-        'ResourceQty': resourceQty,
-        'QtyEntered': qtyEntered,
-        'model-name': modelname
-      };
-}
-
-class MPOTTaskID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MPOTTaskID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MPOTTaskID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
+        'AD_Client_ID': aDClientID?.toJson(),
+        'AD_Org_ID': aDOrgID?.toJson(),
+        'IsActive': isActive,
+        'Created': created,
+        'CreatedBy': createdBy?.toJson(),
+        'Updated': updated,
+        'UpdatedBy': updatedBy?.toJson(),
+        'EMail': eMail,
+        'Supervisor_ID': supervisorID?.toJson(),
+        'NotificationType': notificationType?.toJson(),
+        'IsFullBPAccess': isFullBPAccess,
+        'Value': value,
+        'IsInPayroll': isInPayroll,
+        'IsSalesLead': isSalesLead,
+        'IsLocked': isLocked,
+        'FailedLoginCount': failedLoginCount,
+        'DateLastLogin': dateLastLogin,
+        'IsNoPasswordReset': isNoPasswordReset,
+        'IsExpired': isExpired,
+        'IsAddMailTextAutomatically': isAddMailTextAutomatically,
+        'IsNoExpire': isNoExpire,
+        'IsSupportUser': isSupportUser,
+        'IsShipTo': isShipTo,
+        'IsBillTo': isBillTo,
+        'IsVendorLead': isVendorLead,
+        'isLegalUser': isLegalUser,
+        'LIT_isWebTicket': lITIsWebTicket,
+        'LIT_isMailReader': lITIsMailReader,
+        'LIT_IsPartner': lITIsPartner,
+        'IsPublic': isPublic,
+        'IsFavourite': isFavourite,
         'model-name': modelname
       };
 }
@@ -209,47 +239,20 @@ class ADClientID {
       };
 }
 
-class UpdatedBy {
+class ADOrgID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  UpdatedBy({
+  ADOrgID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  UpdatedBy.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class CUOMID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  CUOMID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  CUOMID.fromJson(Map<String, dynamic> json)
+  ADOrgID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -290,20 +293,20 @@ class CreatedBy {
       };
 }
 
-class MPOTID {
+class UpdatedBy {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  MPOTID({
+  UpdatedBy({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  MPOTID.fromJson(Map<String, dynamic> json)
+  UpdatedBy.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -317,20 +320,47 @@ class MPOTID {
       };
 }
 
-class Status {
+class SupervisorID {
   final String? propertyLabel;
-  final String? id;
+  final int? id;
   final String? identifier;
   final String? modelname;
 
-  Status({
+  SupervisorID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  Status.fromJson(Map<String, dynamic> json)
+  SupervisorID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class NotificationType {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  NotificationType({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  NotificationType.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
         identifier = json['identifier'] as String?,
@@ -344,74 +374,20 @@ class Status {
       };
 }
 
-class ADOrgID {
+class CBPartnerID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  ADOrgID({
+  CBPartnerID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  ADOrgID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class MProductID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MProductID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MProductID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class MPMaintainID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MPMaintainID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MPMaintainID.fromJson(Map<String, dynamic> json)
+  CBPartnerID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
