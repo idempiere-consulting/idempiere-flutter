@@ -10,12 +10,10 @@ import 'package:animate_do/animate_do.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_term_json.dart';
@@ -373,7 +371,7 @@ class CRMSalesOrderContractCreationScreen
                                     onSelected: (BPRecords selection) {
                                       controller.businessPartnerId =
                                           selection.id!;
-                                      controller.getBusinessPartner();
+                                      controller.getBusinessPartner("0");
                                       controller.getSalesOrderDefaultValues();
                                     },
                                   )
@@ -384,6 +382,11 @@ class CRMSalesOrderContractCreationScreen
                     ),
                   ),
                 ),
+                ElevatedButton(
+                    onPressed: () {
+                      controller.createBusinessPartner();
+                    },
+                    child: Text('New Business Partner')),
                 Obx(
                   () => Visibility(
                     visible: controller.filterCount.value == 0 ||
@@ -461,7 +464,7 @@ class CRMSalesOrderContractCreationScreen
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.build),
                           border: const OutlineInputBorder(),
-                          labelText: 'Technician'.tr,
+                          labelText: 'SalesRep'.tr,
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
                       ),

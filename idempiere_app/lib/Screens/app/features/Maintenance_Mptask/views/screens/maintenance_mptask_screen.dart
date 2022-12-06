@@ -179,6 +179,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           'Special Order'.tr) {
                                         Get.toNamed('/MaintenanceMptaskLine',
                                             arguments: {
+                                              "isSpecialOrder": true,
                                               "bPartner": controller
                                                   .trx
                                                   .records![index]
@@ -245,6 +246,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
                                         //log("info button pressed");
+                                        print(controller.trx.records![index]
+                                            .jpToDoStartDate);
                                         Get.to(const EditMaintenanceMptask(),
                                             arguments: {
                                               "id": controller
@@ -260,8 +263,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               "date": controller
                                                   .trx
                                                   .records![index]
-                                                  .jpToDoStartDate
-                                                  ?.substring(0, 10),
+                                                  .jpToDoStartDate,
                                               "timeStart": controller
                                                   .trx
                                                   .records![index]
@@ -286,6 +288,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       .ref2name,
                                               "team": controller
                                                   .trx.records![index].team,
+                                              "jpId": controller.trx
+                                                  .records![index].jPToDoID?.id,
                                             });
                                       },
                                     ),
@@ -596,6 +600,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                     Get.toNamed(
                                                         '/MaintenanceMptaskLine',
                                                         arguments: {
+                                                          "isSpecialOrder":
+                                                              false,
                                                           "bPartner": controller
                                                               .trx
                                                               .records![index]

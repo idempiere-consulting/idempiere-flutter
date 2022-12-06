@@ -189,6 +189,18 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.request_quote,
+                  icon: Icons.request_quote_outlined,
+                  label: "Contracts".tr,
+                  visible: int.parse(list[21], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -235,6 +247,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 13:
                     Get.offNamed('/PriceList');
+                    break;
+                  case 14:
+                    Get.offNamed('/Contract');
                     break;
                   default:
                 }

@@ -397,10 +397,24 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
 
     //print(response.body);
     //var json = jsonDecode(utf8.decode(response.bodyBytes));
+    const filename3 = "products";
+    final file3 = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsonResources =
+        ProductJson.fromJson(jsonDecode(file3.readAsStringSync()));
+
+    bomList = [];
+
+    for (var i = 0; i < jsonResources.records!.length; i++) {
+      bomList.add(jsonResources.records![i]);
+    }
 
     if (json.records!.isNotEmpty) {
       getProductBOMLines(json.records![0].id!);
     }
+    setState(() {
+      missingPartFlag = true;
+    });
   }
 
   getProductBOMLines(int id) async {
@@ -432,7 +446,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
 
     bomList = [];
 
-    for (var element in json.records!) {
+    for (var i = 0; i < jsonResources.records!.length; i++) {
+      bomList.add(jsonResources.records![i]);
+    }
+
+    /* for (var element in json.records!) {                             ////////////////////////////COMMENTATO MOMENTANEAMENTE
       for (var i = 0; i < jsonResources.records!.length; i++) {
         if (element.mProductCategoryID?.id ==
             jsonResources.records![i].mProductCategoryID?.id) {
@@ -440,7 +458,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         }
       }
       //print(element.mProductCategoryID?.identifier ?? "nothing");
-    }
+    } */
     setState(() {
       missingPartFlag = true;
     });
@@ -612,9 +630,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                               print(newValue);
                             }
 
-                            if (newValue == missingPartId) {
+                            /* if (newValue == missingPartId) {
                               getProductBOM();
-                            }
+                            } */
+                            getProductBOM();
                           },
                           items: list
                               .map((list) {

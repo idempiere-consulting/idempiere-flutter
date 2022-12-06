@@ -479,6 +479,7 @@ class _CreateMaintenanceMpResourceState
       "V_Number": numberFieldController.text,
       "LineNo": int.parse(
           lineFieldController.text == "" ? "0" : lineFieldController.text),
+      "LIT_ResourceStatus": {"id": "INS"},
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -518,6 +519,7 @@ class _CreateMaintenanceMpResourceState
         serviceDate: firstUseDate,
         userName: userNameFieldController.text,
         prodCode: barcodeFieldController.text,
+        resourceStatus: ResourceStatus(id: "INS", identifier: "Installato"),
         textDetails: cartelFieldController.text);
 
     var url = Uri.parse('http://' +
@@ -544,7 +546,13 @@ class _CreateMaintenanceMpResourceState
         setState(() {
           saveFlag = false;
         });
-        syncWorkOrder();
+        //syncWorkOrder();
+        RRecords rc = RRecords.fromJson(jsonDecode(response.body));
+        trx.records!.add(rc);
+        trx.rowcount = trx.rowcount! + 1;
+        var data = jsonEncode(trx.toJson());
+        file.writeAsStringSync(data);
+        Get.find<MaintenanceMpResourceController>().getWorkOrders();
         /* Get.snackbar(
           "Done!".tr,
           "The record has been created".tr,
@@ -608,6 +616,7 @@ class _CreateMaintenanceMpResourceState
           "V_Number": numberFieldController.text,
           "LineNo": int.parse(
               lineFieldController.text == "" ? "0" : lineFieldController.text),
+          "LIT_ResourceStatus": {"id": "INS"},
         });
 
         list.add(call);
@@ -649,6 +658,7 @@ class _CreateMaintenanceMpResourceState
           "ProdCode": barcodeFieldController.text,
           "TextDetails": cartelFieldController.text,
           "V_Number": numberFieldController.text,
+          "LIT_ResourceStatus": {"id": "INS"},
           "LineNo": int.parse(
               lineFieldController.text == "" ? "0" : lineFieldController.text),
         });

@@ -111,8 +111,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           },
         );
         if (response.statusCode == 200) {
-          var data = jsonEncode(trx.toJson());
-          file.writeAsStringSync(data);
+          //var data = jsonEncode(trx.toJson());
+          file.writeAsStringSync(jsonEncode(trx.toJson()));
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
           //print("done!");
           //Get.back();
@@ -296,7 +296,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     cartelFieldController = TextEditingController();
     cartelFieldController.text = Get.arguments["cartel"] ?? "";
     productModelFieldController = TextEditingController();
-    productModelFieldController = Get.arguments["model"];
+    productModelFieldController.text = Get.arguments["model"] ?? "";
     userNameFieldController = TextEditingController();
     userNameFieldController.text = Get.arguments["user"] ?? "";
     useLifeYearsFieldController = TextEditingController();

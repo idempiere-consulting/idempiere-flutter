@@ -13,7 +13,7 @@ class MaintenanceMpResourceController extends GetxController {
       jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
       ;
   //var _hasMailSupport = false;
-
+  var args = Get.arguments;
   var offline = -1;
 
   var dropDownValue = "A01";
@@ -115,6 +115,10 @@ class MaintenanceMpResourceController extends GetxController {
       ),
       barrierDismissible: true,
       textConfirm: 'Replace'.tr,
+      textCancel: 'Revision'.tr,
+      onCancel: () async {
+        editWorkOrderResourceDateRevision(await checkConnection(), index);
+      },
       buttonColor: kNotifColor,
       onConfirm: () async {
         DateFormat dateFormat = DateFormat("yyyy-MM-dd");
@@ -778,6 +782,8 @@ class MaintenanceMpResourceController extends GetxController {
     final msg = jsonEncode({
       "id": _trx.records![index].id,
       "LIT_Control1DateFrom": date,
+      "AD_User_ID": {"id": GetStorage().read("userId")},
+      "LIT_ResourceActivity": {"id": "CHK"}
     });
 
     /*  WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -878,6 +884,8 @@ class MaintenanceMpResourceController extends GetxController {
             "offlineid": offlineid2,
             "url": url2,
             "LIT_Control1DateFrom": date,
+            "AD_User_ID": {"id": GetStorage().read("userId")},
+            "LIT_ResourceActivity": {"id": "CHK"}
           });
 
           list.removeAt(i);
@@ -910,6 +918,8 @@ class MaintenanceMpResourceController extends GetxController {
       "id": _trx.records![index].id,
       "LIT_Control1DateFrom": date,
       "LIT_Control2DateFrom": date,
+      "AD_User_ID": {"id": GetStorage().read("userId")},
+      "LIT_ResourceActivity": {"id": "REV"}
     });
 
     /* WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -1011,6 +1021,8 @@ class MaintenanceMpResourceController extends GetxController {
             "url": url2,
             "LIT_Control1DateFrom": date,
             "LIT_Control2DateFrom": date,
+            "AD_User_ID": {"id": GetStorage().read("userId")},
+            "LIT_ResourceActivity": {"id": "REV"}
           });
 
           list.removeAt(i);
@@ -1044,6 +1056,8 @@ class MaintenanceMpResourceController extends GetxController {
       "LIT_Control1DateFrom": date,
       "LIT_Control2DateFrom": date,
       "LIT_Control3DateFrom": date,
+      "AD_User_ID": {"id": GetStorage().read("userId")},
+      "LIT_ResourceActivity": {"id": "TST"}
     });
 
     /*  WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -1147,6 +1161,8 @@ class MaintenanceMpResourceController extends GetxController {
             "LIT_Control1DateFrom": date,
             "LIT_Control2DateFrom": date,
             "LIT_Control3DateFrom": date,
+            "AD_User_ID": {"id": GetStorage().read("userId")},
+            "LIT_ResourceActivity": {"id": "TST"}
           });
 
           list.removeAt(i);

@@ -450,6 +450,11 @@ class LocaleString extends Translations {
           'work-order-maintenance': 'work-order-maintenance',
           'tasks': 'tasks',
           'Object': 'Object',
+          'N° WO': 'N° WO',
+          'Plant Maint.': 'Plant Maint.',
+          'Latest Work Order': 'Latest Work Order',
+          'Selling Area': 'Selling Area',
+          'Create Work Order': 'Create Work Order',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -755,7 +760,7 @@ class LocaleString extends Translations {
           'Edit Anomaly': 'Modifica Anomalia',
           'Bill Business Partner': 'Partner di fatturazione',
           'Organization': 'Organizzazione',
-          'Date Next Run': 'Data Prossima Elaborazione',
+          'Date Next Run': 'Data Pros. Int.',
           'Date Last Run': 'Data Ultima Elaborazione',
           'ContractNo': 'N. Contratto',
           'RESOURCES': 'DISPOSITIVI',
@@ -848,7 +853,7 @@ class LocaleString extends Translations {
           'Send Quiz': 'Invia Quiz',
           'Wrong Username or Password': 'Nome Utente e/o Password errati',
           'inventory-count-line': 'dettaglio-inventario-fisico',
-          'mp-resources': 'resources',
+          'mp-resources': 'dispositivo-di-manutenzione',
           'maintenance': 'impianto-manutenzione-dispositivi',
           'Check Date: ': 'Controllo: ',
           'Revision Date: ': 'Revisione: ',
@@ -873,7 +878,7 @@ class LocaleString extends Translations {
           'Work In Progress': 'In corso',
           'Create Task': 'Crea Attività',
           'A02': 'Estintori/Idranti',
-          'MaintenanceMpContracts': 'Contratti di Manutenzione',
+          'MaintenanceMpContracts': 'Impianto di Manutenzione',
           'Note Work Order': 'Note ODL',
           'Anomalies Review': 'Elenco Anomalie',
           'Sales Order Zoom': 'Ordine/Offerta',
@@ -906,7 +911,12 @@ class LocaleString extends Translations {
           'Attach Image': 'Allega Immagine',
           'work-order-maintenance': 'ordine-di-lavoro-manutenzione',
           'tasks': 'attivita',
-          'Object': 'Oggetto'
+          'Object': 'Oggetto',
+          'N° WO': 'N° ODL',
+          'Plant Maint.': 'Manutenzioni',
+          'Latest Work Order': 'Data ODL',
+          'Selling Area': 'Zona',
+          'Create Work Order': 'CREA Ordine di Lavoro',
         },
       };
 }

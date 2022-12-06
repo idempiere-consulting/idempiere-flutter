@@ -15,7 +15,7 @@ class MaintenanceMpContractsController extends GetxController {
 
   var value = "Tutti".obs;
 
-  var filters = ["Tutti", "Miei" /* , "Team" */];
+  var filters = ["Tutti", "Questo Mese", "Prossimo Mese"];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
@@ -31,6 +31,7 @@ class MaintenanceMpContractsController extends GetxController {
       {"id": "1", "name": "Business Partner"},
       {"id": "2", "name": "N° Doc"},
       {"id": "3", "name": "Phone N°"},
+      {"id": "4", "name": "Area"},
     ]
   };
 
@@ -60,7 +61,7 @@ class MaintenanceMpContractsController extends GetxController {
 
   changeFilter() {
     filterCount++;
-    if (filterCount == 2) {
+    if (filterCount == 3) {
       filterCount = 0;
     }
 
@@ -73,7 +74,7 @@ class MaintenanceMpContractsController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+        'http://' + ip + '/api/v1/models/a?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -248,7 +249,7 @@ class MaintenanceMpContractsController extends GetxController {
           //"C_DocType_ID": _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
         });
 
-        print(msg);
+        //print(msg);
         final protocol = GetStorage().read('protocol');
         var url = Uri.parse(
             '$protocol://' + ip + '/api/v1/processes/generateworkorder');
@@ -294,6 +295,7 @@ class MaintenanceMpContractsController extends GetxController {
 
   Future<void> getContracts() async {
     _dataAvailable.value = false;
+
     //var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     //var notificationFilter = "";
     /* if (Get.arguments != null) {
@@ -303,14 +305,16 @@ class MaintenanceMpContractsController extends GetxController {
         Get.arguments['notificationId'] = null;
       }
     } */
-    _dataAvailable.value = false;
+    //_dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ' +
+        GetStorage()
+            .read('token'); // lit_mp_maintain_contracts_v_id eq 1006307 AND
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_maintain_contracts_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    print(url);
+        '/api/v1/models/lit_mp_maintain_contracts_v?\$filter=  AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    //print(url);
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -319,17 +323,94 @@ class MaintenanceMpContractsController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
+
       _trx = MPMaintainContractJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx != null;
+      if (_trx.pagecount! > 1) {
+        int index = 1;
+        getContractsPages(index);
+      } else {
+        switch (filterCount) {
+          case 1:
+            _trx.records!.retainWhere((element) => element.dateNextRun != null
+                ? DateTime.parse(element.dateNextRun!).month ==
+                    DateTime.now().month
+                : false);
+            break;
+          case 2:
+            _trx.records!.retainWhere((element) => element.dateNextRun != null
+                ? DateTime.parse(element.dateNextRun!).month ==
+                    DateTime.now().month + 1
+                : false);
+            break;
+          default:
+        }
+        //print(trx.rowcount);
+        //print(response.body);
+        // ignore: unnecessary_null_comparison
+        //print(_trx.records!.length);
+        _dataAvailable.value = _trx != null;
+      }
     } else {
       if (kDebugMode) {
         print(response.body);
       }
+    }
+  }
+
+  getContractsPages(int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_contracts_v?\$filter=  AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = MPMaintainContractJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        _trx.records!.add(element);
+      }
+
+      if (_trx.pagecount! > index) {
+        getContractsPages(index);
+      } else {
+        switch (filterCount) {
+          case 1:
+            _trx.records!.retainWhere((element) => element.dateNextRun != null
+                ? DateTime.parse(element.dateNextRun!).month ==
+                    DateTime.now().month
+                : false);
+            break;
+          case 2:
+            _trx.records!.retainWhere((element) => element.dateNextRun != null
+                ? DateTime.parse(element.dateNextRun!).month ==
+                    DateTime.now().month + 1
+                : false);
+            break;
+          default:
+        }
+        //print(trx.rowcount);
+        //print(response.body);
+        // ignore: unnecessary_null_comparison
+
+        print(jsonEncode(_trx.toJson()));
+        print(_trx.records!.length);
+        _dataAvailable.value = _trx != null;
+      }
+    } else {
+      print(response.body);
     }
   }
 

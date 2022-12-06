@@ -5,6 +5,7 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -90,12 +91,13 @@ class MaintenanceMpContractsScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CONTRACTS: ${controller.trx.rowcount}")
-                          : const Text("CONTRACTS: ")),
+                          ? Text(
+                              "${"Plant Maint.".tr}: ${controller.trx.records!.length}")
+                          : Text("${"Plant Maint.".tr}: ")),
                       margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 40),
+                      margin: const EdgeInsets.only(left: 15),
                       child: IconButton(
                         onPressed: () {
                           //Get.to(const CreateLead());
@@ -108,7 +110,7 @@ class MaintenanceMpContractsScreen
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 20),
+                      margin: const EdgeInsets.only(left: 15),
                       child: IconButton(
                         onPressed: () {
                           controller.getContracts();
@@ -120,7 +122,7 @@ class MaintenanceMpContractsScreen
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 30),
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(
                         () => TextButton(
                           onPressed: () {
@@ -194,7 +196,7 @@ class MaintenanceMpContractsScreen
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(
                               () => Visibility(
@@ -224,7 +226,9 @@ class MaintenanceMpContractsScreen
                                                     .toString()
                                                     .toLowerCase()
                                                     .contains(controller.searchFilterValue.value.toLowerCase())
-                                                : true,
+                                                : controller.dropdownValue.value == "4" && controller.trx.records![index].cSalesRegionID != null
+                                                    ? controller.trx.records![index].cSalesRegionID!.identifier.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                    : true,
                                 child: Card(
                                   elevation: 8.0,
                                   margin: const EdgeInsets.symmetric(
@@ -340,10 +344,31 @@ class MaintenanceMpContractsScreen
                                         ],
                                       ),
                                       trailing: IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.view_list,
-                                          color: Colors.green,
+                                        tooltip: 'Zoom Work Order',
+                                        onPressed: () {
+                                          if (controller.trx.records![index]
+                                                  .latestWorkOrderId !=
+                                              null) {
+                                            Get.offNamed('/MaintenanceMptask',
+                                                arguments: {
+                                                  'notificationId': controller
+                                                      .trx
+                                                      .records![index]
+                                                      .latestWorkOrderId
+                                                });
+                                          }
+                                        },
+                                        icon: Icon(
+                                          controller.trx.records![index]
+                                                      .latestWorkOrderId !=
+                                                  null
+                                              ? Icons.search
+                                              : Icons.search_off,
+                                          color: controller.trx.records![index]
+                                                      .docStatus?.id ==
+                                                  'DT'
+                                              ? Colors.yellow
+                                              : Colors.green,
                                         ),
                                       ),
                                       childrenPadding:
@@ -352,7 +377,7 @@ class MaintenanceMpContractsScreen
                                       children: [
                                         Column(
                                           children: [
-                                            Row(
+                                            /* Row(
                                               children: [
                                                 const Text(
                                                   "Address: ",
@@ -369,7 +394,7 @@ class MaintenanceMpContractsScreen
                                                       ""),
                                                 ),
                                               ],
-                                            ),
+                                            ), */
                                             Row(
                                               children: [
                                                 IconButton(
@@ -401,6 +426,194 @@ class MaintenanceMpContractsScreen
                                                         .records![index]
                                                         .phone ??
                                                     ""),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${'Note Plant'.tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .litMpMaintainHelp ??
+                                                      ""),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                /* const Text(
+                                              "BPartner: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ), */
+                                                Icon(Icons.location_pin,
+                                                    color: Colors.red.shade700),
+                                                Expanded(
+                                                  child: Text(
+                                                      "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Team".tr}:  ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .team ??
+                                                      ""),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Selling Area".tr}:  ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cSalesRegionID
+                                                          ?.identifier ??
+                                                      ""),
+                                                )
+                                              ],
+                                            ),
+                                            /* Row(
+                                              children: [
+                                                Text(
+                                                  "${"Contract Type".tr}:  ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller.trx.records![index].lit),
+                                                )
+                                              ],
+                                            ), */
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Date Next Run".tr}:  ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                              .trx
+                                                              .records![index]
+                                                              .dateNextRun !=
+                                                          null
+                                                      ? DateFormat('dd-MM-yyyy')
+                                                          .format(DateTime
+                                                              .parse(controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .dateNextRun!))
+                                                      : "-"),
+                                                )
+                                              ],
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .latestWorkOrderDocNo !=
+                                                  null,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "${"N° WO".tr}:  ",
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(controller
+                                                            .trx
+                                                            .records![index]
+                                                            .latestWorkOrderDocNo ??
+                                                        ""),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cContractID
+                                                      ?.id !=
+                                                  null,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "${"Contract".tr}:  ",
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Get.offNamed('/Contract',
+                                                          arguments: {
+                                                            'notificationId':
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .cContractID
+                                                                    ?.id,
+                                                          });
+                                                    },
+                                                    child: Text(
+                                                        '${controller.trx.records![index].cContractID?.identifier}', style: TextStyle(color: kNotifColor),),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Latest Work Order".tr}:  ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                              .trx
+                                                              .records![index]
+                                                              .latestWorkOrder !=
+                                                          null
+                                                      ? DateFormat('dd-MM-yyyy')
+                                                          .format(DateTime
+                                                              .parse(controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .latestWorkOrder!))
+                                                      : "-"),
+                                                )
                                               ],
                                             ),
                                             ButtonBar(

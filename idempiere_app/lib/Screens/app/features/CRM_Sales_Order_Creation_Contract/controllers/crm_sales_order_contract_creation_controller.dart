@@ -232,6 +232,106 @@ class CRMSalesOrderContractCreationController extends GetxController {
   static String _displayOrgStringForOption(ORecords option) => option.name!;
   static String _displayDocStringForOption(DTRecords option) => option.name!;
 
+  TextEditingController countryCodeFieldController = TextEditingController();
+  TextEditingController vatCodeFieldController = TextEditingController();
+
+  createBusinessPartner() async {
+    Get.defaultDialog(
+      title: 'Create Business Partner'.tr,
+      content: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(20),
+            child: TextField(
+              //maxLines: 5,
+              readOnly: true,
+              controller: countryCodeFieldController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.badge),
+                border: const OutlineInputBorder(),
+                labelText: 'Country Code'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(20),
+            child: TextField(
+              //maxLines: 5,
+              readOnly: true,
+              controller: vatCodeFieldController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.badge),
+                border: const OutlineInputBorder(),
+                labelText: 'VAT Code'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
+        ],
+      ),
+      onCancel: () {},
+      onConfirm: () async {
+        final ip = GetStorage().read('ip');
+        String authorization = 'Bearer ' + GetStorage().read('token');
+        final protocol = GetStorage().read('protocol');
+        var url = Uri.parse(
+            '$protocol://' + ip + '/api/v1/processes/createbpbyvatapirest');
+        var msg = jsonEncode({
+          "CountryCode": countryCodeFieldController.text,
+          "VATNumber": vatCodeFieldController.text
+        });
+        //print(msg);
+        var response = await http.post(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          //print("done!");
+          var json = jsonDecode(response.body);
+          Get.back();
+          print(response.body);
+          if (json["IsError"] == false) {
+            getBusinessPartner(vatCodeFieldController.text);
+            Get.snackbar(
+              "Done!".tr,
+              "Business Partner has been created".tr,
+              icon: const Icon(
+                Icons.done,
+                color: Colors.green,
+              ),
+            );
+          } else {
+            Get.snackbar(
+              "Error!".tr,
+              "Business Partner not created".tr,
+              icon: const Icon(
+                Icons.error,
+                color: Colors.red,
+              ),
+            );
+          }
+        } else {
+          if (kDebugMode) {
+            print(response.body);
+          }
+          Get.snackbar(
+            "Error!".tr,
+            "Business Partner not created".tr,
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      },
+    );
+  }
+
   Future<List<BPRecords>> getAllBPs() async {
     //await getBusinessPartner();
     //print(response.body);
@@ -249,12 +349,18 @@ class CRMSalesOrderContractCreationController extends GetxController {
     //print(json.);
   }
 
-  getBusinessPartner() async {
+  getBusinessPartner(String vat) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/c_bpartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    if (vat != "0") {
+      url = Uri.parse('http://' +
+          ip +
+          '/api/v1/models/c_bpartner?\$filter= LIT_TaxID eq \'$vat\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    }
     var response = await http.get(
       url,
       headers: <String, String>{

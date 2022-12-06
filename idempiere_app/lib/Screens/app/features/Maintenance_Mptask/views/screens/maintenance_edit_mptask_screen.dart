@@ -3,6 +3,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -62,6 +63,28 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     }
   }
 
+  editWorkOrderDate() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "JP_ToDo_ScheduledStartDate": dateFieldController.text,
+      "JP_ToDo_ScheduledEndDate": dateFieldController.text,
+    });
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/jp_todo/${args["jpId"]}');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+  }
+
   editWorkOrder(bool isConnected) async {
     //print(now);
 
@@ -82,6 +105,11 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     if (Get.arguments["id"] != null) {
       trx.records![Get.arguments["index"]].description =
           noteWOFieldController.text;
+
+      trx.records![Get.arguments["index"]].jpToDoStartDate =
+          dateFieldController.text;
+      trx.records![Get.arguments["index"]].jpToDoEndDate =
+          dateFieldController.text;
 
       var url =
           Uri.parse('$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
@@ -225,6 +253,10 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
             child: IconButton(
               onPressed: () async {
                 editWorkOrder(await checkConnection());
+
+                if (await checkConnection()) {
+                  editWorkOrderDate();
+                }
               },
               icon: const Icon(
                 Icons.save,
@@ -269,15 +301,35 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    controller: dateFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.event),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Date'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                  padding: const EdgeInsets.all(10),
+                  //width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
                     ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: dateFieldController.text,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Date'.tr,
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateFieldController.text = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
                   ),
                 ),
                 Container(

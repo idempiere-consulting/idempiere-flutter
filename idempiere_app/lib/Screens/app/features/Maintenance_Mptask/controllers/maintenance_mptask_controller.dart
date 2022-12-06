@@ -141,6 +141,13 @@ class MaintenanceMptaskController extends GetxController {
     _dataAvailable.value = false;
     //print(GetStorage().read('workOrderSync'));
     //print(GetStorage().read('userId'));
+    var notificationFilter = 0;
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter = Get.arguments['notificationId'];
+        Get.arguments['notificationId'] = null;
+      }
+    }
 
     const filename = "workorder";
     final file = File(
@@ -150,12 +157,17 @@ class MaintenanceMptaskController extends GetxController {
     _trx = WorkOrderLocalJson.fromJson(jsondecoded);
 
     //print(value.value);
-
-    if (value.value == "Today".tr) {
-      _trx.records!.retainWhere((element) =>
-          DateTime.now().toString().substring(0, 10) ==
-          element.jpToDoStartDate);
+    if (notificationFilter == 0) {
+      if (value.value == "Today".tr) {
+        _trx.records!.retainWhere((element) =>
+            DateTime.now().toString().substring(0, 10) ==
+            element.jpToDoStartDate);
+      }
+    } else {
+      _trx.records!.retainWhere((element) => element.id == notificationFilter);
+      notificationFilter = 0;
     }
+
     // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;
   }

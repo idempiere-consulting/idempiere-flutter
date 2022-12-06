@@ -47,7 +47,7 @@ class TRecords {
   final ADOrgID? aDOrgID;
   final String? mPOTTaskUU;
   num? qty;
-  final MProductID? mProductID;
+  MProductID? mProductID;
   final MPMaintainID? mPMaintainID;
   String? name;
   String? description;
@@ -373,8 +373,8 @@ class ADOrgID {
 
 class MProductID {
   final String? propertyLabel;
-  final int? id;
-  final String? identifier;
+  int? id;
+  String? identifier;
   final String? modelname;
 
   MProductID({

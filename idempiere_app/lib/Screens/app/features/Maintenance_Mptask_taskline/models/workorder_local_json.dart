@@ -3,7 +3,7 @@ class WorkOrderLocalJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  List<Records>? records;
+  List<WORecords>? records;
 
   WorkOrderLocalJson({
     this.pagecount,
@@ -19,7 +19,7 @@ class WorkOrderLocalJson {
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => WORecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class WorkOrderLocalJson {
       };
 }
 
-class Records {
+class WORecords {
   final int? id;
   final MPOTID? mPOTID;
   final ADClientID? aDClientID;
@@ -72,8 +72,8 @@ class Records {
   final String? refname;
   final String? ref2name;
   final String? team;
-  final String? jpToDoStartDate;
-  final String? jpToDoEndDate;
+  String? jpToDoStartDate;
+  String? jpToDoEndDate;
   final String? jpToDoStartTime;
   final String? jpToDoEndTime;
   final String? litMpMaintainHelp;
@@ -85,7 +85,7 @@ class Records {
   JPToDoID? jPToDoID;
   JPToDoStatus? jpToDoStatus;
 
-  Records(
+  WORecords(
       {this.id,
       this.mPOTID,
       this.aDClientID,
@@ -139,7 +139,7 @@ class Records {
       this.jpToDoStatus,
       this.cOrderID});
 
-  Records.fromJson(Map<String, dynamic> json)
+  WORecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         mPOTID = (json['MP_OT_ID'] as Map<String, dynamic>?) != null
             ? MPOTID.fromJson(json['MP_OT_ID'] as Map<String, dynamic>)

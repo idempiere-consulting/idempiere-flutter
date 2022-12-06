@@ -1568,7 +1568,7 @@ CRUD=1111=F
  19 TaskTodo		    : F3
  20 Ore			        : F3
  21 ..
- 22 ..	
+ 22 Contratti CRM       : F3 *** 1 CRM
  23 Manut. Tecnico******: 1 *** 3 Man.Tecnico
  24 Cal. Tecnico        : F3
  25 Int. di manutenzione: F3

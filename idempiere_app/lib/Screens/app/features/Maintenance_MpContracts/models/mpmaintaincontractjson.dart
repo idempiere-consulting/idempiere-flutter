@@ -3,7 +3,7 @@ class MPMaintainContractJSON {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<Records>? records;
+  List<Records>? records;
 
   MPMaintainContractJSON({
     this.pagecount,
@@ -59,7 +59,17 @@ class Records {
   final String? userNameBp;
   final CBPartnerLocationID? cbPartnerLocationID;
   final MPMaintainTaskID? mPMaintainTaskID;
-  final ADUserID? adUserID;
+  ADUserID? adUserID;
+  final String? team;
+  final String? cLocationAddress1;
+  final String? cLocationCity;
+  final String? cLocationPostal;
+  final String? litMpMaintainHelp;
+  final CSalesRegionID? cSalesRegionID;
+  String? latestWorkOrder;
+  int? latestWorkOrderId;
+  String? latestWorkOrderDocNo;
+  CContractID? cContractID;
 
   Records({
     this.id,
@@ -90,6 +100,16 @@ class Records {
     this.cbPartnerLocationID,
     this.mPMaintainTaskID,
     this.adUserID,
+    this.team,
+    this.cLocationAddress1,
+    this.cLocationCity,
+    this.cLocationPostal,
+    this.litMpMaintainHelp,
+    this.cSalesRegionID,
+    this.latestWorkOrder,
+    this.latestWorkOrderId,
+    this.latestWorkOrderDocNo,
+    this.cContractID,
   });
 
   Records.fromJson(Map<String, dynamic> json)
@@ -145,9 +165,26 @@ class Records {
                 ? MPMaintainTaskID.fromJson(
                     json['MP_Maintain_Task_ID'] as Map<String, dynamic>)
                 : null,
+        team = json['team'] as String?,
+        cLocationAddress1 = json['c_location_address1'] as String?,
+        cLocationCity = json['c_location_city'] as String?,
+        cLocationPostal = json['c_location_postal'] as String?,
+        litMpMaintainHelp = json['mp_maintain_help'] as String?,
         adUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
             ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
-            : null;
+            : null,
+        cSalesRegionID =
+            (json['C_SalesRegion_ID'] as Map<String, dynamic>?) != null
+                ? CSalesRegionID.fromJson(
+                    json['C_SalesRegion_ID'] as Map<String, dynamic>)
+                : null,
+        latestWorkOrder = json['latest_workorder'] as String?,
+        latestWorkOrderDocNo = json['latest_workorder_documentno'] as String?,
+        cContractID = (json['C_Contract_ID'] as Map<String, dynamic>?) != null
+            ? CContractID.fromJson(
+                json['C_Contract_ID'] as Map<String, dynamic>)
+            : null,
+        latestWorkOrderId = json['latest_workorder_id'] as int?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -172,7 +209,17 @@ class Records {
         'AD_Org_ID': aDOrgID?.toJson(),
         'C_BPartner_ID': cBPartnerID?.toJson(),
         'MP_Maintain_ID2': mPMaintainID2,
-        'model-name': modelname
+        'team': team,
+        'c_location_address1': cLocationAddress1,
+        'c_location_city': cLocationCity,
+        'c_location_postal': cLocationPostal,
+        'mp_maintain_help': litMpMaintainHelp,
+        'model-name': modelname,
+        'C_SalesRegion_ID': cSalesRegionID?.toJson(),
+        'latest_workorder': latestWorkOrder,
+        'latest_workorder_documentno': latestWorkOrderDocNo,
+        'C_Contract_ID': cContractID?.toJson(),
+        'latest_workorder_id': latestWorkOrderId,
       };
 }
 
@@ -311,6 +358,33 @@ class ADClientID {
       };
 }
 
+class CContractID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CContractID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CContractID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
 class ADUserID {
   final String? propertyLabel;
   final int? id;
@@ -352,6 +426,33 @@ class ADOrgID {
   });
 
   ADOrgID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CSalesRegionID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CSalesRegionID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CSalesRegionID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

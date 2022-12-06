@@ -13,6 +13,8 @@ import 'package:idempiere_app/Screens/app/config/themes/app_theme.dart';
 import 'package:idempiere_app/Screens/app/features/CRM/views/screens/crm_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Commission/views/screens/crm_commission_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/crm_contract_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/views/screens/crm_contract_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_customer_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice_Line/views/screens/crm_invoice_line_screen.dart';
@@ -179,6 +181,16 @@ class MyApp extends StatelessWidget {
           name: '/ContactBP',
           page: () => const CRMContactBPScreen(),
           binding: CRMContactBPBinding(),
+        ),
+        GetPage(
+          name: '/Contract',
+          page: () => const CRMContractScreen(),
+          binding: CRMContractBinding(),
+        ),
+        GetPage(
+          name: '/ContractLine',
+          page: () => const CRMContractLineScreen(),
+          binding: CRMContractLineBinding(),
         ),
         GetPage(
           name: '/CustomerBP',

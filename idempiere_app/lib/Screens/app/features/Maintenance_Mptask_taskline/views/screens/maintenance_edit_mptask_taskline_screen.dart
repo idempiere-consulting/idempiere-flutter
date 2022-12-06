@@ -6,10 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -75,9 +73,10 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
       "Description": descriptionFieldController.text,
-      "ResourceQty": double.parse(resourceQtyFieldController.text),
+      "ResourceQty": double.parse(qtyFieldController.text),
       "QtyEntered": double.parse(qtyEnteredFieldController.text),
-      "Qty": double.parse(qtyFieldController.text),
+      "Qty": double.parse(resourceQtyFieldController.text),
+      "M_Product_ID": {"id": productId},
     });
 
     WorkOrderTaskLocalJson trx =
@@ -92,6 +91,8 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
           double.parse(qtyEnteredFieldController.text);
       trx.records![Get.arguments["index"]].qty =
           double.parse(qtyFieldController.text);
+      trx.records![Get.arguments["index"]].mProductID =
+          MProductID(id: productId, identifier: productName);
 
       var url = Uri.parse('$protocol://' +
           ip +
@@ -170,7 +171,7 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
           var offlineid2 = json["offlineid"];
           var adorg = json["AD_Org_ID"];
           var adclient = json["AD_Client_ID"];
-          var product = json["M_Product_ID"];
+          //var product = json["M_Product_ID"];
           var resourceQty = json["ResourceQty"];
           var qtyEntered = json["QtyEntered"];
           var uom = json["C_UOM_ID"];
@@ -181,12 +182,12 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
             "AD_Org_ID": adorg,
             "AD_Client_ID": adclient,
             "MP_OT_ID": {"id": args["MPOTId"]},
-            "M_Product_ID": {"id": product},
+            "M_Product_ID": {"id": productId},
             "Description": descriptionFieldController.text,
-            "ResourceQty": resourceQty,
-            "QtyEntered": qtyEntered,
+            "ResourceQty": double.parse(qtyFieldController.text),
+            "QtyEntered": double.parse(qtyEnteredFieldController.text),
+            "Qty": double.parse(resourceQtyFieldController.text),
             "C_UOM_ID": uom,
-            "Qty": double.parse(qtyFieldController.text),
           });
 
           list.removeAt(i);
@@ -220,6 +221,34 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
     ]
   };
 
+  Future<List<Records>> getAllProducts() async {
+    //print(response.body);
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsonResources =
+        ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    /* for (var i = 0; i < jsonResources.records!.length; i++) {
+      if (((jsonResources.records![i].mProductCategoryID?.identifier ?? "")
+          .contains((Get.arguments["id"] as String).tr))) {
+        print(jsonResources.records![i].mProductCategoryID?.identifier);
+      }
+    } */
+
+    //print(jsonResources.records!.length);
+
+    return jsonResources.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  static String _displayStringForOption(Records option) =>
+      "${option.value}_${option.name}";
+
   late List<Types> dropDownList;
   String dropdownValue = "";
 
@@ -238,20 +267,26 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
 
   var offline = -1;
 
+  var productId = 0;
+  var productName;
+
   @override
   void initState() {
     dropdownValue = args["completed"] ?? "NS";
     dropDownList = getTypes()!;
     super.initState();
     descriptionFieldController = TextEditingController();
-    qtyFieldController = TextEditingController(text: args["qty"] ?? "1.0");
+    qtyFieldController =
+        TextEditingController(text: args["resourceQty"] ?? "1.0");
     qtyEnteredFieldController =
         TextEditingController(text: args["qtyEntered"] ?? "1.0");
     resourceQtyFieldController =
-        TextEditingController(text: args["resourceQty"] ?? "1");
+        TextEditingController(text: args["Qty"] ?? "1");
     offline = Get.arguments["offlineid"] ?? -1;
     productFieldController =
         TextEditingController(text: Get.arguments["prod"] ?? "");
+    productName = Get.arguments["prod"] ?? "";
+    productId = Get.arguments["prodId"] ?? 0;
     //getDocType();
     //getResourceName();
     //getAllResources();
@@ -329,6 +364,61 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
                       labelText: 'Product'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: productName),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return "${option.value}_${option.name}"
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = selection.id!;
+                                    productName = selection.name;
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
