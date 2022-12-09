@@ -2,7 +2,7 @@ part of dashboard;
 
 class MaintenanceMpContractsController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late MPMaintainContractJSON _trx;
+  MPMaintainContractJSON _trx = MPMaintainContractJSON();
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
@@ -51,8 +51,8 @@ class MaintenanceMpContractsController extends GetxController {
     });
 
     getContracts();
-    //getADUserID();
-    adUserId = GetStorage().read('userId');
+    getADUserID();
+    //adUserId = GetStorage().read('userId');
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -70,11 +70,10 @@ class MaintenanceMpContractsController extends GetxController {
   }
 
   Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/a?\$filter= Name eq \'$name\'');
+        'http://' + ip + '/api/v1/models/ad_user?\$filter= IsSupportUser eq Y');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -91,6 +90,8 @@ class MaintenanceMpContractsController extends GetxController {
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
+    } else {
+      print(response.body);
     }
   }
 
@@ -244,12 +245,13 @@ class MaintenanceMpContractsController extends GetxController {
           "C_DocType_ID": 1000037,
           "StartTime": "$startTime:00Z",
           "EndTime": "$endTime:00Z",
-          "AD_User_ID": GetStorage().read('userId'),
+          "AD_User_ID": adUserId,
+          "IsAllowCopy": true,
 
           //"C_DocType_ID": _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
         });
 
-        //print(msg);
+        print(msg);
         final protocol = GetStorage().read('protocol');
         var url = Uri.parse(
             '$protocol://' + ip + '/api/v1/processes/generateworkorder');
@@ -268,6 +270,7 @@ class MaintenanceMpContractsController extends GetxController {
           if (kDebugMode) {
             print(response.body);
           }
+          getContracts();
           Get.snackbar(
             "Done!".tr,
             "Sales Order has been created".tr,
@@ -295,7 +298,9 @@ class MaintenanceMpContractsController extends GetxController {
 
   Future<void> getContracts() async {
     _dataAvailable.value = false;
-
+    if (_trx != null) {
+      _trx.records = null;
+    }
     //var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     //var notificationFilter = "";
     /* if (Get.arguments != null) {
@@ -324,13 +329,15 @@ class MaintenanceMpContractsController extends GetxController {
     );
     if (response.statusCode == 200) {
       print(response.body);
-
-      _trx = MPMaintainContractJSON.fromJson(
+      var json = MPMaintainContractJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
-      if (_trx.pagecount! > 1) {
+
+      if (json.pagecount! > 1) {
         int index = 1;
-        getContractsPages(index);
+        getContractPages(json, index);
       } else {
+        _trx = json;
+
         switch (filterCount) {
           case 1:
             _trx.records!.retainWhere((element) => element.dateNextRun != null
@@ -346,12 +353,14 @@ class MaintenanceMpContractsController extends GetxController {
             break;
           default:
         }
-        //print(trx.rowcount);
-        //print(response.body);
-        // ignore: unnecessary_null_comparison
-        //print(_trx.records!.length);
-        _dataAvailable.value = _trx != null;
+
+        _dataAvailable.value = _trx.records != null;
       }
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //print(_trx.records!.length);
+
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -359,7 +368,7 @@ class MaintenanceMpContractsController extends GetxController {
     }
   }
 
-  getContractsPages(int index) async {
+  getContractPages(MPMaintainContractJSON json, int index) async {
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
@@ -380,34 +389,36 @@ class MaintenanceMpContractsController extends GetxController {
       var pageJson = MPMaintainContractJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       for (var element in pageJson.records!) {
-        _trx.records!.add(element);
+        json.records!.add(element);
       }
 
-      if (_trx.pagecount! > index) {
-        getContractsPages(index);
+      if (json.pagecount! > index) {
+        getContractPages(json, index);
       } else {
-        switch (filterCount) {
-          case 1:
-            _trx.records!.retainWhere((element) => element.dateNextRun != null
-                ? DateTime.parse(element.dateNextRun!).month ==
-                    DateTime.now().month
-                : false);
-            break;
-          case 2:
-            _trx.records!.retainWhere((element) => element.dateNextRun != null
-                ? DateTime.parse(element.dateNextRun!).month ==
-                    DateTime.now().month + 1
-                : false);
-            break;
-          default:
+        if (kDebugMode) {
+          _trx = json;
+          print(json.records!.length);
+          switch (filterCount) {
+            case 1:
+              _trx.records!.retainWhere((element) => element.dateNextRun != null
+                  ? DateTime.parse(element.dateNextRun!).month ==
+                      DateTime.now().month
+                  : false);
+              break;
+            case 2:
+              _trx.records!.retainWhere((element) => element.dateNextRun != null
+                  ? DateTime.parse(element.dateNextRun!).month ==
+                      DateTime.now().month + 1
+                  : false);
+              break;
+            default:
+          }
+          _dataAvailable.value = _trx.records != null;
         }
-        //print(trx.rowcount);
-        //print(response.body);
-        // ignore: unnecessary_null_comparison
 
-        print(jsonEncode(_trx.toJson()));
-        print(_trx.records!.length);
-        _dataAvailable.value = _trx != null;
+        //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
+
       }
     } else {
       print(response.body);

@@ -173,6 +173,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         "DateDoc": "${formattedDate}T00:00:00Z",
         "LIT_IsManagedByCustomer": manByCustomer,
         "IsClosed": isClosed,
+        "IsValid": isValid,
       });
 
       if (manByCustomer) {
@@ -193,6 +194,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           "DateDoc": "${formattedDate}T00:00:00Z",
           "LIT_IsManagedByCustomer": manByCustomer,
           "IsClosed": isClosed,
+          "IsValid": isValid,
         });
       }
       if (GetStorage().read('postCallList') == null) {
@@ -499,6 +501,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   bool isReplacedNow = false;
   bool isClosed = false;
   bool manByCustomer = false;
+  bool isValid = false;
   late String missingPartId;
   List<Records> bomList = [];
   bool missingPartFlag = false;
@@ -520,6 +523,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     isCharged = false;
     isReplacedNow = false;
     isClosed = false;
+    isValid = false;
     productFieldController.text = args["productName"] ?? "";
     stockFieldController.text = "0";
     list = [];
@@ -850,6 +854,19 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   onChanged: (bool? value) {
                     setState(() {
                       isClosed = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Valid'.tr),
+                  value: isValid,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isValid = value!;
                       //GetStorage().write('checkboxLogin', checkboxState);
                     });
                   },

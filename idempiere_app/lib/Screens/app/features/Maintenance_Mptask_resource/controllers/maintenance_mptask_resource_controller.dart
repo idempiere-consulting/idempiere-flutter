@@ -793,6 +793,8 @@ class MaintenanceMpResourceController extends GetxController {
       for (var i = 0; i < _trx2.records!.length; i++) {
         if (_trx.records![index].id == _trx2.records![i].id) {
           _trx2.records![i].lITControl1DateFrom = date;
+          _trx2.records![i].doneAction = "Checked";
+          _trx2.records![i].toDoAction = "OK";
         }
       }
 
@@ -930,6 +932,8 @@ class MaintenanceMpResourceController extends GetxController {
         if (_trx.records![index].id == _trx2.records![i].id) {
           _trx2.records![i].lITControl1DateFrom = date;
           _trx2.records![i].lITControl2DateFrom = date;
+          _trx2.records![i].doneAction = "Revisioned";
+          _trx2.records![i].toDoAction = "OK";
         }
       }
 
@@ -1069,6 +1073,8 @@ class MaintenanceMpResourceController extends GetxController {
           _trx2.records![i].lITControl1DateFrom = date;
           _trx2.records![i].lITControl2DateFrom = date;
           _trx2.records![i].lITControl3DateFrom = date;
+          _trx2.records![i].doneAction = "Tested";
+          _trx2.records![i].toDoAction = "OK";
         }
       }
 

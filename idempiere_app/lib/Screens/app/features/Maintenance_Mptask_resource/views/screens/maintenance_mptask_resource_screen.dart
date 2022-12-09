@@ -210,6 +210,7 @@ class MaintenanceMpResourceScreen
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ExpansionTile(
+                                  initiallyExpanded: true,
                                   trailing: IconButton(
                                     onPressed: () {},
                                     icon: Icon(
@@ -455,10 +456,88 @@ class MaintenanceMpResourceScreen
                                               color: Colors.white),
                                         ),
                                       ]),
+                                      Row(children: [
+                                        Text(
+                                          'Manufactured Year: '.tr,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                        Text(
+                                          controller.trx.records![index]
+                                              .manufacturedYear
+                                              .toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ]),
                                       Visibility(
                                         visible: controller.trx.records![index]
-                                                .toDoAction! !=
-                                            "OK",
+                                                .anomaliesCount !=
+                                            "0",
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 2.5),
+                                              child: Text(
+                                                "Has Anomaly".tr,
+                                                style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.white),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .doneAction !=
+                                            "Nothing",
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: kNotifColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 2.5),
+                                              child: Text(
+                                                "${controller.trx.records![index].doneAction}"
+                                                    .tr,
+                                                style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.white),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                    .toDoAction! !=
+                                                "OK" &&
+                                            controller.trx.records![index]
+                                                    .doneAction ==
+                                                "Nothing",
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -528,6 +607,7 @@ class MaintenanceMpResourceScreen
                                         color: Colors.white,
                                         size: 30.0,
                                       ), */
+
                                   childrenPadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   children: [
@@ -580,11 +660,18 @@ class MaintenanceMpResourceScreen
                                                   .lITControl2DateFrom ??
                                               "??"),
                                         ]), */
-                                        Row(children: [
-                                          Text('Revision Date: '.tr),
-                                          Text(
-                                              "${controller.trx.records![index].lITControl2DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateFrom!)) : ""} - ${controller.trx.records![index].lITControl2DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateNext!)) : ""}"),
-                                        ]),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl2DateFrom !=
+                                              null,
+                                          child: Row(children: [
+                                            Text('Revision Date: '.tr),
+                                            Text(
+                                                "${controller.trx.records![index].lITControl2DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateFrom!)) : ""} - ${controller.trx.records![index].lITControl2DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateNext!)) : ""}"),
+                                          ]),
+                                        ),
                                         /*  Row(children: [
                                           const Text('Testing Date: '),
                                           Text(controller.trx.records![index]
@@ -593,17 +680,19 @@ class MaintenanceMpResourceScreen
                                         ]), */ //DateFormat('dd-MM-yyyy').format(
                                         //DateTime.parse(controller.trx
                                         //   .records![index].jpToDoStartDate!))
-                                        Row(children: [
-                                          Text('Testing Date: '.tr),
-                                          Text(
-                                              "${controller.trx.records![index].lITControl3DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateFrom!)) : ""} - ${controller.trx.records![index].lITControl3DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateNext!)) : ""}"),
-                                        ]),
-                                        Row(children: [
-                                          Text('Manufactured Year: '.tr),
-                                          Text(controller.trx.records![index]
-                                              .manufacturedYear
-                                              .toString()),
-                                        ]),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITControl3DateFrom !=
+                                              null,
+                                          child: Row(children: [
+                                            Text('Testing Date: '.tr),
+                                            Text(
+                                                "${controller.trx.records![index].lITControl3DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateFrom!)) : ""} - ${controller.trx.records![index].lITControl3DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateNext!)) : ""}"),
+                                          ]),
+                                        ),
+
                                         Row(children: [
                                           Text('Manufacturer: '.tr),
                                           Text(controller.trx.records![index]

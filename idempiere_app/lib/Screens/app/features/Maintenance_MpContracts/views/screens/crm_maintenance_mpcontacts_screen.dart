@@ -365,9 +365,9 @@ class MaintenanceMpContractsScreen
                                               ? Icons.search
                                               : Icons.search_off,
                                           color: controller.trx.records![index]
-                                                      .docStatus?.id ==
-                                                  'DT'
-                                              ? Colors.yellow
+                                                      .latestWorkOrderId ==
+                                                  null
+                                              ? Colors.red
                                               : Colors.green,
                                         ),
                                       ),
@@ -586,7 +586,10 @@ class MaintenanceMpContractsScreen
                                                           });
                                                     },
                                                     child: Text(
-                                                        '${controller.trx.records![index].cContractID?.identifier}', style: TextStyle(color: kNotifColor),),
+                                                      '${controller.trx.records![index].cContractID?.identifier}',
+                                                      style: TextStyle(
+                                                          color: kNotifColor),
+                                                    ),
                                                   )
                                                 ],
                                               ),

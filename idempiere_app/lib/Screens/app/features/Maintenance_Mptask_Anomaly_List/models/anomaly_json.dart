@@ -55,6 +55,7 @@ class ANRecords {
   bool? lITIsReplaced;
   final String? modelname;
   int? offlineId;
+  bool? isValid;
 
   ANRecords(
       {this.id,
@@ -79,7 +80,8 @@ class ANRecords {
       this.isClosed,
       this.lITIsReplaced,
       this.modelname,
-      this.offlineId});
+      this.offlineId,
+      this.isValid});
 
   ANRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -127,6 +129,7 @@ class ANRecords {
             : null,
         isClosed = json['IsClosed'] as bool?,
         lITIsReplaced = json['LIT_IsReplaced'] as bool?,
+        isValid = json['IsValid'] as bool?,
         offlineId = json["offlineId"] as int?,
         modelname = json['model-name'] as String?;
 
@@ -152,6 +155,7 @@ class ANRecords {
         'M_Product_ID': mProductID?.toJson(),
         'IsClosed': isClosed,
         'LIT_IsReplaced': lITIsReplaced,
+        'IsValid': isValid,
         'model-name': modelname,
         'offlineId': offlineId,
       };

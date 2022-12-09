@@ -56,9 +56,12 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       "DateOrdered": dateOrdered,
       "ServiceDate": firstUseDate,
       "UserName": userNameFieldController.text,
-      "UseLifeYears": int.parse(useLifeYearsFieldController.text == ""
-          ? "0"
-          : useLifeYearsFieldController.text),
+      "UseLifeYears": int.parse(
+        useLifeYearsFieldController.text == ""
+            ? "0"
+            : useLifeYearsFieldController.text,
+      ),
+      "IsActive": isActive,
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -97,6 +100,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           useLifeYearsFieldController.text == ""
               ? "0"
               : useLifeYearsFieldController.text);
+      trx.records![Get.arguments["index"]].isActive = isActive;
       var url = Uri.parse('http://' +
           ip +
           '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}');
@@ -184,7 +188,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             "AD_Client_ID": adclient,
             "Mp_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
             "M_Product_ID": {"id": productId},
-            "IsActive": true,
+            "IsActive": isActive,
             "ResourceType": {"id": "BP"},
             "ResourceQty": 1,
             "CostAmt": 0,
@@ -283,6 +287,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   var offline = -1;
   String dateOrdered = Get.arguments["dateOrder"] ?? "";
   String firstUseDate = Get.arguments["serviceDate"] ?? "";
+  bool isActive = true;
 
   @override
   void initState() {
@@ -327,6 +332,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     offline = Get.arguments["offlineid"] ?? -1;
     dateOrdered = "";
     firstUseDate = "";
+    isActive = true;
     //print(Get.arguments["offlineid"]);
 
     //getAllProducts();
@@ -817,6 +823,19 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                       onSaved: (val) => print(val),
                     ),
                   ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Active'.tr),
+                  value: isActive,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isActive = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ],
             );
