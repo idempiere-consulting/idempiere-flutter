@@ -5,7 +5,7 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ui';
+import 'dart:io';
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -34,6 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -92,7 +93,7 @@ class MaintenanceMpContractsScreen
                     Container(
                       child: Obx(() => controller.dataAvailable
                           ? Text(
-                              "${"Plant Maint.".tr}: ${controller.trx.records!.length}")
+                              "${"Plant Maint.".tr}: ${controller._trx.records!.length}")
                           : Text("${"Plant Maint.".tr}: ")),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -196,7 +197,7 @@ class MaintenanceMpContractsScreen
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.records!.length,
+                          itemCount: controller._trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(
                               () => Visibility(
@@ -204,7 +205,7 @@ class MaintenanceMpContractsScreen
                                         ""
                                     ? true
                                     : controller.dropdownValue.value == "1"
-                                        ? controller.trx.records![index]
+                                        ? controller._trx.records![index]
                                             .cBPartnerID!.identifier
                                             .toString()
                                             .toLowerCase()
@@ -213,7 +214,7 @@ class MaintenanceMpContractsScreen
                                                 .toLowerCase())
                                         : controller.dropdownValue.value == "2"
                                             ? controller
-                                                .trx.records![index].documentNo
+                                                ._trx.records![index].documentNo
                                                 .toString()
                                                 .toLowerCase()
                                                 .contains(controller
@@ -222,12 +223,13 @@ class MaintenanceMpContractsScreen
                                             : controller.dropdownValue.value ==
                                                     "3"
                                                 ? controller
-                                                    .trx.records![index].phone
+                                                    ._trx.records![index].phone
                                                     .toString()
                                                     .toLowerCase()
-                                                    .contains(controller.searchFilterValue.value.toLowerCase())
+                                                    .contains(
+                                                        controller.searchFilterValue.value.toLowerCase())
                                                 : controller.dropdownValue.value == "4" && controller.trx.records![index].cSalesRegionID != null
-                                                    ? controller.trx.records![index].cSalesRegionID!.identifier.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                    ? controller._trx.records![index].cSalesRegionID!.identifier.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
                                                     : true,
                                 child: Card(
                                   elevation: 8.0,
@@ -258,24 +260,24 @@ class MaintenanceMpContractsScreen
                                                 const EditMaintenanceMpContracts(),
                                                 arguments: {
                                                   "maintainId": controller
-                                                      .trx.records![index].id,
+                                                      ._trx.records![index].id,
                                                   "businesspartnerId":
                                                       controller
-                                                          .trx
+                                                          ._trx
                                                           .records![index]
                                                           .cBPartnerID
                                                           ?.id,
                                                   "date": controller
-                                                      .trx
+                                                      ._trx
                                                       .records![index]
                                                       .dateNextRun,
                                                   "technicianId": controller
-                                                      .trx
+                                                      ._trx
                                                       .records![index]
                                                       .adUserID
                                                       ?.id,
                                                   "technicianName": controller
-                                                      .trx
+                                                      ._trx
                                                       .records![index]
                                                       .adUserID
                                                       ?.identifier,
@@ -321,7 +323,7 @@ class MaintenanceMpContractsScreen
                                         ),
                                       ),
                                       title: Text(
-                                        controller.trx.records![index]
+                                        controller._trx.records![index]
                                                 .cBPartnerID!.identifier ??
                                             "???",
                                         style: const TextStyle(
@@ -335,7 +337,7 @@ class MaintenanceMpContractsScreen
                                           const Icon(EvaIcons.hashOutline,
                                               color: Colors.yellowAccent),
                                           Text(
-                                            controller.trx.records![index]
+                                            controller._trx.records![index]
                                                     .documentNo ??
                                                 "??",
                                             style: const TextStyle(
@@ -346,25 +348,25 @@ class MaintenanceMpContractsScreen
                                       trailing: IconButton(
                                         tooltip: 'Zoom Work Order',
                                         onPressed: () {
-                                          if (controller.trx.records![index]
+                                          if (controller._trx.records![index]
                                                   .latestWorkOrderId !=
                                               null) {
                                             Get.offNamed('/MaintenanceMptask',
                                                 arguments: {
                                                   'notificationId': controller
-                                                      .trx
+                                                      ._trx
                                                       .records![index]
                                                       .latestWorkOrderId
                                                 });
                                           }
                                         },
                                         icon: Icon(
-                                          controller.trx.records![index]
+                                          controller._trx.records![index]
                                                       .latestWorkOrderId !=
                                                   null
                                               ? Icons.search
                                               : Icons.search_off,
-                                          color: controller.trx.records![index]
+                                          color: controller._trx.records![index]
                                                       .latestWorkOrderId ==
                                                   null
                                               ? Colors.red
@@ -406,7 +408,7 @@ class MaintenanceMpContractsScreen
                                                   onPressed: () {
                                                     //log("info button pressed");
                                                     if (controller
-                                                            .trx
+                                                            ._trx
                                                             .records![index]
                                                             .phone ==
                                                         null) {
@@ -414,7 +416,7 @@ class MaintenanceMpContractsScreen
                                                     } else {
                                                       controller.makePhoneCall(
                                                           controller
-                                                              .trx
+                                                              ._trx
                                                               .records![index]
                                                               .phone
                                                               .toString());
@@ -422,7 +424,7 @@ class MaintenanceMpContractsScreen
                                                   },
                                                 ),
                                                 Text(controller
-                                                        .trx
+                                                        ._trx
                                                         .records![index]
                                                         .phone ??
                                                     ""),
@@ -438,7 +440,7 @@ class MaintenanceMpContractsScreen
                                                 ),
                                                 Expanded(
                                                   child: Text(controller
-                                                          .trx
+                                                          ._trx
                                                           .records![index]
                                                           .litMpMaintainHelp ??
                                                       ""),
@@ -456,7 +458,7 @@ class MaintenanceMpContractsScreen
                                                     color: Colors.red.shade700),
                                                 Expanded(
                                                   child: Text(
-                                                      "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                                      "${controller._trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                                 ),
                                               ],
                                             ),
@@ -470,7 +472,7 @@ class MaintenanceMpContractsScreen
                                                 ),
                                                 Expanded(
                                                   child: Text(controller
-                                                          .trx
+                                                          ._trx
                                                           .records![index]
                                                           .team ??
                                                       ""),
@@ -487,7 +489,7 @@ class MaintenanceMpContractsScreen
                                                 ),
                                                 Expanded(
                                                   child: Text(controller
-                                                          .trx
+                                                          ._trx
                                                           .records![index]
                                                           .cSalesRegionID
                                                           ?.identifier ??
@@ -518,14 +520,14 @@ class MaintenanceMpContractsScreen
                                                 ),
                                                 Expanded(
                                                   child: Text(controller
-                                                              .trx
+                                                              ._trx
                                                               .records![index]
                                                               .dateNextRun !=
                                                           null
                                                       ? DateFormat('dd-MM-yyyy')
                                                           .format(DateTime
                                                               .parse(controller
-                                                                  .trx
+                                                                  ._trx
                                                                   .records![
                                                                       index]
                                                                   .dateNextRun!))
@@ -535,7 +537,7 @@ class MaintenanceMpContractsScreen
                                             ),
                                             Visibility(
                                               visible: controller
-                                                      .trx
+                                                      ._trx
                                                       .records![index]
                                                       .latestWorkOrderDocNo !=
                                                   null,
@@ -549,7 +551,7 @@ class MaintenanceMpContractsScreen
                                                   ),
                                                   Expanded(
                                                     child: Text(controller
-                                                            .trx
+                                                            ._trx
                                                             .records![index]
                                                             .latestWorkOrderDocNo ??
                                                         ""),
@@ -559,7 +561,7 @@ class MaintenanceMpContractsScreen
                                             ),
                                             Visibility(
                                               visible: controller
-                                                      .trx
+                                                      ._trx
                                                       .records![index]
                                                       .cContractID
                                                       ?.id !=
@@ -578,7 +580,7 @@ class MaintenanceMpContractsScreen
                                                           arguments: {
                                                             'notificationId':
                                                                 controller
-                                                                    .trx
+                                                                    ._trx
                                                                     .records![
                                                                         index]
                                                                     .cContractID
@@ -586,7 +588,7 @@ class MaintenanceMpContractsScreen
                                                           });
                                                     },
                                                     child: Text(
-                                                      '${controller.trx.records![index].cContractID?.identifier}',
+                                                      '${controller._trx.records![index].cContractID?.identifier}',
                                                       style: TextStyle(
                                                           color: kNotifColor),
                                                     ),

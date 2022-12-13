@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/models/mpmaintaincontractjson.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/models/anomaly_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/anomaly_type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/bom_json.dart';
@@ -707,7 +708,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(utf8.decode(response.bodyBytes));
         //productSync = false;
-        syncWorkOrderTask();
+        syncMaintain();
         if (kDebugMode) {
           print('WorkOrderResource Checked');
         }
@@ -757,9 +758,106 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(jsonEncode(json.toJson()));
         //workOrderSync = false;
-        syncWorkOrderTask();
+        syncMaintain();
         if (kDebugMode) {
           print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
+
+      }
+    } else {
+      print(response.body);
+      workOrderSync = false;
+      checkSyncData();
+    }
+  }
+
+  Future<void> syncMaintain() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        //print(response.body);
+      }
+      var json = MPMaintainContractJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncMaintainPages(json, index);
+      } else {
+        const filename = "maintain";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        syncWorkOrderTask();
+        if (kDebugMode) {
+          print('Maintain Checked');
+        }
+        //checkSyncData();
+      }
+      //syncWorkOrderResourceSurveyLines();
+
+    } else {
+      print(response.body);
+      workOrderSync = false;
+      checkSyncData();
+    }
+  }
+
+  syncMaintainPages(MPMaintainContractJSON json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = MPMaintainContractJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncMaintainPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "maintain";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        syncWorkOrderTask();
+        if (kDebugMode) {
+          print('Maintain Checked');
         }
         //checkSyncData();
         //syncWorkOrderResourceSurveyLines();

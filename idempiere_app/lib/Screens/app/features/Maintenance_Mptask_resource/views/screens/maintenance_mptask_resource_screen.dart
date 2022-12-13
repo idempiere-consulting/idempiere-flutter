@@ -186,173 +186,260 @@ class MaintenanceMpResourceScreen
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    //padding: const EdgeInsets.all(10),
+                    //width: 20,
+                    /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                    child: Obx(
+                      () => DropdownButton(
+                        icon: const Icon(Icons.filter_alt_sharp),
+                        value: controller.dropdownValue.value,
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          controller.dropdownValue.value = newValue!;
+
+                          //print(dropdownValue);
+                        },
+                        items: controller.dropDownList.map((list) {
+                          return DropdownMenuItem<String>(
+                            child: Text(
+                              list.name.toString(),
+                            ),
+                            value: list.id,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      child: TextField(
+                        controller: controller.searchFieldController,
+                        onSubmitted: (String? value) {
+                          controller.searchFilterValue.value =
+                              controller.searchFieldController.text;
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.search_outlined),
+                          border: const OutlineInputBorder(),
+                          //labelText: 'Product Value',
+                          hintText: 'Search'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
                     ? ListView.builder(
+                        key: const PageStorageKey<String>('controllerA'),
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
-                          return Visibility(
-                            visible: GetStorage().read('selectedTaskDocNo') ==
-                                    controller
-                                        .trx.records![index].mpMaintainID?.id &&
-                                controller.trx.records![index].resourceStatus
-                                        ?.id ==
-                                    "INS",
-                            child: Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ExpansionTile(
-                                  initiallyExpanded: true,
-                                  trailing: IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.timer_outlined,
-                                      color: (controller.trx.records![index]
-                                                      .lITControl2DateNext)
-                                                  ?.substring(0, 4) ==
-                                              controller.now.year.toString()
-                                          ? Colors.yellow
-                                          : (controller.trx.records![index]
-                                                          .lITControl3DateNext)
+                          return Obx(() => Visibility(
+                                visible: GetStorage()
+                                                .read('selectedTaskDocNo') ==
+                                            controller.trx.records![index]
+                                                .mpMaintainID?.id &&
+                                        controller.trx.records![index]
+                                                .resourceStatus?.id ==
+                                            "INS" &&
+                                        controller.searchFilterValue.value == ""
+                                    ? true
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller
+                                            .trx.records![index].prodCode
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase())
+                                        : controller.dropdownValue.value == "2"
+                                            ? controller
+                                                .trx.records![index].serNo
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : true,
+                                child: Card(
+                                  elevation: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: ExpansionTile(
+                                      initiallyExpanded: true,
+                                      trailing: IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.timer_outlined,
+                                          color: (controller.trx.records![index]
+                                                          .lITControl2DateNext)
                                                       ?.substring(0, 4) ==
                                                   controller.now.year.toString()
-                                              ? Colors.orange
-                                              : Colors.green,
-                                    ),
-                                  ),
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: Icon(
-                                        controller.trx.records![index].eDIType
-                                                    ?.id ==
-                                                'A02'
-                                            ? Icons.grid_4x4_outlined
-                                            : Icons.edit,
-                                        color: Colors.green,
+                                              ? Colors.yellow
+                                              : (controller.trx.records![index]
+                                                              .lITControl3DateNext)
+                                                          ?.substring(0, 4) ==
+                                                      controller.now.year
+                                                          .toString()
+                                                  ? Colors.orange
+                                                  : Colors.green,
+                                        ),
                                       ),
-                                      tooltip: 'Edit Resource',
-                                      onPressed: () async {
-                                        switch (controller
-                                            .trx.records![index].eDIType?.id) {
-                                          case "A01":
-                                            if (controller.trx.records![index]
-                                                    .offlineId ==
-                                                null) {
-                                              Get.toNamed(
-                                                  '/MaintenanceMpResourceSheet',
-                                                  arguments: {
-                                                    "surveyId": controller
+                                      tilePadding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: IconButton(
+                                          icon: Icon(
+                                            controller.trx.records![index]
+                                                        .eDIType?.id ==
+                                                    'A02'
+                                                ? Icons.grid_4x4_outlined
+                                                : Icons.edit,
+                                            color: Colors.green,
+                                          ),
+                                          tooltip: 'Edit Resource',
+                                          onPressed: () async {
+                                            switch (controller.trx
+                                                .records![index].eDIType?.id) {
+                                              case "A01":
+                                                if (controller
                                                         .trx
                                                         .records![index]
-                                                        .lITSurveySheetsID
-                                                        ?.id,
-                                                    "id": controller
-                                                        .trx.records![index].id,
-                                                    "serNo": controller
+                                                        .offlineId ==
+                                                    null) {
+                                                  Get.toNamed(
+                                                      '/MaintenanceMpResourceSheet',
+                                                      arguments: {
+                                                        "surveyId": controller
                                                             .trx
                                                             .records![index]
-                                                            .serNo ??
-                                                        "",
-                                                    "prodId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.id,
-                                                    "prodName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier,
-                                                    "lot": controller.trx
-                                                        .records![index].lot,
-                                                    "location": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .locationComment,
-                                                    "locationCode": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .value,
-                                                    "manYear": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .manufacturedYear,
-                                                    "userName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .userName,
-                                                    "serviceDate": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .serviceDate,
-                                                    "endDate": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .endDate,
-                                                    "manufacturer": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .manufacturer,
-                                                    "model": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .lITProductModel,
-                                                    "manufacturedYear":
-                                                        controller
+                                                            .lITSurveySheetsID
+                                                            ?.id,
+                                                        "id": controller.trx
+                                                            .records![index].id,
+                                                        "serNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serNo ??
+                                                            "",
+                                                        "prodId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.id,
+                                                        "prodName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.identifier,
+                                                        "lot": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lot,
+                                                        "location": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .locationComment,
+                                                        "locationCode":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .value,
+                                                        "manYear": controller
                                                             .trx
                                                             .records![index]
                                                             .manufacturedYear,
-                                                    "purchaseDate": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .dateOrdered,
-                                                    "note": controller.trx
-                                                        .records![index].name,
-                                                    "resTypeId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .lITResourceType
-                                                        ?.id,
-                                                    "valid": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .isValid,
-                                                    "offlineid": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .offlineId,
-                                                    "index": index,
-                                                  });
-                                            }
+                                                        "userName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .userName,
+                                                        "serviceDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serviceDate,
+                                                        "endDate": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .endDate,
+                                                        "manufacturer":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturer,
+                                                        "model": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITProductModel,
+                                                        "manufacturedYear":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturedYear,
+                                                        "purchaseDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
+                                                        "note": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name,
+                                                        "resTypeId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITResourceType
+                                                            ?.id,
+                                                        "valid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .isValid,
+                                                        "offlineid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .offlineId,
+                                                        "index": index,
+                                                      });
+                                                }
 
-                                            break;
-                                          case 'A02':
-                                            Get.toNamed(
-                                                '/MaintenanceMpResourceFireExtinguisherGrid',
-                                                arguments: {
-                                                  "products": File(
-                                                      '${(await getApplicationDocumentsDirectory()).path}/products.json')
-                                                });
-                                            break;
-                                          default:
-                                        }
-                                        /* Get.to(
+                                                break;
+                                              case 'A02':
+                                                Get.toNamed(
+                                                    '/MaintenanceMpResourceFireExtinguisherGrid',
+                                                    arguments: {
+                                                      "products": File(
+                                                          '${(await getApplicationDocumentsDirectory()).path}/products.json')
+                                                    });
+                                                break;
+                                              default:
+                                            }
+                                            /* Get.to(
                                             const EditMaintenanceMpResource(),
                                             arguments: {
                                               "id": controller
@@ -389,845 +476,926 @@ class MaintenanceMpResourceScreen
                                                   .records![index].offlineId,
                                               "index": index,
                                             }); */
-                                      },
-                                    ),
-                                  ),
-                                  title: Column(
-                                    children: [
-                                      Row(
+                                          },
+                                        ),
+                                      ),
+                                      title: Column(
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              "NR. ${controller.trx.records![index].number} L. ${controller.trx.records![index].lineNo} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo}",
-                                              style: const TextStyle(
-                                                color:
-                                                    kNotifColor, /* fontWeight: FontWeight.bold */
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  "NR. ${controller.trx.records![index].number} L. ${controller.trx.records![index].lineNo} b. ${controller.trx.records![index].prodCode} M. ${controller.trx.records![index].serNo}",
+                                                  style: const TextStyle(
+                                                    color:
+                                                        kNotifColor, /* fontWeight: FontWeight.bold */
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mProductID
+                                                          ?.identifier ??
+                                                      "???",
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              controller.trx.records![index]
-                                                      .mProductID?.identifier ??
-                                                  "???",
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Column(
-                                    children: [
-                                      Row(
-                                        children: <Widget>[
-                                          const Icon(
-                                            Icons.location_city,
-                                            color: Colors.white,
+                                      subtitle: Column(
+                                        children: [
+                                          Row(
+                                            children: <Widget>[
+                                              const Icon(
+                                                Icons.location_city,
+                                                color: Colors.white,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  controller.trx.records![index]
+                                                          .locationComment ??
+                                                      "",
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Expanded(
-                                            child: Text(
-                                              controller.trx.records![index]
-                                                      .locationComment ??
-                                                  "",
+                                          Row(children: [
+                                            Text(
+                                              'Quantity: '.tr,
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(children: [
-                                        Text(
-                                          'Quantity: '.tr,
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        Text(
-                                          "${controller.trx.records![index].resourceQty}",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ]),
-                                      Row(children: [
-                                        Text(
-                                          'Manufactured Year: '.tr,
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        Text(
-                                          controller.trx.records![index]
-                                              .manufacturedYear
-                                              .toString(),
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ]),
-                                      Visibility(
-                                        visible: controller.trx.records![index]
-                                                .anomaliesCount !=
-                                            "0",
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.red,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5,
-                                                      vertical: 2.5),
-                                              child: Text(
-                                                "Has Anomaly".tr,
-                                                style: const TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                            Text(
+                                              "${controller.trx.records![index].resourceQty}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: controller.trx.records![index]
-                                                .doneAction !=
-                                            "Nothing",
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: kNotifColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
+                                          ]),
+                                          Row(children: [
+                                            Text(
+                                              'Manufactured Year: '.tr,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Text(
+                                              controller.trx.records![index]
+                                                  .manufacturedYear
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ]),
+                                          Visibility(
+                                            visible: controller
+                                                    .trx
+                                                    .records![index]
+                                                    .anomaliesCount !=
+                                                "0",
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
                                                       horizontal: 5,
                                                       vertical: 2.5),
-                                              child: Text(
-                                                "${controller.trx.records![index].doneAction}"
-                                                    .tr,
-                                                style: const TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: controller.trx.records![index]
-                                                    .toDoAction! !=
-                                                "OK" &&
-                                            controller.trx.records![index]
-                                                    .doneAction ==
+                                                  child: Text(
+                                                    "Has Anomaly".tr,
+                                                    style: const TextStyle(
+                                                        fontSize: 11,
+                                                        color: Colors.white),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: controller
+                                                    .trx
+                                                    .records![index]
+                                                    .doneAction !=
                                                 "Nothing",
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: controller
-                                                            .trx
-                                                            .records![index]
-                                                            .toDoAction! ==
-                                                        "OK"
-                                                    ? kNotifColor
-                                                    : controller
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: kNotifColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 2.5),
+                                                  child: Text(
+                                                    "${controller.trx.records![index].doneAction}"
+                                                        .tr,
+                                                    style: const TextStyle(
+                                                        fontSize: 11,
+                                                        color: Colors.white),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: controller
+                                                        .trx
+                                                        .records![index]
+                                                        .toDoAction! !=
+                                                    "OK" &&
+                                                controller.trx.records![index]
+                                                        .doneAction ==
+                                                    "Nothing",
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: controller
                                                                 .trx
                                                                 .records![index]
                                                                 .toDoAction! ==
-                                                            "PR"
-                                                        ? const Color.fromARGB(
-                                                            255, 209, 189, 4)
+                                                            "OK"
+                                                        ? kNotifColor
                                                         : controller
                                                                     .trx
                                                                     .records![
                                                                         index]
                                                                     .toDoAction! ==
-                                                                "PT"
-                                                            ? Colors.orange
+                                                                "PR"
+                                                            ? const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                209,
+                                                                189,
+                                                                4)
                                                             : controller
                                                                         .trx
                                                                         .records![
                                                                             index]
                                                                         .toDoAction! ==
-                                                                    "PSG"
-                                                                ? Colors.red
+                                                                    "PT"
+                                                                ? Colors.orange
                                                                 : controller
                                                                             .trx
                                                                             .records![
                                                                                 index]
                                                                             .toDoAction! ==
-                                                                        "PX"
-                                                                    ? Colors
-                                                                        .black
-                                                                    : kNotifColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
+                                                                        "PSG"
+                                                                    ? Colors.red
+                                                                    : controller.trx.records![index].toDoAction! ==
+                                                                            "PX"
+                                                                        ? Colors
+                                                                            .black
+                                                                        : kNotifColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
                                                       horizontal: 5,
                                                       vertical: 2.5),
-                                              child: Text(
-                                                controller.trx.records![index]
-                                                    .toDoAction!.tr,
-                                                style: const TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  /* trailing: const Icon(
+                                                  child: Text(
+                                                    controller
+                                                        .trx
+                                                        .records![index]
+                                                        .toDoAction!
+                                                        .tr,
+                                                    style: const TextStyle(
+                                                        fontSize: 11,
+                                                        color: Colors.white),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      /* trailing: const Icon(
                                         Icons.keyboard_arrow_right,
                                         color: Colors.white,
                                         size: 30.0,
                                       ), */
 
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  children: [
-                                    Column(
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
                                       children: [
-                                        Row(children: [
-                                          Text('Note: '.tr),
-                                          Text(controller
-                                                  .trx.records![index].name ??
-                                              ""),
-                                        ]),
-                                        Row(children: [
-                                          Text('Status: '.tr),
-                                          Text(controller.trx.records![index]
-                                                  .resourceStatus?.identifier ??
-                                              ""),
-                                        ]),
-                                        /* Row(children: [
+                                        Column(
+                                          children: [
+                                            Row(children: [
+                                              Text('Note: '.tr),
+                                              Text(controller.trx
+                                                      .records![index].name ??
+                                                  ""),
+                                            ]),
+                                            Row(children: [
+                                              Text('Status: '.tr),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .resourceStatus
+                                                      ?.identifier ??
+                                                  ""),
+                                            ]),
+                                            /* Row(children: [
                                           const Text('SerNo: '),
                                           Text(controller
                                                   .trx.records![index].serNo ??
                                               "??"),
                                         ]), */
-                                        Row(children: [
-                                          Text('Description: '.tr),
-                                          Text(controller.trx.records![index]
-                                                  .description ??
-                                              ""),
-                                        ]),
-                                        /* Row(children: [
+                                            Row(children: [
+                                              Text('Description: '.tr),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .description ??
+                                                  ""),
+                                            ]),
+                                            /* Row(children: [
                                           const Text('Location Code: '),
                                           Text(controller
                                                   .trx.records![index].value ??
                                               "??"),
                                         ]), */
-                                        /* Row(children: [
+                                            /* Row(children: [
                                           const Text('Check Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl1DateFrom ??
                                               "??"),
                                         ]), */
-                                        Row(children: [
-                                          Text('Check Date: '.tr),
-                                          Text(
-                                              "${DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl1DateFrom!))} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl1DateNext!))}"),
-                                        ]),
-                                        /* Row(children: [
+                                            Row(children: [
+                                              Text('Check Date: '.tr),
+                                              Text(
+                                                  "${DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl1DateFrom!))} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl1DateNext!))}"),
+                                            ]),
+                                            /* Row(children: [
                                           const Text('Revision Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl2DateFrom ??
                                               "??"),
                                         ]), */
-                                        Visibility(
-                                          visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .lITControl2DateFrom !=
-                                              null,
-                                          child: Row(children: [
-                                            Text('Revision Date: '.tr),
-                                            Text(
-                                                "${controller.trx.records![index].lITControl2DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateFrom!)) : ""} - ${controller.trx.records![index].lITControl2DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateNext!)) : ""}"),
-                                          ]),
-                                        ),
-                                        /*  Row(children: [
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITControl2DateFrom !=
+                                                  null,
+                                              child: Row(children: [
+                                                Text('Revision Date: '.tr),
+                                                Text(
+                                                    "${controller.trx.records![index].lITControl2DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateFrom!)) : ""} - ${controller.trx.records![index].lITControl2DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateNext!)) : ""}"),
+                                              ]),
+                                            ),
+                                            /*  Row(children: [
                                           const Text('Testing Date: '),
                                           Text(controller.trx.records![index]
                                                   .lITControl3DateFrom ??
                                               "??"),
                                         ]), */ //DateFormat('dd-MM-yyyy').format(
-                                        //DateTime.parse(controller.trx
-                                        //   .records![index].jpToDoStartDate!))
-                                        Visibility(
-                                          visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .lITControl3DateFrom !=
-                                              null,
-                                          child: Row(children: [
-                                            Text('Testing Date: '.tr),
-                                            Text(
-                                                "${controller.trx.records![index].lITControl3DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateFrom!)) : ""} - ${controller.trx.records![index].lITControl3DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateNext!)) : ""}"),
-                                          ]),
-                                        ),
+                                            //DateTime.parse(controller.trx
+                                            //   .records![index].jpToDoStartDate!))
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITControl3DateFrom !=
+                                                  null,
+                                              child: Row(children: [
+                                                Text('Testing Date: '.tr),
+                                                Text(
+                                                    "${controller.trx.records![index].lITControl3DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateFrom!)) : ""} - ${controller.trx.records![index].lITControl3DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateNext!)) : ""}"),
+                                              ]),
+                                            ),
 
-                                        Row(children: [
-                                          Text('Manufacturer: '.tr),
-                                          Text(controller.trx.records![index]
-                                                  .manufacturer ??
-                                              ""),
-                                        ]),
-                                        Visibility(
-                                          visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .eDIType
-                                                  ?.id ==
-                                              "A02",
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                IconButton(
-                                                  tooltip: 'Edit',
-                                                  onPressed: () async {
-                                                    var index2 = 0;
-                                                    for (var i = 0;
-                                                        i <
-                                                            controller
-                                                                ._trx2
-                                                                .records!
-                                                                .length;
-                                                        i++) {
-                                                      if (controller._trx2
-                                                              .records![i].id ==
-                                                          controller
-                                                              ._trx
-                                                              .records![index]
-                                                              .id) {
-                                                        index2 = i;
-                                                      }
-                                                    }
-                                                    Get.to(
-                                                        const EditMaintenanceMpResource(),
-                                                        arguments: {
-                                                          "perm": controller
-                                                              .getPerm("A02"),
-                                                          "id": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .id,
-                                                          "number": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .number,
-                                                          "lineNo": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .lineNo
-                                                              .toString(),
-                                                          "cartel": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .textDetails,
-                                                          "model": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .lITProductModel,
-                                                          "dateOrder":
+                                            Row(children: [
+                                              Text('Manufacturer: '.tr),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .manufacturer ??
+                                                  ""),
+                                            ]),
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .eDIType
+                                                      ?.id ==
+                                                  "A02",
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    IconButton(
+                                                      tooltip: 'Edit',
+                                                      onPressed: () async {
+                                                        var index2 = 0;
+                                                        for (var i = 0;
+                                                            i <
+                                                                controller
+                                                                    ._trx2
+                                                                    .records!
+                                                                    .length;
+                                                            i++) {
+                                                          if (controller
+                                                                  ._trx2
+                                                                  .records![i]
+                                                                  .id ==
                                                               controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .id) {
+                                                            index2 = i;
+                                                          }
+                                                        }
+                                                        Get.to(
+                                                            const EditMaintenanceMpResource(),
+                                                            arguments: {
+                                                              "perm": controller
+                                                                  .getPerm(
+                                                                      "A02"),
+                                                              "id": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .dateOrdered,
-                                                          "years": controller
+                                                                  .id,
+                                                              "number":
+                                                                  controller
                                                                       .trx
                                                                       .records![
                                                                           index]
-                                                                      .useLifeYears !=
-                                                                  null
-                                                              ? controller
+                                                                      .number,
+                                                              "lineNo": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .useLifeYears
-                                                                  .toString()
-                                                              : "0",
-                                                          "user": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .userName,
-                                                          "serviceDate":
-                                                              controller
+                                                                  .lineNo
+                                                                  .toString(),
+                                                              "cartel": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .serviceDate,
-                                                          "productName":
-                                                              controller
+                                                                  .textDetails,
+                                                              "model": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .mProductID!
-                                                                  .identifier,
-                                                          "productId":
-                                                              controller
+                                                                  .lITProductModel,
+                                                              "dateOrder":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .dateOrdered,
+                                                              "years": controller
+                                                                          .trx
+                                                                          .records![
+                                                                              index]
+                                                                          .useLifeYears !=
+                                                                      null
+                                                                  ? controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .useLifeYears
+                                                                      .toString()
+                                                                  : "0",
+                                                              "user": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .mProductID!
-                                                                  .id,
-                                                          "location": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .locationComment,
-                                                          "observation":
-                                                              controller
+                                                                  .userName,
+                                                              "serviceDate":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .serviceDate,
+                                                              "productName":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID!
+                                                                      .identifier,
+                                                              "productId":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID!
+                                                                      .id,
+                                                              "location": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .name,
-                                                          "SerNo": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .serNo,
-                                                          "barcode": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .prodCode,
-                                                          "manufacturer":
-                                                              controller
+                                                                  .locationComment,
+                                                              "observation":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .name,
+                                                              "SerNo":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .serNo,
+                                                              "barcode":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .prodCode,
+                                                              "manufacturer":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .manufacturer,
+                                                              "year": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .manufacturer,
-                                                          "year": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .manufacturedYear
-                                                              .toString(),
-                                                          "Description":
-                                                              controller
+                                                                  .manufacturedYear
+                                                                  .toString(),
+                                                              "Description":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .description,
+                                                              "date3": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .description,
-                                                          "date3": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .lITControl3DateFrom,
-                                                          "date2": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .lITControl2DateFrom,
-                                                          "date1": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .lITControl1DateFrom,
-                                                          "offlineid":
-                                                              controller
+                                                                  .lITControl3DateFrom,
+                                                              "date2": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .offlineId,
-                                                          "index": index2,
-                                                        });
-                                                    /* controller
+                                                                  .lITControl2DateFrom,
+                                                              "date1": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lITControl1DateFrom,
+                                                              "offlineid":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .offlineId,
+                                                              "index": index2,
+                                                            });
+                                                        /* controller
                                                               .editWorkOrderResourceDateCheck(
                                                                   isConnected,
                                                                   index); */
-                                                  },
-                                                  icon: const Icon(Icons.edit),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Check',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateCheck(
-                                                            isConnected, index);
-                                                  },
-                                                  icon: const Icon(Icons
-                                                      .check_circle_outline),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Revision',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .replaceResource(index);
-                                                    /* var isConnected =
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Check',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateCheck(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(Icons
+                                                          .check_circle_outline),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Revision',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .replaceResource(
+                                                                index);
+                                                        /* var isConnected =
                                                               await checkConnection();
                                                           controller
                                                               .editWorkOrderResourceDateRevision(
                                                                   isConnected,
                                                                   index); */
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.handyman_outlined),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Testing',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    controller
-                                                        .editWorkOrderResourceDateTesting(
-                                                            isConnected, index);
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.gavel_outlined),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Anomaly',
-                                                  onPressed: () async {
-                                                    var isConnected =
-                                                        await checkConnection();
-                                                    if (isConnected) {
-                                                      await emptyPostCallStack();
-                                                      await emptyEditAPICallStack();
-                                                      await emptyDeleteCallStack();
-                                                    }
-                                                    Get.to(
-                                                        const CreateResAnomaly(),
-                                                        arguments: {
-                                                          "id": controller
-                                                              .trx
-                                                              .records![index]
-                                                              .id,
-                                                          "docNo": controller
+                                                      },
+                                                      icon: const Icon(Icons
+                                                          .handyman_outlined),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Testing',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.gavel_outlined),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Anomaly',
+                                                      onPressed: () async {
+                                                        var isConnected =
+                                                            await checkConnection();
+                                                        if (isConnected) {
+                                                          await emptyPostCallStack();
+                                                          await emptyEditAPICallStack();
+                                                          await emptyDeleteCallStack();
+                                                        }
+                                                        Get.to(
+                                                            const CreateResAnomaly(),
+                                                            arguments: {
+                                                              "id": controller
                                                                   .trx
                                                                   .records![
                                                                       index]
-                                                                  .mpOtDocumentno ??
-                                                              "",
-                                                          "productId": controller
-                                                                  .trx
-                                                                  .records![
-                                                                      index]
-                                                                  .mProductID
-                                                                  ?.id ??
-                                                              0,
-                                                          "productName": controller
-                                                                  .trx
-                                                                  .records![
-                                                                      index]
-                                                                  .mProductID
-                                                                  ?.identifier ??
-                                                              "",
-                                                          "isConnected":
-                                                              isConnected,
-                                                        });
-                                                  },
-                                                  icon: Stack(
-                                                    children: <Widget>[
-                                                      const Icon(
-                                                        Icons.warning,
-                                                        color: Colors.red,
-                                                      ),
-                                                      Visibility(
-                                                        visible: int.parse(controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .anomaliesCount!) !=
-                                                                0
-                                                            ? true
-                                                            : false,
-                                                        child: Positioned(
-                                                          right: 1,
-                                                          top: 1,
-                                                          child: Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(1),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.red,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          6),
-                                                            ),
-                                                            constraints:
-                                                                const BoxConstraints(
-                                                              minWidth: 12,
-                                                              minHeight: 12,
-                                                            ),
-                                                            child: Text(
-                                                              '${controller.trx.records![index].anomaliesCount}',
-                                                              style:
-                                                                  const TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 8,
+                                                                  .id,
+                                                              "docNo": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mpOtDocumentno ??
+                                                                  "",
+                                                              "productId": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.id ??
+                                                                  0,
+                                                              "productName": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.identifier ??
+                                                                  "",
+                                                              "isConnected":
+                                                                  isConnected,
+                                                            });
+                                                      },
+                                                      icon: Stack(
+                                                        children: <Widget>[
+                                                          const Icon(
+                                                            Icons.warning,
+                                                            color: Colors.red,
+                                                          ),
+                                                          Visibility(
+                                                            visible: int.parse(controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .anomaliesCount!) !=
+                                                                    0
+                                                                ? true
+                                                                : false,
+                                                            child: Positioned(
+                                                              right: 1,
+                                                              top: 1,
+                                                              child: Container(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(1),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              6),
+                                                                ),
+                                                                constraints:
+                                                                    const BoxConstraints(
+                                                                  minWidth: 12,
+                                                                  minHeight: 12,
+                                                                ),
+                                                                child: Text(
+                                                                  '${controller.trx.records![index].anomaliesCount}',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 8,
+                                                                  ),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
                                                               ),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
                                                             ),
                                                           ),
-                                                        ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  tooltip: 'Replace',
-                                                  onPressed: () async {
-                                                    controller
-                                                        .replaceResourceButton(
-                                                            index);
-                                                    /* var isConnected =
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Replace',
+                                                      onPressed: () async {
+                                                        controller
+                                                            .replaceResourceButton(
+                                                                index);
+                                                        /* var isConnected =
                                                               await checkConnection();
                                                           controller
                                                               .editWorkOrderResourceDateRevision(
                                                                   isConnected,
                                                                   index); */
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.find_replace),
-                                                ),
-                                              ]),
-                                        ),
-                                        Visibility(
-                                          visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .eDIType
-                                                  ?.id ==
-                                              "A07",
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              IconButton(
-                                                tooltip: 'Edit',
-                                                onPressed: () async {
-                                                  var index2 = 0;
-                                                  for (var i = 0;
-                                                      i <
-                                                          controller._trx2
-                                                              .records!.length;
-                                                      i++) {
-                                                    if (controller._trx2
-                                                            .records![i].id ==
-                                                        controller
-                                                            ._trx
-                                                            .records![index]
-                                                            .id) {
-                                                      index2 = i;
-                                                    }
-                                                  }
-                                                  Get.to(
-                                                      const EditMaintenanceMpResource(),
-                                                      arguments: {
-                                                        "perm": controller
-                                                            .getPerm("A07"),
-                                                        "id": controller.trx
-                                                            .records![index].id,
-                                                        "number": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .number,
-                                                        "lineNo": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .lineNo
-                                                            .toString(),
-                                                        "cartel": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .textDetails,
-                                                        "model": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .lITProductModel,
-                                                        "dateOrder": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .dateOrdered,
-                                                        "years": controller
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.find_replace),
+                                                    ),
+                                                  ]),
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .eDIType
+                                                      ?.id ==
+                                                  "A07",
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  IconButton(
+                                                    tooltip: 'Edit',
+                                                    onPressed: () async {
+                                                      var index2 = 0;
+                                                      for (var i = 0;
+                                                          i <
+                                                              controller
+                                                                  ._trx2
+                                                                  .records!
+                                                                  .length;
+                                                          i++) {
+                                                        if (controller
+                                                                ._trx2
+                                                                .records![i]
+                                                                .id ==
+                                                            controller
+                                                                ._trx
+                                                                .records![index]
+                                                                .id) {
+                                                          index2 = i;
+                                                        }
+                                                      }
+                                                      Get.to(
+                                                          const EditMaintenanceMpResource(),
+                                                          arguments: {
+                                                            "perm": controller
+                                                                .getPerm("A07"),
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                            "number": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .number,
+                                                            "lineNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .lineNo
+                                                                .toString(),
+                                                            "cartel": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .textDetails,
+                                                            "model": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .lITProductModel,
+                                                            "dateOrder":
+                                                                controller
                                                                     .trx
                                                                     .records![
                                                                         index]
-                                                                    .useLifeYears !=
-                                                                null
-                                                            ? controller
-                                                                .trx
-                                                                .records![index]
-                                                                .useLifeYears
-                                                                .toString()
-                                                            : "0",
-                                                        "user": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .userName,
-                                                        "serviceDate":
-                                                            controller
-                                                                .trx
-                                                                .records![index]
-                                                                .serviceDate,
-                                                        "productName":
-                                                            controller
-                                                                .trx
-                                                                .records![index]
-                                                                .mProductID!
-                                                                .identifier,
-                                                        "productId": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .mProductID!
-                                                            .id,
-                                                        "location": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .locationComment,
-                                                        "observation":
-                                                            controller
-                                                                .trx
-                                                                .records![index]
-                                                                .name,
-                                                        "SerNo": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .serNo,
-                                                        "barcode": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .prodCode,
-                                                        "manufacturer":
-                                                            controller
-                                                                .trx
-                                                                .records![index]
-                                                                .manufacturer,
-                                                        "year": controller
+                                                                    .dateOrdered,
+                                                            "years": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .useLifeYears !=
+                                                                    null
+                                                                ? controller
                                                                     .trx
                                                                     .records![
                                                                         index]
-                                                                    .manufacturedYear !=
-                                                                null
-                                                            ? controller
+                                                                    .useLifeYears
+                                                                    .toString()
+                                                                : "0",
+                                                            "user": controller
                                                                 .trx
                                                                 .records![index]
-                                                                .manufacturedYear
-                                                                .toString()
-                                                            : "0",
-                                                        "Description":
-                                                            controller
+                                                                .userName,
+                                                            "serviceDate":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .serviceDate,
+                                                            "productName":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mProductID!
+                                                                    .identifier,
+                                                            "productId":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mProductID!
+                                                                    .id,
+                                                            "location": controller
                                                                 .trx
                                                                 .records![index]
-                                                                .description,
-                                                        "date3": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .lITControl3DateFrom,
-                                                        "date2": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .lITControl2DateFrom,
-                                                        "date1": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .lITControl1DateFrom,
-                                                        "offlineid": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .offlineId,
-                                                        "index": index2,
-                                                      });
-                                                  /* controller
+                                                                .locationComment,
+                                                            "observation":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .name,
+                                                            "SerNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serNo,
+                                                            "barcode":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .prodCode,
+                                                            "manufacturer":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .manufacturer,
+                                                            "year": controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .manufacturedYear !=
+                                                                    null
+                                                                ? controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .manufacturedYear
+                                                                    .toString()
+                                                                : "0",
+                                                            "Description":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .description,
+                                                            "date3": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .lITControl3DateFrom,
+                                                            "date2": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .lITControl2DateFrom,
+                                                            "date1": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .lITControl1DateFrom,
+                                                            "offlineid":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .offlineId,
+                                                            "index": index2,
+                                                          });
+                                                      /* controller
                                                               .editWorkOrderResourceDateCheck(
                                                                   isConnected,
                                                                   index); */
-                                                },
-                                                icon: const Icon(Icons.edit),
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.edit),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip: 'Check',
+                                                    onPressed: () async {
+                                                      var isConnected =
+                                                          await checkConnection();
+                                                      controller
+                                                          .editWorkOrderResourceDateCheck(
+                                                              isConnected,
+                                                              index);
+                                                    },
+                                                    icon: const Icon(Icons
+                                                        .check_circle_outline),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip: 'Anomaly',
+                                                    onPressed: () async {
+                                                      var isConnected =
+                                                          await checkConnection();
+                                                      if (isConnected) {
+                                                        await emptyPostCallStack();
+                                                        await emptyEditAPICallStack();
+                                                        await emptyDeleteCallStack();
+                                                      }
+                                                      Get.to(
+                                                          const CreateResAnomaly(),
+                                                          arguments: {
+                                                            "docNo": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mpOtDocumentno ??
+                                                                "",
+                                                            "productId": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mProductID
+                                                                    ?.id ??
+                                                                0,
+                                                            "productName": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mProductID
+                                                                    ?.identifier ??
+                                                                "",
+                                                            "isConnected":
+                                                                isConnected,
+                                                          });
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.warning,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              IconButton(
-                                                tooltip: 'Check',
-                                                onPressed: () async {
-                                                  var isConnected =
-                                                      await checkConnection();
-                                                  controller
-                                                      .editWorkOrderResourceDateCheck(
-                                                          isConnected, index);
-                                                },
-                                                icon: const Icon(
-                                                    Icons.check_circle_outline),
-                                              ),
-                                              IconButton(
-                                                tooltip: 'Anomaly',
-                                                onPressed: () async {
-                                                  var isConnected =
-                                                      await checkConnection();
-                                                  if (isConnected) {
-                                                    await emptyPostCallStack();
-                                                    await emptyEditAPICallStack();
-                                                    await emptyDeleteCallStack();
-                                                  }
-                                                  Get.to(
-                                                      const CreateResAnomaly(),
-                                                      arguments: {
-                                                        "docNo": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .mpOtDocumentno ??
-                                                            "",
-                                                        "productId": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .mProductID
-                                                                ?.id ??
-                                                            0,
-                                                        "productName": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .mProductID
-                                                                ?.identifier ??
-                                                            "",
-                                                        "isConnected":
-                                                            isConnected,
-                                                      });
-                                                },
-                                                icon: const Icon(
-                                                  Icons.warning,
-                                                  color: Colors.red,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          );
+                              ));
                         },
                       )
                     : const Center(child: CircularProgressIndicator()),

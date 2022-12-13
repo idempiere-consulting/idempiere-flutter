@@ -38,6 +38,8 @@ class MaintenanceMpResourceController extends GetxController {
   TextEditingController numberFieldController = TextEditingController();
   TextEditingController lineFieldController = TextEditingController();
 
+  late List<FocusNode> focusNode;
+
   final json = {
     "types": [
       {"id": "IRV", "name": "IRV".tr},
@@ -55,8 +57,29 @@ class MaintenanceMpResourceController extends GetxController {
     return dJson.types;
   }
 
+  var searchFieldController = TextEditingController();
+  var searchFilterValue = "".obs;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  final json2 = {
+    "types": [
+      {"id": "1", "name": "Barcode".tr},
+      {"id": "2", "name": "Serial N°".tr},
+      //{"id": "3", "name": "SalesRep".tr},
+    ]
+  };
+
+  List<Types>? getFilterTypes() {
+    var dJson = TypeJson.fromJson(json2);
+
+    return dJson.types;
+  }
+
   @override
   void onInit() {
+    dropDownList = getFilterTypes()!;
     initializeFilters();
 
     super.onInit();
@@ -1249,6 +1272,8 @@ class MaintenanceMpResourceController extends GetxController {
       _trx.records = temp;
       _trx.rowcount = _trx.records?.length;
     }
+
+    focusNode = List<FocusNode>.filled(_trx.records!.length, FocusNode());
 
     // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;

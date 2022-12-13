@@ -73,7 +73,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       trx.records![Get.arguments["index"]].lITControl3DateFrom = date3;
       trx.records![Get.arguments["index"]].lITControl2DateFrom = date2;
       trx.records![Get.arguments["index"]].lITControl1DateFrom = date1;
-      trx.records![Get.arguments["index"]].name = nameFieldController.text;
+      trx.records![Get.arguments["index"]].name =
+          observationFieldController.text;
       trx.records![Get.arguments["index"]].serNo = sernoFieldController.text;
       trx.records![Get.arguments["index"]].description =
           descriptionFieldController.text;

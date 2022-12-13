@@ -2,7 +2,7 @@ part of dashboard;
 
 class MaintenanceMpContractsController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  MPMaintainContractJSON _trx = MPMaintainContractJSON();
+  late MPMaintainContractJSON _trx;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
@@ -45,12 +45,12 @@ class MaintenanceMpContractsController extends GetxController {
   void onInit() {
     startDate = endDate;
     dropDownList = getTypes()!;
+    getContracts();
     super.onInit();
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
 
-    getContracts();
     getADUserID();
     //adUserId = GetStorage().read('userId');
   }
@@ -298,9 +298,7 @@ class MaintenanceMpContractsController extends GetxController {
 
   Future<void> getContracts() async {
     _dataAvailable.value = false;
-    if (_trx != null) {
-      _trx.records = null;
-    }
+
     //var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     //var notificationFilter = "";
     /* if (Get.arguments != null) {
@@ -311,118 +309,34 @@ class MaintenanceMpContractsController extends GetxController {
       }
     } */
     //_dataAvailable.value = false;
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' +
-        GetStorage()
-            .read('token'); // lit_mp_maintain_contracts_v_id eq 1006307 AND
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_contracts_v?\$filter=  AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    //print(url);
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      print(response.body);
-      var json = MPMaintainContractJSON.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
+    const filename = "maintain";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
-      if (json.pagecount! > 1) {
-        int index = 1;
-        getContractPages(json, index);
-      } else {
-        _trx = json;
+    //print(response.body);
+    _trx = MPMaintainContractJSON.fromJson(jsonDecode(file.readAsStringSync()));
 
-        switch (filterCount) {
-          case 1:
-            _trx.records!.retainWhere((element) => element.dateNextRun != null
-                ? DateTime.parse(element.dateNextRun!).month ==
-                    DateTime.now().month
-                : false);
-            break;
-          case 2:
-            _trx.records!.retainWhere((element) => element.dateNextRun != null
-                ? DateTime.parse(element.dateNextRun!).month ==
-                    DateTime.now().month + 1
-                : false);
-            break;
-          default:
-        }
-
-        _dataAvailable.value = _trx.records != null;
-      }
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-      //print(_trx.records!.length);
-
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
+    switch (filterCount) {
+      case 1:
+        _trx.records!.retainWhere((element) => element.dateNextRun != null
+            ? DateTime.parse(element.dateNextRun!).month == DateTime.now().month
+            : false);
+        break;
+      case 2:
+        _trx.records!.retainWhere((element) => element.dateNextRun != null
+            ? DateTime.parse(element.dateNextRun!).month ==
+                DateTime.now().month + 1
+            : false);
+        break;
+      default:
     }
-  }
 
-  getContractPages(MPMaintainContractJSON json, int index) async {
-    String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_contracts_v?\$filter=  AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    _dataAvailable.value = _trx != null;
 
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      index += 1;
-      var pageJson = MPMaintainContractJSON.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
-      for (var element in pageJson.records!) {
-        json.records!.add(element);
-      }
-
-      if (json.pagecount! > index) {
-        getContractPages(json, index);
-      } else {
-        if (kDebugMode) {
-          _trx = json;
-          print(json.records!.length);
-          switch (filterCount) {
-            case 1:
-              _trx.records!.retainWhere((element) => element.dateNextRun != null
-                  ? DateTime.parse(element.dateNextRun!).month ==
-                      DateTime.now().month
-                  : false);
-              break;
-            case 2:
-              _trx.records!.retainWhere((element) => element.dateNextRun != null
-                  ? DateTime.parse(element.dateNextRun!).month ==
-                      DateTime.now().month + 1
-                  : false);
-              break;
-            default:
-          }
-          _dataAvailable.value = _trx.records != null;
-        }
-
-        //checkSyncData();
-        //syncWorkOrderResourceSurveyLines();
-
-      }
-    } else {
-      print(response.body);
-    }
+    //print(trx.rowcount);
+    //print(response.body);
+    // ignore: unnecessary_null_comparison
+    //print(_trx.records!.length);
   }
 
   /* void openDrawer() {
