@@ -48,6 +48,8 @@ class MaintenanceMpResourceController extends GetxController {
       {"id": "REV", "name": "REV".tr},
       {"id": "INS", "name": "INS".tr},
       {"id": "DEL", "name": "DEL".tr},
+      {"id": "RNR", "name": "RNR".tr},
+      {"id": "OUT", "name": "OUT".tr},
     ]
   };
 
@@ -67,7 +69,8 @@ class MaintenanceMpResourceController extends GetxController {
     "types": [
       {"id": "1", "name": "Barcode".tr},
       {"id": "2", "name": "Serial N°".tr},
-      //{"id": "3", "name": "SalesRep".tr},
+      {"id": "3", "name": "Location".tr},
+      {"id": "4", "name": "N°".tr},
     ]
   };
 

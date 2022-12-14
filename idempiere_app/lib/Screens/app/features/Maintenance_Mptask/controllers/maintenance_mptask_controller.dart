@@ -60,7 +60,63 @@ class MaintenanceMptaskController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      syncWorkOrder();
+      //syncWorkOrder();
+      completeWorkOrder(index);
+
+      /* Get.snackbar(
+        "Done!".tr,
+        "The Record has been Completed".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      ); */
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  completeWorkOrder(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/mp_ot/${_trx.records![index].id}');
+
+    var msg = jsonEncode({
+      'DocStatus': {"id": "CO"}
+    });
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //syncWorkOrder();
+
+      const filename = "workorder";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+      var json =
+          WorkOrderLocalJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+      for (var element in json.records!) {
+        if (element.id == _trx.records![index].id) {
+          element.docStatus?.id = "CO";
+          element.jpToDoStatus?.id = "CO";
+        }
+      }
+
+      file.writeAsStringSync(jsonEncode(json.toJson()));
+
+      getWorkOrders();
 
       Get.snackbar(
         "Done!".tr,

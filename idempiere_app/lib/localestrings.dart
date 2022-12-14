@@ -426,6 +426,8 @@ class LocaleString extends Translations {
           'REV': 'Revisioned',
           'INS': 'Installed',
           'DEL': 'Disposed',
+          'RNR': 'Not Revisionable',
+          'OUT': 'Out of Service',
           'Status: ': 'Status: ',
           'of': 'of',
           'Open Total': 'Open Total',
@@ -455,6 +457,9 @@ class LocaleString extends Translations {
           'Latest Work Order': 'Latest Work Order',
           'Selling Area': 'Selling Area',
           'Create Work Order': 'Create Work Order',
+          'Checked': 'Checked',
+          'Revisioned': 'Revisioned',
+          'Tested': 'Tested',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -888,6 +893,8 @@ class LocaleString extends Translations {
           'REV': 'Revisionato',
           'INS': 'Installato',
           'DEL': 'Smaltito/Eliminato',
+          'RNR': 'Non Revisionabile',
+          'OUT': 'Fuori Servizio',
           'Status: ': 'Stato: ',
           'of': 'del',
           'Open Total': 'Totale Aperto',
@@ -917,6 +924,9 @@ class LocaleString extends Translations {
           'Latest Work Order': 'Data ODL',
           'Selling Area': 'Zona',
           'Create Work Order': 'CREA Ordine di Lavoro',
+          'Checked': 'Controllato',
+          'Revisioned': 'Revisionato',
+          'Tested': 'Collaudato',
         },
       };
 }

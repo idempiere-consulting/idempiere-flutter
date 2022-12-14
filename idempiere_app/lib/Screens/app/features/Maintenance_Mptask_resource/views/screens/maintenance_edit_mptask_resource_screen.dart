@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
@@ -62,6 +63,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             : useLifeYearsFieldController.text,
       ),
       "IsActive": isActive,
+      "LIT_ResourceStatus": {"id": dropdownValue},
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -102,6 +104,9 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
               ? "0"
               : useLifeYearsFieldController.text);
       trx.records![Get.arguments["index"]].isActive = isActive;
+      trx.records![Get.arguments["index"]].resourceStatus =
+          ResourceStatus(id: dropdownValue, identifier: dropdownValue.tr);
+
       var url = Uri.parse('http://' +
           ip +
           '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}');
@@ -130,7 +135,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             ),
           );
         } else {
-          //print(response.body);
+          print(response.body);
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",
@@ -217,6 +222,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             "UseLifeYears": int.parse(useLifeYearsFieldController.text == ""
                 ? "0"
                 : useLifeYearsFieldController.text),
+            "LIT_ResourceStatus": {"id": dropdownValue},
           });
 
           list.removeAt(i);
@@ -249,6 +255,25 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     //print(list[0].eMail);
 
     //print(json.);
+  }
+
+  final json = {
+    "types": [
+      {"id": "IRV", "name": "IRV".tr},
+      {"id": "IRR", "name": "IRR".tr},
+      {"id": "IRX", "name": "IRX".tr},
+      {"id": "REV", "name": "REV".tr},
+      {"id": "INS", "name": "INS".tr},
+      {"id": "DEL", "name": "DEL".tr},
+      {"id": "RNR", "name": "RNR".tr},
+      {"id": "OUT", "name": "OUT".tr},
+    ]
+  };
+
+  Future<List<Types>> getTypes() async {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types!;
   }
 
   /* void fillFields() {
@@ -289,9 +314,11 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   String dateOrdered = Get.arguments["dateOrder"] ?? "";
   String firstUseDate = Get.arguments["serviceDate"] ?? "";
   bool isActive = true;
+  String dropdownValue = "OUT";
 
   @override
   void initState() {
+    dropdownValue = Get.arguments["resourceStatus"] ?? "OUT";
     productId = Get.arguments["productId"] ?? 0;
     productName = Get.arguments["productName"] ?? "";
     super.initState();
@@ -388,9 +415,6 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                         labelText: "N°".tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                      ],
                     ),
                   ),
                 ),
@@ -823,6 +847,61 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                       // ignore: avoid_print
                       onSaved: (val) => print(val),
                     ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getTypes(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Types>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                value: dropdownValue,
+                                //icon: const Icon(Icons.arrow_downward),
+                                elevation: 16,
+                                //style: const TextStyle(color: Colors.deepPurple),
+                                /* underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ), */
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: /* <String>[
+                                  'Chiuso',
+                                  'Convertito',
+                                  'In Lavoro',
+                                  'Nuovo'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList()*/
+                                    snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                    value: list.id.toString(),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 CheckboxListTile(

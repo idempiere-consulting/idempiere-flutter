@@ -223,6 +223,10 @@ class MaintenanceMpResourceScreen
                     child: Container(
                       margin: const EdgeInsets.only(left: 10, right: 10),
                       child: TextField(
+                        autofocus: true,
+                        onTap: () {
+                          controller.searchFieldController.text = "";
+                        },
                         controller: controller.searchFieldController,
                         onSubmitted: (String? value) {
                           controller.searchFilterValue.value =
@@ -251,32 +255,34 @@ class MaintenanceMpResourceScreen
                         itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
                           return Obx(() => Visibility(
-                                visible: GetStorage()
-                                                .read('selectedTaskDocNo') ==
+                                visible: GetStorage().read('selectedTaskDocNo') ==
                                             controller.trx.records![index]
                                                 .mpMaintainID?.id &&
-                                        controller.trx.records![index]
-                                                .resourceStatus?.id ==
+                                        controller.trx.records![index].resourceStatus?.id ==
                                             "INS" &&
                                         controller.searchFilterValue.value == ""
                                     ? true
                                     : controller.dropdownValue.value == "1"
-                                        ? controller
-                                            .trx.records![index].prodCode
+                                        ? controller.trx.records![index].prodCode
                                             .toString()
                                             .toLowerCase()
-                                            .contains(controller
-                                                .searchFilterValue.value
+                                            .contains(controller.searchFilterValue.value
                                                 .toLowerCase())
                                         : controller.dropdownValue.value == "2"
-                                            ? controller
-                                                .trx.records![index].serNo
+                                            ? controller.trx.records![index].serNo
                                                 .toString()
                                                 .toLowerCase()
-                                                .contains(controller
-                                                    .searchFilterValue.value
+                                                .contains(controller.searchFilterValue.value
                                                     .toLowerCase())
-                                            : true,
+                                            : controller.dropdownValue.value ==
+                                                    "3"
+                                                ? controller.trx.records![index].locationComment
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .contains(controller.searchFilterValue.value.toLowerCase())
+                                                : controller.dropdownValue.value == "4"
+                                                    ? controller.trx.records![index].number.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                    : true,
                                 child: Card(
                                   elevation: 8.0,
                                   margin: const EdgeInsets.symmetric(
@@ -425,6 +431,14 @@ class MaintenanceMpResourceScreen
                                                             .records![index]
                                                             .offlineId,
                                                         "index": index,
+                                                        "resourceStatus":
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
                                                       });
                                                 }
 
@@ -617,7 +631,11 @@ class MaintenanceMpResourceScreen
                                                       horizontal: 5,
                                                       vertical: 2.5),
                                                   child: Text(
-                                                    "${controller.trx.records![index].doneAction}"
+                                                    controller
+                                                        .trx
+                                                        .records![index]
+                                                        .doneAction!
+                                                        .tr
                                                         .tr,
                                                     style: const TextStyle(
                                                         fontSize: 11,
@@ -989,6 +1007,13 @@ class MaintenanceMpResourceScreen
                                                                           index]
                                                                       .offlineId,
                                                               "index": index2,
+                                                              "resourceStatus": controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .resourceStatus
+                                                                      ?.id ??
+                                                                  "OUT",
                                                             });
                                                         /* controller
                                                               .editWorkOrderResourceDateCheck(

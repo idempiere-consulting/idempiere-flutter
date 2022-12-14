@@ -114,7 +114,7 @@ class MaintenanceMpContractsScreen
                       margin: const EdgeInsets.only(left: 15),
                       child: IconButton(
                         onPressed: () {
-                          controller.getContracts();
+                          controller.syncMaintain();
                         },
                         icon: const Icon(
                           Icons.refresh,
@@ -267,6 +267,12 @@ class MaintenanceMpContractsScreen
                                                           .records![index]
                                                           .cBPartnerID
                                                           ?.id,
+                                                  "businesspartnerName":
+                                                      controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier,
                                                   "date": controller
                                                       ._trx
                                                       .records![index]
@@ -281,6 +287,10 @@ class MaintenanceMpContractsScreen
                                                       .records![index]
                                                       .adUserID
                                                       ?.identifier,
+                                                  "help": controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .litMpMaintainHelp,
                                                 });
                                             //log("info button pressed");
                                             /*   Get.to(const EditLead(),

@@ -84,6 +84,8 @@ class WORecords {
   String? attachment;
   JPToDoID? jPToDoID;
   JPToDoStatus? jpToDoStatus;
+  PaymentRule? paymentRule;
+  num? paidAmt;
 
   WORecords(
       {this.id,
@@ -137,7 +139,9 @@ class WORecords {
       this.litcDocTypeODVID,
       this.jPToDoID,
       this.jpToDoStatus,
-      this.cOrderID});
+      this.cOrderID,
+      this.paymentRule,
+      this.paidAmt});
 
   WORecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -234,6 +238,10 @@ class WORecords {
             ? JPToDoStatus.fromJson(
                 json['JP_ToDo_Status'] as Map<String, dynamic>)
             : null,
+        paymentRule = (json['PaymentRule'] as Map<String, dynamic>?) != null
+            ? PaymentRule.fromJson(json['PaymentRule'] as Map<String, dynamic>)
+            : null,
+        paidAmt = json['PaidAmt'] as num?,
         litMpMaintainHelp = json['mp_maintain_help'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -288,6 +296,34 @@ class WORecords {
         'mp_maintain_help': litMpMaintainHelp,
         'JP_ToDo_ID': jPToDoID?.toJson(),
         'JP_ToDo_Status': jpToDoStatus?.toJson(),
+        'PaymentRule': paymentRule?.toJson(),
+      };
+}
+
+class PaymentRule {
+  final String? propertyLabel;
+  String? id;
+  String? identifier;
+  final String? modelname;
+
+  PaymentRule({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  PaymentRule.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
       };
 }
 
@@ -455,7 +491,7 @@ class CreatedBy {
 
 class DocStatus {
   final String? propertyLabel;
-  final String? id;
+  String? id;
   final String? identifier;
   final String? modelname;
 

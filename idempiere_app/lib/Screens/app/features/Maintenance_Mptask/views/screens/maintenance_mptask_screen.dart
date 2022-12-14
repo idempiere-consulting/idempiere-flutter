@@ -224,8 +224,12 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             });
                                       }
                                     },
-                                    icon: const Icon(
-                                      Icons.view_list,
+                                    icon: Icon(
+                                      controller.trx.records![index].docStatus
+                                                  ?.id !=
+                                              "CO"
+                                          ? Icons.view_list
+                                          : Icons.check_box,
                                       color: Colors.green,
                                     ),
                                   ),
@@ -290,6 +294,24 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   .trx.records![index].team,
                                               "jpId": controller.trx
                                                   .records![index].jPToDoID?.id,
+                                              "paidAmt": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .paidAmt !=
+                                                          0 &&
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .paidAmt !=
+                                                          null
+                                                  ? controller.trx
+                                                      .records![index].paidAmt
+                                                  : 0,
+                                              "paymentRuleId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .paymentRule
+                                                  ?.id,
                                             });
                                       },
                                     ),
@@ -370,21 +392,41 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'N° Maintenance'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .documentNo2 ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                  ._trx
+                                                  .records![index]
+                                                  .mPMaintainID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"N° Maintenance".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed(
+                                                      '/MaintenanceMpContracts',
+                                                      arguments: {
+                                                        'notificationId':
+                                                            controller
+                                                                ._trx
+                                                                .records![index]
+                                                                .mPMaintainID
+                                                                ?.id,
+                                                      });
+                                                },
+                                                child: Text(
+                                                  '${controller._trx.records![index].documentNo2}',
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         Row(
                                           children: [
@@ -562,6 +604,37 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           ],
                                         ),
                                         Row(
+                                          children: [
+                                            Text(
+                                              "${"Payment Rule".tr}:  ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .paymentRule
+                                                      ?.identifier ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Paid Amt".tr}:  ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                  .trx.records![index].paidAmt
+                                                  .toString()),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
                                             children: [
@@ -684,11 +757,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       await checkConnection();
 
                                                   if (isConnected) {
-                                                    print('si.');
+                                                    //print('si.');
                                                     controller
                                                         .completeToDo(index);
-                                                  } else {
-                                                    print('no.');
                                                   }
                                                 },
                                               ),

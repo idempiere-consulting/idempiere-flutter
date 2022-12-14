@@ -40,7 +40,7 @@ class Records {
   final int? currentmp;
   final String? created;
   final CreatedBy? createdBy;
-  final String? dateNextRun;
+  String? dateNextRun;
   final DocStatus? docStatus;
   final int? interval;
   final bool? isActive;
@@ -52,7 +52,7 @@ class Records {
   final String? updated;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
-  final CBPartnerID? cBPartnerID;
+  CBPartnerID? cBPartnerID;
   final int? mPMaintainID2;
   final String? modelname;
   final String? phone;
@@ -64,7 +64,7 @@ class Records {
   final String? cLocationAddress1;
   final String? cLocationCity;
   final String? cLocationPostal;
-  final String? litMpMaintainHelp;
+  String? litMpMaintainHelp;
   final CSalesRegionID? cSalesRegionID;
   String? latestWorkOrder;
   int? latestWorkOrderId;
@@ -468,8 +468,8 @@ class CSalesRegionID {
 
 class CBPartnerID {
   final String? propertyLabel;
-  final int? id;
-  final String? identifier;
+  int? id;
+  String? identifier;
   final String? modelname;
 
   CBPartnerID({

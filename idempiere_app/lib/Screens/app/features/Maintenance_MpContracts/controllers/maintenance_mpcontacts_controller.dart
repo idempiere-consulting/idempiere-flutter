@@ -185,7 +185,7 @@ class MaintenanceMpContractsController extends GetxController {
             padding: const EdgeInsets.all(10),
             child: DateTimePicker(
               type: DateTimePickerType.time,
-              initialValue: "08:00",
+              initialValue: startTime,
               firstDate: DateTime(2000),
               lastDate: DateTime(2100),
               timeLabelText: 'Start Time'.tr,
@@ -194,6 +194,7 @@ class MaintenanceMpContractsController extends GetxController {
               onChanged: (val) {
                 startTime = val;
                 //print(startTime);
+                print(val);
               },
               validator: (val) {
                 //print(val);
@@ -208,16 +209,16 @@ class MaintenanceMpContractsController extends GetxController {
             padding: const EdgeInsets.all(10),
             child: DateTimePicker(
               type: DateTimePickerType.time,
-              initialValue: "18:00",
+              initialValue: endTime,
               firstDate: DateTime(2000),
               lastDate: DateTime(2100),
               timeLabelText: 'End Time'.tr,
               //dateLabelText: 'End Date'.tr,
               icon: const Icon(Icons.timer_outlined),
               onChanged: (val) {
-                startTime = val;
+                endTime = val;
                 //print(DateTime.parse(val));
-                //print(val);
+                print(val);
                 /* setState(() {
                           dateOrdered = val.substring(0, 10);
                         }); */
@@ -299,6 +300,14 @@ class MaintenanceMpContractsController extends GetxController {
   Future<void> getContracts() async {
     _dataAvailable.value = false;
 
+    var notificationFilter = 0;
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter = Get.arguments['notificationId'];
+        Get.arguments['notificationId'] = null;
+      }
+    }
+
     //var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     //var notificationFilter = "";
     /* if (Get.arguments != null) {
@@ -315,20 +324,25 @@ class MaintenanceMpContractsController extends GetxController {
 
     //print(response.body);
     _trx = MPMaintainContractJSON.fromJson(jsonDecode(file.readAsStringSync()));
-
-    switch (filterCount) {
-      case 1:
-        _trx.records!.retainWhere((element) => element.dateNextRun != null
-            ? DateTime.parse(element.dateNextRun!).month == DateTime.now().month
-            : false);
-        break;
-      case 2:
-        _trx.records!.retainWhere((element) => element.dateNextRun != null
-            ? DateTime.parse(element.dateNextRun!).month ==
-                DateTime.now().month + 1
-            : false);
-        break;
-      default:
+    if (notificationFilter == 0) {
+      switch (filterCount) {
+        case 1:
+          _trx.records!.retainWhere((element) => element.dateNextRun != null
+              ? DateTime.parse(element.dateNextRun!).month ==
+                  DateTime.now().month
+              : false);
+          break;
+        case 2:
+          _trx.records!.retainWhere((element) => element.dateNextRun != null
+              ? DateTime.parse(element.dateNextRun!).month ==
+                  DateTime.now().month + 1
+              : false);
+          break;
+        default:
+      }
+    } else {
+      _trx.records!.retainWhere((element) => element.id == notificationFilter);
+      notificationFilter = 0;
     }
 
     _dataAvailable.value = _trx != null;
@@ -337,6 +351,103 @@ class MaintenanceMpContractsController extends GetxController {
     //print(response.body);
     // ignore: unnecessary_null_comparison
     //print(_trx.records!.length);
+  }
+
+  Future<void> syncMaintain() async {
+    _dataAvailable.value = false;
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        //print(response.body);
+      }
+      var json = MPMaintainContractJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncMaintainPages(json, index);
+      } else {
+        const filename = "maintain";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        await file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        getContracts();
+        if (kDebugMode) {
+          print('Maintain Checked');
+        }
+        //checkSyncData();
+      }
+      //syncWorkOrderResourceSurveyLines();
+
+    } else {
+      print(response.body);
+    }
+  }
+
+  syncMaintainPages(MPMaintainContractJSON json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = MPMaintainContractJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncMaintainPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "maintain";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        await file.writeAsString(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        //syncWorkOrderTask();
+        getContracts();
+        if (kDebugMode) {
+          print('Maintain Checked');
+        }
+        //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
+
+      }
+    } else {
+      print(response.body);
+      //workOrderSync = false;
+      //checkSyncData();
+    }
   }
 
   /* void openDrawer() {

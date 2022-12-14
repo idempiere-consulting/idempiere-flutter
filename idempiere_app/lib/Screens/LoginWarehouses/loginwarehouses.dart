@@ -889,7 +889,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       if (kDebugMode) {
-        //print(response.body);
+        print(response.body);
       }
       var json = WorkOrderTaskLocalJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
@@ -921,7 +921,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+        '/api/v1/models/lit_mp_ot_task_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -951,7 +951,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         file.writeAsString(jsonEncode(json.toJson()));
         //workOrderSync = false;
         if (kDebugMode) {
-          print('WorkOrderTask Checked');
+          print('WorkOrderTask page Checked');
         }
         //checkSyncData();
         syncWorkOrderResourceSurveyLines();

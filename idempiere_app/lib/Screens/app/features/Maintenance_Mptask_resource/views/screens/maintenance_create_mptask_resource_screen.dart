@@ -866,9 +866,11 @@ class _CreateMaintenanceMpResourceState
                     child: TextField(
                       controller: numberFieldController,
                       onChanged: (value) {
-                        lineFieldController.text =
-                            (int.parse(numberFieldController.text) * 10)
-                                .toString();
+                        if (int.tryParse(numberFieldController.text) != null) {
+                          lineFieldController.text =
+                              (int.parse(numberFieldController.text) * 10)
+                                  .toString();
+                        }
                       },
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_pin_outlined),
@@ -876,9 +878,6 @@ class _CreateMaintenanceMpResourceState
                         labelText: 'N°'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                      ],
                     ),
                   ),
                 ),

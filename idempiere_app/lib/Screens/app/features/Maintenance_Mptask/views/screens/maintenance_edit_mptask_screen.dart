@@ -6,8 +6,10 @@ import 'dart:io';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/adreflist_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -90,9 +92,17 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    final msg = jsonEncode({
+    var msg = jsonEncode({
       "Description": noteWOFieldController.text,
     });
+
+    if (paidAmtFieldController.text != "0") {
+      msg = jsonEncode({
+        "Description": noteWOFieldController.text,
+        "PaymentRule": {"id": dropdownValue},
+        "PaidAmt": double.parse(paidAmtFieldController.text),
+      });
+    }
     final protocol = GetStorage().read('protocol');
 
     const filename = "workorder";
@@ -110,6 +120,14 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
           dateFieldController.text;
       trx.records![Get.arguments["index"]].jpToDoEndDate =
           dateFieldController.text;
+
+      if (paidAmtFieldController.text != "0") {
+        trx.records![Get.arguments["index"]].paymentRule?.id = dropdownValue;
+        trx.records![Get.arguments["index"]].paymentRule?.identifier =
+            dropdownValue;
+        trx.records![Get.arguments["index"]].paidAmt =
+            double.parse(paidAmtFieldController.text);
+      }
 
       var url =
           Uri.parse('$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
@@ -177,6 +195,35 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     }
   }
 
+  Future<List<Records>> getAllPaymentRule() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/ad_ref_list?\$filter= AD_Reference_ID eq 195');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var json =
+          ADRefListJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      return json.records!;
+    } else {
+      //print(response.body);
+      throw Exception("Failed to load sales reps");
+    }
+  }
+
   var docNoFieldController;
   var bPartnerFieldController;
   var dateFieldController;
@@ -186,12 +233,15 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
   var addressFieldController;
   var representativeFieldController;
   var teamFieldController;
+  var paidAmtFieldController;
+  var dropdownValue = "T";
 
   dynamic args = Get.arguments;
 
   @override
   void initState() {
     super.initState();
+    dropdownValue = Get.arguments["paymentRuleId"] ?? "T";
     docNoFieldController = TextEditingController(text: args["docNo"] ?? "");
     bPartnerFieldController =
         TextEditingController(text: args["businessPartner"] ?? "");
@@ -204,13 +254,17 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     representativeFieldController =
         TextEditingController(text: args["representative"]);
     teamFieldController = TextEditingController(text: args["team"]);
+    paidAmtFieldController =
+        TextEditingController(text: args["paidAmt"].toString());
     //getDocType();
     //getResourceName();
     //getAllResources();
+    getAllPaymentRule();
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     //getSalesRepAutoComplete();
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -349,7 +403,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     readOnly: true,
-                    minLines: 3,
+                    minLines: 1,
                     maxLines: 3,
                     controller: notePlantFieldController,
                     decoration: InputDecoration(
@@ -364,7 +418,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //readOnly: true,
-                    minLines: 3,
+                    minLines: 1,
                     maxLines: 3,
                     controller: noteWOFieldController,
                     decoration: InputDecoration(
@@ -373,6 +427,74 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                       labelText: 'Note Work Order'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    minLines: 1,
+                    maxLines: 1,
+                    controller: paidAmtFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Paid Amt'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    child: Text(
+                      "Payment Rule".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllPaymentRule(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                value: dropdownValue,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                    value: list.value.toString(),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
