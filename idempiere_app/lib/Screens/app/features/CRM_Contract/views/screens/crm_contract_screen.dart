@@ -345,7 +345,7 @@ class CRMContractScreen extends GetView<CRMContractController> {
                                               horizontal: 20.0, vertical: 10.0),
                                       children: [
                                         Column(
-                                          children: [],
+                                          children: const [],
                                         ),
                                       ],
                                     ),
@@ -360,10 +360,10 @@ class CRMContractScreen extends GetView<CRMContractController> {
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
           ),
         ),

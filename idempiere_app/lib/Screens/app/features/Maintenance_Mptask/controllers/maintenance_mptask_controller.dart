@@ -209,7 +209,7 @@ class MaintenanceMptaskController extends GetxController {
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
-    var jsondecoded = jsonDecode(await file.readAsString());
+    var jsondecoded = jsonDecode(file.readAsStringSync());
     _trx = WorkOrderLocalJson.fromJson(jsondecoded);
 
     //print(value.value);
@@ -257,12 +257,14 @@ class MaintenanceMptaskController extends GetxController {
         const filename = "workorder";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        file.writeAsString(response.body);
+        file.writeAsStringSync(response.body);
         //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
         //isWorkOrderSyncing.value = false;
-        syncWorkOrderResource();
+        getWorkOrders();
       } else {
-        //print(response.body);
+        if (kDebugMode) {
+          print(response.body);
+        }
       }
     } else {
       Get.snackbar(
@@ -273,34 +275,6 @@ class MaintenanceMptaskController extends GetxController {
           color: Colors.red,
         ),
       );
-    }
-  }
-
-  Future<void> syncWorkOrderResource() async {
-    String ip = GetStorage().read('ip');
-    //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
-
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      //print(response.body);
-      const filename = "workorderresource";
-      final file = File(
-          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-      file.writeAsString(response.body);
-      /*  GetStorage()
-          .write('workOrderResourceSync', utf8.decode(response.bodyBytes)); */
-      getWorkOrders();
     }
   }
 

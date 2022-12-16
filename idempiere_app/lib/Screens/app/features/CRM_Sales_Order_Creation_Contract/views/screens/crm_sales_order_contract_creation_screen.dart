@@ -386,7 +386,7 @@ class CRMSalesOrderContractCreationScreen
                     onPressed: () {
                       controller.createBusinessPartner();
                     },
-                    child: Text('New Business Partner')),
+                    child: const Text('New Business Partner')),
                 Obx(
                   () => Visibility(
                     visible: controller.filterCount.value == 0 ||
@@ -908,7 +908,7 @@ class CRMSalesOrderContractCreationScreen
                 Visibility(
                     visible: controller.filterCount.value == 2,
                     child: ElevatedButton(
-                        onPressed: () {}, child: Text("Add Product"))),
+                        onPressed: () {}, child: const Text("Add Product"))),
                 Obx(
                   () => Visibility(
                       visible: controller.filterCount.value == 2,

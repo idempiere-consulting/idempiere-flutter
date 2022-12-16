@@ -599,7 +599,7 @@ class MaintenanceMpContractsScreen
                                                     },
                                                     child: Text(
                                                       '${controller._trx.records![index].cContractID?.identifier}',
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: kNotifColor),
                                                     ),
                                                   )

@@ -87,7 +87,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
     );
     if (response.statusCode == 200) {
       controller.getSalesOrders();
-      //print("done!");
+      print(response.body);
 
       Get.snackbar(
         "Done!".tr,
@@ -98,7 +98,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
         ),
       );
     } else {
-      //print(response.body);
+      print(response.body);
       Get.snackbar(
         "Error!".tr,
         "Record not completed".tr,
@@ -545,10 +545,10 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       ),
                                                       onPressed: () async {
                                                         Get.defaultDialog(
-                                                          title:
-                                                              'Complete Action',
-                                                          content: const Text(
-                                                              "Are you sure you want to complete the record?"),
+                                                          title: 'Complete'.tr,
+                                                          content: Text(
+                                                              "Are you sure you want to complete the record?"
+                                                                  .tr),
                                                           onCancel: () {},
                                                           onConfirm: () async {
                                                             final ip =
@@ -587,7 +587,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             if (response
                                                                     .statusCode ==
                                                                 200) {
-                                                              //print("done!");
                                                               completeOrder(
                                                                   index);
                                                             } else {

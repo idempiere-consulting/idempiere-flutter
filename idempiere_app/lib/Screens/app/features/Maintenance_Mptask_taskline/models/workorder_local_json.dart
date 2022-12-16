@@ -85,6 +85,8 @@ class WORecords {
   JPToDoID? jPToDoID;
   JPToDoStatus? jpToDoStatus;
   PaymentRule? paymentRule;
+  int? litSignImageID;
+  CInvoiceID? cInvoiceID;
   num? paidAmt;
 
   WORecords(
@@ -141,6 +143,8 @@ class WORecords {
       this.jpToDoStatus,
       this.cOrderID,
       this.paymentRule,
+      this.litSignImageID,
+      this.cInvoiceID,
       this.paidAmt});
 
   WORecords.fromJson(Map<String, dynamic> json)
@@ -208,6 +212,9 @@ class WORecords {
         cOrderID = (json['C_Order_ID'] as Map<String, dynamic>?) != null
             ? COrderID.fromJson(json['C_Order_ID'] as Map<String, dynamic>)
             : null,
+        cInvoiceID = (json['C_Invoice_ID'] as Map<String, dynamic>?) != null
+            ? CInvoiceID.fromJson(json['C_Invoice_ID'] as Map<String, dynamic>)
+            : null,
         mPMaintainTaskID =
             (json['MP_Maintain_Task_ID'] as Map<String, dynamic>?) != null
                 ? MPMaintainTaskID.fromJson(
@@ -242,6 +249,7 @@ class WORecords {
             ? PaymentRule.fromJson(json['PaymentRule'] as Map<String, dynamic>)
             : null,
         paidAmt = json['PaidAmt'] as num?,
+        litSignImageID = json['LIT_Sign_Image_ID'] as int?,
         litMpMaintainHelp = json['mp_maintain_help'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -297,6 +305,7 @@ class WORecords {
         'JP_ToDo_ID': jPToDoID?.toJson(),
         'JP_ToDo_Status': jpToDoStatus?.toJson(),
         'PaymentRule': paymentRule?.toJson(),
+        'C_Invoice_ID': cInvoiceID?.toJson(),
       };
 }
 
@@ -316,6 +325,33 @@ class PaymentRule {
   PaymentRule.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITSignImageID {
+  final String? propertyLabel;
+  int? id;
+  String? identifier;
+  final String? modelname;
+
+  LITSignImageID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITSignImageID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
@@ -638,6 +674,33 @@ class COrderID {
   });
 
   COrderID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CInvoiceID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CInvoiceID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CInvoiceID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

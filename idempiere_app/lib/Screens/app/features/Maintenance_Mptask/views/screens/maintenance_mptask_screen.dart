@@ -6,7 +6,7 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -140,6 +140,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
+                          /* key: const PageStorageKey<String>(
+                              'controllerWorkOrder'), */
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -230,7 +232,11 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               "CO"
                                           ? Icons.view_list
                                           : Icons.check_box,
-                                      color: Colors.green,
+                                      color: controller.trx.records![index]
+                                                  .docStatus?.id ==
+                                              "CO"
+                                          ? Colors.green
+                                          : Colors.yellow,
                                     ),
                                   ),
                                   tilePadding: const EdgeInsets.symmetric(
@@ -634,6 +640,72 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             )
                                           ],
                                         ),
+                                        Visibility(
+                                          visible: controller._trx
+                                                  .records![index].cOrderID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Sales Order".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed('/SalesOrder',
+                                                      arguments: {
+                                                        "notificationId":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cOrderID
+                                                                ?.id
+                                                      });
+                                                },
+                                                child: Text(
+                                                  '${controller.trx.records![index].cOrderID?.identifier}',
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller._trx
+                                                  .records![index].cInvoiceID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Invoice".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed('/Invoice',
+                                                      arguments: {
+                                                        "notificationId":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cInvoiceID
+                                                                ?.id
+                                                      });
+                                                },
+                                                child: Text(
+                                                  '${controller._trx.records![index].cInvoiceID?.identifier}',
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
                                         Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
@@ -651,8 +723,16 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                             ?.id,
                                                       });
                                                 },
-                                                icon: const Icon(
-                                                    EvaIcons.edit2Outline),
+                                                icon: Icon(
+                                                  EvaIcons.edit2Outline,
+                                                  color: controller
+                                                              .trx
+                                                              .records![index]
+                                                              .litSignImageID !=
+                                                          null
+                                                      ? kNotifColor
+                                                      : Colors.yellow,
+                                                ),
                                               ),
                                               IconButton(
                                                 tooltip: "Print".tr,
@@ -811,7 +891,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                         index);
                                               },
                                             ),
-                                            Visibility(
+                                            /* Visibility(
                                               visible: controller
                                                       .trx
                                                       .records![index]
@@ -837,7 +917,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       });
                                                 },
                                               ),
-                                            ),
+                                            ), */
                                           ],
                                         ),
                                       ],

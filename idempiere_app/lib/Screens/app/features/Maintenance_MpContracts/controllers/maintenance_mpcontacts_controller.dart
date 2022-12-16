@@ -91,7 +91,9 @@ class MaintenanceMpContractsController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -194,7 +196,7 @@ class MaintenanceMpContractsController extends GetxController {
               onChanged: (val) {
                 startTime = val;
                 //print(startTime);
-                print(val);
+                //print(val);
               },
               validator: (val) {
                 //print(val);
@@ -218,7 +220,7 @@ class MaintenanceMpContractsController extends GetxController {
               onChanged: (val) {
                 endTime = val;
                 //print(DateTime.parse(val));
-                print(val);
+                //print(val);
                 /* setState(() {
                           dateOrdered = val.substring(0, 10);
                         }); */
@@ -252,7 +254,7 @@ class MaintenanceMpContractsController extends GetxController {
           //"C_DocType_ID": _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
         });
 
-        print(msg);
+        //print(msg);
         final protocol = GetStorage().read('protocol');
         var url = Uri.parse(
             '$protocol://' + ip + '/api/v1/processes/generateworkorder');
@@ -345,6 +347,7 @@ class MaintenanceMpContractsController extends GetxController {
       notificationFilter = 0;
     }
 
+    // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;
 
     //print(trx.rowcount);
@@ -395,7 +398,9 @@ class MaintenanceMpContractsController extends GetxController {
       //syncWorkOrderResourceSurveyLines();
 
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -444,7 +449,9 @@ class MaintenanceMpContractsController extends GetxController {
 
       }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       //workOrderSync = false;
       //checkSyncData();
     }

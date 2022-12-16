@@ -4,6 +4,7 @@ class CRMSalesOrderContractCreationController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   //late MPMaintainContractJSON _trx;
   //var _hasMailSupport = false;
+  // ignore: unused_field
   late ProductJson _trx;
   late PaymentTermsJson pTerms;
   late PaymentRuleJson pRules;
@@ -294,7 +295,7 @@ class CRMSalesOrderContractCreationController extends GetxController {
           //print("done!");
           var json = jsonDecode(response.body);
           Get.back();
-          print(response.body);
+          //print(response.body);
           if (json["IsError"] == false) {
             getBusinessPartner(vatCodeFieldController.text);
             Get.snackbar(

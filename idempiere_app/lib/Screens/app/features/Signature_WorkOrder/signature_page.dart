@@ -1,12 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/constants.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:signature/signature.dart';
 import 'package:http/http.dart' as http;
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 
 /// example widget showing how to use signature widget
 class SignatureWorkOrderScreen extends StatefulWidget {
@@ -26,6 +30,25 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
     // ignore: avoid_print
     onDrawEnd: () => print('onDrawEnd called!'),
   );
+
+  updateImageId(int imageId) async {
+    final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "LIT_Sign_Image_ID": imageId,
+    });
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/mp_ot/${Get.arguments["id"]}');
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -62,10 +85,9 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
                 final protocol = GetStorage().read('protocol');
                 String authorization = 'Bearer ' + GetStorage().read('token');
                 final msg = jsonEncode(
-                    {"name": "customersignature.jpg", "data": image64});
-                var url = Uri.parse('$protocol://' +
-                    ip +
-                    '/api/v1/models/mp_ot/${Get.arguments["id"]}/attachments');
+                    {"name": "customersignature.jpg", "BinaryData": image64});
+                var url =
+                    Uri.parse('$protocol://' + ip + '/api/v1/models/ad_image');
 
                 var isConnected = await checkConnection();
 
@@ -80,8 +102,27 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
                     },
                   );
                   if (response.statusCode == 201) {
+                    //print(response.body);
+                    var json = jsonDecode(response.body);
+                    const filename = "workorder";
+                    final file = File(
+                        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+                    var trx = WorkOrderLocalJson.fromJson(
+                        jsonDecode(file.readAsStringSync()));
+
+                    for (var element in trx.records!) {
+                      if (element.id == Get.arguments["id"]) {
+                        element.litSignImageID = json["id"];
+                      }
+                    }
+                    file.writeAsStringSync(jsonEncode(trx.toJson()));
+
+                    updateImageId(json["id"]);
+
+                    //Get.find<MaintenanceMptaskController>().getWorkOrders();
                     //print("done!");
-                    Get.back();
+                    //Get.back();
                     Get.snackbar(
                       "Done!".tr,
                       "The record has been created".tr,

@@ -50,7 +50,7 @@ class CRMContractLineController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       _trx = ContractLineJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);

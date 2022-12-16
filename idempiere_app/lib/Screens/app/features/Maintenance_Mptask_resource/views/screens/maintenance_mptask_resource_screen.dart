@@ -84,7 +84,8 @@ class MaintenanceMpResourceScreen
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
-            Get.offNamed('/MaintenanceMptask');
+            //Get.offNamed('/MaintenanceMptask');
+            Get.back();
           },
         ),
       ),
@@ -118,7 +119,7 @@ class MaintenanceMpResourceScreen
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
                       onPressed: () {
-                        //controller.syncWorkOrder();
+                        controller.syncWorkOrderResource();
                       },
                       icon: const Icon(
                         Icons.refresh,
@@ -791,18 +792,11 @@ class MaintenanceMpResourceScreen
                                                   .lITControl2DateFrom ??
                                               "??"),
                                         ]), */
-                                            Visibility(
-                                              visible: controller
-                                                      .trx
-                                                      .records![index]
-                                                      .lITControl2DateFrom !=
-                                                  null,
-                                              child: Row(children: [
-                                                Text('Revision Date: '.tr),
-                                                Text(
-                                                    "${controller.trx.records![index].lITControl2DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateFrom!)) : ""} - ${controller.trx.records![index].lITControl2DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateNext!)) : ""}"),
-                                              ]),
-                                            ),
+                                            Row(children: [
+                                              Text('Revision Date: '.tr),
+                                              Text(
+                                                  "${DateTime.tryParse(controller.trx.records![index].lITControl2DateFrom ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateFrom!)) : ""} - ${controller.trx.records![index].lITControl2DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl2DateNext!)) : ""}"),
+                                            ]),
                                             /*  Row(children: [
                                           const Text('Testing Date: '),
                                           Text(controller.trx.records![index]
@@ -811,18 +805,11 @@ class MaintenanceMpResourceScreen
                                         ]), */ //DateFormat('dd-MM-yyyy').format(
                                             //DateTime.parse(controller.trx
                                             //   .records![index].jpToDoStartDate!))
-                                            Visibility(
-                                              visible: controller
-                                                      .trx
-                                                      .records![index]
-                                                      .lITControl3DateFrom !=
-                                                  null,
-                                              child: Row(children: [
-                                                Text('Testing Date: '.tr),
-                                                Text(
-                                                    "${controller.trx.records![index].lITControl3DateFrom != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateFrom!)) : ""} - ${controller.trx.records![index].lITControl3DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateNext!)) : ""}"),
-                                              ]),
-                                            ),
+                                            Row(children: [
+                                              Text('Testing Date: '.tr),
+                                              Text(
+                                                  "${DateTime.tryParse(controller.trx.records![index].lITControl3DateFrom ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateFrom!)) : ""} - ${controller.trx.records![index].lITControl3DateNext != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl3DateNext!)) : ""}"),
+                                            ]),
 
                                             Row(children: [
                                               Text('Manufacturer: '.tr),
@@ -1382,6 +1369,10 @@ class MaintenanceMpResourceScreen
                                                       Get.to(
                                                           const CreateResAnomaly(),
                                                           arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
                                                             "docNo": controller
                                                                     .trx
                                                                     .records![

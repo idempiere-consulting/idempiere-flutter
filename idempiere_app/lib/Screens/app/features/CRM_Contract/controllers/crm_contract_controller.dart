@@ -123,6 +123,7 @@ class CRMContractController extends GetxController {
         Get.arguments['notificationId'] = null;
       }
     }
+    // ignore: unused_local_variable
     var searchFilter = "";
     if (searchFieldController.text != "" && dropdownValue.value == "1") {
       searchFilter = "and DocumentNo contains ${searchFieldController.text}";

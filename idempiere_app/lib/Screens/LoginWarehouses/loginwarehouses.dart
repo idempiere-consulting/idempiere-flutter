@@ -244,7 +244,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/m_product?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -281,7 +281,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+        '/api/v1/models/m_product?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -717,7 +717,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       //syncWorkOrderResourceSurveyLines();
 
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       workOrderSync = false;
       checkSyncData();
     }
@@ -864,7 +866,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
       }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       workOrderSync = false;
       checkSyncData();
     }
@@ -889,7 +893,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
     if (response.statusCode == 200) {
       if (kDebugMode) {
-        print(response.body);
+        //print(response.body);
       }
       var json = WorkOrderTaskLocalJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
@@ -909,7 +913,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         //checkSyncData();
       }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       workOrderSync = false;
       checkSyncData();
     }

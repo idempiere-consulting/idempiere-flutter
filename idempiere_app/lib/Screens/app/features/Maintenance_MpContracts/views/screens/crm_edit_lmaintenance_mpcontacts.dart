@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/models/mpmaintaincontractjson.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
-import 'package:animate_do/animate_do.dart';
+
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/v
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:idempiere_app/constants.dart';
+
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -664,7 +664,6 @@ class _EditMaintenanceMpContractsState
                       shrinkWrap: true,
                       itemCount: productList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final item = productList[index].id.toString();
                         return Card(
                           elevation: 8.0,
                           margin: const EdgeInsets.symmetric(
@@ -1583,7 +1582,6 @@ class _EditMaintenanceMpContractsState
                       shrinkWrap: true,
                       itemCount: productList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final item = productList[index].id.toString();
                         return Card(
                           elevation: 8.0,
                           margin: const EdgeInsets.symmetric(
@@ -2502,7 +2500,6 @@ class _EditMaintenanceMpContractsState
                       shrinkWrap: true,
                       itemCount: productList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final item = productList[index].id.toString();
                         return Card(
                           elevation: 8.0,
                           margin: const EdgeInsets.symmetric(

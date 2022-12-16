@@ -827,6 +827,7 @@ class MaintenanceMpResourceController extends GetxController {
       var url = Uri.parse('http://' +
           ip +
           '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}');
+      print(msg);
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -856,7 +857,7 @@ class MaintenanceMpResourceController extends GetxController {
             ),
           );
         } else {
-          // print(response.body);
+          print(response.body);
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",
@@ -870,9 +871,9 @@ class MaintenanceMpResourceController extends GetxController {
       } else {
         var data = jsonEncode(_trx2.toJson());
         final file = File(
-            '${(await getApplicationDocumentsDirectory()).path}/workorder.json');
+            '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
         file.writeAsStringSync(data);
-        //GetStorage().write('workOrderSync', data);
+        //GetStorage().write('workOrderResourceSync', data);
         getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
@@ -1008,8 +1009,10 @@ class MaintenanceMpResourceController extends GetxController {
       } else {
         var data = jsonEncode(_trx2.toJson());
         final file = File(
-            '${(await getApplicationDocumentsDirectory()).path}/workorderr.json');
+            '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
         file.writeAsStringSync(data);
+        //GetStorage().write('workOrderResourceSync', data);
+        getWorkOrders();
         //GetStorage().write('workOrderSync', data);
         getWorkOrders();
         Map calls = {};
@@ -1149,9 +1152,9 @@ class MaintenanceMpResourceController extends GetxController {
       } else {
         var data = jsonEncode(_trx2.toJson());
         final file = File(
-            '${(await getApplicationDocumentsDirectory()).path}/workorder.json');
+            '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
         file.writeAsStringSync(data);
-        //GetStorage().write('workOrderSync', data);
+        //GetStorage().write('workOrderResourceSync', data);
         getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
@@ -1213,14 +1216,125 @@ class MaintenanceMpResourceController extends GetxController {
     }
   }
 
+  Future<void> syncWorkOrderResource() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    if (await checkConnection()) {
+      _dataAvailable.value = false;
+      emptyAPICallStak();
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          //print(response.body);
+        }
+        var json = WorkOrderResourceLocalJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+        if (json.pagecount! > 1) {
+          int index = 1;
+          syncWorkOrderResourcePages(json, index);
+        } else {
+          const filename = "workorderresource";
+          final file = File(
+              '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+          file.writeAsStringSync(utf8.decode(response.bodyBytes));
+          //productSync = false;
+          getWorkOrders();
+          if (kDebugMode) {
+            print('WorkOrderResource Checked');
+          }
+          //checkSyncData();
+        }
+        //syncWorkOrderResourceSurveyLines();
+
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+      }
+    } else {
+      Get.snackbar(
+        "Connessione Internet assente!",
+        "Impossibile aggiornare i record.",
+        icon: const Icon(
+          Icons.signal_wifi_connected_no_internet_4,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  syncWorkOrderResourcePages(WorkOrderResourceLocalJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsStringSync(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        getWorkOrders();
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
+
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<void> getWorkOrders() async {
     //print(GetStorage().read('selectedTaskDocNo'));
     _dataAvailable.value = false;
     late List<RRecords> temp;
     var flag = true;
     var now = DateTime.now();
-    var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
+    var twentyDaysAgoDate = now.add(const Duration(days: -20));
+    var twentyDaysLater = now.add(const Duration(days: 20));
+    //var formatter = DateFormat('yyyy-MM-dd');
+    //String formattedDate = formatter.format(now);
     //print(GetStorage().read('workOrderResourceSync'));
 
     final file = File(
@@ -1246,7 +1360,10 @@ class MaintenanceMpResourceController extends GetxController {
       switch (filterCount) {
         case 1:
           temp = (_trx.records!.where((element) =>
-              element.lITControl1DateFrom != formattedDate &&
+              (DateTime.parse(element.lITControl1DateFrom!)
+                      .isAfter(twentyDaysLater) ||
+                  DateTime.parse(element.lITControl1DateFrom!)
+                      .isBefore(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo'))).toList();
           //print(temp);
@@ -1256,7 +1373,10 @@ class MaintenanceMpResourceController extends GetxController {
           break;
         case 2:
           temp = (_trx.records!.where((element) =>
-              element.lITControl1DateFrom == formattedDate &&
+              (DateTime.parse(element.lITControl1DateFrom!)
+                      .isBefore(twentyDaysLater) &&
+                  DateTime.parse(element.lITControl1DateFrom!)
+                      .isAfter(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo'))).toList();
           //print(temp);

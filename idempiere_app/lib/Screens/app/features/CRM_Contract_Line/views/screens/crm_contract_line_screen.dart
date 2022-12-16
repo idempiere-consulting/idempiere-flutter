@@ -11,9 +11,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/models/contract_line_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_create_sales_orderline.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_edit_sales_orderline.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -205,9 +202,9 @@ class CRMContractLineScreen extends GetView<CRMContractLineController> {
                                       ),
                                       Row(
                                         children: <Widget>[
-                                          Text(
+                                          const Text(
                                             "EUR ",
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                                 color: kNotifColor,
                                                 fontWeight: FontWeight.bold),
                                           ),
@@ -233,7 +230,7 @@ class CRMContractLineScreen extends GetView<CRMContractLineController> {
                                       horizontal: 20.0, vertical: 10.0),
                                   children: [
                                     Column(
-                                      children: [
+                                      children: const [
                                         /* Row(
                                           children: [
                                             Text(
@@ -295,10 +292,10 @@ class CRMContractLineScreen extends GetView<CRMContractLineController> {
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
           ),
         ),
