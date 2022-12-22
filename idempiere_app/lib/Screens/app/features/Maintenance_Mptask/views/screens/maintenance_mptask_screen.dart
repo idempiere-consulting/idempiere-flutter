@@ -11,6 +11,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_info_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Signature_WorkOrder/signature_page.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -241,9 +242,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       color: controller.trx.records![index]
                                                       .docStatus?.id ==
                                                   "CO" &&
-                                              controller.trx.records![index]
+                                              /* controller.trx.records![index]
                                                       .cOrderID !=
-                                                  null &&
+                                                  null && */
                                               controller.trx.records![index]
                                                       .cInvoiceID ==
                                                   null
@@ -731,10 +732,22 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             children: [
                                               IconButton(
                                                   onPressed: () {
-                                                    Get.defaultDialog();
+                                                    Get.to(
+                                                        const MaintenanceMptaskInfo(),
+                                                        arguments: {
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPMaintainID
+                                                              ?.id,
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                        });
                                                   },
-                                                  icon:
-                                                      Icon(Icons.info_outline)),
+                                                  icon: const Icon(
+                                                      Icons.info_outline)),
                                               IconButton(
                                                 tooltip: "Sign".tr,
                                                 onPressed: () {

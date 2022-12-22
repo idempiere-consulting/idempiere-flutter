@@ -1032,6 +1032,7 @@ class MaintenanceMpResourceScreen
                                                             onCancel: () {},
                                                             onConfirm:
                                                                 () async {
+                                                              Get.back();
                                                               var isConnected =
                                                                   await checkConnection();
                                                               controller
@@ -1076,6 +1077,7 @@ class MaintenanceMpResourceScreen
                                                             onCancel: () {},
                                                             onConfirm:
                                                                 () async {
+                                                              Get.back();
                                                               var isConnected =
                                                                   await checkConnection();
                                                               controller
@@ -1124,6 +1126,7 @@ class MaintenanceMpResourceScreen
                                                             onCancel: () {},
                                                             onConfirm:
                                                                 () async {
+                                                              Get.back();
                                                               var isConnected =
                                                                   await checkConnection();
                                                               controller
@@ -1293,7 +1296,7 @@ class MaintenanceMpResourceScreen
                                                     MainAxisAlignment.end,
                                                 children: [
                                                   IconButton(
-                                                    tooltip: 'Edit',
+                                                    tooltip: 'Edit A07',
                                                     onPressed: () async {
                                                       var index2 = 0;
                                                       for (var i = 0;
