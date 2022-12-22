@@ -6,7 +6,6 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -231,12 +230,32 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   ?.id !=
                                               "CO"
                                           ? Icons.view_list
-                                          : Icons.check_box,
+                                          : controller.trx.records![index]
+                                                          .docStatus?.id ==
+                                                      "CO" &&
+                                                  controller.trx.records![index]
+                                                          .cOrderID ==
+                                                      null
+                                              ? Icons.view_list
+                                              : Icons.check_box,
                                       color: controller.trx.records![index]
-                                                  .docStatus?.id ==
-                                              "CO"
+                                                      .docStatus?.id ==
+                                                  "CO" &&
+                                              controller.trx.records![index]
+                                                      .cOrderID !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .cInvoiceID ==
+                                                  null
                                           ? Colors.green
-                                          : Colors.yellow,
+                                          : controller.trx.records![index]
+                                                          .docStatus?.id ==
+                                                      "CO" &&
+                                                  controller.trx.records![index]
+                                                          .cInvoiceID !=
+                                                      null
+                                              ? Colors.blue
+                                              : Colors.yellow,
                                     ),
                                   ),
                                   tilePadding: const EdgeInsets.symmetric(
@@ -256,8 +275,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
                                         //log("info button pressed");
-                                        print(controller.trx.records![index]
-                                            .jpToDoStartDate);
+                                        /* print(controller.trx.records![index]
+                                            .jpToDoStartDate); */
                                         Get.to(const EditMaintenanceMptask(),
                                             arguments: {
                                               "id": controller
@@ -711,6 +730,12 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               IconButton(
+                                                  onPressed: () {
+                                                    Get.defaultDialog();
+                                                  },
+                                                  icon:
+                                                      Icon(Icons.info_outline)),
+                                              IconButton(
                                                 tooltip: "Sign".tr,
                                                 onPressed: () {
                                                   Get.to(
@@ -878,7 +903,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ),
                                             ElevatedButton(
                                               child: Text(
-                                                  "Create ODV from Work Order"
+                                                  "Create Sales Order from Work Order"
+                                                      .tr
                                                       .tr),
                                               style: ButtonStyle(
                                                 backgroundColor:

@@ -71,13 +71,16 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
-      "record-id": controller.trx.records![index].id,
+      "doc-action": "CO",
     });
+    print(msg);
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/processes/c-order-process');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/c_order/${controller.trx.records![index].id}');
+    print(url);
 
-    var response = await http.post(
+    var response = await http.put(
       url,
       body: msg,
       headers: <String, String>{
@@ -261,7 +264,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(() => Visibility(
                                   visible: controller.searchFilterValue.value ==
@@ -551,7 +554,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                   .tr),
                                                           onCancel: () {},
                                                           onConfirm: () async {
-                                                            final ip =
+                                                            /*  final ip =
                                                                 GetStorage()
                                                                     .read('ip');
                                                             String
@@ -564,6 +567,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 jsonEncode({
                                                               "DocAction": "CO",
                                                             });
+                                                            print(msg);
                                                             final protocol =
                                                                 GetStorage().read(
                                                                     'protocol');
@@ -571,7 +575,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 '$protocol://' +
                                                                     ip +
                                                                     '/api/v1/models/c_order/${controller.trx.records![index].id}');
-
+                                                            print(url);
                                                             var response =
                                                                 await http.put(
                                                               url,
@@ -590,7 +594,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                               completeOrder(
                                                                   index);
                                                             } else {
-                                                              //print(response.body);
+                                                              print(response
+                                                                  .body);
                                                               Get.snackbar(
                                                                 "Error!".tr,
                                                                 "Record not completed"
@@ -602,7 +607,9 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                       .red,
                                                                 ),
                                                               );
-                                                            }
+                                                            } */
+                                                            completeOrder(
+                                                                index);
                                                           },
                                                         );
                                                       },

@@ -11,7 +11,12 @@ class MaintenanceMptaskController extends GetxController {
 
   var value = (("Today").tr).obs;
 
-  var filters = ["Today".tr, "All" /* , "Team" */];
+  var filters = [
+    "Today".tr,
+    "> ${"Today".tr}",
+    "< ${"Today".tr}",
+    "All".tr /* , "Team" */
+  ];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
@@ -32,7 +37,7 @@ class MaintenanceMptaskController extends GetxController {
 
   changeFilter() {
     filterCount++;
-    if (filterCount == 2) {
+    if (filterCount == 4) {
       filterCount = 0;
     }
 
@@ -218,6 +223,14 @@ class MaintenanceMptaskController extends GetxController {
         _trx.records!.retainWhere((element) =>
             DateTime.now().toString().substring(0, 10) ==
             element.jpToDoStartDate);
+      }
+      if (value.value == "> ${"Today".tr}") {
+        _trx.records!.retainWhere((element) =>
+            DateTime.now().isBefore(DateTime.parse(element.jpToDoStartDate!)));
+      }
+      if (value.value == "< ${"Today".tr}") {
+        _trx.records!.retainWhere((element) =>
+            DateTime.now().isAfter(DateTime.parse(element.jpToDoStartDate!)));
       }
     } else {
       _trx.records!.retainWhere((element) => element.id == notificationFilter);

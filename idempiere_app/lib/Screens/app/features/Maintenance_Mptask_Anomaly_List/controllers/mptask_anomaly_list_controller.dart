@@ -3,6 +3,7 @@ part of dashboard;
 class AnomalyListController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late AnomalyJson _trx;
+  AttachmentListJson att = AttachmentListJson(attachments: []);
   //var _hasMailSupport = false;
   dynamic args = Get.arguments;
   int docId = 0;
@@ -15,6 +16,7 @@ class AnomalyListController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+  var _attachmentsAvailable = false.obs;
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
@@ -159,20 +161,27 @@ class AnomalyListController extends GetxController {
 
     json.records!.retainWhere(
         (element) => element.mPMaintainResourceID?.id == args["id"]);
-    /*  var notificationFilter = "";
-    if (Get.arguments != null) {
-      if (Get.arguments['notificationId'] != null) {
-        notificationFilter =
-            " and AD_User_ID eq ${Get.arguments['notificationId']}";
-        Get.arguments['notificationId'] = null;
+
+    if (json.records!.isNotEmpty && await checkConnection()) {
+      for (var element in json.records!) {
+        await getRecordAttachments(element.id!);
       }
-    } */
-    /* final ip = GetStorage().read('ip');
+    }
+
+    _trx = json;
+    _dataAvailable.value = _trx != null;
+    _attachmentsAvailable.value = true;
+    //}
+  }
+
+  getAttachmentData(int id, String name) async {
+    final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/LIT_NC?\$filter= MP_Maintain_Resource_ID eq ${args["id"]} and C_Order_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_nc/$id/attachments/$name');
+
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -180,14 +189,62 @@ class AnomalyListController extends GetxController {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 200) { */
-    //print(response.body);
-    _trx = json;
-    //print(trx.rowcount);
-    //print(response.body);
-    // ignore: unnecessary_null_comparison
-    _dataAvailable.value = _trx != null;
-    //}
+
+    if (response.statusCode == 200) {
+      var image64 = base64.encode(response.bodyBytes);
+      Get.to(const AnomalyImage(), arguments: {"base64": image64});
+      //print(response.body);
+    }
+  }
+
+  deleteAttachment(int index, int id, String name) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_nc/$id/attachments/$name');
+
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      _attachmentsAvailable.value = false;
+      att.attachments!.removeAt(index);
+      _attachmentsAvailable.value = true;
+    }
+  }
+
+  getRecordAttachments(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_nc/$id/attachments');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json = AttachmentListJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.attachments != null) {
+        for (var element in json.attachments!) {
+          att.attachments!.add(Attachment(id: id, name: element.name));
+        }
+      }
+    }
   }
 
   /* void openDrawer() {

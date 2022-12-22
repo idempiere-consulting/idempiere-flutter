@@ -435,6 +435,7 @@ class LocaleString extends Translations {
           'Open': 'Open',
           'Row Total': 'Row Total',
           'Inventory with Lot': 'Inventory with Lot',
+          'PC': 'Pending Check',
           'PR': 'Pending Review',
           'PT': 'Pending Testing',
           'OK': 'OK',
@@ -460,6 +461,25 @@ class LocaleString extends Translations {
           'Checked': 'Checked',
           'Revisioned': 'Revisioned',
           'Tested': 'Tested',
+          'Undo changes': 'Undo changes',
+          'Are you sure you want to Undo?': 'Are you sure you want to Undo?',
+          'Record rollback successfull': 'Record rollback successfull',
+          'Record rollback failed': 'Record rollback failed',
+          'Resource Code': 'Resource Code',
+          'Sales Order': 'Sales Order',
+          'Paid Amt': 'Paid Amt',
+          'Create Sales Order from Work Order':
+              'Create Sales Order from Work Order',
+          'Show Attachments': 'Show Attachments',
+          'Anomaly List': 'Anomaly List',
+          'The resource shouldn\'t be checked':
+              'The resource shouldn\'t be checked',
+          'The resource shouldn\'t be reviewed':
+              'The resource shouldn\'t be reviewed',
+          'The resource shouldn\'t be tested':
+              'The resource shouldn\'t be tested',
+          'Warning': 'Warning',
+          'Is Valid': 'Is Valid',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -902,6 +922,7 @@ class LocaleString extends Translations {
           'Open': 'Aperto',
           'Row Total': 'Totale Riga',
           'Inventory with Lot': 'Inventario con Lotto',
+          'PC': 'In Attesa di Controllo',
           'PR': 'In Attesa di Revisione',
           'PT': 'In Attesa di Collaudo',
           'OK': 'OK',
@@ -927,6 +948,25 @@ class LocaleString extends Translations {
           'Checked': 'Controllato',
           'Revisioned': 'Revisionato',
           'Tested': 'Collaudato',
+          'Undo changes': 'Torna Indietro',
+          'Are you sure you want to Undo?': 'Sicuro di voler tornare indietro?',
+          'Record rollback successfull':
+              'Eseguito ripristino dell\' ultima modifica',
+          'Record rollback failed': 'Ripristino Fallito',
+          'Resource Code': 'Codice Risorsa',
+          'Sales Order': 'Ordine di V.',
+          'Paid Amt': 'Importo Pagato',
+          'Create Sales Order from Work Order': 'Crea ODV da ODL',
+          'Show Attachments': 'Vedi Allegati',
+          'Anomaly List': 'Lista Anomalia',
+          'The resource shouldn\'t be checked':
+              'La risorsa non dovrebbe essere controllata',
+          'The resource shouldn\'t be reviewed':
+              'La risorsa non dovrebbe essere revisionata',
+          'The resource shouldn\'t be testes':
+              'La risorsa non dovrebbe essere collaudata',
+          'Warning': 'Attenzione',
+          'Is Valid': 'Funzionante'
         },
       };
 }

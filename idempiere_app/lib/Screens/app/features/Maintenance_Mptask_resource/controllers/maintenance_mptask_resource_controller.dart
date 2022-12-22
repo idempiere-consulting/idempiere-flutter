@@ -134,7 +134,7 @@ class MaintenanceMpResourceController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     Get.defaultDialog(
-      title: "Resource Code:",
+      title: "${"Resource Code".tr}:",
       content: RoundedCodeField(
         controller: passwordFieldController,
         onChanged: (value) {},
@@ -347,7 +347,7 @@ class MaintenanceMpResourceController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     Get.defaultDialog(
-      title: "Resource Code:",
+      title: "${"Resource Code".tr}:",
       content: Column(
         children: [
           RoundedCodeField(
@@ -534,7 +534,7 @@ class MaintenanceMpResourceController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     Get.defaultDialog(
-      title: "Resource Code:",
+      title: "${"Resource Code".tr}:",
       content: RoundedCodeField(
         controller: passwordFieldController,
         onChanged: (value) {},
@@ -1214,6 +1214,62 @@ class MaintenanceMpResourceController extends GetxController {
         }
       }
     }
+  }
+
+  undoLastChanges(int id, String modelname) {
+    //print("halo");
+    Get.defaultDialog(
+      title: 'Undo changes'.tr,
+      content: Text("Are you sure you want to Undo?".tr),
+      onCancel: () {},
+      onConfirm: () async {
+        final ip = GetStorage().read('ip');
+        String authorization = 'Bearer ' + GetStorage().read('token');
+        final msg = jsonEncode({
+          "record-id": id,
+          "model-name": modelname,
+        });
+        //print(msg);
+        final protocol = GetStorage().read('protocol');
+        var url = Uri.parse(
+            '$protocol://' + ip + '/api/v1/processes/undompmaintainresource');
+
+        var response = await http.post(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          //print("done!");
+          Get.back();
+          //print(response.body);
+          syncWorkOrderResource();
+          Get.snackbar(
+            "Done!".tr,
+            "Record rollback successfull".tr,
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          if (kDebugMode) {
+            print(response.body);
+          }
+          Get.snackbar(
+            "Error!".tr,
+            "Record rollback failed".tr,
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      },
+    );
   }
 
   Future<void> syncWorkOrderResource() async {

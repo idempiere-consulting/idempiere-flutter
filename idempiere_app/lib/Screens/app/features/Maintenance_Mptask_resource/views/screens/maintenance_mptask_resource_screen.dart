@@ -670,14 +670,15 @@ class MaintenanceMpResourceScreen
                                                                 .toDoAction! ==
                                                             "OK"
                                                         ? kNotifColor
-                                                        : controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .toDoAction! ==
-                                                                "PR"
-                                                            ? const Color
-                                                                    .fromARGB(
+                                                        : controller.trx.records![index].toDoAction! ==
+                                                                    "PR" ||
+                                                                controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .toDoAction! ==
+                                                                    "PC"
+                                                            ? const Color.fromARGB(
                                                                 255,
                                                                 209,
                                                                 189,
@@ -691,15 +692,12 @@ class MaintenanceMpResourceScreen
                                                                 ? Colors.orange
                                                                 : controller
                                                                             .trx
-                                                                            .records![
-                                                                                index]
+                                                                            .records![index]
                                                                             .toDoAction! ==
                                                                         "PSG"
                                                                     ? Colors.red
-                                                                    : controller.trx.records![index].toDoAction! ==
-                                                                            "PX"
-                                                                        ? Colors
-                                                                            .black
+                                                                    : controller.trx.records![index].toDoAction! == "PX"
+                                                                        ? Colors.black
                                                                         : kNotifColor,
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -1013,12 +1011,43 @@ class MaintenanceMpResourceScreen
                                                     IconButton(
                                                       tooltip: 'Check',
                                                       onPressed: () async {
-                                                        var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .editWorkOrderResourceDateCheck(
-                                                                isConnected,
-                                                                index);
+                                                        if (controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .toDoAction !=
+                                                                "PC" &&
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .toDoAction !=
+                                                                "Nothing") {
+                                                          Get.defaultDialog(
+                                                            title: 'Warning'.tr,
+                                                            content: Text(
+                                                                "The resource shouldn't be checked"
+                                                                    .tr
+                                                                    .tr),
+                                                            onCancel: () {},
+                                                            onConfirm:
+                                                                () async {
+                                                              var isConnected =
+                                                                  await checkConnection();
+                                                              controller
+                                                                  .editWorkOrderResourceDateCheck(
+                                                                      isConnected,
+                                                                      index);
+                                                            },
+                                                          );
+                                                        } else {
+                                                          var isConnected =
+                                                              await checkConnection();
+                                                          controller
+                                                              .editWorkOrderResourceDateCheck(
+                                                                  isConnected,
+                                                                  index);
+                                                        }
                                                       },
                                                       icon: const Icon(Icons
                                                           .check_circle_outline),
@@ -1026,11 +1055,41 @@ class MaintenanceMpResourceScreen
                                                     IconButton(
                                                       tooltip: 'Revision',
                                                       onPressed: () async {
-                                                        var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .replaceResource(
-                                                                index);
+                                                        if (controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .toDoAction !=
+                                                                "PR" &&
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .toDoAction !=
+                                                                "Nothing") {
+                                                          Get.defaultDialog(
+                                                            title: 'Warning'.tr,
+                                                            content: Text(
+                                                                "The resource shouldn't be reviewed"
+                                                                    .tr
+                                                                    .tr),
+                                                            onCancel: () {},
+                                                            onConfirm:
+                                                                () async {
+                                                              var isConnected =
+                                                                  await checkConnection();
+                                                              controller
+                                                                  .replaceResource(
+                                                                      index);
+                                                            },
+                                                          );
+                                                        } else {
+                                                          var isConnected =
+                                                              await checkConnection();
+                                                          controller
+                                                              .replaceResource(
+                                                                  index);
+                                                        }
                                                         /* var isConnected =
                                                               await checkConnection();
                                                           controller
@@ -1044,12 +1103,42 @@ class MaintenanceMpResourceScreen
                                                     IconButton(
                                                       tooltip: 'Testing',
                                                       onPressed: () async {
-                                                        var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .editWorkOrderResourceDateTesting(
-                                                                isConnected,
-                                                                index);
+                                                        if (controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .toDoAction !=
+                                                                "PT" &&
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .toDoAction !=
+                                                                "Nothing") {
+                                                          Get.defaultDialog(
+                                                            title: 'Warning'.tr,
+                                                            content: Text(
+                                                                "The resource shouldn't be tested"
+                                                                    .tr
+                                                                    .tr),
+                                                            onCancel: () {},
+                                                            onConfirm:
+                                                                () async {
+                                                              var isConnected =
+                                                                  await checkConnection();
+                                                              controller
+                                                                  .editWorkOrderResourceDateTesting(
+                                                                      isConnected,
+                                                                      index);
+                                                            },
+                                                          );
+                                                        } else {
+                                                          var isConnected =
+                                                              await checkConnection();
+                                                          controller
+                                                              .replaceResource(
+                                                                  index);
+                                                        }
                                                       },
                                                       icon: const Icon(
                                                           Icons.gavel_outlined),
@@ -1165,6 +1254,30 @@ class MaintenanceMpResourceScreen
                                                       },
                                                       icon: const Icon(
                                                           Icons.find_replace),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'Undo',
+                                                      onPressed: () async {
+                                                        if (await checkConnection()) {
+                                                          controller
+                                                              .undoLastChanges(
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .id!,
+                                                                  "mp-maintain-resource");
+                                                        }
+
+                                                        /* var isConnected =
+                                                              await checkConnection();
+                                                          controller
+                                                              .editWorkOrderResourceDateRevision(
+                                                                  isConnected,
+                                                                  index); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.undo),
                                                     ),
                                                   ]),
                                             ),
@@ -1401,6 +1514,21 @@ class MaintenanceMpResourceScreen
                                                       Icons.warning,
                                                       color: Colors.red,
                                                     ),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip: 'Undo',
+                                                    onPressed: () async {
+                                                      if (await checkConnection()) {
+                                                        controller.undoLastChanges(
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id!,
+                                                            "mp-maintain-resource");
+                                                      }
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.undo),
                                                   ),
                                                 ],
                                               ),

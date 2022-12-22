@@ -9,10 +9,12 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/models/anomaly_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/anomaly_type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/attachmentlist_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/bom_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/bom_line_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/locator_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/anomaly_image.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -78,7 +80,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           "IsClosed": isClosed,
         });
       }
-      //print(msg);
+      print(msg);
 
       //print(msg);
       var response = await http.post(
@@ -98,7 +100,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         file.writeAsStringSync(jsonEncode(json.toJson()));
         Get.back();
         var json2 = jsonDecode(response.body);
-        if (imageName != "" && image64 != "") {
+        if (attachment.attachments!.isNotEmpty) {
           sendTicketAttachedImage(json2["id"]);
           //print(response.body);
         }
@@ -223,10 +225,14 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   }
 
   attachImage() async {
+    setState(() {
+      attachmentData = false;
+    });
+
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
 
-    if (result != null) {
+    /* if (result != null) {
       //File file = File(result.files.first.bytes!);
       setState(() {
         image64 = base64.encode(result.files.first.bytes!);
@@ -234,31 +240,44 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       });
       //print(image64);
       //print(imageName);
+    } */
+
+    if (result != null) {
+      for (var element in result.files) {
+        attachment.attachments!.add(Attachment(
+            name: element.name, value: base64.encode(element.bytes!)));
+      }
     }
+
+    setState(() {
+      attachmentData = true;
+    });
   }
 
   sendTicketAttachedImage(int id) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-
-    final msg = jsonEncode({"name": "anomalyimage.jpg", "data": image64});
-
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/LIT_NC/$id/attachments');
 
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      //print(response.body);
-    } else {
-      //print(response.body);
+    for (var element in attachment.attachments!) {
+      final msg = jsonEncode({"name": element.name, "data": element.value});
+
+      var url = Uri.parse(
+          '$protocol://' + ip + '/api/v1/models/LIT_NC/$id/attachments');
+
+      var response = await http.post(
+        url,
+        body: msg,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //print(response.body);
+      } else {
+        //print(response.body);
+      }
     }
   }
 
@@ -401,7 +420,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     //var json = jsonDecode(utf8.decode(response.bodyBytes));
     const filename3 = "products";
     final file3 = File(
-        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        '${(await getApplicationDocumentsDirectory()).path}/$filename3.json');
     var jsonResources =
         ProductJson.fromJson(jsonDecode(file3.readAsStringSync()));
 
@@ -411,9 +430,9 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       bomList.add(jsonResources.records![i]);
     }
 
-    if (json.records!.isNotEmpty) {
+    /* if (json.records!.isNotEmpty) {
       getProductBOMLines(json.records![0].id!);
-    }
+    } */
     setState(() {
       missingPartFlag = true;
     });
@@ -466,6 +485,17 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     });
   }
 
+  initializeAttachmentsList() {
+    setState(() {
+      attachmentData = false;
+    });
+    //attachmentData = false;
+    attachment = AttachmentListJson.fromJson({"attachments": []});
+    setState(() {
+      attachmentData = true;
+    });
+  }
+
   /* void fillFields() {
     nameFieldController.text = args["name"];
     bPartnerFieldController.text = args["bpName"];
@@ -508,9 +538,13 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   int locationId = 0;
   int replacementId = 0;
   late TextEditingValue locatorInitialValue;
+  late AttachmentListJson attachment;
+  bool attachmentData = false;
 
   @override
   void initState() {
+    attachmentData = false;
+    initializeAttachmentsList();
     productFieldController = TextEditingController();
     stockFieldController = TextEditingController();
     noteFieldController = TextEditingController();
@@ -880,6 +914,53 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                       Icons.attach_file,
                       color: image64 != "" ? Colors.green : Colors.white,
                     )),
+                ListView.builder(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: attachment.attachments!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      elevation: 8.0,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 6.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            color: Color.fromRGBO(64, 75, 96, .9)),
+                        child: ListTile(
+                          onTap: () {
+                            Get.to(const AnomalyImage(), arguments: {
+                              "base64": attachment.attachments![index].value
+                            });
+                          },
+                          trailing: IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                attachmentData = false;
+                              });
+
+                              attachment.attachments!.removeAt(index);
+                              setState(() {
+                                attachmentData = true;
+                              });
+                            },
+                          ),
+                          title: Text(
+                            attachment.attachments![index].name ?? "",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
               ],
             );
           },
