@@ -54,27 +54,44 @@ class PortalMpTrainingCourseCourseListScreen
     extends GetView<PortalMpTrainingCourseCourseListController> {
   const PortalMpTrainingCourseCourseListScreen({Key? key}) : super(key: key);
 
+  Future<Null> _selectDate(BuildContext context, int index) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate:
+            DateTime.tryParse(controller._studentFields[index].text) != null
+                ? DateTime.parse(controller._studentFields[index].text)
+                : DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+
+    if (picked != null) {
+      controller.date = picked.toString().substring(0, 10);
+    }
+    controller.initFieldsController(index, false);
+  }
+
   updateOrCreateStudent(index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
 
     //create new student
-    if (controller.newStudent){
+    if (controller.newStudent) {
       final msg = jsonEncode({
         'AD_Org_ID': {"id": GetStorage().read("organizationid")},
         'AD_Client_ID': {"id": GetStorage().read("clientid")},
-        'MP_Maintain_ID': controller.trxCourses.records![controller.selectedCourse].id,
+        'MP_Maintain_ID': controller.trxCourses
+            .records![controller.selectedCourse].mpMaintainParentID?.id,
         'Name': controller.studentFields[0].text,
         'SurName': controller.studentFields[1].text,
         'BirthCity': controller.studentFields[2].text,
-        'Bithday': controller.studentFields[3].text,
+        'Birthday': controller.studentFields[3].text,
         'EMailUser': controller.studentFields[4].text,
         'Description': controller.studentFields[5].text,
         'Note': controller.studentFields[6].text
       });
-      var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/');
+      var url = Uri.parse(
+          '$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/');
       var response = await http.post(
         url,
         body: msg,
@@ -84,7 +101,9 @@ class PortalMpTrainingCourseCourseListScreen
         },
       );
       if (response.statusCode == 201) {
-        Get.find<PortalMpTrainingCourseCourseListController>().getCourseStudents();
+        print(response.body);
+        Get.find<PortalMpTrainingCourseCourseListController>()
+            .getCourseStudents();
         //print("done!");
         Get.snackbar(
           "Done!".tr,
@@ -105,21 +124,21 @@ class PortalMpTrainingCourseCourseListScreen
         );
       }
 
-    //update existing user
+      //update existing user
     } else {
       final msg = jsonEncode({
         'Name': controller.studentFields[0].text,
         'SurName': controller.studentFields[1].text,
         'BirthCity': controller.studentFields[2].text,
-        'Bithday': controller.studentFields[3].text,
+        'Birthday': controller.studentFields[3].text,
         'EMailUser': controller.studentFields[4].text,
         'Description': controller.studentFields[5].text,
         'Note': controller.studentFields[6].text
       });
-      var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/${
-          controller.trxStudents.records![index].id
-        }');
+      print(msg);
+      var url = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/MP_Maintain_Resource/${controller.trxStudents.records![index].id}');
       var response = await http.put(
         url,
         body: msg,
@@ -129,8 +148,8 @@ class PortalMpTrainingCourseCourseListScreen
         },
       );
       if (response.statusCode == 200) {
-         
-        Get.find<PortalMpTrainingCourseCourseListController>().getCourseStudents();
+        Get.find<PortalMpTrainingCourseCourseListController>()
+            .getCourseStudents();
         //print("done!");
         Get.snackbar(
           "Done!".tr,
@@ -154,15 +173,13 @@ class PortalMpTrainingCourseCourseListScreen
   }
 
   deleteStudent(index) async {
-    if (!controller.newStudent){
-
+    if (!controller.newStudent) {
       final ip = GetStorage().read('ip');
       String authorization = 'Bearer ' + GetStorage().read('token');
       final protocol = GetStorage().read('protocol');
-      var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/${
-          controller.trxStudents.records![index].id
-        }');
+      var url = Uri.parse('$protocol://' +
+          ip +
+          '/api/v1/models/MP_Maintain_Resource/${controller.trxStudents.records![index].id}');
       var response = await http.delete(
         url,
         headers: <String, String>{
@@ -171,9 +188,10 @@ class PortalMpTrainingCourseCourseListScreen
         },
       );
       if (response.statusCode == 200) {
-        await Get.find<PortalMpTrainingCourseCourseListController>().getCourseStudents();
-        //if index = 0 will return 1 instead of -1 
-        index = (index -1).abs();
+        await Get.find<PortalMpTrainingCourseCourseListController>()
+            .getCourseStudents();
+        //if index = 0 will return 1 instead of -1
+        index = (index - 1).abs();
         controller.initFieldsController(index, false);
         controller.showStudentDetails = false;
         controller.showStudentDetails = true;
@@ -200,21 +218,23 @@ class PortalMpTrainingCourseCourseListScreen
       }
     } else {
       Get.snackbar(
-          "Error!".tr,
-          "Select a student to delete".tr,
-          isDismissible: true,
-          icon: const Icon(
-            Icons.error,
-            color: Colors.yellow,
-          ),
+        "Error!".tr,
+        "Select a student to delete".tr,
+        isDismissible: true,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.yellow,
+        ),
       );
     }
   }
-  
-  newStudentInput() async{
+
+  newStudentInput() async {
+    controller._showStudentDetails.value = false;
+    controller._studentFields[3].text = "";
     controller.initFieldsController(0, true);
-    if(controller.selectedCourse != 10000){
-      controller.showStudentDetails = true;
+    if (controller.selectedCourse != 10000) {
+      controller._showStudentDetails.value = true;
     } else {
       Get.snackbar(
         "Select a course".tr,
@@ -227,9 +247,6 @@ class PortalMpTrainingCourseCourseListScreen
     }
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -241,12 +258,13 @@ class PortalMpTrainingCourseCourseListScreen
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -262,7 +280,8 @@ class PortalMpTrainingCourseCourseListScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text('COURSES: '.tr + "${controller.trxCourses.rowcount}")
+                          ? Text('COURSES: '.tr +
+                              "${controller.trxCourses.rowcount}")
                           : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -327,15 +346,15 @@ class PortalMpTrainingCourseCourseListScreen
                                       onPressed: () {
                                         //log("info button pressed");
                                         Get.toNamed('/QuizCourse', arguments: {
-                                          "id":
-                                              controller.trxCourses.records![index].id,
+                                          "id": controller
+                                              .trxCourses.records![index].id,
                                         });
                                       },
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trxCourses.records![index].mProductID
-                                            ?.identifier ??
+                                    controller.trxCourses.records![index]
+                                            .mProductID?.identifier ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -376,7 +395,9 @@ class PortalMpTrainingCourseCourseListScreen
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
-                                              child: Text(controller.trxCourses.records![index]
+                                              child: Text(controller
+                                                      .trxCourses
+                                                      .records![index]
                                                       .description ??
                                                   ""),
                                             ),
@@ -407,7 +428,8 @@ class PortalMpTrainingCourseCourseListScreen
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text('COURSES: '.tr + "${controller.trxCourses.rowcount}")
+                          ? Text('COURSES: '.tr +
+                              "${controller.trxCourses.rowcount}")
                           : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -472,15 +494,15 @@ class PortalMpTrainingCourseCourseListScreen
                                       onPressed: () {
                                         //log("info button pressed");
                                         Get.toNamed('/QuizCourse', arguments: {
-                                          "id":
-                                              controller.trxCourses.records![index].id,
+                                          "id": controller
+                                              .trxCourses.records![index].id,
                                         });
                                       },
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trxCourses.records![index].mProductID
-                                            ?.identifier ??
+                                    controller.trxCourses.records![index]
+                                            .mProductID?.identifier ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -521,7 +543,9 @@ class PortalMpTrainingCourseCourseListScreen
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Expanded(
-                                              child: Text(controller.trxCourses.records![index]
+                                              child: Text(controller
+                                                      .trxCourses
+                                                      .records![index]
                                                       .description ??
                                                   ""),
                                             ),
@@ -540,33 +564,32 @@ class PortalMpTrainingCourseCourseListScreen
               ]);
             },
             desktopBuilder: (context, constraints) {
-            return  Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(kBorderRadius),
-                        bottomRight: Radius.circular(kBorderRadius),
-                      ),
-                      child: _Sidebar(data: controller.getSelectedProject())),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing / 2),
-                      _buildProfile(data: controller.getProfil()),
-                      const Divider(thickness: 1),
-                      //const SizedBox(height: kSpacing),
-                      _buildCoursesFilter(),
-                      Row(
-                        children: [
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(kBorderRadius),
+                          bottomRight: Radius.circular(kBorderRadius),
+                        ),
+                        child: _Sidebar(data: controller.getSelectedProject())),
+                  ),
+                  Flexible(
+                      flex: 4,
+                      child: Column(children: [
+                        const SizedBox(height: kSpacing / 2),
+                        _buildProfile(data: controller.getProfil()),
+                        const Divider(thickness: 1),
+                        //const SizedBox(height: kSpacing),
+                        _buildCoursesFilter(),
+                        Row(children: [
                           Container(
                             child: Obx(() => controller.dataAvailable
-                              ? Text("COURSES: ".tr + "${controller.trxCourses.rowcount}")
-                              : Text("COURSES: ".tr + "")),
+                                ? Text("COURSES: ".tr +
+                                    "${controller.trxCourses.rowcount}")
+                                : Text("COURSES: ".tr + "")),
                             margin: const EdgeInsets.only(left: 15),
                           ),
                           Container(
@@ -582,83 +605,104 @@ class PortalMpTrainingCourseCourseListScreen
                                 color: Colors.yellow,
                               ),
                             ),
-                          ),    
-                      ]),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              //height: kSpacing,
-                              height: MediaQuery.of(context).size.height / 1.3,
-                              width: MediaQuery.of(context).size.width / 2,
-                              child: 
-                                Obx( () => controller.dataAvailable ? 
-                                  Scrollbar( 
-                                    child: ListView.builder(
-                                      primary: false,
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      itemCount: controller.trxCourses.rowcount,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        return Obx(() => Visibility(
-                                  visible: controller.courseSearchFilterValue.value ==
-                                          ""
-                                      ? true
-                                      : controller.courseDropdownValue.value == "1"
-                                          ? (controller.trxCourses.records![index].documentNo ?? "")
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(controller
-                                                  .courseSearchFilterValue.value
-                                                  .toLowerCase())
-                                          : controller.courseDropdownValue.value == "2"
-                                              ? (controller
-                                                  .trxCourses.records![index].name ?? "")
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(controller
-                                                      .courseSearchFilterValue.value
-                                                      .toLowerCase())
-                                          : controller.courseDropdownValue.value == "3"
-                                              ?( controller
-                                                  .trxCourses.records![index].cBPartnerID?.identifier ?? "" )
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(controller
-                                                      .courseSearchFilterValue.value
-                                                      .toLowerCase())
-                                                  : true,
-                                  child:Card(
-                                          elevation: 8.0,
-                                          margin: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 6.0),
-                                          child: Obx( () => controller.selectedCourse == index ? 
-                                            _buildCourseCard(Theme.of(context).cardColor, context, index) : 
-                                            _buildCourseCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
-                                        ))));
-                                      },
-                                    ),
-                                  ):
-                                  const Center(child: CircularProgressIndicator()),
+                          ),
+                        ]),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                                //height: kSpacing,
+                                height:
+                                    MediaQuery.of(context).size.height / 1.3,
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Obx(
+                                  () => controller.dataAvailable
+                                      ? Scrollbar(
+                                          child: ListView.builder(
+                                            primary: false,
+                                            scrollDirection: Axis.vertical,
+                                            shrinkWrap: true,
+                                            itemCount:
+                                                controller.trxCourses.rowcount,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Obx(() => Visibility(
+                                                  visible: controller
+                                                              .courseSearchFilterValue
+                                                              .value ==
+                                                          ""
+                                                      ? true
+                                                      : controller.courseDropdownValue
+                                                                  .value ==
+                                                              "1"
+                                                          ? (controller.trxCourses.records![index].documentNo ?? "")
+                                                              .toString()
+                                                              .toLowerCase()
+                                                              .contains(controller
+                                                                  .courseSearchFilterValue
+                                                                  .value
+                                                                  .toLowerCase())
+                                                          : controller.courseDropdownValue
+                                                                      .value ==
+                                                                  "2"
+                                                              ? (controller
+                                                                          .trxCourses
+                                                                          .records![index]
+                                                                          .name ??
+                                                                      "")
+                                                                  .toString()
+                                                                  .toLowerCase()
+                                                                  .contains(controller.courseSearchFilterValue.value.toLowerCase())
+                                                              : controller.courseDropdownValue.value == "3"
+                                                                  ? (controller.trxCourses.records![index].cBPartnerID?.identifier ?? "").toString().toLowerCase().contains(controller.courseSearchFilterValue.value.toLowerCase())
+                                                                  : true,
+                                                  child: Card(
+                                                      elevation: 8.0,
+                                                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                                      child: Obx(
+                                                        () => controller
+                                                                    .selectedCourse ==
+                                                                index
+                                                            ? _buildCourseCard(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .cardColor,
+                                                                context,
+                                                                index)
+                                                            : _buildCourseCard(
+                                                                const Color
+                                                                        .fromRGBO(
+                                                                    64,
+                                                                    75,
+                                                                    96,
+                                                                    .9),
+                                                                context,
+                                                                index),
+                                                      ))));
+                                            },
+                                          ),
+                                        )
+                                      : const Center(
+                                          child: CircularProgressIndicator()),
                                 ),
-                                              ),
-                          )],
-                  ),
-              ])),
-              Flexible(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: kSpacing),
-                      _buildHeader(),
-                      const SizedBox(height: kSpacing),
-                      _buildStudentsFilter(),
-                      Row(
-                        children: [
+                              ),
+                            )
+                          ],
+                        ),
+                      ])),
+                  Flexible(
+                      flex: 4,
+                      child: Column(children: [
+                        const SizedBox(height: kSpacing),
+                        _buildHeader(),
+                        const SizedBox(height: kSpacing),
+                        _buildStudentsFilter(),
+                        Row(children: [
                           Container(
                             child: Obx(() => controller.dataAvailable1
-                              ? Text("STUDENTS: ".tr + "${controller.trxStudents.rowcount}")
-                              : Text("STUDENTS: ".tr + "")),
+                                ? Text("STUDENTS: ".tr +
+                                    "${controller.trxStudents.rowcount}")
+                                : Text("STUDENTS: ".tr + "")),
                             margin: const EdgeInsets.only(left: 15),
                           ),
                           Container(
@@ -672,131 +716,155 @@ class PortalMpTrainingCourseCourseListScreen
                                 color: Colors.yellow,
                               ),
                             ),
-                          ),    
-                      ]),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
+                          ),
+                        ]),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: SizedBox(
                               //height: kSpacing,
                               height: MediaQuery.of(context).size.height / 1.3,
                               width: MediaQuery.of(context).size.width / 2,
-                              child: 
-                                Obx( () => controller.dataAvailable1 ? 
-                                  Scrollbar( 
-                                    child: ListView.builder(
-                                      primary: false,
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      itemCount: controller.trxStudents.rowcount,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        return Obx(() => Visibility(
-                                  visible: controller.studentSearchFilterValue.value ==
-                                          ""
-                                      ? true
-                                      : controller.studentDropdownValue.value == "1"
-                                          ? ((controller.trxStudents.records![index].name ?? "") + 
-                                              (controller.trxStudents.records![index].surname ?? ""))
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(controller
-                                                  .studentSearchFilterValue.value
-                                                  .toLowerCase())
-                                          : controller.studentDropdownValue.value == "2"
-                                              ? (controller
-                                                  .trxStudents.records![index].birthcity ?? "")
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(controller
-                                                      .studentSearchFilterValue.value
-                                                      .toLowerCase())
-                                          : controller.studentDropdownValue.value == "3"
-                                              ?( controller
-                                                  .trxStudents.records![index].birthday ?? "" )
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(controller
-                                                      .studentSearchFilterValue.value
-                                                      .toLowerCase())
-                                                  : true,
-                                  child:Card(
-                                          elevation: 8.0,
-                                          margin: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 6.0),
-                                          child: Obx( () => controller.selectedStudent == index ? 
-                                            _buildStudentCard(Theme.of(context).cardColor, context, index) : 
-                                            _buildStudentCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
-                                          ),
-                                        )));
-                                      },
-                                    ),
-                                  ): Center(child: Text('No Course Selected'.tr)),
-                                              ),
-                      ))],
-                  ),
-              ])),
-                        Flexible(
-                          flex: 7,
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: kSpacing *1),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        SizedBox(
-                                          child: IconButton(
-                                            onPressed: () {
-                                              //crea un nuovo studente quindi verrà fatta una richiesta post
-                                              controller.newStudent = true;
-                                              newStudentInput();
-                                            },
-                                            icon: const Icon(Icons.person_add),
-                                            color: Colors.green,
-                                            iconSize: 35
-                                          ),
+                              child: Obx(
+                                () => controller.dataAvailable1
+                                    ? Scrollbar(
+                                        child: ListView.builder(
+                                          primary: false,
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              controller.trxStudents.rowcount,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Obx(() => Visibility(
+                                                visible: controller
+                                                            .studentSearchFilterValue
+                                                            .value ==
+                                                        ""
+                                                    ? true
+                                                    : controller.studentDropdownValue.value ==
+                                                            "1"
+                                                        ? ((controller.trxStudents.records![index].name ?? "") +
+                                                                (controller.trxStudents.records![index].surname ??
+                                                                    ""))
+                                                            .toString()
+                                                            .toLowerCase()
+                                                            .contains(controller
+                                                                .studentSearchFilterValue
+                                                                .value
+                                                                .toLowerCase())
+                                                        : controller.studentDropdownValue.value ==
+                                                                "2"
+                                                            ? (controller
+                                                                        .trxStudents
+                                                                        .records![index]
+                                                                        .birthcity ??
+                                                                    "")
+                                                                .toString()
+                                                                .toLowerCase()
+                                                                .contains(controller.studentSearchFilterValue.value.toLowerCase())
+                                                            : controller.studentDropdownValue.value == "3"
+                                                                ? (controller.trxStudents.records![index].birthday ?? "").toString().toLowerCase().contains(controller.studentSearchFilterValue.value.toLowerCase())
+                                                                : true,
+                                                child: Card(
+                                                  elevation: 8.0,
+                                                  margin: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10.0,
+                                                      vertical: 6.0),
+                                                  child: Obx(
+                                                    () => controller
+                                                                .selectedStudent ==
+                                                            index
+                                                        ? _buildStudentCard(
+                                                            Theme.of(context)
+                                                                .cardColor,
+                                                            context,
+                                                            index)
+                                                        : _buildStudentCard(
+                                                            const Color
+                                                                    .fromRGBO(
+                                                                64, 75, 96, .9),
+                                                            context,
+                                                            index),
+                                                  ),
+                                                )));
+                                          },
                                         ),
-                                        SizedBox(
-                                          child: IconButton(
-                                            onPressed: () {
-                                              deleteStudent(controller.selectedStudent);
-                                            },
-                                            icon: const Icon(Icons.delete),
-                                            color: Colors.red,
-                                            iconSize: 35
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          child: IconButton(
-                                            onPressed: () {
-                                              updateOrCreateStudent(controller.selectedStudent);
-                                            },
-                                            icon: const Icon(Icons.save),
-                                            color: Colors.white,
-                                            iconSize: 35
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: kSpacing * 3.8),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: SizedBox(
-                                        //width: 100,
-                                        height: MediaQuery.of(context).size.height / 1.3,
-                                        child: 
-                                        Obx( () => controller.showStudentDetails ? 
-                                           _buildStudentInput() : Center(child: Text('No Student Selected'.tr)) 
-                                          )),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      )
+                                    : Center(
+                                        child: Text('No Course Selected'.tr)),
                               ),
-                            )],);
+                            ))
+                          ],
+                        ),
+                      ])),
+                  Flexible(
+                    flex: 7,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing * 1),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                child: IconButton(
+                                    onPressed: () {
+                                      //crea un nuovo studente quindi verrà fatta una richiesta post
+
+                                      controller.newStudent = true;
+                                      newStudentInput();
+                                    },
+                                    icon: const Icon(Icons.person_add),
+                                    color: Colors.green,
+                                    iconSize: 35),
+                              ),
+                              SizedBox(
+                                child: IconButton(
+                                    onPressed: () {
+                                      deleteStudent(controller.selectedStudent);
+                                    },
+                                    icon: const Icon(Icons.delete),
+                                    color: Colors.red,
+                                    iconSize: 35),
+                              ),
+                              SizedBox(
+                                child: IconButton(
+                                    onPressed: () {
+                                      updateOrCreateStudent(
+                                          controller.selectedStudent);
+                                    },
+                                    icon: const Icon(Icons.save),
+                                    color: Colors.white,
+                                    iconSize: 35),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: kSpacing * 3.8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                                  //width: 100,
+                                  height:
+                                      MediaQuery.of(context).size.height / 1.3,
+                                  child: Obx(() => controller
+                                          ._showStudentDetails.value
+                                      ? _buildStudentInput(context)
+                                      : Center(
+                                          child:
+                                              Text('No Student Selected'.tr)))),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              );
             },
           ),
         ),
@@ -983,73 +1051,68 @@ class PortalMpTrainingCourseCourseListScreen
     ]);
   }
 
-  Widget _buildCourseCard(Color selectionColor, context, index){
+  Widget _buildCourseCard(Color selectionColor, context, index) {
     return Container(
-      decoration: BoxDecoration(
-        color: selectionColor
-      ),
+      decoration: BoxDecoration(color: selectionColor),
       child: ExpansionTile(
         trailing: IconButton(
-          icon: const Icon(
-            Icons.article,
-            color: Colors.green,
-          ),
-          onPressed: () {
-            controller.selectedCourse = index;
-            controller.courseId = controller.trxCourses.records![index].id;
-            controller.showStudentDetails = false;
-            controller.getCourseStudents();
-          }),
+            icon: const Icon(
+              Icons.article,
+              color: Colors.green,
+            ),
+            onPressed: () {
+              controller.selectedCourse = index;
+              controller.courseId =
+                  controller.trxCourses.records![index].mpMaintainParentID?.id;
+              print(controller.courseId);
+              controller.showStudentDetails = false;
+              controller.getCourseStudents();
+            }),
         title: Text(
-          "DocumentNo".tr + " " +
-          controller.trxCourses.records![index].documentNo!,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold),
+          "DocumentNo".tr +
+              " " +
+              controller.trxCourses.records![index].documentNo!,
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        subtitle: 
-        Expanded(
+        subtitle: Expanded(
           child: Column(
             children: <Widget>[
               Row(
                 children: [
                   Flexible(
-                    child: Text(controller.trxCourses.records![index].name ?? '',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                      )
-                    ),
+                    child: Text(
+                        controller.trxCourses.records![index].name ?? '',
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white)),
                   ),
                 ],
               ),
-              const SizedBox(width: 50 /* MediaQuery.of(context).size.width / 10, */),
+              const SizedBox(
+                  width: 50 /* MediaQuery.of(context).size.width / 10, */),
               Row(
                 children: [
                   Text("Business Partner".tr + ": ",
-                    style: const TextStyle(
-                      color: Colors.white,
-                    )
-                  ),
-                  Flexible(
-                    child: Text(controller.trxCourses.records![index].cBPartnerID?.identifier ?? "",
-                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold
-                    )),
+                      )),
+                  Flexible(
+                    child: Text(
+                        controller.trxCourses.records![index].cBPartnerID
+                                ?.identifier ??
+                            "",
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
-              
-              
-          ],
-
-                                            ),
+            ],
+          ),
         ),
-      childrenPadding: const EdgeInsets.symmetric(
-            horizontal: 20.0, vertical: 10.0),
+        childrenPadding:
+            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         children: [
           Column(
             children: [
@@ -1076,7 +1139,9 @@ class PortalMpTrainingCourseCourseListScreen
               Row(
                 children: [
                   Text('Organization'.tr + ': '),
-                  Text(controller.trxCourses.records![index].aDOrgID?.identifier ?? '')
+                  Text(controller
+                          .trxCourses.records![index].aDOrgID?.identifier ??
+                      '')
                 ],
               ),
               /* Row(
@@ -1104,108 +1169,103 @@ class PortalMpTrainingCourseCourseListScreen
     );
   }
 
-  Widget _buildStudentCard(Color selectionColor, context, index){
+  Widget _buildStudentCard(Color selectionColor, context, index) {
     return Container(
-      decoration: BoxDecoration(
-        color: selectionColor
-      ),
+      decoration: BoxDecoration(color: selectionColor),
       child: ExpansionTile(
         trailing: IconButton(
-          icon: const Icon(
-            Icons.person,
-            color: Colors.green,
-          ),
-          onPressed: () {
-            //non crea un nuovo studente quindi verrà fatta una richiesta put
-            controller.newStudent = false;
-            controller.initFieldsController(index, false);
-            controller.selectedStudent = index;
-            controller.showStudentDetails = true;
-          }),
+            icon: const Icon(
+              Icons.person,
+              color: Colors.green,
+            ),
+            onPressed: () {
+              //non crea un nuovo studente quindi verrà fatta una richiesta put
+              controller.newStudent = false;
+              controller.initFieldsController(index, false);
+              controller.selectedStudent = index;
+            }),
         title: Row(
           children: [
             Text(
-              (controller.trxStudents.records![index].name != null ? 
-              controller.trxStudents.records![index].name! + ' ' : ''),
+              (controller.trxStudents.records![index].name != null
+                  ? controller.trxStudents.records![index].name! + ' '
+                  : ''),
               style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold),
+                  color: Colors.white, fontWeight: FontWeight.bold),
             ),
             Text(
-              (controller.trxStudents.records![index].surname != null ?
-              controller.trxStudents.records![index].surname! : ''),
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold)
-            )
+                (controller.trxStudents.records![index].surname != null
+                    ? controller.trxStudents.records![index].surname!
+                    : ''),
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold))
           ],
         ),
-        subtitle: 
-        Expanded(
+        subtitle: Expanded(
           child: Column(
             children: <Widget>[
               Row(
                 children: [
-                  Text("Birthplace".tr + ": ",
+                  Text(
+                    "Birthplace".tr + ": ",
                     style: const TextStyle(color: Colors.white),
                   ),
                   Text(controller.trxStudents.records![index].birthcity ?? "",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                  )),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      )),
                 ],
               ),
-              const SizedBox(width: 50 /* MediaQuery.of(context).size.width / 10, */),
+              const SizedBox(
+                  width: 50 /* MediaQuery.of(context).size.width / 10, */),
               Row(
                 children: [
-                  Text('Birthday'.tr + ': ',
-                     style: const TextStyle(color: Colors.white),),
-                  Text(controller.trxStudents.records![index].birthday ?? '',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    )
+                  Text(
+                    'Birthday'.tr + ': ',
+                    style: const TextStyle(color: Colors.white),
                   ),
+                  Text(controller.trxStudents.records![index].birthday ?? '',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      )),
                 ],
               ),
-          ],
-
-        ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildStudentInput() {
+  Widget _buildStudentInput(BuildContext context) {
     return Container(
-      //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-      margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
-      color: const Color.fromRGBO(64, 75, 96, .9),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
+        //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+        margin: const EdgeInsets.only(
+            right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
+        color: const Color.fromRGBO(64, 75, 96, .9),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(children: [
             Container(
               margin: const EdgeInsets.all(10),
               child: TextField(
                 controller: controller.studentFields[0],
                 decoration: InputDecoration(
-                  hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255)
-                  ),
-                  labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  border: const OutlineInputBorder(),
-                  labelText: 'Name'.tr,
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  /* hintText: controller.trxStudents.records![controller.selectedStudent]
+                    hintStyle: const TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255)),
+                    labelStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Name'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    /* hintText: controller.trxStudents.records![controller.selectedStudent]
                   .name ?? '', */
-                  enabled: true
-                ),
+                    enabled: true),
               ),
             ),
             Container(
@@ -1213,21 +1273,19 @@ class PortalMpTrainingCourseCourseListScreen
               child: TextField(
                 controller: controller.studentFields[1],
                 decoration: InputDecoration(
-                  hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255)
-                  ),
-                  labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  border: const OutlineInputBorder(),
-                  labelText: 'Surname'.tr,
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  /* hintText: controller.trxStudents.records![controller.selectedStudent]
+                    hintStyle: const TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255)),
+                    labelStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Surname'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    /* hintText: controller.trxStudents.records![controller.selectedStudent]
                   .surname ?? '', */
-                  enabled: true
-                ),
+                    enabled: true),
               ),
             ),
             Container(
@@ -1236,8 +1294,7 @@ class PortalMpTrainingCourseCourseListScreen
                 controller: controller.studentFields[2],
                 decoration: InputDecoration(
                   hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255)
-                  ),
+                      color: Color.fromARGB(255, 255, 255, 255)),
                   labelStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -1249,42 +1306,19 @@ class PortalMpTrainingCourseCourseListScreen
                   /* hintText: controller.trxStudents.records![controller.selectedStudent]
                   .birthcity ?? '', */
                   enabled: true,
-                  
                 ),
               ),
             ),
             Container(
               margin: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text('Birthday'.tr, 
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15
-                      ),)),
-                  DateTimePicker(
-                        //locale: const Locale('it', 'IT'),
-                        type: DateTimePickerType.date,
-                        calendarTitle: 'Birthday'.tr,
-                        initialValue: controller.studentFields[3].text,
-                        firstDate: DateTime(1930),
-                        lastDate: DateTime(2100),
-                        timeLabelText: 'Birthday'.tr,
-                        icon: const Icon(Icons.access_time),
-                        onChanged: (date) {
-                          controller.studentFields[3].text = date;
-                        },
-                      ),
-                ],
-              )
-              
-              /* TextField(
+              child: TextField(
+                onTap: () {
+                  _selectDate(context, controller.selectedStudent);
+                },
+                controller: controller.studentFields[3],
                 decoration: InputDecoration(
                   hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255)
-                  ),
+                      color: Color.fromARGB(255, 255, 255, 255)),
                   labelStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -1293,32 +1327,61 @@ class PortalMpTrainingCourseCourseListScreen
                   border: const OutlineInputBorder(),
                   labelText: 'Birthday'.tr,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: controller.trxStudents.records![controller.selectedStudent]
-                  .birthday ?? '',
-                  enabled: false
+                  /* hintText: controller.trxStudents.records![controller.selectedStudent]
+                  .birthcity ?? '', */
+                  enabled: true,
                 ),
-              ), */
+              ),
             ),
+            /* Container(
+                margin: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Birthday'.tr,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        )),
+                    Obx(
+                      () => controller._showStudentDetails.value
+                          ? DateTimePicker(
+                              //locale: const Locale('it', 'IT'),
+                              type: DateTimePickerType.date,
+                              calendarTitle: 'Birthday'.tr,
+                              initialValue: controller.studentFields[3].text,
+                              firstDate: DateTime(1930),
+                              lastDate: DateTime(2100),
+                              timeLabelText: 'Birthday'.tr,
+                              icon: const Icon(Icons.access_time),
+                              onChanged: (date) {
+                                controller.studentFields[3].text =
+                                    date.substring(0, 10);
+                              },
+                            )
+                          : SizedBox(),
+                    )
+                  ],
+                )), */
             Container(
               margin: const EdgeInsets.all(10),
               child: TextField(
                 controller: controller.studentFields[4],
                 decoration: InputDecoration(
-                  hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255)
-                  ),
-                  labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  border: const OutlineInputBorder(),
-                  labelText: 'Email'.tr,
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  /* hintText: controller.trxStudents.records![controller.selectedStudent]
+                    hintStyle: const TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255)),
+                    labelStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Email'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    /* hintText: controller.trxStudents.records![controller.selectedStudent]
                   .email ?? '', */
-                  enabled: true
-                ),
+                    enabled: true),
               ),
             ),
             Container(
@@ -1326,21 +1389,19 @@ class PortalMpTrainingCourseCourseListScreen
               child: TextField(
                 controller: controller.studentFields[5],
                 decoration: InputDecoration(
-                  hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255)
-                  ),
-                  labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  border: const OutlineInputBorder(),
-                  labelText: 'Position'.tr,
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  /* hintText: controller.trxStudents.records![controller.selectedStudent]
+                    hintStyle: const TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255)),
+                    labelStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Position'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    /* hintText: controller.trxStudents.records![controller.selectedStudent]
                   .location ?? '', */
-                  enabled: true
-                ),
+                    enabled: true),
               ),
             ),
             Container(
@@ -1348,29 +1409,29 @@ class PortalMpTrainingCourseCourseListScreen
               child: TextField(
                 controller: controller.studentFields[6],
                 decoration: InputDecoration(
-                  hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255)
-                  ),
-                  labelStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  border: const OutlineInputBorder(),
-                  labelText: 'TaxCode'.tr,
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  /* hintText: controller.trxStudents.records![controller.selectedStudent]
+                    hintStyle: const TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255)),
+                    labelStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: const OutlineInputBorder(),
+                    labelText: 'TaxCode'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    /* hintText: controller.trxStudents.records![controller.selectedStudent]
                   .taxcode ?? '', */
-                  enabled: true
-                ),
+                    enabled: true),
               ),
             ),
           ]),
-      ));
+        ));
   }
-  Widget _buildCoursesFilter(){
-    return Row(children: [
-      Container(
+
+  Widget _buildCoursesFilter() {
+    return Row(
+      children: [
+        Container(
           margin: const EdgeInsets.all(10),
           child: Obx(
             () => DropdownButton(
@@ -1409,11 +1470,14 @@ class PortalMpTrainingCourseCourseListScreen
             ),
           ),
         ),
-    ],);
+      ],
+    );
   }
-   Widget _buildStudentsFilter(){
-    return Row(children: [
-      Container(
+
+  Widget _buildStudentsFilter() {
+    return Row(
+      children: [
+        Container(
           margin: const EdgeInsets.all(10),
           child: Obx(
             () => DropdownButton(
@@ -1452,6 +1516,7 @@ class PortalMpTrainingCourseCourseListScreen
             ),
           ),
         ),
-    ],);
+      ],
+    );
   }
 }

@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
 
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 
@@ -14,6 +16,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/bploca
 
 //screens
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
+import 'package:idempiere_app/constants.dart';
 
 class CRMEditSalesOrder extends StatefulWidget {
   const CRMEditSalesOrder({Key? key}) : super(key: key);
@@ -30,7 +33,10 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
       //"bPartner": bPartnerFieldController.text,
       "DocumentNo": docNoFieldController.text,
       "C_DocTypeTarget_ID": {'id': int.parse(dropdownDocType)},
-      'C_BPartner_Location_ID': {'id': int.parse(dropdownBPLocation)}
+      'C_BPartner_Location_ID': {'id': int.parse(dropdownBPLocation)},
+      'IsPaid': isPaid,
+      'PaymentRule': paymentRuleId,
+      'TotalLines': double.parse(amountFieldController.text),
     });
     final protocol = GetStorage().read('protocol');
     var url =
@@ -162,6 +168,40 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     //print(response.body);
   }
 
+  Future<void> getPaymentRules() async {
+    setState(() {
+      pRuleAvailable = false;
+    });
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 195');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pRules =
+          PaymentRuleJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      setState(() {
+        pRuleAvailable = true;
+      });
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   void fillFields() {
     bPartnerFieldController.text = args["bPartner"] ?? "";
     docNoFieldController.text = args["docNo"] ?? "";
@@ -173,6 +213,9 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
   var bPartnerFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var docNoFieldController;
+
+  var businessPartnerFieldController;
+  var amountFieldController;
   //String dropdownValue = "";
   //var bPartnerValue = "";
   late TextEditingValue bPName;
@@ -181,9 +224,16 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
   String dropdownDocType = "";
   String dropdownBPLocation = "";
   int bPartnerId = Get.arguments['bPartnerId'] ?? 0;
+  bool isPaid = false;
+  String paymentRuleId = "B";
+  bool pRuleAvailable = false;
+  late PaymentRuleJson pRules;
 
   @override
   void initState() {
+    isPaid = args['isPaid'] ?? false;
+    pRuleAvailable = false;
+    paymentRuleId = args["PruleId"] ?? "B";
     //dropdownValue = (args["C_BP_Group_ID"]).toString();
     dropdownDocType = (args["docTypeTargetId"]).toString();
     dropdownBPLocation = (args["BPartnerLocationId"]).toString();
@@ -191,8 +241,12 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     super.initState();
     bPartnerFieldController = TextEditingController();
     docNoFieldController = TextEditingController();
+    businessPartnerFieldController =
+        TextEditingController(text: args['bPartnerName']);
+    amountFieldController = TextEditingController(text: args["amt"] ?? "0");
     //bPGroupController = TextEditingController();
     fillFields();
+    getPaymentRules();
     getBPLocations();
     //getAllDocType();
     //getAllBPartners();
@@ -265,6 +319,19 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                       prefixIcon: const Icon(Icons.note_alt),
                       border: const OutlineInputBorder(),
                       labelText: 'DocumentNo'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: businessPartnerFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -363,6 +430,80 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                             : const Center(
                                 child: CircularProgressIndicator(),
                               ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 30),
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Align(
+                    child: Text(
+                      "Payment Rule".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: pRuleAvailable
+                      ? DropdownButton(
+                          value: paymentRuleId,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            paymentRuleId = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: pRules.records!.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.value,
+                            );
+                          }).toList(),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Paid'.tr),
+                  value: isPaid,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isPaid = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: amountFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Net Amount'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
               ],

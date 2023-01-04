@@ -74,6 +74,7 @@ class Records {
   final bool? lITIsChecked;
   final bool? isDelivered;
   final num? lITGrossWeight;
+  final ADUser2ID? adUser2ID;
   final String? modelname;
 
   Records({
@@ -119,6 +120,7 @@ class Records {
     this.lITIsChecked,
     this.isDelivered,
     this.lITGrossWeight,
+    this.adUser2ID,
     this.modelname,
   });
 
@@ -193,6 +195,9 @@ class Records {
         sendEMail = json['SendEMail'] as bool?,
         salesRepID = (json['SalesRep_ID'] as Map<String, dynamic>?) != null
             ? SalesRepID.fromJson(json['SalesRep_ID'] as Map<String, dynamic>)
+            : null,
+        adUser2ID = (json['AD_User2_ID'] as Map<String, dynamic>?) != null
+            ? ADUser2ID.fromJson(json['AD_User2_ID'] as Map<String, dynamic>)
             : null,
         noPackages = json['NoPackages'] as num?,
         isInTransit = json['IsInTransit'] as bool?,
@@ -296,6 +301,33 @@ class ADClientID {
   });
 
   ADClientID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADUser2ID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADUser2ID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADUser2ID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

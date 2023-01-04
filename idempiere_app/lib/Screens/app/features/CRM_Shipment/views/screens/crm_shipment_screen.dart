@@ -306,6 +306,64 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                     Icons.receipt_long)),
                                           ],
                                         ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id ==
+                                              'CO',
+                                          child: ElevatedButton(
+                                            child: Text("Reopen".tr),
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Reopen'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to reopen the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .reopenProcess(index);
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id !=
+                                              'CO',
+                                          child: ElevatedButton(
+                                            child: Text("Complete".tr),
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Complete'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to complete the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .completeShipment(index);
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ],

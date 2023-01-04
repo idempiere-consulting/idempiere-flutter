@@ -408,6 +408,23 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         .records![index]
                                                         .cBPartnerID
                                                         ?.id,
+                                                    "bPartnerName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.identifier,
+                                                    "isPaid": controller.trx
+                                                        .records![index].isPaid,
+                                                    "pRuleId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.id,
+                                                    "amt": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .totalLines
+                                                        .toString(),
                                                   });
                                             },
                                           ),

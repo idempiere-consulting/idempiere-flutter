@@ -42,12 +42,22 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Ticket".tr,
+                  visible: int.parse(list[37], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 //Richieste di offerta
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Sales Order Request".tr,
+                  visible: int.parse(list[36], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,

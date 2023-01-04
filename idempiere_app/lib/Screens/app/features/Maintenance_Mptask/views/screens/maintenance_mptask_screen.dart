@@ -386,7 +386,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         Row(
                                           children: [
                                             Text(
-                                              'N° Work Order'.tr,
+                                              'N° Work Order: '.tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -416,6 +416,22 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             ),
                                             Text(
                                                 "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${'Contract Type'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .contracttypename ??
+                                                  ""),
+                                            )
                                           ],
                                         ),
                                         Visibility(

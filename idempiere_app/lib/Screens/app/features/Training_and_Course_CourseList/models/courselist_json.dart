@@ -18,7 +18,9 @@ class CourseListJson {
     recordssize = json['records-size'] as int?;
     skiprecords = json['skip-records'] as int?;
     rowcount = json['row-count'] as int?;
-    records = (json['records'] as List?)?.map((dynamic e) => Records.fromJson(e as Map<String,dynamic>)).toList();
+    records = (json['records'] as List?)
+        ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -63,6 +65,7 @@ class Records {
   int? mPMaintainID2;
   String? modelname;
   CBPartnerID? cBPartnerID;
+  MPMaintainParentID? mpMaintainParentID;
 
   Records({
     this.id,
@@ -95,6 +98,7 @@ class Records {
     this.mPMaintainID2,
     this.modelname,
     this.cBPartnerID,
+    this.mpMaintainParentID,
   });
 
   Records.fromJson(Map<String, dynamic> json) {
@@ -102,33 +106,58 @@ class Records {
     uid = json['uid'] as String?;
     documentNo = json['DocumentNo'] as String?;
     isChild = json['IsChild'] as bool?;
-    updatedBy = (json['UpdatedBy'] as Map<String,dynamic>?) != null ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String,dynamic>) : null;
+    updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
+        ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
+        : null;
     currentmp = json['currentmp'] as int?;
     created = json['Created'] as String?;
-    createdBy = (json['CreatedBy'] as Map<String,dynamic>?) != null ? CreatedBy.fromJson(json['CreatedBy'] as Map<String,dynamic>) : null;
+    createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
+        ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
+        : null;
     dateNextRun = json['DateNextRun'] as String?;
     description = json['Description'] as String?;
-    docStatus = (json['DocStatus'] as Map<String,dynamic>?) != null ? DocStatus.fromJson(json['DocStatus'] as Map<String,dynamic>) : null;
+    docStatus = (json['DocStatus'] as Map<String, dynamic>?) != null
+        ? DocStatus.fromJson(json['DocStatus'] as Map<String, dynamic>)
+        : null;
     interval = json['Interval'] as int?;
     isActive = json['IsActive'] as bool?;
     lastmp = json['lastmp'] as int?;
     lastread = json['lastread'] as int?;
     nextmp = json['nextmp'] as int?;
-    programmingType = (json['ProgrammingType'] as Map<String,dynamic>?) != null ? ProgrammingType.fromJson(json['ProgrammingType'] as Map<String,dynamic>) : null;
+    programmingType = (json['ProgrammingType'] as Map<String, dynamic>?) != null
+        ? ProgrammingType.fromJson(
+            json['ProgrammingType'] as Map<String, dynamic>)
+        : null;
     promuse = json['promuse'] as int?;
     range = json['Range'] as int?;
     updated = json['Updated'] as String?;
-    aDClientID = (json['AD_Client_ID'] as Map<String,dynamic>?) != null ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String,dynamic>) : null;
-    mProductID = (json['M_Product_ID'] as Map<String,dynamic>?) != null ? MProductID.fromJson(json['M_Product_ID'] as Map<String,dynamic>) : null;
-    aDOrgID = (json['AD_Org_ID'] as Map<String,dynamic>?) != null ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String,dynamic>) : null;
-    windowType = (json['WindowType'] as Map<String,dynamic>?) != null ? WindowType.fromJson(json['WindowType'] as Map<String,dynamic>) : null;
+    aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
+        ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
+        : null;
+    mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
+        ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
+        : null;
+    aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
+        ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
+        : null;
+    windowType = (json['WindowType'] as Map<String, dynamic>?) != null
+        ? WindowType.fromJson(json['WindowType'] as Map<String, dynamic>)
+        : null;
     name = json['Name'] as String?;
     help = json['Help'] as String?;
-    aDUserID = (json['AD_User_ID'] as Map<String,dynamic>?) != null ? ADUserID.fromJson(json['AD_User_ID'] as Map<String,dynamic>) : null;
+    aDUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
+        ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
+        : null;
     mPMaintainID2 = json['MP_Maintain_ID2'] as int?;
     modelname = json['model-name'] as String?;
-    cBPartnerID = (json['C_BPartner_ID'] as Map<String,dynamic>?) != null ? CBPartnerID.fromJson(json['C_BPartner_ID'] as Map<String,dynamic>) : null;
-
+    mpMaintainParentID =
+        (json['MP_MaintainParent_ID'] as Map<String, dynamic>?) != null
+            ? MPMaintainParentID.fromJson(
+                json['MP_MaintainParent_ID'] as Map<String, dynamic>)
+            : null;
+    cBPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
+        ? CBPartnerID.fromJson(json['C_BPartner_ID'] as Map<String, dynamic>)
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -163,6 +192,7 @@ class Records {
     json['MP_Maintain_ID2'] = mPMaintainID2;
     json['model-name'] = modelname;
     json['C_BPartner_ID'] = cBPartnerID?.toJson();
+    json['MP_MaintainParent_ID'] = mpMaintainParentID?.toJson();
     return json;
   }
 }
@@ -331,6 +361,36 @@ class CBPartnerID {
   });
 
   CBPartnerID.fromJson(Map<String, dynamic> json) {
+    propertyLabel = json['propertyLabel'] as String?;
+    id = json['id'] as int?;
+    identifier = json['identifier'] as String?;
+    modelname = json['model-name'] as String?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['propertyLabel'] = propertyLabel;
+    json['id'] = id;
+    json['identifier'] = identifier;
+    json['model-name'] = modelname;
+    return json;
+  }
+}
+
+class MPMaintainParentID {
+  String? propertyLabel;
+  int? id;
+  String? identifier;
+  String? modelname;
+
+  MPMaintainParentID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MPMaintainParentID.fromJson(Map<String, dynamic> json) {
     propertyLabel = json['propertyLabel'] as String?;
     id = json['id'] as int?;
     identifier = json['identifier'] as String?;

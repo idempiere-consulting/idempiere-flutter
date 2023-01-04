@@ -123,7 +123,7 @@ class CRMShipmentController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_InOut?\$filter= IsSoTrx eq Y and DocStatus eq \'CO\' and MovementDate le \'$formattedDate 23:59:59\' and MovementDate ge \'$formattedNinetyDaysAgo 00:00:00\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= MovementDate desc');
+        '/api/v1/models/lit_mobile_shipment_v?\$filter= AD_User2_ID eq $adUserId or SalesRep_ID eq $adUserId&\$orderby= MovementDate desc'); //?\$filter= AD_User2_ID eq $adUserId or SalesRep_ID eq $adUserId&\$orderby= MovementDate desc
 
     var response = await http.get(
       url,
@@ -139,6 +139,8 @@ class CRMShipmentController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      print(response.body);
     }
   }
 
@@ -147,6 +149,93 @@ class CRMShipmentController extends GetxController {
       scaffoldKey.currentState!.openDrawer();
     }
   } */
+
+  reopenProcess(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    var msg = jsonEncode({
+      "record-id": _trx.records![index].id,
+      //"C_DocType_ID": _trx.records![index].cDocTypeID?.id ,
+    });
+
+    //print(msg);
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/processes/scriptclosedtodraftedshipmreceipt');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print("done!");
+      Get.back();
+      print(response.body);
+      Get.snackbar(
+        "Done!".tr,
+        "Sales Order has been created".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Error!".tr,
+        "Sales Order not created".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+    getShipments();
+  }
+
+  completeShipment(int index) async {
+    Get.back();
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_inout/${_trx.records![index].id}');
+
+    var msg = jsonEncode({
+      'DocStatus': {"id": "CO"}
+    });
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.snackbar(
+        "Done!".tr,
+        "The Record has been Completed".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+    getShipments();
+  }
 
   Future<void> getBusinessPartner(int index) async {
     final ip = GetStorage().read('ip');

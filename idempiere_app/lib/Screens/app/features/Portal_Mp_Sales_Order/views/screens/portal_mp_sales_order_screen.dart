@@ -62,67 +62,56 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
   approveSalesOrder(index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    final msg = jsonEncode({"isApproved": true,});
+    final msg = jsonEncode({
+      "isApproved": true,
+    });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip +
-            '/api/v1/models/c_order/${controller.trxSalesOrder.records![index].id}');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/c_order/${controller.trxSalesOrder.records![index].id}');
     var response = await http.put(
       url,
       body: msg,
-      headers: <String,
-          String>{
-        'Content-Type':
-            'application/json',
-        'Authorization':
-            authorization,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
       },
     );
     if (response.statusCode == 200) {
       controller.getSalesOrders();
       Get.snackbar(
         "Done!".tr,
-        "Sales Order approved"
-            .tr,
-        icon:
-            const Icon(
+        "Sales Order approved".tr,
+        icon: const Icon(
           Icons.error,
-          color: Colors
-              .green,
+          color: Colors.green,
         ),
       );
     } else {
       //print(response.body);
       Get.snackbar(
         "Error!".tr,
-        "Sales Order not approved"
-            .tr,
-        icon:
-            const Icon(
+        "Sales Order not approved".tr,
+        icon: const Icon(
           Icons.error,
-          color: Colors
-              .red,
+          color: Colors.red,
         ),
       );
     }
   }
 
-  signOrder(id, String date, int index) async {
+  postImage(id, String date, int index) async {
     var data = await controller.signatureController.toPngBytes();
     // ignore: unused_local_variable
     var image64 = base64.encode(data!);
+    //print(image64);
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    final msg =
-        jsonEncode({
-          "name": "${date.replaceAll('-', '')}_${controller.signatureNameController.text.replaceAll(' ', '')}.jpg",
-          "data": image64,
-          "description": "${controller.signatureNameController.text} $date"
-          }
-        );
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_Order/$id/attachments');
+    final msg =
+        jsonEncode({"name": "customersignature.jpg", "BinaryData": image64});
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_image');
+
     var response = await http.post(
       url,
       body: msg,
@@ -130,8 +119,38 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
         'Content-Type': 'application/json',
         'Authorization': authorization,
       },
-    ); 
+    );
+    if (response.statusCode == 201) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+      signOrder(id, index, json["id"]);
+    } else {
+      //print(response.body);
+    }
+  }
+
+  signOrder(id, int index, int imageId) async {
+    var data = await controller.signatureController.toPngBytes();
+    // ignore: unused_local_variable
+    var image64 = base64.encode(data!);
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final msg = jsonEncode({
+      "LIT_Sign_Image_ID": imageId,
+    });
+    //print(msg);
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/C_Order/$id');
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
     if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.body);
       Get.back();
       Get.snackbar(
         "Signed!".tr,
@@ -146,6 +165,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
       controller.canSign = false;
       controller.canApprove = [index, true];
     } else {
+      //print(response.body);
       Get.snackbar(
         "Error!".tr,
         "Sales Order not signed".tr,
@@ -212,12 +232,13 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -233,7 +254,8 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("SALES ORDERS: ".tr + controller.trxSalesOrder.rowcount.toString())
+                          ? Text("SALES ORDERS: ".tr +
+                              controller.trxSalesOrder.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -261,8 +283,6 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                         ),
                       ),
                     ),
-                    
-                    
                   ],
                 ),
                 Row(
@@ -283,7 +303,8 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                           value: controller.salesOrderDropdownValue.value,
                           elevation: 16,
                           onChanged: (String? newValue) {
-                            controller.salesOrderDropdownValue.value = newValue!;
+                            controller.salesOrderDropdownValue.value =
+                                newValue!;
 
                             //print(salesOrderDropdownValue);
                           },
@@ -302,12 +323,13 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
-                          controller: controller.salesOrderSearchFieldController,
+                          controller:
+                              controller.salesOrderSearchFieldController,
                           onSubmitted: (String? value) {
                             controller.salesOrderSearchFilterValue.value =
                                 controller.salesOrderSearchFieldController.text;
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -328,220 +350,272 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                           shrinkWrap: true,
                           itemCount: controller.trxSalesOrder.rowcount,
                           itemBuilder: (BuildContext context, int index) {
-                            return Obx (() => Visibility(
-                              visible: controller.salesOrderSearchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.salesOrderDropdownValue.value == "1"
-                                        ? controller.trxSalesOrder.records![index].documentNo
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(controller
-                                                .salesOrderSearchFilterValue.value
-                                                .toLowerCase())
-                                    : controller.salesOrderDropdownValue.value == "2"
-                                            ? (controller
-                                                .trxSalesOrder.records![index].cBPartnerID?.identifier?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .salesOrderSearchFilterValue.value
-                                                    .toLowerCase()): true,
-                            
-                              child: Card(
-                                elevation: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: ExpansionTile(
-                                    trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.article,
-                                        color: controller.trxSalesOrder.records![index]
-                                                    .docStatus?.id ==
-                                                "CO"
-                                            ? Colors.green
-                                            : Colors.yellow,
-                                      ),
-                                      onPressed: () {
-                                        Get.toNamed('/PortalMpSalesOrderLine',
-                                            arguments: {
-                                              "id": controller
-                                                  .trxSalesOrder.records![index].id,
-                                              "bPartner": controller
-                                                  .trxSalesOrder
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.identifier,
-                                              "docNo": controller
-                                                  .trxSalesOrder.records![index].documentNo,
-                                              "priceListId": controller
-                                                  .trxSalesOrder
-                                                  .records![index]
-                                                  .mPriceListID
-                                                  ?.id,
-                                              "dateOrdered": controller.trxSalesOrder
-                                                  .records![index].dateOrdered,
-                                            });
-                                      },
-                                    ),
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding: const EdgeInsets.only(right: 12.0),
+                            return Obx(() => Visibility(
+                                  visible: controller
+                                              .salesOrderSearchFilterValue
+                                              .value ==
+                                          ""
+                                      ? true
+                                      : controller.salesOrderDropdownValue.value ==
+                                              "1"
+                                          ? controller.trxSalesOrder
+                                              .records![index].documentNo
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .salesOrderSearchFilterValue
+                                                  .value
+                                                  .toLowerCase())
+                                          : controller.salesOrderDropdownValue
+                                                      .value ==
+                                                  "2"
+                                              ? (controller
+                                                          .trxSalesOrder
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier ??
+                                                      "")
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller.salesOrderSearchFilterValue.value.toLowerCase())
+                                              : true,
+                                  child: Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
                                       decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.edit,
-                                        ),
-                                        tooltip: 'Edit Sales Order'.tr,
-                                        onPressed: () {
-                                          //log("info button pressed");
-                                          Get.to(const CRMEditSalesOrder(), arguments: {
-                                            "id": controller
-                                                .trxSalesOrder.records![index].id,
-                                            "docNo": controller
-                                                  .trxSalesOrder.records![index].documentNo,
-                                            "docTypeTargetId": controller.trxSalesOrder.records![index].cDocTypeTargetID!.id,
-                                            "BPartnerLocationId": controller.trxSalesOrder.records![index].cBPartnerLocationID!.id,
-                                            "bPartnerId": controller
-                                                  .trxSalesOrder
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.id,
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      "Nr ${controller.trxSalesOrder.records![index].documentNo} Dt ${controller.trxSalesOrder.records![index].dateOrdered}",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-                            
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.handshake,
-                                            color: Colors.yellowAccent),
-                                        Expanded(
-                                          child: Text(
-                                            controller.trxSalesOrder.records![index]
-                                                    .cBPartnerID!.identifier ??
-                                                "??",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Amount: ".tr,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "€${controller.trxSalesOrder.records![index].grandTotal}"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Visibility(
-                                                visible: controller
+                                          color:
+                                              Color.fromRGBO(64, 75, 96, .9)),
+                                      child: ExpansionTile(
+                                        trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.article,
+                                            color: controller
                                                         .trxSalesOrder
                                                         .records![index]
                                                         .docStatus
-                                                        ?.id !=
-                                                    'CO',
-                                                child: ElevatedButton(
-                                                  child: Text("Complete".tr),
-                                                  style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty.all(
-                                                            Colors.green),
+                                                        ?.id ==
+                                                    "CO"
+                                                ? Colors.green
+                                                : Colors.yellow,
+                                          ),
+                                          onPressed: () {
+                                            Get.toNamed(
+                                                '/PortalMpSalesOrderLine',
+                                                arguments: {
+                                                  "id": controller.trxSalesOrder
+                                                      .records![index].id,
+                                                  "bPartner": controller
+                                                      .trxSalesOrder
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier,
+                                                  "docNo": controller
+                                                      .trxSalesOrder
+                                                      .records![index]
+                                                      .documentNo,
+                                                  "priceListId": controller
+                                                      .trxSalesOrder
+                                                      .records![index]
+                                                      .mPriceListID
+                                                      ?.id,
+                                                  "dateOrdered": controller
+                                                      .trxSalesOrder
+                                                      .records![index]
+                                                      .dateOrdered,
+                                                });
+                                          },
+                                        ),
+                                        tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        leading: Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                            ),
+                                            tooltip: 'Edit Sales Order'.tr,
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                              Get.to(const CRMEditSalesOrder(),
+                                                  arguments: {
+                                                    "id": controller
+                                                        .trxSalesOrder
+                                                        .records![index]
+                                                        .id,
+                                                    "docNo": controller
+                                                        .trxSalesOrder
+                                                        .records![index]
+                                                        .documentNo,
+                                                    "docTypeTargetId":
+                                                        controller
+                                                            .trxSalesOrder
+                                                            .records![index]
+                                                            .cDocTypeTargetID!
+                                                            .id,
+                                                    "BPartnerLocationId":
+                                                        controller
+                                                            .trxSalesOrder
+                                                            .records![index]
+                                                            .cBPartnerLocationID!
+                                                            .id,
+                                                    "bPartnerId": controller
+                                                        .trxSalesOrder
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.id,
+                                                  });
+                                            },
+                                          ),
+                                        ),
+                                        title: Text(
+                                          "Nr ${controller.trxSalesOrder.records![index].documentNo} Dt ${controller.trxSalesOrder.records![index].dateOrdered}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Row(
+                                          children: <Widget>[
+                                            const Icon(Icons.handshake,
+                                                color: Colors.yellowAccent),
+                                            Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trxSalesOrder
+                                                        .records![index]
+                                                        .cBPartnerID!
+                                                        .identifier ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        childrenPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 10.0),
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
-                                                  onPressed: () async {
-                                                    Get.defaultDialog(
-                                                      title: 'Complete Action',
-                                                      content: const Text(
-                                                          "Are you sure you want to complete the record?"),
-                                                      onCancel: () {},
-                                                      onConfirm: () async {
-                                                        final ip = GetStorage()
-                                                            .read('ip');
-                                                        String authorization =
-                                                            'Bearer ' +
+                                                  Text(
+                                                      "€${controller.trxSalesOrder.records![index].grandTotal}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Visibility(
+                                                    visible: controller
+                                                            .trxSalesOrder
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id !=
+                                                        'CO',
+                                                    child: ElevatedButton(
+                                                      child:
+                                                          Text("Complete".tr),
+                                                      style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .green),
+                                                      ),
+                                                      onPressed: () async {
+                                                        Get.defaultDialog(
+                                                          title:
+                                                              'Complete Action',
+                                                          content: const Text(
+                                                              "Are you sure you want to complete the record?"),
+                                                          onCancel: () {},
+                                                          onConfirm: () async {
+                                                            final ip =
+                                                                GetStorage()
+                                                                    .read('ip');
+                                                            String
+                                                                authorization =
+                                                                'Bearer ' +
+                                                                    GetStorage()
+                                                                        .read(
+                                                                            'token');
+                                                            final msg =
+                                                                jsonEncode({
+                                                              "DocAction": "CO",
+                                                            });
+                                                            final protocol =
                                                                 GetStorage().read(
-                                                                    'token');
-                                                        final msg = jsonEncode({
-                                                          "DocAction": "CO",
-                                                        });
-                                                        final protocol =
-                                                            GetStorage()
-                                                                .read('protocol');
-                                                        var url = Uri.parse(
-                                                            '$protocol://' +
-                                                                ip +
-                                                                '/api/v1/models/c_order/${controller.trxSalesOrder.records![index].id}');
-                            
-                                                        var response =
-                                                            await http.put(
-                                                          url,
-                                                          body: msg,
-                                                          headers: <String,
-                                                              String>{
-                                                            'Content-Type':
-                                                                'application/json',
-                                                            'Authorization':
-                                                                authorization,
+                                                                    'protocol');
+                                                            var url = Uri.parse(
+                                                                '$protocol://' +
+                                                                    ip +
+                                                                    '/api/v1/models/c_order/${controller.trxSalesOrder.records![index].id}');
+
+                                                            var response =
+                                                                await http.put(
+                                                              url,
+                                                              body: msg,
+                                                              headers: <String,
+                                                                  String>{
+                                                                'Content-Type':
+                                                                    'application/json',
+                                                                'Authorization':
+                                                                    authorization,
+                                                              },
+                                                            );
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                              //print("done!");
+                                                              completeOrder(
+                                                                  index);
+                                                            } else {
+                                                              //print(response.body);
+                                                              Get.snackbar(
+                                                                "Error!".tr,
+                                                                "Record not completed"
+                                                                    .tr,
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                              );
+                                                            }
                                                           },
                                                         );
-                                                        if (response.statusCode ==
-                                                            200) {
-                                                          //print("done!");
-                                                          completeOrder(index);
-                                                        } else {
-                                                          //print(response.body);
-                                                          Get.snackbar(
-                                                            "Error!".tr,
-                                                            "Record not completed".tr,
-                                                            icon: const Icon(
-                                                              Icons.error,
-                                                              color: Colors.red,
-                                                            ),
-                                                          );
-                                                        }
                                                       },
-                                                    );
-                                                  },
-                                                ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ));
+                                ));
                           },
                         )
                       : const Center(child: CircularProgressIndicator()),
@@ -561,7 +635,8 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                   children: [
                     Container(
                       child: Obx(() => controller.dataAvailable
-                          ? Text("SALES ORDERS: ".tr + controller.trxSalesOrder.rowcount.toString())
+                          ? Text("SALES ORDERS: ".tr +
+                              controller.trxSalesOrder.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -589,8 +664,6 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                         ),
                       ),
                     ),
-                    
-                    
                   ],
                 ),
                 Row(
@@ -611,7 +684,8 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                           value: controller.salesOrderDropdownValue.value,
                           elevation: 16,
                           onChanged: (String? newValue) {
-                            controller.salesOrderDropdownValue.value = newValue!;
+                            controller.salesOrderDropdownValue.value =
+                                newValue!;
 
                             //print(salesOrderDropdownValue);
                           },
@@ -630,12 +704,13 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
-                          controller: controller.salesOrderSearchFieldController,
+                          controller:
+                              controller.salesOrderSearchFieldController,
                           onSubmitted: (String? value) {
                             controller.salesOrderSearchFilterValue.value =
                                 controller.salesOrderSearchFieldController.text;
                           },
-                          decoration:  InputDecoration(
+                          decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_outlined),
                             border: const OutlineInputBorder(),
                             //labelText: 'Product Value',
@@ -656,220 +731,272 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                           shrinkWrap: true,
                           itemCount: controller.trxSalesOrder.rowcount,
                           itemBuilder: (BuildContext context, int index) {
-                            return Obx (() => Visibility(
-                              visible: controller.salesOrderSearchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.salesOrderDropdownValue.value == "1"
-                                        ? controller.trxSalesOrder.records![index].documentNo
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(controller
-                                                .salesOrderSearchFilterValue.value
-                                                .toLowerCase())
-                                    : controller.salesOrderDropdownValue.value == "2"
-                                            ? (controller
-                                                .trxSalesOrder.records![index].cBPartnerID?.identifier?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .salesOrderSearchFilterValue.value
-                                                    .toLowerCase()): true,
-                            
-                              child: Card(
-                                elevation: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: ExpansionTile(
-                                    trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.article,
-                                        color: controller.trxSalesOrder.records![index]
-                                                    .docStatus?.id ==
-                                                "CO"
-                                            ? Colors.green
-                                            : Colors.yellow,
-                                      ),
-                                      onPressed: () {
-                                        Get.toNamed('/PortalMpSalesOrderLine',
-                                            arguments: {
-                                              "id": controller
-                                                  .trxSalesOrder.records![index].id,
-                                              "bPartner": controller
-                                                  .trxSalesOrder
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.identifier,
-                                              "docNo": controller
-                                                  .trxSalesOrder.records![index].documentNo,
-                                              "priceListId": controller
-                                                  .trxSalesOrder
-                                                  .records![index]
-                                                  .mPriceListID
-                                                  ?.id,
-                                              "dateOrdered": controller.trxSalesOrder
-                                                  .records![index].dateOrdered,
-                                            });
-                                      },
-                                    ),
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding: const EdgeInsets.only(right: 12.0),
+                            return Obx(() => Visibility(
+                                  visible: controller
+                                              .salesOrderSearchFilterValue
+                                              .value ==
+                                          ""
+                                      ? true
+                                      : controller.salesOrderDropdownValue.value ==
+                                              "1"
+                                          ? controller.trxSalesOrder
+                                              .records![index].documentNo
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .salesOrderSearchFilterValue
+                                                  .value
+                                                  .toLowerCase())
+                                          : controller.salesOrderDropdownValue
+                                                      .value ==
+                                                  "2"
+                                              ? (controller
+                                                          .trxSalesOrder
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier ??
+                                                      "")
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller.salesOrderSearchFilterValue.value.toLowerCase())
+                                              : true,
+                                  child: Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
                                       decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.edit,
-                                        ),
-                                        tooltip: 'Edit Sales Order'.tr,
-                                        onPressed: () {
-                                          //log("info button pressed");
-                                          Get.to(const CRMEditSalesOrder(), arguments: {
-                                            "id": controller
-                                                .trxSalesOrder.records![index].id,
-                                            "docNo": controller
-                                                  .trxSalesOrder.records![index].documentNo,
-                                            "docTypeTargetId": controller.trxSalesOrder.records![index].cDocTypeTargetID!.id,
-                                            "BPartnerLocationId": controller.trxSalesOrder.records![index].cBPartnerLocationID!.id,
-                                            "bPartnerId": controller
-                                                  .trxSalesOrder
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.id,
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      "Nr ${controller.trxSalesOrder.records![index].documentNo} Dt ${controller.trxSalesOrder.records![index].dateOrdered}",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-                            
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.handshake,
-                                            color: Colors.yellowAccent),
-                                        Expanded(
-                                          child: Text(
-                                            controller.trxSalesOrder.records![index]
-                                                    .cBPartnerID!.identifier ??
-                                                "??",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "Amount: ".tr,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "€${controller.trxSalesOrder.records![index].grandTotal}"),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Visibility(
-                                                visible: controller
+                                          color:
+                                              Color.fromRGBO(64, 75, 96, .9)),
+                                      child: ExpansionTile(
+                                        trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.article,
+                                            color: controller
                                                         .trxSalesOrder
                                                         .records![index]
                                                         .docStatus
-                                                        ?.id !=
-                                                    'CO',
-                                                child: ElevatedButton(
-                                                  child: Text("Complete".tr),
-                                                  style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty.all(
-                                                            Colors.green),
+                                                        ?.id ==
+                                                    "CO"
+                                                ? Colors.green
+                                                : Colors.yellow,
+                                          ),
+                                          onPressed: () {
+                                            Get.toNamed(
+                                                '/PortalMpSalesOrderLine',
+                                                arguments: {
+                                                  "id": controller.trxSalesOrder
+                                                      .records![index].id,
+                                                  "bPartner": controller
+                                                      .trxSalesOrder
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier,
+                                                  "docNo": controller
+                                                      .trxSalesOrder
+                                                      .records![index]
+                                                      .documentNo,
+                                                  "priceListId": controller
+                                                      .trxSalesOrder
+                                                      .records![index]
+                                                      .mPriceListID
+                                                      ?.id,
+                                                  "dateOrdered": controller
+                                                      .trxSalesOrder
+                                                      .records![index]
+                                                      .dateOrdered,
+                                                });
+                                          },
+                                        ),
+                                        tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        leading: Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                            ),
+                                            tooltip: 'Edit Sales Order'.tr,
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                              Get.to(const CRMEditSalesOrder(),
+                                                  arguments: {
+                                                    "id": controller
+                                                        .trxSalesOrder
+                                                        .records![index]
+                                                        .id,
+                                                    "docNo": controller
+                                                        .trxSalesOrder
+                                                        .records![index]
+                                                        .documentNo,
+                                                    "docTypeTargetId":
+                                                        controller
+                                                            .trxSalesOrder
+                                                            .records![index]
+                                                            .cDocTypeTargetID!
+                                                            .id,
+                                                    "BPartnerLocationId":
+                                                        controller
+                                                            .trxSalesOrder
+                                                            .records![index]
+                                                            .cBPartnerLocationID!
+                                                            .id,
+                                                    "bPartnerId": controller
+                                                        .trxSalesOrder
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.id,
+                                                  });
+                                            },
+                                          ),
+                                        ),
+                                        title: Text(
+                                          "Nr ${controller.trxSalesOrder.records![index].documentNo} Dt ${controller.trxSalesOrder.records![index].dateOrdered}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Row(
+                                          children: <Widget>[
+                                            const Icon(Icons.handshake,
+                                                color: Colors.yellowAccent),
+                                            Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trxSalesOrder
+                                                        .records![index]
+                                                        .cBPartnerID!
+                                                        .identifier ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        childrenPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 10.0),
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
-                                                  onPressed: () async {
-                                                    Get.defaultDialog(
-                                                      title: 'Complete Action',
-                                                      content: const Text(
-                                                          "Are you sure you want to complete the record?"),
-                                                      onCancel: () {},
-                                                      onConfirm: () async {
-                                                        final ip = GetStorage()
-                                                            .read('ip');
-                                                        String authorization =
-                                                            'Bearer ' +
+                                                  Text(
+                                                      "€${controller.trxSalesOrder.records![index].grandTotal}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Visibility(
+                                                    visible: controller
+                                                            .trxSalesOrder
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id !=
+                                                        'CO',
+                                                    child: ElevatedButton(
+                                                      child:
+                                                          Text("Complete".tr),
+                                                      style: ButtonStyle(
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .green),
+                                                      ),
+                                                      onPressed: () async {
+                                                        Get.defaultDialog(
+                                                          title:
+                                                              'Complete Action',
+                                                          content: const Text(
+                                                              "Are you sure you want to complete the record?"),
+                                                          onCancel: () {},
+                                                          onConfirm: () async {
+                                                            final ip =
+                                                                GetStorage()
+                                                                    .read('ip');
+                                                            String
+                                                                authorization =
+                                                                'Bearer ' +
+                                                                    GetStorage()
+                                                                        .read(
+                                                                            'token');
+                                                            final msg =
+                                                                jsonEncode({
+                                                              "DocAction": "CO",
+                                                            });
+                                                            final protocol =
                                                                 GetStorage().read(
-                                                                    'token');
-                                                        final msg = jsonEncode({
-                                                          "DocAction": "CO",
-                                                        });
-                                                        final protocol =
-                                                            GetStorage()
-                                                                .read('protocol');
-                                                        var url = Uri.parse(
-                                                            '$protocol://' +
-                                                                ip +
-                                                                '/api/v1/models/c_order/${controller.trxSalesOrder.records![index].id}');
-                            
-                                                        var response =
-                                                            await http.put(
-                                                          url,
-                                                          body: msg,
-                                                          headers: <String,
-                                                              String>{
-                                                            'Content-Type':
-                                                                'application/json',
-                                                            'Authorization':
-                                                                authorization,
+                                                                    'protocol');
+                                                            var url = Uri.parse(
+                                                                '$protocol://' +
+                                                                    ip +
+                                                                    '/api/v1/models/c_order/${controller.trxSalesOrder.records![index].id}');
+
+                                                            var response =
+                                                                await http.put(
+                                                              url,
+                                                              body: msg,
+                                                              headers: <String,
+                                                                  String>{
+                                                                'Content-Type':
+                                                                    'application/json',
+                                                                'Authorization':
+                                                                    authorization,
+                                                              },
+                                                            );
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                              //print("done!");
+                                                              completeOrder(
+                                                                  index);
+                                                            } else {
+                                                              //print(response.body);
+                                                              Get.snackbar(
+                                                                "Error!".tr,
+                                                                "Record not completed"
+                                                                    .tr,
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons.error,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                              );
+                                                            }
                                                           },
                                                         );
-                                                        if (response.statusCode ==
-                                                            200) {
-                                                          //print("done!");
-                                                          completeOrder(index);
-                                                        } else {
-                                                          //print(response.body);
-                                                          Get.snackbar(
-                                                            "Error!".tr,
-                                                            "Record not completed".tr,
-                                                            icon: const Icon(
-                                                              Icons.error,
-                                                              color: Colors.red,
-                                                            ),
-                                                          );
-                                                        }
                                                       },
-                                                    );
-                                                  },
-                                                ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ));
+                                ));
                           },
                         )
                       : const Center(child: CircularProgressIndicator()),
@@ -895,14 +1022,19 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                       children: [
                         Row(
                           children: [
-                            Flexible(flex: 5, child: _buildProfile(data: controller.getProfil())),
+                            Flexible(
+                                flex: 5,
+                                child: _buildProfile(
+                                    data: controller.getProfil())),
                           ],
                         ),
                         Row(
                           children: [
                             Container(
                               child: Obx(() => controller.dataAvailable
-                                  ? Text("SALES ORDERS: ".tr + controller.trxSalesOrder.rowcount.toString())
+                                  ? Text("SALES ORDERS: ".tr +
+                                      controller.trxSalesOrder.rowcount
+                                          .toString())
                                   : Text("SALES ORDERS: ".tr)),
                               margin: const EdgeInsets.only(left: 15),
                             ),
@@ -929,383 +1061,577 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
                                   itemCount: controller.trxSalesOrder.rowcount,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Obx (() => Visibility(
-                                      visible: controller.salesOrderSearchFilterValue.value ==
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Obx(() => Visibility(
+                                        visible: controller
+                                                    .salesOrderSearchFilterValue
+                                                    .value ==
                                                 ""
                                             ? true
-                                            : controller.salesOrderDropdownValue.value == "1"
-                                                ? controller.trxSalesOrder.records![index].documentNo
+                                            : controller.salesOrderDropdownValue.value ==
+                                                    "1"
+                                                ? controller.trxSalesOrder
+                                                    .records![index].documentNo
                                                     .toString()
                                                     .toLowerCase()
                                                     .contains(controller
-                                                        .salesOrderSearchFilterValue.value
+                                                        .salesOrderSearchFilterValue
+                                                        .value
                                                         .toLowerCase())
-                                            : controller.salesOrderDropdownValue.value == "2"
+                                                : controller.salesOrderDropdownValue
+                                                            .value ==
+                                                        "2"
                                                     ? (controller
-                                                        .trxSalesOrder.records![index].cDocTypeTargetID?.identifier?? "")
+                                                                .trxSalesOrder
+                                                                .records![index]
+                                                                .cDocTypeTargetID
+                                                                ?.identifier ??
+                                                            "")
                                                         .toString()
                                                         .toLowerCase()
-                                                        .contains(controller
-                                                            .salesOrderSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : controller.salesOrderDropdownValue.value == "3"
-                                                    ? (controller
-                                                        .trxSalesOrder.records![index].dateOrdered ?? "")
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(controller
-                                                            .salesOrderSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : true,
-                                    
-                                      child: Card(
-                                        elevation: 8.0,
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 6.0),
-                                        child: Obx( () => controller.selectedCard == index ? 
-                                          _buildCard(Theme.of(context).cardColor, context, index) : 
-                                          _buildCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
-                                      ),
-                                    )));
+                                                        .contains(controller.salesOrderSearchFilterValue.value.toLowerCase())
+                                                    : controller.salesOrderDropdownValue.value == "3"
+                                                        ? (controller.trxSalesOrder.records![index].dateOrdered ?? "").toString().toLowerCase().contains(controller.salesOrderSearchFilterValue.value.toLowerCase())
+                                                        : true,
+                                        child: Card(
+                                          elevation: 8.0,
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 10.0, vertical: 6.0),
+                                          child: Obx(
+                                            () => controller.selectedCard ==
+                                                    index
+                                                ? _buildCard(
+                                                    Theme.of(context).cardColor,
+                                                    context,
+                                                    index)
+                                                : _buildCard(
+                                                    const Color.fromRGBO(
+                                                        64, 75, 96, .9),
+                                                    context,
+                                                    index),
+                                          ),
+                                        )));
                                   },
                                 )
-                              : const Center(child: CircularProgressIndicator()),
+                              : const Center(
+                                  child: CircularProgressIndicator()),
                         )
                       ],
                     ),
                   ),
                   Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing ),
+                      flex: 4,
+                      child: Column(children: [
+                        const SizedBox(height: kSpacing),
                         _buildHeader(),
                         const SizedBox(height: kSpacing * 6.5),
                         Row(
                           children: [
                             Expanded(
                               child: SizedBox(
-                              //width: 100,
-                              height: MediaQuery.of(context).size.height / 1.3,
-                              child: 
-                              Obx( () => controller.dataAvailable ? 
-                                SingleChildScrollView(
-                                  child: Container(
-                                    //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                    margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
-                                    color: const Color.fromRGBO(64, 75, 96, .9),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 8),
-                                      child: Column(
-                                        children: [
-                                          Container( 
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'DocumentNo'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trxSalesOrder.records![controller.selectedCard]
-                                                .documentNo ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Business Partner'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trxSalesOrder.records![controller.selectedCard]
-                                                .cBPartnerID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Document Type'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trxSalesOrder.records![controller.selectedCard]
-                                                .cDocTypeTargetID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Date Ordered'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trxSalesOrder.records![controller.selectedCard]
-                                                .dateOrdered ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Payment Rule'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trxSalesOrder.records![controller.selectedCard]
-                                                .paymentRule?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Payment Term'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trxSalesOrder.records![controller.selectedCard]
-                                                .cPaymentTermID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'SalesRep'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trxSalesOrder.records![controller.selectedCard]
-                                                .salesRepID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
+                                  //width: 100,
+                                  height:
+                                      MediaQuery.of(context).size.height / 1.3,
+                                  child: Obx(() => controller.dataAvailable
+                                      ? SingleChildScrollView(
+                                          child: Container(
+                                              //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                                              margin: const EdgeInsets.only(
+                                                  right: 10.0,
+                                                  left: 10.0,
+                                                  /* top: kSpacing * 7.7 */ bottom:
+                                                      6.0),
+                                              color: const Color.fromRGBO(
+                                                  64, 75, 96, .9),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 8),
+                                                child: Column(children: [
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                              hintStyle: const TextStyle(
+                                                                  color:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255)),
+                                                              labelStyle:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              border:
+                                                                  const OutlineInputBorder(),
+                                                              labelText:
+                                                                  'DocumentNo'
+                                                                      .tr,
+                                                              floatingLabelBehavior:
+                                                                  FloatingLabelBehavior
+                                                                      .always,
+                                                              hintText: controller
+                                                                      .trxSalesOrder
+                                                                      .records![
+                                                                          controller
+                                                                              .selectedCard]
+                                                                      .documentNo ??
+                                                                  '',
+                                                              enabled: false),
                                                     ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Lines Amount'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText:  ( controller.trxSalesOrder.records![controller.selectedCard]
-                                                      .totalLines ?? "").toString(),
-                                                    enabled: false
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                            //const SizedBox(width: kSpacing * 2,),
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                              hintStyle: const TextStyle(
+                                                                  color:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255)),
+                                                              labelStyle:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              border:
+                                                                  const OutlineInputBorder(),
+                                                              labelText:
+                                                                  'Business Partner'
+                                                                      .tr,
+                                                              floatingLabelBehavior:
+                                                                  FloatingLabelBehavior
+                                                                      .always,
+                                                              hintText: controller
+                                                                      .trxSalesOrder
+                                                                      .records![
+                                                                          controller
+                                                                              .selectedCard]
+                                                                      .cBPartnerID
+                                                                      ?.identifier ??
+                                                                  '',
+                                                              enabled: false),
                                                     ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                              hintStyle: const TextStyle(
+                                                                  color:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255)),
+                                                              labelStyle:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              border:
+                                                                  const OutlineInputBorder(),
+                                                              labelText:
+                                                                  'Document Type'
+                                                                      .tr,
+                                                              floatingLabelBehavior:
+                                                                  FloatingLabelBehavior
+                                                                      .always,
+                                                              hintText: controller
+                                                                      .trxSalesOrder
+                                                                      .records![
+                                                                          controller
+                                                                              .selectedCard]
+                                                                      .cDocTypeTargetID
+                                                                      ?.identifier ??
+                                                                  '',
+                                                              enabled: false),
                                                     ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Charge Amount'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText: (controller.trxSalesOrder.records![controller.selectedCard]
-                                                    .chargeAmt ?? "").toString(),
-                                                    enabled: false
-                                            ),
-                                          ),
-                                              ),
-                                        ), 
-                                      ],),
-                                    ]),
-                                  )),
-                                ) : const Center(child: CircularProgressIndicator()) 
-                                )),
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                              hintStyle: const TextStyle(
+                                                                  color:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255)),
+                                                              labelStyle:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              border:
+                                                                  const OutlineInputBorder(),
+                                                              labelText:
+                                                                  'Date Ordered'
+                                                                      .tr,
+                                                              floatingLabelBehavior:
+                                                                  FloatingLabelBehavior
+                                                                      .always,
+                                                              hintText: controller
+                                                                      .trxSalesOrder
+                                                                      .records![
+                                                                          controller
+                                                                              .selectedCard]
+                                                                      .dateOrdered ??
+                                                                  '',
+                                                              enabled: false),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                              hintStyle: const TextStyle(
+                                                                  color:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255)),
+                                                              labelStyle:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              border:
+                                                                  const OutlineInputBorder(),
+                                                              labelText:
+                                                                  'Payment Rule'
+                                                                      .tr,
+                                                              floatingLabelBehavior:
+                                                                  FloatingLabelBehavior
+                                                                      .always,
+                                                              hintText: controller
+                                                                      .trxSalesOrder
+                                                                      .records![
+                                                                          controller
+                                                                              .selectedCard]
+                                                                      .paymentRule
+                                                                      ?.identifier ??
+                                                                  '',
+                                                              enabled: false),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                              hintStyle: const TextStyle(
+                                                                  color:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255)),
+                                                              labelStyle:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              border:
+                                                                  const OutlineInputBorder(),
+                                                              labelText:
+                                                                  'Payment Term'
+                                                                      .tr,
+                                                              floatingLabelBehavior:
+                                                                  FloatingLabelBehavior
+                                                                      .always,
+                                                              hintText: controller
+                                                                      .trxSalesOrder
+                                                                      .records![
+                                                                          controller
+                                                                              .selectedCard]
+                                                                      .cPaymentTermID
+                                                                      ?.identifier ??
+                                                                  '',
+                                                              enabled: false),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                              hintStyle: const TextStyle(
+                                                                  color:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255)),
+                                                              labelStyle:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              border:
+                                                                  const OutlineInputBorder(),
+                                                              labelText:
+                                                                  'SalesRep'.tr,
+                                                              floatingLabelBehavior:
+                                                                  FloatingLabelBehavior
+                                                                      .always,
+                                                              hintText: controller
+                                                                      .trxSalesOrder
+                                                                      .records![
+                                                                          controller
+                                                                              .selectedCard]
+                                                                      .salesRepID
+                                                                      ?.identifier ??
+                                                                  '',
+                                                              enabled: false),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .all(10),
+                                                        child: SizedBox(
+                                                          width: 200,
+                                                          child: TextField(
+                                                            decoration:
+                                                                InputDecoration(
+                                                                    hintStyle: const TextStyle(
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            255,
+                                                                            255,
+                                                                            255)),
+                                                                    labelStyle:
+                                                                        const TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                    border:
+                                                                        const OutlineInputBorder(),
+                                                                    labelText:
+                                                                        'Lines Amount'
+                                                                            .tr,
+                                                                    floatingLabelBehavior:
+                                                                        FloatingLabelBehavior
+                                                                            .always,
+                                                                    hintText: (controller.trxSalesOrder.records![controller.selectedCard].totalLines ??
+                                                                            "")
+                                                                        .toString(),
+                                                                    enabled:
+                                                                        false),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      //const SizedBox(width: kSpacing * 2,),
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .all(10),
+                                                        child: SizedBox(
+                                                          width: 200,
+                                                          child: TextField(
+                                                            decoration:
+                                                                InputDecoration(
+                                                                    hintStyle: const TextStyle(
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            255,
+                                                                            255,
+                                                                            255)),
+                                                                    labelStyle:
+                                                                        const TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                    border:
+                                                                        const OutlineInputBorder(),
+                                                                    labelText:
+                                                                        'Charge Amount'
+                                                                            .tr,
+                                                                    floatingLabelBehavior:
+                                                                        FloatingLabelBehavior
+                                                                            .always,
+                                                                    hintText: (controller.trxSalesOrder.records![controller.selectedCard].chargeAmt ??
+                                                                            "")
+                                                                        .toString(),
+                                                                    enabled:
+                                                                        false),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ]),
+                                              )),
+                                        )
+                                      : const Center(
+                                          child: CircularProgressIndicator()))),
                             ),
                           ],
                         ),
-                      ]
-                    )),
-                    Flexible(
-                      flex: 4,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: kSpacing * 3.3),
-                          Row(
-                            children: [
-                              Container(
-                                child: Obx(() => controller.showData
-                                    ? Text("LINES: ".tr + controller.trxLine.rowcount.toString())
-                                    : Text("LINES: ".tr)),
-                                margin: const EdgeInsets.only(left: 15),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 20),
-                                child: IconButton(
-                                  onPressed: () {
-                                    controller.getSalesOrderLines();
-                                  },
-                                  icon: const Icon(
-                                    Icons.refresh,
-                                    color: Colors.yellow,
-                                  ),
+                      ])),
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: kSpacing * 3.3),
+                        Row(
+                          children: [
+                            Container(
+                              child: Obx(() => controller.showData
+                                  ? Text("LINES: ".tr +
+                                      controller.trxLine.rowcount.toString())
+                                  : Text("LINES: ".tr)),
+                              margin: const EdgeInsets.only(left: 15),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 20),
+                              child: IconButton(
+                                onPressed: () {
+                                  controller.getSalesOrderLines();
+                                },
+                                icon: const Icon(
+                                  Icons.refresh,
+                                  color: Colors.yellow,
                                 ),
                               ),
-                            ],
-                          ),
-                          _buildLinesFilter(),
-                          const SizedBox(height: kSpacing * 1.2),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: SizedBox(
-                                //width: 100,
-                                height: MediaQuery.of(context).size.height / 1.3,
-                                child: 
-                                Obx( () => controller.showData ? 
-
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                                    child: SingleChildScrollView(
-                                      child: ListView.builder(
-                                        primary: false,
-                                        scrollDirection: Axis.vertical,
-                                        shrinkWrap: true,
-                                        itemCount: controller.trxLine.rowcount,
-                                        itemBuilder: (BuildContext context, int index) {
-                                          return Obx(() => Visibility(
-                                    visible: controller.linesSearchFilterValue.value ==
-                                            ""
-                                        ? true
-                                        : controller.linesDropdownValue.value == "1"
-                                            ? (controller.trxLine.records![index].mProductID?.identifier ?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .linesSearchFilterValue.value
-                                                    .toLowerCase())
-                                            : controller.linesDropdownValue.value == "2"
-                                                ? (controller
-                                                    .trxLine.records![index].line ?? "")
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .contains(controller
-                                                        .linesSearchFilterValue.value
-                                                        .toLowerCase())
-                                            : controller.linesDropdownValue.value == "3"
-                                                ? (controller
-                                                    .trxLine.records![index].name ?? "")
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .contains(controller
-                                                        .linesSearchFilterValue.value
-                                                        .toLowerCase())
-                                            : controller.linesDropdownValue.value == "4"
-                                                ? (controller
-                                                    .trxLine.records![index].lineNetAmt ?? "")
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .contains(controller
-                                                        .linesSearchFilterValue.value
-                                                        .toLowerCase())
-                                                    : true,
-                                    child: _buildLineCard(context, index)));
-                                        }
-                                      ),
-                                    ),
-                                  )
-                              : Center(child: Text('No Sales Order selected'.tr)) 
-                              )),
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
-              ),
+                            ),
+                          ],
+                        ),
+                        _buildLinesFilter(),
+                        const SizedBox(height: kSpacing * 1.2),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                                  //width: 100,
+                                  height:
+                                      MediaQuery.of(context).size.height / 1.3,
+                                  child: Obx(() => controller.showData
+                                      ? Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: SingleChildScrollView(
+                                            child: ListView.builder(
+                                                primary: false,
+                                                scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                itemCount:
+                                                    controller.trxLine.rowcount,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Obx(() => Visibility(
+                                                      visible: controller
+                                                                  .linesSearchFilterValue
+                                                                  .value ==
+                                                              ""
+                                                          ? true
+                                                          : controller.linesDropdownValue
+                                                                      .value ==
+                                                                  "1"
+                                                              ? (controller.trxLine.records![index].mProductID?.identifier ?? "")
+                                                                  .toString()
+                                                                  .toLowerCase()
+                                                                  .contains(controller
+                                                                      .linesSearchFilterValue
+                                                                      .value
+                                                                      .toLowerCase())
+                                                              : controller.linesDropdownValue
+                                                                          .value ==
+                                                                      "2"
+                                                                  ? (controller.trxLine.records![index].line ?? "")
+                                                                      .toString()
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          controller.linesSearchFilterValue.value.toLowerCase())
+                                                                  : controller.linesDropdownValue.value == "3"
+                                                                      ? (controller.trxLine.records![index].name ?? "").toString().toLowerCase().contains(controller.linesSearchFilterValue.value.toLowerCase())
+                                                                      : controller.linesDropdownValue.value == "4"
+                                                                          ? (controller.trxLine.records![index].lineNetAmt ?? "").toString().toLowerCase().contains(controller.linesSearchFilterValue.value.toLowerCase())
+                                                                          : true,
+                                                      child: _buildLineCard(context, index)));
+                                                }),
+                                          ),
+                                        )
+                                      : Center(
+                                          child: Text(
+                                              'No Sales Order selected'.tr)))),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-              );     
+              );
             },
           ),
         ),
@@ -1429,33 +1755,37 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
           .toList(),
     ]);
   }
-  Widget _buildCard(Color selectionColor, context, index){
+
+  Widget _buildCard(Color selectionColor, context, index) {
     return Container(
-      decoration: BoxDecoration(
-          color: selectionColor),
+      decoration: BoxDecoration(color: selectionColor),
       child: ExpansionTile(
         leading: Icon(
           Icons.handshake,
-          color: controller.trxSalesOrder.records![index].docStatus?.id == 'CO' ? 
-            Colors.green : Colors.yellow,
+          color: controller.trxSalesOrder.records![index].docStatus?.id == 'CO'
+              ? Colors.green
+              : Colors.yellow,
         ),
         trailing: IconButton(
           icon: Icon(
             Icons.article,
-            color: controller.trxSalesOrder.records![index].isApproved == false ? 
-              Colors.green : Colors.blue,
+            color: controller.trxSalesOrder.records![index].isApproved == false
+                ? Colors.green
+                : Colors.blue,
           ),
           onPressed: () {
             controller.selectedCard = index;
-            controller.salesOrderId = controller.trxSalesOrder.records?[index].id;
+            controller.salesOrderId =
+                controller.trxSalesOrder.records?[index].id;
             controller.getSalesOrderLines();
           },
         ),
         title: Text(
-          'DocumentNo'.tr + ' ' + controller.trxSalesOrder.records![index].documentNo!,
-          style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold),
+          'DocumentNo'.tr +
+              ' ' +
+              controller.trxSalesOrder.records![index].documentNo!,
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         subtitle: Row(
           children: <Widget>[
@@ -1465,237 +1795,265 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                   Row(
                     children: [
                       Text(
-                        controller.trxSalesOrder.records![index].cBPartnerID?.identifier ??
+                        controller.trxSalesOrder.records![index].cBPartnerID
+                                ?.identifier ??
                             "",
-                        style: const TextStyle(
-                            color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
-                  Row(
-                    children:[
-                      Text(controller.trxSalesOrder.records![index].cBPartnerLocationID?.identifier ?? "",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
-                        ),
-                      )
-                    ]
-                  )
+                  Row(children: [
+                    Text(
+                      controller.trxSalesOrder.records![index]
+                              .cBPartnerLocationID?.identifier ??
+                          "",
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    )
+                  ])
                 ],
               ),
             ),
           ],
         ),
-        childrenPadding: const EdgeInsets.symmetric(
-            horizontal: 20.0, vertical: 10.0),
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text('Date Ordered'.tr + ': '),
-                        Text(controller.trxSalesOrder.records![index].dateOrdered ?? "",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
+        childrenPadding:
+            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        children: [
+          Column(
+            children: [
+              Row(
+                children: [
+                  Text('Date Ordered'.tr + ': '),
+                  Text(
+                    controller.trxSalesOrder.records![index].dateOrdered ?? "",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                    Row(
-                      children: [
-                        Text('Document Type'.tr + ': '),
-                        Text(controller.trxSalesOrder.records![index].cDocTypeTargetID?.identifier ?? "",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Document Type'.tr + ': '),
+                  Text(
+                    controller.trxSalesOrder.records![index].cDocTypeTargetID
+                            ?.identifier ??
+                        "",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                    Row(
-                      children: [
-                        Text('Line Amount'.tr + ': '),
-                        Text((controller.trxSalesOrder.records![index].totalLines ?? "").toString(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Line Amount'.tr + ': '),
+                  Text(
+                    (controller.trxSalesOrder.records![index].totalLines ?? "")
+                        .toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                    Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.end,
-                      children: [
-                        controller.trxSalesOrder.
-                            records![index].isApproved == false ? 
-                        IconButton(
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  controller.trxSalesOrder.records![index].isApproved == false
+                      ? IconButton(
                           tooltip: 'Sign'.tr,
                           onPressed: () async {
-                              showDialog(context: context, 
+                            showDialog(
+                                context: context,
                                 builder: (context) => AlertDialog(
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0)
-                                    )
-                                  ),
-                                  title: Text('DocumentNo'.tr + ' ' + (controller.trxSalesOrder.records?[index].documentNo ?? "")),
-                                  content: Builder(
-                                    builder: (context) {
-                                      var height = MediaQuery.of(context).size.height;
-                                      var width = MediaQuery.of(context).size.width;
-                                      String dateNow = DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
-                                      return SizedBox(
-                                        height: height - 400,
-                                        width: width - 800,
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text('Date'.tr + ': $dateNow' ),
-                                                Column(
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Text('Name'.tr + ': '),
-                                                        SizedBox(
-                                                          width: 300,
-                                                          child: TextFormField(
-                                                            controller: controller.signatureNameController,
-                                                            onChanged: (text) {
-                                                              controller.canSign = text.isNotEmpty;
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                                IconButton(
-                                                  onPressed: () {
-                                                    signOrder(controller.trxSalesOrder.records![index].id, dateNow, index);
-                                                  }, 
-                                                  icon: const Icon(
-                                                    Icons.save
-                                                  )
-                                                )
-                                              ],
-                                            ),
-                                            Obx( () => controller.canSign ?
-                                              Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  children: [
-                                                    Column(
-                                                      children: [
-                                                        Signature(
-                                                          backgroundColor: Colors.white,
-                                                          width: width - 1000,
-                                                          height:  height - 500,
-                                                          controller: controller.signatureController),
-                                                      ],
-                                                    ),
-                                                    Container(
-                                                      margin: const EdgeInsets.only(left: 100),
-                                                      child: Column(
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      title: Text('DocumentNo'.tr +
+                                          ' ' +
+                                          (controller.trxSalesOrder
+                                                  .records?[index].documentNo ??
+                                              "")),
+                                      content: Builder(builder: (context) {
+                                        var height =
+                                            MediaQuery.of(context).size.height;
+                                        var width =
+                                            MediaQuery.of(context).size.width;
+                                        String dateNow =
+                                            DateFormat('yyyy-MM-dd')
+                                                .format(DateTime.now())
+                                                .toString();
+                                        return SizedBox(
+                                          height: height - 400,
+                                          width: width - 800,
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                      'Date'.tr + ': $dateNow'),
+                                                  Column(
+                                                    children: [
+                                                      Row(
                                                         children: [
-                                                          Center(
-                                                            child: IconButton(
-                                                              onPressed: () => controller.signatureController.value = [],
-                                                              icon: const Icon(
-                                                                Icons.cleaning_services,
-                                                                color: Colors.red,
-                                                                size: 30,
-                                                              )
+                                                          Text(
+                                                              'Name'.tr + ': '),
+                                                          SizedBox(
+                                                            width: 300,
+                                                            child:
+                                                                TextFormField(
+                                                              controller: controller
+                                                                  .signatureNameController,
+                                                              onChanged:
+                                                                  (text) {
+                                                                controller
+                                                                        .canSign =
+                                                                    text.isNotEmpty;
+                                                              },
                                                             ),
                                                           ),
                                                         ],
                                                       ),
-                                                    )
-                                                  ]
-                                                ),
-                                              ) 
-                                              : Padding( 
-                                                  padding: const EdgeInsets.only(top: 20),
-                                                  child: Text('Please, fill the Name field to sign'.tr, 
-                                                    style: const TextStyle(color: Colors.red)
-                                                  )
-                                                ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-                                  ),
-                                  
-                                )
-                              );//.then((exit) => controller.signatureController.value = []);
+                                                    ],
+                                                  ),
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        postImage(
+                                                            controller
+                                                                .trxSalesOrder
+                                                                .records![index]
+                                                                .id,
+                                                            dateNow,
+                                                            index);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.save))
+                                                ],
+                                              ),
+                                              Obx(
+                                                () => controller.canSign
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Row(children: [
+                                                          Column(
+                                                            children: [
+                                                              ClipRRect(
+                                                                child: Signature(
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    width:
+                                                                        width -
+                                                                            1000,
+                                                                    height:
+                                                                        height -
+                                                                            500,
+                                                                    controller:
+                                                                        controller
+                                                                            .signatureController),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 100),
+                                                            child: Column(
+                                                              children: [
+                                                                Center(
+                                                                  child: IconButton(
+                                                                      onPressed: () => controller.signatureController.value = [],
+                                                                      icon: const Icon(
+                                                                        Icons
+                                                                            .cleaning_services,
+                                                                        color: Colors
+                                                                            .red,
+                                                                        size:
+                                                                            30,
+                                                                      )),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ]),
+                                                      )
+                                                    : Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 20),
+                                                        child: Text(
+                                                            'Please, fill the Name field to sign'
+                                                                .tr,
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .red))),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }),
+                                    )); //.then((exit) => controller.signatureController.value = []);
                           },
-                          icon: const Icon(
-                              EvaIcons.edit2Outline),
-                        ) : Text('Approved'.tr),
-                           Obx( () => controller.canApprove[index] ?
-                            Visibility(
-                              visible: controller
-                                      .trxSalesOrder
-                                      .records![index]
-                                      .isApproved == false,
-                              child: ElevatedButton(
-                                child:
-                                    Text("Approve".tr),
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty
-                                          .all(Colors
-                                              .green),
-                                ),
-                                onPressed: () async {
-                                  Get.defaultDialog(
-                                    title:
-                                        'Approve Sales Order',
+                          icon: const Icon(EvaIcons.edit2Outline),
+                        )
+                      : Text('Approved'.tr),
+                  Obx(() => controller.canApprove[index]
+                      ? Visibility(
+                          visible: controller
+                                  .trxSalesOrder.records![index].isApproved ==
+                              false,
+                          child: ElevatedButton(
+                              child: Text("Approve".tr),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.green),
+                              ),
+                              onPressed: () async {
+                                Get.defaultDialog(
+                                    title: 'Approve Sales Order',
                                     content: const Text(
                                         "Are you sure you want to approve this Sales Order?"),
                                     onCancel: () {},
                                     onConfirm: () async {
                                       approveSalesOrder(index);
-                                      Navigator.of(context, rootNavigator: true).pop() ;
-                                    }
-                                  );
-                                }
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop();
+                                    });
+                              }),
+                        )
+                      : Visibility(
+                          visible: controller
+                                  .trxSalesOrder.records![index].isApproved ==
+                              false,
+                          child: ElevatedButton(
+                              child: Text("Approve".tr),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.grey),
                               ),
-                            ) : 
-                            Visibility(
-                              visible: controller
-                                      .trxSalesOrder
-                                      .records![index]
-                                      .isApproved == false,
-                              child: ElevatedButton(
-                                child:
-                                    Text("Approve".tr),
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty
-                                          .all(Colors
-                                              .grey),
-                                ),
-                                onPressed: () async {
-                                  Get.snackbar(
-                                    "Sign missing".tr,
-                                    "Please, sign this Sales Order to approve it".tr,
-                                    icon:
-                                        const Icon(
-                                      Icons.error,
-                                      color: Colors
-                                          .red,
-                                    ),
-                                  );
-                                }
-                              ),
-                            )
-                           )
-                      ],
-                    ),
-                    /* Row(
+                              onPressed: () async {
+                                Get.snackbar(
+                                  "Sign missing".tr,
+                                  "Please, sign this Sales Order to approve it"
+                                      .tr,
+                                  icon: const Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                  ),
+                                );
+                              }),
+                        ))
+                ],
+              ),
+              /* Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Signature(
@@ -1706,23 +2064,21 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                         ),
                       ],
                     ) */
-                  ],
-                ),
-              ],
-            ),
-          );
+            ],
+          ),
+        ],
+      ),
+    );
   }
-  
-  Widget _buildLineCard(context, index){
+
+  Widget _buildLineCard(context, index) {
     return Container(
-      decoration: const BoxDecoration(
-          color: Color.fromRGBO(64, 75, 96, .9)),
+      decoration: const BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
       child: ExpansionTile(
         title: Text(
           controller.trxLine.records![index].mProductID?.identifier ?? "???",
-          style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         subtitle: Expanded(
           child: Column(
@@ -1731,124 +2087,119 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                 children: [
                   Text(
                     'LineNo'.tr + ': ',
-                    style: const TextStyle(
-                        color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  Text((controller.trxLine.records![index].line ??
-                        "").toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
-                        ),)
+                  Text(
+                    (controller.trxLine.records![index].line ?? "").toString(),
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )
                 ],
               ),
               Row(
                 children: [
                   Text(
                     'Name'.tr + ': ',
-                    style: const TextStyle(
-                        color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  Text(controller.trxLine.records![index].name ??
-                        "",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
-                      ))
+                  Text(controller.trxLine.records![index].name ?? "",
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold))
                 ],
               ),
               Row(
                 children: [
                   Text(
                     'Line Amount'.tr + ': ',
-                    style: const TextStyle(
-                        color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  Text((controller.trxLine.records![index].lineNetAmt ??
-                        "").toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                      )
+                  Text(
+                    (controller.trxLine.records![index].lineNetAmt ?? "")
+                        .toString(),
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )
                 ],
               ),
             ],
           ),
         ),
-        childrenPadding: const EdgeInsets.symmetric(
-            horizontal: 20.0, vertical: 10.0),
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text('Description'.tr + ': '),
-                        Text(controller.trxLine.records![index].description ?? "",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Date Promised'.tr + ': '),
-                        Text(controller.trxLine.records![index].datePromised ?? "",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Date Ordered'.tr + ': '),
-                        Text(controller.trxLine.records![index].dateOrdered ?? "",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Price'.tr + ': '),
-                        Text((controller.trxLine.records![index].priceEntered ?? "").toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('List Price'.tr + ': '),
-                        Text((controller.trxLine.records![index].priceList ?? "").toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Tax'.tr + ': '),
-                        Text(controller.trxLine.records![index].cTaxID?.identifier ?? "",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
+        childrenPadding:
+            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        children: [
+          Column(
+            children: [
+              Row(
+                children: [
+                  Text('Description'.tr + ': '),
+                  Text(
+                    controller.trxLine.records![index].description ?? "",
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Date Promised'.tr + ': '),
+                  Text(
+                    controller.trxLine.records![index].datePromised ?? "",
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Date Ordered'.tr + ': '),
+                  Text(
+                    controller.trxLine.records![index].dateOrdered ?? "",
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Price'.tr + ': '),
+                  Text(
+                    (controller.trxLine.records![index].priceEntered ?? "")
+                        .toString(),
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Text('List Price'.tr + ': '),
+                  Text(
+                    (controller.trxLine.records![index].priceList ?? "")
+                        .toString(),
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Text('Tax'.tr + ': '),
+                  Text(
+                    controller.trxLine.records![index].cTaxID?.identifier ?? "",
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
-  _buildSalesOrdersFilter(){
-    return Row( 
+  _buildSalesOrdersFilter() {
+    return Row(
       children: [
         Container(
           margin: const EdgeInsets.all(10),
@@ -1888,7 +2239,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                 controller.salesOrderSearchFilterValue.value =
                     controller.salesOrderSearchFieldController.text;
               },
-              decoration:  InputDecoration(
+              decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search_outlined),
                 border: const OutlineInputBorder(),
                 hintText: 'Search'.tr,
@@ -1901,9 +2252,10 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
     );
   }
 
-  Widget _buildLinesFilter(){
-    return Row(children: [
-      Container(
+  Widget _buildLinesFilter() {
+    return Row(
+      children: [
+        Container(
           margin: const EdgeInsets.all(10),
           child: Obx(
             () => DropdownButton(
@@ -1942,7 +2294,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
             ),
           ),
         ),
-    ],);
+      ],
+    );
   }
-
 }

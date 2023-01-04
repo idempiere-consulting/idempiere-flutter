@@ -97,6 +97,7 @@ class Records {
   final num? qtyToInvoice;
   final bool? lITIsAdvancedView;
   final String? modelname;
+  final bool? isPaid;
 
   Records({
     this.id,
@@ -164,6 +165,7 @@ class Records {
     this.qtyToInvoice,
     this.lITIsAdvancedView,
     this.modelname,
+    this.isPaid,
   });
 
   Records.fromJson(Map<String, dynamic> json)
@@ -304,6 +306,7 @@ class Records {
         lITIsDisplaySuppProduct = json['LIT_IsDisplaySuppProduct'] as bool?,
         qtyToInvoice = json['QtyToInvoice'] as num?,
         lITIsAdvancedView = json['LIT_IsAdvancedView'] as bool?,
+        isPaid = json['IsPaid'] as bool?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -370,7 +373,8 @@ class Records {
         'LIT_IsDisplaySuppProduct': lITIsDisplaySuppProduct,
         'QtyToInvoice': qtyToInvoice,
         'LIT_IsAdvancedView': lITIsAdvancedView,
-        'model-name': modelname
+        'model-name': modelname,
+        'IsPaid': isPaid,
       };
 }
 

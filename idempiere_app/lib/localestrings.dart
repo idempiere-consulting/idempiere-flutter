@@ -480,6 +480,13 @@ class LocaleString extends Translations {
               'The resource shouldn\'t be tested',
           'Warning': 'Warning',
           'Is Valid': 'Is Valid',
+          'Contract Type': 'Contract Type',
+          'N° Work Order: ': 'N° Work Order: ',
+          'N° Maintenance': 'N° Maintenance',
+          'Is Paid': 'Is Paid',
+          'Net Amount': 'Net Amount',
+          'shipment': 'shipment',
+          'shipment-line': 'shipment-line'
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -966,7 +973,14 @@ class LocaleString extends Translations {
           'The resource shouldn\'t be testes':
               'La risorsa non dovrebbe essere collaudata',
           'Warning': 'Attenzione',
-          'Is Valid': 'Funzionante'
+          'Is Valid': 'Funzionante',
+          'Contract Type': 'Tipo Contratto',
+          'N° Work Order: ': 'N° ODL: ',
+          'N° Maintenance': 'N° Impianto',
+          'Is Paid': 'Pagato',
+          'Net Amount': 'Importo Netto',
+          'shipment': 'documento-di-spedizione-ddt00',
+          'shipment-line': 'riga-del-documento'
         },
       };
 }

@@ -7,10 +7,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_create.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_edit.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -56,6 +58,21 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Shipments Lines"),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () async {
+                Get.to(const CreateShipmentline(), arguments: {
+                  "id": Get.arguments["id"],
+                });
+              },
+              icon: const Icon(
+                Icons.add,
+              ),
+            ),
+          ),
+        ],
         /* leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
@@ -185,35 +202,39 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                           right: BorderSide(
                                               width: 1.0,
                                               color: Colors.white24))),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                    tooltip: 'Edit Shipment'.tr,
-                                    onPressed: () {
-                                      //log("info button pressed");
-                                      Get.to(const EditShipmentline(),
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "qtyPlanned": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .plannedQty ??
-                                                0,
-                                            "description": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .description ??
-                                                "",
-                                            "isSelected": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .isSelected ??
-                                                false,
-                                          });
-                                    },
+                                  child: Column(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.edit,
+                                          color: Colors.green,
+                                        ),
+                                        tooltip: 'Edit Shipment'.tr,
+                                        onPressed: () {
+                                          //log("info button pressed");
+                                          Get.to(const EditShipmentline(),
+                                              arguments: {
+                                                "id": controller
+                                                    .trx.records![index].id,
+                                                "qtyPlanned": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .plannedQty ??
+                                                    0,
+                                                "description": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    "",
+                                                "isSelected": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .isSelected ??
+                                                    false,
+                                              });
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 trailing: IconButton(

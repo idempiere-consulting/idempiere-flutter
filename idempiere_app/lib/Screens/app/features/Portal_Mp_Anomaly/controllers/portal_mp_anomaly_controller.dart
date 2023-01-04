@@ -13,7 +13,7 @@ class PortalMpAnomalyController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
-    // ignore: prefer_typing_uninitialized_variables
+  // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
 
   var searchFieldController = TextEditingController();
@@ -52,13 +52,13 @@ class PortalMpAnomalyController extends GetxController {
 
   bool get dataAvailable => _dataAvailable.value;
   LitNcJson get trx => _trx;
-  
+
   int get selectedCard => _selectedCard.value;
   set selectedCard(index) => _selectedCard.value = index;
-  
+
   bool get showDetails => _showDetails.value;
-  set showDetails(show) => _showDetails.value = show; 
-  
+  set showDetails(show) => _showDetails.value = show;
+
   changeFilter() {
     filterCount++;
     if (filterCount == 2) {
@@ -121,7 +121,7 @@ class PortalMpAnomalyController extends GetxController {
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
     } else {
-      //print(response.body);
+      print(response.body);
     }
   }
 
@@ -136,8 +136,8 @@ class PortalMpAnomalyController extends GetxController {
     var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/lit_mobile_nc_v?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]} ');
-        //and C_BPartner_ID eq $businessPartnerId'
-        //and AD_User_ID eq ${GetStorage().read("userId")}
+    //and C_BPartner_ID eq $businessPartnerId'
+    //and AD_User_ID eq ${GetStorage().read("userId")}
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -146,12 +146,13 @@ class PortalMpAnomalyController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx =
-          LitNcJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      _trx = LitNcJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
-      //print(response.body);
+      print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx.records!.isNotEmpty;
+    } else {
+      print(response.body);
     }
   }
 

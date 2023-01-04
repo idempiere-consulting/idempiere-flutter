@@ -29,10 +29,10 @@ class PortalMpSalesOrderController extends GetxController {
   var _dataAvailable = false.obs;
   // ignore: prefer_final_fields
   var _showData = false.obs;
-  
+
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
-  
+
   // ignore: prefer_final_fields
   var _selectedCard = 0.obs;
 
@@ -63,7 +63,6 @@ class PortalMpSalesOrderController extends GetxController {
       {"id": "4", "name": "Line Amount".tr},
     ]
   };
-
 
   List<Types>? getTypes(json) {
     var dJson = TypeJson.fromJson(json);
@@ -111,7 +110,6 @@ class PortalMpSalesOrderController extends GetxController {
     getSalesOrders();
   }
 
-
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
@@ -127,7 +125,7 @@ class PortalMpSalesOrderController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       var json = jsonDecode(response.body);
 
       GetStorage().write('BusinessPartnerName',
@@ -137,10 +135,9 @@ class PortalMpSalesOrderController extends GetxController {
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
     } else {
-      //print(response.body);
+      print(response.body);
     }
   }
-
 
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
@@ -209,6 +206,7 @@ class PortalMpSalesOrderController extends GetxController {
     //IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and
     //SalesRep_ID eq ${GetStorage().read("userId")}
     //lit_mobile_order_bploc_v
+    print("so");
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -217,7 +215,7 @@ class PortalMpSalesOrderController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       _trx =
           SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
@@ -225,12 +223,13 @@ class PortalMpSalesOrderController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx.records!.isNotEmpty;
 
-      if(_canApprove.isEmpty){
-        for(int i = 0; i < _trx.records!.length; i++){
+      if (_canApprove.isEmpty) {
+        for (int i = 0; i < _trx.records!.length; i++) {
           _canApprove.add(false);
         }
       }
     } else {
+      print(response.body);
       _dataAvailable.value = false;
     }
   }
@@ -252,16 +251,14 @@ class PortalMpSalesOrderController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      
-      _trx1 = PortalMPSalesOrderLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      _trx1 = PortalMPSalesOrderLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
 
       _showData.value = _trx1.records!.isNotEmpty;
     } else {
       _showData.value = false;
     }
   }
-
-  
 
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
