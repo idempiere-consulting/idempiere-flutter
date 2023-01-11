@@ -214,7 +214,9 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
   // ignore: prefer_typing_uninitialized_variables
   var docNoFieldController;
 
+  // ignore: prefer_typing_uninitialized_variables
   var businessPartnerFieldController;
+  // ignore: prefer_typing_uninitialized_variables
   var amountFieldController;
   //String dropdownValue = "";
   //var bPartnerValue = "";

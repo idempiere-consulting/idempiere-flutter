@@ -47,7 +47,7 @@ class _CreateShipmentlineState extends State<CreateShipmentline> {
       },
     );
     if (response.statusCode == 201) {
-      print(response.body);
+      //print(response.body);
       Get.back();
       Get.find<CRMShipmentlineController>().getShipmentlines();
       //print("done!");
@@ -60,7 +60,9 @@ class _CreateShipmentlineState extends State<CreateShipmentline> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Error!".tr,
         "Record not updated".tr,
@@ -115,7 +117,7 @@ class _CreateShipmentlineState extends State<CreateShipmentline> {
     }
   }
 
-  windowsAAA() async {
+  /* windowsAAA() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
 
@@ -138,7 +140,7 @@ class _CreateShipmentlineState extends State<CreateShipmentline> {
         print(response.body);
       }
     }
-  }
+  } */
 
   Future<List<Records>> getAllProducts() async {
     //print(response.body);
@@ -174,7 +176,9 @@ class _CreateShipmentlineState extends State<CreateShipmentline> {
   // ignore: prefer_typing_uninitialized_variables
   var checkboxState;
 
+  // ignore: prefer_typing_uninitialized_variables
   var productId;
+  // ignore: prefer_typing_uninitialized_variables
   var productName;
 
   @override

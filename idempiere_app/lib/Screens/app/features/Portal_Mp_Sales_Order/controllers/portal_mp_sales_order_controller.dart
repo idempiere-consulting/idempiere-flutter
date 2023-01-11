@@ -125,7 +125,7 @@ class PortalMpSalesOrderController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var json = jsonDecode(response.body);
 
       GetStorage().write('BusinessPartnerName',
@@ -135,7 +135,9 @@ class PortalMpSalesOrderController extends GetxController {
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

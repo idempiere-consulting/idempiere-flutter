@@ -73,12 +73,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
     final msg = jsonEncode({
       "doc-action": "CO",
     });
-    print(msg);
+    //print(msg);
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/c_order/${controller.trx.records![index].id}');
-    print(url);
+    //print(url);
 
     var response = await http.put(
       url,
@@ -90,7 +90,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
     );
     if (response.statusCode == 200) {
       controller.getSalesOrders();
-      print(response.body);
+      //print(response.body);
 
       Get.snackbar(
         "Done!".tr,
@@ -101,7 +101,9 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Error!".tr,
         "Record not completed".tr,

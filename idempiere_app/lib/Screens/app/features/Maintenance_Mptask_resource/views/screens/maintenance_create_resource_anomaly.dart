@@ -126,7 +126,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           "IsClosed": isClosed,
         });
       }
-      print(msg);
+      //print(msg);
 
       //print(msg);
       var response = await http.post(
@@ -534,6 +534,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     ); */
 
     //print(response.body);
+    // ignore: unused_local_variable
     var json = BOMLineJson.fromJson(jsonDecode(file2.readAsStringSync()));
     var jsonResources =
         ProductJson.fromJson(jsonDecode(file.readAsStringSync()));

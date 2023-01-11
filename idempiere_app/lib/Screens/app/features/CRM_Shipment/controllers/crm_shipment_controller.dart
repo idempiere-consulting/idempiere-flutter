@@ -110,13 +110,8 @@ class CRMShipmentController extends GetxController {
   }
 
   Future<void> getShipments() async {
-    var now = DateTime.now();
-    DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
-    var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
-    String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
     _dataAvailable.value = false;
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    /* var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"]; */
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
