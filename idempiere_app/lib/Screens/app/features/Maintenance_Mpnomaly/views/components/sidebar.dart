@@ -97,7 +97,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "MaintenanceInternaluseinventory".tr,
+                  label: "Shipment Customer".tr,
                   visible: int.parse(list[28], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -161,7 +161,7 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/MaintenanceMppicking');
                     break;
                   case 6:
-                    Get.offNamed('/MaintenanceInternaluseinventory');
+                    Get.offNamed('/MaintenanceShipment');
                     break;
                   case 7:
                     Get.offNamed('/MaintenanceMpimportitem');

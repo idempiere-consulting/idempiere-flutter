@@ -27,7 +27,7 @@ class LoginWarehouses extends StatefulWidget {
 
 class _LoginWarehousesState extends State<LoginWarehouses> {
   syncData() {
-    showDialog(
+    /* showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -41,25 +41,32 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
           ),
         );
       },
-    );
-    if (GetStorage().read('isjpTODOSync') ?? true) {
+    ); */
+
+    var syncPerm = GetStorage().read("permission3");
+    if ((GetStorage().read('isjpTODOSync') ?? true) &&
+        (syncPerm != null && syncPerm != "" ? syncPerm[0] == 'Y' : true)) {
       jpTODOSync = true;
       syncJPTODO();
     }
-    if (GetStorage().read('isUserPreferencesSync') ?? true) {
+    if ((GetStorage().read('isUserPreferencesSync') ?? true) &&
+        (syncPerm != null && syncPerm != "" ? syncPerm[1] == 'Y' : true)) {
       userPreferencesSync = true;
       syncUserPreferences();
     }
-    if (GetStorage().read('isBusinessPartnerSync') ?? true) {
+    if ((GetStorage().read('isBusinessPartnerSync') ?? true) &&
+        (syncPerm != null && syncPerm != "" ? syncPerm[2] == 'Y' : true)) {
       businessPartnerSync = true;
       syncBusinessPartner();
     }
-    if (GetStorage().read('isProductSync') ?? true) {
+    if ((GetStorage().read('isProductSync') ?? true) &&
+        (syncPerm != null && syncPerm != "" ? syncPerm[3] == 'Y' : true)) {
       productSync = true;
       syncProduct();
       //syncProductBOM();
     }
-    if (GetStorage().read('isWorkOrderSync') ?? true) {
+    if ((GetStorage().read('isWorkOrderSync') ?? true) &&
+        (syncPerm != null && syncPerm != "" ? syncPerm[4] == 'Y' : true)) {
       workOrderSync = true;
       syncWorkOrder();
       syncWorkOrderRefListResource();
@@ -683,7 +690,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -731,7 +738,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -1233,9 +1240,11 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (json["records"][0]["IsMobileEnabled"] == true) {
         String permissions = json["records"][0]["lit_mobilerole"];
         String permissions2 = json["records"][0]["lit_mobile_perm"] ?? "";
+        String permissions3 = json["records"][0]["LIT_MobileChartRole"] ?? "";
         List<String> list = permissions.split("-");
         GetStorage().write('permission', list);
         GetStorage().write('permission2', permissions2);
+        GetStorage().write('permission3', permissions3);
         if (GetStorage().read('products') != null) {
           Get.offAllNamed('/Dashboard');
         } else {
@@ -1384,6 +1393,23 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
                                   ),
                                 ),
                                 onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const CircularProgressIndicator(),
+                                            Text(
+                                                "Syncing data with iDempiere..."
+                                                    .tr),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
                                   GetStorage().write('warehouseid',
                                       snapshot.data![index]['id'].toString());
                                   _getAuthToken(

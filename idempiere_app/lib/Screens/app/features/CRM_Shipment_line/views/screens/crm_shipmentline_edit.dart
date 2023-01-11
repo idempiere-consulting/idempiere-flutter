@@ -22,7 +22,7 @@ class _EditShipmentlineState extends State<EditShipmentline> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
-      "PlannedQty": int.parse(qtyFieldController.text),
+      "QtyEntered": int.parse(qtyFieldController.text),
       "Description": descriptionFieldController.text,
       "IsSelected": checkboxState,
     });
@@ -120,7 +120,7 @@ class _EditShipmentlineState extends State<EditShipmentline> {
     super.initState();
     qtyFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
-    qtyFieldController.text = (args["qtyPlanned"]).toString();
+    qtyFieldController.text = (args["qtyEntered"]).toString();
     descriptionFieldController.text = args["description"] ?? "";
     checkboxState = args["isSelected"] ?? false;
   }

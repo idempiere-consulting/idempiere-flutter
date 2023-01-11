@@ -16,6 +16,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/anomaly_image.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
@@ -39,9 +40,16 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     const filename = "anomalies";
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    const filename2 = "workorderresource";
+    final file2 = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename2.json');
+
+    var res = WorkOrderResourceLocalJson.fromJson(
+        jsonDecode(file2.readAsStringSync()));
     if (isConnected) {
       String authorization =
           'Bearer ' + GetStorage().read('token'); //selectedTaskId
+
       var msg = jsonEncode({
         "AD_Org_ID": {"id": GetStorage().read("organizationid")},
         "AD_Client_ID": {
@@ -61,6 +69,44 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         "LIT_IsManagedByCustomer": manByCustomer,
         "IsClosed": isClosed,
       });
+
+      if (replacementId == 0) {
+        msg = jsonEncode({
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+          "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
+          "MP_Maintain_Resource_ID": {"id": args["id"]},
+          "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
+          "AD_User_ID": {"id": GetStorage().read("userId")},
+          "Name": "anomaly",
+          "Description": noteFieldController.text,
+          "IsInvoiced": isCharged,
+          "LIT_IsReplaced": isReplacedNow,
+          "DateDoc": "${formattedDate}T00:00:00Z",
+          "LIT_IsManagedByCustomer": manByCustomer,
+          "IsClosed": isClosed,
+        });
+      }
+
+      if (replacementId == 0) {
+        msg = jsonEncode({
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+          "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
+          "MP_Maintain_Resource_ID": {"id": args["id"]},
+          "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
+          "AD_User_ID": {"id": GetStorage().read("userId")},
+          "Name": "anomaly",
+          "Description": noteFieldController.text,
+          "IsInvoiced": isCharged,
+          "LIT_IsReplaced": isReplacedNow,
+          "DateDoc": "${formattedDate}T00:00:00Z",
+          "LIT_IsManagedByCustomer": manByCustomer,
+          "IsClosed": isClosed,
+        });
+      }
 
       if (manByCustomer) {
         msg = jsonEncode({
@@ -92,6 +138,14 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         },
       );
       if (response.statusCode == 201) {
+        for (var element in res.records!) {
+          if (element.id == Get.arguments["id"]) {
+            element.anomaliesCount =
+                (int.parse(element.anomaliesCount!) + 1).toString();
+          }
+        }
+        file2.writeAsStringSync(jsonEncode(res.toJson()));
+        Get.find<MaintenanceMpResourceController>().getWorkOrders();
         var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
         var record =
             ANRecords.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -137,7 +191,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       record.lITNCFaultTypeID = LITNCFaultTypeID.fromJson({
         "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)}
       });
-      record.aDUserID = ADUserID.fromJson({
+      record.aDUserID = ADUserID3.fromJson({
         "AD_User_ID": {"id": GetStorage().read("userId")}
       });
       record.description = noteFieldController.text;
@@ -177,6 +231,25 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         "IsClosed": isClosed,
         "IsValid": isValid,
       });
+
+      if (replacementId == 0) {
+        msg = jsonEncode({
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
+          "MP_OT_ID": {"id": GetStorage().read("selectedWorkOrderId")},
+          "MP_Maintain_Resource_ID": {"id": args["id"]},
+          "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)},
+          "AD_User_ID": {"id": GetStorage().read("userId")},
+          "Name": "anomaly",
+          "Description": noteFieldController.text,
+          "IsInvoiced": isCharged,
+          "LIT_IsReplaced": isReplacedNow,
+          "DateDoc": "${formattedDate}T00:00:00Z",
+          "LIT_IsManagedByCustomer": manByCustomer,
+          "IsClosed": isClosed,
+        });
+      }
 
       if (manByCustomer) {
         msg = jsonEncode({

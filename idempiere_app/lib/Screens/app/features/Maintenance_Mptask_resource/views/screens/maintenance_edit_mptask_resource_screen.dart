@@ -56,6 +56,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       "LIT_ProductModel": productModelFieldController.text,
       "DateOrdered": dateOrdered,
       "ServiceDate": firstUseDate,
+      "Note": observationFieldController.text,
       "UserName": userNameFieldController.text,
       "UseLifeYears": int.parse(
         useLifeYearsFieldController.text == ""

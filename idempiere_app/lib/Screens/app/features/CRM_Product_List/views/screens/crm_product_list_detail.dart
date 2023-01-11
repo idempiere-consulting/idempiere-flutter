@@ -360,6 +360,11 @@ class _ProductListDetailState extends State<ProductListDetail>
                     Image.network(
                       "https://assets.myntassets.com/h_240,q_90,w_180/v1/assets/images/1304671/2016/4/14/11460624898615-Hancock-Men-Shirts-8481460624898035-1_mini.jpg",
                     ),
+                    /* Image.memory(
+                      const Base64Codec().decode((Get.arguments["image64"])
+                          .replaceAll(RegExp(r'\n'), '')),
+                      fit: BoxFit.cover,
+                    ), */
                     Image.network(
                       "https://n1.sdlcdn.com/imgs/c/9/8/Lambency-Brown-Solid-Casual-Blazers-SDL781227769-1-1b660.jpg",
                     ),

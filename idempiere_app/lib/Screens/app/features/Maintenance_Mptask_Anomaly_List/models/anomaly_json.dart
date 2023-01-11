@@ -44,7 +44,7 @@ class ANRecords {
   final String? updated;
   final UpdatedBy? updatedBy;
   String? dateDoc;
-  ADUserID? aDUserID;
+  ADUserID3? aDUserID;
   final MPMaintainTaskID? mPMaintainTaskID;
   LITNCFaultTypeID? lITNCFaultTypeID;
   MPMaintainResourceID? mPMaintainResourceID;
@@ -105,7 +105,7 @@ class ANRecords {
             : null,
         dateDoc = json['DateDoc'] as String?,
         aDUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
-            ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
+            ? ADUserID3.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
             : null,
         mPMaintainTaskID =
             (json['MP_Maintain_Task_ID'] as Map<String, dynamic>?) != null
@@ -269,20 +269,20 @@ class UpdatedBy {
       };
 }
 
-class ADUserID {
+class ADUserID3 {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  ADUserID({
+  ADUserID3({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  ADUserID.fromJson(Map<String, dynamic> json)
+  ADUserID3.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

@@ -210,9 +210,11 @@ class MaintenanceMpResourceSheetController extends GetxController {
     WorkOrderResourceSurveyLinesJson surveyLines2 =
         WorkOrderResourceSurveyLinesJson.fromJson(
             jsonDecode(file.readAsStringSync()));
+    //print(surveyLines2.records!.length);
     surveyLines2.records!.removeWhere(
         (element) => element.mPMaintainResourceID?.id != Get.arguments["id"]);
     surveyLines = surveyLines2;
+    //print(surveyLines.records!.length);
     isChecked = RxList<bool>.filled(surveyLines.records!.length, false);
     for (var i = 0; i < surveyLines.records!.length; i++) {
       isChecked[i] = surveyLines.records![i].lITIsField1 ?? false;

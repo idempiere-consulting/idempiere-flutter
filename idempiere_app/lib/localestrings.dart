@@ -486,7 +486,11 @@ class LocaleString extends Translations {
           'Is Paid': 'Is Paid',
           'Net Amount': 'Net Amount',
           'shipment': 'shipment',
-          'shipment-line': 'shipment-line'
+          'shipment-line': 'shipment-line',
+          'Yes': 'Yes',
+          'No': 'No',
+          'Paid': 'Paid',
+          'Not Paid': 'Not Paid',
         },
         //ITALIAN LANGUAGE
         'it_IT': {
@@ -980,7 +984,12 @@ class LocaleString extends Translations {
           'Is Paid': 'Pagato',
           'Net Amount': 'Importo Netto',
           'shipment': 'documento-di-spedizione-ddt00',
-          'shipment-line': 'riga-del-documento'
+          'shipment-line': 'riga-del-documento',
+          'Yes': 'Sì',
+          'No': 'No',
+          'Paid': 'Pagato',
+          'Not Paid': 'Non Pagato',
+          'Unchecked': 'Da Controllare',
         },
       };
 }

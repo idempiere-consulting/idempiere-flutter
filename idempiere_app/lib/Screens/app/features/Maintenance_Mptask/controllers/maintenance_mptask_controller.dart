@@ -3,6 +3,7 @@ part of dashboard;
 class MaintenanceMptaskController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late WorkOrderLocalJson _trx;
+  late WorkOrderLocalJson _trx2;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
@@ -216,6 +217,7 @@ class MaintenanceMptaskController extends GetxController {
 
     var jsondecoded = jsonDecode(file.readAsStringSync());
     _trx = WorkOrderLocalJson.fromJson(jsondecoded);
+    _trx2 = WorkOrderLocalJson.fromJson(jsondecoded);
 
     //print(value.value);
     if (notificationFilter == 0) {

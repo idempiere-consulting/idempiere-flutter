@@ -126,6 +126,8 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                                       .toLowerCase()) {
                                 Get.to(const ProductListDetail(), arguments: {
                                   "id": controller.trx.records![i].id,
+                                  "image64":
+                                      controller.trx.records![i].imageData
                                 });
                               }
                             }
@@ -159,18 +161,15 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                               staggeredTileBuilder: (index) =>
                                   const StaggeredTile.fit(1)), */
                               MasonryGridView.count(
-                                shrinkWrap: true,
-                                itemCount: controller.trx.records?.length ?? 0,
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 8,
-                                crossAxisSpacing: 8,
-                                
-                                itemBuilder: (context, index) {
-                                  return buildImageCard(index);
-                                  
-                                },
-                              )
-                        )
+                            shrinkWrap: true,
+                            itemCount: controller.trx.records?.length ?? 0,
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                            itemBuilder: (context, index) {
+                              return buildImageCard(index);
+                            },
+                          ))
                       : const Center(child: CircularProgressIndicator()),
                 ),
               ]);
@@ -252,18 +251,15 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                           height: size.height,
                           width: double.infinity,
                           child: MasonryGridView.count(
-                                shrinkWrap: true,
-                                itemCount: controller.trx.records?.length ?? 0,
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 8,
-                                crossAxisSpacing: 8,
-                                
-                                itemBuilder: (context, index) {
-                                  return buildImageCard(index);
-                                  
-                                },
-                              )
-                        )
+                            shrinkWrap: true,
+                            itemCount: controller.trx.records?.length ?? 0,
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                            itemBuilder: (context, index) {
+                              return buildImageCard(index);
+                            },
+                          ))
                       : const Center(child: CircularProgressIndicator()),
                 ),
               ]);
@@ -345,18 +341,15 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                           height: size.height,
                           width: double.infinity,
                           child: MasonryGridView.count(
-                                shrinkWrap: true,
-                                itemCount: controller.trx.records?.length ?? 0,
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 8,
-                                crossAxisSpacing: 8,
-                                
-                                itemBuilder: (context, index) {
-                                  return buildImageCard(index);
-                                  
-                                },
-                              )
-                        )
+                            shrinkWrap: true,
+                            itemCount: controller.trx.records?.length ?? 0,
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                            itemBuilder: (context, index) {
+                              return buildImageCard(index);
+                            },
+                          ))
                       : const Center(child: CircularProgressIndicator()),
                 ),
               ]);
@@ -551,6 +544,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
           Get.to(const ProductListDetail(), arguments: {
             "id": controller.trx.records![index].id,
             "add": false,
+            "image64": controller.trx.records![index].imageData,
           });
         },
         child: Card(
@@ -576,7 +570,10 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
               ),
               ListTile(
                 title: Text(
-                  "  €" + controller.trx.records![index].price.toString(),
+                  "  € " +
+                      (controller.trx.records![index].price != null
+                          ? controller.trx.records![index].price.toString()
+                          : " "),
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),

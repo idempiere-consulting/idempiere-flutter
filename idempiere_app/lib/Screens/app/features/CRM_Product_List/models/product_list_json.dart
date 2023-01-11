@@ -201,7 +201,7 @@ class Records {
         lITIsProductConfigurable = json['LIT_IsProductConfigurable'] as bool?,
         modelname = json['model-name'] as String?,
         imageData = json['imagebase64'] as String?,
-        price = json['Price'] as num?;
+        price = json['PriceStd'] as num?;
 
   Map<String, dynamic> toJson() => {
         'id': id,

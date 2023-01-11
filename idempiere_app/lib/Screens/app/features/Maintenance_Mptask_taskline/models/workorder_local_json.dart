@@ -88,6 +88,7 @@ class WORecords {
   int? litSignImageID;
   CInvoiceID? cInvoiceID;
   num? paidAmt;
+  bool? isPaid;
   String? contracttypename;
 
   WORecords(
@@ -147,6 +148,7 @@ class WORecords {
       this.litSignImageID,
       this.cInvoiceID,
       this.paidAmt,
+      this.isPaid,
       this.contracttypename});
 
   WORecords.fromJson(Map<String, dynamic> json)
@@ -252,6 +254,7 @@ class WORecords {
             : null,
         paidAmt = json['PaidAmt'] as num?,
         litSignImageID = json['LIT_Sign_Image_ID'] as int?,
+        isPaid = json['IsPaid'] as bool?,
         contracttypename = json['contracttypename'] as String?,
         litMpMaintainHelp = json['mp_maintain_help'] as String?;
 
@@ -309,6 +312,7 @@ class WORecords {
         'JP_ToDo_Status': jpToDoStatus?.toJson(),
         'PaymentRule': paymentRule?.toJson(),
         'C_Invoice_ID': cInvoiceID?.toJson(),
+        'IsPaid': isPaid,
         'contracttypename': contracttypename,
       };
 }

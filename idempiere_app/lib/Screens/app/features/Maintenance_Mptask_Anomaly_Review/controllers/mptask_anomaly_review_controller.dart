@@ -163,7 +163,7 @@ class AnomalyReviewController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/LIT_NC?\$filter= MP_Maintain_Task_ID eq ${args["id"]} and C_Order_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/LIT_NC?\$filter= MP_OT_ID eq ${args["id"]} and C_Order_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{

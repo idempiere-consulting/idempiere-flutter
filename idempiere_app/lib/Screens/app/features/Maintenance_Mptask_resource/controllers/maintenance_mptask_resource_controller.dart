@@ -141,10 +141,7 @@ class MaintenanceMpResourceController extends GetxController {
       ),
       barrierDismissible: true,
       textConfirm: 'Replace'.tr,
-      textCancel: 'Revision'.tr,
-      onCancel: () async {
-        editWorkOrderResourceDateRevision(await checkConnection(), index);
-      },
+      textCancel: 'Cancel'.tr,
       buttonColor: kNotifColor,
       onConfirm: () async {
         DateFormat dateFormat = DateFormat("yyyy-MM-dd");
@@ -172,6 +169,8 @@ class MaintenanceMpResourceController extends GetxController {
               "V_Number": _trx.records![index].number,
               "LineNo": _trx.records![index].lineNo,
               "LIT_ResourceStatus": {"id": "INS"},
+              "AD_User_ID": {"id": GetStorage().read('userId')},
+              "LIT_ResourceActivity": {"id": "CHK"}
             });
 
             _trx2.records![i].mpMaintainID = _trx.records![index].mpMaintainID;
@@ -182,6 +181,8 @@ class MaintenanceMpResourceController extends GetxController {
                 _trx.records![index].locationComment;
             _trx2.records![i].resourceStatus =
                 ResourceStatus(id: "INS", identifier: "INS".tr);
+            _trx2.records![i].doneAction = "Checked";
+            _trx2.records![i].toDoAction = "OK";
 
             //print(_trx.records![index].mpMaintainID?.id);
             /*  print('http://' +
@@ -574,6 +575,8 @@ class MaintenanceMpResourceController extends GetxController {
               "V_Number": _trx.records![index].number,
               "LineNo": _trx.records![index].lineNo,
               "LIT_ResourceStatus": {"id": "INS"},
+              "AD_User_ID": {"id": GetStorage().read('userId')},
+              "LIT_ResourceActivity": {"id": "CHK"}
             });
 
             _trx2.records![i].mpMaintainID = _trx.records![index].mpMaintainID;
@@ -584,6 +587,8 @@ class MaintenanceMpResourceController extends GetxController {
                 _trx.records![index].locationComment;
             _trx2.records![i].resourceStatus =
                 ResourceStatus(id: "INS", identifier: "INS".tr);
+            _trx2.records![i].doneAction = "Checked";
+            _trx2.records![i].toDoAction = "OK";
 
             //print(_trx.records![index].mpMaintainID?.id);
             /*  print('http://' +
@@ -608,7 +613,7 @@ class MaintenanceMpResourceController extends GetxController {
                 file.writeAsStringSync(data);
                 //getWorkOrders();
                 //print("done!");
-                //Get.back();
+                Get.back();
                 Get.snackbar(
                   "Fatto!",
                   "Il record è stato modificato",
@@ -1279,7 +1284,7 @@ class MaintenanceMpResourceController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     if (await checkConnection()) {
       _dataAvailable.value = false;
       emptyAPICallStak();

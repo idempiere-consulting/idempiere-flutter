@@ -95,7 +95,7 @@ class CRMTaskController extends GetxController {
   }
 
   Future<void> getTasks() async {
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    var apiUrlFilter = ["", " and AD_User_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');

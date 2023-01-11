@@ -272,6 +272,23 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                           ],
                                         ),
                                         Row(
+                                          children: [
+                                            Text(
+                                              "Causale: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .litmMovementTypeID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [

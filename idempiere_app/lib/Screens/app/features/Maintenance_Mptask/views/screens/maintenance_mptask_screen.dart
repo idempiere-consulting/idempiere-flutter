@@ -6,6 +6,7 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:ui';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -275,6 +276,17 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       ),
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
+                                        var index2 = 0;
+                                        var count = 0;
+                                        for (var element
+                                            in controller._trx2.records!) {
+                                          count++;
+                                          if (element.id ==
+                                              controller
+                                                  .trx.records![index].id) {
+                                            index2 = count;
+                                          }
+                                        }
                                         //log("info button pressed");
                                         /* print(controller.trx.records![index]
                                             .jpToDoStartDate); */
@@ -282,7 +294,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
-                                              "index": index,
+                                              "index": index2,
                                               "docNo": controller.trx
                                                   .records![index].documentNo,
                                               "businessPartner": controller
@@ -673,6 +685,36 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               child: Text(controller
                                                   .trx.records![index].paidAmt
                                                   .toString()),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                controller.trx.records![index]
+                                                                .isPaid !=
+                                                            true ||
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .isPaid ==
+                                                            null
+                                                    ? 'Not Paid'.tr
+                                                    : 'Paid'.tr,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .isPaid !=
+                                                                true ||
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .isPaid ==
+                                                                null
+                                                        ? Colors.yellow
+                                                        : kNotifColor),
+                                              ),
                                             )
                                           ],
                                         ),
@@ -913,7 +955,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       "id": controller
                                                           .trx
                                                           .records![index]
-                                                          .mPMaintainTaskID
+                                                          .mPOTID
                                                           ?.id,
                                                       "record-id": controller
                                                               .trx
