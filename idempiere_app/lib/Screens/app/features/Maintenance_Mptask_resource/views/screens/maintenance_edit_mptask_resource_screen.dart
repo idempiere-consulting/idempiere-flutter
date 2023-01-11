@@ -5,6 +5,7 @@ import 'dart:io';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -136,7 +137,9 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             ),
           );
         } else {
-          print(response.body);
+          if (kDebugMode) {
+            print(response.body);
+          }
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",

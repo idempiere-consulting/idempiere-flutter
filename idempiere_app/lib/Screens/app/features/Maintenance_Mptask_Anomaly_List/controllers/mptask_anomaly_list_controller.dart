@@ -16,6 +16,7 @@ class AnomalyListController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+  // ignore: prefer_final_fields
   var _attachmentsAvailable = false.obs;
 
   var searchFieldController = TextEditingController();
@@ -169,6 +170,7 @@ class AnomalyListController extends GetxController {
     }
 
     _trx = json;
+    // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;
     _attachmentsAvailable.value = true;
     //}

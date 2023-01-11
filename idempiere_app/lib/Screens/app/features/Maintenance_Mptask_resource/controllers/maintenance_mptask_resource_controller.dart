@@ -832,7 +832,7 @@ class MaintenanceMpResourceController extends GetxController {
       var url = Uri.parse('http://' +
           ip +
           '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}');
-      print(msg);
+      //print(msg);
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -862,7 +862,9 @@ class MaintenanceMpResourceController extends GetxController {
             ),
           );
         } else {
-          print(response.body);
+          if (kDebugMode) {
+            print(response.body);
+          }
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",

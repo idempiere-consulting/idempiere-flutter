@@ -165,7 +165,7 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       _trxStudents = CourseStudentJson.fromJson(jsonDecode(response.body));
       _dataAvailable1.value = _trxStudents.records!.isNotEmpty;
     } else {

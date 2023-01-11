@@ -1,18 +1,12 @@
 import 'dart:convert';
 //import 'dart:developer';
-
-import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/business_partner_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/infocount_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/resource_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 class MaintenanceMptaskInfo extends StatefulWidget {
@@ -61,7 +55,9 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
         dataAvailable = true;
       });
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -139,8 +135,8 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 10,
                 ),
               ],
@@ -148,8 +144,8 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 10,
                 ),
               ],

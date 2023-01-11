@@ -5,8 +5,6 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -54,6 +52,7 @@ class PortalMpTrainingCourseCourseListScreen
     extends GetView<PortalMpTrainingCourseCourseListController> {
   const PortalMpTrainingCourseCourseListScreen({Key? key}) : super(key: key);
 
+  // ignore: prefer_void_to_null
   Future<Null> _selectDate(BuildContext context, int index) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -101,7 +100,7 @@ class PortalMpTrainingCourseCourseListScreen
         },
       );
       if (response.statusCode == 201) {
-        print(response.body);
+        //print(response.body);
         Get.find<PortalMpTrainingCourseCourseListController>()
             .getCourseStudents();
         //print("done!");
@@ -135,7 +134,7 @@ class PortalMpTrainingCourseCourseListScreen
         'Description': controller.studentFields[5].text,
         'Note': controller.studentFields[6].text
       });
-      print(msg);
+      //print(msg);
       var url = Uri.parse('$protocol://' +
           ip +
           '/api/v1/models/MP_Maintain_Resource/${controller.trxStudents.records![index].id}');
@@ -1064,7 +1063,7 @@ class PortalMpTrainingCourseCourseListScreen
               controller.selectedCourse = index;
               controller.courseId =
                   controller.trxCourses.records![index].mpMaintainParentID?.id;
-              print(controller.courseId);
+              //print(controller.courseId);
               controller.showStudentDetails = false;
               controller.getCourseStudents();
             }),

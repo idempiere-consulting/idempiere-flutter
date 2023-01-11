@@ -77,6 +77,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     var url = Uri.parse(
         '$protocol://' + ip + '/api/v1/models/jp_todo/${args["jpId"]}');
 
+    // ignore: unused_local_variable
     var response = await http.put(
       url,
       body: msg,
@@ -213,7 +214,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var json =
           ADRefListJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 

@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Shipment_line/views/screens/maintenance_shipmentline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -50,7 +49,7 @@ class _CreateMaintenanceShipmentlineState
       },
     );
     if (response.statusCode == 201) {
-      print(response.body);
+      //print(response.body);
       Get.back();
       Get.find<MaintenanceShipmentlineController>().getShipmentlines();
       //print("done!");
@@ -63,7 +62,9 @@ class _CreateMaintenanceShipmentlineState
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Error!".tr,
         "Record not updated".tr,
@@ -135,7 +136,9 @@ class _CreateMaintenanceShipmentlineState
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -177,7 +180,9 @@ class _CreateMaintenanceShipmentlineState
   // ignore: prefer_typing_uninitialized_variables
   var checkboxState;
 
+  // ignore: prefer_typing_uninitialized_variables
   var productId;
+  // ignore: prefer_typing_uninitialized_variables
   var productName;
 
   @override

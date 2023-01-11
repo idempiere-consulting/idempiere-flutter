@@ -30,7 +30,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -150,7 +150,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
       },
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(response.body);
+      //print(response.body);
       Get.back();
       Get.snackbar(
         "Signed!".tr,

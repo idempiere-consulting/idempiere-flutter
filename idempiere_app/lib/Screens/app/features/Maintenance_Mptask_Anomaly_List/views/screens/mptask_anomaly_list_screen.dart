@@ -14,7 +14,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/models/anomaly_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/views/screens/attachment_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/views/screens/mptask_edit_anomaly_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/attachmentlist_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/anomaly_image.dart';

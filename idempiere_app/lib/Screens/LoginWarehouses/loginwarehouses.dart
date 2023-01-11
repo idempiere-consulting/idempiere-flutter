@@ -776,7 +776,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
       }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       workOrderSync = false;
       checkSyncData();
     }
@@ -823,7 +825,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       //syncWorkOrderResourceSurveyLines();
 
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       workOrderSync = false;
       checkSyncData();
     }
@@ -971,7 +975,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         //syncWorkOrderTask();
       }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       workOrderSync = false;
       checkSyncData();
     }

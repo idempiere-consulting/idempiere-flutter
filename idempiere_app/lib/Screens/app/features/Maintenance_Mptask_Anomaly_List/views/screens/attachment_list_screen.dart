@@ -10,7 +10,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/anomaly_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:idempiere_app/constants.dart';
 
 class AttachmentList extends StatefulWidget {
   const AttachmentList({Key? key}) : super(key: key);
@@ -67,7 +66,7 @@ class _AttachmentListState extends State<AttachmentList> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () async {
-                var isConnected = await checkConnection();
+                //var isConnected = await checkConnection();
                 //editAnomaly(isConnected);
               },
               icon: const Icon(
@@ -81,8 +80,8 @@ class _AttachmentListState extends State<AttachmentList> {
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
             return Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 10,
                 ),
               ],

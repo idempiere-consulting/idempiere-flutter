@@ -208,7 +208,7 @@ class PortalMpSalesOrderController extends GetxController {
     //IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and
     //SalesRep_ID eq ${GetStorage().read("userId")}
     //lit_mobile_order_bploc_v
-    print("so");
+    //print("so");
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -217,7 +217,7 @@ class PortalMpSalesOrderController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       _trx =
           SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
@@ -231,7 +231,6 @@ class PortalMpSalesOrderController extends GetxController {
         }
       }
     } else {
-      print(response.body);
       _dataAvailable.value = false;
     }
   }

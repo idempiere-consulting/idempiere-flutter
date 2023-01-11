@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert';
 import 'dart:io';
 //import 'dart:developer';
@@ -268,6 +270,7 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
   var offline = -1;
 
   var productId = 0;
+  // ignore: prefer_typing_uninitialized_variables
   var productName;
 
   @override
@@ -495,8 +498,8 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 10,
                 ),
               ],
@@ -504,8 +507,8 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 10,
                 ),
               ],

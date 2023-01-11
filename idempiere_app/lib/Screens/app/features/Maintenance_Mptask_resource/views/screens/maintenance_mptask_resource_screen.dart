@@ -1087,16 +1087,16 @@ class MaintenanceMpResourceScreen
                                                             onConfirm:
                                                                 () async {
                                                               Get.back();
-                                                              var isConnected =
-                                                                  await checkConnection();
+                                                              /* var isConnected =
+                                                                  await checkConnection(); */
                                                               controller
                                                                   .replaceResource(
                                                                       index);
                                                             },
                                                           );
                                                         } else {
-                                                          var isConnected =
-                                                              await checkConnection();
+                                                          /* var isConnected =
+                                                              await checkConnection(); */
                                                           controller
                                                               .replaceResource(
                                                                   index);

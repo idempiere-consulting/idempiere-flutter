@@ -121,7 +121,9 @@ class PortalMpAnomalyController extends GetxController {
 
       businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -148,11 +150,13 @@ class PortalMpAnomalyController extends GetxController {
     if (response.statusCode == 200) {
       _trx = LitNcJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
-      print(response.body);
+      //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx.records!.isNotEmpty;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

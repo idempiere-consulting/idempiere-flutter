@@ -172,7 +172,7 @@ class CRMShipmentController extends GetxController {
     if (response.statusCode == 200) {
       //print("done!");
       Get.back();
-      print(response.body);
+      //print(response.body);
       Get.snackbar(
         "Done!".tr,
         "Sales Order has been created".tr,
