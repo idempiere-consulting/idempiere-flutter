@@ -51,7 +51,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           lineFieldController.text == "" ? "0" : lineFieldController.text),
       "LocationComment": locationFieldController.text,
       "Manufacturer": manufacturerFieldController.text,
-      "ManufacturedYear": int.parse(yearFieldController.text),
+      "ManufacturedYear": int.parse(
+          yearFieldController.text == "null" ? "0" : yearFieldController.text),
       "ProdCode": barcodeFieldController.text,
       "TextDetails": cartelFieldController.text,
       "LIT_ProductModel": productModelFieldController.text,
@@ -89,8 +90,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           locationFieldController.text;
       trx.records![Get.arguments["index"]].manufacturer =
           manufacturerFieldController.text;
-      trx.records![Get.arguments["index"]].manufacturedYear =
-          int.parse(yearFieldController.text);
+      trx.records![Get.arguments["index"]].manufacturedYear = int.parse(
+          yearFieldController.text == "null" ? "0" : yearFieldController.text);
       trx.records![Get.arguments["index"]].prodCode =
           barcodeFieldController.text;
       trx.records![Get.arguments["index"]].textDetails =
@@ -216,7 +217,9 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 : lineFieldController.text),
             "LocationComment": locationFieldController.text,
             "Manufacturer": manufacturerFieldController.text,
-            "ManufacturedYear": int.parse(yearFieldController.text),
+            "ManufacturedYear": int.parse(yearFieldController.text == "null"
+                ? "0"
+                : yearFieldController.text),
             "ProdCode": barcodeFieldController.text,
             "TextDetails": cartelFieldController.text,
             "LIT_ProductModel": productModelFieldController.text,

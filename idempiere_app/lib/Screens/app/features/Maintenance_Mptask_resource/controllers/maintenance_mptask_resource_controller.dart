@@ -130,7 +130,7 @@ class MaintenanceMpResourceController extends GetxController {
     return "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN";
   }
 
-  replaceResource(int index) {
+  reviewResourceButton(int index) {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     Get.defaultDialog(
@@ -141,7 +141,12 @@ class MaintenanceMpResourceController extends GetxController {
       ),
       barrierDismissible: true,
       textConfirm: 'Replace'.tr,
-      textCancel: 'Cancel'.tr,
+      textCancel: 'Revision'.tr,
+      onCancel: () async {
+        var isConnected = await checkConnection();
+        editWorkOrderResourceDateRevision(isConnected, index);
+        //Get.back();
+      },
       buttonColor: kNotifColor,
       onConfirm: () async {
         DateFormat dateFormat = DateFormat("yyyy-MM-dd");
@@ -156,10 +161,11 @@ class MaintenanceMpResourceController extends GetxController {
         // ignore: unused_local_variable
         var res = WorkOrderResourceLocalJson.fromJson(
             jsonDecode(file.readAsStringSync()));
-
+        var count = 0;
         for (var i = 0; i < _trx2.records!.length; i++) {
           //print(res.records![i].prodCode);
           if (_trx2.records![i].prodCode == passwordFieldController.text) {
+            count++;
             var msg = jsonEncode({
               "MP_Maintain_ID": {
                 "id": _trx.records![index].mpMaintainID?.id,
@@ -339,6 +345,16 @@ class MaintenanceMpResourceController extends GetxController {
             }
             getWorkOrders();
           }
+        }
+        if (count == 0) {
+          Get.snackbar(
+            "Error!".tr,
+            "Barcode not found!",
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
         }
       },
     );
@@ -543,12 +559,7 @@ class MaintenanceMpResourceController extends GetxController {
       barrierDismissible: true,
       textConfirm: 'Replace'.tr,
       buttonColor: kNotifColor,
-      textCancel: 'Revision'.tr,
-      onCancel: () async {
-        var isConnected = await checkConnection();
-        editWorkOrderResourceDateRevision(isConnected, index);
-        //Get.back();
-      },
+      textCancel: 'Cancel'.tr,
       onConfirm: () async {
         DateFormat dateFormat = DateFormat("yyyy-MM-dd");
 
@@ -562,10 +573,11 @@ class MaintenanceMpResourceController extends GetxController {
         // ignore: unused_local_variable
         var res = WorkOrderResourceLocalJson.fromJson(
             jsonDecode(file.readAsStringSync()));
-
+        var count = 0;
         for (var i = 0; i < _trx2.records!.length; i++) {
           //print(res.records![i].prodCode);
           if (_trx2.records![i].prodCode == passwordFieldController.text) {
+            count++;
             var msg = jsonEncode({
               "MP_Maintain_ID": {
                 "id": _trx.records![index].mpMaintainID?.id,
@@ -743,6 +755,16 @@ class MaintenanceMpResourceController extends GetxController {
             getWorkOrders();
             Get.back();
           }
+        }
+        if (count == 0) {
+          Get.snackbar(
+            "Error!".tr,
+            "Barcode not found!",
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
         }
       },
     );
