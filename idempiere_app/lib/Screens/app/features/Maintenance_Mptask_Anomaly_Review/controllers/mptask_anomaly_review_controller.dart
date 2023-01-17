@@ -9,10 +9,10 @@ class AnomalyReviewController extends GetxController {
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
-  var value = ("Replacements Only".tr).obs;
+  var value = ("All".tr).obs;
 
-  var filters = ["Replacements Only", "All" /* , "Team" */];
-  var filterCount = 0;
+  var filters = ["Replacements Only".tr, "All".tr /* , "Team" */];
+  var filterCount = 1;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 

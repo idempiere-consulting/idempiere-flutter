@@ -249,7 +249,7 @@ class MaintenanceMpResourceScreen
               Obx(
                 () => controller.dataAvailable
                     ? ListView.builder(
-                        key: const PageStorageKey<String>('controllerA'),
+                        key: const PageStorageKey<String>('workorderresource'),
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -292,6 +292,8 @@ class MaintenanceMpResourceScreen
                                     decoration: const BoxDecoration(
                                         color: Color.fromRGBO(64, 75, 96, .9)),
                                     child: ExpansionTile(
+                                      key: PageStorageKey(
+                                          'workorderresource$index'),
                                       initiallyExpanded: true,
                                       trailing: IconButton(
                                         onPressed: () {},
@@ -457,6 +459,666 @@ class MaintenanceMpResourceScreen
                                                       "products": File(
                                                           '${(await getApplicationDocumentsDirectory()).path}/products.json')
                                                     });
+                                                break;
+                                              case "A03":
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .offlineId ==
+                                                    null) {
+                                                  Get.toNamed(
+                                                      '/MaintenanceMpResourceSheet',
+                                                      arguments: {
+                                                        "surveyId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITSurveySheetsID
+                                                            ?.id,
+                                                        "id": controller.trx
+                                                            .records![index].id,
+                                                        "serNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serNo ??
+                                                            "",
+                                                        "prodId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.id,
+                                                        "prodName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.identifier,
+                                                        "lot": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lot,
+                                                        "location": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .locationComment,
+                                                        "locationCode":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .value,
+                                                        "manYear": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .manufacturedYear,
+                                                        "userName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .userName,
+                                                        "serviceDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serviceDate,
+                                                        "endDate": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .endDate,
+                                                        "manufacturer":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturer,
+                                                        "model": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITProductModel,
+                                                        "manufacturedYear":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturedYear,
+                                                        "purchaseDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
+                                                        "note": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name,
+                                                        "resTypeId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITResourceType
+                                                            ?.id,
+                                                        "valid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .isValid,
+                                                        "offlineid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .offlineId,
+                                                        "index": index,
+                                                        "resourceStatus":
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
+                                                      });
+                                                }
+
+                                                break;
+                                              case "A04":
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .offlineId ==
+                                                    null) {
+                                                  Get.toNamed(
+                                                      '/MaintenanceMpResourceSheet',
+                                                      arguments: {
+                                                        "surveyId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITSurveySheetsID
+                                                            ?.id,
+                                                        "id": controller.trx
+                                                            .records![index].id,
+                                                        "serNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serNo ??
+                                                            "",
+                                                        "prodId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.id,
+                                                        "prodName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.identifier,
+                                                        "lot": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lot,
+                                                        "location": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .locationComment,
+                                                        "locationCode":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .value,
+                                                        "manYear": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .manufacturedYear,
+                                                        "userName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .userName,
+                                                        "serviceDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serviceDate,
+                                                        "endDate": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .endDate,
+                                                        "manufacturer":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturer,
+                                                        "model": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITProductModel,
+                                                        "manufacturedYear":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturedYear,
+                                                        "purchaseDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
+                                                        "note": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name,
+                                                        "resTypeId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITResourceType
+                                                            ?.id,
+                                                        "valid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .isValid,
+                                                        "offlineid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .offlineId,
+                                                        "index": index,
+                                                        "resourceStatus":
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
+                                                      });
+                                                }
+
+                                                break;
+                                              case "A05":
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .offlineId ==
+                                                    null) {
+                                                  Get.toNamed(
+                                                      '/MaintenanceMpResourceSheet',
+                                                      arguments: {
+                                                        "surveyId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITSurveySheetsID
+                                                            ?.id,
+                                                        "id": controller.trx
+                                                            .records![index].id,
+                                                        "serNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serNo ??
+                                                            "",
+                                                        "prodId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.id,
+                                                        "prodName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.identifier,
+                                                        "lot": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lot,
+                                                        "location": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .locationComment,
+                                                        "locationCode":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .value,
+                                                        "manYear": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .manufacturedYear,
+                                                        "userName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .userName,
+                                                        "serviceDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serviceDate,
+                                                        "endDate": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .endDate,
+                                                        "manufacturer":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturer,
+                                                        "model": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITProductModel,
+                                                        "manufacturedYear":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturedYear,
+                                                        "purchaseDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
+                                                        "note": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name,
+                                                        "resTypeId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITResourceType
+                                                            ?.id,
+                                                        "valid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .isValid,
+                                                        "offlineid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .offlineId,
+                                                        "index": index,
+                                                        "resourceStatus":
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
+                                                      });
+                                                }
+
+                                                break;
+                                              case "A06":
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .offlineId ==
+                                                    null) {
+                                                  Get.toNamed(
+                                                      '/MaintenanceMpResourceSheet',
+                                                      arguments: {
+                                                        "surveyId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITSurveySheetsID
+                                                            ?.id,
+                                                        "id": controller.trx
+                                                            .records![index].id,
+                                                        "serNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serNo ??
+                                                            "",
+                                                        "prodId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.id,
+                                                        "prodName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.identifier,
+                                                        "lot": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lot,
+                                                        "location": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .locationComment,
+                                                        "locationCode":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .value,
+                                                        "manYear": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .manufacturedYear,
+                                                        "userName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .userName,
+                                                        "serviceDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serviceDate,
+                                                        "endDate": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .endDate,
+                                                        "manufacturer":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturer,
+                                                        "model": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITProductModel,
+                                                        "manufacturedYear":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturedYear,
+                                                        "purchaseDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
+                                                        "note": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name,
+                                                        "resTypeId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITResourceType
+                                                            ?.id,
+                                                        "valid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .isValid,
+                                                        "offlineid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .offlineId,
+                                                        "index": index,
+                                                        "resourceStatus":
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
+                                                      });
+                                                }
+
+                                                break;
+                                              case "A09":
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .offlineId ==
+                                                    null) {
+                                                  Get.toNamed(
+                                                      '/MaintenanceMpResourceSheet',
+                                                      arguments: {
+                                                        "surveyId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITSurveySheetsID
+                                                            ?.id,
+                                                        "id": controller.trx
+                                                            .records![index].id,
+                                                        "serNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serNo ??
+                                                            "",
+                                                        "prodId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.id,
+                                                        "prodName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.identifier,
+                                                        "lot": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lot,
+                                                        "location": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .locationComment,
+                                                        "locationCode":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .value,
+                                                        "manYear": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .manufacturedYear,
+                                                        "userName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .userName,
+                                                        "serviceDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serviceDate,
+                                                        "endDate": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .endDate,
+                                                        "manufacturer":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturer,
+                                                        "model": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITProductModel,
+                                                        "manufacturedYear":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturedYear,
+                                                        "purchaseDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
+                                                        "note": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name,
+                                                        "resTypeId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITResourceType
+                                                            ?.id,
+                                                        "valid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .isValid,
+                                                        "offlineid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .offlineId,
+                                                        "index": index,
+                                                        "resourceStatus":
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
+                                                      });
+                                                }
+
+                                                break;
+                                              case "A10":
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .offlineId ==
+                                                    null) {
+                                                  Get.toNamed(
+                                                      '/MaintenanceMpResourceSheet',
+                                                      arguments: {
+                                                        "surveyId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITSurveySheetsID
+                                                            ?.id,
+                                                        "id": controller.trx
+                                                            .records![index].id,
+                                                        "serNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serNo ??
+                                                            "",
+                                                        "prodId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.id,
+                                                        "prodName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.identifier,
+                                                        "lot": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lot,
+                                                        "location": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .locationComment,
+                                                        "locationCode":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .value,
+                                                        "manYear": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .manufacturedYear,
+                                                        "userName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .userName,
+                                                        "serviceDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serviceDate,
+                                                        "endDate": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .endDate,
+                                                        "manufacturer":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturer,
+                                                        "model": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITProductModel,
+                                                        "manufacturedYear":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturedYear,
+                                                        "purchaseDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
+                                                        "note": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name,
+                                                        "resTypeId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITResourceType
+                                                            ?.id,
+                                                        "valid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .isValid,
+                                                        "offlineid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .offlineId,
+                                                        "index": index,
+                                                        "resourceStatus":
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
+                                                      });
+                                                }
+
                                                 break;
                                               default:
                                             }
@@ -671,29 +1333,25 @@ class MaintenanceMpResourceScreen
                                                 Container(
                                                   decoration: BoxDecoration(
                                                     color: controller
-                                                                .trx
-                                                                .records![index]
-                                                                .toDoAction! ==
-                                                            "OK"
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .toDoAction! ==
+                                                                "OK" ||
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .toDoAction! ==
+                                                                "NEW"
                                                         ? kNotifColor
                                                         : controller.trx.records![index].toDoAction! ==
                                                                     "PR" ||
-                                                                controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .toDoAction! ==
+                                                                controller.trx.records![index].toDoAction! ==
                                                                     "PC"
                                                             ? const Color.fromARGB(
-                                                                255,
-                                                                209,
-                                                                189,
-                                                                4)
-                                                            : controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .toDoAction! ==
+                                                                255, 209, 189, 4)
+                                                            : controller.trx.records![index].toDoAction! ==
                                                                     "PT"
                                                                 ? Colors.orange
                                                                 : controller
@@ -825,17 +1483,44 @@ class MaintenanceMpResourceScreen
                                             ]),
                                             Visibility(
                                               visible: controller
-                                                      .trx
-                                                      .records![index]
-                                                      .eDIType
-                                                      ?.id ==
-                                                  "A01",
+                                                          .trx
+                                                          .records![index]
+                                                          .eDIType
+                                                          ?.id ==
+                                                      "A01" ||
+                                                  controller.trx.records![index]
+                                                          .eDIType?.id ==
+                                                      "A03" ||
+                                                  controller.trx.records![index]
+                                                          .eDIType?.id ==
+                                                      "A04" ||
+                                                  controller.trx.records![index]
+                                                          .eDIType?.id ==
+                                                      "A05" ||
+                                                  controller.trx.records![index]
+                                                          .eDIType?.id ==
+                                                      "A06" ||
+                                                  controller.trx.records![index]
+                                                          .eDIType?.id ==
+                                                      "A09" ||
+                                                  controller.trx.records![index]
+                                                          .eDIType?.id ==
+                                                      "A10" ||
+                                                  controller.trx.records![index]
+                                                          .eDIType?.id ==
+                                                      "A11" ||
+                                                  controller.trx.records![index]
+                                                          .eDIType?.id ==
+                                                      "A12" ||
+                                                  controller.trx.records![index]
+                                                          .eDIType?.id ==
+                                                      "A13",
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
                                                   IconButton(
-                                                    tooltip: 'Edit A01',
+                                                    tooltip: 'Edit',
                                                     onPressed: () async {
                                                       var index2 = 0;
                                                       for (var i = 0;
@@ -860,7 +1545,12 @@ class MaintenanceMpResourceScreen
                                                           const EditMaintenanceMpResource(),
                                                           arguments: {
                                                             "perm": controller
-                                                                .getPerm("A01"),
+                                                                .getPerm(controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .eDIType!
+                                                                    .id!),
                                                             "id": controller
                                                                 .trx
                                                                 .records![index]
@@ -989,6 +1679,28 @@ class MaintenanceMpResourceScreen
                                                                         index]
                                                                     .offlineId,
                                                             "index": index2,
+                                                            "length": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .length,
+                                                            "width": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .width,
+                                                            "weightAmt":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .weightAmt,
+                                                            "height": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .height,
+                                                            "color": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .color,
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -1260,6 +1972,36 @@ class MaintenanceMpResourceScreen
                                                                       .resourceStatus
                                                                       ?.id ??
                                                                   "OUT",
+                                                              "length":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .length,
+                                                              "width":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .width,
+                                                              "weightAmt":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .weightAmt,
+                                                              "height":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .height,
+                                                              "color":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .color,
                                                             });
                                                         /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -1391,8 +2133,7 @@ class MaintenanceMpResourceScreen
                                                               var isConnected =
                                                                   await checkConnection();
                                                               controller
-                                                                  .editWorkOrderResourceDateTesting(
-                                                                      isConnected,
+                                                                  .testingResourceButton(
                                                                       index);
                                                             },
                                                           );
@@ -1400,8 +2141,7 @@ class MaintenanceMpResourceScreen
                                                           var isConnected =
                                                               await checkConnection();
                                                           controller
-                                                              .editWorkOrderResourceDateTesting(
-                                                                  isConnected,
+                                                              .testingResourceButton(
                                                                   index);
                                                         }
                                                       },
@@ -1547,6 +2287,7 @@ class MaintenanceMpResourceScreen
                                                   ]),
                                             ),
                                             Visibility(
+                                              //
                                               visible: controller
                                                       .trx
                                                       .records![index]
@@ -1712,6 +2453,28 @@ class MaintenanceMpResourceScreen
                                                                         index]
                                                                     .offlineId,
                                                             "index": index2,
+                                                            "length": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .length,
+                                                            "width": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .width,
+                                                            "weightAmt":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .weightAmt,
+                                                            "height": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .height,
+                                                            "color": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .color,
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -1794,480 +2557,6 @@ class MaintenanceMpResourceScreen
                                                     },
                                                     icon:
                                                         const Icon(Icons.undo),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Visibility(
-                                              visible: controller
-                                                      .trx
-                                                      .records![index]
-                                                      .eDIType
-                                                      ?.id ==
-                                                  "A09",
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  IconButton(
-                                                    tooltip: 'Edit A09',
-                                                    onPressed: () async {
-                                                      var index2 = 0;
-                                                      for (var i = 0;
-                                                          i <
-                                                              controller
-                                                                  ._trx2
-                                                                  .records!
-                                                                  .length;
-                                                          i++) {
-                                                        if (controller
-                                                                ._trx2
-                                                                .records![i]
-                                                                .id ==
-                                                            controller
-                                                                ._trx
-                                                                .records![index]
-                                                                .id) {
-                                                          index2 = i;
-                                                        }
-                                                      }
-                                                      Get.to(
-                                                          const EditMaintenanceMpResource(),
-                                                          arguments: {
-                                                            "perm": controller
-                                                                .getPerm("A09"),
-                                                            "id": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .id,
-                                                            "number": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .number,
-                                                            "lineNo": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lineNo
-                                                                .toString(),
-                                                            "cartel": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .textDetails,
-                                                            "model": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lITProductModel,
-                                                            "dateOrder":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .dateOrdered,
-                                                            "years": controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .useLifeYears !=
-                                                                    null
-                                                                ? controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .useLifeYears
-                                                                    .toString()
-                                                                : "0",
-                                                            "user": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .userName,
-                                                            "serviceDate":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .serviceDate,
-                                                            "productName":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mProductID!
-                                                                    .identifier,
-                                                            "productId":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mProductID!
-                                                                    .id,
-                                                            "location": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .locationComment,
-                                                            "observation":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .name,
-                                                            "SerNo": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .serNo,
-                                                            "barcode":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .prodCode,
-                                                            "manufacturer":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .manufacturer,
-                                                            "year": controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .manufacturedYear !=
-                                                                    null
-                                                                ? controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .manufacturedYear
-                                                                    .toString()
-                                                                : "0",
-                                                            "Description":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .description,
-                                                            "date3": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lITControl3DateFrom,
-                                                            "date2": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lITControl2DateFrom,
-                                                            "date1": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lITControl1DateFrom,
-                                                            "offlineid":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .offlineId,
-                                                            "index": index2,
-                                                          });
-                                                      /* controller
-                                                              .editWorkOrderResourceDateCheck(
-                                                                  isConnected,
-                                                                  index); */
-                                                    },
-                                                    icon:
-                                                        const Icon(Icons.edit),
-                                                  ),
-                                                  IconButton(
-                                                    tooltip: 'Check',
-                                                    onPressed: () async {
-                                                      var isConnected =
-                                                          await checkConnection();
-                                                      controller
-                                                          .editWorkOrderResourceDateCheck(
-                                                              isConnected,
-                                                              index);
-                                                    },
-                                                    icon: const Icon(Icons
-                                                        .check_circle_outline),
-                                                  ),
-                                                  IconButton(
-                                                    tooltip: 'Anomaly',
-                                                    onPressed: () async {
-                                                      var isConnected =
-                                                          await checkConnection();
-                                                      if (isConnected) {
-                                                        await emptyPostCallStack();
-                                                        await emptyEditAPICallStack();
-                                                        await emptyDeleteCallStack();
-                                                      }
-                                                      Get.to(
-                                                          const CreateResAnomaly(),
-                                                          arguments: {
-                                                            "id": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .id,
-                                                            "docNo": controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mpOtDocumentno ??
-                                                                "",
-                                                            "productId": controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mProductID
-                                                                    ?.id ??
-                                                                0,
-                                                            "productName": controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mProductID
-                                                                    ?.identifier ??
-                                                                "",
-                                                            "isConnected":
-                                                                isConnected,
-                                                          });
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons.warning,
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Visibility(
-                                              visible: controller
-                                                      .trx
-                                                      .records![index]
-                                                      .eDIType
-                                                      ?.id ==
-                                                  "A10",
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  IconButton(
-                                                    tooltip: 'Edit A10',
-                                                    onPressed: () async {
-                                                      var index2 = 0;
-                                                      for (var i = 0;
-                                                          i <
-                                                              controller
-                                                                  ._trx2
-                                                                  .records!
-                                                                  .length;
-                                                          i++) {
-                                                        if (controller
-                                                                ._trx2
-                                                                .records![i]
-                                                                .id ==
-                                                            controller
-                                                                ._trx
-                                                                .records![index]
-                                                                .id) {
-                                                          index2 = i;
-                                                        }
-                                                      }
-                                                      Get.to(
-                                                          const EditMaintenanceMpResource(),
-                                                          arguments: {
-                                                            "perm": controller
-                                                                .getPerm("A10"),
-                                                            "id": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .id,
-                                                            "number": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .number,
-                                                            "lineNo": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lineNo
-                                                                .toString(),
-                                                            "cartel": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .textDetails,
-                                                            "model": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lITProductModel,
-                                                            "dateOrder":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .dateOrdered,
-                                                            "years": controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .useLifeYears !=
-                                                                    null
-                                                                ? controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .useLifeYears
-                                                                    .toString()
-                                                                : "0",
-                                                            "user": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .userName,
-                                                            "serviceDate":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .serviceDate,
-                                                            "productName":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mProductID!
-                                                                    .identifier,
-                                                            "productId":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mProductID!
-                                                                    .id,
-                                                            "location": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .locationComment,
-                                                            "observation":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .name,
-                                                            "SerNo": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .serNo,
-                                                            "barcode":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .prodCode,
-                                                            "manufacturer":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .manufacturer,
-                                                            "year": controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .manufacturedYear !=
-                                                                    null
-                                                                ? controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .manufacturedYear
-                                                                    .toString()
-                                                                : "0",
-                                                            "Description":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .description,
-                                                            "date3": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lITControl3DateFrom,
-                                                            "date2": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lITControl2DateFrom,
-                                                            "date1": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .lITControl1DateFrom,
-                                                            "offlineid":
-                                                                controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .offlineId,
-                                                            "index": index2,
-                                                          });
-                                                      /* controller
-                                                              .editWorkOrderResourceDateCheck(
-                                                                  isConnected,
-                                                                  index); */
-                                                    },
-                                                    icon:
-                                                        const Icon(Icons.edit),
-                                                  ),
-                                                  IconButton(
-                                                    tooltip: 'Check',
-                                                    onPressed: () async {
-                                                      var isConnected =
-                                                          await checkConnection();
-                                                      controller
-                                                          .editWorkOrderResourceDateCheck(
-                                                              isConnected,
-                                                              index);
-                                                    },
-                                                    icon: const Icon(Icons
-                                                        .check_circle_outline),
-                                                  ),
-                                                  IconButton(
-                                                    tooltip: 'Anomaly',
-                                                    onPressed: () async {
-                                                      var isConnected =
-                                                          await checkConnection();
-                                                      if (isConnected) {
-                                                        await emptyPostCallStack();
-                                                        await emptyEditAPICallStack();
-                                                        await emptyDeleteCallStack();
-                                                      }
-                                                      Get.to(
-                                                          const CreateResAnomaly(),
-                                                          arguments: {
-                                                            "id": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .id,
-                                                            "docNo": controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mpOtDocumentno ??
-                                                                "",
-                                                            "productId": controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mProductID
-                                                                    ?.id ??
-                                                                0,
-                                                            "productName": controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .mProductID
-                                                                    ?.identifier ??
-                                                                "",
-                                                            "isConnected":
-                                                                isConnected,
-                                                          });
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons.warning,
-                                                      color: Colors.red,
-                                                    ),
                                                   ),
                                                 ],
                                               ),

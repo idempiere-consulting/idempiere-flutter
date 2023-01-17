@@ -439,7 +439,7 @@ class _CreateMaintenanceMpResourceState
 
   createWorkOrderResource(bool isConnected) async {
     //print(now);
-    const filename = "reflistresourcetype";
+    const filename = "workorderresource";
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
     //print(GetStorage().read('selectedTaskId'));
@@ -479,6 +479,16 @@ class _CreateMaintenanceMpResourceState
       "V_Number": numberFieldController.text,
       "LineNo": int.parse(
           lineFieldController.text == "" ? "0" : lineFieldController.text),
+      "Length": int.parse(
+          lengthFieldController.text != "" ? lengthFieldController.text : "0"),
+      "Width": int.parse(
+          widthFieldController.text != "" ? widthFieldController.text : "0"),
+      "WeightAmt": int.parse(weightAmtFieldController.text != ""
+          ? weightAmtFieldController.text
+          : "0"),
+      "Height": int.parse(
+          heightFieldController.text != "" ? heightFieldController.text : "0"),
+      "Color": colorFieldController.text,
       "LIT_ResourceStatus": {"id": "INS"},
     });
 
@@ -520,6 +530,15 @@ class _CreateMaintenanceMpResourceState
         userName: userNameFieldController.text,
         prodCode: barcodeFieldController.text,
         resourceStatus: ResourceStatus(id: "INS", identifier: "Installato"),
+        length: int.parse(lengthFieldController.text != ""
+            ? lengthFieldController.text
+            : "0"),
+        width: int.parse(
+            widthFieldController.text != "" ? widthFieldController.text : "0"),
+        weightAmt: int.parse(weightAmtFieldController.text != ""
+            ? weightAmtFieldController.text
+            : "0"),
+        color: colorFieldController.text,
         textDetails: cartelFieldController.text);
 
     var url = Uri.parse('http://' +
@@ -547,20 +566,25 @@ class _CreateMaintenanceMpResourceState
           saveFlag = false;
         });
         //syncWorkOrder();
+        //print(response.body);
         RRecords rc = RRecords.fromJson(jsonDecode(response.body));
+        rc.toDoAction = 'Nothing';
+        rc.doneAction = 'NEW';
+        rc.anomaliesCount = '0';
+        rc.eDIType = edt;
         trx.records!.add(rc);
         trx.rowcount = trx.rowcount! + 1;
         var data = jsonEncode(trx.toJson());
         file.writeAsStringSync(data);
         Get.find<MaintenanceMpResourceController>().getWorkOrders();
-        /* Get.snackbar(
+        Get.snackbar(
           "Done!".tr,
           "The record has been created".tr,
           icon: const Icon(
             Icons.done,
             color: Colors.green,
           ),
-        ); */
+        );
       } else {
         if (kDebugMode) {
           print(response.body);
@@ -617,6 +641,19 @@ class _CreateMaintenanceMpResourceState
           "LineNo": int.parse(
               lineFieldController.text == "" ? "0" : lineFieldController.text),
           "LIT_ResourceStatus": {"id": "INS"},
+          "Length": int.parse(lengthFieldController.text != ""
+              ? lengthFieldController.text
+              : "0"),
+          "Width": int.parse(widthFieldController.text != ""
+              ? widthFieldController.text
+              : "0"),
+          "WeightAmt": int.parse(weightAmtFieldController.text != ""
+              ? weightAmtFieldController.text
+              : "0"),
+          "Height": int.parse(heightFieldController.text != ""
+              ? heightFieldController.text
+              : "0"),
+          "Color": colorFieldController.text,
         });
 
         list.add(call);
@@ -661,6 +698,19 @@ class _CreateMaintenanceMpResourceState
           "LIT_ResourceStatus": {"id": "INS"},
           "LineNo": int.parse(
               lineFieldController.text == "" ? "0" : lineFieldController.text),
+          "Length": int.parse(lengthFieldController.text != ""
+              ? lengthFieldController.text
+              : "0"),
+          "Width": int.parse(widthFieldController.text != ""
+              ? widthFieldController.text
+              : "0"),
+          "WeightAmt": int.parse(weightAmtFieldController.text != ""
+              ? weightAmtFieldController.text
+              : "0"),
+          "Height": int.parse(heightFieldController.text != ""
+              ? heightFieldController.text
+              : "0"),
+          "Color": colorFieldController.text,
         });
         list.add(call);
       }
@@ -740,6 +790,11 @@ class _CreateMaintenanceMpResourceState
   var barcodeFieldController;
   var cartelFieldController;
   var lineFieldController;
+  var lengthFieldController;
+  var widthFieldController;
+  var weightAmtFieldController;
+  var heightFieldController;
+  var colorFieldController;
   String date3 = "";
   int dateCalc3 = 0;
   String date2 = "";
@@ -776,6 +831,11 @@ class _CreateMaintenanceMpResourceState
     cartelFieldController = TextEditingController();
     numberFieldController = TextEditingController();
     lineFieldController = TextEditingController();
+    lengthFieldController = TextEditingController(text: "0");
+    widthFieldController = TextEditingController(text: "0");
+    weightAmtFieldController = TextEditingController(text: "0");
+    heightFieldController = TextEditingController(text: "0");
+    colorFieldController = TextEditingController(text: "");
     date3 = "";
     dateCalc3 = 0;
     date2 = "";
@@ -1281,6 +1341,101 @@ class _CreateMaintenanceMpResourceState
                       },
                       // ignore: avoid_print
                       onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[18] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: lengthFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Length".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[19] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: widthFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Width".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[20] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: weightAmtFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Supported Weight".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[21] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: heightFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Height".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[22] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: colorFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Color".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
                     ),
                   ),
                 ),

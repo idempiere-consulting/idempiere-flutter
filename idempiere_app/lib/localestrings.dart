@@ -990,6 +990,11 @@ class LocaleString extends Translations {
           'Paid': 'Pagato',
           'Not Paid': 'Non Pagato',
           'Unchecked': 'Da Controllare',
+          'Reviewed': 'Revisionato',
+          'Anomaly Review': 'Anomalie',
+          'Replacements Only': 'Solo Sostituzioni',
+          'Special Order with Material': 'Int.Straordinario + Materiale',
+          'Shipment Order': 'Consegna',
         },
       };
 }

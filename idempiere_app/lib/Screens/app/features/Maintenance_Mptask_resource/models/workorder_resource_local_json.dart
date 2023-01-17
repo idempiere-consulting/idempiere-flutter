@@ -86,6 +86,11 @@ class RRecords {
   String? toDoAction;
   String? doneAction;
   ADUserID? adUserID;
+  num? length;
+  num? width;
+  num? weightAmt;
+  num? height;
+  String? color;
 
   RRecords(
       {this.id,
@@ -140,7 +145,12 @@ class RRecords {
       this.anomaliesCount,
       this.toDoAction,
       this.doneAction,
-      this.adUserID});
+      this.adUserID,
+      this.length,
+      this.width,
+      this.weightAmt,
+      this.height,
+      this.color});
 
   RRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -228,6 +238,11 @@ class RRecords {
         adUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
             ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
             : null,
+        length = json['Length'] as num?,
+        width = json['Width'] as num?,
+        weightAmt = json['WeightedAmt'] as num?,
+        height = json['Height'] as num?,
+        color = json['Color'] as String?,
         team = json['team'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -284,6 +299,11 @@ class RRecords {
         'anomalies_count': anomaliesCount,
         'todo_action': toDoAction,
         'done_action': doneAction,
+        'Length': length,
+        'Width': width,
+        'WeightedAmt': weightAmt,
+        'Height': height,
+        'Color': color,
         'team': team,
       };
 }

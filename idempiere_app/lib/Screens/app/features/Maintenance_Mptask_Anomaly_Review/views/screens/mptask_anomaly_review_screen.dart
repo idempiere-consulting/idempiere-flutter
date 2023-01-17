@@ -355,7 +355,7 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
                                             child: Row(
                                               children: [
                                                 Text(
-                                                  "Replacement: ".tr,
+                                                  "${"Replacement"}: ".tr,
                                                   style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold),

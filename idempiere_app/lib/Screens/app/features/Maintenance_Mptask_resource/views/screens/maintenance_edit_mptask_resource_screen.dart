@@ -67,6 +67,16 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       ),
       "IsActive": isActive,
       "LIT_ResourceStatus": {"id": dropdownValue},
+      "Length": int.parse(
+          lengthFieldController.text != "" ? lengthFieldController.text : "0"),
+      "Width": int.parse(
+          widthFieldController.text != "" ? widthFieldController.text : "0"),
+      "WeightedAmt": int.parse(weightAmtFieldController.text != ""
+          ? weightAmtFieldController.text
+          : "0"),
+      "Height": int.parse(
+          heightFieldController.text != "" ? heightFieldController.text : "0"),
+      "Color": colorFieldController.text,
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -109,6 +119,18 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       trx.records![Get.arguments["index"]].isActive = isActive;
       trx.records![Get.arguments["index"]].resourceStatus =
           ResourceStatus(id: dropdownValue, identifier: dropdownValue.tr);
+      trx.records![Get.arguments["index"]].length = int.parse(
+          lengthFieldController.text != "" ? lengthFieldController.text : "0");
+      trx.records![Get.arguments["index"]].width = int.parse(
+          widthFieldController.text != "" ? widthFieldController.text : "0");
+      trx.records![Get.arguments["index"]].weightAmt = int.parse(
+          weightAmtFieldController.text != ""
+              ? weightAmtFieldController.text
+              : "0");
+      trx.records![Get.arguments["index"]].height = int.parse(
+          heightFieldController.text != "" ? heightFieldController.text : "0");
+
+      trx.records![Get.arguments["index"]].color = colorFieldController.text;
 
       var url = Uri.parse('http://' +
           ip +
@@ -230,6 +252,19 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 ? "0"
                 : useLifeYearsFieldController.text),
             "LIT_ResourceStatus": {"id": dropdownValue},
+            "Length": int.parse(lengthFieldController.text != ""
+                ? lengthFieldController.text
+                : "0"),
+            "Width": int.parse(widthFieldController.text != ""
+                ? widthFieldController.text
+                : "0"),
+            "WeightedAmt": int.parse(weightAmtFieldController.text != ""
+                ? weightAmtFieldController.text
+                : "0"),
+            "Height": int.parse(heightFieldController.text != ""
+                ? heightFieldController.text
+                : "0"),
+            "Color": colorFieldController.text,
           });
 
           list.removeAt(i);
@@ -309,6 +344,11 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   var productModelFieldController;
   var userNameFieldController;
   var useLifeYearsFieldController;
+  var lengthFieldController;
+  var widthFieldController;
+  var weightAmtFieldController;
+  var heightFieldController;
+  var colorFieldController;
   String date3 = "";
   int dateCalc3 = 0;
   String date2 = "";
@@ -358,6 +398,17 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     yearFieldController.text = Get.arguments["year"] ?? "0";
     observationFieldController = TextEditingController();
     observationFieldController.text = Get.arguments["observation"] ?? "";
+    lengthFieldController =
+        TextEditingController(text: (Get.arguments["length"] ?? 0).toString());
+    widthFieldController =
+        TextEditingController(text: (Get.arguments["width"] ?? 0).toString());
+    weightAmtFieldController = TextEditingController(
+        text: (Get.arguments["weightAmt"] ?? 0).toString());
+    heightFieldController =
+        TextEditingController(text: (Get.arguments["height"] ?? 0).toString());
+    colorFieldController =
+        TextEditingController(text: Get.arguments["color"] ?? "");
+
     date3 = Get.arguments["date3"] ?? "";
     dateCalc3 = 0;
     date2 = Get.arguments["date2"] ?? "";
@@ -853,6 +904,98 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                       },
                       // ignore: avoid_print
                       onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[18] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: lengthFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Length".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[19] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: widthFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Width".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[20] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: weightAmtFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Supported Weight".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[21] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: heightFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Height".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[22] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      //focusNode: focusNode,
+                      controller: colorFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: "Color".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),

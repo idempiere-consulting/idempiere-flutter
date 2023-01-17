@@ -140,8 +140,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
-                          /* key: const PageStorageKey<String>(
-                              'controllerWorkOrder'), */
+                          key: PageStorageKey('workorder'),
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -155,6 +154,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ExpansionTile(
+                                  key: PageStorageKey('workorderrow$index'),
                                   trailing: IconButton(
                                     onPressed: () {
                                       GetStorage().write(
@@ -177,8 +177,15 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
                                       if (controller.trx.records![index]
-                                              .cDocTypeID?.identifier ==
-                                          'Special Order'.tr) {
+                                                  .cDocTypeID?.identifier ==
+                                              'Special Order'.tr ||
+                                          controller.trx.records![index]
+                                                  .cDocTypeID?.identifier ==
+                                              "Special Order with Material"
+                                                  .tr ||
+                                          controller.trx.records![index]
+                                                  .cDocTypeID?.identifier ==
+                                              'Shipment Order'.tr) {
                                         Get.toNamed('/MaintenanceMptaskLine',
                                             arguments: {
                                               "isSpecialOrder": true,
@@ -367,9 +374,25 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     children: <Widget>[
                                       Icon(
                                         Icons.handshake,
-                                        color: controller._trx.records![index]
-                                                    .cDocTypeID?.identifier ==
-                                                'Special Order'.tr
+                                        color: controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .cDocTypeID
+                                                        ?.identifier ==
+                                                    'Special Order'.tr ||
+                                                controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .cDocTypeID
+                                                        ?.identifier ==
+                                                    'Special Order with Material'
+                                                        .tr ||
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cDocTypeID
+                                                        ?.identifier ==
+                                                    'Shipment Order'.tr
                                             ? Colors.orange
                                             : Colors.yellow,
                                       ),
@@ -426,7 +449,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                                "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(1, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(1, 5) : "N/A"}")
                                           ],
                                         ),
                                         Row(
@@ -837,11 +860,24 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               ),
                                               Visibility(
                                                 visible: controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cDocTypeID
-                                                        ?.identifier !=
-                                                    'Special Order'.tr,
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier !=
+                                                        'Special Order'.tr ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Special Order with Material'
+                                                            .tr ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Shipment Order'.tr,
                                                 child: IconButton(
                                                   tooltip: "Tasks".tr,
                                                   onPressed: () {

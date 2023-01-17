@@ -248,17 +248,23 @@ class MaintenanceMpResourceSheetController extends GetxController {
       "M_Product_ID": {"id": productId},
       "ResourceType": {"id": "BP"},
       "ResourceQty": 1,
-      "LIT_ResourceType": {"id": dropDownValue.value},
+      //"LIT_ResourceType": {"id": dropDownValue.value},
       "LocationComment": locationFieldController.text,
       "Manufacturer": manufacturerFieldController.text,
       //"Value": locationCodeFieldController.text,
       "SerNo": serialNoFieldController.text,
       //"Lot": lotFieldController.text,
-      "ManufacturedYear": int.parse(manufacturedYearFieldController.text),
-      "UseLifeYears": int.parse(expectedDurationFieldController.text),
+      "ManufacturedYear": manufacturedYearFieldController.text != "null" &&
+              manufacturedYearFieldController.text != ""
+          ? int.parse(manufacturedYearFieldController.text)
+          : 0,
+      "UseLifeYears": expectedDurationFieldController.text != "null" &&
+              expectedDurationFieldController.text != ""
+          ? int.parse(expectedDurationFieldController.text)
+          : 0,
       "Name": noteFieldController.text,
       "LIT_ProductModel": modelFieldController.text,
-      "DateOrdered": date2.substring(0, 10),
+      "DateOrdered": date2 != "" ? date2.substring(0, 10) : date2,
       "ServiceDate": date3,
       "UserName": userFieldController.text,
       "isValid": checkboxState.value,
@@ -267,7 +273,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
           lineFieldController.text == "" ? "0" : lineFieldController.text),
     });
 
-    //print(msg);
+    print(msg);
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
@@ -275,8 +281,8 @@ class MaintenanceMpResourceSheetController extends GetxController {
     if (Get.arguments["id"] != null && offline == -1) {
       trx.records![Get.arguments["index"]].mProductID!.id = productId;
       trx.records![Get.arguments["index"]].mProductID!.identifier = productName;
-      trx.records![Get.arguments["index"]].lITResourceType!.id =
-          dropDownValue.value;
+      /*  trx.records![Get.arguments["index"]].lITResourceType!.id =
+          dropDownValue.value; */
       trx.records![Get.arguments["index"]].locationComment =
           locationFieldController.text;
       trx.records![Get.arguments["index"]].manufacturer =
@@ -285,10 +291,16 @@ class MaintenanceMpResourceSheetController extends GetxController {
           locationCodeFieldController.text; */
       trx.records![Get.arguments["index"]].serNo = serialNoFieldController.text;
       //trx.records![Get.arguments["index"]].lot = lotFieldController.text;
-      trx.records![Get.arguments["index"]].manufacturedYear =
-          int.parse(manufacturedYearFieldController.text);
-      trx.records![Get.arguments["index"]].useLifeYears =
-          int.parse(expectedDurationFieldController.text);
+      trx.records![Get.arguments["index"]].manufacturedYear = int.parse(
+          manufacturedYearFieldController.text != "null" &&
+                  manufacturedYearFieldController.text != ""
+              ? manufacturedYearFieldController.text
+              : "0");
+      trx.records![Get.arguments["index"]].useLifeYears = int.parse(
+          expectedDurationFieldController.text != "null" &&
+                  expectedDurationFieldController.text != ""
+              ? expectedDurationFieldController.text
+              : "0");
       trx.records![Get.arguments["index"]].name = noteFieldController.text;
       trx.records![Get.arguments["index"]].lITProductModel =
           modelFieldController.text;
@@ -302,7 +314,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
 
       var url = Uri.parse('http://' +
           ip +
-          '/api/v1/windows/preventive-maintenance/tabs/resources/${Get.arguments["id"]}');
+          '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -332,7 +344,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
             ),
           );
         } else {
-          //print(response.body);
+          print(response.body);
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",

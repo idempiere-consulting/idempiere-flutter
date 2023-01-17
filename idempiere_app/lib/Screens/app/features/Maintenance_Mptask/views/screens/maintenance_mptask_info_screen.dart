@@ -28,7 +28,7 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_resource_testcount_v?\$filter= lit_mp_resource_testcount_v_ID eq ${Get.arguments["id"]}');
+        '/api/v1/models/lit_mp_resource_testcount_v?\$filter=  lit_mp_resource_testcount_v_ID eq ${Get.arguments["id"]}');
 
     var response = await http.get(
       url,

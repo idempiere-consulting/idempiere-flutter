@@ -360,6 +360,236 @@ class MaintenanceMpResourceController extends GetxController {
     );
   }
 
+  testingResourceButton(int index) {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    Get.defaultDialog(
+      title: "${"Resource Code".tr}:",
+      content: RoundedCodeField(
+        controller: passwordFieldController,
+        onChanged: (value) {},
+      ),
+      barrierDismissible: true,
+      textConfirm: 'Replace'.tr,
+      textCancel: 'Testing'.tr,
+      onCancel: () async {
+        var isConnected = await checkConnection();
+        editWorkOrderResourceDateTesting(isConnected, index);
+        //Get.back();
+      },
+      buttonColor: kNotifColor,
+      onConfirm: () async {
+        DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+        String date = dateFormat.format(DateTime.now());
+
+        var isConnected = await checkConnection();
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+        // ignore: unused_local_variable
+        var res = WorkOrderResourceLocalJson.fromJson(
+            jsonDecode(file.readAsStringSync()));
+        var count = 0;
+        for (var i = 0; i < _trx2.records!.length; i++) {
+          //print(res.records![i].prodCode);
+          if (_trx2.records![i].prodCode == passwordFieldController.text) {
+            count++;
+            var msg = jsonEncode({
+              "MP_Maintain_ID": {
+                "id": _trx.records![index].mpMaintainID?.id,
+              },
+              "LIT_Control1DateFrom": date,
+              "LocationComment": _trx.records![index].locationComment,
+              "V_Number": _trx.records![index].number,
+              "LineNo": _trx.records![index].lineNo,
+              "LIT_ResourceStatus": {"id": "INS"},
+              "AD_User_ID": {"id": GetStorage().read('userId')},
+              "LIT_ResourceActivity": {"id": "CHK"}
+            });
+
+            _trx2.records![i].mpMaintainID = _trx.records![index].mpMaintainID;
+            _trx2.records![i].lITControl1DateFrom = date;
+            _trx2.records![i].number = _trx.records![index].number;
+            _trx2.records![i].lineNo = _trx.records![index].lineNo;
+            _trx2.records![i].locationComment =
+                _trx.records![index].locationComment;
+            _trx2.records![i].resourceStatus =
+                ResourceStatus(id: "INS", identifier: "INS".tr);
+            _trx2.records![i].doneAction = "Checked";
+            _trx2.records![i].toDoAction = "OK";
+
+            //print(_trx.records![index].mpMaintainID?.id);
+            /*  print('http://' +
+                ip +
+                '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'); */
+            var url = Uri.parse('http://' +
+                ip +
+                '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}');
+            if (isConnected) {
+              emptyAPICallStak();
+              var response = await http.put(
+                url,
+                body: msg,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Authorization': authorization,
+                },
+              );
+              if (response.statusCode == 200) {
+                //print(response.body);
+                var data = jsonEncode(_trx2.toJson());
+                file.writeAsStringSync(data);
+                //getWorkOrders();
+                //print("done!");
+                //Get.back();
+                Get.back();
+                Get.snackbar(
+                  "Fatto!",
+                  "Il record è stato modificato",
+                  icon: const Icon(
+                    Icons.done,
+                    color: Colors.green,
+                  ),
+                );
+              } else {
+                //print(response.body);
+                //print(response.statusCode);
+                Get.snackbar(
+                  "Errore!",
+                  "Il record non è stato modificato",
+                  icon: const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                );
+              }
+            } else {
+              var data = jsonEncode(_trx2.toJson());
+              //GetStorage().write('workOrderSync', data);
+              file.writeAsStringSync(data);
+              //getWorkOrders();
+              Map calls = {};
+              if (GetStorage().read('storedEditAPICalls') == null) {
+                calls['http://' +
+                        ip +
+                        '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
+                    msg;
+              } else {
+                calls = GetStorage().read('storedEditAPICalls');
+                calls['http://' +
+                        ip +
+                        '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
+                    msg;
+              }
+              GetStorage().write('storedEditAPICalls', calls);
+              Get.snackbar(
+                "Salvato!",
+                "Il record è stato salvato localmente in attesa di connessione internet.",
+                icon: const Icon(
+                  Icons.save,
+                  color: Colors.red,
+                ),
+              );
+            }
+
+            for (var i2 = 0; i2 < _trx2.records!.length; i2++) {
+              if (_trx.records![index].id == _trx2.records![i2].id) {
+                _trx2.records![i2].resourceStatus =
+                    ResourceStatus(id: "IRV", identifier: "IRV".tr);
+                var msg = jsonEncode({
+                  "LIT_ResourceStatus": {"id": "IRV"},
+                });
+                var url = Uri.parse('http://' +
+                    ip +
+                    '/api/v1/windows/maintenance-resource/${trx.records![index].id}');
+                if (isConnected) {
+                  emptyAPICallStak();
+                  var response = await http.put(
+                    url,
+                    body: msg,
+                    headers: <String, String>{
+                      'Content-Type': 'application/json',
+                      'Authorization': authorization,
+                    },
+                  );
+                  if (response.statusCode == 200) {
+                    if (kDebugMode) {
+                      print(response.body);
+                    }
+                    var data = jsonEncode(_trx2.toJson());
+                    file.writeAsStringSync(data);
+                    //getWorkOrders();
+                    //print("done!");
+                    //Get.back();
+                    /* Get.snackbar(
+                      "Fatto!",
+                      "Il record è stato modificato",
+                      icon: const Icon(
+                        Icons.done,
+                        color: Colors.green,
+                      ),
+                    ); */
+                  } else {
+                    //print(response.body);
+                    //print(response.statusCode);
+                    /* Get.snackbar(
+                      "Errore!",
+                      "Il record non è stato modificato",
+                      icon: const Icon(
+                        Icons.error,
+                        color: Colors.red,
+                      ),
+                    ); */
+                  }
+                } else {
+                  var data = jsonEncode(_trx2.toJson());
+                  //GetStorage().write('workOrderSync', data);
+                  file.writeAsStringSync(data);
+                  //getWorkOrders();
+                  Map calls = {};
+                  if (GetStorage().read('storedEditAPICalls') == null) {
+                    calls['http://' +
+                            ip +
+                            '/api/v1/windows/maintenance-resource/${trx.records![index].id}'] =
+                        msg;
+                  } else {
+                    calls = GetStorage().read('storedEditAPICalls');
+                    calls['http://' +
+                            ip +
+                            '/api/v1/windows/maintenance-resource/${trx.records![index].id}'] =
+                        msg;
+                  }
+                  GetStorage().write('storedEditAPICalls', calls);
+                  /* Get.snackbar(
+                    "Salvato!",
+                    "Il record è stato salvato localmente in attesa di connessione internet.",
+                    icon: const Icon(
+                      Icons.save,
+                      color: Colors.red,
+                    ),
+                  ); */
+                }
+              }
+            }
+            getWorkOrders();
+          }
+        }
+        if (count == 0) {
+          Get.snackbar(
+            "Error!".tr,
+            "Barcode not found!",
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        }
+      },
+    );
+  }
+
   sellResource() {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -437,10 +667,8 @@ class MaintenanceMpResourceController extends GetxController {
             jsonDecode(file.readAsStringSync()));
 
         for (var i = 0; i < _trx2.records!.length; i++) {
-          if (kDebugMode) {
-            print(res.records![i].prodCode);
-          }
           if (_trx2.records![i].prodCode == passwordFieldController.text) {
+            print('trovato');
             var msg = jsonEncode({
               "MP_Maintain_ID": {
                 "id": GetStorage().read('selectedTaskDocNo'),
@@ -454,7 +682,7 @@ class MaintenanceMpResourceController extends GetxController {
               "LIT_ResourceStatus": {"id": "INS"},
             });
 
-            _trx2.records![i].mpMaintainID =
+            _trx2.records![i].mpMaintainID?.id =
                 GetStorage().read('selectedTaskDocNo');
             _trx2.records![i].lITControl1DateFrom = date;
             _trx2.records![i].number = numberFieldController.text;
@@ -484,7 +712,7 @@ class MaintenanceMpResourceController extends GetxController {
                 },
               );
               if (response.statusCode == 200) {
-                //print(response.body);
+                print(response.body);
                 var data = jsonEncode(_trx2.toJson());
                 file.writeAsStringSync(data);
                 //getWorkOrders();
@@ -500,7 +728,7 @@ class MaintenanceMpResourceController extends GetxController {
                   ),
                 );
               } else {
-                //print(response.body);
+                print(response.body);
                 //print(response.statusCode);
                 Get.snackbar(
                   "Errore!",
@@ -1308,7 +1536,7 @@ class MaintenanceMpResourceController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
     if (await checkConnection()) {
       _dataAvailable.value = false;
       emptyAPICallStak();
@@ -1366,7 +1594,7 @@ class MaintenanceMpResourceController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -1411,6 +1639,7 @@ class MaintenanceMpResourceController extends GetxController {
   }
 
   Future<void> getWorkOrders() async {
+    print('hallo');
     //print(GetStorage().read('selectedTaskDocNo'));
     _dataAvailable.value = false;
     late List<RRecords> temp;
