@@ -279,6 +279,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         }
         //checkSyncData();
       }
+    } else {
+      print(response.body);
     }
   }
 
@@ -520,6 +522,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         }
         //checkSyncData();
       }
+    } else {
+      productSync = false;
+      checkSyncData();
     }
   }
 

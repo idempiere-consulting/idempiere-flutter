@@ -178,6 +178,86 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
     }
   }
 
+  deleteAnomaly(bool isConnected) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+
+    const filename = "anomalies";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    if (Get.arguments["id"] != null && offline == -1) {
+      json.records!.removeWhere((element) => Get.arguments["id"] == element.id);
+
+      var url = Uri.parse(
+          'http://' + ip + '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
+      if (isConnected) {
+        emptyAPICallStak();
+        var response = await http.delete(
+          url,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          var data = jsonEncode(json.toJson());
+          file.writeAsStringSync(data);
+          Get.find<MaintenanceMpResourceController>().getWorkOrders();
+          Get.find<AnomalyListController>().getAnomalies();
+          Get.back();
+          //print("done!");
+          //Get.back();
+          Get.snackbar(
+            "Fatto!",
+            "Il record è stato cancellato",
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          //print(response.body);
+          //print(response.statusCode);
+          Get.snackbar(
+            "Errore!",
+            "Il record non è stato cancellato",
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      } else {
+        var data = jsonEncode(json.toJson());
+        //GetStorage().write('workOrderSync', data);
+        file.writeAsStringSync(data);
+        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        Get.find<AnomalyListController>().getAnomalies();
+        List<dynamic> list = [];
+        if (GetStorage().read('storedEditAPICalls') == null) {
+          list.add(
+              'http://' + ip + '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
+        } else {
+          list = GetStorage().read('storedEditAPICalls');
+          list.add(
+              'http://' + ip + '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
+        }
+        GetStorage().write('storedEditAPICalls', list);
+        Get.snackbar(
+          "Salvato!",
+          "Il record è stato salvato localmente in attesa di connessione internet.",
+          icon: const Icon(
+            Icons.save,
+            color: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   var offline = -1;
   var anomalyTypeFieldController;
   var resourceFieldController;
@@ -215,6 +295,20 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
           child: Text('Edit Anomaly'),
         ),
         actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              onPressed: () async {
+                var isConnected = await checkConnection();
+                deleteAnomaly(isConnected);
+                //editAnomaly(isConnected);
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(

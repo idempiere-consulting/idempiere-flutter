@@ -65,6 +65,7 @@ import 'package:idempiere_app/Screens/app/features/Portal_Mp_Contract/views/scre
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoice/views/screens/portal_mp_invoice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Maintenance/views/screens/portal_mp_maintenance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Opportunity/views/screens/portal_mp_opportunity_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_B2B/views/screens/portal_mp_sales_order_b2b_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Training_and_CourseList/views/screens/portal_mp_training_course_courselist_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Production/views/screens/production_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Production_Order/views/screens/production_order_screen.dart';
@@ -473,6 +474,11 @@ class MyApp extends StatelessWidget {
           name: '/PortalMpSalesOrder',
           page: () => const PortalMpSalesOrderScreen(),
           binding: PortalMpSalesOrderBinding(),
+        ),
+        GetPage(
+          name: '/PortalMpSalesOrderB2B',
+          page: () => const PortalMpSalesOrderB2BScreen(),
+          binding: PortalMpSalesOrderB2BBinding(),
         ),
         GetPage(
           name: '/PortalMpTrainingCourse',

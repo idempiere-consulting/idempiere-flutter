@@ -77,6 +77,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       "Height": int.parse(
           heightFieldController.text != "" ? heightFieldController.text : "0"),
       "Color": colorFieldController.text,
+      //"IsPrinted": sendWorkOrder,
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -131,6 +132,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           heightFieldController.text != "" ? heightFieldController.text : "0");
 
       trx.records![Get.arguments["index"]].color = colorFieldController.text;
+      //trx.records![Get.arguments["index"]].isPrinted = sendWorkOrder;
 
       var url = Uri.parse('http://' +
           ip +
@@ -265,6 +267,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 ? heightFieldController.text
                 : "0"),
             "Color": colorFieldController.text,
+            //"IsPrinted": sendWorkOrder,
           });
 
           list.removeAt(i);
@@ -361,6 +364,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   String dateOrdered = Get.arguments["dateOrder"] ?? "";
   String firstUseDate = Get.arguments["serviceDate"] ?? "";
   bool isActive = true;
+  //bool sendWorkOrder = false;
   String dropdownValue = "OUT";
 
   @override
@@ -418,6 +422,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     offline = Get.arguments["offlineid"] ?? -1;
     dateOrdered = "";
     firstUseDate = "";
+    //sendWorkOrder = Get.arguments["isPrinted"] ?? false;
     isActive = true;
     //print(Get.arguments["offlineid"]);
 

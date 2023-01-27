@@ -95,6 +95,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     String authorization = 'Bearer ' + GetStorage().read('token');
     var msg = jsonEncode({
       "Description": noteWOFieldController.text,
+      "IsPrinted": sendWorkOrder,
     });
 
     if (paidAmtFieldController.text != "0") {
@@ -102,6 +103,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
         "Description": noteWOFieldController.text,
         "PaymentRule": {"id": dropdownValue},
         "PaidAmt": double.parse(paidAmtFieldController.text),
+        "IsPrinted": sendWorkOrder,
       });
     }
     final protocol = GetStorage().read('protocol');
@@ -121,6 +123,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
           dateFieldController.text;
       trx.records![Get.arguments["index"]].jpToDoEndDate =
           dateFieldController.text;
+      trx.records![Get.arguments["index"]].isPrinted = sendWorkOrder;
 
       if (paidAmtFieldController.text != "0") {
         trx.records![Get.arguments["index"]].paymentRule?.id = dropdownValue;
@@ -236,6 +239,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
   var teamFieldController;
   var paidAmtFieldController;
   var dropdownValue = "T";
+  bool sendWorkOrder = false;
 
   dynamic args = Get.arguments;
 
@@ -257,6 +261,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     teamFieldController = TextEditingController(text: args["team"]);
     paidAmtFieldController =
         TextEditingController(text: args["paidAmt"].toString());
+    sendWorkOrder = Get.arguments['isPrinted'] ?? false;
     //getDocType();
     //getResourceName();
     //getAllResources();
@@ -538,6 +543,19 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Send Work Order'.tr),
+                  value: sendWorkOrder,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      sendWorkOrder = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ],
             );

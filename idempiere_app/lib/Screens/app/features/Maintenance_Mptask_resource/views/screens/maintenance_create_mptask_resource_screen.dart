@@ -489,7 +489,13 @@ class _CreateMaintenanceMpResourceState
       "Height": int.parse(
           heightFieldController.text != "" ? heightFieldController.text : "0"),
       "Color": colorFieldController.text,
-      "LIT_ResourceStatus": {"id": "INS"},
+      "LIT_ResourceStatus": {
+        "id": Get.arguments["property"] == null ||
+                Get.arguments["property"] == false
+            ? "INS"
+            : "NEW"
+      },
+      "IsOwned": Get.arguments["property"] ?? false,
     });
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -1286,7 +1292,9 @@ class _CreateMaintenanceMpResourceState
                     ),
                     child: DateTimePicker(
                       type: DateTimePickerType.date,
-                      initialValue: '',
+                      initialValue: (Get.arguments["perm"])[16] == "N"
+                          ? ''
+                          : DateTime.now().toString(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
                       dateLabelText: 'Revision Date'.tr,
@@ -1322,7 +1330,9 @@ class _CreateMaintenanceMpResourceState
                     ),
                     child: DateTimePicker(
                       type: DateTimePickerType.date,
-                      initialValue: '',
+                      initialValue: (Get.arguments["perm"])[17] == "N"
+                          ? ''
+                          : DateTime.now().toString(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
                       dateLabelText: 'Testing Date'.tr,

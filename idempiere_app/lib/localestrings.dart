@@ -974,7 +974,7 @@ class LocaleString extends Translations {
               'La risorsa non dovrebbe essere controllata',
           'The resource shouldn\'t be reviewed':
               'La risorsa non dovrebbe essere revisionata',
-          'The resource shouldn\'t be testes':
+          'The resource shouldn\'t be tested':
               'La risorsa non dovrebbe essere collaudata',
           'Warning': 'Attenzione',
           'Is Valid': 'Funzionante',
@@ -995,6 +995,13 @@ class LocaleString extends Translations {
           'Replacements Only': 'Solo Sostituzioni',
           'Special Order with Material': 'Int.Straordinario + Materiale',
           'Shipment Order': 'Consegna',
+          'Location Note': 'Note Ubicazione',
+          'Installed': 'Installato',
+          'Send Work Order': 'Invia ODL',
+          'Retired': 'Ritirato',
+          'Category': 'Categoria',
+          'Customer Portal': 'Portale Cliente',
+          'Sales Order B2B': 'Ordine di Vendita B2B',
         },
       };
 }

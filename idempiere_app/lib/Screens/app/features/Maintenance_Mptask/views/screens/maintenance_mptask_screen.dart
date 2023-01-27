@@ -356,6 +356,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   .records![index]
                                                   .paymentRule
                                                   ?.id,
+                                              "IsPrinted": controller
+                                                  .trx.records![index].isPrinted
                                             });
                                       },
                                     ),
@@ -370,40 +372,62 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.handshake,
-                                        color: controller
-                                                        ._trx
-                                                        .records![index]
-                                                        .cDocTypeID
-                                                        ?.identifier ==
-                                                    'Special Order'.tr ||
-                                                controller
-                                                        ._trx
-                                                        .records![index]
-                                                        .cDocTypeID
-                                                        ?.identifier ==
-                                                    'Special Order with Material'
-                                                        .tr ||
-                                                controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cDocTypeID
-                                                        ?.identifier ==
-                                                    'Shipment Order'.tr
-                                            ? Colors.orange
-                                            : Colors.yellow,
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.handshake,
+                                            color: controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Special Order'.tr ||
+                                                    controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Special Order with Material'
+                                                            .tr ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Shipment Order'.tr
+                                                ? Colors.orange
+                                                : Colors.yellow,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
+                                      Row(
+                                        children: [
+                                          /* const Text(
+                                              "BPartner: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ), */
+                                          Icon(Icons.location_pin,
+                                              color: Colors.red.shade700),
+                                          Expanded(
+                                            child: Text(
+                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -562,6 +586,24 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                             ),
                                           ],
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx.records![index].name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Location Note'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].name}"
+                                                      .tr),
+                                            ],
+                                          ),
                                         ),
                                         Visibility(
                                           visible: controller.trx

@@ -23,9 +23,15 @@ class MaintenanceMpResourceController extends GetxController {
   //var adUserId;
   DateTime now = DateTime.now();
 
-  var value = "All".obs;
+  var value = "Installed".tr.obs;
 
-  var filters = ["All", "Unchecked", "Checked"];
+  var filters = [
+    "Installed".tr,
+    "Unchecked".tr,
+    "Checked".tr,
+    'Retired'.tr,
+    "All".tr
+  ];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
@@ -105,7 +111,7 @@ class MaintenanceMpResourceController extends GetxController {
 
     _tt = RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    _tt2.records?.insert(0, Records(value: "0", name: "All"));
+    _tt2.records?.insert(0, Records(value: "0", name: "All".tr));
     filter1Available.value = true;
     filter2Available.value = true;
     getWorkOrders();
@@ -113,7 +119,7 @@ class MaintenanceMpResourceController extends GetxController {
 
   changeFilter() {
     filterCount++;
-    if (filterCount == 3) {
+    if (filterCount == 5) {
       filterCount = 0;
     }
 
@@ -1018,6 +1024,18 @@ class MaintenanceMpResourceController extends GetxController {
             case "A02NEW":
               sellResource();
               break;
+            case "A02SEDE":
+              for (var i = 0; i < _tt.records!.length; i++) {
+                if (_tt.records![i].value == newValue) {
+                  Get.to(const CreateMaintenanceMpResource(), arguments: {
+                    "id": dropDownValue,
+                    "reflistresourcetype": file,
+                    "perm": _tt.records![i].parameterValue,
+                    "property": true,
+                  });
+                }
+              }
+              break;
             default:
               for (var i = 0; i < _tt.records!.length; i++) {
                 if (_tt.records![i].value == newValue) {
@@ -1025,6 +1043,7 @@ class MaintenanceMpResourceController extends GetxController {
                     "id": dropDownValue,
                     "reflistresourcetype": file,
                     "perm": _tt.records![i].parameterValue,
+                    "property": false,
                   });
                 }
               }
@@ -1639,7 +1658,7 @@ class MaintenanceMpResourceController extends GetxController {
   }
 
   Future<void> getWorkOrders() async {
-    print('hallo');
+    //print('hallo');
     //print(GetStorage().read('selectedTaskDocNo'));
     _dataAvailable.value = false;
     late List<RRecords> temp;
@@ -1670,8 +1689,18 @@ class MaintenanceMpResourceController extends GetxController {
       _trx.rowcount = _trx.records?.length;
       flag = false;
     }
-    if (filterCount != 0) {
+    if (filterCount != 4) {
       switch (filterCount) {
+        case 0:
+          temp = (_trx.records!.where((element) =>
+              element.resourceStatus!.id == "INS" &&
+              element.mpMaintainID?.id ==
+                  GetStorage().read('selectedTaskDocNo'))).toList();
+          //print(temp);
+          _trx.records = temp;
+          _trx.rowcount = _trx.records?.length;
+          flag = false;
+          break;
         case 1:
           temp = (_trx.records!.where((element) =>
               (DateTime.parse(element.lITControl1DateFrom!)
@@ -1679,7 +1708,8 @@ class MaintenanceMpResourceController extends GetxController {
                   DateTime.parse(element.lITControl1DateFrom!)
                       .isBefore(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
-                  GetStorage().read('selectedTaskDocNo'))).toList();
+                  GetStorage().read('selectedTaskDocNo') &&
+              element.resourceStatus!.id == "INS")).toList();
           //print(temp);
           _trx.records = temp;
           _trx.rowcount = _trx.records?.length;
@@ -1691,6 +1721,18 @@ class MaintenanceMpResourceController extends GetxController {
                       .isBefore(twentyDaysLater) &&
                   DateTime.parse(element.lITControl1DateFrom!)
                       .isAfter(twentyDaysAgoDate)) &&
+              element.mpMaintainID?.id ==
+                  GetStorage().read('selectedTaskDocNo') &&
+              element.resourceStatus!.id == "INS")).toList();
+          //print(temp);
+          _trx.records = temp;
+          _trx.rowcount = _trx.records?.length;
+          flag = false;
+          break;
+        case 3:
+          temp = (_trx.records!.where((element) =>
+              (element.resourceStatus!.id == "IRV" ||
+                  element.resourceStatus!.id == "IRX") &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo'))).toList();
           //print(temp);
@@ -1709,6 +1751,7 @@ class MaintenanceMpResourceController extends GetxController {
       _trx.records = temp;
       _trx.rowcount = _trx.records?.length;
     }
+    //print(_trx.records!.length);
 
     focusNode = List<FocusNode>.filled(_trx.records!.length, FocusNode());
 

@@ -98,7 +98,8 @@ class MaintenanceMpResourceScreen
                 children: [
                   Container(
                     child: Obx(() => controller.dataAvailable
-                        ? Text("${"RESOURCES".tr}: ${controller.trx.rowcount}")
+                        ? Text(
+                            "${"RESOURCES".tr}: ${controller.trx.records!.length}")
                         : Text("${"RESOURCES".tr}: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
@@ -1701,6 +1702,13 @@ class MaintenanceMpResourceScreen
                                                                 .trx
                                                                 .records![index]
                                                                 .color,
+                                                            "resourceStatus": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -2475,6 +2483,13 @@ class MaintenanceMpResourceScreen
                                                                 .trx
                                                                 .records![index]
                                                                 .color,
+                                                            "resourceStatus": controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(

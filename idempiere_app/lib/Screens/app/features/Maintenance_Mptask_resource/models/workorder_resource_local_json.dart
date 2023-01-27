@@ -91,6 +91,7 @@ class RRecords {
   num? weightAmt;
   num? height;
   String? color;
+  bool? isPrinted;
 
   RRecords(
       {this.id,
@@ -150,7 +151,8 @@ class RRecords {
       this.width,
       this.weightAmt,
       this.height,
-      this.color});
+      this.color,
+      this.isPrinted});
 
   RRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -243,6 +245,7 @@ class RRecords {
         weightAmt = json['WeightedAmt'] as num?,
         height = json['Height'] as num?,
         color = json['Color'] as String?,
+        isPrinted = json['IsPrinted'] as bool?,
         team = json['team'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -304,6 +307,7 @@ class RRecords {
         'WeightedAmt': weightAmt,
         'Height': height,
         'Color': color,
+        'IsPrinted': isPrinted,
         'team': team,
       };
 }
