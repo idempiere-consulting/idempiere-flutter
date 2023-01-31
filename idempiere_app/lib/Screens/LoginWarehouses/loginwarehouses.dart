@@ -44,6 +44,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     ); */
 
     var syncPerm = GetStorage().read("permission3");
+    print('permessi $syncPerm');
     if ((GetStorage().read('isjpTODOSync') ?? true) &&
         (syncPerm != null && syncPerm != "" ? syncPerm[0] == 'Y' : true)) {
       jpTODOSync = true;

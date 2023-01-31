@@ -1002,6 +1002,10 @@ class LocaleString extends Translations {
           'Category': 'Categoria',
           'Customer Portal': 'Portale Cliente',
           'Sales Order B2B': 'Ordine di Vendita B2B',
+          'Color': 'Colore',
+          'Colors': 'Colori',
+          'Size': 'Taglia',
+          'Sizes': 'Taglie',
         },
       };
 }

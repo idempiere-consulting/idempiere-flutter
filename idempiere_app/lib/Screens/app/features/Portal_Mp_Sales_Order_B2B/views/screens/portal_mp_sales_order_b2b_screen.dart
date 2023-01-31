@@ -149,7 +149,8 @@ class PortalMpSalesOrderB2BScreen
                                   if (controller
                                           .prodCategoriesAvailable.value ==
                                       false) {
-                                    controller.productsAvailable.value = false;
+                                    controller.productFilterAvailable.value =
+                                        false;
                                     controller.prodCategoriesAvailable.value =
                                         true;
                                   }
@@ -166,7 +167,8 @@ class PortalMpSalesOrderB2BScreen
                             ),
                             Obx(
                               () => Visibility(
-                                  visible: controller.productsAvailable.value,
+                                  visible:
+                                      controller.productFilterAvailable.value,
                                   child: const Text(
                                     "  >  ",
                                     style: TextStyle(color: Colors.grey),
@@ -174,7 +176,8 @@ class PortalMpSalesOrderB2BScreen
                             ),
                             Obx(
                               () => Visibility(
-                                  visible: controller.productsAvailable.value,
+                                  visible:
+                                      controller.productFilterAvailable.value,
                                   child: Text(
                                     controller.chosenCategoryName.value,
                                     style: const TextStyle(color: Colors.grey),
@@ -197,6 +200,8 @@ class PortalMpSalesOrderB2BScreen
                                             .records![index].name!;
                                     controller.getFilteredProducts(controller
                                         .prodCategories.records![index].id!);
+                                    controller.cat = controller
+                                        .prodCategories.records![index].id!;
                                   },
                                   child: Card(
                                     margin: EdgeInsets.zero,
@@ -262,7 +267,7 @@ class PortalMpSalesOrderB2BScreen
                             ),
                           )),
                       Obx(() => Visibility(
-                            visible: controller.productsAvailable.value,
+                            visible: controller.productFilterAvailable.value,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -275,7 +280,7 @@ class PortalMpSalesOrderB2BScreen
                                       child: Row(
                                         children: [
                                           Container(
-                                            margin: EdgeInsets.all(4),
+                                            margin: const EdgeInsets.all(4),
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .primaryColor
@@ -296,14 +301,47 @@ class PortalMpSalesOrderB2BScreen
                                                         MultiSelectListType
                                                             .CHIP,
                                                     searchable: true,
-                                                    buttonText: Text("Color"),
-                                                    title: Text("Animals"),
-                                                    items: controller._items,
+                                                    buttonText:
+                                                        Text("Color".tr),
+                                                    title: Text("Colors".tr),
+                                                    items:
+                                                        controller._colorItems,
                                                     onConfirm: (values) {
                                                       controller
-                                                              ._selectedAnimals2 =
-                                                          values
-                                                              as List<Animal>;
+                                                          .colorUrlFilter = "";
+                                                      controller
+                                                              ._selectedColors =
+                                                          values;
+                                                      var flag = false;
+                                                      for (var element
+                                                          in controller
+                                                              ._selectedColors) {
+                                                        if (controller
+                                                                .colorUrlFilter ==
+                                                            "") {
+                                                          flag = true;
+                                                          controller
+                                                              .colorUrlFilter = controller
+                                                                  .colorUrlFilter +
+                                                              " AND (AD_PrintColor_ID eq ${element.id}";
+                                                        } else {
+                                                          controller
+                                                              .colorUrlFilter = controller
+                                                                  .colorUrlFilter +
+                                                              " OR AD_PrintColor_ID eq ${element.id}";
+                                                          flag = true;
+                                                        }
+                                                      }
+                                                      if (flag) {
+                                                        controller
+                                                                .colorUrlFilter =
+                                                            controller
+                                                                    .colorUrlFilter +
+                                                                ")";
+                                                      }
+                                                      controller
+                                                          .getFilteredProducts2(
+                                                              controller.cat);
                                                     },
                                                     chipDisplay:
                                                         MultiSelectChipDisplay
@@ -350,42 +388,57 @@ class PortalMpSalesOrderB2BScreen
                                                         MultiSelectListType
                                                             .CHIP,
                                                     searchable: true,
-                                                    buttonText: Text("Size"),
-                                                    title: Text("Animals"),
-                                                    items: controller._items,
+                                                    buttonText: Text("Size".tr),
+                                                    title: Text("Sizes".tr),
+                                                    items:
+                                                        controller._sizeItems,
                                                     onConfirm: (values) {
+                                                      controller.sizeUrlFilter =
+                                                          "";
                                                       controller
-                                                              ._selectedAnimals2 =
-                                                          values
-                                                              as List<Animal>;
+                                                              ._selectedSizes =
+                                                          values;
+                                                      var flag = false;
+                                                      for (var element
+                                                          in controller
+                                                              ._selectedSizes) {
+                                                        if (controller
+                                                                .sizeUrlFilter ==
+                                                            "") {
+                                                          flag = true;
+                                                          controller
+                                                              .sizeUrlFilter = controller
+                                                                  .sizeUrlFilter +
+                                                              " AND (lit_ProductSize_ID eq ${element.id}";
+                                                        } else {
+                                                          controller
+                                                              .sizeUrlFilter = controller
+                                                                  .sizeUrlFilter +
+                                                              " OR lit_ProductSize_ID eq ${element.id}";
+                                                          flag = true;
+                                                        }
+                                                      }
+                                                      if (flag) {
+                                                        controller
+                                                                .sizeUrlFilter =
+                                                            controller
+                                                                    .sizeUrlFilter +
+                                                                ")";
+                                                      }
+                                                      controller
+                                                          .getFilteredProducts2(
+                                                              controller.cat);
                                                     },
                                                     chipDisplay:
                                                         MultiSelectChipDisplay
                                                             .none()),
-                                                /* controller._selectedAnimals2 ==
-                                                              null ||
-                                                          controller
-                                                              ._selectedAnimals2
-                                                              .isEmpty
-                                                      ? Container(
-                                                          padding:
-                                                              EdgeInsets.all(10),
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          child: Text(
-                                                            "None selected",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black54),
-                                                          ))
-                                                      : Container(), */
                                               ],
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    Padding(
+                                    /* Padding(
                                       padding: const EdgeInsets.only(
                                           left: 8, bottom: 15),
                                       child: Row(
@@ -502,109 +555,178 @@ class PortalMpSalesOrderB2BScreen
                                           ),
                                         ],
                                       ),
-                                    ),
+                                    ), */
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           left: 8, bottom: 15),
                                       child: Row(
                                         children: [
-                                          Text(
-                                            controller.filteredProds.rowcount
-                                                    .toString() +
-                                                " Products",
-                                            style:
-                                                TextStyle(color: Colors.grey),
+                                          Obx(
+                                            () => Visibility(
+                                              visible: controller
+                                                  .productsAvailable.value,
+                                              child: Text(
+                                                controller
+                                                        .filteredProds.rowcount
+                                                        .toString() +
+                                                    " Products",
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    StaggeredGrid.count(
-                                      crossAxisCount: 3,
-                                      children: List.generate(
-                                          controller.filteredProds.records!
-                                              .length, (index) {
-                                        return GestureDetector(
-                                          onTap: () {},
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Card(
-                                              margin: EdgeInsets.zero,
-                                              /* shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ), */
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    /* margin:
-                                                        const EdgeInsets.all(8), */
-                                                    child: ClipRRect(
-                                                      /* borderRadius:
-                                                          BorderRadius.circular(
-                                                              8), */
-                                                      child: controller
-                                                                  .filteredProds
-                                                                  .records![
-                                                                      index]
-                                                                  .imageData !=
-                                                              null
-                                                          ? Image.memory(
-                                                              const Base64Codec().decode((controller
+                                    Obx(
+                                      () => Visibility(
+                                        visible:
+                                            controller.productsAvailable.value,
+                                        child: StaggeredGrid.count(
+                                          crossAxisCount: 3,
+                                          children: List.generate(
+                                              controller.filteredProds.records!
+                                                  .length, (index) {
+                                            return GestureDetector(
+                                              onTap: () {},
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Card(
+                                                  margin: EdgeInsets.zero,
+                                                  /* shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ), */
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                        /* margin:
+                                                          const EdgeInsets.all(8), */
+                                                        child: ClipRRect(
+                                                          /* borderRadius:
+                                                            BorderRadius.circular(
+                                                                8), */
+                                                          child: controller
                                                                       .filteredProds
                                                                       .records![
                                                                           index]
-                                                                      .imageData!)
-                                                                  .replaceAll(
-                                                                      RegExp(
-                                                                          r'\n'),
-                                                                      '')),
-                                                              fit: BoxFit.cover,
-                                                            )
-                                                          : const Text(
-                                                              "no image"),
-                                                    ),
-                                                  ),
-                                                  ListTile(
-                                                    title: Text(
-                                                      controller
-                                                              .filteredProds
-                                                              .records![index]
-                                                              .name ??
-                                                          "",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    subtitle: Row(
-                                                      children: const [
-                                                        Text("Disponibilità: "),
-                                                        Text("3"),
-                                                      ],
-                                                    ),
-                                                    /* subtitle: Column(
-                                                  children: [
-                                                    Row(
-                                                            children: <Widget>[
-                                                              Expanded(
-                                    child: Text(
-                                      controller.trx.records![index].name ?? "??",
-                                      style: const TextStyle(color: Colors.white),
-                                    ),
+                                                                      .imageData !=
+                                                                  null
+                                                              ? Image.memory(
+                                                                  const Base64Codec().decode((controller
+                                                                          .filteredProds
+                                                                          .records![
+                                                                              index]
+                                                                          .imageData!)
+                                                                      .replaceAll(
+                                                                          RegExp(
+                                                                              r'\n'),
+                                                                          '')),
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                )
+                                                              : const Text(
+                                                                  "no image"),
+                                                        ),
+                                                      ),
+                                                      ListTile(
+                                                        title: Text(
+                                                          controller
+                                                                  .filteredProds
+                                                                  .records![
+                                                                      index]
+                                                                  .name ??
+                                                              "",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        subtitle: Row(
+                                                          children: [
+                                                            Visibility(
+                                                              visible: controller
+                                                                          .filteredProds
+                                                                          .records![
+                                                                              index]
+                                                                          .qtyAvailable !=
+                                                                      null &&
+                                                                  controller
+                                                                          .filteredProds
+                                                                          .records![
+                                                                              index]
+                                                                          .qtyAvailable
+                                                                          .toString() !=
+                                                                      "0",
+                                                              child: Text(
+                                                                  "${"Available".tr}: "),
+                                                            ),
+                                                            Visibility(
+                                                              visible: controller
+                                                                          .filteredProds
+                                                                          .records![
+                                                                              index]
+                                                                          .qtyAvailable !=
+                                                                      null &&
+                                                                  controller
+                                                                          .filteredProds
+                                                                          .records![
+                                                                              index]
+                                                                          .qtyAvailable
+                                                                          .toString() !=
+                                                                      "0",
+                                                              child: Text(controller
+                                                                  .filteredProds
+                                                                  .records![
+                                                                      index]
+                                                                  .qtyAvailable
+                                                                  .toString()),
+                                                            ),
+                                                            Visibility(
+                                                              visible: controller
+                                                                      .filteredProds
+                                                                      .records![
+                                                                          index]
+                                                                      .qtyAvailable
+                                                                      .toString() ==
+                                                                  "0",
+                                                              child: Text(
+                                                                "Not Available"
+                                                                    .tr,
+                                                                style:
+                                                                    TextStyle(),
                                                               ),
-                                                            ],
-                                                    ),
-                                                  ],
-                                                ), */
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        /* subtitle: Column(
+                                                    children: [
+                                                      Row(
+                                                              children: <Widget>[
+                                                                Expanded(
+                                      child: Text(
+                                        controller.trx.records![index].name ?? "??",
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                                                ),
+                                                              ],
+                                                      ),
+                                                    ],
+                                                  ), */
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        );
-                                      }),
+                                            );
+                                          }),
+                                        ),
+                                      ),
                                     ),
                                   ]),
                                 ),
@@ -954,6 +1076,26 @@ class Animal {
   final String name;
 
   Animal({
+    required this.id,
+    required this.name,
+  });
+}
+
+class FilterColor {
+  final int id;
+  final String name;
+
+  FilterColor({
+    required this.id,
+    required this.name,
+  });
+}
+
+class FilterSize {
+  final int id;
+  final String name;
+
+  FilterSize({
     required this.id,
     required this.name,
   });

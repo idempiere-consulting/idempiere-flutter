@@ -83,6 +83,8 @@ class Records {
   final String? productCategoryName2;
   final num? price;
   final num? qtyAvailable;
+  final ADPrintColorID? adPrintColorID;
+  final LitProductSizeID? litProductSizeID;
 
   Records(
       {this.id,
@@ -135,7 +137,9 @@ class Records {
       this.productCategoryName1,
       this.productCategoryName2,
       this.price,
-      this.qtyAvailable});
+      this.qtyAvailable,
+      this.litProductSizeID,
+      this.adPrintColorID});
 
   Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -212,6 +216,16 @@ class Records {
         productCategoryName1 = json['product_category_name1'] as String?,
         productCategoryName2 = json['product_category_name2'] as String?,
         qtyAvailable = json['QtyAvailable'] as num?,
+        adPrintColorID =
+            (json['AD_PrintColor_ID'] as Map<String, dynamic>?) != null
+                ? ADPrintColorID.fromJson(
+                    json['AD_PrintColor_ID'] as Map<String, dynamic>)
+                : null,
+        litProductSizeID =
+            (json['lit_ProductSize_ID'] as Map<String, dynamic>?) != null
+                ? LitProductSizeID.fromJson(
+                    json['lit_ProductSize_ID'] as Map<String, dynamic>)
+                : null,
         price = json['PriceStd'] as num?;
 
   Map<String, dynamic> toJson() => {
@@ -265,6 +279,8 @@ class Records {
         'product_category_name1': productCategoryName1,
         'product_category_name2': productCategoryName2,
         'Price': price,
+        'AD_PrintColor_ID': adPrintColorID?.toJson(),
+        'lit_ProductSize_ID': litProductSizeID?.toJson(),
         'QtyAvailable': qtyAvailable,
       };
 }
@@ -391,6 +407,60 @@ class CUOMID {
   });
 
   CUOMID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADPrintColorID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADPrintColorID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADPrintColorID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LitProductSizeID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LitProductSizeID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LitProductSizeID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

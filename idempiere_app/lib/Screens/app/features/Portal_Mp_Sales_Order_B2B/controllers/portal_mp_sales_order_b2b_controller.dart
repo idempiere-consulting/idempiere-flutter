@@ -4,6 +4,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
   var prodCategoriesAvailable = false.obs;
   var productsAvailable = false.obs;
   var productDetailAvailable = false.obs;
+  var productFilterAvailable = false.obs;
 
   B2BProductCategoryJson prodCategories = B2BProductCategoryJson(records: []);
 
@@ -11,6 +12,11 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   var chosenCategoryName = "".obs;
   var chosenProductName = "".obs;
+
+  var cat = 0;
+
+  var colorUrlFilter = "";
+  var sizeUrlFilter = "";
 
   static final List<Animal> _animals = [
     Animal(id: 1, name: "Lion"),
@@ -46,6 +52,20 @@ class PortalMpSalesOrderB2BController extends GetxController {
       .toList();
 
   List<Animal> _selectedAnimals2 = [];
+
+  // FILTER COLOR
+
+  List<FilterColor> _colors = [];
+  List<MultiSelectItem<dynamic>> _colorItems = [];
+
+  List<dynamic> _selectedColors = [];
+
+  //END FILTER COLOR
+  // FILTER SIZE
+  List<FilterSize> _sizes = [];
+  List<MultiSelectItem<dynamic>> _sizeItems = [];
+
+  List<dynamic> _selectedSizes = [];
 
   @override
   void onInit() {
@@ -83,6 +103,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   getFilteredProducts(int id) async {
     prodCategoriesAvailable.value = false;
+    productFilterAvailable.value = false;
     productsAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
@@ -103,6 +124,87 @@ class PortalMpSalesOrderB2BController extends GetxController {
       //print(utf8.decode(response.bodyBytes));
       filteredProds =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var record in filteredProds.records!) {
+        //color filter
+        if (_colors.isEmpty && record.adPrintColorID != null) {
+          _colors.add(FilterColor(
+              id: record.adPrintColorID!.id!,
+              name: record.adPrintColorID!.identifier!));
+        }
+        if (_colors.isNotEmpty && record.adPrintColorID != null) {
+          var found = _colors
+              .where((element) => element.id == record.adPrintColorID!.id);
+          if (found.isEmpty) {
+            _colors.add(FilterColor(
+                id: record.adPrintColorID!.id!,
+                name: record.adPrintColorID!.identifier!));
+          }
+        }
+        _colorItems = _colors
+            .map((color) => MultiSelectItem<FilterColor>(color, color.name))
+            .toList();
+
+        //end color filter
+        //size filter
+        if (_sizes.isEmpty && record.litProductSizeID != null) {
+          _sizes.add(FilterSize(
+              id: record.litProductSizeID!.id!,
+              name: record.litProductSizeID!.identifier!));
+        }
+        if (_sizes.isNotEmpty && record.litProductSizeID != null) {
+          var found = _sizes
+              .where((element) => element.id == record.litProductSizeID!.id);
+          if (found.isEmpty) {
+            _sizes.add(FilterSize(
+                id: record.litProductSizeID!.id!,
+                name: record.litProductSizeID!.identifier!));
+          }
+        }
+        _sizeItems = _sizes
+            .map((size) => MultiSelectItem<FilterSize>(size, size.name))
+            .toList();
+
+        //end size filter
+      }
+      //print(_sizeItems);
+      productFilterAvailable.value = true;
+      productsAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(utf8.decode(response.bodyBytes));
+      }
+    }
+  }
+
+  getFilteredProducts2(int id) async {
+    print("kek");
+    prodCategoriesAvailable.value = false;
+    //productFilterAvailable.value = false;
+    productsAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter');
+
+    print('$protocol://' +
+        ip +
+        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(utf8.decode(response.bodyBytes));
+      filteredProds =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      //productFilterAvailable.value = true;
       productsAvailable.value = true;
     } else {
       if (kDebugMode) {
