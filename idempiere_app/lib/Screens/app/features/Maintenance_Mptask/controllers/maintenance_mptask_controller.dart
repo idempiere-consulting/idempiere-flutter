@@ -219,7 +219,7 @@ class MaintenanceMptaskController extends GetxController {
     _trx = WorkOrderLocalJson.fromJson(jsondecoded);
     _trx2 = WorkOrderLocalJson.fromJson(jsondecoded);
 
-    print(_trx.records!.length);
+    //print(_trx.records!.length);
 
     //print(value.value);
     if (notificationFilter == 0) {

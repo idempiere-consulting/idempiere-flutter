@@ -1006,6 +1006,9 @@ class LocaleString extends Translations {
           'Colors': 'Colori',
           'Size': 'Taglia',
           'Sizes': 'Taglie',
+          'Record already Signed': 'Record gia Firmato',
+          'Are you sure you want Sign again?':
+              'Sicuro di voler Firmare di nuovo?',
         },
       };
 }

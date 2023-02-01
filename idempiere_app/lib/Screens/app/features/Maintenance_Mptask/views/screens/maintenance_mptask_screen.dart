@@ -873,15 +873,43 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               IconButton(
                                                 tooltip: "Sign".tr,
                                                 onPressed: () {
-                                                  Get.to(
-                                                      const SignatureWorkOrderScreen(),
-                                                      arguments: {
-                                                        "id": controller
-                                                            .trx
-                                                            .records![index]
-                                                            .mPOTID
-                                                            ?.id,
-                                                      });
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .litSignImageID ==
+                                                      null) {
+                                                    Get.to(
+                                                        const SignatureWorkOrderScreen(),
+                                                        arguments: {
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID
+                                                              ?.id,
+                                                        });
+                                                  } else {
+                                                    Get.defaultDialog(
+                                                      title:
+                                                          'Record already Signed'
+                                                              .tr,
+                                                      content: Text(
+                                                          "Are you sure you want Sign again?"
+                                                              .tr),
+                                                      onCancel: () {},
+                                                      onConfirm: () async {
+                                                        Get.to(
+                                                            const SignatureWorkOrderScreen(),
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .mPOTID
+                                                                  ?.id,
+                                                            });
+                                                      },
+                                                    );
+                                                  }
                                                 },
                                                 icon: Icon(
                                                   EvaIcons.edit2Outline,
