@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import '../../../Maintenance_Mptask_resource/models/product_json.dart';
 
 import '../../../CRM_Product_List/models/product_list_json.dart';
 
@@ -137,7 +138,43 @@ class PortalMpSalesOrderB2BScreen
                   child: Column(
                     children: [
                       const SizedBox(height: kSpacing),
-                      _buildHeader(),
+                      Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: kSpacing),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Row(
+                              children: [
+                                const TodayText(),
+                                const SizedBox(width: kSpacing),
+                                Expanded(
+                                    child: TextField(
+                                  controller: controller.searchFieldController,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    hintText: "search..",
+                                    isDense: true,
+                                    fillColor: Theme.of(context).cardColor,
+                                  ),
+                                  onEditingComplete: () {
+                                    FocusScope.of(context).unfocus();
+                                    controller.getFilteredProducts3();
+                                    //if (onSearch != null) onSearch!(controller.text);
+                                  },
+                                  textInputAction: TextInputAction.search,
+                                  style: TextStyle(color: kFontColorPallets[1]),
+                                )),
+                              ],
+                            )),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: kSpacing * 2),
                       Padding(
                         padding: const EdgeInsets.only(left: 40, bottom: 8.0),
@@ -150,6 +187,9 @@ class PortalMpSalesOrderB2BScreen
                                           .prodCategoriesAvailable.value ==
                                       false) {
                                     controller.productFilterAvailable.value =
+                                        false;
+                                    controller.productsAvailable.value = false;
+                                    controller.productDetailAvailable.value =
                                         false;
                                     controller.prodCategoriesAvailable.value =
                                         true;
@@ -167,8 +207,48 @@ class PortalMpSalesOrderB2BScreen
                             ),
                             Obx(
                               () => Visibility(
+                                  visible: controller
+                                          .prodCategoriesAvailable.value ==
+                                      false,
+                                  child: const Text(
+                                    "  >  ",
+                                    style: TextStyle(color: Colors.grey),
+                                  )),
+                            ),
+                            Obx(
+                              () => Visibility(
+                                  visible: controller
+                                          .prodCategoriesAvailable.value ==
+                                      false,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (controller
+                                          .productDetailAvailable.value) {
+                                        controller.productDetailAvailable
+                                            .value = false;
+                                        controller.productFilterAvailable
+                                            .value = true;
+                                        controller.productsAvailable.value =
+                                            true;
+                                        controller.chosenDetailSize.value = "";
+                                      }
+                                    },
+                                    child: Text(
+                                      controller.chosenCategoryName.value,
+                                      style: TextStyle(
+                                          color: controller
+                                                      .productDetailAvailable
+                                                      .value ==
+                                                  false
+                                              ? Colors.grey
+                                              : Colors.deepPurpleAccent),
+                                    ),
+                                  )),
+                            ),
+                            Obx(
+                              () => Visibility(
                                   visible:
-                                      controller.productFilterAvailable.value,
+                                      controller.productDetailAvailable.value,
                                   child: const Text(
                                     "  >  ",
                                     style: TextStyle(color: Colors.grey),
@@ -177,9 +257,9 @@ class PortalMpSalesOrderB2BScreen
                             Obx(
                               () => Visibility(
                                   visible:
-                                      controller.productFilterAvailable.value,
+                                      controller.productDetailAvailable.value,
                                   child: Text(
-                                    controller.chosenCategoryName.value,
+                                    controller.chosenProductName.value,
                                     style: const TextStyle(color: Colors.grey),
                                   )),
                             ),
@@ -231,7 +311,8 @@ class PortalMpSalesOrderB2BScreen
                                                                 '')),
                                                     fit: BoxFit.cover,
                                                   )
-                                                : const Text("no image"),
+                                                : Image.network(
+                                                    'https://freesvg.org/img/Simple-Image-Not-Found-Icon.png'),
                                           ),
                                         ),
                                         ListTile(
@@ -367,7 +448,7 @@ class PortalMpSalesOrderB2BScreen
                                             ),
                                           ),
                                           Container(
-                                            margin: EdgeInsets.all(4),
+                                            margin: const EdgeInsets.all(4),
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .primaryColor
@@ -570,7 +651,7 @@ class PortalMpSalesOrderB2BScreen
                                                         .filteredProds.rowcount
                                                         .toString() +
                                                     " Products",
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Colors.grey),
                                               ),
                                             ),
@@ -588,7 +669,23 @@ class PortalMpSalesOrderB2BScreen
                                               controller.filteredProds.records!
                                                   .length, (index) {
                                             return GestureDetector(
-                                              onTap: () {},
+                                              onTap: () {
+                                                controller.chosenProductName
+                                                        .value =
+                                                    controller.filteredProds
+                                                        .records![index].name!;
+                                                controller.getProduct(controller
+                                                    .filteredProds
+                                                    .records![index]
+                                                    .id!);
+
+                                                /* controller.chosenDetailSize
+                                                        .value =
+                                                    controller._sizes[0].id
+                                                        .toString(); */
+
+                                                controller.detailIndex = index;
+                                              },
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
@@ -600,35 +697,35 @@ class PortalMpSalesOrderB2BScreen
                                                 ), */
                                                   child: Column(
                                                     children: [
-                                                      Container(
-                                                        /* margin:
-                                                          const EdgeInsets.all(8), */
-                                                        child: ClipRRect(
-                                                          /* borderRadius:
-                                                            BorderRadius.circular(
-                                                                8), */
-                                                          child: controller
-                                                                      .filteredProds
-                                                                      .records![
-                                                                          index]
-                                                                      .imageData !=
-                                                                  null
-                                                              ? Image.memory(
-                                                                  const Base64Codec().decode((controller
-                                                                          .filteredProds
-                                                                          .records![
-                                                                              index]
-                                                                          .imageData!)
-                                                                      .replaceAll(
-                                                                          RegExp(
-                                                                              r'\n'),
-                                                                          '')),
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                )
-                                                              : const Text(
-                                                                  "no image"),
-                                                        ),
+                                                      ClipRRect(
+                                                        /* borderRadius:
+                                                          BorderRadius.circular(
+                                                              8), */
+                                                        child: controller
+                                                                    .filteredProds
+                                                                    .records![
+                                                                        index]
+                                                                    .imageData !=
+                                                                null
+                                                            ? Image.memory(
+                                                                const Base64Codec().decode((controller
+                                                                        .filteredProds
+                                                                        .records![
+                                                                            index]
+                                                                        .imageData!)
+                                                                    .replaceAll(
+                                                                        RegExp(
+                                                                            r'\n'),
+                                                                        '')),
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )
+                                                            : Image.network(controller
+                                                                    .filteredProds
+                                                                    .records![
+                                                                        index]
+                                                                    .imageUrl ??
+                                                                'https://freesvg.org/img/Simple-Image-Not-Found-Icon.png'),
                                                       ),
                                                       ListTile(
                                                         title: Text(
@@ -699,7 +796,7 @@ class PortalMpSalesOrderB2BScreen
                                                                 "Not Available"
                                                                     .tr,
                                                                 style:
-                                                                    TextStyle(),
+                                                                    const TextStyle(),
                                                               ),
                                                             ),
                                                           ],
@@ -734,6 +831,210 @@ class PortalMpSalesOrderB2BScreen
                               ],
                             ),
                           )),
+                      Obx(
+                        () => controller.productDetailAvailable.value
+                            ? Visibility(
+                                visible:
+                                    controller.productDetailAvailable.value,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: StaggeredGrid.count(
+                                    crossAxisCount: 8,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
+                                    children: [
+                                      StaggeredGridTile.count(
+                                        crossAxisCellCount: 4,
+                                        mainAxisCellCount: 6,
+                                        child: ClipRRect(
+                                          /* borderRadius:
+                                                            BorderRadius.circular(
+                                                                8), */
+                                          child: controller.filteredProds
+                                                      .records?[0].imageData !=
+                                                  null
+                                              ? Image.memory(
+                                                  const Base64Codec().decode(
+                                                      (controller
+                                                              .filteredProds
+                                                              .records![controller
+                                                                  .detailIndex]
+                                                              .imageData!)
+                                                          .replaceAll(
+                                                              RegExp(r'\n'),
+                                                              '')),
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.network(controller
+                                                      .filteredProds
+                                                      .records![controller
+                                                          .detailIndex]
+                                                      .imageUrl ??
+                                                  'https://freesvg.org/img/Simple-Image-Not-Found-Icon.png'),
+                                        ),
+                                      ),
+                                      StaggeredGridTile.count(
+                                        crossAxisCellCount: 4,
+                                        mainAxisCellCount: 8,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                        controller
+                                                                .prodDetail
+                                                                .records![0]
+                                                                .name ??
+                                                            "",
+                                                        style: const TextStyle(
+                                                            fontSize: 20)),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      controller
+                                                              .prodDetail
+                                                              .records![0]
+                                                              .mProductCategoryID!
+                                                              .identifier ??
+                                                          "N/A",
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 30),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: const [
+                                                  Expanded(
+                                                    child: Text("EUR 19.99",
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Obx(() => DropdownButton(
+                                                        hint: Text(
+                                                            'Choose a Size'.tr),
+
+                                                        value: controller
+                                                                    .chosenDetailSize
+                                                                    .value ==
+                                                                ""
+                                                            ? null
+                                                            : controller
+                                                                .chosenDetailSize
+                                                                .value,
+                                                        //icon: const Icon(Icons.arrow_downward),
+                                                        elevation: 16,
+                                                        //style: const TextStyle(color: Colors.deepPurple),
+                                                        /* underline: Container(
+                                                                  height: 2,
+                                                                  color: Colors.deepPurpleAccent,
+                                                                ), */
+                                                        onChanged: (newValue) {
+                                                          print(newValue);
+                                                          controller
+                                                                  .chosenDetailSize
+                                                                  .value =
+                                                              newValue
+                                                                  .toString();
+
+                                                          //print(dropdownValue);
+                                                        },
+                                                        items: controller._sizes
+                                                            .map((list) {
+                                                          return DropdownMenuItem<
+                                                              String>(
+                                                            child: Text(
+                                                              list.name
+                                                                  .toString(),
+                                                            ),
+                                                            value: list.id
+                                                                .toString(),
+                                                          );
+                                                        }).toList(),
+                                                      ))
+                                                ],
+                                              ),
+                                              Container(
+                                                //height: 80,
+                                                margin: EdgeInsets.only(
+                                                    top: 40, bottom: 20),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: ElevatedButton(
+                                                          onPressed: () {},
+                                                          child: Text(
+                                                            "Add to Cart".tr,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        15),
+                                                          )),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              /* ExpansionTile(
+                                                title: Text(
+                                                    "Composition and Washing Instructions"),
+                                              ), */
+                                              ExpansionTile(
+                                                  title: const Text(
+                                                      "Product Description"),
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        Text(controller
+                                                                .prodDetail
+                                                                .records![0]
+                                                                .description ??
+                                                            "N/A")
+                                                      ],
+                                                    )
+                                                  ]),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      /* StaggeredGridTile.count(
+                                  crossAxisCellCount: 4,
+                                  mainAxisCellCount: 2,
+                                  child: Tile(index: 1),
+                                ),
+                                StaggeredGridTile.count(
+                                  crossAxisCellCount: 2,
+                                  mainAxisCellCount: 2,
+                                  child: Tile(index: 2),
+                                ),
+                                StaggeredGridTile.count(
+                                  crossAxisCellCount: 2,
+                                  mainAxisCellCount: 2,
+                                  child: Tile(index: 3),
+                                ),
+                                StaggeredGridTile.count(
+                                  crossAxisCellCount: 8,
+                                  mainAxisCellCount: 4,
+                                  child: Tile(index: 4),
+                                ), */
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(),
+                      )
                       /*_buildProgress(),
                       const SizedBox(height: kSpacing * 2),
                       const SizedBox(height: kSpacing * 2),
@@ -859,7 +1160,14 @@ class PortalMpSalesOrderB2BScreen
                 tooltip: "menu",
               ),
             ),
-          const Expanded(child: _Header()),
+          Expanded(
+              child: Row(
+            children: [
+              const TodayText(),
+              const SizedBox(width: kSpacing),
+              Expanded(child: SearchField()),
+            ],
+          )),
         ],
       ),
     );

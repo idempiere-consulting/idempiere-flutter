@@ -44,7 +44,7 @@ class ProjectCard extends StatelessWidget {
               Row(
                 children: [
                   const _SubtitleText("Release time : "),
-                  _ReleaseTimeText(DateTime.parse('2023-02-01'))
+                  _ReleaseTimeText(DateTime.parse('2023-02-06'))
                 ],
               )
             ],

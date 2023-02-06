@@ -94,7 +94,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                     Container(
                       child: Obx(() => controller.dataAvailable
                           ? Text(
-                              "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
+                              "${"WORK ORDER".tr}: ${controller.trx.records!.length}")
                           : Text("${"WORK ORDER".tr}: ")),
                       margin: const EdgeInsets.only(left: 15),
                     ),
@@ -428,6 +428,26 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                           ),
                                         ],
+                                      ),
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].name !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            /* const Text(
+                                                "BPartner: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ), */
+                                            Icon(Icons.location_pin,
+                                                color: Colors.red.shade700),
+                                            Expanded(
+                                              child: Text(
+                                                  "${controller.trx.records![index].name}"),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),

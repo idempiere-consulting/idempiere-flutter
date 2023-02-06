@@ -6,9 +6,18 @@ class PortalMpSalesOrderB2BController extends GetxController {
   var productDetailAvailable = false.obs;
   var productFilterAvailable = false.obs;
 
+  TextEditingController searchFieldController = TextEditingController();
+
   B2BProductCategoryJson prodCategories = B2BProductCategoryJson(records: []);
 
   ProductListJson filteredProds = ProductListJson(records: []);
+
+  ProductJson prodDetail = ProductJson(records: []);
+
+  var detailIndex = 0;
+  var detailImage = "";
+  var detailImageType = "URL";
+  var chosenDetailSize = "".obs;
 
   var chosenCategoryName = "".obs;
   var chosenProductName = "".obs;
@@ -69,6 +78,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   @override
   void onInit() {
+    chosenDetailSize.value;
     super.onInit();
     getProductCategories();
   }
@@ -90,7 +100,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
       prodCategories = B2BProductCategoryJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       prodCategoriesAvailable.value = true;
@@ -177,7 +187,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
   }
 
   getFilteredProducts2(int id) async {
-    print("kek");
+    //print("kek");
     prodCategoriesAvailable.value = false;
     //productFilterAvailable.value = false;
     productsAvailable.value = false;
@@ -188,9 +198,9 @@ class PortalMpSalesOrderB2BController extends GetxController {
         ip +
         '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter');
 
-    print('$protocol://' +
+    /* print('$protocol://' +
         ip +
-        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter');
+        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter'); */
 
     var response = await http.get(
       url,
@@ -201,7 +211,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
       filteredProds =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //productFilterAvailable.value = true;
@@ -209,6 +219,75 @@ class PortalMpSalesOrderB2BController extends GetxController {
     } else {
       if (kDebugMode) {
         print(utf8.decode(response.bodyBytes));
+      }
+    }
+  }
+
+  getFilteredProducts3() async {
+    //print("kek");
+    prodCategoriesAvailable.value = false;
+    //productFilterAvailable.value = false;
+    productsAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_product_list_v?\$filter= contains(tolower(value),\'${searchFieldController.text}\')');
+
+    /* print('$protocol://' +
+        ip +
+        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter'); */
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      filteredProds =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      //productFilterAvailable.value = true;
+      productsAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(utf8.decode(response.bodyBytes));
+      }
+    }
+  }
+
+  Future<void> getProduct(int id) async {
+    productFilterAvailable.value = false;
+    productDetailAvailable.value = false;
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/m_product?\$filter= M_Product_ID eq $id');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+
+      prodDetail =
+          ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      productDetailAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
       }
     }
   }

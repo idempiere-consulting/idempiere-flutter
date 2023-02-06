@@ -92,6 +92,7 @@ class RRecords {
   num? height;
   String? color;
   bool? isPrinted;
+  LitResourceGroupID? litResourceGroupID;
 
   RRecords(
       {this.id,
@@ -152,7 +153,8 @@ class RRecords {
       this.weightAmt,
       this.height,
       this.color,
-      this.isPrinted});
+      this.isPrinted,
+      this.litResourceGroupID});
 
   RRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -246,6 +248,11 @@ class RRecords {
         height = json['Height'] as num?,
         color = json['Color'] as String?,
         isPrinted = json['IsPrinted'] as bool?,
+        litResourceGroupID =
+            (json['lit_ResourceGroup_ID'] as Map<String, dynamic>?) != null
+                ? LitResourceGroupID.fromJson(
+                    json['lit_ResourceGroup_ID'] as Map<String, dynamic>)
+                : null,
         team = json['team'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -309,6 +316,7 @@ class RRecords {
         'Color': color,
         'IsPrinted': isPrinted,
         'team': team,
+        'lit_ResourceGroup_ID': litResourceGroupID?.toJson(),
       };
 }
 
@@ -436,6 +444,33 @@ class ResourceType {
   ResourceType.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LitResourceGroupID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LitResourceGroupID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LitResourceGroupID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

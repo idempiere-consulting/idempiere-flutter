@@ -28,7 +28,7 @@ class _Sidebar extends StatelessWidget {
             SelectionButton(
               initialSelected: 9,
               data: [
-                SelectionButtonData(
+                /* SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
                   label: "Dashboard",
@@ -91,7 +91,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Contract".tr,
-                ),
+                ), */
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,

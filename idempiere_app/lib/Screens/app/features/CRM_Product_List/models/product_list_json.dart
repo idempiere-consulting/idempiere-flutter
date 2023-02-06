@@ -85,6 +85,7 @@ class Records {
   final num? qtyAvailable;
   final ADPrintColorID? adPrintColorID;
   final LitProductSizeID? litProductSizeID;
+  final String? imageUrl;
 
   Records(
       {this.id,
@@ -139,7 +140,8 @@ class Records {
       this.price,
       this.qtyAvailable,
       this.litProductSizeID,
-      this.adPrintColorID});
+      this.adPrintColorID,
+      this.imageUrl});
 
   Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -226,6 +228,7 @@ class Records {
                 ? LitProductSizeID.fromJson(
                     json['lit_ProductSize_ID'] as Map<String, dynamic>)
                 : null,
+        imageUrl = json['ImageURL'] as String?,
         price = json['PriceStd'] as num?;
 
   Map<String, dynamic> toJson() => {
@@ -282,6 +285,7 @@ class Records {
         'AD_PrintColor_ID': adPrintColorID?.toJson(),
         'lit_ProductSize_ID': litProductSizeID?.toJson(),
         'QtyAvailable': qtyAvailable,
+        'ImageURL': imageUrl,
       };
 }
 

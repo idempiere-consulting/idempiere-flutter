@@ -120,11 +120,37 @@ class MaintenanceMpResourceScreen
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
                       onPressed: () {
-                        controller.syncWorkOrderResource();
+                        controller.syncThisWorkOrderResource(
+                            GetStorage().read('selectedTaskDocNo'));
                       },
                       icon: const Icon(
                         Icons.refresh,
                         color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      tooltip: 'Send locally saved records',
+                      onPressed: () async {
+                        if (await checkConnection()) {
+                          emptyAPICallStak();
+                        } else {
+                          Get.snackbar(
+                            "Error!".tr,
+                            "No Internet connection".tr,
+                            icon: const Icon(
+                              Icons
+                                  .signal_wifi_connected_no_internet_4_outlined,
+                              color: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.cloud_upload_outlined,
+                        color: kNotifColor,
                       ),
                     ),
                   ),
@@ -145,6 +171,50 @@ class MaintenanceMpResourceScreen
               //const SizedBox(height: 5),
               Row(
                 //mainAxisAlignment: MainAxisAlignment.,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => Visibility(
+                        visible: controller.filter3Available.value,
+                        child: DropdownButton(
+                          value: controller.dropDownValue3.value,
+                          style: const TextStyle(fontSize: 12.0),
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropDownValue3.value = newValue!;
+                            controller.getWorkOrders();
+                          },
+                          items: controller._tt3.records!.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.id.toString(),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => Visibility(
+                        visible: controller.filter2Available.value,
+                        child: TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 30),
@@ -171,21 +241,31 @@ class MaintenanceMpResourceScreen
                       ),
                     ),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Obx(
                       () => Visibility(
-                        visible: controller.filter2Available.value,
-                        child: TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
+                        visible: controller.filter3Available.value,
+                        child: DropdownButton(
+                          value: controller.dropDownValue3.value,
+                          style: const TextStyle(fontSize: 12.0),
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            controller.dropDownValue3.value = newValue!;
+                            controller.getWorkOrders();
                           },
-                          child: Text(controller.value.value),
+                          items: controller._tt3.records!.map((list) {
+                            return DropdownMenuItem<String>(
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                              value: list.value,
+                            );
+                          }).toList(),
                         ),
                       ),
                     ),
-                  ),
+                  ), */
                 ],
               ),
               Row(
@@ -254,7 +334,7 @@ class MaintenanceMpResourceScreen
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
+                        itemCount: controller.trx.records!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Obx(() => Visibility(
                                 visible: GetStorage().read('selectedTaskDocNo') ==
@@ -449,6 +529,11 @@ class MaintenanceMpResourceScreen
                                                                     .resourceStatus
                                                                     ?.id ??
                                                                 "OUT",
+                                                        "resourceGroup": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .litResourceGroupID
+                                                            ?.id,
                                                       });
                                                 }
 
@@ -567,6 +652,11 @@ class MaintenanceMpResourceScreen
                                                                     .resourceStatus
                                                                     ?.id ??
                                                                 "OUT",
+                                                        "resourceGroup": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .litResourceGroupID
+                                                            ?.id,
                                                       });
                                                 }
 
@@ -677,6 +767,11 @@ class MaintenanceMpResourceScreen
                                                                     .resourceStatus
                                                                     ?.id ??
                                                                 "OUT",
+                                                        "resourceGroup": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .litResourceGroupID
+                                                            ?.id,
                                                       });
                                                 }
 
@@ -787,6 +882,11 @@ class MaintenanceMpResourceScreen
                                                                     .resourceStatus
                                                                     ?.id ??
                                                                 "OUT",
+                                                        "resourceGroup": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .litResourceGroupID
+                                                            ?.id,
                                                       });
                                                 }
 
@@ -897,6 +997,11 @@ class MaintenanceMpResourceScreen
                                                                     .resourceStatus
                                                                     ?.id ??
                                                                 "OUT",
+                                                        "resourceGroup": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .litResourceGroupID
+                                                            ?.id,
                                                       });
                                                 }
 
@@ -1007,6 +1112,11 @@ class MaintenanceMpResourceScreen
                                                                     .resourceStatus
                                                                     ?.id ??
                                                                 "OUT",
+                                                        "resourceGroup": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .litResourceGroupID
+                                                            ?.id,
                                                       });
                                                 }
 
@@ -1117,6 +1227,11 @@ class MaintenanceMpResourceScreen
                                                                     .resourceStatus
                                                                     ?.id ??
                                                                 "OUT",
+                                                        "resourceGroup": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .litResourceGroupID
+                                                            ?.id,
                                                       });
                                                 }
 
@@ -1709,6 +1824,13 @@ class MaintenanceMpResourceScreen
                                                                     .resourceStatus
                                                                     ?.id ??
                                                                 "OUT",
+                                                            "resourceGroup":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .litResourceGroupID
+                                                                    ?.id,
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -1833,6 +1955,11 @@ class MaintenanceMpResourceScreen
                                                             index2 = i;
                                                           }
                                                         }
+                                                        /* print(controller
+                                                            .trx
+                                                            .records![index]
+                                                            .litResourceGroupID
+                                                            ?.id); */
                                                         Get.to(
                                                             const EditMaintenanceMpResource(),
                                                             arguments: {
@@ -1980,6 +2107,13 @@ class MaintenanceMpResourceScreen
                                                                       .resourceStatus
                                                                       ?.id ??
                                                                   "OUT",
+                                                              "resourceGroup":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .litResourceGroupID
+                                                                      ?.id,
                                                               "length":
                                                                   controller
                                                                       .trx
@@ -2490,6 +2624,13 @@ class MaintenanceMpResourceScreen
                                                                     .resourceStatus
                                                                     ?.id ??
                                                                 "OUT",
+                                                            "resourceGroup":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .litResourceGroupID
+                                                                    ?.id,
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(

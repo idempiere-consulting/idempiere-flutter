@@ -790,7 +790,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
                 Visibility(
-                  visible: /* missingPartFlag && */ manByCustomer != true,
+                  visible: /* missingPartFlag && */ /*  manByCustomer != true */
+                      false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
@@ -805,7 +806,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   ),
                 ),
                 Visibility(
-                  visible: missingPartFlag && manByCustomer != true,
+                  visible: /* missingPartFlag && manByCustomer != true */ false,
                   child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -873,7 +874,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   ),
                 ),
                 Visibility(
-                  visible: locatorAvailable && manByCustomer != true,
+                  visible: /* locatorAvailable && manByCustomer != true */
+                      false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
@@ -886,7 +888,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   ),
                 ),
                 Visibility(
-                  visible: locatorAvailable && manByCustomer != true,
+                  visible: /* locatorAvailable && manByCustomer != true */
+                      false,
                   child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -924,7 +927,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                             )),
                 ),
                 Visibility(
-                  visible: manByCustomer != true,
+                  visible: /* manByCustomer != true */ false,
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(

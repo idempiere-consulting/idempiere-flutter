@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/reflist_resource_type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -37,6 +38,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
     final msg = jsonEncode({
       "id": Get.arguments["id"],
       "M_Product_ID": {"id": productId},
@@ -77,6 +79,9 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       "Height": int.parse(
           heightFieldController.text != "" ? heightFieldController.text : "0"),
       "Color": colorFieldController.text,
+      "lit_ResourceGroup_ID": {
+        "id": dropdownValue3 == "" ? 1000000 : int.parse(dropdownValue3)
+      }
       //"IsPrinted": sendWorkOrder,
     });
 
@@ -132,9 +137,13 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           heightFieldController.text != "" ? heightFieldController.text : "0");
 
       trx.records![Get.arguments["index"]].color = colorFieldController.text;
+      trx.records![Get.arguments["index"]].litResourceGroupID =
+          LitResourceGroupID(
+        id: dropdownValue3 == "" ? 1000000 : int.parse(dropdownValue3),
+      );
       //trx.records![Get.arguments["index"]].isPrinted = sendWorkOrder;
 
-      var url = Uri.parse('http://' +
+      var url = Uri.parse('$protocol://' +
           ip +
           '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}');
       if (isConnected) {
@@ -156,6 +165,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           Get.snackbar(
             "Fatto!",
             "Il record è stato modificato",
+            duration: const Duration(milliseconds: 800),
+            snackPosition: SnackPosition.TOP,
             icon: const Icon(
               Icons.done,
               color: Colors.green,
@@ -169,6 +180,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           Get.snackbar(
             "Errore!",
             "Il record non è stato modificato",
+            duration: const Duration(milliseconds: 800),
             icon: const Icon(
               Icons.error,
               color: Colors.red,
@@ -182,13 +194,13 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
         Get.find<MaintenanceMpResourceController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
-          calls['http://' +
+          calls['$protocol://' +
                   ip +
                   '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['http://' +
+          calls['$protocol://' +
                   ip +
                   '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}'] =
               msg;
@@ -267,6 +279,9 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 ? heightFieldController.text
                 : "0"),
             "Color": colorFieldController.text,
+            "lit_ResourceGroup_ID": {
+              "id": dropdownValue3 == "" ? 1000000 : int.parse(dropdownValue3)
+            }
             //"IsPrinted": sendWorkOrder,
           });
 
@@ -276,6 +291,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           Get.snackbar(
             "Salvato!",
             "Il record è stato salvato localmente in attesa di connessione internet.",
+            duration: const Duration(milliseconds: 800),
             icon: const Icon(
               Icons.save,
               color: Colors.red,
@@ -319,6 +335,17 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types!;
+  }
+
+  Future<List<RefRecords>> getResourceGroup() async {
+    const filename = "listresourcegroup";
+    final file2 = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var dJson =
+        RefListResourceTypeJson.fromJson(jsonDecode(file2.readAsStringSync()));
+
+    return dJson.records!;
   }
 
   /* void fillFields() {
@@ -366,9 +393,12 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   bool isActive = true;
   //bool sendWorkOrder = false;
   String dropdownValue = "OUT";
+  String dropdownValue3 = "";
 
   @override
   void initState() {
+    dropdownValue3 = ((Get.arguments["resourceGroup"]) ?? "").toString();
+    //print(Get.arguments["resourceGroup"]);
     dropdownValue = Get.arguments["resourceStatus"] ?? "OUT";
     productId = Get.arguments["productId"] ?? 0;
     productName = Get.arguments["productName"] ?? "";
@@ -744,6 +774,62 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
+                  visible: (Get.arguments["perm"])[23] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      child: Text(
+                        "Resource Group".tr,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (Get.arguments["perm"])[23] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getResourceGroup(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<RefRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  value: dropdownValue3 == ""
+                                      ? null
+                                      : dropdownValue3,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropdownValue3 = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                      value: list.id.toString(),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
                   visible: (Get.arguments["perm"])[12] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
@@ -1021,31 +1107,14 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                         snapshot.hasData
                             ? DropdownButton(
                                 value: dropdownValue,
-                                //icon: const Icon(Icons.arrow_downward),
                                 elevation: 16,
-                                //style: const TextStyle(color: Colors.deepPurple),
-                                /* underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ), */
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     dropdownValue = newValue!;
                                   });
                                   //print(dropdownValue);
                                 },
-                                items: /* <String>[
-                                  'Chiuso',
-                                  'Convertito',
-                                  'In Lavoro',
-                                  'Nuovo'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList()*/
-                                    snapshot.data!.map((list) {
+                                items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     child: Text(
                                       list.name.toString(),

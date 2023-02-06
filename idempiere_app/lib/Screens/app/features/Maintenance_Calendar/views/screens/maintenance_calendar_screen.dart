@@ -68,7 +68,7 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
     var json = EventJson.fromJson(jsonDecode(GetStorage().read('')));
     List<EventRecords>? list = json.records;
 
-    for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
+    for (var i = 0; i < json.records!.length; i++) {
       //print(list![i].jPToDoScheduledStartTime);
       var formatter = DateFormat('yyyy-MM-dd');
       var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);
@@ -153,7 +153,7 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
           EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       List<EventRecords>? list = json.records;
 
-      for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
+      for (var i = 0; i < json.records!.length; i++) {
         //print(list![i].jPToDoScheduledStartTime);
         var formatter = DateFormat('yyyy-MM-dd');
         var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);

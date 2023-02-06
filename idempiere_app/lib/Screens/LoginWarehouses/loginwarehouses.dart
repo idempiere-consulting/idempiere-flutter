@@ -72,6 +72,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       syncWorkOrder();
       syncWorkOrderRefListResource();
       syncWorkOrderRefListResourceCategory();
+      syncWorkOrderListResourceGroup();
     }
   }
 
@@ -728,7 +729,6 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         //checkSyncData();
       }
       //syncWorkOrderResourceSurveyLines();
-
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -779,7 +779,6 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         }
         //checkSyncData();
         //syncWorkOrderResourceSurveyLines();
-
       }
     } else {
       if (kDebugMode) {
@@ -829,7 +828,6 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         //checkSyncData();
       }
       //syncWorkOrderResourceSurveyLines();
-
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -880,7 +878,6 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         }
         //checkSyncData();
         //syncWorkOrderResourceSurveyLines();
-
       }
     } else {
       if (kDebugMode) {
@@ -986,6 +983,45 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       }
       workOrderSync = false;
       checkSyncData();
+    }
+  }
+
+  Future<void> syncWorkOrderListResourceGroup() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_resourcegroup/');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+
+      //print(response2.body);
+      const filename = "listresourcegroup";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
+      /*  GetStorage()
+            .write('refListResourceType', utf8.decode(response2.bodyBytes)); */
+      if (kDebugMode) {
+        print('ListResourceGroup Checked');
+      }
+
+      /* var json = jsonDecode(response.body);
+      var id = json["records"][0]["id"]; */
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

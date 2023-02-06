@@ -12,12 +12,17 @@ class MaintenanceMpResourceController extends GetxController {
       _tt2 /* = RefListResourceTypeJson.fromJson(
       jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
       ;
+  late RefListResourceTypeJson
+      _tt3 /* = RefListResourceTypeJson.fromJson(
+      jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
+      ;
   //var _hasMailSupport = false;
   var args = Get.arguments;
   var offline = -1;
 
   var dropDownValue = "A01";
   var dropDownValue2 = "0".obs;
+  var dropDownValue3 = "0".obs;
 
   // ignore: prefer_typing_uninitialized_variables
   //var adUserId;
@@ -37,6 +42,7 @@ class MaintenanceMpResourceController extends GetxController {
   var _dataAvailable = false.obs;
   var filter1Available = false.obs;
   var filter2Available = false.obs;
+  var filter3Available = false.obs;
 
   TextEditingController passwordFieldController = TextEditingController();
   TextEditingController newLocationCommentFieldController =
@@ -105,15 +111,23 @@ class MaintenanceMpResourceController extends GetxController {
   Future<void> initializeFilters() async {
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/reflistresourcetypecategory.json');
+    const filename = "listresourcegroup";
+    final file2 = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    _tt3 =
+        RefListResourceTypeJson.fromJson(jsonDecode(file2.readAsStringSync()));
 
     _tt2 =
         RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
 
     _tt = RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    _tt2.records?.insert(0, Records(value: "0", name: "All".tr));
+    _tt2.records?.insert(0, RefRecords(value: "0", name: "All".tr));
+    _tt3.records?.insert(0, RefRecords(id: 0, name: "All".tr));
     filter1Available.value = true;
     filter2Available.value = true;
+    filter3Available.value = true;
     getWorkOrders();
   }
 
@@ -139,6 +153,7 @@ class MaintenanceMpResourceController extends GetxController {
   reviewResourceButton(int index) {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
     Get.defaultDialog(
       title: "${"Resource Code".tr}:",
       content: RoundedCodeField(
@@ -185,6 +200,26 @@ class MaintenanceMpResourceController extends GetxController {
               "LIT_ResourceActivity": {"id": "CHK"}
             });
 
+            if (_trx.records![index].litResourceGroupID != null) {
+              msg = jsonEncode({
+                "MP_Maintain_ID": {
+                  "id": _trx.records![index].mpMaintainID?.id,
+                },
+                "LIT_Control1DateFrom": date,
+                "LocationComment": _trx.records![index].locationComment,
+                "V_Number": _trx.records![index].number,
+                "LineNo": _trx.records![index].lineNo,
+                "LIT_ResourceStatus": {"id": "INS"},
+                "AD_User_ID": {"id": GetStorage().read('userId')},
+                "LIT_ResourceActivity": {"id": "CHK"},
+                "lit_ResourceGroup_ID": {
+                  "id": _trx.records![index].litResourceGroupID?.id
+                }
+              });
+              _trx2.records![i].litResourceGroupID =
+                  _trx.records![index].litResourceGroupID;
+            }
+
             _trx2.records![i].mpMaintainID = _trx.records![index].mpMaintainID;
             _trx2.records![i].lITControl1DateFrom = date;
             _trx2.records![i].number = _trx.records![index].number;
@@ -200,7 +235,7 @@ class MaintenanceMpResourceController extends GetxController {
             /*  print('http://' +
                 ip +
                 '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'); */
-            var url = Uri.parse('http://' +
+            var url = Uri.parse('$protocol://' +
                 ip +
                 '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}');
             if (isConnected) {
@@ -248,13 +283,13 @@ class MaintenanceMpResourceController extends GetxController {
               //getWorkOrders();
               Map calls = {};
               if (GetStorage().read('storedEditAPICalls') == null) {
-                calls['http://' +
+                calls['$protocol://' +
                         ip +
                         '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
                     msg;
               } else {
                 calls = GetStorage().read('storedEditAPICalls');
-                calls['http://' +
+                calls['$protocol://' +
                         ip +
                         '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
                     msg;
@@ -277,7 +312,7 @@ class MaintenanceMpResourceController extends GetxController {
                 var msg = jsonEncode({
                   "LIT_ResourceStatus": {"id": "IRV"},
                 });
-                var url = Uri.parse('http://' +
+                var url = Uri.parse('$protocol://' +
                     ip +
                     '/api/v1/windows/maintenance-resource/${trx.records![index].id}');
                 if (isConnected) {
@@ -326,13 +361,13 @@ class MaintenanceMpResourceController extends GetxController {
                   //getWorkOrders();
                   Map calls = {};
                   if (GetStorage().read('storedEditAPICalls') == null) {
-                    calls['http://' +
+                    calls['$protocol://' +
                             ip +
                             '/api/v1/windows/maintenance-resource/${trx.records![index].id}'] =
                         msg;
                   } else {
                     calls = GetStorage().read('storedEditAPICalls');
-                    calls['http://' +
+                    calls['$protocol://' +
                             ip +
                             '/api/v1/windows/maintenance-resource/${trx.records![index].id}'] =
                         msg;
@@ -369,6 +404,7 @@ class MaintenanceMpResourceController extends GetxController {
   testingResourceButton(int index) {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
     Get.defaultDialog(
       title: "${"Resource Code".tr}:",
       content: RoundedCodeField(
@@ -415,6 +451,26 @@ class MaintenanceMpResourceController extends GetxController {
               "LIT_ResourceActivity": {"id": "CHK"}
             });
 
+            if (_trx.records![index].litResourceGroupID != null) {
+              msg = jsonEncode({
+                "MP_Maintain_ID": {
+                  "id": _trx.records![index].mpMaintainID?.id,
+                },
+                "LIT_Control1DateFrom": date,
+                "LocationComment": _trx.records![index].locationComment,
+                "V_Number": _trx.records![index].number,
+                "LineNo": _trx.records![index].lineNo,
+                "LIT_ResourceStatus": {"id": "INS"},
+                "AD_User_ID": {"id": GetStorage().read('userId')},
+                "LIT_ResourceActivity": {"id": "CHK"},
+                "lit_ResourceGroup_ID": {
+                  "id": _trx.records![index].litResourceGroupID?.id
+                }
+              });
+              _trx2.records![i].litResourceGroupID =
+                  _trx.records![index].litResourceGroupID;
+            }
+
             _trx2.records![i].mpMaintainID = _trx.records![index].mpMaintainID;
             _trx2.records![i].lITControl1DateFrom = date;
             _trx2.records![i].number = _trx.records![index].number;
@@ -430,7 +486,7 @@ class MaintenanceMpResourceController extends GetxController {
             /*  print('http://' +
                 ip +
                 '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'); */
-            var url = Uri.parse('http://' +
+            var url = Uri.parse('$protocol://' +
                 ip +
                 '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}');
             if (isConnected) {
@@ -478,13 +534,13 @@ class MaintenanceMpResourceController extends GetxController {
               //getWorkOrders();
               Map calls = {};
               if (GetStorage().read('storedEditAPICalls') == null) {
-                calls['http://' +
+                calls['$protocol://' +
                         ip +
                         '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
                     msg;
               } else {
                 calls = GetStorage().read('storedEditAPICalls');
-                calls['http://' +
+                calls['$protocol://' +
                         ip +
                         '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
                     msg;
@@ -507,7 +563,7 @@ class MaintenanceMpResourceController extends GetxController {
                 var msg = jsonEncode({
                   "LIT_ResourceStatus": {"id": "IRV"},
                 });
-                var url = Uri.parse('http://' +
+                var url = Uri.parse('$protocol://' +
                     ip +
                     '/api/v1/windows/maintenance-resource/${trx.records![index].id}');
                 if (isConnected) {
@@ -556,13 +612,13 @@ class MaintenanceMpResourceController extends GetxController {
                   //getWorkOrders();
                   Map calls = {};
                   if (GetStorage().read('storedEditAPICalls') == null) {
-                    calls['http://' +
+                    calls['$protocol://' +
                             ip +
                             '/api/v1/windows/maintenance-resource/${trx.records![index].id}'] =
                         msg;
                   } else {
                     calls = GetStorage().read('storedEditAPICalls');
-                    calls['http://' +
+                    calls['$protocol://' +
                             ip +
                             '/api/v1/windows/maintenance-resource/${trx.records![index].id}'] =
                         msg;
@@ -599,6 +655,7 @@ class MaintenanceMpResourceController extends GetxController {
   sellResource() {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
     Get.defaultDialog(
       title: "${"Resource Code".tr}:",
       content: Column(
@@ -674,7 +731,7 @@ class MaintenanceMpResourceController extends GetxController {
 
         for (var i = 0; i < _trx2.records!.length; i++) {
           if (_trx2.records![i].prodCode == passwordFieldController.text) {
-            print('trovato');
+            //print('trovato');
             var msg = jsonEncode({
               "MP_Maintain_ID": {
                 "id": GetStorage().read('selectedTaskDocNo'),
@@ -704,7 +761,7 @@ class MaintenanceMpResourceController extends GetxController {
             /*  print('http://' +
                 ip +
                 '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'); */
-            var url = Uri.parse('http://' +
+            var url = Uri.parse('$protocol://' +
                 ip +
                 '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}');
             if (isConnected) {
@@ -718,7 +775,6 @@ class MaintenanceMpResourceController extends GetxController {
                 },
               );
               if (response.statusCode == 200) {
-                print(response.body);
                 var data = jsonEncode(_trx2.toJson());
                 file.writeAsStringSync(data);
                 //getWorkOrders();
@@ -734,7 +790,9 @@ class MaintenanceMpResourceController extends GetxController {
                   ),
                 );
               } else {
-                print(response.body);
+                if (kDebugMode) {
+                  print(response.body);
+                }
                 //print(response.statusCode);
                 Get.snackbar(
                   "Errore!",
@@ -752,13 +810,13 @@ class MaintenanceMpResourceController extends GetxController {
               //getWorkOrders();
               Map calls = {};
               if (GetStorage().read('storedEditAPICalls') == null) {
-                calls['http://' +
+                calls['$protocol://' +
                         ip +
                         '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
                     msg;
               } else {
                 calls = GetStorage().read('storedEditAPICalls');
-                calls['http://' +
+                calls['$protocol://' +
                         ip +
                         '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
                     msg;
@@ -784,6 +842,7 @@ class MaintenanceMpResourceController extends GetxController {
   replaceResourceButton(int index) {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
     Get.defaultDialog(
       title: "${"Resource Code".tr}:",
       content: RoundedCodeField(
@@ -825,6 +884,26 @@ class MaintenanceMpResourceController extends GetxController {
               "LIT_ResourceActivity": {"id": "CHK"}
             });
 
+            if (_trx.records![index].litResourceGroupID != null) {
+              msg = jsonEncode({
+                "MP_Maintain_ID": {
+                  "id": _trx.records![index].mpMaintainID?.id,
+                },
+                "LIT_Control1DateFrom": date,
+                "LocationComment": _trx.records![index].locationComment,
+                "V_Number": _trx.records![index].number,
+                "LineNo": _trx.records![index].lineNo,
+                "LIT_ResourceStatus": {"id": "INS"},
+                "AD_User_ID": {"id": GetStorage().read('userId')},
+                "LIT_ResourceActivity": {"id": "CHK"},
+                "lit_ResourceGroup_ID": {
+                  "id": _trx.records![index].litResourceGroupID?.id
+                }
+              });
+              _trx2.records![i].litResourceGroupID =
+                  _trx.records![index].litResourceGroupID;
+            }
+
             _trx2.records![i].mpMaintainID = _trx.records![index].mpMaintainID;
             _trx2.records![i].lITControl1DateFrom = date;
             _trx2.records![i].number = _trx.records![index].number;
@@ -840,7 +919,7 @@ class MaintenanceMpResourceController extends GetxController {
             /*  print('http://' +
                 ip +
                 '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'); */
-            var url = Uri.parse('http://' +
+            var url = Uri.parse('$protocol://' +
                 ip +
                 '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}');
             if (isConnected) {
@@ -887,13 +966,13 @@ class MaintenanceMpResourceController extends GetxController {
               //getWorkOrders();
               Map calls = {};
               if (GetStorage().read('storedEditAPICalls') == null) {
-                calls['http://' +
+                calls['$protocol://' +
                         ip +
                         '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
                     msg;
               } else {
                 calls = GetStorage().read('storedEditAPICalls');
-                calls['http://' +
+                calls['$protocol://' +
                         ip +
                         '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
                     msg;
@@ -916,7 +995,7 @@ class MaintenanceMpResourceController extends GetxController {
                 var msg = jsonEncode({
                   "LIT_ResourceStatus": {"id": "IRX"},
                 });
-                var url = Uri.parse('http://' +
+                var url = Uri.parse('$protocol://' +
                     ip +
                     '/api/v1/windows/maintenance-resource/${trx.records![index].id}');
                 if (isConnected) {
@@ -963,13 +1042,13 @@ class MaintenanceMpResourceController extends GetxController {
                   //getWorkOrders();
                   Map calls = {};
                   if (GetStorage().read('storedEditAPICalls') == null) {
-                    calls['http://' +
+                    calls['$protocol://' +
                             ip +
                             '/api/v1/windows/maintenance-resource/${trx.records![index].id}'] =
                         msg;
                   } else {
                     calls = GetStorage().read('storedEditAPICalls');
-                    calls['http://' +
+                    calls['$protocol://' +
                             ip +
                             '/api/v1/windows/maintenance-resource/${trx.records![index].id}'] =
                         msg;
@@ -1077,6 +1156,8 @@ class MaintenanceMpResourceController extends GetxController {
 
     String date = dateFormat.format(DateTime.now());
 
+    final protocol = GetStorage().read('protocol');
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final msg = jsonEncode({
@@ -1098,7 +1179,7 @@ class MaintenanceMpResourceController extends GetxController {
         }
       }
 
-      var url = Uri.parse('http://' +
+      var url = Uri.parse('$protocol://' +
           ip +
           '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}');
       //print(msg);
@@ -1153,13 +1234,13 @@ class MaintenanceMpResourceController extends GetxController {
         getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
-          calls['http://' +
+          calls['$protocol://' +
                   ip +
                   '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['http://' +
+          calls['$protocol://' +
                   ip +
                   '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
@@ -1239,8 +1320,8 @@ class MaintenanceMpResourceController extends GetxController {
           _trx2.records![i].toDoAction = "OK";
         }
       }
-
-      var url = Uri.parse('http://' +
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse('$protocol://' +
           ip +
           '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}');
       if (isConnected) {
@@ -1293,13 +1374,13 @@ class MaintenanceMpResourceController extends GetxController {
         getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
-          calls['http://' +
+          calls['$protocol://' +
                   ip +
                   '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['http://' +
+          calls['$protocol://' +
                   ip +
                   '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
@@ -1355,7 +1436,7 @@ class MaintenanceMpResourceController extends GetxController {
     //print(now);
 
     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-
+    final protocol = GetStorage().read('protocol');
     String date = dateFormat.format(DateTime.now());
 
     final ip = GetStorage().read('ip');
@@ -1383,7 +1464,7 @@ class MaintenanceMpResourceController extends GetxController {
         }
       }
 
-      var url = Uri.parse('http://' +
+      var url = Uri.parse('$protocol://' +
           ip +
           '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}');
       if (isConnected) {
@@ -1434,13 +1515,13 @@ class MaintenanceMpResourceController extends GetxController {
         getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
-          calls['http://' +
+          calls['$protocol://' +
                   ip +
                   '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['http://' +
+          calls['$protocol://' +
                   ip +
                   '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
               msg;
@@ -1522,7 +1603,7 @@ class MaintenanceMpResourceController extends GetxController {
           //print("done!");
           Get.back();
           //print(response.body);
-          syncWorkOrderResource();
+          syncThisWorkOrderResource(GetStorage().read('selectedTaskDocNo'));
           Get.snackbar(
             "Done!".tr,
             "Record rollback successfull".tr,
@@ -1589,7 +1670,6 @@ class MaintenanceMpResourceController extends GetxController {
           //checkSyncData();
         }
         //syncWorkOrderResourceSurveyLines();
-
       } else {
         if (kDebugMode) {
           print(response.body);
@@ -1648,7 +1728,139 @@ class MaintenanceMpResourceController extends GetxController {
         }
         //checkSyncData();
         //syncWorkOrderResourceSurveyLines();
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
 
+  Future<void> syncThisWorkOrderResource(int id) async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= MP_Maintain_ID eq $id AND (AD_User_ID eq ${GetStorage().read('userId')} OR AD_User_ID eq null)');
+    if (await checkConnection()) {
+      _dataAvailable.value = false;
+      emptyAPICallStak();
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          //print(response.body);
+        }
+        var json = WorkOrderResourceLocalJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+        //print(json.records!.length);
+        if (json.pagecount! > 1) {
+          int index = 1;
+          syncThisWorkOrderResourcePages(json, index, id);
+        } else {
+          const filename = "workorderresource";
+          final file = File(
+              '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+          var temp = WorkOrderResourceLocalJson.fromJson(
+              jsonDecode(file.readAsStringSync()));
+
+          for (var tempRecord in temp.records!) {
+            for (var jsonRecord in json.records!) {
+              if (jsonRecord.id == tempRecord.id) {
+                tempRecord = jsonRecord;
+              }
+            }
+          }
+          file.writeAsStringSync(jsonEncode(temp.toJson()));
+          //productSync = false;
+          getWorkOrders();
+          if (kDebugMode) {
+            print('WorkOrderResource Checked');
+          }
+          //checkSyncData();
+        }
+        //syncWorkOrderResourceSurveyLines();
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+      }
+    } else {
+      Get.snackbar(
+        "Connessione Internet assente!",
+        "Impossibile aggiornare i record.",
+        icon: const Icon(
+          Icons.signal_wifi_connected_no_internet_4,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  syncThisWorkOrderResourcePages(
+      WorkOrderResourceLocalJson json, int index, int id) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter=MP_Maintain_ID eq $id AND (AD_User_ID eq ${GetStorage().read('userId')} OR AD_User_ID eq null)&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+        var temp = WorkOrderResourceLocalJson.fromJson(
+            jsonDecode(file.readAsStringSync()));
+
+        for (var tempRecord in temp.records!) {
+          for (var jsonRecord in json.records!) {
+            if (jsonRecord.id == tempRecord.id) {
+              tempRecord = jsonRecord;
+            }
+          }
+        }
+
+        file.writeAsStringSync(jsonEncode(temp.toJson()));
+        //workOrderSync = false;
+        getWorkOrders();
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
       }
     } else {
       if (kDebugMode) {
@@ -1672,10 +1884,12 @@ class MaintenanceMpResourceController extends GetxController {
 
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+
     //print(file.readAsStringSync());
     //print(GetStorage().read('selectedTaskDocNo'));
     _trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
+    print(_trx.records!.length);
     _trx2 = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
 
@@ -1742,6 +1956,13 @@ class MaintenanceMpResourceController extends GetxController {
           break;
         default:
       }
+    }
+    if (dropDownValue3.value != "0") {
+      var temp = (_trx.records!.where((element) =>
+          element.litResourceGroupID?.id == int.parse(dropDownValue3.value) &&
+          element.mpMaintainID?.id ==
+              GetStorage().read('selectedTaskDocNo'))).toList();
+      _trx.records = temp;
     }
     if (flag) {
       temp = (_trx.records!.where((element) =>
