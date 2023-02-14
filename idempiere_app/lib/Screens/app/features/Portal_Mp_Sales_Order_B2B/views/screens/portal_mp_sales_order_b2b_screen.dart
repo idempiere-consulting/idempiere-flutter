@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 library dashboard;
 
 //import 'dart:convert';
@@ -695,7 +697,7 @@ class PortalMpSalesOrderB2BScreen
                                                   .length, (index) {
                                             return GestureDetector(
                                               onTap: () {
-                                                controller.DetailDropDownSizes =
+                                                controller.detailDropDownSizes =
                                                     [];
                                                 controller.qtyFieldController
                                                     .text = "1";
@@ -712,7 +714,7 @@ class PortalMpSalesOrderB2BScreen
                                                           .records![index]
                                                           .sku) {
                                                     controller
-                                                            .DetailDropDownSizes
+                                                        .detailDropDownSizes
                                                         .add(FilterSize(
                                                             id: element
                                                                 .litProductSizeID!
@@ -1006,7 +1008,7 @@ class PortalMpSalesOrderB2BScreen
                                                                 ), */
                                                             onChanged:
                                                                 (newValue) {
-                                                              print(newValue);
+                                                              //print(newValue);
                                                               controller
                                                                       .chosenDetailSize
                                                                       .value =
@@ -1052,8 +1054,8 @@ class PortalMpSalesOrderB2BScreen
 
                                                               if (search
                                                                   .isNotEmpty) {
-                                                                print(
-                                                                    "trovato");
+                                                                /* print(
+                                                                    "trovato"); */
                                                                 controller
                                                                     .getProdB2BStock(
                                                                         search
@@ -1062,7 +1064,7 @@ class PortalMpSalesOrderB2BScreen
                                                               }
                                                             },
                                                             items: controller
-                                                                    .DetailDropDownSizes
+                                                                .detailDropDownSizes
                                                                 .map((list) {
                                                               return DropdownMenuItem<
                                                                   String>(

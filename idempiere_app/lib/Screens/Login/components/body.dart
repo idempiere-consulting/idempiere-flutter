@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -224,7 +225,9 @@ class _BodyState extends State<Body> {
           Get.to(() => const LoginClient());
         }
       } else {
-        print(response.body);
+        if (kDebugMode) {
+          print(response.body);
+        }
         Get.snackbar(
           "Error!".tr,
           "Wrong Username or Password".tr,

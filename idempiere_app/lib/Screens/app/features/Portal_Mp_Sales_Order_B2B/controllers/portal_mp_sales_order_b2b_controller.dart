@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, prefer_final_fields
+
 part of dashboard;
 
 class PortalMpSalesOrderB2BController extends GetxController {
@@ -57,7 +59,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
   var colorUrlFilter = "";
   var sizeUrlFilter = "";
 
-  List<FilterSize> DetailDropDownSizes = [];
+  List<FilterSize> detailDropDownSizes = [];
 
   TextEditingController qtyFieldController = TextEditingController(text: "1");
 
@@ -140,9 +142,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    print('http://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -229,7 +229,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print('done');
+      //print('done');
       skuProducts = [];
       filteredProds.records!.removeWhere((element) => true);
       ProductListJson temp =
@@ -621,7 +621,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   Future<void> getProdB2BStock(int id) async {
     prodStockAvailable.value = false;
-    print(id);
+    //print(id);
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
@@ -636,7 +636,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
 
       prodStock = B2BProdStockJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));

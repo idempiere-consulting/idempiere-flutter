@@ -28,7 +28,7 @@ class _TodayTextState extends State<TodayText> {
         children: [
           Text(
             "Today".tr,
-            style: Theme.of(context).textTheme.caption,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           Text(
             DateFormat.yMMMEd('language'.tr).format(DateTime.now()),

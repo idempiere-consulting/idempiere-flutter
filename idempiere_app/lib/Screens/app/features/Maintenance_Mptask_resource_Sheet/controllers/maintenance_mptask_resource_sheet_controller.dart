@@ -273,7 +273,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
           lineFieldController.text == "" ? "0" : lineFieldController.text),
     });
 
-    print(msg);
+    //print(msg);
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
@@ -344,7 +344,9 @@ class MaintenanceMpResourceSheetController extends GetxController {
             ),
           );
         } else {
-          print(response.body);
+          if (kDebugMode) {
+            print(response.body);
+          }
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",

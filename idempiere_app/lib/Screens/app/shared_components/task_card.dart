@@ -181,7 +181,7 @@ class _Tile extends StatelessWidget {
   Widget _subtitle(String data) {
     return Text(
       data,
-      style: Theme.of(Get.context!).textTheme.caption,
+      style: Theme.of(Get.context!).textTheme.bodySmall,
       textAlign: TextAlign.left,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,

@@ -68,7 +68,7 @@ class _Info extends StatelessWidget {
         ),
         Text(
           "To add more members",
-          style: Theme.of(context).textTheme.caption,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
     );
