@@ -12,11 +12,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_B2B/models/b2b_productcategory_json.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_B2B/models/b2bprodstock_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -29,13 +26,11 @@ import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/doctype_json.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
-import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../Maintenance_Mptask_resource/models/product_json.dart';
@@ -208,8 +203,6 @@ class PortalMpSalesOrderB2BScreen
                                             .value = false;
                                         controller.prodCategoriesAvailable
                                             .value = true;
-                                        controller.prodStockAvailable.value =
-                                            false;
                                       }
                                     },
                                     child: Text(
@@ -249,8 +242,6 @@ class PortalMpSalesOrderB2BScreen
                                                 true;
                                             controller.chosenDetailSize.value =
                                                 "";
-                                            controller.prodStockAvailable
-                                                .value = false;
                                           }
                                         },
                                         child: Text(
@@ -472,7 +463,7 @@ class PortalMpSalesOrderB2BScreen
                                               ],
                                             ),
                                           ),
-                                          /* Container(
+                                          Container(
                                             margin: const EdgeInsets.all(4),
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
@@ -540,7 +531,7 @@ class PortalMpSalesOrderB2BScreen
                                                             .none()),
                                               ],
                                             ),
-                                          ), */
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -672,8 +663,8 @@ class PortalMpSalesOrderB2BScreen
                                               visible: controller
                                                   .productsAvailable.value,
                                               child: Text(
-                                                controller.filteredProds
-                                                        .records!.length
+                                                controller
+                                                        .filteredProds.rowcount
                                                         .toString() +
                                                     " Products",
                                                 style: const TextStyle(
@@ -695,33 +686,12 @@ class PortalMpSalesOrderB2BScreen
                                                   .length, (index) {
                                             return GestureDetector(
                                               onTap: () {
-                                                controller.DetailDropDownSizes =
-                                                    [];
                                                 controller.qtyFieldController
                                                     .text = "1";
                                                 controller.chosenProductName
                                                         .value =
                                                     controller.filteredProds
                                                         .records![index].name!;
-
-                                                for (var element
-                                                    in controller.skuProducts) {
-                                                  if (element.sku ==
-                                                      controller
-                                                          .filteredProds
-                                                          .records![index]
-                                                          .sku) {
-                                                    controller
-                                                            .DetailDropDownSizes
-                                                        .add(FilterSize(
-                                                            id: element
-                                                                .litProductSizeID!
-                                                                .id!,
-                                                            name: element
-                                                                .litProductSizeID!
-                                                                .identifier!));
-                                                  }
-                                                }
                                                 controller.getProduct(controller
                                                     .filteredProds
                                                     .records![index]
@@ -792,7 +762,7 @@ class PortalMpSalesOrderB2BScreen
                                                                   FontWeight
                                                                       .bold),
                                                         ),
-                                                        /* subtitle: Row(
+                                                        subtitle: Row(
                                                           children: [
                                                             Visibility(
                                                               visible: controller
@@ -848,7 +818,7 @@ class PortalMpSalesOrderB2BScreen
                                                               ),
                                                             ),
                                                           ],
-                                                        ), */
+                                                        ),
                                                         /* subtitle: Column(
                                                     children: [
                                                       Row(
@@ -880,490 +850,305 @@ class PortalMpSalesOrderB2BScreen
                             ),
                           )),
                       Obx(
-                        () =>
-                            controller.productDetailAvailable.value &&
-                                    controller.shoppingCartAvailable.value ==
-                                        false
-                                ? Visibility(
-                                    visible:
-                                        controller.productDetailAvailable.value,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: StaggeredGrid.count(
-                                        crossAxisCount: 8,
-                                        mainAxisSpacing: 8,
-                                        crossAxisSpacing: 8,
-                                        children: [
-                                          StaggeredGridTile.count(
-                                            crossAxisCellCount: 4,
-                                            mainAxisCellCount: 6,
-                                            child: ClipRRect(
-                                              /* borderRadius:
+                        () => controller.productDetailAvailable.value &&
+                                controller.shoppingCartAvailable.value == false
+                            ? Visibility(
+                                visible:
+                                    controller.productDetailAvailable.value,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: StaggeredGrid.count(
+                                    crossAxisCount: 8,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
+                                    children: [
+                                      StaggeredGridTile.count(
+                                        crossAxisCellCount: 4,
+                                        mainAxisCellCount: 6,
+                                        child: ClipRRect(
+                                          /* borderRadius:
                                                             BorderRadius.circular(
                                                                 8), */
-                                              child: controller
-                                                          .filteredProds
-                                                          .records?[0]
-                                                          .imageData !=
-                                                      null
-                                                  ? Image.memory(
-                                                      const Base64Codec()
-                                                          .decode((controller
-                                                                  .filteredProds
-                                                                  .records![
-                                                                      controller
-                                                                          .detailIndex]
-                                                                  .imageData!)
-                                                              .replaceAll(
-                                                                  RegExp(r'\n'),
-                                                                  '')),
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  : Image.network(controller
-                                                          .filteredProds
-                                                          .records![controller
-                                                              .detailIndex]
-                                                          .imageUrl ??
-                                                      'https://freesvg.org/img/Simple-Image-Not-Found-Icon.png'),
-                                            ),
-                                          ),
-                                          StaggeredGridTile.count(
-                                            crossAxisCellCount: 4,
-                                            mainAxisCellCount: 8,
-                                            child: Container(
-                                              padding: const EdgeInsets.all(8),
-                                              child: Column(
+                                          child: controller.filteredProds
+                                                      .records?[0].imageData !=
+                                                  null
+                                              ? Image.memory(
+                                                  const Base64Codec().decode(
+                                                      (controller
+                                                              .filteredProds
+                                                              .records![controller
+                                                                  .detailIndex]
+                                                              .imageData!)
+                                                          .replaceAll(
+                                                              RegExp(r'\n'),
+                                                              '')),
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.network(controller
+                                                      .filteredProds
+                                                      .records![controller
+                                                          .detailIndex]
+                                                      .imageUrl ??
+                                                  'https://freesvg.org/img/Simple-Image-Not-Found-Icon.png'),
+                                        ),
+                                      ),
+                                      StaggeredGridTile.count(
+                                        crossAxisCellCount: 4,
+                                        mainAxisCellCount: 8,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Column(
+                                            children: [
+                                              Row(
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Text(
-                                                            controller
-                                                                    .prodDetail
-                                                                    .records![0]
-                                                                    .name ??
-                                                                "",
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        20)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Text(
-                                                          controller
-                                                                  .prodDetail
-                                                                  .records![0]
-                                                                  .mProductCategoryID!
-                                                                  .identifier ??
-                                                              "N/A",
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 30),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Text(
-                                                            "EUR ${controller.filteredProds.records![controller.detailIndex].price.toString()}",
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        20)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Obx(() => DropdownButton(
-                                                            hint: Text(
-                                                                'Choose a Size'
-                                                                    .tr),
-
-                                                            value: controller
-                                                                        .chosenDetailSize
-                                                                        .value ==
-                                                                    ""
-                                                                ? null
-                                                                : controller
-                                                                    .chosenDetailSize
-                                                                    .value,
-                                                            //icon: const Icon(Icons.arrow_downward),
-                                                            elevation: 16,
-                                                            //style: const TextStyle(color: Colors.deepPurple),
-                                                            /* underline: Container(
-                                                                  height: 2,
-                                                                  color: Colors.deepPurpleAccent,
-                                                                ), */
-                                                            onChanged:
-                                                                (newValue) {
-                                                              print(newValue);
-                                                              controller
-                                                                      .chosenDetailSize
-                                                                      .value =
-                                                                  newValue
-                                                                      .toString();
-
-                                                              for (var element
-                                                                  in controller
-                                                                      ._sizes) {
-                                                                if (element.id
-                                                                        .toString() ==
-                                                                    controller
-                                                                        .chosenDetailSize
-                                                                        .value) {
-                                                                  controller
-                                                                          .chosenDetailSizeName =
-                                                                      element
-                                                                          .name;
-                                                                }
-                                                              }
-
-                                                              /* print(controller
-                                                                  .filteredProds
-                                                                  .records![
-                                                                      controller
-                                                                          .detailIndex]
-                                                                  .sku! +
-                                                              "." +
-                                                              controller
-                                                                  .chosenDetailSizeName);  */
-
-                                                              var search = controller.skuProducts.where((element) =>
-                                                                  element
-                                                                      .value ==
-                                                                  controller
-                                                                          .filteredProds
-                                                                          .records![controller
-                                                                              .detailIndex]
-                                                                          .sku! +
-                                                                      "." +
-                                                                      controller
-                                                                          .chosenDetailSizeName);
-
-                                                              if (search
-                                                                  .isNotEmpty) {
-                                                                print(
-                                                                    "trovato");
-                                                                controller
-                                                                    .getProdB2BStock(
-                                                                        search
-                                                                            .first
-                                                                            .id!);
-                                                              }
-                                                            },
-                                                            items: controller
-                                                                    .DetailDropDownSizes
-                                                                .map((list) {
-                                                              return DropdownMenuItem<
-                                                                  String>(
-                                                                child: Text(
-                                                                  list.name
-                                                                      .toString(),
-                                                                ),
-                                                                value: list.id
-                                                                    .toString(),
-                                                              );
-                                                            }).toList(),
-                                                          ))
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 10),
-                                                    margin:
-                                                        const EdgeInsets.all(
-                                                            10),
-                                                    child: TextField(
-                                                      controller: controller
-                                                          .qtyFieldController,
-                                                      keyboardType:
-                                                          const TextInputType
-                                                                  .numberWithOptions(
-                                                              signed: true,
-                                                              decimal: true),
-                                                      inputFormatters: [
-                                                        FilteringTextInputFormatter
-                                                            .allow(
-                                                                RegExp("[0-9]"))
-                                                      ],
-                                                      decoration:
-                                                          InputDecoration(
-                                                        prefixIcon: const Icon(
-                                                            Icons.scale),
-                                                        border:
-                                                            const OutlineInputBorder(),
-                                                        labelText:
-                                                            'Quantity'.tr,
-                                                        floatingLabelBehavior:
-                                                            FloatingLabelBehavior
-                                                                .always,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    //height: 80,
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            top: 40,
-                                                            bottom: 20),
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: ElevatedButton(
-                                                              onPressed: () {
-                                                                var list = controller
-                                                                    .productList
-                                                                    .where((element) =>
-                                                                        element
-                                                                            .id ==
-                                                                        controller
-                                                                            .prodDetail
-                                                                            .records![0]
-                                                                            .id!);
-
-                                                                if (list
-                                                                    .isEmpty) {
-                                                                  if (controller
-                                                                          .chosenDetailSize
-                                                                          .value !=
-                                                                      "") {
-                                                                    var search = controller.skuProducts.where((element) =>
-                                                                        element
-                                                                            .value ==
-                                                                        controller.filteredProds.records![controller.detailIndex].sku! +
-                                                                            "." +
-                                                                            controller.chosenDetailSizeName);
-                                                                    controller
-                                                                        .productList
-                                                                        .add(
-                                                                            ProductCheckout(
-                                                                      id: search
-                                                                          .first
-                                                                          .id!,
-                                                                      name: controller
-                                                                          .prodDetail
-                                                                          .records![
-                                                                              0]
-                                                                          .name!,
-                                                                      qty: int
-                                                                          .parse(
-                                                                        controller
-                                                                            .qtyFieldController
-                                                                            .text,
-                                                                      ),
-                                                                      cost: controller
-                                                                              .filteredProds
-                                                                              .records![controller.detailIndex]
-                                                                              .price ??
-                                                                          0,
-                                                                      adPrintColorID: controller
-                                                                          .filteredProds
-                                                                          .records![
-                                                                              controller.detailIndex]
-                                                                          .adPrintColorID,
-                                                                      litProductSizeID: LitProductSizeID(
-                                                                          id: int.parse(controller
-                                                                              .chosenDetailSize
-                                                                              .value),
-                                                                          identifier:
-                                                                              controller.chosenDetailSizeName),
-                                                                      imageData: controller
-                                                                          .filteredProds
-                                                                          .records![
-                                                                              controller.detailIndex]
-                                                                          .imageData,
-                                                                      imageUrl: controller
-                                                                          .filteredProds
-                                                                          .records![
-                                                                              controller.detailIndex]
-                                                                          .imageUrl,
-                                                                    ));
-
-                                                                    controller
-                                                                        .shoppingCartCounter
-                                                                        .value++;
-                                                                    controller
-                                                                        .updateTotal();
-                                                                    controller
-                                                                        .productDetailAvailable
-                                                                        .value = false;
-                                                                    controller
-                                                                        .productFilterAvailable
-                                                                        .value = true;
-                                                                    controller
-                                                                        .productsAvailable
-                                                                        .value = true;
-                                                                    controller
-                                                                        .chosenDetailSize
-                                                                        .value = "";
-                                                                  }
-                                                                } else {
-                                                                  controller
-                                                                      .qtyFieldController
-                                                                      .text = "1";
-                                                                  controller
-                                                                      .shoppingCartAvailable
-                                                                      .value = true;
-                                                                  controller
-                                                                      .prodStockAvailable
-                                                                      .value = false;
-                                                                }
-                                                              },
-                                                              child: Text(
-                                                                (controller.productList.where((element) =>
-                                                                        element
-                                                                            .id ==
-                                                                        controller
-                                                                            .prodDetail
-                                                                            .records![0]
-                                                                            .id!)).isEmpty
-                                                                    ? "Add to Cart".tr
-                                                                    : "Item added, go to your Cart".tr,
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            15),
-                                                              )),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  /* ExpansionTile(
-                                                title: Text(
-                                                    "Composition and Washing Instructions"),
-                                              ), */
-                                                  Obx(
-                                                    () => controller
-                                                            .prodStockAvailable
-                                                            .value
-                                                        ? ExpansionTile(
-                                                            initiallyExpanded:
-                                                                true,
-                                                            title: Text(
-                                                                "Product Stock"
-                                                                    .tr,
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .white)),
-                                                            children: [
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                    top: 8.0,
-                                                                    bottom: 8.0,
-                                                                    left: 15,
-                                                                    right: 15,
-                                                                  ),
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            "${"Warehouse".tr}: ",
-                                                                            style:
-                                                                                const TextStyle(fontWeight: FontWeight.bold),
-                                                                          ),
-                                                                          Text((controller.currentStock.qtyOnHand ?? 0)
-                                                                              .toString()),
-                                                                        ],
-                                                                      ),
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            "${"Headquarter".tr}: ",
-                                                                            style:
-                                                                                const TextStyle(fontWeight: FontWeight.bold),
-                                                                          ),
-                                                                          Text((controller.providerStock.qtyAvailable ?? 0)
-                                                                              .toString()),
-                                                                        ],
-                                                                      ),
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            "${"Restock".tr}: ",
-                                                                            style:
-                                                                                const TextStyle(fontWeight: FontWeight.bold),
-                                                                          ),
-                                                                          Text((controller.futureStock.qtyOrdered ?? 0)
-                                                                              .toString()),
-                                                                        ],
-                                                                      ),
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            "${"Restock Date".tr}: ",
-                                                                            style:
-                                                                                const TextStyle(fontWeight: FontWeight.bold),
-                                                                          ),
-                                                                          Text(controller.futureStock.litDateReStock ??
-                                                                              ""),
-                                                                        ],
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                )
-                                                              ])
-                                                        : const SizedBox(),
-                                                  ),
-                                                  Visibility(
-                                                    visible: controller
-                                                            .prodDetail
-                                                            .records![0]
-                                                            .description !=
-                                                        null,
-                                                    child: ExpansionTile(
-                                                        initiallyExpanded: true,
-                                                        title: Text(
-                                                            "Product Description"
-                                                                .tr,
-                                                            style:
-                                                                const TextStyle(
-                                                                    color: Colors
-                                                                        .white)),
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                              top: 8.0,
-                                                              bottom: 8.0,
-                                                              left: 15,
-                                                              right: 15,
-                                                            ),
-                                                            child: Column(
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                    Text(controller
-                                                                            .prodDetail
-                                                                            .records![0]
-                                                                            .description ??
-                                                                        "N/A"),
-                                                                  ],
-                                                                )
-                                                              ],
-                                                            ),
-                                                          )
-                                                        ]),
+                                                  Expanded(
+                                                    child: Text(
+                                                        controller
+                                                                .prodDetail
+                                                                .records![0]
+                                                                .name ??
+                                                            "",
+                                                        style: const TextStyle(
+                                                            fontSize: 20)),
                                                   ),
                                                 ],
                                               ),
-                                            ),
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      controller
+                                                              .prodDetail
+                                                              .records![0]
+                                                              .mProductCategoryID!
+                                                              .identifier ??
+                                                          "N/A",
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 30),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: const [
+                                                  Expanded(
+                                                    child: Text("EUR 19.99",
+                                                        style: TextStyle(
+                                                            fontSize: 20)),
+                                                  ),
+                                                ],
+                                              ),
+                                              /* Row(
+                                                children: [
+                                                  Obx(() => DropdownButton(
+                                                        hint: Text(
+                                                            'Choose a Size'.tr),
+
+                                                        value: controller
+                                                                    .chosenDetailSize
+                                                                    .value ==
+                                                                ""
+                                                            ? null
+                                                            : controller
+                                                                .chosenDetailSize
+                                                                .value,
+                                                        //icon: const Icon(Icons.arrow_downward),
+                                                        elevation: 16,
+                                                        //style: const TextStyle(color: Colors.deepPurple),
+                                                        /* underline: Container(
+                                                                  height: 2,
+                                                                  color: Colors.deepPurpleAccent,
+                                                                ), */
+                                                        onChanged: (newValue) {
+                                                          print(newValue);
+                                                          controller
+                                                                  .chosenDetailSize
+                                                                  .value =
+                                                              newValue
+                                                                  .toString();
+
+                                                          //print(dropdownValue);
+                                                        },
+                                                        items: controller._sizes
+                                                            .map((list) {
+                                                          return DropdownMenuItem<
+                                                              String>(
+                                                            child: Text(
+                                                              list.name
+                                                                  .toString(),
+                                                            ),
+                                                            value: list.id
+                                                                .toString(),
+                                                          );
+                                                        }).toList(),
+                                                      ))
+                                                ],
+                                              ), */
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10),
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                child: TextField(
+                                                  controller: controller
+                                                      .qtyFieldController,
+                                                  keyboardType:
+                                                      const TextInputType
+                                                              .numberWithOptions(
+                                                          signed: true,
+                                                          decimal: true),
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp("[0-9]"))
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                    prefixIcon:
+                                                        const Icon(Icons.scale),
+                                                    border:
+                                                        const OutlineInputBorder(),
+                                                    labelText: 'Quantity'.tr,
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .always,
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                //height: 80,
+                                                margin: const EdgeInsets.only(
+                                                    top: 40, bottom: 20),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: ElevatedButton(
+                                                          onPressed: () {
+                                                            var list = controller
+                                                                .productList
+                                                                .where((element) =>
+                                                                    element
+                                                                        .id ==
+                                                                    controller
+                                                                        .prodDetail
+                                                                        .records![
+                                                                            0]
+                                                                        .id!);
+
+                                                            if (list.isEmpty) {
+                                                              controller
+                                                                  .productList
+                                                                  .add(
+                                                                      ProductCheckout(
+                                                                id: controller
+                                                                    .prodDetail
+                                                                    .records![0]
+                                                                    .id!,
+                                                                name: controller
+                                                                    .prodDetail
+                                                                    .records![0]
+                                                                    .name!,
+                                                                qty: int.parse(
+                                                                  controller
+                                                                      .qtyFieldController
+                                                                      .text,
+                                                                ),
+                                                                cost: 0,
+                                                                adPrintColorID: controller
+                                                                    .filteredProds
+                                                                    .records![
+                                                                        controller
+                                                                            .detailIndex]
+                                                                    .adPrintColorID,
+                                                                litProductSizeID: controller
+                                                                    .filteredProds
+                                                                    .records![
+                                                                        controller
+                                                                            .detailIndex]
+                                                                    .litProductSizeID,
+                                                                imageData: controller
+                                                                    .filteredProds
+                                                                    .records![
+                                                                        controller
+                                                                            .detailIndex]
+                                                                    .imageData,
+                                                                imageUrl: controller
+                                                                    .filteredProds
+                                                                    .records![
+                                                                        controller
+                                                                            .detailIndex]
+                                                                    .imageUrl,
+                                                              ));
+
+                                                              controller
+                                                                  .shoppingCartCounter
+                                                                  .value++;
+                                                              controller
+                                                                  .updateTotal();
+                                                              controller
+                                                                  .productDetailAvailable
+                                                                  .value = false;
+                                                              controller
+                                                                  .productFilterAvailable
+                                                                  .value = true;
+                                                              controller
+                                                                  .productsAvailable
+                                                                  .value = true;
+                                                              controller
+                                                                  .chosenDetailSize
+                                                                  .value = "";
+                                                            } else {
+                                                              controller
+                                                                  .qtyFieldController
+                                                                  .text = "1";
+                                                              controller
+                                                                  .shoppingCartAvailable
+                                                                  .value = true;
+                                                            }
+                                                          },
+                                                          child: Text(
+                                                            (controller.productList.where((element) =>
+                                                                    element
+                                                                        .id ==
+                                                                    controller
+                                                                        .prodDetail
+                                                                        .records![
+                                                                            0]
+                                                                        .id!)).isEmpty
+                                                                ? "Add to Cart".tr
+                                                                : "Item added, go to your Cart".tr,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        15),
+                                                          )),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              /* ExpansionTile(
+                                                title: Text(
+                                                    "Composition and Washing Instructions"),
+                                              ), */
+                                              ExpansionTile(
+                                                  title: const Text(
+                                                      "Product Description"),
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        Text(controller
+                                                                .prodDetail
+                                                                .records![0]
+                                                                .description ??
+                                                            "N/A")
+                                                      ],
+                                                    )
+                                                  ]),
+                                            ],
                                           ),
-                                          /* StaggeredGridTile.count(
+                                        ),
+                                      ),
+                                      /* StaggeredGridTile.count(
                                   crossAxisCellCount: 4,
                                   mainAxisCellCount: 2,
                                   child: Tile(index: 1),
@@ -1383,11 +1168,11 @@ class PortalMpSalesOrderB2BScreen
                                   mainAxisCellCount: 4,
                                   child: Tile(index: 4),
                                 ), */
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox(),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(),
                       ),
                       Obx(
                         () => controller.shoppingCartAvailable.value
@@ -1400,7 +1185,7 @@ class PortalMpSalesOrderB2BScreen
                                             controller.shoppingCartAvailable
                                                 .value = false;
                                           },
-                                          child: Text("Back".tr)),
+                                          child: const Text("Indietro")),
                                     ],
                                   ),
                                   Row(
@@ -1622,10 +1407,7 @@ class PortalMpSalesOrderB2BScreen
                                                     children: [
                                                       Expanded(
                                                         child: ElevatedButton(
-                                                            onPressed: () {
-                                                              controller
-                                                                  .createSalesOrder();
-                                                            },
+                                                            onPressed: () {},
                                                             child: Text(
                                                                 "Proceed".tr)),
                                                       ),
@@ -1686,7 +1468,6 @@ class PortalMpSalesOrderB2BScreen
                                 icon: const Icon(Icons.shopping_bag_outlined),
                                 onPressed: () {
                                   controller.shoppingCartAvailable.value = true;
-                                  controller.prodStockAvailable.value = false;
                                 }),
                             Obx(
                               () => Visibility(

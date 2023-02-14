@@ -55,6 +55,7 @@ class BPRecords {
   final num? acqusitionCost;
   final num? potentialLifeTimeValue;
   final CPaymentTermID? cPaymentTermID;
+  final CPaymentRuleID? cPaymentRuleID;
   final num? actualLifeTimeValue;
   final num? shareOfCustomer;
   final bool? isEmployee;
@@ -84,59 +85,59 @@ class BPRecords {
   final String? litTaxID;
   final String? modelname;
 
-  BPRecords({
-    this.id,
-    this.uid,
-    this.aDClientID,
-    this.aDOrgID,
-    this.isActive,
-    this.created,
-    this.createdBy,
-    this.updated,
-    this.updatedBy,
-    this.value,
-    this.name,
-    this.salesVolume,
-    this.numberEmployees,
-    this.isSummary,
-    this.aDLanguage,
-    this.isVendor,
-    this.isCustomer,
-    this.isProspect,
-    this.sOCreditLimit,
-    this.sOCreditUsed,
-    this.acqusitionCost,
-    this.potentialLifeTimeValue,
-    this.cPaymentTermID,
-    this.actualLifeTimeValue,
-    this.shareOfCustomer,
-    this.isEmployee,
-    this.isSalesRep,
-    this.mPriceListID,
-    this.isOneTime,
-    this.isTaxExempt,
-    this.documentCopies,
-    this.isDiscountPrinted,
-    this.invoiceRule,
-    this.deliveryRule,
-    this.cBPGroupID,
-    this.sendEMail,
-    this.sOCreditStatus,
-    this.shelfLifeMinPct,
-    this.flatDiscount,
-    this.totalOpenBalance,
-    this.isPOTaxExempt,
-    this.isManufacturer,
-    this.is1099Vendor,
-    this.lITTaxTypeBPPartnerID,
-    this.lITIsPriceListUpdatable,
-    this.lITCardavSync,
-    this.lITKm,
-    this.lITNoInvoiceXMLVendor,
-    this.isValid,
-    this.litTaxID,
-    this.modelname,
-  });
+  BPRecords(
+      {this.id,
+      this.uid,
+      this.aDClientID,
+      this.aDOrgID,
+      this.isActive,
+      this.created,
+      this.createdBy,
+      this.updated,
+      this.updatedBy,
+      this.value,
+      this.name,
+      this.salesVolume,
+      this.numberEmployees,
+      this.isSummary,
+      this.aDLanguage,
+      this.isVendor,
+      this.isCustomer,
+      this.isProspect,
+      this.sOCreditLimit,
+      this.sOCreditUsed,
+      this.acqusitionCost,
+      this.potentialLifeTimeValue,
+      this.cPaymentTermID,
+      this.actualLifeTimeValue,
+      this.shareOfCustomer,
+      this.isEmployee,
+      this.isSalesRep,
+      this.mPriceListID,
+      this.isOneTime,
+      this.isTaxExempt,
+      this.documentCopies,
+      this.isDiscountPrinted,
+      this.invoiceRule,
+      this.deliveryRule,
+      this.cBPGroupID,
+      this.sendEMail,
+      this.sOCreditStatus,
+      this.shelfLifeMinPct,
+      this.flatDiscount,
+      this.totalOpenBalance,
+      this.isPOTaxExempt,
+      this.isManufacturer,
+      this.is1099Vendor,
+      this.lITTaxTypeBPPartnerID,
+      this.lITIsPriceListUpdatable,
+      this.lITCardavSync,
+      this.lITKm,
+      this.lITNoInvoiceXMLVendor,
+      this.isValid,
+      this.litTaxID,
+      this.modelname,
+      this.cPaymentRuleID});
 
   BPRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -176,6 +177,10 @@ class BPRecords {
                 ? CPaymentTermID.fromJson(
                     json['C_PaymentTerm_ID'] as Map<String, dynamic>)
                 : null,
+        cPaymentRuleID = (json['PaymentRule'] as Map<String, dynamic>?) != null
+            ? CPaymentRuleID.fromJson(
+                json['PaymentRule'] as Map<String, dynamic>)
+            : null,
         actualLifeTimeValue = json['ActualLifeTimeValue'] as num?,
         shareOfCustomer = json['ShareOfCustomer'] as int?,
         isEmployee = json['IsEmployee'] as bool?,
@@ -428,6 +433,33 @@ class CPaymentTermID {
   CPaymentTermID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CPaymentRuleID {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  CPaymentRuleID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CPaymentRuleID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

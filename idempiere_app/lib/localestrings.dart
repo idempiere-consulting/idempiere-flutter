@@ -1010,6 +1010,19 @@ class LocaleString extends Translations {
           'Are you sure you want Sign again?':
               'Sicuro di voler Firmare di nuovo?',
           'Is Closed': 'Chiuso',
+          'Replace': 'Scambio',
+          'Resource Group': 'Destinazione',
+          'Add to Cart': 'Aggiungi al Carrello',
+          'Item added, go to your Cart': 'Articolo aggiunto, vai al Carrello',
+          'Product Stock': 'Stoccaggio Prodotto',
+          'Headquarter': 'Sede',
+          'Restock': 'Riordino',
+          'Restock Date': 'Data Riordino',
+          'Product Description': 'Descrizione Prodotto',
+          'Back': 'Indietro',
+          'Subtotal': 'SubTotale',
+          'Proceed': 'Procedi',
+          'Choose a Size': 'Scegli una taglia',
         },
       };
 }

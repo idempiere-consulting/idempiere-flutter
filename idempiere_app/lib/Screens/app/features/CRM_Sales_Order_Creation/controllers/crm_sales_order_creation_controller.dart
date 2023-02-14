@@ -45,7 +45,7 @@ class CRMSalesOrderCreationController extends GetxController {
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
 
-  late List<Records> dropDownList;
+  late List<DTRecords> dropDownList;
   var dropdownValue = "1".obs;
 
   final json = {

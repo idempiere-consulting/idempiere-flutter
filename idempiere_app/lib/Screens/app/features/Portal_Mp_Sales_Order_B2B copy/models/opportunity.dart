@@ -1,11 +1,11 @@
-class DocTypeJson {
+class OpportunityJson {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<DTRecords>? records;
+  final List<Records>? records;
 
-  DocTypeJson({
+  OpportunityJson({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
@@ -13,13 +13,13 @@ class DocTypeJson {
     this.records,
   });
 
-  DocTypeJson.fromJson(Map<String, dynamic> json)
+  OpportunityJson.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => DTRecords.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,90 +31,58 @@ class DocTypeJson {
       };
 }
 
-class DTRecords {
+class Records {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
-  final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
+  final bool? isActive;
   final String? updated;
   final UpdatedBy? updatedBy;
-  final String? name;
-  final bool? isDocNoControlled;
-  final DocNoSequenceID? docNoSequenceID;
-  final GLCategoryID? gLCategoryID;
-  final String? printName;
-  final DocBaseType? docBaseType;
-  final DocSubTypeSO? docSubTypeSO;
-  final bool? hasCharges;
-  final bool? hasProforma;
-  final bool? isDefault;
-  final int? documentCopies;
-  final bool? isSOTrx;
-  final bool? isDefaultCounterDoc;
-  final bool? isPickQAConfirm;
-  final bool? isShipConfirm;
-  final bool? isInTransit;
-  final bool? isSplitWhenDifference;
-  final bool? isCreateCounter;
-  final bool? isIndexed;
-  final bool? isOverwriteSeqOnComplete;
-  final bool? isOverwriteDateOnComplete;
-  final bool? isPrepareSplitDocument;
-  final bool? isChargeOrProductMandatory;
-  final bool? isNoPriceListCheck;
-  final GenerateWithholding? generateWithholding;
-  final bool? lITIsCreateNegativeMovement;
-  final bool? lITIsUseVATSequence;
-  final bool? lITIsNotPosting;
-  final bool? isDoNotInvoice;
+  final String? documentNo;
+  final CBPartnerID? cBPartnerID;
+  final ADUserID? aDUserID;
+  final String? expectedCloseDate;
+  final SalesRepID? salesRepID;
+  final num? opportunityAmt;
+  final CCurrencyID? cCurrencyID;
+  final CSalesStageID? cSalesStageID;
+  final int? probability;
+  final num? weightedAmt;
+  final bool? isPublished;
+  final bool? isFavourite;
   final String? modelname;
+  final MProductID? mProductID;
 
-  DTRecords({
+  Records({
     this.id,
     this.uid,
     this.aDClientID,
     this.aDOrgID,
-    this.isActive,
     this.created,
     this.createdBy,
+    this.isActive,
     this.updated,
     this.updatedBy,
-    this.name,
-    this.isDocNoControlled,
-    this.docNoSequenceID,
-    this.gLCategoryID,
-    this.printName,
-    this.docBaseType,
-    this.docSubTypeSO,
-    this.hasCharges,
-    this.hasProforma,
-    this.isDefault,
-    this.documentCopies,
-    this.isSOTrx,
-    this.isDefaultCounterDoc,
-    this.isPickQAConfirm,
-    this.isShipConfirm,
-    this.isInTransit,
-    this.isSplitWhenDifference,
-    this.isCreateCounter,
-    this.isIndexed,
-    this.isOverwriteSeqOnComplete,
-    this.isOverwriteDateOnComplete,
-    this.isPrepareSplitDocument,
-    this.isChargeOrProductMandatory,
-    this.isNoPriceListCheck,
-    this.generateWithholding,
-    this.lITIsCreateNegativeMovement,
-    this.lITIsUseVATSequence,
-    this.lITIsNotPosting,
-    this.isDoNotInvoice,
+    this.documentNo,
+    this.cBPartnerID,
+    this.aDUserID,
+    this.expectedCloseDate,
+    this.salesRepID,
+    this.opportunityAmt,
+    this.cCurrencyID,
+    this.cSalesStageID,
+    this.probability,
+    this.weightedAmt,
+    this.isPublished,
+    this.isFavourite,
     this.modelname,
+    this.mProductID,
   });
 
-  DTRecords.fromJson(Map<String, dynamic> json)
+  Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
@@ -123,62 +91,44 @@ class DTRecords {
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
-        isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
+        isActive = json['IsActive'] as bool?,
         updated = json['Updated'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        name = json['Name'] as String?,
-        isDocNoControlled = json['IsDocNoControlled'] as bool?,
-        docNoSequenceID =
-            (json['DocNoSequence_ID'] as Map<String, dynamic>?) != null
-                ? DocNoSequenceID.fromJson(
-                    json['DocNoSequence_ID'] as Map<String, dynamic>)
+        documentNo = json['DocumentNo'] as String?,
+        cBPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
+            ? CBPartnerID.fromJson(
+                json['C_BPartner_ID'] as Map<String, dynamic>)
+            : null,
+        aDUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
+            ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
+            : null,
+        expectedCloseDate = json['ExpectedCloseDate'] as String?,
+        salesRepID = (json['SalesRep_ID'] as Map<String, dynamic>?) != null
+            ? SalesRepID.fromJson(json['SalesRep_ID'] as Map<String, dynamic>)
+            : null,
+        opportunityAmt = json['OpportunityAmt'] as num?,
+        cCurrencyID = (json['C_Currency_ID'] as Map<String, dynamic>?) != null
+            ? CCurrencyID.fromJson(
+                json['C_Currency_ID'] as Map<String, dynamic>)
+            : null,
+        cSalesStageID =
+            (json['C_SalesStage_ID'] as Map<String, dynamic>?) != null
+                ? CSalesStageID.fromJson(
+                    json['C_SalesStage_ID'] as Map<String, dynamic>)
                 : null,
-        gLCategoryID = (json['GL_Category_ID'] as Map<String, dynamic>?) != null
-            ? GLCategoryID.fromJson(
-                json['GL_Category_ID'] as Map<String, dynamic>)
+        mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
+            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
             : null,
-        printName = json['PrintName'] as String?,
-        docBaseType = (json['DocBaseType'] as Map<String, dynamic>?) != null
-            ? DocBaseType.fromJson(json['DocBaseType'] as Map<String, dynamic>)
-            : null,
-        docSubTypeSO = (json['DocSubTypeSO'] as Map<String, dynamic>?) != null
-            ? DocSubTypeSO.fromJson(
-                json['DocSubTypeSO'] as Map<String, dynamic>)
-            : null,
-        hasCharges = json['HasCharges'] as bool?,
-        hasProforma = json['HasProforma'] as bool?,
-        isDefault = json['IsDefault'] as bool?,
-        documentCopies = json['DocumentCopies'] as int?,
-        isSOTrx = json['IsSOTrx'] as bool?,
-        isDefaultCounterDoc = json['IsDefaultCounterDoc'] as bool?,
-        isPickQAConfirm = json['IsPickQAConfirm'] as bool?,
-        isShipConfirm = json['IsShipConfirm'] as bool?,
-        isInTransit = json['IsInTransit'] as bool?,
-        isSplitWhenDifference = json['IsSplitWhenDifference'] as bool?,
-        isCreateCounter = json['IsCreateCounter'] as bool?,
-        isIndexed = json['IsIndexed'] as bool?,
-        isOverwriteSeqOnComplete = json['IsOverwriteSeqOnComplete'] as bool?,
-        isOverwriteDateOnComplete = json['IsOverwriteDateOnComplete'] as bool?,
-        isPrepareSplitDocument = json['IsPrepareSplitDocument'] as bool?,
-        isChargeOrProductMandatory =
-            json['IsChargeOrProductMandatory'] as bool?,
-        isNoPriceListCheck = json['IsNoPriceListCheck'] as bool?,
-        generateWithholding =
-            (json['GenerateWithholding'] as Map<String, dynamic>?) != null
-                ? GenerateWithholding.fromJson(
-                    json['GenerateWithholding'] as Map<String, dynamic>)
-                : null,
-        lITIsCreateNegativeMovement =
-            json['LIT_isCreateNegativeMovement'] as bool?,
-        lITIsUseVATSequence = json['LIT_IsUseVATSequence'] as bool?,
-        lITIsNotPosting = json['LIT_IsNotPosting'] as bool?,
-        isDoNotInvoice = json['isDoNotInvoice'] as bool?,
+        probability = json['Probability'] as int?,
+        weightedAmt = json['WeightedAmt'] as num?,
+        isPublished = json['IsPublished'] as bool?,
+        isFavourite = json['IsFavourite'] as bool?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -186,40 +136,23 @@ class DTRecords {
         'uid': uid,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
-        'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
+        'IsActive': isActive,
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'Name': name,
-        'IsDocNoControlled': isDocNoControlled,
-        'DocNoSequence_ID': docNoSequenceID?.toJson(),
-        'GL_Category_ID': gLCategoryID?.toJson(),
-        'PrintName': printName,
-        'DocBaseType': docBaseType?.toJson(),
-        'DocSubTypeSO': docSubTypeSO?.toJson(),
-        'HasCharges': hasCharges,
-        'HasProforma': hasProforma,
-        'IsDefault': isDefault,
-        'DocumentCopies': documentCopies,
-        'IsSOTrx': isSOTrx,
-        'IsDefaultCounterDoc': isDefaultCounterDoc,
-        'IsPickQAConfirm': isPickQAConfirm,
-        'IsShipConfirm': isShipConfirm,
-        'IsInTransit': isInTransit,
-        'IsSplitWhenDifference': isSplitWhenDifference,
-        'IsCreateCounter': isCreateCounter,
-        'IsIndexed': isIndexed,
-        'IsOverwriteSeqOnComplete': isOverwriteSeqOnComplete,
-        'IsOverwriteDateOnComplete': isOverwriteDateOnComplete,
-        'IsPrepareSplitDocument': isPrepareSplitDocument,
-        'IsChargeOrProductMandatory': isChargeOrProductMandatory,
-        'IsNoPriceListCheck': isNoPriceListCheck,
-        'GenerateWithholding': generateWithholding?.toJson(),
-        'LIT_isCreateNegativeMovement': lITIsCreateNegativeMovement,
-        'LIT_IsUseVATSequence': lITIsUseVATSequence,
-        'LIT_IsNotPosting': lITIsNotPosting,
-        'isDoNotInvoice': isDoNotInvoice,
+        'DocumentNo': documentNo,
+        'C_BPartner_ID': cBPartnerID?.toJson(),
+        'AD_User_ID': aDUserID?.toJson(),
+        'ExpectedCloseDate': expectedCloseDate,
+        'SalesRep_ID': salesRepID?.toJson(),
+        'OpportunityAmt': opportunityAmt,
+        'C_Currency_ID': cCurrencyID?.toJson(),
+        'C_SalesStage_ID': cSalesStageID?.toJson(),
+        'Probability': probability,
+        'WeightedAmt': weightedAmt,
+        'IsPublished': isPublished,
+        'IsFavourite': isFavourite,
         'model-name': modelname
       };
 }
@@ -332,20 +265,20 @@ class UpdatedBy {
       };
 }
 
-class DocNoSequenceID {
+class CBPartnerID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  DocNoSequenceID({
+  CBPartnerID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  DocNoSequenceID.fromJson(Map<String, dynamic> json)
+  CBPartnerID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -359,20 +292,20 @@ class DocNoSequenceID {
       };
 }
 
-class GLCategoryID {
+class ADUserID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  GLCategoryID({
+  ADUserID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  GLCategoryID.fromJson(Map<String, dynamic> json)
+  ADUserID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -386,22 +319,22 @@ class GLCategoryID {
       };
 }
 
-class DocBaseType {
+class SalesRepID {
   final String? propertyLabel;
-  final String? id;
+  final int? id;
   final String? identifier;
   final String? modelname;
 
-  DocBaseType({
+  SalesRepID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  DocBaseType.fromJson(Map<String, dynamic> json)
+  SalesRepID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as String?,
+        id = json['id'] as int?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
@@ -413,22 +346,22 @@ class DocBaseType {
       };
 }
 
-class DocSubTypeSO {
+class CCurrencyID {
   final String? propertyLabel;
-  final String? id;
+  final int? id;
   final String? identifier;
   final String? modelname;
 
-  DocSubTypeSO({
+  CCurrencyID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  DocSubTypeSO.fromJson(Map<String, dynamic> json)
+  CCurrencyID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as String?,
+        id = json['id'] as int?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
@@ -440,22 +373,49 @@ class DocSubTypeSO {
       };
 }
 
-class GenerateWithholding {
+class CSalesStageID {
   final String? propertyLabel;
-  final String? id;
+  final int? id;
   final String? identifier;
   final String? modelname;
 
-  GenerateWithholding({
+  CSalesStageID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  GenerateWithholding.fromJson(Map<String, dynamic> json)
+  CSalesStageID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MProductID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MProductID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MProductID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

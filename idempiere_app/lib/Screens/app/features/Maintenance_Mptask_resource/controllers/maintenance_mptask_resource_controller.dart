@@ -28,14 +28,14 @@ class MaintenanceMpResourceController extends GetxController {
   //var adUserId;
   DateTime now = DateTime.now();
 
-  var value = "Installed".tr.obs;
+  var value = "All".tr.obs;
 
   var filters = [
+    "All".tr,
     "Installed".tr,
     "Unchecked".tr,
     "Checked".tr,
     'Retired'.tr,
-    "All".tr
   ];
   var filterCount = 0;
   // ignore: prefer_final_fields
@@ -43,6 +43,8 @@ class MaintenanceMpResourceController extends GetxController {
   var filter1Available = false.obs;
   var filter2Available = false.obs;
   var filter3Available = false.obs;
+
+  bool init = true;
 
   TextEditingController passwordFieldController = TextEditingController();
   TextEditingController newLocationCommentFieldController =
@@ -124,7 +126,9 @@ class MaintenanceMpResourceController extends GetxController {
     _tt = RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
 
     _tt2.records?.insert(0, RefRecords(value: "0", name: "All".tr));
+
     _tt3.records?.insert(0, RefRecords(id: 0, name: "All".tr));
+
     filter1Available.value = true;
     filter2Available.value = true;
     filter3Available.value = true;
@@ -300,7 +304,7 @@ class MaintenanceMpResourceController extends GetxController {
                 "Il record è stato salvato localmente in attesa di connessione internet.",
                 icon: const Icon(
                   Icons.save,
-                  color: Colors.red,
+                  color: Colors.yellow,
                 ),
               );
             }
@@ -551,7 +555,7 @@ class MaintenanceMpResourceController extends GetxController {
                 "Il record è stato salvato localmente in attesa di connessione internet.",
                 icon: const Icon(
                   Icons.save,
-                  color: Colors.red,
+                  color: Colors.yellow,
                 ),
               );
             }
@@ -827,7 +831,7 @@ class MaintenanceMpResourceController extends GetxController {
                 "Il record è stato salvato localmente in attesa di connessione internet.",
                 icon: const Icon(
                   Icons.save,
-                  color: Colors.red,
+                  color: Colors.yellow,
                 ),
               );
             }
@@ -983,7 +987,7 @@ class MaintenanceMpResourceController extends GetxController {
                 "Il record è stato salvato localmente in attesa di connessione internet.",
                 icon: const Icon(
                   Icons.save,
-                  color: Colors.red,
+                  color: Colors.yellow,
                 ),
               );
             }
@@ -1251,7 +1255,7 @@ class MaintenanceMpResourceController extends GetxController {
           "Il record è stato salvato localmente in attesa di connessione internet.",
           icon: const Icon(
             Icons.save,
-            color: Colors.red,
+            color: Colors.yellow,
           ),
         );
       }
@@ -1282,7 +1286,7 @@ class MaintenanceMpResourceController extends GetxController {
             "Il record è stato salvato localmente in attesa di connessione internet.",
             icon: const Icon(
               Icons.save,
-              color: Colors.red,
+              color: Colors.yellow,
             ),
           );
         }
@@ -1391,7 +1395,7 @@ class MaintenanceMpResourceController extends GetxController {
           "Il record è stato salvato localmente in attesa di connessione internet.",
           icon: const Icon(
             Icons.save,
-            color: Colors.red,
+            color: Colors.yellow,
           ),
         );
       }
@@ -1423,7 +1427,7 @@ class MaintenanceMpResourceController extends GetxController {
             "Il record è stato salvato localmente in attesa di connessione internet.",
             icon: const Icon(
               Icons.save,
-              color: Colors.red,
+              color: Colors.yellow,
             ),
           );
         }
@@ -1532,7 +1536,7 @@ class MaintenanceMpResourceController extends GetxController {
           "Il record è stato salvato localmente in attesa di connessione internet.",
           icon: const Icon(
             Icons.save,
-            color: Colors.red,
+            color: Colors.yellow,
           ),
         );
       }
@@ -1565,7 +1569,7 @@ class MaintenanceMpResourceController extends GetxController {
             "Il record è stato salvato localmente in attesa di connessione internet.",
             icon: const Icon(
               Icons.save,
-              color: Colors.red,
+              color: Colors.yellow,
             ),
           );
         }
@@ -1603,7 +1607,7 @@ class MaintenanceMpResourceController extends GetxController {
           //print("done!");
           Get.back();
           //print(response.body);
-          syncThisWorkOrderResource(GetStorage().read('selectedTaskDocNo'));
+          syncSingleResource(id);
           Get.snackbar(
             "Done!".tr,
             "Record rollback successfull".tr,
@@ -1736,6 +1740,78 @@ class MaintenanceMpResourceController extends GetxController {
     }
   }
 
+  syncSingleResource(int id) async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ' + GetStorage().read('token');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= lit_mp_maintain_resource_v_ID eq $id AND AD_User_ID eq ${GetStorage().read('userId')}');
+    if (await checkConnection()) {
+      _dataAvailable.value = false;
+      emptyAPICallStak();
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print(response.body);
+        }
+        var json = WorkOrderResourceLocalJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+        //print(json.records!.length);
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+        var temp = WorkOrderResourceLocalJson.fromJson(
+            jsonDecode(file.readAsStringSync()));
+
+        //temp.records!.replaceRange(start, end, replacements)
+
+        for (var i = 0; i < temp.records!.length; i++) {
+          for (var j = 0; j < json.records!.length; j++) {
+            if (temp.records![i].id == json.records![j].id) {
+              temp.records!.removeAt(i);
+              temp.records!.insert(i, json.records![j]);
+            }
+          }
+        }
+
+        /* for (var tempRecord in temp.records!) {
+          for (var jsonRecord in json.records!) {
+            if (jsonRecord.id == tempRecord.id) {
+              print('Prima');
+              print(tempRecord.lITControl1DateFrom);
+
+              tempRecord.lITControl1DateFrom = jsonRecord.lITControl1DateFrom;
+              print('Dopo');
+              print(tempRecord.lITControl1DateFrom);
+            }
+          }
+        } */
+        file.writeAsStringSync(jsonEncode(temp.toJson()));
+        //productSync = false;
+        getWorkOrders();
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+
+        //syncWorkOrderResourceSurveyLines();
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+      }
+    }
+  }
+
   Future<void> syncThisWorkOrderResource(int id) async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
@@ -1773,10 +1849,11 @@ class MaintenanceMpResourceController extends GetxController {
           var temp = WorkOrderResourceLocalJson.fromJson(
               jsonDecode(file.readAsStringSync()));
 
-          for (var tempRecord in temp.records!) {
-            for (var jsonRecord in json.records!) {
-              if (jsonRecord.id == tempRecord.id) {
-                tempRecord = jsonRecord;
+          for (var i = 0; i < temp.records!.length; i++) {
+            for (var j = 0; j < json.records!.length; j++) {
+              if (temp.records![i].id == json.records![j].id) {
+                temp.records!.removeAt(i);
+                temp.records!.insert(i, json.records![j]);
               }
             }
           }
@@ -1832,7 +1909,7 @@ class MaintenanceMpResourceController extends GetxController {
       }
 
       if (json.pagecount! > index) {
-        syncWorkOrderResourcePages(json, index);
+        syncThisWorkOrderResourcePages(json, index, id);
       } else {
         if (kDebugMode) {
           print(json.records!.length);
@@ -1845,10 +1922,11 @@ class MaintenanceMpResourceController extends GetxController {
         var temp = WorkOrderResourceLocalJson.fromJson(
             jsonDecode(file.readAsStringSync()));
 
-        for (var tempRecord in temp.records!) {
-          for (var jsonRecord in json.records!) {
-            if (jsonRecord.id == tempRecord.id) {
-              tempRecord = jsonRecord;
+        for (var i = 0; i < temp.records!.length; i++) {
+          for (var j = 0; j < json.records!.length; j++) {
+            if (temp.records![i].id == json.records![j].id) {
+              temp.records!.removeAt(i);
+              temp.records!.insert(i, json.records![j]);
             }
           }
         }
@@ -1889,7 +1967,19 @@ class MaintenanceMpResourceController extends GetxController {
     //print(GetStorage().read('selectedTaskDocNo'));
     _trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
+
     print(_trx.records!.length);
+
+    /* if (init) {
+      //filter3Available.value = false;
+      var found =
+          _trx.records!.where((element) => element.litResourceGroupID != null);
+      if (found.isNotEmpty) {
+        dropDownValue3.value = found.first.litResourceGroupID!.id.toString();
+      }
+      init = false;
+    } */
+    //print(_trx.records!.length);
     _trx2 = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
 
@@ -1903,9 +1993,9 @@ class MaintenanceMpResourceController extends GetxController {
       _trx.rowcount = _trx.records?.length;
       flag = false;
     }
-    if (filterCount != 4) {
+    if (filterCount != 0) {
       switch (filterCount) {
-        case 0:
+        case 1:
           temp = (_trx.records!.where((element) =>
               element.resourceStatus!.id == "INS" &&
               element.mpMaintainID?.id ==
@@ -1915,7 +2005,7 @@ class MaintenanceMpResourceController extends GetxController {
           _trx.rowcount = _trx.records?.length;
           flag = false;
           break;
-        case 1:
+        case 2:
           temp = (_trx.records!.where((element) =>
               (DateTime.parse(element.lITControl1DateFrom!)
                       .isAfter(twentyDaysLater) ||
@@ -1929,7 +2019,7 @@ class MaintenanceMpResourceController extends GetxController {
           _trx.rowcount = _trx.records?.length;
           flag = false;
           break;
-        case 2:
+        case 3:
           temp = (_trx.records!.where((element) =>
               (DateTime.parse(element.lITControl1DateFrom!)
                       .isBefore(twentyDaysLater) &&
@@ -1943,7 +2033,7 @@ class MaintenanceMpResourceController extends GetxController {
           _trx.rowcount = _trx.records?.length;
           flag = false;
           break;
-        case 3:
+        case 4:
           temp = (_trx.records!.where((element) =>
               (element.resourceStatus!.id == "IRV" ||
                   element.resourceStatus!.id == "IRX") &&
@@ -1957,13 +2047,15 @@ class MaintenanceMpResourceController extends GetxController {
         default:
       }
     }
-    if (dropDownValue3.value != "0") {
+
+    //FILTRO DESTINAZIONE
+    /*  if (dropDownValue3.value != "0") {
       var temp = (_trx.records!.where((element) =>
           element.litResourceGroupID?.id == int.parse(dropDownValue3.value) &&
           element.mpMaintainID?.id ==
               GetStorage().read('selectedTaskDocNo'))).toList();
       _trx.records = temp;
-    }
+    } */
     if (flag) {
       temp = (_trx.records!.where((element) =>
           element.mpMaintainID?.id ==
@@ -1972,6 +2064,14 @@ class MaintenanceMpResourceController extends GetxController {
       _trx.records = temp;
       _trx.rowcount = _trx.records?.length;
     }
+    var count = 0;
+    for (var element in _trx.records!) {
+      if (element.mpMaintainID!.id == 1008213) {
+        count++;
+      }
+    }
+    print(count);
+
     //print(_trx.records!.length);
 
     focusNode = List<FocusNode>.filled(_trx.records!.length, FocusNode());

@@ -99,7 +99,7 @@ class MaintenanceMpResourceScreen
                   Container(
                     child: Obx(() => controller.dataAvailable
                         ? Text(
-                            "${"RESOURCES".tr}: ${controller.trx.records!.length}")
+                            "${"RESOURCES".tr}: ${controller._trx.records!.length}")
                         : Text("${"RESOURCES".tr}: ")),
                     margin: const EdgeInsets.only(left: 15),
                   ),
@@ -169,11 +169,11 @@ class MaintenanceMpResourceScreen
                 ],
               ),
               //const SizedBox(height: 5),
-              Row(
+              /*  Row(
                 //mainAxisAlignment: MainAxisAlignment.,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(left: 30),
+                    margin: const EdgeInsets.only(left: 10),
                     child: Obx(
                       () => Visibility(
                         visible: controller.filter3Available.value,
@@ -197,27 +197,12 @@ class MaintenanceMpResourceScreen
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 30),
-                    child: Obx(
-                      () => Visibility(
-                        visible: controller.filter2Available.value,
-                        child: TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
-              ),
+              ), */
               Row(
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(left: 30),
+                    margin: const EdgeInsets.only(left: 10),
                     child: Obx(
                       () => Visibility(
                         visible: controller.filter1Available.value,
@@ -237,6 +222,21 @@ class MaintenanceMpResourceScreen
                               value: list.value,
                             );
                           }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => Visibility(
+                        visible: controller.filter2Available.value,
+                        child: TextButton(
+                          onPressed: () {
+                            controller.changeFilter();
+                            //print("hello");
+                          },
+                          child: Text(controller.value.value),
                         ),
                       ),
                     ),
@@ -363,7 +363,7 @@ class MaintenanceMpResourceScreen
                                                     .toLowerCase()
                                                     .contains(controller.searchFilterValue.value.toLowerCase())
                                                 : controller.dropdownValue.value == "4"
-                                                    ? controller.trx.records![index].number.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
+                                                    ? controller.trx.records![index].number.toString().toLowerCase() == controller.searchFilterValue.value.toLowerCase()
                                                     : true,
                                 child: Card(
                                   elevation: 8.0,
@@ -2272,16 +2272,16 @@ class MaintenanceMpResourceScreen
                                                             onConfirm:
                                                                 () async {
                                                               Get.back();
-                                                              var isConnected =
-                                                                  await checkConnection();
+                                                              /* var isConnected =
+                                                                  await checkConnection(); */
                                                               controller
                                                                   .testingResourceButton(
                                                                       index);
                                                             },
                                                           );
                                                         } else {
-                                                          var isConnected =
-                                                              await checkConnection();
+                                                          /* var isConnected =
+                                                              await checkConnection(); */
                                                           controller
                                                               .testingResourceButton(
                                                                   index);

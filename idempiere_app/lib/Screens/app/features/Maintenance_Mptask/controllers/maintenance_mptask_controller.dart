@@ -2,6 +2,7 @@ part of dashboard;
 
 class MaintenanceMptaskController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
+  var args = Get.arguments;
   late WorkOrderLocalJson _trx;
   late WorkOrderLocalJson _trx2;
   var _hasCallSupport = false;
@@ -204,10 +205,10 @@ class MaintenanceMptaskController extends GetxController {
     //print(GetStorage().read('workOrderSync'));
     //print(GetStorage().read('userId'));
     var notificationFilter = 0;
-    if (Get.arguments != null) {
-      if (Get.arguments['notificationId'] != null) {
-        notificationFilter = Get.arguments['notificationId'];
-        Get.arguments['notificationId'] = null;
+    if (args != null) {
+      if (args['notificationId'] != null && args['notificationId'] != 0) {
+        notificationFilter = args['notificationId'];
+        args['notificationId'] = 0;
       }
     }
 

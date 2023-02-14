@@ -14,6 +14,7 @@ import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.da
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/create_calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/edit_calendar_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Calendar/views/screens/edit_calendar_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -70,6 +71,7 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
 
     for (var i = 0; i < json.records!.length; i++) {
       //print(list![i].jPToDoScheduledStartTime);
+      //print(list![i].mpotid?.id);
       var formatter = DateFormat('yyyy-MM-dd');
       var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);
       if (selectedEvents[
@@ -80,6 +82,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
             .add(
           Event(
               id: list[i].id!,
+              workOrderId: list[i].mpotid?.id ?? 0,
+              workOrderName: list[i].mpotid?.identifier ?? "",
               type: list[i].jPToDoType!.identifier ?? "???",
               typeId: list[i].jPToDoType!.id!,
               status: list[i].jPToDoStatus!.identifier ?? "???",
@@ -102,6 +106,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
             DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
           Event(
               id: list[i].id!,
+              workOrderId: list[i].mpotid?.id ?? 0,
+              workOrderName: list[i].mpotid?.identifier ?? "",
               type: list[i].jPToDoType!.identifier ?? "???",
               typeId: list[i].jPToDoType!.id!,
               status: list[i].jPToDoStatus!.identifier ?? "???",
@@ -154,7 +160,7 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
       List<EventRecords>? list = json.records;
 
       for (var i = 0; i < json.records!.length; i++) {
-        //print(list![i].jPToDoScheduledStartTime);
+        //print(list![i].mpotid?.id);
         var formatter = DateFormat('yyyy-MM-dd');
         var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);
 
@@ -166,6 +172,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
               .add(
             Event(
                 id: list[i].id!,
+                workOrderId: list[i].mpotid?.id ?? 0,
+                workOrderName: list[i].mpotid?.identifier ?? "",
                 type: list[i].jPToDoType!.identifier ?? "???",
                 typeId: list[i].jPToDoType!.id!,
                 status: list[i].jPToDoStatus!.identifier ?? "???",
@@ -189,6 +197,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
               DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
             Event(
                 id: list[i].id!,
+                workOrderId: list[i].mpotid?.id ?? 0,
+                workOrderName: list[i].mpotid?.identifier ?? "",
                 type: list[i].jPToDoType!.identifier ?? "???",
                 typeId: list[i].jPToDoType!.id!,
                 status: list[i].jPToDoStatus!.identifier ?? "???",
@@ -540,16 +550,17 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                         ),
                         tooltip: 'Edit Event'.tr,
                         onPressed: () {
-                          Get.off(const EditCalendarEvent(), arguments: {
-                            "id": event.id,
-                            "name": event.title,
-                            "description": event.description,
-                            "typeId": event.typeId,
-                            "startDate": event.scheduledStartDate,
-                            "startTime": event.scheduledStartTime,
-                            "endTime": event.scheduledEndTime,
-                            "statusId": event.statusId,
-                          });
+                          Get.off(const EditWorkOrderCalendarEvent(),
+                              arguments: {
+                                "id": event.id,
+                                "name": event.title,
+                                "description": event.description,
+                                "typeId": event.typeId,
+                                "startDate": event.scheduledStartDate,
+                                "startTime": event.scheduledStartTime,
+                                "endTime": event.scheduledEndTime,
+                                "statusId": event.statusId,
+                              });
                         },
                       ),
                     ),
@@ -603,6 +614,29 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
+                        ),
+                        Visibility(
+                          visible: event.workOrderId != 0,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                    onPressed: () {
+                                      //print(event.workOrderId);
+
+                                      Get.offNamed('/MaintenanceMptask',
+                                          arguments: {
+                                            'notificationId': event.workOrderId
+                                          });
+                                    },
+                                    child: Text(
+                                      event.workOrderName,
+                                      style:
+                                          const TextStyle(color: kNotifColor),
+                                    )),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),

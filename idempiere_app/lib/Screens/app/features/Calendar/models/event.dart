@@ -22,6 +22,8 @@ class Event {
   final String refname;
   final String ref2name;
   final String cBPartner;
+  final int workOrderId;
+  final String workOrderName;
 
   const Event({
     required this.id,
@@ -40,5 +42,7 @@ class Event {
     required this.refname,
     required this.ref2name,
     required this.cBPartner,
+    required this.workOrderId,
+    required this.workOrderName,
   });
 }

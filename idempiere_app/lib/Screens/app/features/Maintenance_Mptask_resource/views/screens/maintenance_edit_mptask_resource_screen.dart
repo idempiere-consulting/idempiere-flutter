@@ -79,9 +79,9 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       "Height": int.parse(
           heightFieldController.text != "" ? heightFieldController.text : "0"),
       "Color": colorFieldController.text,
-      "lit_ResourceGroup_ID": {
+      /* "lit_ResourceGroup_ID": {
         "id": dropdownValue3 == "" ? 1000000 : int.parse(dropdownValue3)
-      }
+      } */
       //"IsPrinted": sendWorkOrder,
     });
 
@@ -166,6 +166,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             "Fatto!",
             "Il record è stato modificato",
             duration: const Duration(milliseconds: 800),
+            isDismissible: true,
             snackPosition: SnackPosition.TOP,
             icon: const Icon(
               Icons.done,
@@ -780,7 +781,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                     child: Align(
                       child: Text(
                         "Resource Group".tr,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                       alignment: Alignment.centerLeft,
                     ),

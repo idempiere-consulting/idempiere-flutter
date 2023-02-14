@@ -3,7 +3,7 @@ class ProductListJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<Records>? records;
+  final List<PLRecords>? records;
 
   ProductListJson({
     this.pagecount,
@@ -19,7 +19,7 @@ class ProductListJson {
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => PLRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class ProductListJson {
       };
 }
 
-class Records {
+class PLRecords {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
@@ -86,8 +86,10 @@ class Records {
   final ADPrintColorID? adPrintColorID;
   final LitProductSizeID? litProductSizeID;
   final String? imageUrl;
+  final String? sku;
+  final String? sizes;
 
-  Records(
+  PLRecords(
       {this.id,
       this.uid,
       this.aDClientID,
@@ -141,9 +143,11 @@ class Records {
       this.qtyAvailable,
       this.litProductSizeID,
       this.adPrintColorID,
+      this.sku,
+      this.sizes,
       this.imageUrl});
 
-  Records.fromJson(Map<String, dynamic> json)
+  PLRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
@@ -229,7 +233,9 @@ class Records {
                     json['lit_ProductSize_ID'] as Map<String, dynamic>)
                 : null,
         imageUrl = json['ImageURL'] as String?,
-        price = json['PriceStd'] as num?;
+        sku = json['SKU'] as String?,
+        sizes = json['sizes'] as String?,
+        price = json['PriceList'] as num?;
 
   Map<String, dynamic> toJson() => {
         'id': id,

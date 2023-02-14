@@ -140,7 +140,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
-                          key: PageStorageKey('workorder'),
+                          key: const PageStorageKey('workorder'),
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,

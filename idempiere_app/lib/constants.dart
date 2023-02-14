@@ -68,6 +68,7 @@ emptyAPICallStak() {
 }
 
 emptyPostCallStack() {
+  bool flag = false;
   if (GetStorage().read('postCallList') != null &&
       (GetStorage().read('postCallList')).isEmpty == false) {
     List<dynamic> list = GetStorage().read('postCallList');
@@ -87,22 +88,39 @@ emptyPostCallStack() {
           'Authorization': authorization,
         },
       );
-
-      list.remove(element);
+      if (response.statusCode == 201) {
+        list.remove(element);
+      } else {
+        flag = true;
+      }
     });
     GetStorage().write('postCallList', list);
-    Get.snackbar(
-      "Done!".tr,
-      "Records saved locally have been synchronized!".tr,
-      icon: const Icon(
-        Icons.cloud_upload,
-        color: Colors.green,
-      ),
-    );
+    if (flag == false) {
+      Get.snackbar(
+        "Done!".tr,
+        "Records saved locally have been synchronized!".tr,
+        duration: const Duration(milliseconds: 800),
+        isDismissible: true,
+        icon: const Icon(
+          Icons.cloud_upload,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Error!".tr,
+        "Failed connection to Idempiere, records are not synchronized!".tr,
+        icon: const Icon(
+          Icons.cloud_off,
+          color: Colors.red,
+        ),
+      );
+    }
   }
 }
 
 emptyEditAPICallStack() {
+  bool flag = false;
   if (GetStorage().read('storedEditAPICalls') != null &&
       (GetStorage().read('storedEditAPICalls')).isEmpty == false) {
     Map calls = GetStorage().read('storedEditAPICalls');
@@ -120,23 +138,40 @@ emptyEditAPICallStack() {
           'Authorization': authorization,
         },
       );
-      calls.remove(call);
+      if (response.statusCode != 200) {
+        flag = true;
+      } else {
+        calls.remove(call);
+      }
     });
 
     GetStorage().write('storedEditAPICalls', calls);
-
-    Get.snackbar(
-      "Done!".tr,
-      "Records saved locally have been synchronized!".tr,
-      icon: const Icon(
-        Icons.cloud_upload,
-        color: Colors.green,
-      ),
-    );
+    if (flag == false) {
+      Get.snackbar(
+        "Done!".tr,
+        "Records saved locally have been synchronized!".tr,
+        duration: const Duration(milliseconds: 800),
+        isDismissible: true,
+        icon: const Icon(
+          Icons.cloud_upload,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Error!".tr,
+        "Failed connection to Idempiere, records are not synchronized!".tr,
+        icon: const Icon(
+          Icons.cloud_off,
+          color: Colors.red,
+        ),
+      );
+    }
   }
 }
 
 emptyDeleteCallStack() {
+  var flag = false;
   if (GetStorage().read('deleteCallList') != null &&
       (GetStorage().read('deleteCallList')).isEmpty == false) {
     List<dynamic> list = GetStorage().read('deleteCallList');
@@ -157,17 +192,35 @@ emptyDeleteCallStack() {
           'Authorization': authorization,
         },
       );
-      list.remove(element);
+
+      if (response.statusCode == 200) {
+        list.remove(element);
+      } else {
+        flag = true;
+      }
     });
     GetStorage().write('deleteCallList', list);
-    Get.snackbar(
-      "Done!".tr,
-      "Records saved locally have been synchronized!".tr,
-      icon: const Icon(
-        Icons.cloud_upload,
-        color: Colors.green,
-      ),
-    );
+    if (flag == false) {
+      Get.snackbar(
+        "Done!".tr,
+        "Records saved locally have been synchronized!".tr,
+        duration: const Duration(milliseconds: 800),
+        isDismissible: true,
+        icon: const Icon(
+          Icons.cloud_upload,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Error!".tr,
+        "Failed connection to Idempiere, records are not synchronized!".tr,
+        icon: const Icon(
+          Icons.cloud_off,
+          color: Colors.red,
+        ),
+      );
+    }
   }
 }
 

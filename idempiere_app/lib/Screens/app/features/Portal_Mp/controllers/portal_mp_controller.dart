@@ -57,6 +57,8 @@ class PortalMpController extends GetxController {
               .add(
             Event(
                 id: list[i].id!,
+                workOrderId: list[i].mpotid?.id ?? 0,
+                workOrderName: list[i].mpotid?.identifier ?? "",
                 type: list[i].jPToDoType!.identifier ?? "???",
                 typeId: list[i].jPToDoType!.id!,
                 status: list[i].jPToDoStatus!.identifier ?? "???",
@@ -80,6 +82,8 @@ class PortalMpController extends GetxController {
               DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
             Event(
                 id: list[i].id!,
+                workOrderId: list[i].mpotid?.id ?? 0,
+                workOrderName: list[i].mpotid?.identifier ?? "",
                 type: list[i].jPToDoType!.identifier ?? "???",
                 typeId: list[i].jPToDoType!.id!,
                 status: list[i].jPToDoStatus!.identifier ?? "???",

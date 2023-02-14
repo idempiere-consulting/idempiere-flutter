@@ -6,21 +6,13 @@ class PortalMpSalesOrderB2BController extends GetxController {
   var productDetailAvailable = false.obs;
   var productFilterAvailable = false.obs;
   var shoppingCartAvailable = false.obs;
-  var prodStockAvailable = false.obs;
-  var bpLocationAvailable = false.obs;
-  var docTypeFlag = false.obs;
 
   var pTermAvailable = false.obs;
   var pRuleAvailable = false.obs;
 
   int businessPartnerId = 0;
   var businessPartnerName = "".obs;
-  var bpLocationId = "0".obs;
   var paymentTermId = "0".obs;
-  var paymentRuleId = "B".obs;
-
-  late List<DTRecords> dropDownList;
-  var dropdownValue = "1".obs;
 
   TextEditingController searchFieldController = TextEditingController();
 
@@ -28,24 +20,12 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   ProductListJson filteredProds = ProductListJson(records: []);
 
-  List<PLRecords> skuProducts = [];
-
   ProductJson prodDetail = ProductJson(records: []);
-  B2BProdStockJson prodStock = B2BProdStockJson(records: []);
-  PSRecords currentStock = PSRecords(qtyOnHand: 0);
-  PSRecords providerStock = PSRecords(qtyAvailable: 0);
-  PSRecords futureStock = PSRecords(
-    qtyOrdered: 0,
-  );
-  SalesOrderDefaultsJson defValues = SalesOrderDefaultsJson(records: []);
-  BusinessPartnerLocationJson bpLocation =
-      BusinessPartnerLocationJson(records: []);
 
   var detailIndex = 0;
   var detailImage = "";
   var detailImageType = "URL";
   var chosenDetailSize = "".obs;
-  var chosenDetailSizeName = "";
 
   var chosenCategoryName = "".obs;
   var chosenProductName = "".obs;
@@ -56,8 +36,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   var colorUrlFilter = "";
   var sizeUrlFilter = "";
-
-  List<FilterSize> DetailDropDownSizes = [];
 
   TextEditingController qtyFieldController = TextEditingController(text: "1");
 
@@ -136,11 +114,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     var userId = GetStorage().read("userId");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    print('http://' +
+    var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
@@ -156,9 +130,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
       try {
         businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
         getDefaultPaymentTermsFromBP();
-        getSalesOrderDefaultValues();
-        getDocTypes();
-        getLocationFromBP();
       } catch (e) {
         if (kDebugMode) {
           print("no bp");
@@ -175,7 +146,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
       }
     } else {
       if (kDebugMode) {
-        print('bp fallito');
         print(response.body);
       }
     }
@@ -229,31 +199,10 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print('done');
-      skuProducts = [];
-      filteredProds.records!.removeWhere((element) => true);
-      ProductListJson temp =
-          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-
-      for (var i = 0; i < temp.records!.length; i++) {
-        var prodFound = filteredProds.records!
-            .where((element) => element.sku == temp.records![i].sku);
-
-        if (prodFound.isEmpty) {
-          for (var element in temp.records!) {
-            if (element.sku == temp.records![i].sku) {
-              skuProducts.add(element);
-            }
-          }
-          //print("added");
-          filteredProds.records!.add(temp.records![i]);
-        }
-      }
-      //print(skuProducts.length);
       //print(utf8.decode(response.bodyBytes));
-      /* filteredProds =
-          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
-      for (var record in temp.records!) {
+      filteredProds =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var record in filteredProds.records!) {
         //color filter
         if (_colors.isEmpty && record.adPrintColorID != null) {
           _colors.add(FilterColor(
@@ -300,7 +249,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
       productsAvailable.value = true;
     } else {
       if (kDebugMode) {
-        print('Error');
         print(utf8.decode(response.bodyBytes));
       }
     }
@@ -316,7 +264,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter');
+        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter');
 
     /* print('$protocol://' +
         ip +
@@ -331,50 +279,9 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      filteredProds.records!.removeWhere((element) => true);
-      skuProducts = [];
-      ProductListJson temp =
-          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-
-      for (var i = 0; i < temp.records!.length; i++) {
-        var prodFound = filteredProds.records!
-            .where((element) => element.sku == temp.records![i].sku);
-
-        if (prodFound.isEmpty) {
-          for (var element in temp.records!) {
-            if (element.sku == temp.records![i].sku) {
-              skuProducts.add(element);
-            }
-          }
-          //print("added");
-          filteredProds.records!.add(temp.records![i]);
-        }
-      }
-
-      _sizes.removeWhere((element) => true);
-
-      for (var record in temp.records!) {
-        if (_sizes.isEmpty && record.litProductSizeID != null) {
-          _sizes.add(FilterSize(
-              id: record.litProductSizeID!.id!,
-              name: record.litProductSizeID!.identifier!));
-        }
-        if (_sizes.isNotEmpty && record.litProductSizeID != null) {
-          var found = _sizes
-              .where((element) => element.id == record.litProductSizeID!.id);
-          if (found.isEmpty) {
-            _sizes.add(FilterSize(
-                id: record.litProductSizeID!.id!,
-                name: record.litProductSizeID!.identifier!));
-          }
-        }
-        _sizeItems = _sizes
-            .map((size) => MultiSelectItem<FilterSize>(size, size.name))
-            .toList();
-      }
       //print(utf8.decode(response.bodyBytes));
-      /* filteredProds =
-          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
+      filteredProds =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //productFilterAvailable.value = true;
       productsAvailable.value = true;
     } else {
@@ -410,49 +317,8 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
     if (response.statusCode == 200) {
       //print(utf8.decode(response.bodyBytes));
-      /* filteredProds =
-          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
-      filteredProds.records!.removeWhere((element) => true);
-      skuProducts = [];
-      ProductListJson temp =
+      filteredProds =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-
-      for (var i = 0; i < temp.records!.length; i++) {
-        var prodFound = filteredProds.records!
-            .where((element) => element.sku == temp.records![i].sku);
-
-        if (prodFound.isEmpty) {
-          for (var element in temp.records!) {
-            if (element.sku == temp.records![i].sku) {
-              skuProducts.add(element);
-            }
-          }
-          //print("added");
-          filteredProds.records!.add(temp.records![i]);
-        }
-      }
-
-      _sizes.removeWhere((element) => true);
-
-      for (var record in temp.records!) {
-        if (_sizes.isEmpty && record.litProductSizeID != null) {
-          _sizes.add(FilterSize(
-              id: record.litProductSizeID!.id!,
-              name: record.litProductSizeID!.identifier!));
-        }
-        if (_sizes.isNotEmpty && record.litProductSizeID != null) {
-          var found = _sizes
-              .where((element) => element.id == record.litProductSizeID!.id);
-          if (found.isEmpty) {
-            _sizes.add(FilterSize(
-                id: record.litProductSizeID!.id!,
-                name: record.litProductSizeID!.identifier!));
-          }
-        }
-        _sizeItems = _sizes
-            .map((size) => MultiSelectItem<FilterSize>(size, size.name))
-            .toList();
-      }
       //productFilterAvailable.value = true;
       productsAvailable.value = true;
     } else {
@@ -486,48 +352,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       prodDetail =
           ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
-      //getProdB2BStock(id);
-
       productDetailAvailable.value = true;
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
-    }
-  }
-
-  Future<void> getLocationFromBP() async {
-    bpLocationAvailable.value = false;
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(utf8.decode(response.bodyBytes));
-      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      bpLocation = BusinessPartnerLocationJson.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
-
-      if (bpLocation.rowcount! > 0) {
-        if (bpLocation.records![0].id != null) {
-          bpLocationId.value = bpLocation.records![0].id.toString();
-        }
-      }
-      //print(trx.rowcount);
-      //print(response.body);
-      //print(paymentTermId);
-      bpLocationAvailable.value = true;
-      // ignore: unnecessary_null_comparison
-      //pTermAvailable.value = pTerm != null;
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -550,34 +375,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
     //print(list[0].eMail);
 
     //print(json.);
-  }
-
-  Future<void> getSalesOrderDefaultValues() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_order_defaults_v?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
-    if (businessPartnerId != 0) {
-      var response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        //print(response.body);
-        defValues = SalesOrderDefaultsJson.fromJson(
-            jsonDecode(utf8.decode(response.bodyBytes)));
-        //getPriceListVersionID();
-      } else {
-        if (kDebugMode) {
-          print(response.body);
-        }
-      }
-    }
   }
 
   Future<void> getDefaultPaymentTermsFromBP() async {
@@ -603,7 +400,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
       if (json.rowcount! > 0) {
         if (json.records![0].cPaymentTermID != null) {
           paymentTermId.value = json.records![0].cPaymentTermID!.id!.toString();
-          paymentRuleId.value = json.records![0].cPaymentRuleID?.id ?? "B";
         }
       }
       //print(trx.rowcount);
@@ -615,179 +411,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
     } else {
       if (kDebugMode) {
         print(response.body);
-      }
-    }
-  }
-
-  Future<void> getProdB2BStock(int id) async {
-    prodStockAvailable.value = false;
-    print(id);
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_b2bstock_v?\$filter= M_Product_ID eq $id and AD_Client_ID eq ${GetStorage().read("clientid")}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
-
-      prodStock = B2BProdStockJson.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
-
-      for (var element in prodStock.records!) {
-        if (element.rowType!.id! == "m_product") {
-          providerStock = element;
-          futureStock = element;
-        }
-        if (element.rowType!.id! == "m_storageonhand") {
-          currentStock = element;
-        }
-      }
-      prodStockAvailable.value = true;
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
-    }
-  }
-
-  Future<void> getDocTypes() async {
-    docTypeFlag.value = false;
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_DocType?\$filter= DocBaseType eq \'SOO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json =
-          DocTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      var check = true;
-      for (var element in json.records!) {
-        //print(element.id);
-        if (element.isDefault == true) {
-          dropdownValue.value = element.id.toString();
-          check = false;
-          //print("Dropdown: ${dropdownValue.value}");
-        }
-      }
-
-      if (check) {
-        dropdownValue.value = json.records![0].id.toString();
-      }
-
-      dropDownList = json.records!;
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-      //_dataAvailable.value = _trx != null;
-      docTypeFlag.value = true;
-    }
-  }
-
-  Future<void> createSalesOrder() async {
-    Get.back();
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/sales-order');
-
-    var now = DateTime.now();
-    var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
-    //print(formattedDate);
-    List<Map<String, Object>> list = [];
-
-    for (var element in productList) {
-      list.add({
-        "M_Product_ID": {"id": element.id},
-        "qtyEntered": element.qty
-      });
-    }
-
-    var msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
-      "C_BPartner_ID": {"id": businessPartnerId},
-      "C_BPartner_Location_ID": {"id": bpLocationId.value},
-      "Bill_BPartner_ID": {"id": businessPartnerId},
-      "Bill_Location_ID": {"id": defValues.records![0].cBPartnerLocationID!.id},
-      "Revision": defValues.records![0].revision,
-      "AD_User_ID": defValues.records![0].aDUserID!.id,
-      "Bill_User_ID": defValues.records![0].billUserID!.id,
-      "C_DocTypeTarget_ID": {"id": int.parse(dropdownValue.value)},
-      "DateOrdered": "${formattedDate}T00:00:00Z",
-      "DatePromised": "${formattedDate}T00:00:00Z",
-      "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
-      "DeliveryRule": defValues.records![0].deliveryRule!.id,
-      "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
-      "FreightCostRule": defValues.records![0].freightCostRule!.id,
-      "PriorityRule": defValues.records![0].priorityRule!.id,
-      "InvoiceRule": defValues.records![0].invoiceRule!.id,
-      "M_PriceList_ID": defValues.records![0].mPriceListID!.id,
-      "SalesRep_ID": defValues.records![0].salesRepID!.id,
-      "C_Currency_ID": defValues.records![0].cCurrencyID!.id,
-      "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
-      "PaymentRule": {"id": paymentRuleId.value},
-      "order-line".tr: list,
-    });
-
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 201) {
-      //print(response.body);
-
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
-
-      /* Get.find<CRMSalesOrderController>().getSalesOrders();
-      Get.back(); */
-      //print("done!");
-      Get.snackbar(
-        "${json["DocumentNo"]}",
-        "The record has been created".tr,
-        icon: const Icon(
-          Icons.done,
-          color: Colors.green,
-        ),
-      );
-
-      /* cOrderId = json["id"];
-      if (cOrderId != 0) {
-        createSalesOrderLine();
-      } */
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-        Get.snackbar(
-          "Error!".tr,
-          "Record not updated".tr,
-          icon: const Icon(
-            Icons.error,
-            color: Colors.red,
-          ),
-        );
       }
     }
   }
