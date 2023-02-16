@@ -92,6 +92,16 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.personOutline,
                   label: "Contract".tr,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Sales Order B2B".tr,
+                  visible: int.parse(list[51], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -131,6 +141,9 @@ class _Sidebar extends StatelessWidget {
 
                   case 8:
                     Get.offNamed('/PortalMpContract');
+                    break;
+                  case 9:
+                    Get.offNamed('/PortalMpSalesOrderB2B');
                     break;
 
                   default:

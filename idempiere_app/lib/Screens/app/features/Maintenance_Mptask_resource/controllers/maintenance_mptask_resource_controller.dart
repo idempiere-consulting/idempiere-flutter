@@ -1968,7 +1968,7 @@ class MaintenanceMpResourceController extends GetxController {
     _trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
 
-    print(_trx.records!.length);
+    //print(_trx.records!.length);
 
     /* if (init) {
       //filter3Available.value = false;
@@ -2064,13 +2064,13 @@ class MaintenanceMpResourceController extends GetxController {
       _trx.records = temp;
       _trx.rowcount = _trx.records?.length;
     }
-    var count = 0;
+    /* var count = 0;
     for (var element in _trx.records!) {
       if (element.mpMaintainID!.id == 1008213) {
         count++;
       }
     }
-    print(count);
+    print(count); */
 
     //print(_trx.records!.length);
 

@@ -1,12 +1,14 @@
 part of dashboard;
 
 class _Sidebar extends StatelessWidget {
-  const _Sidebar({
+  _Sidebar({
     required this.data,
     Key? key,
   }) : super(key: key);
 
   final ProjectCardData data;
+
+  final List<dynamic> list = GetStorage().read('permission');
 
   @override
   Widget build(BuildContext context) {
@@ -29,42 +31,76 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard".tr,
+                  label: "Dashboard",
+                  visible: int.parse(list[0], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "MaintenanceCalendar".tr,
+                  label: "Ticket".tr,
+                  visible: int.parse(list[37], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
+                ),
+                //Richieste di offerta
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Sales Order Request".tr,
+                  visible: int.parse(list[36], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "MaintenanceMptask".tr,
+                  label: "SalesOrder".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "MaintenanceMpanomaly".tr,
+                  label: "Training and Course".tr,
+                ),
+                //Impianto
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Maintenance".tr,
+                ),
+                //Impianti dettaglio
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Anomaly".tr,
+                ),
+                //Scadenze
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Invoice".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "MaintenanceMpwarehouse".tr,
+                  label: "Contract".tr,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "MaintenanceMppicking".tr,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "MaintenanceInternaluseinventory".tr,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "MaintenanceMpimportitem".tr,
+                  label: "Sales Order B2B".tr,
+                  visible: int.parse(list[51], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
               ],
               onSelected: (index, value) {
@@ -76,25 +112,38 @@ class _Sidebar extends StatelessWidget {
                     break;
 
                   case 1:
-                    Get.offNamed('/MaintenanceCalendar');
+                    Get.offNamed('/TicketClientTicket');
                     break;
+                  //Richieste di offerta
                   case 2:
-                    Get.offNamed('/MaintenanceMptask');
+                    Get.offNamed('/PortalMpOpportunity');
                     break;
+
                   case 3:
-                    Get.offNamed('/MaintenanceMpanomaly');
+                    Get.offNamed('/PortalMpSalesOrder');
                     break;
+
                   case 4:
-                    Get.offNamed('/MaintenanceMpwarehouse');
+                    Get.offNamed('/PortalMpTrainingCourse');
                     break;
+                  //Impianto
                   case 5:
-                    Get.offNamed('/MaintenanceMppicking');
+                    Get.offNamed('/PortalMpMaintenanceMp');
                     break;
+                  //Impianti dettaglio
                   case 6:
-                    Get.offNamed('/MaintenanceInternaluseinventory');
+                    Get.offNamed('/PortalMpAnomaly');
                     break;
+                  //Scadenze
                   case 7:
-                    Get.offNamed('/MaintenanceMpimportitem');
+                    Get.offNamed('/PortalMpInvoice');
+                    break;
+
+                  case 8:
+                    Get.offNamed('/PortalMpContract');
+                    break;
+                  case 9:
+                    Get.offNamed('/PortalMpSalesOrderB2B');
                     break;
 
                   default:

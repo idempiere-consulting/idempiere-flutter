@@ -1602,7 +1602,7 @@ CRUD=1111=F
  49
  50
  51
- 52
+ 52 B2B                  : F3
  53 Formazione Corsita***: 1 *** 5 Formazione Corsista
  54 Presenza Corso       : F3
  55 Questionario         :

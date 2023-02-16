@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, prefer_final_fields
+
 part of dashboard;
 
 class PortalMpSalesOrderB2BController extends GetxController {
