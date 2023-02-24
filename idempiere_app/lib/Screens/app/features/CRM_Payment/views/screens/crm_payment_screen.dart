@@ -85,11 +85,11 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("RECEIPTS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("RECEIPTS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -332,11 +332,11 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("RECEIPTS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("RECEIPTS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -577,11 +577,11 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("RECEIPTS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("RECEIPTS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),

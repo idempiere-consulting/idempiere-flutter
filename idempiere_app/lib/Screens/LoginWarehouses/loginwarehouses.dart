@@ -78,9 +78,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncJPTODO() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -109,11 +109,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncUserPreferences() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_UserPreference?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_UserPreference?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -138,11 +137,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncBusinessPartner() async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -175,11 +173,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncBusinessPartnerPages(BusinessPartnerJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -219,11 +216,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncADOrgInfo() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${GetStorage().read("organizationid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${GetStorage().read("organizationid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -249,11 +245,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncProduct() async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -290,11 +285,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncProductPages(ProductJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -334,9 +328,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   Future<void> syncProductBOM() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/PP_Product_BOM');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/PP_Product_BOM');
 
     var response = await http.get(
       url,
@@ -370,11 +364,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncProductBOMPages(ProductBOMJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/PP_Product_BOM?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/PP_Product_BOM?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -414,10 +407,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   Future<void> syncProductBOMLines() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/PP_Product_BOMLine');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/PP_Product_BOMLine');
 
     var response = await http.get(
       url,
@@ -451,11 +443,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncProductBOMLinesPages(BOMLineJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/PP_Product_BOMLine?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/PP_Product_BOMLine?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -495,9 +486,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   Future<void> syncAnomalies() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NC');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/LIT_NC');
 
     var response = await http.get(
       url,
@@ -534,11 +525,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncAnomaliesPages(AnomalyJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/LIT_NC?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/LIT_NC?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -578,9 +568,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   Future<void> syncAnomalyTypes() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NCFaultType');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/LIT_NCFaultType');
 
     var response = await http.get(
       url,
@@ -613,11 +603,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncAnomalyTypePages(AnomalyTypeJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/LIT_NCFaultType?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/LIT_NCFaultType?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -657,11 +646,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   Future<void> syncWorkOrder() async {
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId or maintain_documentno eq \'SEDE\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId or maintain_documentno eq \'SEDE\'');
 
     var response = await http.get(
       url,
@@ -695,11 +683,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -742,11 +729,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncWorkOrderResourcePages(WorkOrderResourceLocalJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -794,11 +780,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   Future<void> syncMaintain() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -841,11 +826,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncMaintainPages(MPMaintainContractJSON json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -893,11 +877,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   Future<void> syncWorkOrderTask() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_ot_task_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_ot_task_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -939,11 +922,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
   syncWorkOrderTaskPages(WorkOrderTaskLocalJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_ot_task_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_ot_task_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -991,10 +973,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   Future<void> syncWorkOrderListResourceGroup() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_resourcegroup/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_resourcegroup/');
 
     var response = await http.get(
       url,
@@ -1030,11 +1011,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   Future<void> syncWorkOrderRefListResource() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Reference?\$filter= Name eq \'MP ResourceType\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Reference?\$filter= Name eq \'MP ResourceType\'');
 
     var response = await http.get(
       url,
@@ -1049,9 +1029,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
       var json = jsonDecode(response.body);
       var id = json["records"][0]["id"];
-      var url2 = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+      var url2 = Uri.parse(
+          '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
 
       var response2 = await http.get(
         url2,
@@ -1088,11 +1067,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   Future<void> syncWorkOrderRefListResourceCategory() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Reference?\$filter= Name eq \'C_BP_EDI EDI Type\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Reference?\$filter= Name eq \'C_BP_EDI EDI Type\'');
 
     var response = await http.get(
       url,
@@ -1107,9 +1085,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
 
       var json = jsonDecode(response.body);
       var id = json["records"][0]["id"];
-      var url2 = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+      var url2 = Uri.parse(
+          '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
 
       var response2 = await http.get(
         url2,
@@ -1146,11 +1123,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   Future<void> syncWorkOrderResourceSurveyLines() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/mp_resource_survey_line?\$orderby= LineNo asc');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/mp_resource_survey_line?\$orderby= LineNo asc');
 
     var response = await http.get(
       url,
@@ -1183,11 +1159,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   syncWorkOrderResourceSurveyLinesPages(
       WorkOrderResourceSurveyLinesJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -1270,11 +1245,10 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
   getLoginPermission() async {
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId');
 
     var response = await http.get(
       url,
@@ -1321,7 +1295,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     String authorization = 'Bearer ' + GetStorage().read('token1');
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/auth/tokens');
+    var url = Uri.parse('$protocol://$ip/api/v1/auth/tokens');
     final msg = jsonEncode({
       "clientId": clientid,
       "roleId": roleid,
@@ -1365,9 +1339,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     final protocol = GetStorage().read('protocol');
     // ignore: unused_local_variable
     List posts = [];
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/auth/warehouses?client=' +
+    var url = Uri.parse('$protocol://$ip/api/v1/auth/warehouses?client=' +
         clientid +
         '&role=' +
         roleid +

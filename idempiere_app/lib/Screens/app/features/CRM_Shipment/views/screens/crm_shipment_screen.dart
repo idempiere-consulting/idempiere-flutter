@@ -95,11 +95,11 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Shipment: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Shipment: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -331,7 +331,6 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                   ?.id ==
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Reopen".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -350,6 +349,7 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                 },
                                               );
                                             },
+                                            child: Text("Reopen".tr),
                                           ),
                                         ),
                                         Visibility(
@@ -360,7 +360,6 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                   ?.id !=
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Complete".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -379,6 +378,7 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                 },
                                               );
                                             },
+                                            child: Text("Complete".tr),
                                           ),
                                         ),
                                       ],
@@ -405,11 +405,11 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Shipment: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Shipment: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -598,11 +598,11 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Shipment: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Shipment: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),

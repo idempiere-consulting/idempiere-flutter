@@ -18,13 +18,12 @@ class EditShipment extends StatefulWidget {
 class _EditShipmentState extends State<EditShipment> {
   editShipment() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "PrivateNote": noteFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/m_inout/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/m_inout/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -63,7 +62,7 @@ class _EditShipmentState extends State<EditShipment> {
     String authorization = 'Bearer ' + GetStorage().read('token');
     final protocol = GetStorage().read('protocol');
     var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/m_inout/${args["id"]}');
+        Uri.parse('$protocol://$ip/api/v1/models/m_inout/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -176,7 +175,7 @@ class _EditShipmentState extends State<EditShipment> {
                   child: TextField(
                     maxLines: 5,
                     controller: noteFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Note'.tr,
@@ -198,7 +197,7 @@ class _EditShipmentState extends State<EditShipment> {
                   child: TextField(
                     maxLines: 5,
                     controller: noteFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Note'.tr,

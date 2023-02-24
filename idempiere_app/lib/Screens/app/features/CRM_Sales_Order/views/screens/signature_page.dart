@@ -64,7 +64,7 @@ class SignatureSalesOrderState extends State<SignatureSalesOrderScreen> {
                 Get.back(); */
 
                 final ip = GetStorage().read('ip');
-                String authorization = 'Bearer ' + GetStorage().read('token');
+                String authorization = 'Bearer ${GetStorage().read('token')}';
 
                 final msg =
                     jsonEncode({"name": "signature.jpg", "data": image64});

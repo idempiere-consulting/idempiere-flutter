@@ -93,6 +93,8 @@ class RRecords {
   String? color;
   bool? isPrinted;
   LitResourceGroupID? litResourceGroupID;
+  bool? isSold;
+  String? note;
 
   RRecords(
       {this.id,
@@ -154,7 +156,9 @@ class RRecords {
       this.height,
       this.color,
       this.isPrinted,
-      this.litResourceGroupID});
+      this.litResourceGroupID,
+      this.isSold,
+      this.note});
 
   RRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -253,6 +257,8 @@ class RRecords {
                 ? LitResourceGroupID.fromJson(
                     json['lit_ResourceGroup_ID'] as Map<String, dynamic>)
                 : null,
+        isSold = json['IsSold'] as bool?,
+        note = json['Note'] as String?,
         team = json['team'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -316,6 +322,8 @@ class RRecords {
         'Color': color,
         'IsPrinted': isPrinted,
         'team': team,
+        'IsSold': isSold,
+        'Note': note,
         'lit_ResourceGroup_ID': litResourceGroupID?.toJson(),
       };
 }

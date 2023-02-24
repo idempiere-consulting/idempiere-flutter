@@ -20,7 +20,7 @@ class CreateLead extends StatefulWidget {
 class _CreateLeadState extends State<CreateLead> {
   createLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -33,8 +33,7 @@ class _CreateLeadState extends State<CreateLead> {
       "IsSalesLead": true
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/');
     //print(msg);
     var response = await http.post(
       url,
@@ -70,12 +69,10 @@ class _CreateLeadState extends State<CreateLead> {
 
   Future<List<LSRecords>> getAllLeadStatuses() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://' +
-        ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -97,10 +94,9 @@ class _CreateLeadState extends State<CreateLead> {
 
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -244,11 +240,11 @@ class _CreateLeadState extends State<CreateLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -299,11 +295,11 @@ class _CreateLeadState extends State<CreateLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "LeadStatus".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 /* Container(
@@ -386,10 +382,10 @@ class _CreateLeadState extends State<CreateLead> {
                                 }).toList()*/
                                     snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -458,11 +454,11 @@ class _CreateLeadState extends State<CreateLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -513,11 +509,11 @@ class _CreateLeadState extends State<CreateLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "LeadStatus".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 /* Container(
@@ -600,10 +596,10 @@ class _CreateLeadState extends State<CreateLead> {
                                 }).toList()*/
                                     snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -672,11 +668,11 @@ class _CreateLeadState extends State<CreateLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -727,11 +723,11 @@ class _CreateLeadState extends State<CreateLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "LeadStatus".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 /* Container(
@@ -814,10 +810,10 @@ class _CreateLeadState extends State<CreateLead> {
                                 }).toList()*/
                                     snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )

@@ -27,7 +27,7 @@ class CreateSalesOrderLine extends StatefulWidget {
 class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
   createSalesOrderLine() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     // ignore: prefer_typing_uninitialized_variables
     var msg;
 
@@ -121,7 +121,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getPriceListVersionID() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -150,7 +150,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getProductPrice() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -179,7 +179,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getAdditionalProductInfo() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -206,7 +206,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getInstAttr(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -248,7 +248,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> searchByCode(dynamic value) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -291,7 +291,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> searchByInstAttr(dynamic id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -332,7 +332,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getProductByInstAttr(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -496,12 +496,12 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by code".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -522,12 +522,12 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -649,11 +649,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Attribute Instance".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -685,13 +685,13 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                             items: attrList.records!
                                 .map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
                                     child: Text(
                                       list.mAttributeSetInstanceID
                                               ?.identifier ??
                                           "???",
                                     ),
-                                    value: list.mAttributeSetInstanceID?.id
-                                        .toString(),
                                   );
                                 })
                                 .toSet()
@@ -768,12 +768,12 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by code".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -794,12 +794,12 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -921,11 +921,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Attribute Instance".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -957,13 +957,13 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                             items: attrList.records!
                                 .map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
                                     child: Text(
                                       list.mAttributeSetInstanceID
                                               ?.identifier ??
                                           "???",
                                     ),
-                                    value: list.mAttributeSetInstanceID?.id
-                                        .toString(),
                                   );
                                 })
                                 .toSet()
@@ -1040,12 +1040,12 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by code".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1066,12 +1066,12 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1193,11 +1193,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Attribute Instance".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1229,13 +1229,13 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
                             items: attrList.records!
                                 .map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
                                     child: Text(
                                       list.mAttributeSetInstanceID
                                               ?.identifier ??
                                           "???",
                                     ),
-                                    value: list.mAttributeSetInstanceID?.id
-                                        .toString(),
                                   );
                                 })
                                 .toSet()

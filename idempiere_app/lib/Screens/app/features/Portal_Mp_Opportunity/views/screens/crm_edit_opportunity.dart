@@ -310,12 +310,12 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -385,12 +385,12 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -457,11 +457,11 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -514,11 +514,11 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesStage".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -547,10 +547,10 @@ class _EditOpportunityState extends State<EditOpportunity> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -571,12 +571,12 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -646,12 +646,12 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -718,11 +718,11 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -775,11 +775,11 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesStage".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -808,10 +808,10 @@ class _EditOpportunityState extends State<EditOpportunity> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -832,12 +832,12 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -907,12 +907,12 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -979,11 +979,11 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1036,11 +1036,11 @@ class _EditOpportunityState extends State<EditOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesStage".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1069,10 +1069,10 @@ class _EditOpportunityState extends State<EditOpportunity> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )

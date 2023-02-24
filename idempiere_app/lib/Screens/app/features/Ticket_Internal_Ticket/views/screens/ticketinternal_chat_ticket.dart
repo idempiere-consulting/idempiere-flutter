@@ -32,7 +32,7 @@ class TicketInternalChatState extends State<TicketInternalChat> {
 
   getLog() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -92,7 +92,7 @@ class TicketInternalChatState extends State<TicketInternalChat> {
     final msg = jsonEncode({"Result": message.text});
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +

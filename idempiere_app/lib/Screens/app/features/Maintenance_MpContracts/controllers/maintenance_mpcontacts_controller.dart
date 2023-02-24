@@ -71,7 +71,7 @@ class MaintenanceMpContractsController extends GetxController {
 
   Future<void> getADUserID() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse(
         'http://' + ip + '/api/v1/models/ad_user?\$filter= IsSupportUser eq Y');
     var response = await http.get(
@@ -239,7 +239,7 @@ class MaintenanceMpContractsController extends GetxController {
       onCancel: () {},
       onConfirm: () async {
         final ip = GetStorage().read('ip');
-        String authorization = 'Bearer ' + GetStorage().read('token');
+        String authorization = 'Bearer ${GetStorage().read('token')}';
         var msg = jsonEncode({
           "record-id": _trx.records![index].mPMaintainID2,
           "isCreateCalendar": true,
@@ -360,7 +360,7 @@ class MaintenanceMpContractsController extends GetxController {
     _dataAvailable.value = false;
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -396,7 +396,6 @@ class MaintenanceMpContractsController extends GetxController {
         //checkSyncData();
       }
       //syncWorkOrderResourceSurveyLines();
-
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -406,7 +405,7 @@ class MaintenanceMpContractsController extends GetxController {
 
   syncMaintainPages(MPMaintainContractJSON json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -446,7 +445,6 @@ class MaintenanceMpContractsController extends GetxController {
         }
         //checkSyncData();
         //syncWorkOrderResourceSurveyLines();
-
       }
     } else {
       if (kDebugMode) {

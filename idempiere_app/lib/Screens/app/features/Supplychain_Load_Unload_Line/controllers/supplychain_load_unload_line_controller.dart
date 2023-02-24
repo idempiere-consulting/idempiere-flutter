@@ -24,7 +24,7 @@ class SupplychainLoadUnloadLineController extends GetxController {
 
   deleteLoadUnloadLine(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url =
@@ -67,7 +67,7 @@ class SupplychainLoadUnloadLineController extends GetxController {
   Future<void> getLoadUnloadsLine() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -241,7 +241,7 @@ class SupplychainLoadUnloadLineController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(

@@ -49,11 +49,10 @@ class MaintenanceShipmentlineController extends GetxController {
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -103,11 +102,10 @@ class MaintenanceShipmentlineController extends GetxController {
     //var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/M_InOutLine?\$filter= M_InOut_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_InOutLine?\$filter= M_InOut_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read("clientid")}');
 
     var response = await http.get(
       url,
@@ -129,12 +127,11 @@ class MaintenanceShipmentlineController extends GetxController {
 
   deleteShipmentLine(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_inoutline/${_trx.records![index].id}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_inoutline/${_trx.records![index].id}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -179,6 +176,7 @@ class MaintenanceShipmentlineController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -323,7 +321,7 @@ class MaintenanceShipmentlineController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getShipments() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(
@@ -341,7 +339,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

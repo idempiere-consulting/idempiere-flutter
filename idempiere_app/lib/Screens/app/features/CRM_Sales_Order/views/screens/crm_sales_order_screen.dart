@@ -14,7 +14,9 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/contractarticle_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_edithtml_sales_order.dart';
 //import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_pos_page.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
@@ -69,7 +71,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
   completeOrder(int index) async {
     Get.back();
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "doc-action": "CO",
     });
@@ -147,11 +149,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("SALES ORDERS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -229,10 +231,10 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -482,6 +484,20 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     MainAxisAlignment.end,
                                                 children: [
                                                   IconButton(
+                                                    tooltip: 'Editor HTML',
+                                                    onPressed: () async {
+                                                      controller
+                                                          .getContractArticles(
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .id!);
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.html),
+                                                  ),
+                                                  IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
                                                       /* var isConnected =
@@ -557,8 +573,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             ?.id !=
                                                         'CO',
                                                     child: ElevatedButton(
-                                                      child:
-                                                          Text("Complete".tr),
                                                       style: ButtonStyle(
                                                         backgroundColor:
                                                             MaterialStateProperty
@@ -632,6 +646,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           },
                                                         );
                                                       },
+                                                      child:
+                                                          Text("Complete".tr),
                                                     ),
                                                   ),
                                                 ],
@@ -661,11 +677,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("SALES ORDERS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -730,10 +746,10 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -966,6 +982,20 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     MainAxisAlignment.end,
                                                 children: [
                                                   IconButton(
+                                                    tooltip: 'Editor HTML',
+                                                    onPressed: () async {
+                                                      controller
+                                                          .getContractArticles(
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .id!);
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.html),
+                                                  ),
+                                                  IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
                                                       /* var isConnected =
@@ -1041,8 +1071,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             ?.id !=
                                                         'CO',
                                                     child: ElevatedButton(
-                                                      child:
-                                                          Text("Complete".tr),
                                                       style: ButtonStyle(
                                                         backgroundColor:
                                                             MaterialStateProperty
@@ -1113,6 +1141,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           },
                                                         );
                                                       },
+                                                      child:
+                                                          Text("Complete".tr),
                                                     ),
                                                   ),
                                                 ],
@@ -1142,11 +1172,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("SALES ORDERS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -1211,10 +1241,10 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -1522,8 +1552,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             ?.id !=
                                                         'CO',
                                                     child: ElevatedButton(
-                                                      child:
-                                                          Text("Complete".tr),
                                                       style: ButtonStyle(
                                                         backgroundColor:
                                                             MaterialStateProperty
@@ -1594,6 +1622,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           },
                                                         );
                                                       },
+                                                      child:
+                                                          Text("Complete".tr),
                                                     ),
                                                   ),
                                                 ],

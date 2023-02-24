@@ -34,7 +34,7 @@ class _EditMaintenanceMpContractsState
     extends State<EditMaintenanceMpContracts> {
   edit() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var msg = jsonEncode({
       "DateNextRun": "${date}T00:00:00Z",
       "AD_User_ID": {"id": technicianId},
@@ -102,7 +102,7 @@ class _EditMaintenanceMpContractsState
 
   deleteLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -143,7 +143,7 @@ class _EditMaintenanceMpContractsState
 
   Future<List<LSRecords>> getAllLeadStatuses() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -169,7 +169,7 @@ class _EditMaintenanceMpContractsState
 
   Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
@@ -280,7 +280,7 @@ class _EditMaintenanceMpContractsState
 
   getContractResource() async {
     /* final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/mp_maintain_resource?\$filter= MP_Maintain_ID eq ${Get.arguments['maintainId']} and MP_Maintain_Resource_ID neq null and M_Product_ID neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -315,7 +315,7 @@ class _EditMaintenanceMpContractsState
 
   getBusinessPartner() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/c_bpartner?\$filter= C_BPartner_ID eq $businesspartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -351,7 +351,7 @@ class _EditMaintenanceMpContractsState
 
   getBusinessPartnerLocation() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/c_bpartner_location?\$filter= C_BPartner_ID eq $businesspartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -444,11 +444,11 @@ class _EditMaintenanceMpContractsState
                   margin: const EdgeInsets.only(top: 10),
                   padding: const EdgeInsets.only(left: 20),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -573,11 +573,11 @@ class _EditMaintenanceMpContractsState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Technician".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1377,11 +1377,11 @@ class _EditMaintenanceMpContractsState
                   margin: const EdgeInsets.only(top: 10),
                   padding: const EdgeInsets.only(left: 20),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1506,11 +1506,11 @@ class _EditMaintenanceMpContractsState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Technician".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -2295,11 +2295,11 @@ class _EditMaintenanceMpContractsState
                   margin: const EdgeInsets.only(top: 10),
                   padding: const EdgeInsets.only(left: 20),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -2424,11 +2424,11 @@ class _EditMaintenanceMpContractsState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Technician".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(

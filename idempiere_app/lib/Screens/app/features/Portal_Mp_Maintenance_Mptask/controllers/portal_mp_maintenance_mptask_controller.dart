@@ -45,11 +45,10 @@ class PortalMpMaintenanceMptaskController extends GetxController {
   Future<void> syncWorkOrder() async {
     getBusinessPartner();
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_ot_v?\$filter= c_bpartner_id eq $businessPartnerId '); //mp_ot_ad_user_id eq $userId
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= c_bpartner_id eq $businessPartnerId '); //mp_ot_ad_user_id eq $userId
 
     var response = await http.get(
       url,
@@ -71,10 +70,10 @@ class PortalMpMaintenanceMptaskController extends GetxController {
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    String authorization = 'Bearer ';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -180,10 +179,10 @@ class PortalMpMaintenanceMptaskController extends GetxController {
   Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v');
 
     var response = await http.get(
       url,
@@ -208,6 +207,7 @@ class PortalMpMaintenanceMptaskController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -346,45 +346,5 @@ class PortalMpMaintenanceMptaskController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

@@ -137,11 +137,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     String formattedSixtyDaysLater = formatter.format(sixtyDaysLater);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_jp_todo_v?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedSixtyDaysLater 23:59:59\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_jp_todo_v?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedSixtyDaysLater 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -249,9 +248,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -447,9 +446,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     startingDayOfWeek: StartingDayOfWeek.monday,
                     daysOfWeekVisible: true,
-                    onFormatChanged: (CalendarFormat _format) {
+                    onFormatChanged: (CalendarFormat format) {
                       setState(() {
-                        format = _format;
+                        format = format;
                       });
                     },
                     onDaySelected: (DateTime selectDay, DateTime focusDay) {
@@ -613,6 +612,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       ],
                     ),
+                    childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
                     children: [
                       Visibility(
                         visible: event.refname != 'N/A' ? true : false,
@@ -693,8 +694,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       ),
                     ],
-                    childrenPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
                   ),
                 ),
               ),
@@ -797,9 +796,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     startingDayOfWeek: StartingDayOfWeek.monday,
                     daysOfWeekVisible: true,
-                    onFormatChanged: (CalendarFormat _format) {
+                    onFormatChanged: (CalendarFormat format) {
                       setState(() {
-                        format = _format;
+                        format = format;
                       });
                     },
                     onDaySelected: (DateTime selectDay, DateTime focusDay) {
@@ -963,6 +962,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       ],
                     ),
+                    childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
                     children: [
                       Visibility(
                         visible: event.refname != 'N/A' ? true : false,
@@ -1043,8 +1044,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       ),
                     ],
-                    childrenPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
                   ),
                 ),
               ),
@@ -1147,9 +1146,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     startingDayOfWeek: StartingDayOfWeek.monday,
                     daysOfWeekVisible: true,
-                    onFormatChanged: (CalendarFormat _format) {
+                    onFormatChanged: (CalendarFormat format) {
                       setState(() {
-                        format = _format;
+                        format = format;
                       });
                     },
                     onDaySelected: (DateTime selectDay, DateTime focusDay) {
@@ -1313,6 +1312,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       ],
                     ),
+                    childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
                     children: [
                       Visibility(
                         visible: event.refname != 'N/A' ? true : false,
@@ -1393,8 +1394,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       ),
                     ],
-                    childrenPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
                   ),
                 ),
               ),

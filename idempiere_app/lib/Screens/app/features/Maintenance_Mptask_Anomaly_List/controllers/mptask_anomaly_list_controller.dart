@@ -27,7 +27,7 @@ class AnomalyListController extends GetxController {
 
   Future<void> getWarehouseDocType() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -63,7 +63,7 @@ class AnomalyListController extends GetxController {
       onCancel: () {},
       onConfirm: () async {
         final ip = GetStorage().read('ip');
-        String authorization = 'Bearer ' + GetStorage().read('token');
+        String authorization = 'Bearer ${GetStorage().read('token')}';
         final msg = jsonEncode({
           "record-id": args["record-id"],
           "model-name": args["model-name"],
@@ -160,13 +160,20 @@ class AnomalyListController extends GetxController {
 
     var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    json.records!.retainWhere(
-        (element) => element.mPMaintainResourceID?.id == args["id"]);
+    print(json.records!.length);
+
+    json.records!.retainWhere((element) =>
+        element.mPMaintainResourceID?.id == args["id"] &&
+        element.isClosed == false);
 
     if (json.records!.isNotEmpty && await checkConnection()) {
       for (var element in json.records!) {
         await getRecordAttachments(element.id!);
       }
+    }
+
+    for (var element in json.records!) {
+      print(element.isClosed);
     }
 
     _trx = json;
@@ -178,7 +185,7 @@ class AnomalyListController extends GetxController {
 
   getAttachmentData(int id, String name) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
@@ -201,7 +208,7 @@ class AnomalyListController extends GetxController {
 
   deleteAttachment(int index, int id, String name) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
@@ -224,7 +231,7 @@ class AnomalyListController extends GetxController {
 
   getRecordAttachments(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(

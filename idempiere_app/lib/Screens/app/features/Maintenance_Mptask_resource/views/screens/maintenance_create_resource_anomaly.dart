@@ -17,6 +17,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/anomaly_image.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_barcode/views/screens/maintenance_mptask_resource_barcode_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
@@ -35,7 +36,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
   createResAnomaly(bool isConnected) async {
     final ip = GetStorage().read('ip');
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/LIT_NC/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/LIT_NC/');
 
     const filename = "anomalies";
     final file = File(
@@ -48,7 +49,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         jsonDecode(file2.readAsStringSync()));
     if (isConnected) {
       String authorization =
-          'Bearer ' + GetStorage().read('token'); //selectedTaskId
+          'Bearer ${GetStorage().read('token')}'; //selectedTaskId
 
       var msg = jsonEncode({
         "AD_Org_ID": {"id": GetStorage().read("organizationid")},
@@ -145,7 +146,20 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           }
         }
         file2.writeAsStringSync(jsonEncode(res.toJson()));
-        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        try {
+          Get.find<MaintenanceMpResourceController>().syncThisWorkOrderResource(
+              GetStorage().read('selectedTaskDocNo'));
+        } catch (e) {
+          print('no page');
+        }
+        try {
+          Get.find<MaintenanceMpResourceBarcodeController>()
+              .syncThisWorkOrderResource(
+                  GetStorage().read('selectedTaskDocNo'));
+        } catch (e) {
+          print('no page');
+        }
+
         var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
         var record =
             ANRecords.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -162,6 +176,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         Get.snackbar(
           "Done!".tr,
           "The record has been created".tr,
+          duration: const Duration(milliseconds: 800),
           icon: const Icon(
             Icons.done,
             color: Colors.green,
@@ -211,7 +226,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
 
       var msg = jsonEncode({
         "offlineid": GetStorage().read('postCallId'),
-        "url": '$protocol://' + ip + '/api/v1/models/LIT_NC/',
+        "url": '$protocol://$ip/api/v1/models/LIT_NC/',
         "AD_Org_ID": {"id": GetStorage().read("organizationid")},
         "AD_Client_ID": {
           "id": GetStorage().read("clientid")
@@ -254,7 +269,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       if (manByCustomer) {
         msg = jsonEncode({
           "offlineid": GetStorage().read('postCallId'),
-          "url": '$protocol://' + ip + '/api/v1/models/LIT_NC/',
+          "url": '$protocol://$ip/api/v1/models/LIT_NC/',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
@@ -286,14 +301,23 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         "The record has been saved locally waiting for internet connection".tr,
         icon: const Icon(
           Icons.save,
-          color: Colors.red,
+          color: Colors.yellow,
         ),
       );
       json.records!.add(record);
       //json.rowcount = json.rowcount! + 1;
       var data = jsonEncode(json.toJson());
       file.writeAsStringSync(data);
-      Get.find<MaintenanceMpResourceController>().getWorkOrders();
+      try {
+        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+      } catch (e) {
+        print("no page");
+      }
+      try {
+        Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
+      } catch (e) {
+        print("no page");
+      }
     }
   }
 
@@ -329,14 +353,14 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
 
   sendTicketAttachedImage(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     for (var element in attachment.attachments!) {
       final msg = jsonEncode({"name": element.name, "data": element.value});
 
-      var url = Uri.parse(
-          '$protocol://' + ip + '/api/v1/models/LIT_NC/$id/attachments');
+      var url =
+          Uri.parse('$protocol://$ip/api/v1/models/LIT_NC/$id/attachments');
 
       var response = await http.post(
         url,
@@ -377,11 +401,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
 
   getLocators() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/M_Locator?\$filter= M_Warehouse_ID eq ${GetStorage().read('warehouseid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Locator?\$filter= M_Warehouse_ID eq ${GetStorage().read('warehouseid')}');
 
     var response = await http.get(
       url,
@@ -438,11 +461,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     }
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/M_StorageOnHand?\$filter= M_Product_ID eq ${args["productId"]} $locId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_StorageOnHand?\$filter= M_Product_ID eq ${args["productId"]} $locId');
 
     var response = await http.get(
       url,
@@ -467,11 +489,9 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
 
   getProductBOM() async {
     /* final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/PP_Product_BOM?\$filter= M_Product_ID eq ${args["productId"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/PP_Product_BOM?\$filter= M_Product_ID eq ${args["productId"]}');
 
     var response = await http.get(
       url,
@@ -519,11 +539,9 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
     final file2 = File(
         '${(await getApplicationDocumentsDirectory()).path}/$filename2.json');
     /* final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/PP_Product_BOMLine?\$filter= PP_Product_BOM_ID eq $id');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/PP_Product_BOMLine?\$filter= PP_Product_BOM_ID eq $id');
 
     var response = await http.get(
       url,
@@ -712,11 +730,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Anomaly Type".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -750,10 +768,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                           items: list
                               .map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name ?? "???",
                                   ),
-                                  value: list.id.toString(),
                                 );
                               })
                               .toSet()
@@ -795,13 +813,13 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Replacement".tr,
                         style: const TextStyle(
                           fontSize: 12,
                         ),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -879,11 +897,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Stock Area".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1050,11 +1068,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Anomaly Type".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1087,10 +1105,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                           items: list
                               .map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name ?? "???",
                                   ),
-                                  value: list.id.toString(),
                                 );
                               })
                               .toSet()
@@ -1131,13 +1149,13 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Replacement".tr,
                         style: const TextStyle(
                           fontSize: 12,
                         ),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1214,11 +1232,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Stock Area".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1316,11 +1334,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Anomaly Type".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1353,10 +1371,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                           items: list
                               .map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name ?? "???",
                                   ),
-                                  value: list.id.toString(),
                                 );
                               })
                               .toSet()
@@ -1397,13 +1415,13 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Replacement".tr,
                         style: const TextStyle(
                           fontSize: 12,
                         ),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1480,11 +1498,11 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Stock Area".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),

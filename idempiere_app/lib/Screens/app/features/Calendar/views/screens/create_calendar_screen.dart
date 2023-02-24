@@ -21,11 +21,10 @@ class CreateCalendarEvent extends StatefulWidget {
 class _CreateCalendarEventState extends State<CreateCalendarEvent> {
   Future<void> getProject() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= AD_User_ID eq $adUserId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= AD_User_ID eq $adUserId');
 
     var response = await http.get(
       url,
@@ -66,11 +65,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
   Future<List<Records>> getAllProjects() async {
     final ip = GetStorage().read('ip');
     String authorization =
-        'Bearer ' + GetStorage().read('token'); //GetStorage().read("clientid")
+        'Bearer ${GetStorage().read('token')}'; //GetStorage().read("clientid")
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_project?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_project?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -97,11 +95,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
 
   Future<void> getProjectBP() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_project?\$filter= C_Project_ID eq $projectId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_project?\$filter= C_Project_ID eq $projectId');
 
     var response = await http.get(
       url,
@@ -131,7 +128,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
 
   createEvent() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -171,7 +168,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
     }
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo/');
 
     //print(msg);
     var response = await http.post(
@@ -333,11 +330,11 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Project".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -533,10 +530,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.id,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.id,
                       );
                     }).toList(),
                   ),
@@ -688,10 +685,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.id,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.id,
                       );
                     }).toList(),
                   ),
@@ -843,10 +840,10 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.id,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.id,
                       );
                     }).toList(),
                   ),

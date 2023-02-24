@@ -242,11 +242,11 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Agente",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -297,11 +297,11 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Status Lead".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 /* Container(
@@ -384,10 +384,10 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                                 }).toList()*/
                                     snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -456,11 +456,11 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Agente",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -511,11 +511,11 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Status Lead".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 /* Container(
@@ -598,10 +598,10 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                                 }).toList()*/
                                     snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -670,11 +670,11 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Agente",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -725,11 +725,11 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Status Lead".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 /* Container(
@@ -812,10 +812,10 @@ class _CreateTrainingCourseScoreState extends State<CreateTrainingCourseScore> {
                                 }).toList()*/
                                     snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )

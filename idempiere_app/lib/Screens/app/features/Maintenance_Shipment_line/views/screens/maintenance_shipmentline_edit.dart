@@ -23,15 +23,15 @@ class _EditMaintenanceShipmentlineState
     extends State<EditMaintenanceShipmentline> {
   editShipment() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "QtyEntered": int.parse(qtyFieldController.text),
       "Description": descriptionFieldController.text,
       "IsSelected": checkboxState,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/m_inoutline/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/m_inoutline/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -68,11 +68,11 @@ class _EditMaintenanceShipmentlineState
 
   deleteShipmentLine() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/m_inoutline/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/m_inoutline/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,

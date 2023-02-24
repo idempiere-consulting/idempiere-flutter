@@ -84,11 +84,11 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Product List: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Product List: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -186,11 +186,11 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Product List: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Product List: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -276,11 +276,11 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Product List: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Product List: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -570,10 +570,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
               ),
               ListTile(
                 title: Text(
-                  "  € " +
-                      (controller.trx.records![index].price != null
-                          ? controller.trx.records![index].price.toString()
-                          : " "),
+                  "  € ${controller.trx.records![index].price != null ? controller.trx.records![index].price.toString() : " "}",
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),

@@ -28,10 +28,9 @@ class EditMaintenanceMptask extends StatefulWidget {
 class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
   deleteWorkOrder() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["id"]}');
     var response = await http.delete(
       url,
       headers: <String, String>{
@@ -67,15 +66,15 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
   editWorkOrderDate() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "JP_ToDo_ScheduledStartDate": dateFieldController.text,
       "JP_ToDo_ScheduledEndDate": dateFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/jp_todo/${args["jpId"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/jp_todo/${args["jpId"]}');
 
     // ignore: unused_local_variable
     var response = await http.put(
@@ -92,7 +91,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     //print(now);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var msg = jsonEncode({
       "Description": noteWOFieldController.text,
       "IsPrinted": sendWorkOrder,
@@ -133,8 +132,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
             double.parse(paidAmtFieldController.text);
       }
 
-      var url =
-          Uri.parse('$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
+      var url = Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["id"]}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -179,12 +177,10 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
         Get.find<MaintenanceMptaskController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
-          calls['$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}'] =
-              msg;
+          calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}'] =
-              msg;
+          calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
         Get.snackbar(
@@ -201,12 +197,11 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
   Future<List<Records>> getAllPaymentRule() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_ref_list?\$filter= AD_Reference_ID eq 195');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_ref_list?\$filter= AD_Reference_ID eq 195');
 
     var response = await http.get(
       url,
@@ -458,11 +453,11 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Payment Rule".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -491,10 +486,10 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )

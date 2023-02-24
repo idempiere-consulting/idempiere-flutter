@@ -37,7 +37,6 @@ class PortalMpMaintenanceMpController extends GetxController {
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
-
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -53,10 +52,10 @@ class PortalMpMaintenanceMpController extends GetxController {
   MPMaintainResourcesJson get trxResources => _trx1;
 
   bool get showResourceDetails => _showResourceDetails.value;
-  set showResourceDetails(show) => _showResourceDetails.value = show; 
-  
-  int get selectedMaintainID=> _selectedMaintainID.value;
-  set selectedMaintainID(id) => _selectedMaintainID.value = id; 
+  set showResourceDetails(show) => _showResourceDetails.value = show;
+
+  int get selectedMaintainID => _selectedMaintainID.value;
+  set selectedMaintainID(id) => _selectedMaintainID.value = id;
 
   //maintenance filter
   late List<Types> maintenanceDropDownList;
@@ -111,11 +110,9 @@ class PortalMpMaintenanceMpController extends GetxController {
 /*   Future<void> getMPMaintain() async {
     await getBusinessPartner();
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/MP_Maintain?\$filter= C_BPartner_ID eq $businessPartnerId ');//mp_ot_ad_user_id eq $userId 
+    var url = Uri.parse('$protocol://$ip/api/v1/models/MP_Maintain?\$filter= C_BPartner_ID eq $businessPartnerId ');//mp_ot_ad_user_id eq $userId 
 
     var response = await http.get(
       url,
@@ -137,11 +134,10 @@ class PortalMpMaintenanceMpController extends GetxController {
     _dataAvailable.value = false;
     await getBusinessPartner();
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_maintain_bploc_v?\$filter= C_BPartner_ID eq $businessPartnerId'); //?\$filter= C_BPartner_ID eq $businessPartnerId  
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_maintain_bploc_v?\$filter= C_BPartner_ID eq $businessPartnerId'); //?\$filter= C_BPartner_ID eq $businessPartnerId
 
     var response = await http.get(
       url,
@@ -151,7 +147,8 @@ class PortalMpMaintenanceMpController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx = LitMaintainJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      _trx =
+          LitMaintainJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx.records!.isNotEmpty;
     } else {
@@ -163,10 +160,10 @@ class PortalMpMaintenanceMpController extends GetxController {
     _dataAvailable1.value = false;
     var maintainId = _selectedMaintainID;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/MP_Maintain_Resource?\$filter= MP_Maintain_ID eq $maintainId');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/MP_Maintain_Resource?\$filter= MP_Maintain_ID eq $maintainId');
 
     var response = await http.get(
       url,
@@ -176,7 +173,8 @@ class PortalMpMaintenanceMpController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx1 = MPMaintainResourcesJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      _trx1 = MPMaintainResourcesJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
 
       _dataAvailable1.value = _trx1.records!.isNotEmpty;
     } else {
@@ -188,10 +186,10 @@ class PortalMpMaintenanceMpController extends GetxController {
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -247,6 +245,7 @@ class PortalMpMaintenanceMpController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -391,7 +390,7 @@ class PortalMpMaintenanceMpController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(
@@ -409,7 +408,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

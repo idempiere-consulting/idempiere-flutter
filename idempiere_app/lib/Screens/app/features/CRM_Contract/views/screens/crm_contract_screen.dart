@@ -82,11 +82,11 @@ class CRMContractScreen extends GetView<CRMContractController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("CONTRACTS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("CONTRACTS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -151,10 +151,10 @@ class CRMContractScreen extends GetView<CRMContractController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),

@@ -33,6 +33,7 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: depend_on_referenced_packages
 import 'package:pdf/pdf.dart';
 
 import 'package:flutter/material.dart';
@@ -95,11 +96,11 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Shipment: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Shipment: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -333,7 +334,6 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                                   ?.id ==
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Reopen".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -352,6 +352,7 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                                 },
                                               );
                                             },
+                                            child: Text("Reopen".tr),
                                           ),
                                         ),
                                         Visibility(
@@ -362,7 +363,6 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                                   ?.id !=
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Complete".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -381,6 +381,7 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                                 },
                                               );
                                             },
+                                            child: Text("Complete".tr),
                                           ),
                                         ),
                                       ],
@@ -407,11 +408,11 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Shipment: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Shipment: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -600,11 +601,11 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Shipment: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Shipment: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),

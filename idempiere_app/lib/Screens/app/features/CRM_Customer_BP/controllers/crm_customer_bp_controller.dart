@@ -67,7 +67,7 @@ class CRMCustomerBPController extends GetxController {
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -121,7 +121,7 @@ class CRMCustomerBPController extends GetxController {
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -295,7 +295,7 @@ class CRMCustomerBPController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getCustomers() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(

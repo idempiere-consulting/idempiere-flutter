@@ -27,7 +27,7 @@ class _PriceListDetailState extends State<PriceListDetail>
     with TickerProviderStateMixin {
   Future<void> getProduct() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -185,14 +185,14 @@ class _PriceListDetailState extends State<PriceListDetail>
                       margin: const EdgeInsets.all(10),
                       child: ElevatedButton(
                         onPressed: () {},
-                        child: flagAvailable
-                            ? Text("Available".tr)
-                            : Text("Not Available".tr),
                         style: ButtonStyle(
                           backgroundColor: flagAvailable
                               ? MaterialStateProperty.all(Colors.green)
                               : MaterialStateProperty.all(Colors.red),
                         ),
+                        child: flagAvailable
+                            ? Text("Available".tr)
+                            : Text("Not Available".tr),
                       )),
                 ),
               ],
@@ -260,14 +260,14 @@ class _PriceListDetailState extends State<PriceListDetail>
                       margin: const EdgeInsets.all(10),
                       child: ElevatedButton(
                         onPressed: () {},
-                        child: flagAvailable
-                            ? Text("Available".tr)
-                            : Text("Not Available".tr),
                         style: ButtonStyle(
                           backgroundColor: flagAvailable
                               ? MaterialStateProperty.all(Colors.green)
                               : MaterialStateProperty.all(Colors.red),
                         ),
+                        child: flagAvailable
+                            ? Text("Available".tr)
+                            : Text("Not Available".tr),
                       )),
                 ),
               ],
@@ -551,14 +551,14 @@ class _PriceListDetailState extends State<PriceListDetail>
                   }
                 }
               },
-              child: flagAvailable
-                  ? Text("Add to Basket".tr)
-                  : Text("Not Available".tr),
               style: ButtonStyle(
                 backgroundColor: flagAvailable
                     ? MaterialStateProperty.all(Colors.green)
                     : MaterialStateProperty.all(Colors.red),
               ),
+              child: flagAvailable
+                  ? Text("Add to Basket".tr)
+                  : Text("Not Available".tr),
             ),
           ),
         ],

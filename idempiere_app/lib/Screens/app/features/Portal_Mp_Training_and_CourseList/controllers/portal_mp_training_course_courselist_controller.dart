@@ -95,7 +95,7 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -126,7 +126,7 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
     _dataAvailable.value = false;
     //final adUserId = GetStorage().read('userId');
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -151,7 +151,7 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
     _dataAvailable1.value = false;
     //final adUserId = GetStorage().read('userId');
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -353,7 +353,7 @@ class PortalMpTrainingCourseCourseListController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(

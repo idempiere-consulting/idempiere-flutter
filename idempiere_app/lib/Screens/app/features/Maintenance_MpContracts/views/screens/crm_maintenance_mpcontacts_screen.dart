@@ -91,11 +91,11 @@ class MaintenanceMpContractsScreen
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text(
                               "${"Plant Maint.".tr}: ${controller._trx.records!.length}")
                           : Text("${"Plant Maint.".tr}: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 15),
@@ -160,10 +160,10 @@ class MaintenanceMpContractsScreen
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -639,8 +639,6 @@ class MaintenanceMpContractsScreen
                                               overflowButtonSpacing: 5,
                                               children: [
                                                 ElevatedButton(
-                                                  child: Text(
-                                                      "Create Work Order".tr),
                                                   style: ButtonStyle(
                                                     backgroundColor:
                                                         MaterialStateProperty
@@ -650,6 +648,8 @@ class MaintenanceMpContractsScreen
                                                     controller
                                                         .createWorkOrder(index);
                                                   },
+                                                  child: Text(
+                                                      "Create Work Order".tr),
                                                 ),
                                               ],
                                             )
@@ -729,10 +729,10 @@ class MaintenanceMpContractsScreen
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("CONTRACTS: ${controller.trx.rowcount}")
                           : const Text("CONTRACTS: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -796,10 +796,10 @@ class MaintenanceMpContractsScreen
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -1088,10 +1088,10 @@ class MaintenanceMpContractsScreen
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("CONTRACTS: ${controller.trx.rowcount}")
                           : const Text("CONTRACTS: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -1155,10 +1155,10 @@ class MaintenanceMpContractsScreen
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),

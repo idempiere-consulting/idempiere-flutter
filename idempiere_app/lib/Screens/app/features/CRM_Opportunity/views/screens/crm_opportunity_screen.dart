@@ -85,11 +85,11 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("OPPORTUNITY: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("OPPORTUNITY: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -152,10 +152,10 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -405,8 +405,6 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               ElevatedButton(
-                                                child: Text(
-                                                    "Create Sales Order".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -468,6 +466,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                     },
                                                   );
                                                 },
+                                                child: Text(
+                                                    "Create Sales Order".tr),
                                               ),
                                             ],
                                           ),
@@ -496,11 +496,11 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("OPPORTUNITY: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("OPPORTUNITY: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -563,10 +563,10 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -834,11 +834,11 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("OPPORTUNITY: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("OPPORTUNITY: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -901,10 +901,10 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),

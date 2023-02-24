@@ -94,7 +94,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
 
   sendAttachedImage(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final msg = jsonEncode({
       "name": "signature.jpg",
@@ -124,7 +124,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
 
   sendAttachedImageOffline(int id) async {
     final ip = GetStorage().read('ip');
-    //String authorization = 'Bearer ' + GetStorage().read('token');
+    //String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     //record.offlineId = GetStorage().read('postCallId');
@@ -159,7 +159,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
 
   sendSurveyLines() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     for (var i = 0; i < isChecked.length; i++) {
       var msg = jsonEncode({"LIT_IsField1": isChecked[i]});
@@ -241,7 +241,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "id": Get.arguments["id"],
       "Mp_Maintain_Task_ID": GetStorage().read('selectedTaskId'),

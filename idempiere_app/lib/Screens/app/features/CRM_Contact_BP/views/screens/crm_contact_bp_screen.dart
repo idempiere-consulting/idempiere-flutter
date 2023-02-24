@@ -83,11 +83,11 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("CONTACTS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("CONTACTS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -152,10 +152,10 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -421,11 +421,11 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("CONTACTS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("CONTACTS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -489,10 +489,10 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -728,11 +728,11 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("CONTACTS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("CONTACTS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -796,10 +796,10 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),

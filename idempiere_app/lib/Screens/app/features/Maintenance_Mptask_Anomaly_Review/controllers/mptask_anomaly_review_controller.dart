@@ -24,7 +24,7 @@ class AnomalyReviewController extends GetxController {
 
   Future<void> getWarehouseDocType() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -60,7 +60,7 @@ class AnomalyReviewController extends GetxController {
       onCancel: () {},
       onConfirm: () async {
         final ip = GetStorage().read('ip');
-        String authorization = 'Bearer ' + GetStorage().read('token');
+        String authorization = 'Bearer ${GetStorage().read('token')}';
         final msg = jsonEncode({
           "record-id": args["record-id"],
           "model-name": args["model-name"],
@@ -159,11 +159,11 @@ class AnomalyReviewController extends GetxController {
       }
     } */
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/LIT_NC?\$filter= MP_OT_ID eq ${args["id"]} and C_Order_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}');
+        '/api/v1/models/LIT_NC?\$filter= MP_OT_ID eq ${args["id"]} and IsClosed eq N and C_Order_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{

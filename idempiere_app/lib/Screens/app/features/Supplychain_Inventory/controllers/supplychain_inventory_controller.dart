@@ -19,7 +19,7 @@ class SupplychainInventoryController extends GetxController {
   completeInventory(int index) async {
     Get.back();
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "record-id": _trx.records![index].id,
     });
@@ -68,7 +68,7 @@ class SupplychainInventoryController extends GetxController {
     String formattedthirtyDaysAgo = formatter.format(thirtyDaysAgo);
     String formattedNow = formatter.format(now);
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -93,7 +93,7 @@ class SupplychainInventoryController extends GetxController {
 
   Future<void> getDocType() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +

@@ -60,7 +60,7 @@ class SupplychainLoadUnloadScreen
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/processes/m-inventory-process');
+        '${'$protocol://' + ip}/api/v1/processes/m-inventory-process');
 
     var response = await http.post(
       url,
@@ -110,12 +110,13 @@ class SupplychainLoadUnloadScreen
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -130,11 +131,11 @@ class SupplychainLoadUnloadScreen
                 Row(
                   children: [
                     Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Load & Unload".tr +
-                              ": ${controller.trx.rowcount}")
-                          : Text("Load & Unload".tr)),
                       margin: const EdgeInsets.only(left: 15),
+                      child: Obx(() => controller.dataAvailable
+                          ? Text(
+                              "${"Load & Unload".tr}: ${controller.trx.rowcount}")
+                          : Text("Load & Unload".tr)),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -293,7 +294,6 @@ class SupplychainLoadUnloadScreen
                                                       ?.id !=
                                                   'CO',
                                               child: ElevatedButton(
-                                                child: Text("Complete".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -321,9 +321,7 @@ class SupplychainLoadUnloadScreen
                                                           GetStorage()
                                                               .read('protocol');
                                                       var url = Uri.parse(
-                                                          '$protocol://' +
-                                                              ip +
-                                                              '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+                                                          '${'$protocol://' + ip}/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
 
                                                       var response =
                                                           await http.put(
@@ -358,6 +356,7 @@ class SupplychainLoadUnloadScreen
                                                     },
                                                   );
                                                 },
+                                                child: Text("Complete".tr),
                                               ),
                                             ),
                                           ],
@@ -386,11 +385,11 @@ class SupplychainLoadUnloadScreen
                 Row(
                   children: [
                     Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Load & Unload".tr +
-                              ": ${controller.trx.rowcount}")
-                          : Text("Load & Unload".tr)),
                       margin: const EdgeInsets.only(left: 15),
+                      child: Obx(() => controller.dataAvailable
+                          ? Text(
+                              "${"Load & Unload".tr}: ${controller.trx.rowcount}")
+                          : Text("Load & Unload".tr)),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -549,7 +548,6 @@ class SupplychainLoadUnloadScreen
                                                       ?.id !=
                                                   'CO',
                                               child: ElevatedButton(
-                                                child: Text("Complete".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -577,9 +575,7 @@ class SupplychainLoadUnloadScreen
                                                           GetStorage()
                                                               .read('protocol');
                                                       var url = Uri.parse(
-                                                          '$protocol://' +
-                                                              ip +
-                                                              '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+                                                          '${'$protocol://' + ip}/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
 
                                                       var response =
                                                           await http.put(
@@ -614,6 +610,7 @@ class SupplychainLoadUnloadScreen
                                                     },
                                                   );
                                                 },
+                                                child: Text("Complete".tr),
                                               ),
                                             ),
                                           ],
@@ -642,11 +639,11 @@ class SupplychainLoadUnloadScreen
                 Row(
                   children: [
                     Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Load & Unload".tr +
-                              ": ${controller.trx.rowcount}")
-                          : Text("Load & Unload".tr)),
                       margin: const EdgeInsets.only(left: 15),
+                      child: Obx(() => controller.dataAvailable
+                          ? Text(
+                              "${"Load & Unload".tr}: ${controller.trx.rowcount}")
+                          : Text("Load & Unload".tr)),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -805,7 +802,6 @@ class SupplychainLoadUnloadScreen
                                                       ?.id !=
                                                   'CO',
                                               child: ElevatedButton(
-                                                child: Text("Complete".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -833,9 +829,7 @@ class SupplychainLoadUnloadScreen
                                                           GetStorage()
                                                               .read('protocol');
                                                       var url = Uri.parse(
-                                                          '$protocol://' +
-                                                              ip +
-                                                              '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+                                                          '${'$protocol://' + ip}/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
 
                                                       var response =
                                                           await http.put(
@@ -870,6 +864,7 @@ class SupplychainLoadUnloadScreen
                                                     },
                                                   );
                                                 },
+                                                child: Text("Complete".tr),
                                               ),
                                             ),
                                           ],

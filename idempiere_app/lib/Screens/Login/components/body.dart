@@ -48,7 +48,7 @@ class _BodyState extends State<Body> {
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
     final protocol = GetStorage().read('protocol');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId');
@@ -145,7 +145,7 @@ class _BodyState extends State<Body> {
     if (isConnected) {
       GetStorage().write("isOffline", false);
       final protocol = GetStorage().read('protocol');
-      var url = Uri.parse('$protocol://' + ip + '/api/v1/auth/tokens');
+      var url = Uri.parse('$protocol://$ip/api/v1/auth/tokens');
       final msg = jsonEncode({
         "userName": userFieldController.text,
         "password": passwordFieldController.text
@@ -183,7 +183,7 @@ class _BodyState extends State<Body> {
           String warehouseid = GetStorage().read('warehouseid');
           String authorization = 'Bearer ' + GetStorage().read('token1');
 
-          var url = Uri.parse('$protocol://' + ip + '/api/v1/auth/tokens');
+          var url = Uri.parse('$protocol://$ip/api/v1/auth/tokens');
           final msg = jsonEncode({
             "clientId": clientid,
             "roleId": roleid,

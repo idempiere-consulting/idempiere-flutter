@@ -22,7 +22,7 @@ class _EditTrainingCoursePresenceState
     extends State<EditTrainingCoursePresence> {
   editLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -50,7 +50,7 @@ class _EditTrainingCoursePresenceState
       //print("done!");
       Get.snackbar(
         "Done!".tr,
-        "The record has been updated" .tr,
+        "The record has been updated".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -59,7 +59,7 @@ class _EditTrainingCoursePresenceState
     } else {
       Get.snackbar(
         "Error!".tr,
-        "Record not updated" .tr,
+        "Record not updated".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -70,7 +70,7 @@ class _EditTrainingCoursePresenceState
 
   deleteLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url =
         Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
@@ -109,7 +109,7 @@ class _EditTrainingCoursePresenceState
 
   Future<List<LSRecords>> getAllLeadStatuses() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -135,7 +135,7 @@ class _EditTrainingCoursePresenceState
 
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
@@ -310,11 +310,11 @@ class _EditTrainingCoursePresenceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Agente",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -367,11 +367,11 @@ class _EditTrainingCoursePresenceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Stato Lead",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -400,10 +400,10 @@ class _EditTrainingCoursePresenceState
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -472,11 +472,11 @@ class _EditTrainingCoursePresenceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Agente",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -529,11 +529,11 @@ class _EditTrainingCoursePresenceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Stato Lead",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -562,10 +562,10 @@ class _EditTrainingCoursePresenceState
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -634,11 +634,11 @@ class _EditTrainingCoursePresenceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Agente",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -691,11 +691,11 @@ class _EditTrainingCoursePresenceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Stato Lead",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -724,10 +724,10 @@ class _EditTrainingCoursePresenceState
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )

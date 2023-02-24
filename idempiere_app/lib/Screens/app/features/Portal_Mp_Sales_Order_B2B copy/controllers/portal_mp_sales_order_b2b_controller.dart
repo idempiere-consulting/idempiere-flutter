@@ -115,10 +115,10 @@ class PortalMpSalesOrderB2BController extends GetxController {
   Future<void> getBusinessPartner() async {
     var userId = GetStorage().read("userId");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -155,11 +155,10 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   getProductCategories() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_prod_category_v?\$filter= IsSummary eq Y and IsSelfService eq Y');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_prod_category_v?\$filter= IsSummary eq Y and IsSelfService eq Y');
 
     var response = await http.get(
       url,
@@ -186,11 +185,10 @@ class PortalMpSalesOrderB2BController extends GetxController {
     productFilterAvailable.value = false;
     productsAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id');
 
     var response = await http.get(
       url,
@@ -262,15 +260,12 @@ class PortalMpSalesOrderB2BController extends GetxController {
     //productFilterAvailable.value = false;
     productsAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter');
 
-    /* print('$protocol://' +
-        ip +
-        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter'); */
+    /* print('$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter'); */
 
     var response = await http.get(
       url,
@@ -299,15 +294,12 @@ class PortalMpSalesOrderB2BController extends GetxController {
     //productFilterAvailable.value = false;
     productsAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_product_list_v?\$filter= contains(tolower(value),\'${searchFieldController.text}\')');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= contains(tolower(value),\'${searchFieldController.text}\')');
 
-    /* print('$protocol://' +
-        ip +
-        '/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter'); */
+    /* print('$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter'); */
 
     var response = await http.get(
       url,
@@ -335,11 +327,10 @@ class PortalMpSalesOrderB2BController extends GetxController {
     productDetailAvailable.value = false;
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter= M_Product_ID eq $id');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter= M_Product_ID eq $id');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -381,11 +372,10 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   Future<void> getDefaultPaymentTermsFromBP() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BPartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BPartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -422,6 +412,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
   //print(json.);
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

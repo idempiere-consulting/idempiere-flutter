@@ -20,7 +20,7 @@ class EditShipmentline extends StatefulWidget {
 class _EditShipmentlineState extends State<EditShipmentline> {
   editShipment() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "QtyEntered": int.parse(qtyFieldController.text),
       "Description": descriptionFieldController.text,
@@ -65,7 +65,7 @@ class _EditShipmentlineState extends State<EditShipmentline> {
 
   deleteShipmentLine() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(

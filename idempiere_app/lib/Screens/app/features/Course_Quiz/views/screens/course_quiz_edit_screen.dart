@@ -22,7 +22,7 @@ class EditMaintenanceMptask extends StatefulWidget {
 class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
   deleteWorkOrder() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url =
         Uri.parse('$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
@@ -63,7 +63,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     //print(now);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -115,7 +115,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
   getResourceName() async {
     final userId = GetStorage().read('userId');
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -140,7 +140,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
   getSelectedBPLocation(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -175,7 +175,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
   getDocType() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -200,7 +200,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
   Future<List<BPRecords>> getAllBusinessPartners() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_bpartner');
     var response = await http.get(
@@ -221,7 +221,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
   Future<List<RRecords>> getAllResources() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/s_resource');
     var response = await http.get(
@@ -250,7 +250,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
 
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
@@ -411,11 +411,11 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Resource".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -468,11 +468,11 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -571,11 +571,11 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Resource".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -628,11 +628,11 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -731,11 +731,11 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Resource".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -788,11 +788,11 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(

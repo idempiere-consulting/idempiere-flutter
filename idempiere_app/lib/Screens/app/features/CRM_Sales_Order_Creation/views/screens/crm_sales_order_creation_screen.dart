@@ -318,11 +318,11 @@ class CRMSalesOrderCreationScreen
                       margin: const EdgeInsets.only(top: 40),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Business Partner".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -387,11 +387,11 @@ class CRMSalesOrderCreationScreen
                       margin: const EdgeInsets.only(top: 30),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Document Type".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -420,10 +420,10 @@ class CRMSalesOrderCreationScreen
                               },
                               items: controller.dropDownList.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.id.toString(),
                                 );
                               }).toList(),
                             )
@@ -545,11 +545,7 @@ class CRMSalesOrderCreationScreen
                                                       .spaceBetween,
                                               children: <Widget>[
                                                 Text(
-                                                  "€ " +
-                                                      controller
-                                                          .productList[index]
-                                                          .cost
-                                                          .toString(),
+                                                  "€ ${controller.productList[index].cost}",
                                                   style: const TextStyle(
                                                       fontSize: 15,
                                                       fontWeight:
@@ -624,11 +620,11 @@ class CRMSalesOrderCreationScreen
                       margin: const EdgeInsets.only(top: 30),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Location".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -657,10 +653,10 @@ class CRMSalesOrderCreationScreen
                               },
                               items: controller.bpLocation.records!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.id.toString(),
                                 );
                               }).toList(),
                             )
@@ -677,11 +673,11 @@ class CRMSalesOrderCreationScreen
                       margin: const EdgeInsets.only(top: 30),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Payment Term".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -710,10 +706,10 @@ class CRMSalesOrderCreationScreen
                               },
                               items: controller.pTerms.records!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.id.toString(),
                                 );
                               }).toList(),
                             )
@@ -730,11 +726,11 @@ class CRMSalesOrderCreationScreen
                       margin: const EdgeInsets.only(top: 30),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Payment Rule".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -763,10 +759,10 @@ class CRMSalesOrderCreationScreen
                               },
                               items: controller.pRules.records!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.value,
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.value,
                                 );
                               }).toList(),
                             )
@@ -1025,7 +1021,7 @@ class CRMSalesOrderCreationScreen
               ),
               ListTile(
                 title: Text(
-                  "  €" + controller.trx.records![index].price.toString(),
+                  "  €${controller.trx.records![index].price}",
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),

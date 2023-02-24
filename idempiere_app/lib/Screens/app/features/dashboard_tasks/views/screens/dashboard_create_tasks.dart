@@ -24,7 +24,7 @@ class CreateDashboardTasks extends StatefulWidget {
 class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
   createEvent() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -134,7 +134,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
 
   Future<void> getProject() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -178,7 +178,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
 
   Future<void> getProjectBP() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -213,7 +213,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
   Future<List<Records>> getAllProjects() async {
     final ip = GetStorage().read('ip');
     String authorization =
-        'Bearer ' + GetStorage().read('token'); //GetStorage().read("clientid")
+        'Bearer ${GetStorage().read('token')}'; //GetStorage().read("clientid")
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -387,11 +387,11 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Project".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -556,10 +556,10 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.id,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.id,
                       );
                     }).toList(),
                   ),
@@ -612,11 +612,11 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Project".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -781,10 +781,10 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.id,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.id,
                       );
                     }).toList(),
                   ),
@@ -837,11 +837,11 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Project".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1006,10 +1006,10 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.id,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.id,
                       );
                     }).toList(),
                   ),

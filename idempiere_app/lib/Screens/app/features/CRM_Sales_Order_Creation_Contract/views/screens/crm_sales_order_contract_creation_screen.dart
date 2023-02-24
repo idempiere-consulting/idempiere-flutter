@@ -321,11 +321,11 @@ class CRMSalesOrderContractCreationScreen
                       margin: const EdgeInsets.only(top: 40),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Business Partner".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -483,11 +483,11 @@ class CRMSalesOrderContractCreationScreen
                       margin: const EdgeInsets.only(top: 10),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "SalesRep".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -553,11 +553,11 @@ class CRMSalesOrderContractCreationScreen
                       margin: const EdgeInsets.only(top: 10),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Organization".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -623,11 +623,11 @@ class CRMSalesOrderContractCreationScreen
                       margin: const EdgeInsets.only(top: 10),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Document Type".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -757,12 +757,12 @@ class CRMSalesOrderContractCreationScreen
                     child: Container(
                       padding: const EdgeInsets.only(left: 40),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Search by product".tr,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -945,11 +945,11 @@ class CRMSalesOrderContractCreationScreen
                       margin: const EdgeInsets.only(top: 30),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Payment Term".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -978,10 +978,10 @@ class CRMSalesOrderContractCreationScreen
                               },
                               items: controller.pTerms.records!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.id.toString(),
                                 );
                               }).toList(),
                             )
@@ -998,11 +998,11 @@ class CRMSalesOrderContractCreationScreen
                       margin: const EdgeInsets.only(top: 30),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Payment Rule".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -1031,10 +1031,10 @@ class CRMSalesOrderContractCreationScreen
                               },
                               items: controller.pRules.records!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.value,
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.value,
                                 );
                               }).toList(),
                             )
@@ -1132,11 +1132,7 @@ class CRMSalesOrderContractCreationScreen
                                                       .spaceBetween,
                                               children: <Widget>[
                                                 Text(
-                                                  "€ " +
-                                                      controller
-                                                          .productList[index]
-                                                          .cost
-                                                          .toString(),
+                                                  "€ ${controller.productList[index].cost}",
                                                   style: const TextStyle(
                                                       fontSize: 15,
                                                       fontWeight:

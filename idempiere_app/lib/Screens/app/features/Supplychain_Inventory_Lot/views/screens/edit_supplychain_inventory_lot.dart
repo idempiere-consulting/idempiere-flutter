@@ -20,7 +20,7 @@ class _EditSupplychainInventoryLotState
     extends State<EditSupplychainInventoryLot> {
   editInventory() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -64,7 +64,7 @@ class _EditSupplychainInventoryLotState
   //deleteInventory()
   /* deleteInventory() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url =
         Uri.parse('$protocol://' + ip + '/api/v1/models/M_Inventory/${args['id']}');

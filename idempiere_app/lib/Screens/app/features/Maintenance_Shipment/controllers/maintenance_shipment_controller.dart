@@ -59,11 +59,10 @@ class MaintenanceShipmentController extends GetxController {
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -119,11 +118,10 @@ class MaintenanceShipmentController extends GetxController {
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"]; */
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_shipment_v?\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&\$orderby= MovementDate desc'); //?\$filter= AD_User2_ID eq $adUserId or SalesRep_ID eq $adUserId&\$orderby= MovementDate desc
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&\$orderby= MovementDate desc'); //?\$filter= AD_User2_ID eq $adUserId or SalesRep_ID eq $adUserId&\$orderby= MovementDate desc
 
     var response = await http.get(
       url,
@@ -154,7 +152,7 @@ class MaintenanceShipmentController extends GetxController {
 
   reopenProcess(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var msg = jsonEncode({
       "record-id": _trx.records![index].id,
       //"C_DocType_ID": _trx.records![index].cDocTypeID?.id ,
@@ -162,9 +160,8 @@ class MaintenanceShipmentController extends GetxController {
 
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/processes/scriptclosedtodraftedshipmreceipt');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/processes/scriptclosedtodraftedshipmreceipt');
 
     var response = await http.post(
       url,
@@ -205,11 +202,10 @@ class MaintenanceShipmentController extends GetxController {
   completeShipment(int index) async {
     Get.back();
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_inout/${_trx.records![index].id}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_inout/${_trx.records![index].id}');
 
     var msg = jsonEncode({
       'DocStatus': {"id": "CO"}
@@ -241,10 +237,10 @@ class MaintenanceShipmentController extends GetxController {
 
   Future<void> getBusinessPartner(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -274,11 +270,10 @@ class MaintenanceShipmentController extends GetxController {
     //String? isConnected = await BluetoothThermalPrinter.connectionStatus;
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/M_InOutLine?\$filter= M_InOut_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_InOutLine?\$filter= M_InOut_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
     //print(Get.arguments["id"]);
     var response = await http.get(
       url,
@@ -309,11 +304,10 @@ class MaintenanceShipmentController extends GetxController {
 
   Future<void> getDocument(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/shipment-customer/${_trx.records![index].id}/print');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/shipment-customer/${_trx.records![index].id}/print');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -346,11 +340,10 @@ class MaintenanceShipmentController extends GetxController {
     //late SalesOrderLineJson json;
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
     //print(Get.arguments["id"]);
     var response = await http.get(
       url,
@@ -411,10 +404,10 @@ class MaintenanceShipmentController extends GetxController {
     bytes += generator.hr();
 
     bytes += generator.text(
-        "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
+        "${"Document Type: ".tr}${trx.records![index].cDocTypeID!.identifier}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text(
-        'Document: '.tr + '${trx.records![index].documentNo} $formattedDate',
+        '${'Document: '.tr}${trx.records![index].documentNo} $formattedDate',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 1);
 
@@ -527,6 +520,7 @@ class MaintenanceShipmentController extends GetxController {
   }
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -671,7 +665,7 @@ class MaintenanceShipmentController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getShipments() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(
@@ -689,7 +683,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

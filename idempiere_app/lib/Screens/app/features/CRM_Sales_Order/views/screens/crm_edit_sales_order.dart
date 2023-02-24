@@ -28,7 +28,7 @@ class CRMEditSalesOrder extends StatefulWidget {
 class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
   editSalesOrder() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       //"bPartner": bPartnerFieldController.text,
       "DocumentNo": docNoFieldController.text,
@@ -78,7 +78,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
 
   deleteCustomer() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url =
         Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
@@ -117,7 +117,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
 
   Future<List<DTRecords>> getAllDocType() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -143,7 +143,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
 
   Future<List<BPLRecords>> getBPLocations() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -174,7 +174,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     });
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -341,11 +341,11 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Document Type'.tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -374,10 +374,10 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -389,11 +389,11 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Business Partner Location'.tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -422,10 +422,10 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -438,11 +438,11 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                   margin: const EdgeInsets.only(top: 30),
                   padding: const EdgeInsets.only(left: 20),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Payment Rule".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -466,10 +466,10 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                           },
                           items: pRules.records!.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.value,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.value,
                             );
                           }).toList(),
                         )
@@ -532,11 +532,11 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Document Type'.tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -565,10 +565,10 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -580,11 +580,11 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Business Partner Location'.tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -613,10 +613,10 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -649,11 +649,11 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Document Type'.tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -682,10 +682,10 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -697,11 +697,11 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Business Partner Location'.tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -730,10 +730,10 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )

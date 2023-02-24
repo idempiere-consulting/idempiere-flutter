@@ -237,11 +237,11 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
               Container(
                 padding: const EdgeInsets.only(left: 40),
                 child: Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
                     'Gruppo Business Partner'.tr,
                     style: const TextStyle(fontSize: 12),
                   ),
-                  alignment: Alignment.centerLeft,
                 ),
               ),
               Container(
@@ -270,10 +270,10 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                               },
                               items: snapshot.data!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.id.toString(),
                                 );
                               }).toList(),
                             )
@@ -317,11 +317,11 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
               Container(
                 padding: const EdgeInsets.only(left: 40),
                 child: Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
                     'Gruppo Business Partner'.tr,
                     style: const TextStyle(fontSize: 12),
                   ),
-                  alignment: Alignment.centerLeft,
                 ),
               ),
               Container(
@@ -350,10 +350,10 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                               },
                               items: snapshot.data!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.id.toString(),
                                 );
                               }).toList(),
                             )
@@ -397,11 +397,11 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
               Container(
                 padding: const EdgeInsets.only(left: 40),
                 child: Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
                     'Gruppo Business Partner'.tr,
                     style: const TextStyle(fontSize: 12),
                   ),
-                  alignment: Alignment.centerLeft,
                 ),
               ),
               Container(
@@ -430,10 +430,10 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                               },
                               items: snapshot.data!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.id.toString(),
                                 );
                               }).toList(),
                             )

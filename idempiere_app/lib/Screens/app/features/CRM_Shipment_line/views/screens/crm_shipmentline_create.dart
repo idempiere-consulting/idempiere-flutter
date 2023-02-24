@@ -23,7 +23,7 @@ class CreateShipmentline extends StatefulWidget {
 class _CreateShipmentlineState extends State<CreateShipmentline> {
   createShipment() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "QtyEntered": int.parse(qtyFieldController.text),
       "Description": descriptionFieldController.text,
@@ -76,7 +76,7 @@ class _CreateShipmentlineState extends State<CreateShipmentline> {
 
   deleteShipmentLine() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
@@ -119,7 +119,7 @@ class _CreateShipmentlineState extends State<CreateShipmentline> {
 
   /* windowsAAA() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +

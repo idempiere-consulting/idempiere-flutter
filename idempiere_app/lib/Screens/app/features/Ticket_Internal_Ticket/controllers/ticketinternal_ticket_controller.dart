@@ -46,7 +46,7 @@ class TicketInternalTicketController extends GetxController {
 
   getAllticketTypeID() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
 
@@ -81,7 +81,7 @@ class TicketInternalTicketController extends GetxController {
 
   getTicketAttachment(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
@@ -130,7 +130,7 @@ class TicketInternalTicketController extends GetxController {
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -159,7 +159,7 @@ class TicketInternalTicketController extends GetxController {
 
   Future<void> getClosedTicketsID() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/R_Status?\$filter= Value eq \'R98\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -188,7 +188,7 @@ class TicketInternalTicketController extends GetxController {
   Future<void> getTicketTypes() async {
     //var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -256,7 +256,7 @@ class TicketInternalTicketController extends GetxController {
     }
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -280,7 +280,7 @@ class TicketInternalTicketController extends GetxController {
 
   Future<void> closeTicket(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "R_Status_ID": 1000024,
     });
@@ -465,7 +465,7 @@ class TicketInternalTicketController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(

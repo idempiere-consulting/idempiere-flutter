@@ -40,7 +40,7 @@ class _CreateSupplychainInventoryLotLineState
 
   Future<void> getInstAttr(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -84,7 +84,7 @@ class _CreateSupplychainInventoryLotLineState
 
   Future<void> createInventoryLine(int type) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -257,11 +257,11 @@ class _CreateSupplychainInventoryLotLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -346,11 +346,11 @@ class _CreateSupplychainInventoryLotLineState
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Attribute Instance".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -382,13 +382,13 @@ class _CreateSupplychainInventoryLotLineState
                             items: attrList.records!
                                 .map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
                                     child: Text(
                                       list.mAttributeSetInstanceID
                                               ?.identifier ??
                                           "???",
                                     ),
-                                    value: list.mAttributeSetInstanceID?.id
-                                        .toString(),
                                   );
                                 })
                                 .toSet()
@@ -411,11 +411,11 @@ class _CreateSupplychainInventoryLotLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -503,11 +503,11 @@ class _CreateSupplychainInventoryLotLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(

@@ -21,7 +21,7 @@ class EditContactBP extends StatefulWidget {
 class _EditContactBPState extends State<EditContactBP> {
   editContactBP() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -67,7 +67,7 @@ class _EditContactBPState extends State<EditContactBP> {
 
   deleteLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url =
         Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
@@ -106,7 +106,7 @@ class _EditContactBPState extends State<EditContactBP> {
 
   Future<List<LSRecords>> getAllLeadStatuses() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +

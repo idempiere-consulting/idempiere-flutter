@@ -30,7 +30,7 @@ class PortalMpContractController extends GetxController {
   var _contractId = 0.obs;
   // ignore: prefer_final_fields
   var _showData = false.obs;
-  
+
   late List<Types> contractDropDownList;
 
   final contractJson = {
@@ -62,7 +62,7 @@ class PortalMpContractController extends GetxController {
     //getADUserID();
     adUserId = GetStorage().read('userId');
   }
-  
+
   List<Types>? getTypes(json) {
     var dJson = TypeJson.fromJson(json);
 
@@ -93,7 +93,7 @@ class PortalMpContractController extends GetxController {
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -119,11 +119,10 @@ class PortalMpContractController extends GetxController {
     }
   }
 
-
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse(
         'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
@@ -151,7 +150,7 @@ class PortalMpContractController extends GetxController {
     _showData.value = false;
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -164,17 +163,17 @@ class PortalMpContractController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx = PortalMPContractJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      _trx = PortalMPContractJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx.records!.isNotEmpty;
     }
-
   }
 
   Future<void> getContractLines() async {
     _showData.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -187,15 +186,15 @@ class PortalMpContractController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx1 = PortalMPContractLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      
+      _trx1 = PortalMPContractLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
       _showData.value = _trx1.records!.isNotEmpty;
     } else {
       _showData.value = false;
     }
-
   }
-  
+
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();
@@ -347,7 +346,7 @@ class PortalMpContractController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(

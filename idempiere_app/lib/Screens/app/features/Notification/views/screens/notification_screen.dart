@@ -135,9 +135,7 @@ class NotificationScreen extends GetView<NotificationController> {
                                         const Icon(Icons.linear_scale,
                                             color: Colors.yellowAccent),
                                         Text(
-                                            " " +
-                                                controller.trx.records![index]
-                                                    .docType!,
+                                            " ${controller.trx.records![index].docType!}",
                                             style: const TextStyle(
                                                 color: Colors.white))
                                       ],
@@ -212,9 +210,7 @@ class NotificationScreen extends GetView<NotificationController> {
                                         const Icon(Icons.linear_scale,
                                             color: Colors.yellowAccent),
                                         Text(
-                                            " " +
-                                                controller.trx.records![index]
-                                                    .docType!,
+                                            " ${controller.trx.records![index].docType!}",
                                             style: const TextStyle(
                                                 color: Colors.white))
                                       ],
@@ -289,9 +285,7 @@ class NotificationScreen extends GetView<NotificationController> {
                                         const Icon(Icons.linear_scale,
                                             color: Colors.yellowAccent),
                                         Text(
-                                            " " +
-                                                controller.trx.records![index]
-                                                    .docType!,
+                                            " ${controller.trx.records![index].docType!}",
                                             style: const TextStyle(
                                                 color: Colors.white))
                                       ],

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'dart:convert';
 //import 'dart:developer';
 import 'package:flutter/foundation.dart';
@@ -23,12 +25,11 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
       dataAvailable = false;
     });
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_resource_testcount_v?\$filter=  lit_mp_resource_testcount_v_ID eq ${Get.arguments["id"]}');
+    var url = Uri.parse(
+        '${'$protocol://' + ip}/api/v1/models/lit_mp_resource_testcount_v?\$filter=  lit_mp_resource_testcount_v_ID eq ${Get.arguments["id"]}');
 
     var response = await http.get(
       url,
@@ -125,9 +126,6 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
                       getWorkOrderInfo();
                     },
                     onChanged: (PlutoGridOnChangedEvent event) {},
-                    configuration: const PlutoGridConfiguration(
-                      enableColumnBorder: true,
-                    ),
                   ),
                 )
               ],

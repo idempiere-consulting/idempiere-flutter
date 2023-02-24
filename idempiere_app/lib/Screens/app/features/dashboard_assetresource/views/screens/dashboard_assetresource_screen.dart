@@ -60,12 +60,13 @@ class DashboardAssetresourceScreen
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
@@ -80,10 +81,10 @@ class DashboardAssetresourceScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("LEAD: ${controller.trx.rowcount}")
                         : const Text("LEAD: ")),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -334,10 +335,10 @@ class DashboardAssetresourceScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("LEAD: ${controller.trx.rowcount}")
                         : const Text("LEAD: ")),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -588,10 +589,10 @@ class DashboardAssetresourceScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("LEAD: ${controller.trx.rowcount}")
                         : const Text("LEAD: ")),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),

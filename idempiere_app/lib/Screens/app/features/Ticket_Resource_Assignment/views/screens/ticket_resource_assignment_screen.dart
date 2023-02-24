@@ -59,12 +59,13 @@ class TicketResourceAssignmentScreen
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
@@ -79,10 +80,10 @@ class TicketResourceAssignmentScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("HOUR: ".tr + "${controller.trx.rowcount}")
                         : Text("HOUR: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -317,10 +318,10 @@ class TicketResourceAssignmentScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("HOUR: ".tr + "${controller.trx.rowcount}")
                         : Text("HOUR: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -555,10 +556,10 @@ class TicketResourceAssignmentScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("HOUR: ".tr + "${controller.trx.rowcount}")
                         : Text("HOUR: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),

@@ -420,23 +420,19 @@ class PortalMpSalesOrderB2BScreen
                                                             "") {
                                                           flag = true;
                                                           controller
-                                                              .colorUrlFilter = controller
-                                                                  .colorUrlFilter +
-                                                              " AND (AD_PrintColor_ID eq ${element.id}";
+                                                                  .colorUrlFilter =
+                                                              "${controller.colorUrlFilter} AND (AD_PrintColor_ID eq ${element.id}";
                                                         } else {
                                                           controller
-                                                              .colorUrlFilter = controller
-                                                                  .colorUrlFilter +
-                                                              " OR AD_PrintColor_ID eq ${element.id}";
+                                                                  .colorUrlFilter =
+                                                              "${controller.colorUrlFilter} OR AD_PrintColor_ID eq ${element.id}";
                                                           flag = true;
                                                         }
                                                       }
                                                       if (flag) {
                                                         controller
                                                                 .colorUrlFilter =
-                                                            controller
-                                                                    .colorUrlFilter +
-                                                                ")";
+                                                            "${controller.colorUrlFilter})";
                                                       }
                                                       controller
                                                           .getFilteredProducts2(
@@ -506,23 +502,19 @@ class PortalMpSalesOrderB2BScreen
                                                             "") {
                                                           flag = true;
                                                           controller
-                                                              .sizeUrlFilter = controller
-                                                                  .sizeUrlFilter +
-                                                              " AND (lit_ProductSize_ID eq ${element.id}";
+                                                                  .sizeUrlFilter =
+                                                              "${controller.sizeUrlFilter} AND (lit_ProductSize_ID eq ${element.id}";
                                                         } else {
                                                           controller
-                                                              .sizeUrlFilter = controller
-                                                                  .sizeUrlFilter +
-                                                              " OR lit_ProductSize_ID eq ${element.id}";
+                                                                  .sizeUrlFilter =
+                                                              "${controller.sizeUrlFilter} OR lit_ProductSize_ID eq ${element.id}";
                                                           flag = true;
                                                         }
                                                       }
                                                       if (flag) {
                                                         controller
                                                                 .sizeUrlFilter =
-                                                            controller
-                                                                    .sizeUrlFilter +
-                                                                ")";
+                                                            "${controller.sizeUrlFilter})";
                                                       }
                                                       controller
                                                           .getFilteredProducts2(
@@ -665,10 +657,7 @@ class PortalMpSalesOrderB2BScreen
                                               visible: controller
                                                   .productsAvailable.value,
                                               child: Text(
-                                                controller
-                                                        .filteredProds.rowcount
-                                                        .toString() +
-                                                    " Products",
+                                                "${controller.filteredProds.rowcount} Products",
                                                 style: const TextStyle(
                                                     color: Colors.grey),
                                               ),
@@ -1346,7 +1335,7 @@ class PortalMpSalesOrderB2BScreen
                                                                                 MainAxisAlignment.spaceBetween,
                                                                             children: <Widget>[
                                                                               Text(
-                                                                                "€ " + controller.productList[index].cost.toString(),
+                                                                                "€ ${controller.productList[index].cost}",
                                                                                 style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                                                                               ),
                                                                               Container(

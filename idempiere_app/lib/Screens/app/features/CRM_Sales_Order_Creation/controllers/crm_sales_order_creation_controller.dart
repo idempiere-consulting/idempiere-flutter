@@ -141,10 +141,10 @@ class CRMSalesOrderCreationController extends GetxController {
   Future<void> getBusinessPartner() async {
     var userId = GetStorage().read("userId");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -198,11 +198,10 @@ class CRMSalesOrderCreationController extends GetxController {
   Future<void> getDocTypes() async {
     docTypeFlag.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_DocType?\$filter= DocBaseType eq \'SOO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_DocType?\$filter= DocBaseType eq \'SOO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -240,11 +239,10 @@ class CRMSalesOrderCreationController extends GetxController {
   Future<void> getProductLists() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_product_list_v?\$filter= PriceStd neq null and IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= PriceStd neq null and IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -271,11 +269,10 @@ class CRMSalesOrderCreationController extends GetxController {
 
   Future<void> getSalesOrderDefaultValues() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_order_defaults_v?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_order_defaults_v?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     if (businessPartnerId != 0) {
       var response = await http.get(
         url,
@@ -300,11 +297,10 @@ class CRMSalesOrderCreationController extends GetxController {
   Future<void> getPaymentTerms() async {
     pTermAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_PaymentTerm?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_PaymentTerm?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
     if (businessPartnerId != 0) {
       var response = await http.get(
         url,
@@ -338,11 +334,10 @@ class CRMSalesOrderCreationController extends GetxController {
   Future<void> getLocationFromBP() async {
     bpLocationAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -376,11 +371,10 @@ class CRMSalesOrderCreationController extends GetxController {
 
   Future<void> getDefaultPaymentTermsFromBP() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BPartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BPartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -415,11 +409,10 @@ class CRMSalesOrderCreationController extends GetxController {
   Future<void> getPaymentRules() async {
     pTermAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 195');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 195');
 
     var response = await http.get(
       url,
@@ -443,12 +436,11 @@ class CRMSalesOrderCreationController extends GetxController {
 
   Future<void> getPriceListVersionID() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_pricelist_version?\$select=M_PriceList_Version_ID&\$orderby=ValidFrom DESC&\$filter=M_PriceList_ID eq ${defValues.records![0].mPriceListID!.id} & ValidFrom le ${Get.arguments["dateOrdered"]}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_pricelist_version?\$select=M_PriceList_Version_ID&\$orderby=ValidFrom DESC&\$filter=M_PriceList_ID eq ${defValues.records![0].mPriceListID!.id} & ValidFrom le ${Get.arguments["dateOrdered"]}');
 
     var response = await http.get(
       url,
@@ -472,7 +464,7 @@ class CRMSalesOrderCreationController extends GetxController {
 
   /* Future<void> getTabs() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url =
         Uri.parse('$protocol://' + ip + '/api/v1/windows/sales-order/tabs');
@@ -504,9 +496,9 @@ class CRMSalesOrderCreationController extends GetxController {
   Future<void> createSalesOrder() async {
     Get.back();
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/sales-order');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/sales-order');
 
     var now = DateTime.now();
     var formatter = DateFormat('yyyy-MM-dd');
@@ -595,7 +587,7 @@ class CRMSalesOrderCreationController extends GetxController {
 
   /* Future<void> createSalesOrderLine() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -625,6 +617,7 @@ class CRMSalesOrderCreationController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -763,45 +756,5 @@ class CRMSalesOrderCreationController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

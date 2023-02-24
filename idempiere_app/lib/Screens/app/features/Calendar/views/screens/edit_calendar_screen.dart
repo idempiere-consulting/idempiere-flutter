@@ -20,10 +20,9 @@ class EditCalendarEvent extends StatefulWidget {
 class _EditCalendarEventState extends State<EditCalendarEvent> {
   deleteEvent() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/${args['id']}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo/${args['id']}');
     var response = await http.delete(
       url,
       headers: <String, String>{
@@ -59,7 +58,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
 
   editEvent() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "Name": nameFieldController.text,
       "Description": descriptionFieldController.text,
@@ -71,8 +70,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
       "JP_ToDo_Type": {"id": "S"},
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/${args['id']}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo/${args['id']}');
     //print(msg);
     var response = await http.put(
       url,
@@ -366,10 +364,10 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       },
                       items: dropDownList.map((list) {
                         return DropdownMenuItem<String>(
+                          value: list.id,
                           child: Text(
                             list.name.toString(),
                           ),
-                          value: list.id,
                         );
                       }).toList(),
                     ),
@@ -523,10 +521,10 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       },
                       items: dropDownList.map((list) {
                         return DropdownMenuItem<String>(
+                          value: list.id,
                           child: Text(
                             list.name.toString(),
                           ),
-                          value: list.id,
                         );
                       }).toList(),
                     ),
@@ -680,10 +678,10 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                       },
                       items: dropDownList.map((list) {
                         return DropdownMenuItem<String>(
+                          value: list.id,
                           child: Text(
                             list.name.toString(),
                           ),
-                          value: list.id,
                         );
                       }).toList(),
                     ),

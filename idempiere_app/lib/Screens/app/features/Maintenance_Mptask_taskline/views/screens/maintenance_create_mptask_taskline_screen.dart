@@ -30,7 +30,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
     final protocol = GetStorage().read('protocol');
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -53,9 +53,8 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
       resourceQty: double.parse(resourceQtyFieldController.text),
     );
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/work-order-extinguisher/tabs/${"work-order-maintenance".tr}/${Get.arguments["id"]}/${"tasks".tr}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/work-order-extinguisher/tabs/${"work-order-maintenance".tr}/${Get.arguments["id"]}/${"tasks".tr}');
     if (isConnected) {
       if (kDebugMode) {
         print(msg);
@@ -111,7 +110,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
       if (GetStorage().read('postCallList') == null) {
         var call = jsonEncode({
           "offlineid": GetStorage().read('postCallId'),
-          "url": '$protocol://' + ip + '/api/v1/models/MP_OT_Task',
+          "url": '$protocol://$ip/api/v1/models/MP_OT_Task',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           "M_Product_ID": {"id": productId},
@@ -127,7 +126,7 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
         list = GetStorage().read('postCallList');
         var call = jsonEncode({
           "offlineid": GetStorage().read('postCallId'),
-          "url": '$protocol://' + ip + '/api/v1/models/MP_OT_Task',
+          "url": '$protocol://$ip/api/v1/models/MP_OT_Task',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           "M_Product_ID": {"id": productId},
@@ -261,11 +260,11 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -395,11 +394,11 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -487,11 +486,11 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(

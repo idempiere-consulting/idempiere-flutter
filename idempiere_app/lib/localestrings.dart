@@ -197,6 +197,7 @@ class LocaleString extends Translations {
           'RECEIPTS: ': 'RECEIPTS: ',
           'Today': 'Today',
           'language': 'en',
+          'LANGUAGE': 'US',
           'languageCalendar': 'en_EN',
           'Add Event': 'Add Event',
           'Edit Event': 'Edit Event',
@@ -690,6 +691,7 @@ class LocaleString extends Translations {
           'RECEIPTS: ': 'INCASSI: ',
           'Today': 'Oggi',
           'language': 'it',
+          'LANGUAGE': 'IT',
           'languageCalendar': 'it_IT',
           'Add Event': 'Aggiungi Evento',
           'Edit Event': 'Modifica Evento',
@@ -1023,6 +1025,11 @@ class LocaleString extends Translations {
           'Subtotal': 'SubTotale',
           'Proceed': 'Procedi',
           'Choose a Size': 'Scegli una taglia',
+          'Resource Type': 'Tipo Risorsa',
+          'Edit Resource': 'Edit Risorsa',
+          'Sold': 'Venduto',
+          'All Types': 'Tutti i Tipi',
+          'All Group Locations': 'Tutti i Gruppi Destinazione',
         },
       };
 }

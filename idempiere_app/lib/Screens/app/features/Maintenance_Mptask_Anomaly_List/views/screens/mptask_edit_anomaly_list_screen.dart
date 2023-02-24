@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/models/anomaly_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/views/screens/mptask_anomaly_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_barcode/views/screens/maintenance_mptask_resource_barcode_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
@@ -25,7 +26,8 @@ class EditAnomalyList extends StatefulWidget {
 class _EditAnomalyListState extends State<EditAnomalyList> {
   editAnomaly(bool isConnected) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
 
     const filename = "anomalies";
     final file = File(
@@ -45,125 +47,101 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
 
     var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
 
+    print(json.records!.length);
+
+    /* json.records!.retainWhere((element) =>
+        element.mPMaintainResourceID?.id == args["id"] &&
+        element.isClosed == false); */
+
     if (Get.arguments["id"] != null && offline == -1) {
-      json.records![Get.arguments["index"]].description =
-          noteFieldController.text;
-      json.records![Get.arguments["index"]].isInvoiced = isCharged;
-      json.records![Get.arguments["index"]].lITIsReplaced = isReplacedNow;
-      json.records![Get.arguments["index"]].lITIsManagedByCustomer =
-          manByCustomer;
-      json.records![Get.arguments["index"]].isClosed = isClosed;
+      for (var i = 0; i < json.records!.length; i++) {
+        if (json.records![i].id == args["id"]) {
+          json.records![i].description = noteFieldController.text;
+          json.records![i].isInvoiced = isCharged;
+          json.records![i].lITIsReplaced = isReplacedNow;
+          json.records![i].lITIsManagedByCustomer = manByCustomer;
+          json.records![i].isClosed = isClosed;
 
-      var url = Uri.parse(
-          'http://' + ip + '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
-      if (isConnected) {
-        emptyAPICallStak();
-        var response = await http.put(
-          url,
-          body: msg,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Authorization': authorization,
-          },
-        );
-        if (response.statusCode == 200) {
-          var data = jsonEncode(json.toJson());
-          file.writeAsStringSync(data);
-          Get.find<MaintenanceMpResourceController>().getWorkOrders();
-          Get.find<AnomalyListController>().getAnomalies();
-          //print("done!");
-          //Get.back();
-          Get.snackbar(
-            "Fatto!",
-            "Il record è stato modificato",
-            icon: const Icon(
-              Icons.done,
-              color: Colors.green,
-            ),
-          );
-        } else {
-          //print(response.body);
-          //print(response.statusCode);
-          Get.snackbar(
-            "Errore!",
-            "Il record non è stato modificato",
-            icon: const Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
-          );
-        }
-      } else {
-        var data = jsonEncode(json.toJson());
-        //GetStorage().write('workOrderSync', data);
-        file.writeAsStringSync(data);
-        Get.find<MaintenanceMpResourceController>().getWorkOrders();
-        Get.find<AnomalyListController>().getAnomalies();
-        Map calls = {};
-        if (GetStorage().read('storedEditAPICalls') == null) {
-          calls['http://' +
-              ip +
-              '/api/v1/models/LIT_NC/${Get.arguments["id"]}'] = msg;
-        } else {
-          calls = GetStorage().read('storedEditAPICalls');
-          calls['http://' +
-              ip +
-              '/api/v1/models/LIT_NC/${Get.arguments["id"]}'] = msg;
-        }
-        GetStorage().write('storedEditAPICalls', calls);
-        Get.snackbar(
-          "Salvato!",
-          "Il record è stato salvato localmente in attesa di connessione internet.",
-          icon: const Icon(
-            Icons.save,
-            color: Colors.red,
-          ),
-        );
-      }
-      if (offline != -1) {
-        List<dynamic> list = GetStorage().read('postCallList');
-
-        for (var i = 0; i < list.length; i++) {
-          var json = jsonDecode(list[i]);
-          if (json["offlineid"] == Get.arguments?["offlineid"]) {
-            var url2 = json["url"];
-            var offlineid2 = json["offlineid"];
-            var adorg = json["AD_Org_ID"];
-            var adclient = json["AD_Client_ID"];
-            var faultType = json["LIT_NCFaultType_ID"];
-            var aduser = json["AD_User_ID"];
-            var product = json["M_Product_ID"];
-            var date = json["DateDoc"];
-            var workorder = json["MP_OT_ID"];
-            var resource = json["MP_Maintain_Resource_ID"];
-
-            var call = jsonEncode({
-              "offlineid": offlineid2,
-              "url": url2,
-              "AD_Org_ID": adorg,
-              "MP_OT_ID": workorder,
-              "MP_Maintain_Resource_ID": resource,
-              "AD_Client_ID": adclient,
-              "LIT_NCFaultType_ID": faultType,
-              "AD_User_ID": aduser,
-              "Name": "anomaly",
-              "Description": noteFieldController.text,
-              "IsInvoiced": isCharged,
-              "LIT_IsReplaced": isReplacedNow,
-              "M_Product_ID": product,
-              "DateDoc": date,
-              "LIT_IsManagedByCustomer": manByCustomer,
-              "IsClosed": isClosed,
-            });
-
-            list.removeAt(i);
-            list.add(call);
-            GetStorage().write('postCallList', list);
+          var url = Uri.parse(
+              '$protocol://' + ip + '/api/v1/models/LIT_NC/${args["id"]}');
+          if (isConnected) {
+            emptyAPICallStak();
+            var response = await http.put(
+              url,
+              body: msg,
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': authorization,
+              },
+            );
+            if (response.statusCode == 200) {
+              var data = jsonEncode(json.toJson());
+              file.writeAsStringSync(data);
+              try {
+                Get.find<MaintenanceMpResourceController>()
+                    .syncThisWorkOrderResource(
+                        GetStorage().read('selectedTaskDocNo'));
+              } catch (e) {
+                print('no page');
+              }
+              try {
+                Get.find<MaintenanceMpResourceBarcodeController>()
+                    .syncThisWorkOrderResource(
+                        GetStorage().read('selectedTaskDocNo'));
+              } catch (e) {
+                print('no page');
+              }
+              Get.find<AnomalyListController>().getAnomalies();
+              //print("done!");
+              //Get.back();
+              Get.snackbar(
+                "Fatto!",
+                "Il record è stato modificato",
+                icon: const Icon(
+                  Icons.done,
+                  color: Colors.green,
+                ),
+              );
+            } else {
+              //print(response.body);
+              //print(response.statusCode);
+              Get.snackbar(
+                "Errore!",
+                "Il record non è stato modificato",
+                icon: const Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
+              );
+            }
+          } else {
             var data = jsonEncode(json.toJson());
             //GetStorage().write('workOrderSync', data);
             file.writeAsStringSync(data);
-            Get.find<MaintenanceMpResourceController>().getWorkOrders();
+            try {
+              Get.find<MaintenanceMpResourceController>().getWorkOrders();
+            } catch (e) {
+              print("no page");
+            }
+            try {
+              Get.find<MaintenanceMpResourceBarcodeController>()
+                  .getWorkOrders();
+            } catch (e) {
+              print("no page");
+            }
             Get.find<AnomalyListController>().getAnomalies();
+            Map calls = {};
+            if (GetStorage().read('storedEditAPICalls') == null) {
+              calls['$protocol://' +
+                  ip +
+                  '/api/v1/models/LIT_NC/${Get.arguments["id"]}'] = msg;
+            } else {
+              calls = GetStorage().read('storedEditAPICalls');
+              calls['$protocol://' +
+                  ip +
+                  '/api/v1/models/LIT_NC/${Get.arguments["id"]}'] = msg;
+            }
+            GetStorage().write('storedEditAPICalls', calls);
             Get.snackbar(
               "Salvato!",
               "Il record è stato salvato localmente in attesa di connessione internet.",
@@ -173,6 +151,71 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
               ),
             );
           }
+          if (offline != -1) {
+            List<dynamic> list = GetStorage().read('postCallList');
+
+            for (var i = 0; i < list.length; i++) {
+              var json = jsonDecode(list[i]);
+              if (json["offlineid"] == Get.arguments?["offlineid"]) {
+                var url2 = json["url"];
+                var offlineid2 = json["offlineid"];
+                var adorg = json["AD_Org_ID"];
+                var adclient = json["AD_Client_ID"];
+                var faultType = json["LIT_NCFaultType_ID"];
+                var aduser = json["AD_User_ID"];
+                var product = json["M_Product_ID"];
+                var date = json["DateDoc"];
+                var workorder = json["MP_OT_ID"];
+                var resource = json["MP_Maintain_Resource_ID"];
+
+                var call = jsonEncode({
+                  "offlineid": offlineid2,
+                  "url": url2,
+                  "AD_Org_ID": adorg,
+                  "MP_OT_ID": workorder,
+                  "MP_Maintain_Resource_ID": resource,
+                  "AD_Client_ID": adclient,
+                  "LIT_NCFaultType_ID": faultType,
+                  "AD_User_ID": aduser,
+                  "Name": "anomaly",
+                  "Description": noteFieldController.text,
+                  "IsInvoiced": isCharged,
+                  "LIT_IsReplaced": isReplacedNow,
+                  "M_Product_ID": product,
+                  "DateDoc": date,
+                  "LIT_IsManagedByCustomer": manByCustomer,
+                  "IsClosed": isClosed,
+                });
+
+                list.removeAt(i);
+                list.add(call);
+                GetStorage().write('postCallList', list);
+                var data = jsonEncode(json.toJson());
+                //GetStorage().write('workOrderSync', data);
+                file.writeAsStringSync(data);
+                try {
+                  Get.find<MaintenanceMpResourceController>().getWorkOrders();
+                } catch (e) {
+                  print("no page");
+                }
+                try {
+                  Get.find<MaintenanceMpResourceBarcodeController>()
+                      .getWorkOrders();
+                } catch (e) {
+                  print("no page");
+                }
+                Get.find<AnomalyListController>().getAnomalies();
+                Get.snackbar(
+                  "Salvato!",
+                  "Il record è stato salvato localmente in attesa di connessione internet.",
+                  icon: const Icon(
+                    Icons.save,
+                    color: Colors.red,
+                  ),
+                );
+              }
+            }
+          }
         }
       }
     }
@@ -180,7 +223,8 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
 
   deleteAnomaly(bool isConnected) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
 
     const filename = "anomalies";
     final file = File(
@@ -192,7 +236,7 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
       json.records!.removeWhere((element) => Get.arguments["id"] == element.id);
 
       var url = Uri.parse(
-          'http://' + ip + '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
+          '$protocol://' + ip + '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.delete(
@@ -205,7 +249,16 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
         if (response.statusCode == 200) {
           var data = jsonEncode(json.toJson());
           file.writeAsStringSync(data);
-          Get.find<MaintenanceMpResourceController>().getWorkOrders();
+          try {
+            Get.find<MaintenanceMpResourceController>().getWorkOrders();
+          } catch (e) {
+            print("no page");
+          }
+          try {
+            Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
+          } catch (e) {
+            print("no page");
+          }
           Get.find<AnomalyListController>().getAnomalies();
           Get.back();
           //print("done!");
@@ -234,16 +287,27 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
         var data = jsonEncode(json.toJson());
         //GetStorage().write('workOrderSync', data);
         file.writeAsStringSync(data);
-        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        try {
+          Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        } catch (e) {
+          print("no page");
+        }
+        try {
+          Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
+        } catch (e) {
+          print("no page");
+        }
         Get.find<AnomalyListController>().getAnomalies();
         List<dynamic> list = [];
         if (GetStorage().read('storedEditAPICalls') == null) {
-          list.add(
-              'http://' + ip + '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
+          list.add('$protocol://' +
+              ip +
+              '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
         } else {
           list = GetStorage().read('storedEditAPICalls');
-          list.add(
-              'http://' + ip + '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
+          list.add('$protocol://' +
+              ip +
+              '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
         }
         GetStorage().write('storedEditAPICalls', list);
         Get.snackbar(
@@ -258,6 +322,7 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
     }
   }
 
+  dynamic args = Get.arguments;
   var offline = -1;
   var anomalyTypeFieldController;
   var resourceFieldController;

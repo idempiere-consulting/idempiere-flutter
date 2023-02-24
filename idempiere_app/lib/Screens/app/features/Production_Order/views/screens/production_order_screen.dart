@@ -62,12 +62,13 @@ class ProductionOrderScreen extends GetView<ProductionOrderController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -82,10 +83,10 @@ class ProductionOrderScreen extends GetView<ProductionOrderController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("ORDERS: ${controller.trx.rowcount}")
                           : const Text("ORDERS: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -272,10 +273,10 @@ class ProductionOrderScreen extends GetView<ProductionOrderController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("ORDERS: ${controller.trx.rowcount}")
                           : const Text("ORDERS: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -462,10 +463,10 @@ class ProductionOrderScreen extends GetView<ProductionOrderController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("ORDERS: ${controller.trx.rowcount}")
                           : const Text("ORDERS: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),

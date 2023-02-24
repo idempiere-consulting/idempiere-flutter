@@ -71,7 +71,7 @@ class PortalMpTrainingCourseCourseListScreen
 
   updateOrCreateStudent(index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     //create new student
@@ -90,7 +90,7 @@ class PortalMpTrainingCourseCourseListScreen
         'Note': controller.studentFields[6].text
       });
       var url = Uri.parse(
-          '$protocol://' + ip + '/api/v1/models/MP_Maintain_Resource/');
+          '${'$protocol://' + ip}/api/v1/models/MP_Maintain_Resource/');
       var response = await http.post(
         url,
         body: msg,
@@ -135,9 +135,8 @@ class PortalMpTrainingCourseCourseListScreen
         'Note': controller.studentFields[6].text
       });
       //print(msg);
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/MP_Maintain_Resource/${controller.trxStudents.records![index].id}');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/MP_Maintain_Resource/${controller.trxStudents.records![index].id}');
       var response = await http.put(
         url,
         body: msg,
@@ -174,11 +173,10 @@ class PortalMpTrainingCourseCourseListScreen
   deleteStudent(index) async {
     if (!controller.newStudent) {
       final ip = GetStorage().read('ip');
-      String authorization = 'Bearer ' + GetStorage().read('token');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/MP_Maintain_Resource/${controller.trxStudents.records![index].id}');
+      var url = Uri.parse(
+          '${'$protocol://' + ip}/api/v1/models/MP_Maintain_Resource/${controller.trxStudents.records![index].id}');
       var response = await http.delete(
         url,
         headers: <String, String>{
@@ -278,11 +276,11 @@ class PortalMpTrainingCourseCourseListScreen
                 Row(
                   children: [
                     Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text('COURSES: '.tr +
-                              "${controller.trxCourses.rowcount}")
-                          : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
+                      child: Obx(() => controller.dataAvailable
+                          ? Text(
+                              "${'COURSES: '.tr}${controller.trxCourses.rowcount}")
+                          : Text("COURSES: ".tr)),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -426,11 +424,11 @@ class PortalMpTrainingCourseCourseListScreen
                 Row(
                   children: [
                     Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text('COURSES: '.tr +
-                              "${controller.trxCourses.rowcount}")
-                          : Text("COURSES: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
+                      child: Obx(() => controller.dataAvailable
+                          ? Text(
+                              "${'COURSES: '.tr}${controller.trxCourses.rowcount}")
+                          : Text("COURSES: ".tr)),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -585,11 +583,11 @@ class PortalMpTrainingCourseCourseListScreen
                         _buildCoursesFilter(),
                         Row(children: [
                           Container(
-                            child: Obx(() => controller.dataAvailable
-                                ? Text("COURSES: ".tr +
-                                    "${controller.trxCourses.rowcount}")
-                                : Text("COURSES: ".tr + "")),
                             margin: const EdgeInsets.only(left: 15),
+                            child: Obx(() => controller.dataAvailable
+                                ? Text(
+                                    "${"COURSES: ".tr}${controller.trxCourses.rowcount}")
+                                : Text("COURSES: ".tr)),
                           ),
                           Container(
                             margin: const EdgeInsets.only(left: 20),
@@ -698,11 +696,11 @@ class PortalMpTrainingCourseCourseListScreen
                         _buildStudentsFilter(),
                         Row(children: [
                           Container(
-                            child: Obx(() => controller.dataAvailable1
-                                ? Text("STUDENTS: ".tr +
-                                    "${controller.trxStudents.rowcount}")
-                                : Text("STUDENTS: ".tr + "")),
                             margin: const EdgeInsets.only(left: 15),
+                            child: Obx(() => controller.dataAvailable1
+                                ? Text(
+                                    "${"STUDENTS: ".tr}${controller.trxStudents.rowcount}")
+                                : Text("STUDENTS: ".tr)),
                           ),
                           Container(
                             margin: const EdgeInsets.only(left: 20),
@@ -1068,9 +1066,7 @@ class PortalMpTrainingCourseCourseListScreen
               controller.getCourseStudents();
             }),
         title: Text(
-          "DocumentNo".tr +
-              " " +
-              controller.trxCourses.records![index].documentNo!,
+          "${"DocumentNo".tr} ${controller.trxCourses.records![index].documentNo!}",
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
@@ -1092,7 +1088,7 @@ class PortalMpTrainingCourseCourseListScreen
                   width: 50 /* MediaQuery.of(context).size.width / 10, */),
               Row(
                 children: [
-                  Text("Business Partner".tr + ": ",
+                  Text("${"Business Partner".tr}: ",
                       style: const TextStyle(
                         color: Colors.white,
                       )),
@@ -1131,13 +1127,13 @@ class PortalMpTrainingCourseCourseListScreen
               ), */
               Row(
                 children: [
-                  Text('Description'.tr + ': '),
+                  Text('${'Description'.tr}: '),
                   Text(controller.trxCourses.records![index].description ?? '')
                 ],
               ),
               Row(
                 children: [
-                  Text('Organization'.tr + ': '),
+                  Text('${'Organization'.tr}: '),
                   Text(controller
                           .trxCourses.records![index].aDOrgID?.identifier ??
                       '')
@@ -1187,7 +1183,7 @@ class PortalMpTrainingCourseCourseListScreen
           children: [
             Text(
               (controller.trxStudents.records![index].name != null
-                  ? controller.trxStudents.records![index].name! + ' '
+                  ? '${controller.trxStudents.records![index].name!} '
                   : ''),
               style: const TextStyle(
                   color: Colors.white, fontWeight: FontWeight.bold),
@@ -1206,7 +1202,7 @@ class PortalMpTrainingCourseCourseListScreen
               Row(
                 children: [
                   Text(
-                    "Birthplace".tr + ": ",
+                    "${"Birthplace".tr}: ",
                     style: const TextStyle(color: Colors.white),
                   ),
                   Text(controller.trxStudents.records![index].birthcity ?? "",
@@ -1221,7 +1217,7 @@ class PortalMpTrainingCourseCourseListScreen
               Row(
                 children: [
                   Text(
-                    'Birthday'.tr + ': ',
+                    '${'Birthday'.tr}: ',
                     style: const TextStyle(color: Colors.white),
                   ),
                   Text(controller.trxStudents.records![index].birthday ?? '',
@@ -1442,10 +1438,10 @@ class PortalMpTrainingCourseCourseListScreen
               },
               items: controller.courseDropDownList.map((list) {
                 return DropdownMenuItem<String>(
+                  value: list.id,
                   child: Text(
                     list.name.toString(),
                   ),
-                  value: list.id,
                 );
               }).toList(),
             ),
@@ -1488,10 +1484,10 @@ class PortalMpTrainingCourseCourseListScreen
               },
               items: controller.studentDropDownList.map((list) {
                 return DropdownMenuItem<String>(
+                  value: list.id,
                   child: Text(
                     list.name.toString(),
                   ),
-                  value: list.id,
                 );
               }).toList(),
             ),

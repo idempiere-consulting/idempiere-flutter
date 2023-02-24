@@ -84,11 +84,11 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("COMMISSIONS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("COMMISSIONS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -277,11 +277,11 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("COMMISSIONS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("COMMISSIONS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -468,11 +468,11 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("COMMISSIONS: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("COMMISSIONS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),

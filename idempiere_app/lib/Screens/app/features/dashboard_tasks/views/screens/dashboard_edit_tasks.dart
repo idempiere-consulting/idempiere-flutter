@@ -37,7 +37,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
     //print(tot);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "JP_ToDo_Status": {"id": statusId},
       "Qty": hours,
@@ -89,7 +89,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
 
   deleteLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url =
         Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
@@ -128,7 +128,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
 
   Future<List<LSRecords>> getAllLeadStatuses() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -154,7 +154,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
 
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(

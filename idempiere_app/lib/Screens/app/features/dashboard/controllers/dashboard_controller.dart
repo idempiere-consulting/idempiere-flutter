@@ -61,7 +61,7 @@ class DashboardController extends GetxController {
     //String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -130,7 +130,7 @@ class DashboardController extends GetxController {
     if (GetStorage().read("isOffline") == false) {
       var userid = GetStorage().read("userId");
       final ip = GetStorage().read('ip');
-      String authorization = 'Bearer ' + GetStorage().read('token');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
       var url = Uri.parse('$protocol://' +
           ip +

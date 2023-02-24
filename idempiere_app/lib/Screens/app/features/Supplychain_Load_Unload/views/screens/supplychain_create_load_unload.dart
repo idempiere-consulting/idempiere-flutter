@@ -21,7 +21,7 @@ class _CreateSupplychainLoadUnloadState
     extends State<CreateSupplychainLoadUnload> {
   createLoadUnload() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var formatter = DateFormat('yyyy-MM-dd');
     // ignore: prefer_typing_uninitialized_variables
     var msg;
@@ -73,7 +73,7 @@ class _CreateSupplychainLoadUnloadState
       //print("done!");
       Get.snackbar(
         "Done!".tr,
-        "The record has been created" .tr,
+        "The record has been created".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -100,7 +100,7 @@ class _CreateSupplychainLoadUnloadState
     });
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -138,7 +138,7 @@ class _CreateSupplychainLoadUnloadState
   bool warehouseAvailable = false;
 
   var warehouseId = "1000000";
-  
+
   late WarehouseJson trx;
 
   @override
@@ -202,11 +202,11 @@ class _CreateSupplychainLoadUnloadState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Warehouse".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -234,10 +234,10 @@ class _CreateSupplychainLoadUnloadState
                           items: trx.records!
                               .map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name ?? "???",
                                   ),
-                                  value: list.id.toString(),
                                 );
                               })
                               .toSet()
@@ -283,11 +283,11 @@ class _CreateSupplychainLoadUnloadState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Warehouse".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -315,10 +315,10 @@ class _CreateSupplychainLoadUnloadState
                           items: trx.records!
                               .map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name ?? "???",
                                   ),
-                                  value: list.id.toString(),
                                 );
                               })
                               .toSet()
@@ -364,11 +364,11 @@ class _CreateSupplychainLoadUnloadState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Warehouse".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -396,10 +396,10 @@ class _CreateSupplychainLoadUnloadState
                           items: trx.records!
                               .map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name ?? "???",
                                   ),
-                                  value: list.id.toString(),
                                 );
                               })
                               .toSet()

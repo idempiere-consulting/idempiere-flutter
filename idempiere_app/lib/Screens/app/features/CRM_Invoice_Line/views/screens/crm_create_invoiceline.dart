@@ -19,7 +19,7 @@ class CreateInvoiceLine extends StatefulWidget {
 class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
   createLoadUnload() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var formatter = DateFormat('yyyy-MM-dd');
 
     final msg = jsonEncode({
@@ -130,7 +130,7 @@ class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: activityFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Activity (Barcode)'.tr,
@@ -163,7 +163,7 @@ class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: activityFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Activity (Barcode)'.tr,
@@ -196,7 +196,7 @@ class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: activityFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Activity (Barcode)'.tr,

@@ -61,7 +61,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
 
   approveSalesOrder(index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "isApproved": true,
     });
@@ -106,7 +106,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
     var image64 = base64.encode(data!);
     //print(image64);
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     final msg =
         jsonEncode({"name": "customersignature.jpg", "BinaryData": image64});
@@ -134,7 +134,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
     // ignore: unused_local_variable
     var image64 = base64.encode(data!);
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "LIT_Sign_Image_ID": imageId,
     });
@@ -180,7 +180,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
   completeOrder(int index) async {
     Get.back();
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "record-id": controller.trxSalesOrder.records![index].id,
     });
@@ -253,11 +253,11 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("SALES ORDERS: ".tr +
                               controller.trxSalesOrder.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -310,10 +310,10 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                           },
                           items: controller.salesOrderDropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -533,8 +533,6 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                             ?.id !=
                                                         'CO',
                                                     child: ElevatedButton(
-                                                      child:
-                                                          Text("Complete".tr),
                                                       style: ButtonStyle(
                                                         backgroundColor:
                                                             MaterialStateProperty
@@ -605,6 +603,8 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                           },
                                                         );
                                                       },
+                                                      child:
+                                                          Text("Complete".tr),
                                                     ),
                                                   ),
                                                 ],
@@ -634,11 +634,11 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("SALES ORDERS: ".tr +
                               controller.trxSalesOrder.rowcount.toString())
                           : Text("SALES ORDERS: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -691,10 +691,10 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                           },
                           items: controller.salesOrderDropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -914,8 +914,6 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                             ?.id !=
                                                         'CO',
                                                     child: ElevatedButton(
-                                                      child:
-                                                          Text("Complete".tr),
                                                       style: ButtonStyle(
                                                         backgroundColor:
                                                             MaterialStateProperty
@@ -986,6 +984,8 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                           },
                                                         );
                                                       },
+                                                      child:
+                                                          Text("Complete".tr),
                                                     ),
                                                   ),
                                                 ],
@@ -1031,12 +1031,12 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                         Row(
                           children: [
                             Container(
+                              margin: const EdgeInsets.only(left: 15),
                               child: Obx(() => controller.dataAvailable
                                   ? Text("SALES ORDERS: ".tr +
                                       controller.trxSalesOrder.rowcount
                                           .toString())
                                   : Text("SALES ORDERS: ".tr)),
-                              margin: const EdgeInsets.only(left: 15),
                             ),
                             Container(
                               margin: const EdgeInsets.only(left: 20),
@@ -1545,11 +1545,11 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                         Row(
                           children: [
                             Container(
+                              margin: const EdgeInsets.only(left: 15),
                               child: Obx(() => controller.showData
                                   ? Text("LINES: ".tr +
                                       controller.trxLine.rowcount.toString())
                                   : Text("LINES: ".tr)),
-                              margin: const EdgeInsets.only(left: 15),
                             ),
                             Container(
                               margin: const EdgeInsets.only(left: 20),
@@ -2011,7 +2011,6 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                   .trxSalesOrder.records![index].isApproved ==
                               false,
                           child: ElevatedButton(
-                              child: Text("Approve".tr),
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.green),
@@ -2027,14 +2026,14 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                       Navigator.of(context, rootNavigator: true)
                                           .pop();
                                     });
-                              }),
+                              },
+                              child: Text("Approve".tr)),
                         )
                       : Visibility(
                           visible: controller
                                   .trxSalesOrder.records![index].isApproved ==
                               false,
                           child: ElevatedButton(
-                              child: Text("Approve".tr),
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all(Colors.grey),
@@ -2049,7 +2048,8 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                     color: Colors.red,
                                   ),
                                 );
-                              }),
+                              },
+                              child: Text("Approve".tr)),
                         ))
                 ],
               ),
@@ -2221,10 +2221,10 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
               },
               items: controller.salesOrderDropDownList.map((list) {
                 return DropdownMenuItem<String>(
+                  value: list.id,
                   child: Text(
                     list.name.toString(),
                   ),
-                  value: list.id,
                 );
               }).toList(),
             ),
@@ -2267,10 +2267,10 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
               },
               items: controller.linesDropDownList.map((list) {
                 return DropdownMenuItem<String>(
+                  value: list.id,
                   child: Text(
                     list.name.toString(),
                   ),
-                  value: list.id,
                 );
               }).toList(),
             ),

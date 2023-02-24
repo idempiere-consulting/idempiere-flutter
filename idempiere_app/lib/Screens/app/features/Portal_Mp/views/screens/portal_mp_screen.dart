@@ -1647,6 +1647,8 @@ class PortalMpScreen extends GetView<PortalMpController> {
                   ),
                 ],
               ),
+              childrenPadding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
               children: [
                 Visibility(
                   visible: event.refname != 'N/A' ? true : false,
@@ -1723,8 +1725,6 @@ class PortalMpScreen extends GetView<PortalMpController> {
                   ),
                 ),
               ],
-              childrenPadding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             ),
           ),
         ),

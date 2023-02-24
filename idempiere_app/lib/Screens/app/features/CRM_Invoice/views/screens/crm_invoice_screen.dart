@@ -94,11 +94,11 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("INVOICES: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("INVOICES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -162,10 +162,10 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -480,11 +480,11 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("INVOICES: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("INVOICES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -548,10 +548,10 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -787,11 +787,11 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("INVOICES: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("INVOICES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -855,10 +855,10 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),

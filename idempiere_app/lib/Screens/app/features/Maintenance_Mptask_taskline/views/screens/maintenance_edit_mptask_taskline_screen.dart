@@ -72,7 +72,7 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
 
     final ip = GetStorage().read('ip');
     final protocol = GetStorage().read('protocol');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "Description": descriptionFieldController.text,
       "ResourceQty": double.parse(qtyFieldController.text),
@@ -96,9 +96,8 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
       trx.records![Get.arguments["index"]].mProductID =
           MProductID(id: productId, identifier: productName);
 
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/mp_ot_task/${Get.arguments["id"]}');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/mp_ot_task/${Get.arguments["id"]}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -142,14 +141,12 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
         Get.find<MaintenanceMptaskLineController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
-          calls['$protocol://' +
-              ip +
-              '/api/v1/models/mp_ot_task/${Get.arguments["id"]}'] = msg;
+          calls['$protocol://$ip/api/v1/models/mp_ot_task/${Get.arguments["id"]}'] =
+              msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['$protocol://' +
-              ip +
-              '/api/v1/models/mp_ot_task/${Get.arguments["id"]}'] = msg;
+          calls['$protocol://$ip/api/v1/models/mp_ot_task/${Get.arguments["id"]}'] =
+              msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
         Get.snackbar(
@@ -372,11 +369,11 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(

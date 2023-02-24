@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/Login/login_screen.dart';
@@ -51,13 +52,12 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/scre
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_List/views/screens/mptask_anomaly_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Anomaly_Review/views/screens/mptask_anomaly_review_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_A2_Fire_Extinguisher_Grid/views/screens/maintenance_mptask_resource_fire_extinguisher_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_Sheet/views/screens/maintenance_mptask_resource_sheet_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_barcode/views/screens/maintenance_mptask_resource_barcode_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mpwarehouse/views/screens/maintenance_mpwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Shipment/views/screens/maintenance_shipment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Shipment_line/views/screens/maintenance_shipmentline_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maps/maps_page.dart';
 import 'package:idempiere_app/Screens/app/features/Notification/views/screens/notification_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/portal_mp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Anomaly/views/screens/portal_mp_anomaly_screen.dart';
@@ -124,6 +124,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: <Locale>[Locale('en', 'US'), Locale('it', 'IT')],
       translations: LocaleString(),
       locale: Locale(GetStorage().read('language') ?? 'it_IT'),
       theme: AppTheme.basic,
@@ -407,9 +413,9 @@ class MyApp extends StatelessWidget {
           binding: MaintenanceMpResourceBinding(),
         ),
         GetPage(
-          name: '/MaintenanceMpResourceFireExtinguisherGrid',
-          page: () => const MaintenanceMpResourceFireExtinguisherScreen(),
-          binding: MaintenanceMpResourceFireExtinguisherBinding(),
+          name: '/MaintenanceMpResourceBarcode',
+          page: () => const MaintenanceMpResourceBarcodeScreen(),
+          binding: MaintenanceMpResourceBarcodeBinding(),
         ),
         GetPage(
           name: '/MaintenanceMpResourceSheet',
@@ -441,10 +447,10 @@ class MyApp extends StatelessWidget {
           page: () => const MaintenanceMpimportitemScreen(),
           binding: MaintenanceMpimportitemBinding(),
         ),
-        GetPage(
+        /* GetPage(
           name: '/MapsScreen',
           page: () => const MobileMapsScreen(),
-        ),
+        ), */
         GetPage(
           name: '/PortalMp',
           page: () => const PortalMpScreen(),

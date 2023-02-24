@@ -176,7 +176,7 @@ class MaintenanceMptaskLineController extends GetxController {
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/MP_OT_Task/$id');
 
@@ -263,7 +263,7 @@ class MaintenanceMptaskLineController extends GetxController {
 
   editManualNote() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "ManualNote": manualNoteFieldController.text,
     });
@@ -375,7 +375,7 @@ class MaintenanceMptaskLineController extends GetxController {
     /* var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/mp_ot?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');

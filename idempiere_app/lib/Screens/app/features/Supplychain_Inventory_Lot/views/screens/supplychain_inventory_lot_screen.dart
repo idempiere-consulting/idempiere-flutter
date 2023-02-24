@@ -82,10 +82,10 @@ class SupplychainInventoryLotScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
                         : Text("INVENTORY: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -267,7 +267,6 @@ class SupplychainInventoryLotScreen
                                                   ?.id !=
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Complete".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -326,6 +325,7 @@ class SupplychainInventoryLotScreen
                                                 },
                                               );
                                             },
+                                            child: Text("Complete".tr),
                                           ),
                                         ),
                                       ],
@@ -353,10 +353,10 @@ class SupplychainInventoryLotScreen
               Row(
                 children: [
                   Container(
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
-                        : Text("INVENTORY: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("${"INVENTORY: ".tr}${controller.trx.rowcount}")
+                        : Text("INVENTORY: ".tr)),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -533,7 +533,6 @@ class SupplychainInventoryLotScreen
                                                   ?.id !=
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Complete".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -592,6 +591,7 @@ class SupplychainInventoryLotScreen
                                                 },
                                               );
                                             },
+                                            child: Text("Complete".tr),
                                           ),
                                         ),
                                       ],
@@ -619,10 +619,10 @@ class SupplychainInventoryLotScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
                         : Text("INVENTORY: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -799,7 +799,6 @@ class SupplychainInventoryLotScreen
                                                   ?.id !=
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Complete".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -858,6 +857,7 @@ class SupplychainInventoryLotScreen
                                                 },
                                               );
                                             },
+                                            child: Text("Complete".tr),
                                           ),
                                         ),
                                       ],

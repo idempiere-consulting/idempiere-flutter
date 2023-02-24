@@ -97,11 +97,11 @@ class MaintenanceMpResourceScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text(
                             "${"RESOURCES".tr}: ${controller._trx.records!.length}")
                         : Text("${"RESOURCES".tr}: ")),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -169,7 +169,7 @@ class MaintenanceMpResourceScreen
                 ],
               ),
               //const SizedBox(height: 5),
-              /*  Row(
+              Row(
                 //mainAxisAlignment: MainAxisAlignment.,
                 children: [
                   Container(
@@ -198,7 +198,7 @@ class MaintenanceMpResourceScreen
                     ),
                   ),
                 ],
-              ), */
+              ),
               Row(
                 children: [
                   Container(
@@ -216,10 +216,10 @@ class MaintenanceMpResourceScreen
                           },
                           items: controller._tt2.records!.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.value,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.value,
                             );
                           }).toList(),
                         ),
@@ -292,10 +292,10 @@ class MaintenanceMpResourceScreen
                         },
                         items: controller.dropDownList.map((list) {
                           return DropdownMenuItem<String>(
+                            value: list.id,
                             child: Text(
                               list.name.toString(),
                             ),
-                            value: list.id,
                           );
                         }).toList(),
                       ),
@@ -506,7 +506,7 @@ class MaintenanceMpResourceScreen
                                                         "note": controller
                                                             .trx
                                                             .records![index]
-                                                            .name,
+                                                            .note,
                                                         "resTypeId": controller
                                                             .trx
                                                             .records![index]
@@ -629,7 +629,7 @@ class MaintenanceMpResourceScreen
                                                         "note": controller
                                                             .trx
                                                             .records![index]
-                                                            .name,
+                                                            .note,
                                                         "resTypeId": controller
                                                             .trx
                                                             .records![index]
@@ -744,7 +744,7 @@ class MaintenanceMpResourceScreen
                                                         "note": controller
                                                             .trx
                                                             .records![index]
-                                                            .name,
+                                                            .note,
                                                         "resTypeId": controller
                                                             .trx
                                                             .records![index]
@@ -859,7 +859,7 @@ class MaintenanceMpResourceScreen
                                                         "note": controller
                                                             .trx
                                                             .records![index]
-                                                            .name,
+                                                            .note,
                                                         "resTypeId": controller
                                                             .trx
                                                             .records![index]
@@ -974,7 +974,7 @@ class MaintenanceMpResourceScreen
                                                         "note": controller
                                                             .trx
                                                             .records![index]
-                                                            .name,
+                                                            .note,
                                                         "resTypeId": controller
                                                             .trx
                                                             .records![index]
@@ -1204,7 +1204,7 @@ class MaintenanceMpResourceScreen
                                                         "note": controller
                                                             .trx
                                                             .records![index]
-                                                            .name,
+                                                            .note,
                                                         "resTypeId": controller
                                                             .trx
                                                             .records![index]
@@ -1521,7 +1521,7 @@ class MaintenanceMpResourceScreen
                                             Row(children: [
                                               Text('Note: '.tr),
                                               Text(controller.trx
-                                                      .records![index].name ??
+                                                      .records![index].note ??
                                                   ""),
                                             ]),
                                             Row(children: [
@@ -1831,6 +1831,14 @@ class MaintenanceMpResourceScreen
                                                                         index]
                                                                     .litResourceGroupID
                                                                     ?.id,
+                                                            "note": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .note,
+                                                            "name": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .name,
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -1894,9 +1902,56 @@ class MaintenanceMpResourceScreen
                                                                 isConnected,
                                                           });
                                                     },
-                                                    icon: const Icon(
-                                                      Icons.warning,
-                                                      color: Colors.red,
+                                                    icon: Stack(
+                                                      children: <Widget>[
+                                                        const Icon(
+                                                          Icons.warning,
+                                                          color: Colors.red,
+                                                        ),
+                                                        Visibility(
+                                                          visible: controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .anomaliesCount !=
+                                                              "0",
+                                                          child: Positioned(
+                                                            right: 1,
+                                                            top: 1,
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(1),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color:
+                                                                    Colors.red,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            6),
+                                                              ),
+                                                              constraints:
+                                                                  const BoxConstraints(
+                                                                minWidth: 12,
+                                                                minHeight: 12,
+                                                              ),
+                                                              child: Text(
+                                                                '${controller.trx.records![index].anomaliesCount}',
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 8,
+                                                                ),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   IconButton(
@@ -2144,6 +2199,16 @@ class MaintenanceMpResourceScreen
                                                                       .records![
                                                                           index]
                                                                       .color,
+                                                              "note": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .note,
+                                                              "name": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .name,
                                                             });
                                                         /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -2339,14 +2404,12 @@ class MaintenanceMpResourceScreen
                                                             color: Colors.red,
                                                           ),
                                                           Visibility(
-                                                            visible: int.parse(controller
-                                                                        .trx
-                                                                        .records![
-                                                                            index]
-                                                                        .anomaliesCount!) !=
-                                                                    0
-                                                                ? true
-                                                                : false,
+                                                            visible: controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .anomaliesCount !=
+                                                                "0",
                                                             child: Positioned(
                                                               right: 1,
                                                               top: 1,
@@ -2631,6 +2694,14 @@ class MaintenanceMpResourceScreen
                                                                         index]
                                                                     .litResourceGroupID
                                                                     ?.id,
+                                                            "note": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .note,
+                                                            "name": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .name,
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -2694,9 +2765,56 @@ class MaintenanceMpResourceScreen
                                                                 isConnected,
                                                           });
                                                     },
-                                                    icon: const Icon(
-                                                      Icons.warning,
-                                                      color: Colors.red,
+                                                    icon: Stack(
+                                                      children: <Widget>[
+                                                        const Icon(
+                                                          Icons.warning,
+                                                          color: Colors.red,
+                                                        ),
+                                                        Visibility(
+                                                          visible: controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .anomaliesCount !=
+                                                              "0",
+                                                          child: Positioned(
+                                                            right: 1,
+                                                            top: 1,
+                                                            child: Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(1),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color:
+                                                                    Colors.red,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            6),
+                                                              ),
+                                                              constraints:
+                                                                  const BoxConstraints(
+                                                                minWidth: 12,
+                                                                minHeight: 12,
+                                                              ),
+                                                              child: Text(
+                                                                '${controller.trx.records![index].anomaliesCount}',
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 8,
+                                                                ),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   IconButton(
@@ -2736,10 +2854,10 @@ class MaintenanceMpResourceScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("${"RESOURCES".tr}: ${controller.trx.rowcount}")
                         : Text("${"RESOURCES".tr}: ")),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -2799,10 +2917,10 @@ class MaintenanceMpResourceScreen
                           },
                           items: controller._tt2.records!.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.value,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.value,
                             );
                           }).toList(),
                         ),
@@ -2958,7 +3076,7 @@ class MaintenanceMpResourceScreen
                                                         .records![index]
                                                         .dateOrdered,
                                                     "note": controller.trx
-                                                        .records![index].name,
+                                                        .records![index].note,
                                                     "resTypeId": controller
                                                         .trx
                                                         .records![index]
@@ -3106,7 +3224,7 @@ class MaintenanceMpResourceScreen
                                         Row(children: [
                                           Text('Note: '.tr),
                                           Text(controller
-                                                  .trx.records![index].name ??
+                                                  .trx.records![index].note ??
                                               ""),
                                         ]),
                                         Row(children: [
@@ -3493,6 +3611,8 @@ class MaintenanceMpResourceScreen
                                                   Get.to(
                                                       const CreateResAnomaly(),
                                                       arguments: {
+                                                        "id": controller.trx
+                                                            .records![index].id,
                                                         "docNo": controller
                                                                 .trx
                                                                 .records![index]
@@ -3514,9 +3634,53 @@ class MaintenanceMpResourceScreen
                                                             isConnected,
                                                       });
                                                 },
-                                                icon: const Icon(
-                                                  Icons.warning,
-                                                  color: Colors.red,
+                                                icon: Stack(
+                                                  children: <Widget>[
+                                                    const Icon(
+                                                      Icons.warning,
+                                                      color: Colors.red,
+                                                    ),
+                                                    Visibility(
+                                                      visible: controller
+                                                              .trx
+                                                              .records![index]
+                                                              .anomaliesCount !=
+                                                          "0",
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Text(
+                                                            '${controller.trx.records![index].anomaliesCount}',
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 8,
+                                                            ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ],
@@ -3541,10 +3705,10 @@ class MaintenanceMpResourceScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("${"RESOURCES".tr}: ${controller.trx.rowcount}")
                         : Text("${"RESOURCES".tr}: ")),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -3604,10 +3768,10 @@ class MaintenanceMpResourceScreen
                           },
                           items: controller._tt2.records!.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.value,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.value,
                             );
                           }).toList(),
                         ),
@@ -3763,7 +3927,7 @@ class MaintenanceMpResourceScreen
                                                         .records![index]
                                                         .dateOrdered,
                                                     "note": controller.trx
-                                                        .records![index].name,
+                                                        .records![index].note,
                                                     "resTypeId": controller
                                                         .trx
                                                         .records![index]
@@ -3911,7 +4075,7 @@ class MaintenanceMpResourceScreen
                                         Row(children: [
                                           Text('Note: '.tr),
                                           Text(controller
-                                                  .trx.records![index].name ??
+                                                  .trx.records![index].note ??
                                               ""),
                                         ]),
                                         Row(children: [
@@ -4298,6 +4462,8 @@ class MaintenanceMpResourceScreen
                                                   Get.to(
                                                       const CreateResAnomaly(),
                                                       arguments: {
+                                                        "id": controller.trx
+                                                            .records![index].id,
                                                         "docNo": controller
                                                                 .trx
                                                                 .records![index]
@@ -4319,9 +4485,53 @@ class MaintenanceMpResourceScreen
                                                             isConnected,
                                                       });
                                                 },
-                                                icon: const Icon(
-                                                  Icons.warning,
-                                                  color: Colors.red,
+                                                icon: Stack(
+                                                  children: <Widget>[
+                                                    const Icon(
+                                                      Icons.warning,
+                                                      color: Colors.red,
+                                                    ),
+                                                    Visibility(
+                                                      visible: controller
+                                                              .trx
+                                                              .records![index]
+                                                              .anomaliesCount !=
+                                                          "0",
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Text(
+                                                            '${controller.trx.records![index].anomaliesCount}',
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 8,
+                                                            ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ],

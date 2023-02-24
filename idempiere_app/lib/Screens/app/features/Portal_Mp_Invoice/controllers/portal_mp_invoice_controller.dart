@@ -6,7 +6,7 @@ class PortalMpInvoiceController extends GetxController {
   late PortalMPInvoiceLineJson _trx1;
 
   // ignore: prefer_typing_uninitialized_variables
-  var adUserId; 
+  var adUserId;
 
   var value = "Tutti".obs;
 
@@ -91,7 +91,7 @@ class PortalMpInvoiceController extends GetxController {
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -120,7 +120,7 @@ class PortalMpInvoiceController extends GetxController {
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -179,7 +179,7 @@ class PortalMpInvoiceController extends GetxController {
     _dataAvailable.value = false;
     _showData.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -203,7 +203,7 @@ class PortalMpInvoiceController extends GetxController {
   Future<void> getInvoiceLines() async {
     _showData.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -216,13 +216,13 @@ class PortalMpInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx1 = PortalMPInvoiceLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      
+      _trx1 = PortalMPInvoiceLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
       _showData.value = _trx1.records!.isNotEmpty;
     } else {
       _showData.value = false;
     }
-
   }
 
   // Data
@@ -370,7 +370,7 @@ class PortalMpInvoiceController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(

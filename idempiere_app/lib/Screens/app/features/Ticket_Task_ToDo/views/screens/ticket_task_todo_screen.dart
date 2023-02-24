@@ -58,12 +58,13 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
@@ -78,10 +79,10 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
               Row(
                 children: [
                   Container(
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("TASK: ".tr + "${controller.trx.rowcount}")
-                        : Text("TASK: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("${"TASK: ".tr}${controller.trx.rowcount}")
+                        : Text("TASK: ".tr)),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -309,10 +310,10 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
               Row(
                 children: [
                   Container(
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("TASK: ".tr + "${controller.trx.rowcount}")
-                        : Text("TASK: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("${"TASK: ".tr}${controller.trx.rowcount}")
+                        : Text("TASK: ".tr)),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -540,10 +541,10 @@ class TicketTaskToDoScreen extends GetView<TicketTaskToDoController> {
               Row(
                 children: [
                   Container(
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("TASK: ".tr + "${controller.trx.rowcount}")
-                        : Text("TASK: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("${"TASK: ".tr}${controller.trx.rowcount}")
+                        : Text("TASK: ".tr)),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),

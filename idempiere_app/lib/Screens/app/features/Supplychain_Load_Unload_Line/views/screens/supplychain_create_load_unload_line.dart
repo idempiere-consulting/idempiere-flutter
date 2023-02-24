@@ -26,7 +26,7 @@ class _CreateSupplychainLoadUnloadLineState
     extends State<CreateSupplychainLoadUnloadLine> {
   createLoadUnloadLine() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "M_Inventory_ID": {"id": Get.arguments["id"]},
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
@@ -78,7 +78,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<void> getCharge() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -118,7 +118,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<List<Records>> getLocators() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -145,7 +145,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<void> getInstAttr(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -191,7 +191,7 @@ class _CreateSupplychainLoadUnloadLineState
     });
     instAttrId = 0;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -237,7 +237,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<void> searchByInstAttr(dynamic id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -280,7 +280,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<void> getProductByInstAttr(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -316,7 +316,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<void> nextLotIncrease() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     final msg = jsonEncode({
@@ -339,7 +339,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<void> createAttribute() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' +
@@ -372,7 +372,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<void> createLot() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/M_Lot/');
@@ -411,7 +411,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<void> createAttributeSetInstance() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse(
@@ -471,7 +471,7 @@ class _CreateSupplychainLoadUnloadLineState
 
   Future<void> createAttributeInstance() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse(
@@ -641,12 +641,12 @@ class _CreateSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by code".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -668,12 +668,12 @@ class _CreateSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -740,11 +740,11 @@ class _CreateSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Locator".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -857,11 +857,11 @@ class _CreateSupplychainLoadUnloadLineState
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Attribute Instance".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -893,13 +893,13 @@ class _CreateSupplychainLoadUnloadLineState
                             items: attrList.records!
                                 .map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
                                     child: Text(
                                       list.mAttributeSetInstanceID
                                               ?.identifier ??
                                           "???",
                                     ),
-                                    value: list.mAttributeSetInstanceID?.id
-                                        .toString(),
                                   );
                                 })
                                 .toSet()
@@ -969,12 +969,12 @@ class _CreateSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by code".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -996,12 +996,12 @@ class _CreateSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1068,11 +1068,11 @@ class _CreateSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Locator".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1185,11 +1185,11 @@ class _CreateSupplychainLoadUnloadLineState
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Attribute Instance".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1221,13 +1221,13 @@ class _CreateSupplychainLoadUnloadLineState
                             items: attrList.records!
                                 .map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
                                     child: Text(
                                       list.mAttributeSetInstanceID
                                               ?.identifier ??
                                           "???",
                                     ),
-                                    value: list.mAttributeSetInstanceID?.id
-                                        .toString(),
                                   );
                                 })
                                 .toSet()
@@ -1297,12 +1297,12 @@ class _CreateSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by code".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1324,12 +1324,12 @@ class _CreateSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Search by product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1396,11 +1396,11 @@ class _CreateSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Locator".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1513,11 +1513,11 @@ class _CreateSupplychainLoadUnloadLineState
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Attribute Instance".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1549,13 +1549,13 @@ class _CreateSupplychainLoadUnloadLineState
                             items: attrList.records!
                                 .map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.mAttributeSetInstanceID?.id
+                                        .toString(),
                                     child: Text(
                                       list.mAttributeSetInstanceID
                                               ?.identifier ??
                                           "???",
                                     ),
-                                    value: list.mAttributeSetInstanceID?.id
-                                        .toString(),
                                   );
                                 })
                                 .toSet()

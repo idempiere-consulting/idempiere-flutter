@@ -40,7 +40,7 @@ class RRecords {
   final int? costAmt;
   final String? created;
   final CreatedBy? createdBy;
-  final bool? isActive;
+  bool? isActive;
   bool? isValid;
   final int? resourceQty;
   final ResourceType? resourceType;
@@ -59,7 +59,7 @@ class RRecords {
   String? lITControl1DateFrom;
   String? lITControl1DateNext;
   final LITSurveySheetsID? lITSurveySheetsID;
-  final EDIType? eDIType;
+  EDIType? eDIType;
   String? lot;
   String? locationComment;
   int? manufacturedYear;
@@ -72,51 +72,93 @@ class RRecords {
   String? dateOrdered;
   LITResourceType? lITResourceType;
   final String? modelname;
+  String? prodCode;
+  String? textDetails;
   int? offlineId;
+  bool? filtered;
+  bool? checked;
+  MPMaintainID? mpMaintainID;
+  ResourceStatus? resourceStatus;
+  String? number;
+  int? lineNo;
+  String? team;
+  String? anomaliesCount;
+  String? toDoAction;
+  String? doneAction;
+  ADUserID? adUserID;
+  num? length;
+  num? width;
+  num? weightAmt;
+  num? height;
+  String? color;
+  bool? isPrinted;
+  LitResourceGroupID? litResourceGroupID;
+  bool? isSold;
+  String? note;
 
-  RRecords({
-    this.id,
-    this.mpOtDocumentno,
-    this.mpDateworkstart,
-    this.aDClientID,
-    this.updatedBy,
-    this.costAmt,
-    this.created,
-    this.createdBy,
-    this.isActive,
-    this.isValid,
-    this.resourceQty,
-    this.resourceType,
-    this.updated,
-    this.aDOrgID,
-    this.mProductID,
-    this.discount,
-    this.value,
-    this.name,
-    this.description,
-    this.serNo,
-    this.lITControl3DateFrom,
-    this.lITControl3DateNext,
-    this.lITControl2DateFrom,
-    this.lITControl2DateNext,
-    this.lITControl1DateFrom,
-    this.lITControl1DateNext,
-    this.lITSurveySheetsID,
-    this.eDIType,
-    this.lot,
-    this.locationComment,
-    this.manufacturedYear,
-    this.userName,
-    this.serviceDate,
-    this.endDate,
-    this.manufacturer,
-    this.useLifeYears,
-    this.lITProductModel,
-    this.dateOrdered,
-    this.lITResourceType,
-    this.modelname,
-    this.offlineId,
-  });
+  RRecords(
+      {this.id,
+      this.mpOtDocumentno,
+      this.mpDateworkstart,
+      this.aDClientID,
+      this.updatedBy,
+      this.costAmt,
+      this.created,
+      this.createdBy,
+      this.isActive,
+      this.isValid,
+      this.resourceQty,
+      this.resourceType,
+      this.updated,
+      this.aDOrgID,
+      this.mProductID,
+      this.discount,
+      this.value,
+      this.name,
+      this.description,
+      this.serNo,
+      this.lITControl3DateFrom,
+      this.lITControl3DateNext,
+      this.lITControl2DateFrom,
+      this.lITControl2DateNext,
+      this.lITControl1DateFrom,
+      this.lITControl1DateNext,
+      this.lITSurveySheetsID,
+      this.eDIType,
+      this.lot,
+      this.locationComment,
+      this.manufacturedYear,
+      this.userName,
+      this.serviceDate,
+      this.endDate,
+      this.manufacturer,
+      this.useLifeYears,
+      this.lITProductModel,
+      this.dateOrdered,
+      this.lITResourceType,
+      this.modelname,
+      this.prodCode,
+      this.textDetails,
+      this.offlineId,
+      this.checked,
+      this.mpMaintainID,
+      this.resourceStatus,
+      this.number,
+      this.lineNo,
+      this.team,
+      this.anomaliesCount,
+      this.toDoAction,
+      this.doneAction,
+      this.adUserID,
+      this.length,
+      this.width,
+      this.weightAmt,
+      this.height,
+      this.color,
+      this.isPrinted,
+      this.litResourceGroupID,
+      this.isSold,
+      this.note});
 
   RRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -182,7 +224,42 @@ class RRecords {
                     json['LIT_ResourceType'] as Map<String, dynamic>)
                 : null,
         modelname = json['model-name'] as String?,
-        offlineId = json['offlineId'] as int?;
+        prodCode = json['ProdCode'] as String?,
+        textDetails = json['TextDetails'] as String?,
+        offlineId = json['offlineId'] as int?,
+        checked = false,
+        filtered = false,
+        mpMaintainID = (json['MP_Maintain_ID'] as Map<String, dynamic>?) != null
+            ? MPMaintainID.fromJson(
+                json['MP_Maintain_ID'] as Map<String, dynamic>)
+            : null,
+        resourceStatus =
+            (json['LIT_ResourceStatus'] as Map<String, dynamic>?) != null
+                ? ResourceStatus.fromJson(
+                    json['LIT_ResourceStatus'] as Map<String, dynamic>)
+                : null,
+        number = json['V_Number'] as String?,
+        lineNo = json['LineNo'] as int?,
+        anomaliesCount = json['anomalies_count'] as String?,
+        toDoAction = json['todo_action'] as String?,
+        doneAction = json['done_action'] as String?,
+        adUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
+            ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
+            : null,
+        length = json['Length'] as num?,
+        width = json['Width'] as num?,
+        weightAmt = json['WeightedAmt'] as num?,
+        height = json['Height'] as num?,
+        color = json['Color'] as String?,
+        isPrinted = json['IsPrinted'] as bool?,
+        litResourceGroupID =
+            (json['lit_ResourceGroup_ID'] as Map<String, dynamic>?) != null
+                ? LitResourceGroupID.fromJson(
+                    json['lit_ResourceGroup_ID'] as Map<String, dynamic>)
+                : null,
+        isSold = json['IsSold'] as bool?,
+        note = json['Note'] as String?,
+        team = json['team'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -226,6 +303,28 @@ class RRecords {
         'DateOrdered': dateOrdered,
         'LIT_ResourceType': lITResourceType?.toJson(),
         'offlineId': offlineId,
+        'ProdCode': prodCode,
+        'TextDetails': textDetails,
+        'Checked': checked,
+        'Filtered': filtered,
+        'MP_Maintain_ID': mpMaintainID?.toJson(),
+        'LIT_ResourceStatus': resourceStatus?.toJson(),
+        'AD_User_ID': adUserID?.toJson(),
+        'LineNo': lineNo,
+        'V_Number': number,
+        'anomalies_count': anomaliesCount,
+        'todo_action': toDoAction,
+        'done_action': doneAction,
+        'Length': length,
+        'Width': width,
+        'WeightedAmt': weightAmt,
+        'Height': height,
+        'Color': color,
+        'IsPrinted': isPrinted,
+        'team': team,
+        'IsSold': isSold,
+        'Note': note,
+        'lit_ResourceGroup_ID': litResourceGroupID?.toJson(),
       };
 }
 
@@ -243,6 +342,33 @@ class ADClientID {
   });
 
   ADClientID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADUserID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADUserID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADUserID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -324,6 +450,60 @@ class ResourceType {
   });
 
   ResourceType.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LitResourceGroupID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LitResourceGroupID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LitResourceGroupID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ResourceStatus {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  ResourceStatus({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ResourceStatus.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
         identifier = json['identifier'] as String?,
@@ -461,6 +641,33 @@ class LITResourceType {
   LITResourceType.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MPMaintainID {
+  final String? propertyLabel;
+  int? id;
+  String? identifier;
+  final String? modelname;
+
+  MPMaintainID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MPMaintainID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

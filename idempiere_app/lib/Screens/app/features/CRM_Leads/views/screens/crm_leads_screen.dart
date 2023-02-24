@@ -86,10 +86,10 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("LEAD: ${controller.trx.rowcount}")
                           : const Text("LEAD: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -153,10 +153,10 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -425,8 +425,6 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                                   MainAxisAlignment.end,
                                               children: [
                                                 ElevatedButton(
-                                                  child:
-                                                      Text("Convert Lead".tr),
                                                   style: ButtonStyle(
                                                     backgroundColor:
                                                         MaterialStateProperty
@@ -442,10 +440,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                                         final ip = GetStorage()
                                                             .read('ip');
                                                         String authorization =
-                                                            'Bearer ' +
-                                                                GetStorage()
-                                                                    .read(
-                                                                        'token');
+                                                            'Bearer ${GetStorage().read('token')}';
                                                         final msg = jsonEncode({
                                                           "DocAction": "CO",
                                                         });
@@ -453,9 +448,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                                             GetStorage().read(
                                                                 'protocol');
                                                         var url = Uri.parse(
-                                                            '$protocol://' +
-                                                                ip +
-                                                                '/api/v1/models/ad_user/${controller.trx.windowrecords![index].id}');
+                                                            '$protocol://$ip/api/v1/models/ad_user/${controller.trx.windowrecords![index].id}');
 
                                                         var response =
                                                             await http.put(
@@ -490,6 +483,8 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                                       },
                                                     );
                                                   },
+                                                  child:
+                                                      Text("Convert Lead".tr),
                                                 ),
                                               ],
                                             ),
@@ -519,10 +514,10 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("LEAD: ${controller.trx.rowcount}")
                           : const Text("LEAD: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -586,10 +581,10 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -861,10 +856,10 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("LEAD: ${controller.trx.rowcount}")
                           : const Text("LEAD: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -928,10 +923,10 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),

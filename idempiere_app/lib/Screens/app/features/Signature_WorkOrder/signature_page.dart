@@ -34,7 +34,7 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
   updateImageId(int imageId) async {
     final ip = GetStorage().read('ip');
     final protocol = GetStorage().read('protocol');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "LIT_Sign_Image_ID": imageId,
     });
@@ -84,7 +84,7 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
                 var image64 = base64.encode(data!);
                 final ip = GetStorage().read('ip');
                 final protocol = GetStorage().read('protocol');
-                String authorization = 'Bearer ' + GetStorage().read('token');
+                String authorization = 'Bearer ${GetStorage().read('token')}';
                 final msg = jsonEncode(
                     {"name": "customersignature.jpg", "BinaryData": image64});
                 var url =

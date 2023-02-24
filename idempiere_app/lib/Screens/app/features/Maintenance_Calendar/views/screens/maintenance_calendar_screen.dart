@@ -640,6 +640,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                         ),
                       ],
                     ),
+                    childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
                     children: [
                       Visibility(
                         visible: event.refname != 'N/A' ? true : false,
@@ -720,8 +722,6 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                         ),
                       ),
                     ],
-                    childrenPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
                   ),
                 ),
               ),
@@ -990,6 +990,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                         ),
                       ],
                     ),
+                    childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
                     children: [
                       Visibility(
                         visible: event.refname != 'N/A' ? true : false,
@@ -1070,8 +1072,6 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                         ),
                       ),
                     ],
-                    childrenPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
                   ),
                 ),
               ),
@@ -1340,6 +1340,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                         ),
                       ],
                     ),
+                    childrenPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10.0),
                     children: [
                       Visibility(
                         visible: event.refname != 'N/A' ? true : false,
@@ -1420,8 +1422,6 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                         ),
                       ),
                     ],
-                    childrenPadding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10.0),
                   ),
                 ),
               ),

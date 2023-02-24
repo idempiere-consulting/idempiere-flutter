@@ -310,11 +310,11 @@ class _EditSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -367,11 +367,11 @@ class _EditSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Line Status".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -400,10 +400,10 @@ class _EditSupplychainLoadUnloadLineState
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -472,11 +472,11 @@ class _EditSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -529,11 +529,11 @@ class _EditSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Line Status".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -562,10 +562,10 @@ class _EditSupplychainLoadUnloadLineState
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -634,11 +634,11 @@ class _EditSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -691,11 +691,11 @@ class _EditSupplychainLoadUnloadLineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Line Status".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -724,10 +724,10 @@ class _EditSupplychainLoadUnloadLineState
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )

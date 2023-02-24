@@ -20,7 +20,7 @@ class EditLead extends StatefulWidget {
 class _EditLeadState extends State<EditLead> {
   editLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -32,8 +32,8 @@ class _EditLeadState extends State<EditLead> {
       "LeadStatus": {"id": dropdownValue}
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -68,7 +68,7 @@ class _EditLeadState extends State<EditLead> {
 
   deleteLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url =
         Uri.parse('http://' + ip + '/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
@@ -106,10 +106,9 @@ class _EditLeadState extends State<EditLead> {
 
   Future<List<LSRecords>> getAllLeadStatuses() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-        final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' +
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
@@ -133,10 +132,9 @@ class _EditLeadState extends State<EditLead> {
 
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-        final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/ad_user');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -309,11 +307,11 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Agente",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -366,11 +364,11 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Stato Lead",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -399,10 +397,10 @@ class _EditLeadState extends State<EditLead> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -471,11 +469,11 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Agente",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -528,11 +526,11 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Stato Lead",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -561,10 +559,10 @@ class _EditLeadState extends State<EditLead> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -633,11 +631,11 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Agente",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -690,11 +688,11 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Stato Lead",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -723,10 +721,10 @@ class _EditLeadState extends State<EditLead> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )

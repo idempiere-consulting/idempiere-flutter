@@ -25,7 +25,7 @@ class _CreateMaintenanceShipmentlineState
     extends State<CreateMaintenanceShipmentline> {
   createShipment() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "QtyEntered": int.parse(qtyFieldController.text),
       "Description": descriptionFieldController.text,
@@ -36,9 +36,8 @@ class _CreateMaintenanceShipmentlineState
       "C_UOM_ID": {"id": 100},
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/shipment-customer/tabs/${"shipment".tr}/${Get.arguments["id"]}/${"shipment-line".tr}'); //shipment   shipment-line
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/shipment-customer/tabs/${"shipment".tr}/${Get.arguments["id"]}/${"shipment-line".tr}'); //shipment   shipment-line
     //print(msg);
     var response = await http.post(
       url,
@@ -78,11 +77,11 @@ class _CreateMaintenanceShipmentlineState
 
   deleteShipmentLine() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/m_inoutline/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/m_inoutline/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -121,12 +120,11 @@ class _CreateMaintenanceShipmentlineState
 
   windowsAAA() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/shipment-customer/tabs/shipment/${Get.arguments["id"]}/shipment-line');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/shipment-customer/tabs/shipment/${Get.arguments["id"]}/shipment-line');
     //print(msg);
     var response = await http.get(
       url,
@@ -238,11 +236,11 @@ class _CreateMaintenanceShipmentlineState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(

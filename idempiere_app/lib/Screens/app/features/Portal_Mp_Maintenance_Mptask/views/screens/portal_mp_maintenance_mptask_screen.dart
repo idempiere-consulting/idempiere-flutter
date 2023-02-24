@@ -85,10 +85,10 @@ class PortalMpMaintenanceMptaskScreen
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("WORK ORDER: ${controller.trx.rowcount}")
                           : const Text("WORK ORDER: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -281,8 +281,6 @@ class PortalMpMaintenanceMptaskScreen
                                               MainAxisAlignment.end,
                                           children: [
                                             ElevatedButton(
-                                              child:
-                                                  Text("Create Sales Order".tr),
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
@@ -342,6 +340,8 @@ class PortalMpMaintenanceMptaskScreen
                                                         },
                                                       ); */
                                               },
+                                              child:
+                                                  Text("Create Sales Order".tr),
                                             ),
                                           ],
                                         ),
@@ -369,10 +369,10 @@ class PortalMpMaintenanceMptaskScreen
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("WORK ORDER: ${controller.trx.rowcount}")
                           : const Text("WORK ORDER: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -563,8 +563,6 @@ class PortalMpMaintenanceMptaskScreen
                                               MainAxisAlignment.end,
                                           children: [
                                             ElevatedButton(
-                                              child:
-                                                  Text("Create Sales Order".tr),
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
@@ -624,6 +622,8 @@ class PortalMpMaintenanceMptaskScreen
                                                         },
                                                       ); */
                                               },
+                                              child:
+                                                  Text("Create Sales Order".tr),
                                             ),
                                           ],
                                         ),
@@ -651,10 +651,10 @@ class PortalMpMaintenanceMptaskScreen
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("WORK ORDER: ${controller.trx.rowcount}")
                           : const Text("WORK ORDER: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -847,8 +847,6 @@ class PortalMpMaintenanceMptaskScreen
                                               MainAxisAlignment.end,
                                           children: [
                                             ElevatedButton(
-                                              child:
-                                                  Text("Create Sales Order".tr),
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
@@ -908,6 +906,8 @@ class PortalMpMaintenanceMptaskScreen
                                                         },
                                                       ); */
                                               },
+                                              child:
+                                                  Text("Create Sales Order".tr),
                                             ),
                                           ],
                                         ),

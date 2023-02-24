@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 part of dashboard;
 
 class MaintenanceMptaskController extends GetxController {
@@ -49,11 +51,10 @@ class MaintenanceMptaskController extends GetxController {
 
   completeToDo(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/JP_ToDo/${_trx.records![index].jPToDoID?.id}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/JP_ToDo/${_trx.records![index].jPToDoID?.id}');
 
     var msg = jsonEncode({
       'JP_ToDo_Status': {"id": "CO"}
@@ -87,11 +88,10 @@ class MaintenanceMptaskController extends GetxController {
 
   completeWorkOrder(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/mp_ot/${_trx.records![index].id}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/mp_ot/${_trx.records![index].id}');
 
     var msg = jsonEncode({
       'DocStatus': {"id": "CO"}
@@ -142,11 +142,10 @@ class MaintenanceMptaskController extends GetxController {
 
   Future<void> getDocument(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/maintenance-item/${_trx.records![index].id}/print');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/maintenance-item/${_trx.records![index].id}/print');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -256,11 +255,10 @@ class MaintenanceMptaskController extends GetxController {
       _dataAvailable.value = false;
       String ip = GetStorage().read('ip');
       var userId = GetStorage().read('userId');
-      String authorization = 'Bearer ' + GetStorage().read('token');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
 
       var response = await http.get(
         url,
@@ -275,7 +273,7 @@ class MaintenanceMptaskController extends GetxController {
         const filename = "workorder";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        file.writeAsStringSync(response.body);
+        file.writeAsStringSync(utf8.decode(response.bodyBytes));
         //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
         //isWorkOrderSyncing.value = false;
         getWorkOrders();
@@ -303,7 +301,7 @@ class MaintenanceMptaskController extends GetxController {
       onCancel: () {},
       onConfirm: () async {
         final ip = GetStorage().read('ip');
-        String authorization = 'Bearer ' + GetStorage().read('token');
+        String authorization = 'Bearer ${GetStorage().read('token')}';
         var msg = jsonEncode({
           "record-id": _trx.records![index].id,
           "C_DocType_ID": _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
@@ -320,8 +318,8 @@ class MaintenanceMptaskController extends GetxController {
         }
         //print(msg);
         final protocol = GetStorage().read('protocol');
-        var url = Uri.parse(
-            '$protocol://' + ip + '/api/v1/processes/createorderfromwo');
+        var url =
+            Uri.parse('$protocol://$ip/api/v1/processes/createorderfromwo');
 
         var response = await http.post(
           url,
@@ -511,7 +509,7 @@ class MaintenanceMptaskController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(
@@ -529,7 +527,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

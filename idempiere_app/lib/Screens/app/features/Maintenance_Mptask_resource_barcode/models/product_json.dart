@@ -49,7 +49,7 @@ class Records {
   final bool? isPurchased;
   final bool? isSold;
   final int? volume;
-  final int? weight;
+  final num? weight;
   final String? value;
   final MProductCategoryID? mProductCategoryID;
   final CTaxCategoryID? cTaxCategoryID;
@@ -66,6 +66,7 @@ class Records {
   final ProductType? productType;
   final int? guaranteeDays;
   final MAttributeSetInstanceID? mAttributeSetInstanceID;
+  final MAttributeSetID? mAttributeSetID;
   final int? guaranteeDaysMin;
   final bool? isWebStoreFeatured;
   final bool? isSelfService;
@@ -86,6 +87,7 @@ class Records {
   final bool? lITIsProductCard;
   final bool? lITIsProductConfigurable;
   final String? modelname;
+  final MLocatorID? mLocatorID;
 
   Records({
     this.id,
@@ -122,6 +124,7 @@ class Records {
     this.productType,
     this.guaranteeDays,
     this.mAttributeSetInstanceID,
+    this.mAttributeSetID,
     this.guaranteeDaysMin,
     this.isWebStoreFeatured,
     this.isSelfService,
@@ -142,6 +145,7 @@ class Records {
     this.lITIsProductCard,
     this.lITIsProductConfigurable,
     this.modelname,
+    this.mLocatorID,
   });
 
   Records.fromJson(Map<String, dynamic> json)
@@ -172,7 +176,7 @@ class Records {
         isPurchased = json['IsPurchased'] as bool?,
         isSold = json['IsSold'] as bool?,
         volume = json['Volume'] as int?,
-        weight = json['Weight'] as int?,
+        weight = json['Weight'] as num?,
         value = json['Value'] as String?,
         mProductCategoryID =
             (json['M_Product_Category_ID'] as Map<String, dynamic>?) != null
@@ -203,6 +207,11 @@ class Records {
                 ? MAttributeSetInstanceID.fromJson(
                     json['M_AttributeSetInstance_ID'] as Map<String, dynamic>)
                 : null,
+        mAttributeSetID =
+            (json['M_AttributeSet_ID'] as Map<String, dynamic>?) != null
+                ? MAttributeSetID.fromJson(
+                    json['M_AttributeSet_ID'] as Map<String, dynamic>)
+                : null,
         guaranteeDaysMin = json['GuaranteeDaysMin'] as int?,
         isWebStoreFeatured = json['IsWebStoreFeatured'] as bool?,
         isSelfService = json['IsSelfService'] as bool?,
@@ -222,7 +231,10 @@ class Records {
         lITIsSubcontractingPhase = json['LIT_IsSubcontractingPhase'] as bool?,
         lITIsProductCard = json['LIT_IsProductCard'] as bool?,
         lITIsProductConfigurable = json['LIT_IsProductConfigurable'] as bool?,
-        modelname = json['model-name'] as String?;
+        modelname = json['model-name'] as String?,
+        mLocatorID = (json['M_Locator_ID'] as Map<String, dynamic>?) != null
+            ? MLocatorID.fromJson(json['M_Locator_ID'] as Map<String, dynamic>)
+            : null;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -278,7 +290,9 @@ class Records {
         'LIT_IsSubcontractingPhase': lITIsSubcontractingPhase,
         'LIT_IsProductCard': lITIsProductCard,
         'LIT_IsProductConfigurable': lITIsProductConfigurable,
-        'model-name': modelname
+        'model-name': modelname,
+        'M_Locator_ID': mLocatorID?.toJson(),
+        'M_AttributeSet_ID': mAttributeSetID?.toJson(),
       };
 }
 
@@ -501,19 +515,80 @@ class ProductType {
 class MAttributeSetInstanceID {
   final String? propertyLabel;
   final int? id;
+  final String? identifier;
   final String? modelname;
 
   MAttributeSetInstanceID({
     this.propertyLabel,
     this.id,
+    this.identifier,
     this.modelname,
   });
 
   MAttributeSetInstanceID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
-  Map<String, dynamic> toJson() =>
-      {'propertyLabel': propertyLabel, 'id': id, 'model-name': modelname};
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MAttributeSetID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MAttributeSetID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MAttributeSetID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MLocatorID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MLocatorID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MLocatorID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
 }

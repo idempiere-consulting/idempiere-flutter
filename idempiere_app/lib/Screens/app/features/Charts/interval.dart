@@ -21,32 +21,32 @@ class IntervalPage extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Interactive Bar Chart',
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                   '- A tooltip and crosshair on selection.',
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                   '- Bar colors and shadow elevations change with selection state.',
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                   '- Double tap to clear the selection.',
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
@@ -84,18 +84,18 @@ class IntervalPage extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Transposed Bar Chart',
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                   '- Uses gradient attribute instead of color.',
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
@@ -153,25 +153,25 @@ class IntervalPage extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Interval Bar Chart',
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                   '- Make sure to specify a same scale for all variables in a same dimension.',
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                   '- With corner radius.',
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
@@ -207,38 +207,38 @@ class IntervalPage extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Stacked Bar Chart',
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                   '- Nested by type.',
                   style: TextStyle(color: Colors.black),
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text('- With a label in middle of each bar.',
                     style: TextStyle(color: Colors.black)),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                     '- Selects tuples with same index but different types.',
                     style: TextStyle(color: Colors.black)),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
-                child: const Text('- A multiple variabes tooltip.',
-                    style: TextStyle(color: Colors.black)),
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                 alignment: Alignment.centerLeft,
+                child: const Text('- A multiple variabes tooltip.',
+                    style: TextStyle(color: Colors.black)),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
@@ -289,11 +289,11 @@ class IntervalPage extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Funnel Chart',
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
@@ -334,11 +334,11 @@ class IntervalPage extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Pie Chart',
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
@@ -377,18 +377,18 @@ class IntervalPage extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Rose Chart',
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                   '- With corner radius and shadow elevation.',
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
@@ -423,18 +423,18 @@ class IntervalPage extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Stacked Rose Chart',
                   style: TextStyle(fontSize: 20),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                alignment: Alignment.centerLeft,
                 child: const Text(
                   '- A multiple variabes tooltip anchord top-left.',
                 ),
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                alignment: Alignment.centerLeft,
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),
@@ -481,11 +481,11 @@ class IntervalPage extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Race Chart',
                   style: TextStyle(fontSize: 20),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),

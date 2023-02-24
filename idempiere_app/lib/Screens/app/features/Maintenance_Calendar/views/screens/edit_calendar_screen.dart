@@ -368,10 +368,10 @@ class _EditWorkOrderCalendarEventState
                       },
                       items: dropDownList.map((list) {
                         return DropdownMenuItem<String>(
+                          value: list.id,
                           child: Text(
                             list.name.toString(),
                           ),
-                          value: list.id,
                         );
                       }).toList(),
                     ),
@@ -525,10 +525,10 @@ class _EditWorkOrderCalendarEventState
                       },
                       items: dropDownList.map((list) {
                         return DropdownMenuItem<String>(
+                          value: list.id,
                           child: Text(
                             list.name.toString(),
                           ),
-                          value: list.id,
                         );
                       }).toList(),
                     ),
@@ -682,10 +682,10 @@ class _EditWorkOrderCalendarEventState
                       },
                       items: dropDownList.map((list) {
                         return DropdownMenuItem<String>(
+                          value: list.id,
                           child: Text(
                             list.name.toString(),
                           ),
-                          value: list.id,
                         );
                       }).toList(),
                     ),

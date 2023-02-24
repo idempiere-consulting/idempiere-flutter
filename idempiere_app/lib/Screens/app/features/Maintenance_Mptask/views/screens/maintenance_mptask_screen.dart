@@ -36,6 +36,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
+// ignore: depend_on_referenced_packages
 import 'package:pdf/pdf.dart';
 import 'dart:typed_data';
 
@@ -92,11 +93,11 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text(
                               "${"WORK ORDER".tr}: ${controller.trx.records!.length}")
                           : Text("${"WORK ORDER".tr}: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -874,6 +875,42 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             children: [
                                               IconButton(
                                                   onPressed: () {
+                                                    GetStorage().write(
+                                                        'selectedWorkOrderId',
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mPOTID!
+                                                            .id);
+
+                                                    GetStorage().write(
+                                                        'selectedTaskDocNo',
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mPMaintainID
+                                                            ?.id);
+                                                    GetStorage().write(
+                                                        'selectedTaskBP',
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.identifier ??
+                                                            "");
+                                                    Get.toNamed(
+                                                        '/MaintenanceMpResourceBarcode',
+                                                        arguments: {
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                        });
+                                                  },
+                                                  icon: Icon(Icons
+                                                      .manage_search_outlined)),
+                                              IconButton(
+                                                  onPressed: () {
                                                     Get.to(
                                                         const MaintenanceMptaskInfo(),
                                                         arguments: {
@@ -1047,7 +1084,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       ?.id !=
                                                   'CO',
                                               child: ElevatedButton(
-                                                child: Text("Complete".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -1063,11 +1099,10 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                         .completeToDo(index);
                                                   }
                                                 },
+                                                child: Text("Complete".tr),
                                               ),
                                             ),
                                             ElevatedButton(
-                                              child:
-                                                  Text("Anomalies Review".tr),
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
@@ -1096,12 +1131,10 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                           "",
                                                     });
                                               },
+                                              child:
+                                                  Text("Anomalies Review".tr),
                                             ),
                                             ElevatedButton(
-                                              child: Text(
-                                                  "Create Sales Order from Work Order"
-                                                      .tr
-                                                      .tr),
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
@@ -1112,6 +1145,10 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                     .createSalesOrderFromWorkOrder(
                                                         index);
                                               },
+                                              child: Text(
+                                                  "Create Sales Order from Work Order"
+                                                      .tr
+                                                      .tr),
                                             ),
                                             /* Visibility(
                                               visible: controller
@@ -1166,11 +1203,11 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text(
                               "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
                           : Text("${"WORK ORDER".tr}: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -1590,17 +1627,15 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           overflowButtonSpacing: 5,
                                           children: [
                                             ElevatedButton(
-                                              child: Text("Complete".tr),
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
                                                         Colors.green),
                                               ),
                                               onPressed: () async {},
+                                              child: Text("Complete".tr),
                                             ),
                                             ElevatedButton(
-                                              child:
-                                                  Text("Anomalies Review".tr),
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
@@ -1629,6 +1664,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                           "",
                                                     });
                                               },
+                                              child:
+                                                  Text("Anomalies Review".tr),
                                             ),
                                             Visibility(
                                               visible: controller
@@ -1637,8 +1674,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       .cOrderID !=
                                                   null,
                                               child: ElevatedButton(
-                                                child:
-                                                    Text("Sales Order Zoom".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -1655,6 +1690,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                                 ?.id
                                                       });
                                                 },
+                                                child:
+                                                    Text("Sales Order Zoom".tr),
                                               ),
                                             ),
                                           ],
@@ -1683,11 +1720,11 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text(
                               "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
                           : Text("${"WORK ORDER".tr}: ")),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -2107,17 +2144,15 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           overflowButtonSpacing: 5,
                                           children: [
                                             ElevatedButton(
-                                              child: Text("Complete".tr),
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
                                                         Colors.green),
                                               ),
                                               onPressed: () async {},
+                                              child: Text("Complete".tr),
                                             ),
                                             ElevatedButton(
-                                              child:
-                                                  Text("Anomalies Review".tr),
                                               style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
@@ -2146,6 +2181,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                           "",
                                                     });
                                               },
+                                              child:
+                                                  Text("Anomalies Review".tr),
                                             ),
                                             Visibility(
                                               visible: controller
@@ -2154,8 +2191,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       .cOrderID !=
                                                   null,
                                               child: ElevatedButton(
-                                                child:
-                                                    Text("Sales Order Zoom".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -2172,6 +2207,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                                 ?.id
                                                       });
                                                 },
+                                                child:
+                                                    Text("Sales Order Zoom".tr),
                                               ),
                                             ),
                                           ],

@@ -4,6 +4,8 @@ class CRMSalesOrderController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late SalesOrderJson _trx;
 
+  ContractArticleJSON articleList = ContractArticleJSON(records: []);
+
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
@@ -19,6 +21,8 @@ class CRMSalesOrderController extends GetxController {
 
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
+
+  var articleDropDownValue = "0".obs;
 
   final json = {
     "types": [
@@ -60,7 +64,7 @@ class CRMSalesOrderController extends GetxController {
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -120,7 +124,7 @@ class CRMSalesOrderController extends GetxController {
       }
     }
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -145,7 +149,7 @@ class CRMSalesOrderController extends GetxController {
 
   Future<void> getDocument(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -173,7 +177,8 @@ class CRMSalesOrderController extends GetxController {
 
       //return json.records!;
     } else {
-      throw Exception("Failed to load PDF");
+      //throw Exception("Failed to load PDF");
+      print(response.body);
     }
   }
 
@@ -193,7 +198,7 @@ class CRMSalesOrderController extends GetxController {
 
   Future<void> getBusinessPartner(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -226,7 +231,7 @@ class CRMSalesOrderController extends GetxController {
     String? isConnected = await BluetoothThermalPrinter.connectionStatus;
     if (isConnected == "true") {
       final ip = GetStorage().read('ip');
-      String authorization = 'Bearer ' + GetStorage().read('token');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
       var url = Uri.parse('$protocol://' +
           ip +
@@ -585,6 +590,69 @@ class CRMSalesOrderController extends GetxController {
     bytes += generator.cut();
     return bytes;
   }
+
+  getContractArticles(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_ContractArticle?\$filter= C_Order_ID eq $id');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      articleList = ContractArticleJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      openArticleSelection();
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
+  openArticleSelection() {
+    Get.defaultDialog(
+        title: "Select which Article to Edit".tr,
+        content: Obx(
+          () => DropdownButton(
+            hint: Text("No Article Selected".tr),
+            value: articleDropDownValue.value == "0"
+                ? null
+                : articleDropDownValue.value,
+            style: const TextStyle(fontSize: 12.0),
+            elevation: 16,
+            onChanged: (String? newValue) async {
+              articleDropDownValue.value = newValue!;
+              Get.back();
+              print(newValue);
+              for (var element in articleList.records!) {
+                if (element.help == articleDropDownValue.value) {
+                  Get.to(const CRMEditHTMLSalesOrder(), arguments: {
+                    "html": articleDropDownValue.value,
+                    "id": element.id
+                  });
+                }
+              }
+
+              articleDropDownValue.value = "0";
+            },
+            items: articleList.records!.map((list) {
+              return DropdownMenuItem<String>(
+                value: list.help,
+                child: Text(
+                  list.rowType?.identifier ?? "NONE",
+                ),
+              );
+            }).toList(),
+          ),
+        ));
+  }
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();
@@ -592,6 +660,7 @@ class CRMSalesOrderController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -736,7 +805,7 @@ class CRMSalesOrderController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(

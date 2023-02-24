@@ -22,7 +22,7 @@ class EditProdutionOrder extends StatefulWidget {
 class _EditProdutionOrderState extends State<EditProdutionOrder> {
   Future<void> getProductionOrder() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -57,7 +57,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
 
   getWarehouse(int? locator) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -89,7 +89,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(DateTime.now());
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "record-id": args["id"],
       "model-name": "M_Production",
@@ -141,7 +141,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(DateTime.now());
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "record-id": args["id"],
       "model-name": "M_Production",
@@ -192,7 +192,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(DateTime.now());
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "record-id": args["id"],
       "model-name": "M_Production",

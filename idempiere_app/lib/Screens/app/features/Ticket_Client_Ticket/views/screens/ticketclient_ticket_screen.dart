@@ -60,12 +60,13 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -80,10 +81,10 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("TICKET: ".tr + "${controller.trx.rowcount}")
                           : Text("TICKET: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -313,10 +314,10 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("TICKET: ".tr + "${controller.trx.rowcount}")
                           : Text("TICKET: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -546,10 +547,10 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("TICKET: ".tr + "${controller.trx.rowcount}")
                           : Text("TICKET: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),

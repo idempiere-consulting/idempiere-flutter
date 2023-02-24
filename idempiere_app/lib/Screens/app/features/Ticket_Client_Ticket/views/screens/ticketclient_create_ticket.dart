@@ -44,7 +44,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
 
   sendTicketAttachedImage(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final msg = jsonEncode({"name": "ticketimage.jpg", "data": image64});
 
@@ -69,7 +69,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
 
   createTicket() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -137,7 +137,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     String formattedDate = formatter.format(date);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -211,7 +211,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   Future<void> getBusinessPartner() async {
     var userId = GetStorage().read("userId");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -255,7 +255,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   Future<void> getRStatus() async {
     //var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/R_Status?\$filter= Value eq \'R00\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -281,7 +281,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   Future<void> getSalesRep() async {
     //var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/AD_User?\$filter= Value eq \'tba\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -310,7 +310,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
 
   getTicketTypeInfo() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -338,7 +338,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   Future<List<Types>> getFreeSlots() async {
     List<Types> list = [];
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -408,7 +408,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     //print(formattedFiftyDaysAgo);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -440,7 +440,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
 
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
@@ -593,12 +593,12 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       : false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child:  Align(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Business Partner".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -672,11 +672,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "User".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -763,7 +763,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Summary of the issue'.tr,
@@ -779,7 +779,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Subject of the Scheduled Session'.tr,
@@ -791,11 +791,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Priority".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -819,10 +819,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.id,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.id,
                       );
                     }).toList(),
                   ),
@@ -832,11 +832,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Session slots currently free".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -868,10 +868,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                                   },
                                   items: snapshot.data!.map((list) {
                                     return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
                                       child: Text(
                                         list.name.toString(),
                                       ),
-                                      value: list.id.toString(),
                                     );
                                   }).toList(),
                                 )
@@ -911,12 +911,12 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       : false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child:  Align(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Business Partner".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -990,11 +990,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "User".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1081,7 +1081,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Summary of the issue'.tr,
@@ -1097,7 +1097,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Subject of the Scheduled Session'.tr,
@@ -1109,11 +1109,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Priority".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1137,10 +1137,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.id,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.id,
                       );
                     }).toList(),
                   ),
@@ -1150,11 +1150,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Session slots currently free".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1186,10 +1186,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                                   },
                                   items: snapshot.data!.map((list) {
                                     return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
                                       child: Text(
                                         list.name.toString(),
                                       ),
-                                      value: list.id.toString(),
                                     );
                                   }).toList(),
                                 )
@@ -1229,12 +1229,12 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                       : false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
-                    child:  Align(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Business Partner".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1308,11 +1308,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "User".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1399,7 +1399,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Summary of the issue'.tr,
@@ -1415,7 +1415,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: TextField(
                       maxLines: 5,
                       controller: nameFieldController,
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         //prefixIcon: Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Subject of the Scheduled Session'.tr,
@@ -1427,11 +1427,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Priority".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1455,10 +1455,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     },
                     items: dropDownList.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.id,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.id,
                       );
                     }).toList(),
                   ),
@@ -1468,11 +1468,11 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         "Session slots currently free".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
-                      alignment: Alignment.centerLeft,
                     ),
                   ),
                 ),
@@ -1504,10 +1504,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                                   },
                                   items: snapshot.data!.map((list) {
                                     return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
                                       child: Text(
                                         list.name.toString(),
                                       ),
-                                      value: list.id.toString(),
                                     );
                                   }).toList(),
                                 )

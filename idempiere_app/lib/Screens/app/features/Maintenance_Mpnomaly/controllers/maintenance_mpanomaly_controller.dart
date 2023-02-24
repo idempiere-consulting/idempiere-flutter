@@ -17,10 +17,9 @@ class MaintenanceMpanomalyController extends GetxController {
 
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -189,7 +188,7 @@ class MaintenanceMpanomalyController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(
@@ -207,8 +206,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

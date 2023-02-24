@@ -60,12 +60,13 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
@@ -80,10 +81,11 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
               Row(
                 children: [
                   Container(
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("In Progress: ".tr + controller.wpCount.value.toString())
-                        : Text("In Progress: ".tr)),
                     margin: const EdgeInsets.only(left: 15),
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("In Progress: ".tr +
+                            controller.wpCount.value.toString())
+                        : Text("In Progress: ".tr)),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -307,11 +309,11 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text(
-                            "In Progress: ".tr + "${controller.wpCount.value}")
+                            "${"In Progress: ".tr}${controller.wpCount.value}")
                         : Text("In Progress: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -535,11 +537,11 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text(
-                            "In Progress: ".tr + "${controller.wpCount.value}")
+                            "${"In Progress: ".tr}${controller.wpCount.value}")
                         : Text("In Progress: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),

@@ -18,7 +18,7 @@ class EditShipment extends StatefulWidget {
 class _EditShipmentState extends State<EditShipment> {
   editShipment() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "PrivateNote": noteFieldController.text,
     });
@@ -60,7 +60,7 @@ class _EditShipmentState extends State<EditShipment> {
 
   /*  deleteLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url =
         Uri.parse('$protocol://' + ip + '/api/v1/models/m_inout/${args["id"]}');
@@ -176,7 +176,7 @@ class _EditShipmentState extends State<EditShipment> {
                   child: TextField(
                     maxLines: 5,
                     controller: noteFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Note'.tr,
@@ -198,7 +198,7 @@ class _EditShipmentState extends State<EditShipment> {
                   child: TextField(
                     maxLines: 5,
                     controller: noteFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Note'.tr,

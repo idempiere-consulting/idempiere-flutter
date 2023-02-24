@@ -134,11 +134,11 @@ class MaintenanceShipmentlineScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("Shipment Lines: ".tr +
                             controller.trx.rowcount.toString())
                         : Text("Shipment Lines: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   /* Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -380,11 +380,11 @@ class MaintenanceShipmentlineScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("Shipment Lines: ".tr +
                             controller.trx.rowcount.toString())
                         : Text("Shipment Lines: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   /* Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -624,11 +624,11 @@ class MaintenanceShipmentlineScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("Shipment Lines: ".tr +
                             controller.trx.rowcount.toString())
                         : Text("Shipment Lines: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   /* Container(
                     margin: const EdgeInsets.only(left: 40),

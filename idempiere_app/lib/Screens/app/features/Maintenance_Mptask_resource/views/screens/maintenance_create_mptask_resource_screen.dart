@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
 import 'dart:io';
@@ -12,11 +12,12 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/reflist_resource_type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/resource_type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/views/screens/maintenance_mptask_resource_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_A2_Fire_Extinguisher_Grid/models/reflist_resource_type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_barcode/views/screens/maintenance_mptask_resource_barcode_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
@@ -60,10 +61,10 @@ class _CreateMaintenanceMpResourceState
         },
         items: _tt.records!.map((list) {
           return DropdownMenuItem<String>(
+            value: list.value,
             child: Text(
               list.name.toString(),
             ),
-            value: list.value,
           );
         }).toList(),
       ),
@@ -81,11 +82,10 @@ class _CreateMaintenanceMpResourceState
   Future<void> syncWorkOrder() async {
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
 
     var response = await http.get(
       url,
@@ -108,7 +108,7 @@ class _CreateMaintenanceMpResourceState
   /* Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
         '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
@@ -132,10 +132,10 @@ class _CreateMaintenanceMpResourceState
   Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v');
 
     var response = await http.get(
       url,
@@ -166,11 +166,10 @@ class _CreateMaintenanceMpResourceState
 
   syncWorkOrderResourcePages(WorkOrderResourceLocalJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -208,11 +207,10 @@ class _CreateMaintenanceMpResourceState
   Future<void> syncWorkOrderRefListResource() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Reference?\$filter= Name eq \'LIT_ResourceType\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Reference?\$filter= Name eq \'LIT_ResourceType\'');
 
     var response = await http.get(
       url,
@@ -227,9 +225,8 @@ class _CreateMaintenanceMpResourceState
 
       var json = jsonDecode(response.body);
       var id = json["records"][0]["id"];
-      var url2 = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+      var url2 = Uri.parse(
+          '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
 
       var response2 = await http.get(
         url2,
@@ -262,11 +259,10 @@ class _CreateMaintenanceMpResourceState
   Future<void> syncWorkOrderRefListResourceCategory() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Reference?\$filter= Name eq \'C_BP_EDI EDI Type\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Reference?\$filter= Name eq \'C_BP_EDI EDI Type\'');
 
     var response = await http.get(
       url,
@@ -281,9 +277,8 @@ class _CreateMaintenanceMpResourceState
 
       var json = jsonDecode(response.body);
       var id = json["records"][0]["id"];
-      var url2 = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+      var url2 = Uri.parse(
+          '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
 
       var response2 = await http.get(
         url2,
@@ -316,7 +311,7 @@ class _CreateMaintenanceMpResourceState
   /* Future<void> syncWorkOrderResourceSurveyLines() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -351,11 +346,10 @@ class _CreateMaintenanceMpResourceState
   Future<void> syncWorkOrderResourceSurveyLines() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/mp_resource_survey_line?\$orderby= LineNo asc');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/mp_resource_survey_line?\$orderby= LineNo asc');
 
     var response = await http.get(
       url,
@@ -376,7 +370,16 @@ class _CreateMaintenanceMpResourceState
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(utf8.decode(response.bodyBytes));
-        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        try {
+          Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        } catch (e) {
+          print("no page");
+        }
+        try {
+          Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
+        } catch (e) {
+          print("no page");
+        }
         Get.snackbar(
           "Done!".tr,
           "The record has been created".tr,
@@ -392,11 +395,10 @@ class _CreateMaintenanceMpResourceState
   syncWorkOrderResourceSurveyLinesPages(
       WorkOrderResourceSurveyLinesJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -424,7 +426,16 @@ class _CreateMaintenanceMpResourceState
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(jsonEncode(json.toJson()));
-        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        try {
+          Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        } catch (e) {
+          print("no page");
+        }
+        try {
+          Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
+        } catch (e) {
+          print("no page");
+        }
         Get.snackbar(
           "Done!".tr,
           "The record has been created".tr,
@@ -438,6 +449,7 @@ class _CreateMaintenanceMpResourceState
   }
 
   createWorkOrderResource(bool isConnected) async {
+    final protocol = GetStorage().read('protocol');
     //print(now);
     const filename = "workorderresource";
     final file = File(
@@ -445,7 +457,7 @@ class _CreateMaintenanceMpResourceState
     //print(GetStorage().read('selectedTaskId'));
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -458,7 +470,7 @@ class _CreateMaintenanceMpResourceState
       "LIT_Control3DateFrom": date3,
       "LIT_Control2DateFrom": date2,
       "LIT_Control1DateFrom": date1,
-      "Name": noteFieldController.text,
+      "Note": noteFieldController.text,
       "SerNo": sernoFieldController.text,
       "LocationComment": locationFieldController.text,
       //"Value": locationCodeFieldController.text,
@@ -515,7 +527,7 @@ class _CreateMaintenanceMpResourceState
         lITControl3DateFrom: date3,
         lITControl2DateFrom: date2,
         lITControl1DateFrom: date1,
-        name: noteFieldController.text,
+        note: noteFieldController.text,
         serNo: sernoFieldController.text,
         locationComment: locationFieldController.text,
         //value: locationCodeFieldController.text,
@@ -547,9 +559,8 @@ class _CreateMaintenanceMpResourceState
         color: colorFieldController.text,
         textDetails: cartelFieldController.text);
 
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}');
     if (isConnected) {
       if (kDebugMode) {
         print(msg);
@@ -582,7 +593,16 @@ class _CreateMaintenanceMpResourceState
         trx.rowcount = trx.rowcount! + 1;
         var data = jsonEncode(trx.toJson());
         file.writeAsStringSync(data);
-        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        try {
+          Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        } catch (e) {
+          print("no page");
+        }
+        try {
+          Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
+        } catch (e) {
+          print("no page");
+        }
         Get.snackbar(
           "Done!".tr,
           "The record has been created".tr,
@@ -610,9 +630,8 @@ class _CreateMaintenanceMpResourceState
       if (GetStorage().read('postCallList') == null) {
         var call = jsonEncode({
           "offlineid": GetStorage().read('postCallId'),
-          "url": 'http://' +
-              ip +
-              '/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
+          "url":
+              '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
@@ -624,7 +643,7 @@ class _CreateMaintenanceMpResourceState
           "LIT_Control3DateFrom": date3,
           "LIT_Control2DateFrom": date2,
           "LIT_Control1DateFrom": date1,
-          "Name": noteFieldController.text,
+          "Note": noteFieldController.text,
           "SerNo": sernoFieldController.text,
           "LocationComment": locationFieldController.text,
           //"Value": locationCodeFieldController.text,
@@ -667,9 +686,8 @@ class _CreateMaintenanceMpResourceState
         list = GetStorage().read('postCallList');
         var call = jsonEncode({
           "offlineid": GetStorage().read('postCallId'),
-          "url": 'http://' +
-              ip +
-              '/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
+          "url":
+              '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
@@ -681,7 +699,7 @@ class _CreateMaintenanceMpResourceState
           "LIT_Control3DateFrom": date3,
           "LIT_Control2DateFrom": date2,
           "LIT_Control1DateFrom": date1,
-          "Name": noteFieldController.text,
+          "Note": noteFieldController.text,
           "SerNo": sernoFieldController.text,
           "LocationComment": locationFieldController.text,
           //"Value": locationCodeFieldController.text,
@@ -734,7 +752,16 @@ class _CreateMaintenanceMpResourceState
       trx.rowcount = trx.rowcount! + 1;
       var data = jsonEncode(trx.toJson());
       file.writeAsStringSync(data);
-      Get.find<MaintenanceMpResourceController>().getWorkOrders();
+      try {
+        Get.find<MaintenanceMpResourceController>().getWorkOrders();
+      } catch (e) {
+        print("no page");
+      }
+      try {
+        Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
+      } catch (e) {
+        print("no page");
+      }
       setState(() {
         saveFlag = false;
       });
@@ -877,8 +904,19 @@ class _CreateMaintenanceMpResourceState
               child: IconButton(
                 onPressed: () async {
                   Get.back();
-                  Get.find<MaintenanceMpResourceController>()
-                      .openResourceType();
+                  try {
+                    Get.find<MaintenanceMpResourceController>()
+                        .openResourceType();
+                  } catch (e) {
+                    print("no page");
+                  }
+
+                  try {
+                    Get.find<MaintenanceMpResourceBarcodeController>()
+                        .openResourceType();
+                  } catch (e) {
+                    print("no page");
+                  }
                 },
                 icon: const Icon(
                   Icons.add,
@@ -952,8 +990,13 @@ class _CreateMaintenanceMpResourceState
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
+                      onChanged: (string) {
+                        setState(() {});
+                      },
                       controller: lineFieldController,
                       decoration: InputDecoration(
+                        prefixIconColor:
+                            lineFieldController.text == "" ? Colors.red : null,
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Line N°'.tr,
@@ -968,11 +1011,11 @@ class _CreateMaintenanceMpResourceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1108,6 +1151,7 @@ class _CreateMaintenanceMpResourceState
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -1144,6 +1188,7 @@ class _CreateMaintenanceMpResourceState
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -1187,8 +1232,14 @@ class _CreateMaintenanceMpResourceState
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
+                      onChanged: (string) {
+                        setState(() {});
+                      },
                       controller: useLifeYearsFieldController,
                       decoration: InputDecoration(
+                        prefixIconColor: useLifeYearsFieldController.text == ""
+                            ? Colors.red
+                            : null,
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Due Year'.tr,
@@ -1232,8 +1283,15 @@ class _CreateMaintenanceMpResourceState
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
+                      onChanged: (string) {
+                        setState(() {});
+                      },
                       controller: manufacturedYearFieldController,
                       decoration: InputDecoration(
+                        prefixIconColor:
+                            manufacturedYearFieldController.text == ""
+                                ? Colors.red
+                                : null,
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Manufactured Year'.tr,
@@ -1255,6 +1313,7 @@ class _CreateMaintenanceMpResourceState
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: DateTime.now().toString(),
                       firstDate: DateTime(2000),
@@ -1291,6 +1350,7 @@ class _CreateMaintenanceMpResourceState
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: (Get.arguments["perm"])[16] == "N"
                           ? ''
@@ -1329,6 +1389,7 @@ class _CreateMaintenanceMpResourceState
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: (Get.arguments["perm"])[17] == "N"
                           ? ''
@@ -1359,9 +1420,15 @@ class _CreateMaintenanceMpResourceState
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
+                      onChanged: (string) {
+                        setState(() {});
+                      },
                       //focusNode: focusNode,
                       controller: lengthFieldController,
                       decoration: InputDecoration(
+                        prefixIconColor: lengthFieldController.text == ""
+                            ? Colors.red
+                            : null,
                         prefixIcon: const Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: "Length".tr,
@@ -1378,9 +1445,14 @@ class _CreateMaintenanceMpResourceState
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
+                      onChanged: (string) {
+                        setState(() {});
+                      },
                       //focusNode: focusNode,
                       controller: widthFieldController,
                       decoration: InputDecoration(
+                        prefixIconColor:
+                            widthFieldController.text == "" ? Colors.red : null,
                         prefixIcon: const Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: "Width".tr,
@@ -1397,9 +1469,15 @@ class _CreateMaintenanceMpResourceState
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
+                      onChanged: (string) {
+                        setState(() {});
+                      },
                       //focusNode: focusNode,
                       controller: weightAmtFieldController,
                       decoration: InputDecoration(
+                        prefixIconColor: weightAmtFieldController.text == ""
+                            ? Colors.red
+                            : null,
                         prefixIcon: const Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: "Supported Weight".tr,
@@ -1416,9 +1494,15 @@ class _CreateMaintenanceMpResourceState
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
+                      onChanged: (string) {
+                        setState(() {});
+                      },
                       //focusNode: focusNode,
                       controller: heightFieldController,
                       decoration: InputDecoration(
+                        prefixIconColor: heightFieldController.text == ""
+                            ? Colors.red
+                            : null,
                         prefixIcon: const Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: "Height".tr,
@@ -1461,11 +1545,11 @@ class _CreateMaintenanceMpResourceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1528,11 +1612,11 @@ class _CreateMaintenanceMpResourceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Type".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1556,10 +1640,10 @@ class _CreateMaintenanceMpResourceState
                     },
                     items: tt.records!.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.value,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.value,
                       );
                     }).toList(),
                   ),
@@ -1683,6 +1767,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),
@@ -1716,6 +1801,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),
@@ -1749,6 +1835,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),
@@ -1782,6 +1869,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),
@@ -1815,6 +1903,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),
@@ -1873,11 +1962,11 @@ class _CreateMaintenanceMpResourceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1940,11 +2029,11 @@ class _CreateMaintenanceMpResourceState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Type".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1968,10 +2057,10 @@ class _CreateMaintenanceMpResourceState
                     },
                     items: tt.records!.map((list) {
                       return DropdownMenuItem<String>(
+                        value: list.value,
                         child: Text(
                           list.name.toString(),
                         ),
-                        value: list.value,
                       );
                     }).toList(),
                   ),
@@ -2095,6 +2184,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),
@@ -2128,6 +2218,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),
@@ -2161,6 +2252,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),
@@ -2194,6 +2286,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),
@@ -2227,6 +2320,7 @@ class _CreateMaintenanceMpResourceState
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
                     type: DateTimePickerType.date,
                     initialValue: '',
                     firstDate: DateTime(2000),

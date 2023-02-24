@@ -111,13 +111,13 @@ class CRMScreen extends GetView<CRMController> {
                 () => Visibility(
                   visible: controller.dataAvailable,
                   child: Container(
+                    padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                     child: const Text(
                       'Lead Status',
                       style: TextStyle(
                         fontSize: 20, /* color: Colors.black */
                       ),
                     ),
-                    padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                   ),
                 ),
               ),
@@ -234,13 +234,13 @@ class CRMScreen extends GetView<CRMController> {
               const SizedBox(height: kSpacing),
               _buildRecentMessages(data: controller.getChatting()), */
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Lead Status',
                   style: TextStyle(
                     fontSize: 20, /* color: Colors.black */
                   ),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
                   margin: const EdgeInsets.only(top: 10),
@@ -343,13 +343,13 @@ class CRMScreen extends GetView<CRMController> {
               const SizedBox(height: kSpacing),
               _buildRecentMessages(data: controller.getChatting()), */
               Container(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
                 child: const Text(
                   'Lead Status',
                   style: TextStyle(
                     fontSize: 20, /* color: Colors.black */
                   ),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 40, 20, 5),
               ),
               Container(
                   margin: const EdgeInsets.only(top: 10),

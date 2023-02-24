@@ -148,11 +148,11 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
                       margin: const EdgeInsets.only(top: 40),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Business Partner".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -245,11 +245,11 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Product List: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Product List: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -335,11 +335,11 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("Product List: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("Product List: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),

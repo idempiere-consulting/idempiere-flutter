@@ -57,7 +57,7 @@ class SettingsController extends GetxController {
     String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -81,7 +81,7 @@ class SettingsController extends GetxController {
 
   syncUserPreferences() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -105,7 +105,7 @@ class SettingsController extends GetxController {
 
   Future<void> syncBusinessPartner() async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -135,13 +135,12 @@ class SettingsController extends GetxController {
       }
       /* GetStorage()
           .write('businessPartnerSync', utf8.decode(response.bodyBytes)); */
-
     }
   }
 
   syncBusinessPartnerPages(BusinessPartnerJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -183,7 +182,7 @@ class SettingsController extends GetxController {
 
   Future<void> syncProduct() async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -221,7 +220,7 @@ class SettingsController extends GetxController {
 
   syncProductPages(ProductJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -265,7 +264,7 @@ class SettingsController extends GetxController {
   Future<void> syncWorkOrder() async {
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -295,7 +294,7 @@ class SettingsController extends GetxController {
   Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
         '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
@@ -335,7 +334,7 @@ class SettingsController extends GetxController {
 
   syncWorkOrderResourcePages(WorkOrderResourceLocalJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -380,7 +379,7 @@ class SettingsController extends GetxController {
   Future<void> syncWorkOrderRefListResource() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -433,7 +432,7 @@ class SettingsController extends GetxController {
   Future<void> syncWorkOrderRefListResourceCategory() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -486,7 +485,7 @@ class SettingsController extends GetxController {
   Future<void> syncWorkOrderResourceSurveyLines() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -525,7 +524,7 @@ class SettingsController extends GetxController {
   syncWorkOrderResourceSurveyLinesPages(
       WorkOrderResourceSurveyLinesJson json, int index) async {
     String ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -569,7 +568,7 @@ class SettingsController extends GetxController {
   Future<void> syncWorkOrderResourceType() async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -803,7 +802,7 @@ class SettingsController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(

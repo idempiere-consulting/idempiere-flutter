@@ -74,7 +74,7 @@ class MaintenanceMpContractsCreateContractController extends GetxController {
 
   Future<void> createMaintainContract() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     // ignore: unused_local_variable
     var msg = jsonEncode({
@@ -96,7 +96,6 @@ class MaintenanceMpContractsCreateContractController extends GetxController {
     );
     if (response.statusCode == 201) {
       //print(response.body);
-
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -176,7 +175,7 @@ class MaintenanceMpContractsCreateContractController extends GetxController {
 
   getBusinessPartner() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/c_bpartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -203,7 +202,7 @@ class MaintenanceMpContractsCreateContractController extends GetxController {
 
   getBusinessPartnerLocation() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('http://' +
         ip +
         '/api/v1/models/c_bpartner_location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
@@ -229,7 +228,7 @@ class MaintenanceMpContractsCreateContractController extends GetxController {
 
   Future<List<Records>> getAllTechnicians() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
     var response = await http.get(
@@ -258,7 +257,7 @@ class MaintenanceMpContractsCreateContractController extends GetxController {
   Future<void> getProductLists() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +

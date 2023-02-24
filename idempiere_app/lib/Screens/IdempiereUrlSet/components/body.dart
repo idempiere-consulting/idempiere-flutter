@@ -121,10 +121,10 @@ class _BodyState extends State<Body> {
                 },
                 items: dropDownList.map((list) {
                   return DropdownMenuItem<String>(
+                    value: list.id,
                     child: Text(
                       list.name.toString(),
                     ),
-                    value: list.id,
                   );
                 }).toList(),
               ),
@@ -146,10 +146,10 @@ class _BodyState extends State<Body> {
                 },
                 items: protocolDropDownList.map((list) {
                   return DropdownMenuItem<String>(
+                    value: list.id,
                     child: Text(
                       list.name.toString(),
                     ),
-                    value: list.id,
                   );
                 }).toList(),
               ),

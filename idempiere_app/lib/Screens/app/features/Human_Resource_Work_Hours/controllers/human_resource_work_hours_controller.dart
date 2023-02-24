@@ -42,7 +42,7 @@ class HumanResourceWorkHoursController extends GetxController {
             (DateTime.now()).difference(savedDate).inSeconds > 3) {
           savedDate = DateTime.now();
           final ip = GetStorage().read('ip');
-          String authorization = 'Bearer ' + GetStorage().read('token');
+          String authorization = 'Bearer ${GetStorage().read('token')}';
           final protocol = GetStorage().read('protocol');
           var text =
               String.fromCharCodes(ndef.cachedMessage!.records[0].payload);
@@ -123,7 +123,7 @@ class HumanResourceWorkHoursController extends GetxController {
     }
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/lit_workhour/');
 

@@ -53,16 +53,15 @@ class CourseQuizController extends GetxController {
 
     if (isConnected) {
       String ip = GetStorage().read('ip');
-      String authorization = 'Bearer ' + GetStorage().read('token');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
 
       for (var i = 0; i < _trx.records!.length; i++) {
         switch (_trx.records![i].lITSurveyType?.id) {
           case 'N':
             if (numberfieldController[i].text != "") {
-              var url = Uri.parse('$protocol://' +
-                  ip +
-                  '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+              var url = Uri.parse(
+                  '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
 
               var msg = jsonEncode({
                 "ValueNumber": numberfieldController[i].text,
@@ -81,9 +80,8 @@ class CourseQuizController extends GetxController {
 
             break;
           case 'T':
-            var url = Uri.parse('$protocol://' +
-                ip +
-                '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+            var url = Uri.parse(
+                '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
 
             var msg = jsonEncode({
               "ValueNumber": textfieldController[i].text,
@@ -100,9 +98,8 @@ class CourseQuizController extends GetxController {
             );
             break;
           case 'D':
-            var url = Uri.parse('$protocol://' +
-                ip +
-                '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+            var url = Uri.parse(
+                '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
 
             var msg = jsonEncode({
               "DateValue": dateValue[i],
@@ -119,9 +116,8 @@ class CourseQuizController extends GetxController {
             );
             break;
           case 'M':
-            var url = Uri.parse('$protocol://' +
-                ip +
-                '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+            var url = Uri.parse(
+                '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
 
             var msg = jsonEncode({
               "ValueNumber": selectedValue[i].toString(),
@@ -139,9 +135,8 @@ class CourseQuizController extends GetxController {
             break;
           case 'Y':
             if (checkValue[i] != 2) {
-              var url = Uri.parse('$protocol://' +
-                  ip +
-                  '/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+              var url = Uri.parse(
+                  '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
 
               var msg = jsonEncode({
                 "ValueNumber": checkValue[i] == 1 ? "Y" : "N",
@@ -194,11 +189,10 @@ class CourseQuizController extends GetxController {
       emptyAPICallStak();
       _dataAvailable.value = false;
       String ip = GetStorage().read('ip');
-      String authorization = 'Bearer ' + GetStorage().read('token');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/mp_resource_survey?\$filter= MP_Maintain_Resource_ID eq ${Get.arguments["id"]} and LIT_SurveyCategory eq \'SU\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/mp_resource_survey?\$filter= MP_Maintain_Resource_ID eq ${Get.arguments["id"]} and LIT_SurveyCategory eq \'SU\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
       var response = await http.get(
         url,
@@ -230,11 +224,10 @@ class CourseQuizController extends GetxController {
   Future<void> getQuizLines(int identifier) async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/mp_resource_survey_line?\$filter= mp_resource_survey_ID eq $identifier and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/mp_resource_survey_line?\$filter= mp_resource_survey_ID eq $identifier and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -267,6 +260,7 @@ class CourseQuizController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -411,7 +405,7 @@ class CourseQuizController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(
@@ -429,7 +423,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

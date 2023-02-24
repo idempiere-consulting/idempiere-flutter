@@ -20,7 +20,7 @@ class SupplychainInventoryLotLineController extends GetxController {
 
   deleteLoadUnloadLine(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url =
@@ -63,7 +63,7 @@ class SupplychainInventoryLotLineController extends GetxController {
   Future<void> getInventoryLines() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +

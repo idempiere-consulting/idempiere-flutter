@@ -84,10 +84,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
                           : Text("INVOICES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -151,10 +151,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                           },
                           items: controller.invoiceDropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -390,10 +390,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
                           : Text("INVOICES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -457,10 +457,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                           },
                           items: controller.invoiceDropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -709,10 +709,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                         Row(
                           children: [
                             Container(
+                              margin: const EdgeInsets.only(left: 15),
                               child: Obx(() => controller.dataAvailable
                                   ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
                                   : Text("INVOICES: ".tr)),
-                              margin: const EdgeInsets.only(left: 15),
                             ),
                             Container(
                               margin: const EdgeInsets.only(left: 20),
@@ -1024,10 +1024,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                         Row(
                           children: [
                             Container(
+                              margin: const EdgeInsets.only(left: 15),
                               child: Obx(() => controller.showData
                                   ? Text("LINES: ".tr + controller.trx1.rowcount.toString())
                                   : Text("LINES: ".tr)),
-                              margin: const EdgeInsets.only(left: 15),
                             ),
                             Container(
                               margin: const EdgeInsets.only(left: 20),
@@ -1314,7 +1314,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
           },
         ),
         title: Text(
-          'DocumentNo'.tr + ' ' + controller.trx.records![index].documentNo!,
+          '${'DocumentNo'.tr} ${controller.trx.records![index].documentNo!}',
           style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold),
@@ -1340,13 +1340,13 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                   children: [
                     Row(
                       children: [
-                        Text('Document Type'.tr + ': '),
+                        Text('${'Document Type'.tr}: '),
                         Text(controller.trx.records![index].cDocTypeTargetID?.identifier ?? "",)
                       ],
                     ),
                     Row(
                       children: [
-                        Text('Date Invoiced'.tr + ': '),
+                        Text('${'Date Invoiced'.tr}: '),
                         Text(controller.trx.records![index].dateInvoiced ?? "",)
                       ],
                     ),                    
@@ -1380,10 +1380,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
               },
               items: controller.invoiceDropDownList.map((list) {
                 return DropdownMenuItem<String>(
+                  value: list.id,
                   child: Text(
                     list.name.toString(),
                   ),
-                  value: list.id,
                 );
               }).toList(),
             ),
@@ -1426,10 +1426,10 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
               },
               items: controller.linesDropDownList.map((list) {
                 return DropdownMenuItem<String>(
+                  value: list.id,
                   child: Text(
                     list.name.toString(),
                   ),
-                  value: list.id,
                 );
               }).toList(),
             ),
@@ -1478,7 +1478,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
               Row(
                 children: [
                   Text(
-                    'LineNo'.tr + ': ',
+                    '${'LineNo'.tr}: ',
                     style: const TextStyle(
                         color: Colors.white),
                   ),
@@ -1493,7 +1493,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
               Row(
                 children: [
                   Text(
-                    'Name'.tr + ': ',
+                    '${'Name'.tr}: ',
                     style: const TextStyle(
                         color: Colors.white),
                   ),
@@ -1508,7 +1508,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
               Row(
                 children: [
                   Text(
-                    'Line Amount'.tr + ': ',
+                    '${'Line Amount'.tr}: ',
                     style: const TextStyle(
                         color: Colors.white),
                   ),
@@ -1530,7 +1530,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                   children: [
                     Row(
                       children: [
-                        Text('Description'.tr + ': '),
+                        Text('${'Description'.tr}: '),
                         Text(controller.trx1.records![index].description ?? "",
                           style: const TextStyle(
                             color: Colors.white,
@@ -1540,7 +1540,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                     ),
                     Row(
                       children: [
-                        Text('Price'.tr + ': '),
+                        Text('${'Price'.tr}: '),
                         Text((controller.trx1.records![index].priceEntered ?? "").toString(),
                           style: const TextStyle(
                             color: Colors.white,
@@ -1550,7 +1550,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                     ),
                     Row(
                       children: [
-                        Text('List Price'.tr + ': '),
+                        Text('${'List Price'.tr}: '),
                         Text((controller.trx1.records![index].priceList ?? "").toString(),
                           style: const TextStyle(
                             color: Colors.white,
@@ -1560,7 +1560,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                     ),
                     Row(
                       children: [
-                        Text('Tax'.tr + ': '),
+                        Text('${'Tax'.tr}: '),
                         Text(controller.trx1.records![index].cTaxID?.identifier ?? "",
                           style: const TextStyle(
                             color: Colors.white,

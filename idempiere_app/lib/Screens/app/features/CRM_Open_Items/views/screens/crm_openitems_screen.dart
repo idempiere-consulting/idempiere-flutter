@@ -156,11 +156,11 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                       margin: const EdgeInsets.only(top: 40),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Business Partner".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -222,11 +222,11 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                       margin: const EdgeInsets.only(top: 40),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Organization".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -344,13 +344,7 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                                                         FontWeight.bold),
                                               ),
                                               Text(
-                                                (controller
-                                                            ._trx
-                                                            .records![index]
-                                                            .cCurrencyID
-                                                            ?.identifier ??
-                                                        "??") +
-                                                    " ",
+                                                "${controller._trx.records![index].cCurrencyID?.identifier ?? "??"} ",
                                                 style: const TextStyle(
                                                     color: Colors.greenAccent,
                                                     fontWeight:
@@ -375,13 +369,7 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                                                         FontWeight.bold),
                                               ),
                                               Text(
-                                                (controller
-                                                            ._trx
-                                                            .records![index]
-                                                            .cCurrencyID
-                                                            ?.identifier ??
-                                                        "??") +
-                                                    " ",
+                                                "${controller._trx.records![index].cCurrencyID?.identifier ?? "??"} ",
                                                 style: const TextStyle(
                                                     color: Colors.greenAccent,
                                                     fontWeight:

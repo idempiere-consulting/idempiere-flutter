@@ -56,13 +56,12 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
   completeOrder(int index) async {
     Get.back();
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "record-id": controller.trx.records![index].id,
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/processes/c-order-process');
+    var url = Uri.parse('$protocol://$ip/api/v1/processes/c-order-process');
 
     var response = await http.post(
       url,
@@ -129,11 +128,11 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("ANOMALIES: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("ANOMALIES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -185,10 +184,10 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -384,11 +383,11 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
                 Row(
                   children: [
                     Container(
+                      margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text("ANOMALIES: ".tr +
                               controller.trx.rowcount.toString())
                           : Text("ANOMALIES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
@@ -440,10 +439,10 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id,
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id,
                             );
                           }).toList(),
                         ),
@@ -653,11 +652,11 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
                       Row(
                         children: [
                           Container(
+                            margin: const EdgeInsets.only(left: 15),
                             child: Obx(() => controller.dataAvailable
                                 ? Text("ANOMALIES: ".tr +
                                     controller.trx.rowcount.toString())
                                 : Text("ANOMALIES: ".tr)),
-                            margin: const EdgeInsets.only(left: 15),
                           ),
                           Container(
                             margin: const EdgeInsets.only(left: 20),
@@ -709,10 +708,10 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
                                 },
                                 items: controller.dropDownList.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id,
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id,
                                   );
                                 }).toList(),
                               ),
@@ -1945,7 +1944,7 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
             children: [
               Row(
                 children: [
-                  Text('Document Date'.tr + ': '),
+                  Text('${'Document Date'.tr}: '),
                   Text(
                     controller.trx.records![index].dateDoc ?? "",
                   )

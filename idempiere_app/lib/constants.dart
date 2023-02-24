@@ -72,7 +72,7 @@ emptyPostCallStack() {
   if (GetStorage().read('postCallList') != null &&
       (GetStorage().read('postCallList')).isEmpty == false) {
     List<dynamic> list = GetStorage().read('postCallList');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     // ignore: avoid_function_literals_in_foreach_calls
     list.forEach((element) async {
@@ -124,7 +124,7 @@ emptyEditAPICallStack() {
   if (GetStorage().read('storedEditAPICalls') != null &&
       (GetStorage().read('storedEditAPICalls')).isEmpty == false) {
     Map calls = GetStorage().read('storedEditAPICalls');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     calls.forEach((call, msg) async {
       var url = Uri.parse(call);
       //print(url);
@@ -175,7 +175,7 @@ emptyDeleteCallStack() {
   if (GetStorage().read('deleteCallList') != null &&
       (GetStorage().read('deleteCallList')).isEmpty == false) {
     List<dynamic> list = GetStorage().read('deleteCallList');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     // ignore: avoid_function_literals_in_foreach_calls
     list.forEach((element) async {

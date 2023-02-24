@@ -27,7 +27,7 @@ class CRMController extends GetxController {
   Future<void> getFunnelChartData() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
         '$protocol://' + ip + '/api/v1/models/lit_mobile_lead_funnel_v/');

@@ -24,7 +24,7 @@ class CreateOpportunity extends StatefulWidget {
 class _CreateOpportunityState extends State<CreateOpportunity> {
   saveOpportunity() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -36,7 +36,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       "Description": descriptionFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/C_Opportunity/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_Opportunity/');
     //print(msg);
     var response = await http.post(
       url,
@@ -71,11 +71,10 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
 
   Future<List<OSRecords>> getAllOpportunityStatuses() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -97,11 +96,10 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
 
   Future<void> getSaleStageDefault() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')} and IsDefault eq Y');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')} and IsDefault eq Y');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -128,9 +126,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
 
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -280,12 +278,12 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -355,12 +353,12 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -427,11 +425,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -484,11 +482,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesStage".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -517,10 +515,10 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -541,12 +539,12 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -616,12 +614,12 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -688,11 +686,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -745,11 +743,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesStage".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -778,10 +776,10 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )
@@ -802,12 +800,12 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -877,12 +875,12 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Product".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -949,11 +947,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1006,11 +1004,11 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesStage".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1039,10 +1037,10 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.id.toString(),
                                   );
                                 }).toList(),
                               )

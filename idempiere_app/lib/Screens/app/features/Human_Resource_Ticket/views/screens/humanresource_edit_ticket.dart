@@ -262,7 +262,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
@@ -274,7 +274,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Business Partner'.tr,
@@ -286,7 +286,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.phone_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Phone'.tr,
@@ -298,7 +298,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: mailFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.mail_outline),
                       border: const OutlineInputBorder(),
                       labelText: 'Email'.tr,
@@ -309,11 +309,11 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -365,12 +365,12 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child:  Align(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Lead Status".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -399,10 +399,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -424,7 +424,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
@@ -436,7 +436,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Business Partner'.tr,
@@ -448,7 +448,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.phone_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Phone'.tr,
@@ -460,7 +460,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: mailFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.mail_outline),
                       border: const OutlineInputBorder(),
                       labelText: 'Email'.tr,
@@ -471,11 +471,11 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -527,12 +527,12 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child:  Align(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Lead Status".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -561,10 +561,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )
@@ -586,7 +586,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
@@ -598,7 +598,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: bPartnerFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Business Partner'.tr,
@@ -610,7 +610,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.phone_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Phone'.tr,
@@ -622,7 +622,7 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: mailFieldController,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.mail_outline),
                       border: const OutlineInputBorder(),
                       labelText: 'Email'.tr,
@@ -633,11 +633,11 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "SalesRep".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -689,12 +689,12 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child:  Align(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Lead Status".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -723,10 +723,10 @@ class _EditHumanResourceTicketState extends State<EditHumanResourceTicket> {
                                 },
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),
-                                    value: list.value.toString(),
                                   );
                                 }).toList(),
                               )

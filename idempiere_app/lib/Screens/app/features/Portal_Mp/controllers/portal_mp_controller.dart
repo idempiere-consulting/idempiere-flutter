@@ -25,7 +25,7 @@ class PortalMpController extends GetxController {
     String formattedSixtyDaysLater = formatter.format(sixtyDaysLater);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +

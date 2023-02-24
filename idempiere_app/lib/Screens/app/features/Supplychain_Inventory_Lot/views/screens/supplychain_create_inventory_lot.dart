@@ -21,7 +21,7 @@ class _CreateSupplychainInventoryLotState
     extends State<CreateSupplychainInventoryLot> {
   createinventory() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     var formatter = DateFormat('yyyy-MM-dd');
     // ignore: prefer_typing_uninitialized_variables
     var msg;
@@ -100,7 +100,7 @@ class _CreateSupplychainInventoryLotState
     });
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
@@ -202,11 +202,11 @@ class _CreateSupplychainInventoryLotState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Warehouse".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -234,10 +234,10 @@ class _CreateSupplychainInventoryLotState
                           items: trx.records!
                               .map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name ?? "???",
                                   ),
-                                  value: list.id.toString(),
                                 );
                               })
                               .toSet()
@@ -283,11 +283,11 @@ class _CreateSupplychainInventoryLotState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Warehouse".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -315,10 +315,10 @@ class _CreateSupplychainInventoryLotState
                           items: trx.records!
                               .map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name ?? "???",
                                   ),
-                                  value: list.id.toString(),
                                 );
                               })
                               .toSet()
@@ -364,11 +364,11 @@ class _CreateSupplychainInventoryLotState
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Warehouse".tr,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -396,10 +396,10 @@ class _CreateSupplychainInventoryLotState
                           items: trx.records!
                               .map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
                                   child: Text(
                                     list.name ?? "???",
                                   ),
-                                  value: list.id.toString(),
                                 );
                               })
                               .toSet()

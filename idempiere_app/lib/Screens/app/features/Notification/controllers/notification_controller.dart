@@ -21,7 +21,7 @@ class NotificationController extends GetxController {
 
   sendReadNotification(int index) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     // ignore: prefer_typing_uninitialized_variables
     var msg;
     switch (_trx.records![index].docType) {
@@ -72,8 +72,7 @@ class NotificationController extends GetxController {
       default:
     }
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/lit_mobile_isread/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_mobile_isread/');
     var response = await http.post(
       url,
       body: msg,
@@ -138,11 +137,10 @@ class NotificationController extends GetxController {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     final userId = GetStorage().read('userId');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -165,6 +163,7 @@ class NotificationController extends GetxController {
   }
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -309,7 +308,7 @@ class NotificationController extends GetxController {
 class Provider extends GetConnect {
   Future<void> getLeads() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     //print(authorization);
     //String clientid = GetStorage().read('clientid');
     /* final response = await get(
@@ -327,7 +326,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

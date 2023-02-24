@@ -81,10 +81,10 @@ class SupplychainInventoryScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
                         : Text("INVENTORY: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -265,7 +265,6 @@ class SupplychainInventoryScreen
                                                   ?.id !=
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Complete".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -324,6 +323,7 @@ class SupplychainInventoryScreen
                                                 },
                                               );
                                             },
+                                            child: Text("Complete".tr),
                                           ),
                                         ),
                                       ],
@@ -351,10 +351,10 @@ class SupplychainInventoryScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
                         : Text("INVENTORY: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -531,7 +531,6 @@ class SupplychainInventoryScreen
                                                   ?.id !=
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Complete".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -590,6 +589,7 @@ class SupplychainInventoryScreen
                                                 },
                                               );
                                             },
+                                            child: Text("Complete".tr),
                                           ),
                                         ),
                                       ],
@@ -617,10 +617,10 @@ class SupplychainInventoryScreen
               Row(
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
                         ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
                         : Text("INVENTORY: ".tr)),
-                    margin: const EdgeInsets.only(left: 15),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 40),
@@ -797,7 +797,6 @@ class SupplychainInventoryScreen
                                                   ?.id !=
                                               'CO',
                                           child: ElevatedButton(
-                                            child: Text("Complete".tr),
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
@@ -856,6 +855,7 @@ class SupplychainInventoryScreen
                                                 },
                                               );
                                             },
+                                            child: Text("Complete".tr),
                                           ),
                                         ),
                                       ],

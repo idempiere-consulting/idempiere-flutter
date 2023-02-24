@@ -21,7 +21,7 @@ class AttachmentList extends StatefulWidget {
 class _AttachmentListState extends State<AttachmentList> {
   getRecordAttachments() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
