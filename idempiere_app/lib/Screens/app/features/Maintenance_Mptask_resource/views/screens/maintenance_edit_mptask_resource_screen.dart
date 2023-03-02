@@ -298,9 +298,9 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 ? heightFieldController.text
                 : "0"),
             "Color": colorFieldController.text,
-            "lit_ResourceGroup_ID": {
+            /* "lit_ResourceGroup_ID": {
               "id": dropdownValue3 == "" ? 1000000 : int.parse(dropdownValue3)
-            }
+            } */
             //"IsPrinted": sendWorkOrder,
           });
 

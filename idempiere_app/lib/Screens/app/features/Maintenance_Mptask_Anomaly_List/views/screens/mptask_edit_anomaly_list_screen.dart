@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 //import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -47,7 +48,9 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
 
     var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    print(json.records!.length);
+    if (kDebugMode) {
+      print(json.records!.length);
+    }
 
     /* json.records!.retainWhere((element) =>
         element.mPMaintainResourceID?.id == args["id"] &&
@@ -62,8 +65,8 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
           json.records![i].lITIsManagedByCustomer = manByCustomer;
           json.records![i].isClosed = isClosed;
 
-          var url = Uri.parse(
-              '$protocol://' + ip + '/api/v1/models/LIT_NC/${args["id"]}');
+          var url =
+              Uri.parse('$protocol://$ip/api/v1/models/LIT_NC/${args["id"]}');
           if (isConnected) {
             emptyAPICallStak();
             var response = await http.put(
@@ -82,14 +85,18 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
                     .syncThisWorkOrderResource(
                         GetStorage().read('selectedTaskDocNo'));
               } catch (e) {
-                print('no page');
+                if (kDebugMode) {
+                  print('no page');
+                }
               }
               try {
                 Get.find<MaintenanceMpResourceBarcodeController>()
                     .syncThisWorkOrderResource(
                         GetStorage().read('selectedTaskDocNo'));
               } catch (e) {
-                print('no page');
+                if (kDebugMode) {
+                  print('no page');
+                }
               }
               Get.find<AnomalyListController>().getAnomalies();
               //print("done!");
@@ -121,25 +128,27 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
             try {
               Get.find<MaintenanceMpResourceController>().getWorkOrders();
             } catch (e) {
-              print("no page");
+              if (kDebugMode) {
+                print("no page");
+              }
             }
             try {
               Get.find<MaintenanceMpResourceBarcodeController>()
                   .getWorkOrders();
             } catch (e) {
-              print("no page");
+              if (kDebugMode) {
+                print("no page");
+              }
             }
             Get.find<AnomalyListController>().getAnomalies();
             Map calls = {};
             if (GetStorage().read('storedEditAPICalls') == null) {
-              calls['$protocol://' +
-                  ip +
-                  '/api/v1/models/LIT_NC/${Get.arguments["id"]}'] = msg;
+              calls['$protocol://$ip/api/v1/models/LIT_NC/${Get.arguments["id"]}'] =
+                  msg;
             } else {
               calls = GetStorage().read('storedEditAPICalls');
-              calls['$protocol://' +
-                  ip +
-                  '/api/v1/models/LIT_NC/${Get.arguments["id"]}'] = msg;
+              calls['$protocol://$ip/api/v1/models/LIT_NC/${Get.arguments["id"]}'] =
+                  msg;
             }
             GetStorage().write('storedEditAPICalls', calls);
             Get.snackbar(
@@ -196,13 +205,17 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
                 try {
                   Get.find<MaintenanceMpResourceController>().getWorkOrders();
                 } catch (e) {
-                  print("no page");
+                  if (kDebugMode) {
+                    print("no page");
+                  }
                 }
                 try {
                   Get.find<MaintenanceMpResourceBarcodeController>()
                       .getWorkOrders();
                 } catch (e) {
-                  print("no page");
+                  if (kDebugMode) {
+                    print("no page");
+                  }
                 }
                 Get.find<AnomalyListController>().getAnomalies();
                 Get.snackbar(
@@ -236,7 +249,7 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
       json.records!.removeWhere((element) => Get.arguments["id"] == element.id);
 
       var url = Uri.parse(
-          '$protocol://' + ip + '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
+          '$protocol://$ip/api/v1/models/LIT_NC/${Get.arguments["id"]}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.delete(
@@ -252,12 +265,16 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
           try {
             Get.find<MaintenanceMpResourceController>().getWorkOrders();
           } catch (e) {
-            print("no page");
+            if (kDebugMode) {
+              print("no page");
+            }
           }
           try {
             Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
           } catch (e) {
-            print("no page");
+            if (kDebugMode) {
+              print("no page");
+            }
           }
           Get.find<AnomalyListController>().getAnomalies();
           Get.back();
@@ -290,24 +307,26 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
         try {
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         try {
           Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         Get.find<AnomalyListController>().getAnomalies();
         List<dynamic> list = [];
         if (GetStorage().read('storedEditAPICalls') == null) {
-          list.add('$protocol://' +
-              ip +
-              '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
+          list.add(
+              '$protocol://$ip/api/v1/models/LIT_NC/${Get.arguments["id"]}');
         } else {
           list = GetStorage().read('storedEditAPICalls');
-          list.add('$protocol://' +
-              ip +
-              '/api/v1/models/LIT_NC/${Get.arguments["id"]}');
+          list.add(
+              '$protocol://$ip/api/v1/models/LIT_NC/${Get.arguments["id"]}');
         }
         GetStorage().write('storedEditAPICalls', list);
         Get.snackbar(

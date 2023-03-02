@@ -40,13 +40,21 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
     );
 
     if (response.statusCode == 200) {
+      print(response.body);
       trx = InfoCountJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      //InfoCountJSON list = InfoCountJSON(records: []);
+
+      /* trx.records!.retainWhere((element) =>
+          element.revisionCount == "0" && element.testingCount == "0"); */
+
       List<PlutoRow> newRows = [];
-      for (var element in trx.records!) {
+      for (var i = 0; i < (trx.records!.length); i++) {
         PlutoRow row = PlutoRow(cells: {
-          'Product'.tr: PlutoCell(value: element.mProductID?.identifier),
-          'Revision'.tr: PlutoCell(value: element.revisionCount),
-          'Testing'.tr: PlutoCell(value: element.testingCount),
+          'Product'.tr:
+              PlutoCell(value: trx.records![i].mProductID?.identifier),
+          'Revision'.tr: PlutoCell(value: trx.records![i].revisionCount),
+          'Testing'.tr: PlutoCell(value: trx.records![i].testingCount),
         });
         newRows.add(row);
       }
@@ -89,7 +97,7 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
   void initState() {
     super.initState();
     dataAvailable = false;
-    getWorkOrderInfo();
+    //getWorkOrderInfo();
     //print('hello');
   }
 

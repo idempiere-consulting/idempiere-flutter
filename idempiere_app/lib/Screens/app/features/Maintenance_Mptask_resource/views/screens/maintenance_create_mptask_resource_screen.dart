@@ -869,9 +869,9 @@ class _CreateMaintenanceMpResourceState
     weightAmtFieldController = TextEditingController(text: "0");
     heightFieldController = TextEditingController(text: "0");
     colorFieldController = TextEditingController(text: "");
-    date3 = "";
+    date3 = (DateTime.now().toString()).substring(0, 10);
     dateCalc3 = 0;
-    date2 = "";
+    date2 = (DateTime.now().toString()).substring(0, 10);
     dateCalc3 = 0;
     date1 = (DateTime.now().toString()).substring(0, 10);
     dateCalc3 = 0;

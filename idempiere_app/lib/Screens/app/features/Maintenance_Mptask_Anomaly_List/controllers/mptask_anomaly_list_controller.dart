@@ -30,9 +30,8 @@ class AnomalyListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_DocType?\$filter= Name eq \'Warehouse Order\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_DocType?\$filter= Name eq \'Warehouse Order\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -71,9 +70,8 @@ class AnomalyListController extends GetxController {
         });
         //print(msg);
         final protocol = GetStorage().read('protocol');
-        var url = Uri.parse('$protocol://' +
-            ip +
-            '/api/v1/processes/createsalesorderfromanomaly');
+        var url = Uri.parse(
+            '$protocol://$ip/api/v1/processes/createsalesorderfromanomaly');
 
         var response = await http.post(
           url,
@@ -160,7 +158,7 @@ class AnomalyListController extends GetxController {
 
     var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    print(json.records!.length);
+    //print(json.records!.length);
 
     json.records!.retainWhere((element) =>
         element.mPMaintainResourceID?.id == args["id"] &&
@@ -172,9 +170,9 @@ class AnomalyListController extends GetxController {
       }
     }
 
-    for (var element in json.records!) {
+    /* for (var element in json.records!) {
       print(element.isClosed);
-    }
+    } */
 
     _trx = json;
     // ignore: unnecessary_null_comparison
@@ -188,8 +186,8 @@ class AnomalyListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/lit_nc/$id/attachments/$name');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/lit_nc/$id/attachments/$name');
 
     var response = await http.get(
       url,
@@ -211,8 +209,8 @@ class AnomalyListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/lit_nc/$id/attachments/$name');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/lit_nc/$id/attachments/$name');
 
     var response = await http.delete(
       url,
@@ -234,8 +232,7 @@ class AnomalyListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/lit_nc/$id/attachments');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_nc/$id/attachments');
 
     var response = await http.get(
       url,

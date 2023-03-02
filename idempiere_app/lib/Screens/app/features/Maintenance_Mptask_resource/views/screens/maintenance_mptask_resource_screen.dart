@@ -187,10 +187,10 @@ class MaintenanceMpResourceScreen
                           },
                           items: controller._tt3.records!.map((list) {
                             return DropdownMenuItem<String>(
+                              value: list.id.toString(),
                               child: Text(
                                 list.name.toString(),
                               ),
-                              value: list.id.toString(),
                             );
                           }).toList(),
                         ),
@@ -1448,12 +1448,7 @@ class MaintenanceMpResourceScreen
                                               children: [
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    color: controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .toDoAction! ==
-                                                                "OK" ||
+                                                    color: controller.trx.records![index].toDoAction! == "OK" ||
                                                             controller
                                                                     .trx
                                                                     .records![
@@ -1461,14 +1456,23 @@ class MaintenanceMpResourceScreen
                                                                     .toDoAction! ==
                                                                 "NEW"
                                                         ? kNotifColor
-                                                        : controller.trx.records![index].toDoAction! ==
-                                                                    "PR" ||
+                                                        : controller.trx.records![index].toDoAction! == "PR" ||
                                                                 controller.trx.records![index].toDoAction! ==
-                                                                    "PC"
+                                                                    "PC" ||
+                                                                controller.trx.records![index].toDoAction! ==
+                                                                    "PRnow" ||
+                                                                controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .toDoAction! ==
+                                                                    "PCnow"
                                                             ? const Color.fromARGB(
                                                                 255, 209, 189, 4)
                                                             : controller.trx.records![index].toDoAction! ==
-                                                                    "PT"
+                                                                        "PT" ||
+                                                                    controller.trx.records![index].toDoAction! ==
+                                                                        "PTnow"
                                                                 ? Colors.orange
                                                                 : controller
                                                                             .trx

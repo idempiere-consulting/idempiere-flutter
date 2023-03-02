@@ -268,8 +268,6 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
 
       if (manByCustomer) {
         msg = jsonEncode({
-          "offlineid": GetStorage().read('postCallId'),
-          "url": '$protocol://$ip/api/v1/models/LIT_NC/',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
@@ -284,7 +282,6 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           "DateDoc": "${formattedDate}T00:00:00Z",
           "LIT_IsManagedByCustomer": manByCustomer,
           "IsClosed": isClosed,
-          "IsValid": isValid,
         });
       }
       if (GetStorage().read('postCallList') == null) {
