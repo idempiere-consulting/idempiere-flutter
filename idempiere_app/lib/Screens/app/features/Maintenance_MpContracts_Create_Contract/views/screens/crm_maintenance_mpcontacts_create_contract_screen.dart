@@ -317,11 +317,11 @@ class MaintenanceMpContractsCreateContractScreen
                       margin: const EdgeInsets.only(top: 40),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Business Partner".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -469,11 +469,11 @@ class MaintenanceMpContractsCreateContractScreen
                       margin: const EdgeInsets.only(top: 40),
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           "Technician".tr,
                           style: const TextStyle(fontSize: 12),
                         ),
-                        alignment: Alignment.centerLeft,
                       ),
                     ),
                   ),
@@ -687,11 +687,7 @@ class MaintenanceMpContractsCreateContractScreen
                                                       .spaceBetween,
                                               children: <Widget>[
                                                 Text(
-                                                  "€ " +
-                                                      controller
-                                                          .productList[index]
-                                                          .cost
-                                                          .toString(),
+                                                  "€ ${controller.productList[index].cost}",
                                                   style: const TextStyle(
                                                       fontSize: 15,
                                                       fontWeight:
@@ -771,7 +767,7 @@ class MaintenanceMpContractsCreateContractScreen
               ),
               ListTile(
                 title: Text(
-                  "  €" + controller._trx.records![index].price.toString(),
+                  "  €${controller._trx.records![index].price}",
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),

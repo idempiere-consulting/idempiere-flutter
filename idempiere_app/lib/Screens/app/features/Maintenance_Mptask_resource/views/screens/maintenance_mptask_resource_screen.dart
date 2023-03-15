@@ -480,6 +480,11 @@ class MaintenanceMpResourceScreen
                                                                 .trx
                                                                 .records![index]
                                                                 .serviceDate,
+                                                        "orderedDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
                                                         "endDate": controller
                                                             .trx
                                                             .records![index]

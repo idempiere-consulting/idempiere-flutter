@@ -555,10 +555,10 @@ class MaintenanceMpResourceSheetScreen
                               },
                               items: controller.refList.records!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.value.toString(),
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.value.toString(),
                                 );
                               }).toList(),
                             ),
@@ -930,10 +930,10 @@ class MaintenanceMpResourceSheetScreen
                               },
                               items: controller.refList.records!.map((list) {
                                 return DropdownMenuItem<String>(
+                                  value: list.value.toString(),
                                   child: Text(
                                     list.name.toString(),
                                   ),
-                                  value: list.value.toString(),
                                 );
                               }).toList(),
                             ),

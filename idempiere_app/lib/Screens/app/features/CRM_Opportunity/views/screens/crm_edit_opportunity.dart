@@ -35,8 +35,8 @@ class _EditOpportunityState extends State<EditOpportunity> {
       "Description": descriptionFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/C_Opportunity/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/C_Opportunity/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -73,8 +73,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -112,9 +111,8 @@ class _EditOpportunityState extends State<EditOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -138,7 +136,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{

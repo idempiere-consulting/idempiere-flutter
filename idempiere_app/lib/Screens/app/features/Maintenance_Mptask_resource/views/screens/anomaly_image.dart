@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 
-// For the testing purposes, you should probably use https://pub.dev/packages/uuid
-
 class AnomalyImage extends StatefulWidget {
   const AnomalyImage({Key? key}) : super(key: key);
 

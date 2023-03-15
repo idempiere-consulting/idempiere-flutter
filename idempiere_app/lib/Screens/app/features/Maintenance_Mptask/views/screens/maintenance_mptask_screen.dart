@@ -415,21 +415,6 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          /* const Text(
-                                              "BPartner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ), */
-                                          Icon(Icons.location_pin,
-                                              color: Colors.red.shade700),
-                                          Expanded(
-                                            child: Text(
-                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
-                                          ),
-                                        ],
-                                      ),
                                       Visibility(
                                         visible: controller
                                                 .trx.records![index].name !=
@@ -441,14 +426,34 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold),
                                               ), */
-                                            Icon(Icons.location_pin,
-                                                color: Colors.red.shade700),
+                                            const Icon(Icons.location_city,
+                                                color: Colors.white),
                                             Expanded(
                                               child: Text(
-                                                  "${controller.trx.records![index].name}"),
+                                                  "${controller.trx.records![index].name}",
+                                                  style: const TextStyle(
+                                                      color: Colors.white)),
                                             ),
                                           ],
                                         ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          /* const Text(
+                                              "BPartner: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ), */
+                                          Icon(Icons.location_pin,
+                                              color: Colors.red.shade700),
+                                          Expanded(
+                                            child: Text(
+                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -907,7 +912,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                               .documentNo,
                                                         });
                                                   },
-                                                  icon: Icon(Icons
+                                                  icon: const Icon(Icons
                                                       .manage_search_outlined)),
                                               IconButton(
                                                   onPressed: () {
@@ -981,7 +986,9 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               ),
                                               IconButton(
                                                 tooltip: "Print".tr,
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  controller.getDocument(index);
+                                                },
                                                 icon: const Icon(
                                                     EvaIcons.printer),
                                               ),
@@ -1100,6 +1107,38 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   }
                                                 },
                                                 child: Text("Complete".tr),
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .jpToDoStatus
+                                                          ?.id ==
+                                                      'CO' &&
+                                                  controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .docStatus
+                                                          ?.id ==
+                                                      'CO',
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  var isConnected =
+                                                      await checkConnection();
+
+                                                  if (isConnected) {
+                                                    //print('si.');
+                                                    controller
+                                                        .reOpenToDo(index);
+                                                  }
+                                                },
+                                                child: Text("Reopen".tr),
                                               ),
                                             ),
                                             ElevatedButton(

@@ -110,6 +110,95 @@ class AnomalyListController extends GetxController {
     );
   }
 
+  Future<void> syncAnomalies() async {
+    _dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/LIT_NC?\$filter= IsClosed eq N and AD_Client_ID eq ${GetStorage().read('clientid')}'); //
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncAnomaliesPages(json, index);
+      } else {
+        const filename = "anomalies";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsStringSync(utf8.decode(response.bodyBytes));
+        getAnomalies();
+        //productSync = false;
+        //syncAnomalyTypes();
+        if (kDebugMode) {
+          print('Anomalies Checked');
+        }
+        //checkSyncData();
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      //productSync = false;
+      //checkSyncData();
+    }
+  }
+
+  syncAnomaliesPages(AnomalyJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/LIT_NC?\$filter= IsClosed eq N and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncAnomaliesPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "anomalies";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsStringSync(jsonEncode(json.toJson()));
+        getAnomalies();
+        //productSync = false;
+        //syncAnomalyTypes();
+        if (kDebugMode) {
+          print('Anomalies Checked');
+        }
+        //checkSyncData();
+      }
+    }
+  }
+
   /* final json = {
     "types": [
       {"id": "1", "name": "Name"},
@@ -260,6 +349,7 @@ class AnomalyListController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

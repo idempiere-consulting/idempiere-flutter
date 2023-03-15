@@ -24,9 +24,8 @@ class _AttachmentListState extends State<AttachmentList> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_nc/${Get.arguments["id"]}/attachments');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_nc/${Get.arguments["id"]}/attachments');
 
     var response = await http.get(
       url,

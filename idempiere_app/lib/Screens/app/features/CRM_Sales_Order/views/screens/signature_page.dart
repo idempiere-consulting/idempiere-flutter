@@ -70,9 +70,8 @@ class SignatureSalesOrderState extends State<SignatureSalesOrderScreen> {
                     jsonEncode({"name": "signature.jpg", "data": image64});
 
                 final protocol = GetStorage().read('protocol');
-                var url = Uri.parse('$protocol://' +
-                    ip +
-                    '/api/v1/models/C_Order/${Get.arguments["id"]}/attachments');
+                var url = Uri.parse(
+                    '$protocol://$ip/api/v1/models/C_Order/${Get.arguments["id"]}/attachments');
 
                 var response = await http.post(
                   url,

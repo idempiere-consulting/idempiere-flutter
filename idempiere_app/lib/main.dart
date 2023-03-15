@@ -124,12 +124,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: <Locale>[Locale('en', 'US'), Locale('it', 'IT')],
+      supportedLocales: const <Locale>[Locale('en', 'US'), Locale('it', 'IT')],
       translations: LocaleString(),
       locale: Locale(GetStorage().read('language') ?? 'it_IT'),
       theme: AppTheme.basic,

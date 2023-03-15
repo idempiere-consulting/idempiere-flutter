@@ -47,6 +47,7 @@ class Windowrecords {
   final LeadSource? leadSource;
   final String? phone;
   final String? eMail;
+  final String? url;
   final String? name2;
   final String? bPName;
   final BPLocationID? bPLocationID;
@@ -70,6 +71,7 @@ class Windowrecords {
     this.leadSource,
     this.phone,
     this.eMail,
+    this.url,
     this.name2,
     this.bPName,
     this.bPLocationID,
@@ -105,6 +107,7 @@ class Windowrecords {
             ? LeadSource.fromJson(json['LeadSource'] as Map<String, dynamic>)
             : null,
         phone = json['Phone'] as String?,
+        url = json['URL'] as String?,
         eMail = json['EMail'] as String?,
         name2 = json['Name2'] as String?,
         bPName = json['BPName'] as String?,
@@ -131,6 +134,7 @@ class Windowrecords {
         'C_Job_ID': cJobID?.toJson(),
         'LeadSource': leadSource?.toJson(),
         'Phone': phone,
+        'URL': url,
         'EMail': eMail,
         'Name2': name2,
         'BPName': bPName,

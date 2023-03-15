@@ -38,7 +38,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
       "Description": descriptionFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/C_Opportunity/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_Opportunity/');
     //print(msg);
     var response = await http.post(
       url,
@@ -75,9 +75,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -101,9 +100,8 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')} and IsDefault eq Y');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')} and IsDefault eq Y');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -132,7 +130,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{

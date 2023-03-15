@@ -140,12 +140,103 @@ class MaintenanceMptaskController extends GetxController {
     }
   }
 
+  reOpenToDo(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/JP_ToDo/${_trx.records![index].jPToDoID?.id}');
+
+    var msg = jsonEncode({
+      'JP_ToDo_Status': {"id": "NY"}
+    });
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //syncWorkOrder();
+      reOpenWorkOrder(index);
+
+      /* Get.snackbar(
+        "Done!".tr,
+        "The Record has been Completed".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      ); */
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  reOpenWorkOrder(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/mp_ot/${_trx.records![index].id}');
+
+    var msg = jsonEncode({
+      'DocStatus': {"id": "DR"}
+    });
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //syncWorkOrder();
+
+      const filename = "workorder";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+      var json =
+          WorkOrderLocalJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+      for (var element in json.records!) {
+        if (element.id == _trx.records![index].id) {
+          element.docStatus?.id = "DR";
+          element.jpToDoStatus?.id = "NY";
+        }
+      }
+
+      file.writeAsStringSync(jsonEncode(json.toJson()));
+
+      getWorkOrders();
+
+      Get.snackbar(
+        "Done!".tr,
+        "The Record has been Reopened".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<void> getDocument(int index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/windows/maintenance-item/${_trx.records![index].id}/print');
+        '$protocol://$ip/api/v1/windows/work-order-extinguisher/${_trx.records![index].id}/print');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -169,6 +260,9 @@ class MaintenanceMptaskController extends GetxController {
 
       //return json.records!;
     } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
       throw Exception("Failed to load PDF");
     }
   }

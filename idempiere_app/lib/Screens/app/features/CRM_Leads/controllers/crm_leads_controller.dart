@@ -6,6 +6,9 @@ class CRMLeadController extends GetxController {
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
@@ -67,8 +70,9 @@ class CRMLeadController extends GetxController {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -117,6 +121,25 @@ class CRMLeadController extends GetxController {
   Future<void> getLeads() async {
     _dataAvailable.value = false;
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    var searchUrlFilter = "";
+    if (searchFieldController.text != "") {
+      switch (dropdownValue.value) {
+        case "1":
+          searchUrlFilter =
+              " and contains(Name,'${searchFieldController.text}')";
+
+          break;
+        case "2":
+          searchUrlFilter =
+              " and contains(EMail,'${searchFieldController.text}')";
+          break;
+        case "3":
+          searchUrlFilter =
+              " and contains(Phone,'${searchFieldController.text}')";
+          break;
+        default:
+      }
+    }
     var notificationFilter = "";
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
@@ -129,9 +152,8 @@ class CRMLeadController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -142,10 +164,13 @@ class CRMLeadController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = LeadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      print(response.body);
     }
   }
 
@@ -156,6 +181,7 @@ class CRMLeadController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -294,45 +320,5 @@ class CRMLeadController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

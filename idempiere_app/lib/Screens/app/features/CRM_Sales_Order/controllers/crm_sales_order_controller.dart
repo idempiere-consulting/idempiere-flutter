@@ -66,9 +66,8 @@ class CRMSalesOrderController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -126,9 +125,8 @@ class CRMSalesOrderController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter&\$orderby= DateOrdered desc');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter&\$orderby= DateOrdered desc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -151,9 +149,8 @@ class CRMSalesOrderController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/sales-order/${_trx.records![index].id}/print');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/sales-order/${_trx.records![index].id}/print');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -178,7 +175,9 @@ class CRMSalesOrderController extends GetxController {
       //return json.records!;
     } else {
       //throw Exception("Failed to load PDF");
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -199,9 +198,9 @@ class CRMSalesOrderController extends GetxController {
   Future<void> getBusinessPartner(int index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -233,9 +232,8 @@ class CRMSalesOrderController extends GetxController {
       final ip = GetStorage().read('ip');
       String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/c_orderline?\$filter= C_Order_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/c_orderline?\$filter= C_Order_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
       //print(Get.arguments["id"]);
       var response = await http.get(
         url,
@@ -298,10 +296,10 @@ class CRMSalesOrderController extends GetxController {
     bytes += generator.hr();
 
     bytes += generator.text(
-        "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
+        "${"Document Type: ".tr}${trx.records![index].cDocTypeID!.identifier}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text(
-        'Document: '.tr + '${trx.records![index].documentNo} $formattedDate',
+        '${'Document: '.tr}${trx.records![index].documentNo} $formattedDate',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 1);
     bytes += generator.row([
@@ -610,9 +608,13 @@ class CRMSalesOrderController extends GetxController {
       articleList = ContractArticleJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       openArticleSelection();
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -630,7 +632,7 @@ class CRMSalesOrderController extends GetxController {
             onChanged: (String? newValue) async {
               articleDropDownValue.value = newValue!;
               Get.back();
-              print(newValue);
+              //print(newValue);
               for (var element in articleList.records!) {
                 if (element.help == articleDropDownValue.value) {
                   Get.to(const CRMEditHTMLSalesOrder(), arguments: {
@@ -799,45 +801,5 @@ class CRMSalesOrderController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

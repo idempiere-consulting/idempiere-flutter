@@ -150,14 +150,18 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           Get.find<MaintenanceMpResourceController>().syncThisWorkOrderResource(
               GetStorage().read('selectedTaskDocNo'));
         } catch (e) {
-          print('no page');
+          if (kDebugMode) {
+            print('no page');
+          }
         }
         try {
           Get.find<MaintenanceMpResourceBarcodeController>()
               .syncThisWorkOrderResource(
                   GetStorage().read('selectedTaskDocNo'));
         } catch (e) {
-          print('no page');
+          if (kDebugMode) {
+            print('no page');
+          }
         }
 
         var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
@@ -249,6 +253,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
 
       if (replacementId == 0) {
         msg = jsonEncode({
+          "offlineid": GetStorage().read('postCallId'),
+          "url": '$protocol://$ip/api/v1/models/LIT_NC/',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
@@ -268,6 +274,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
 
       if (manByCustomer) {
         msg = jsonEncode({
+          "offlineid": GetStorage().read('postCallId'),
+          "url": '$protocol://$ip/api/v1/models/LIT_NC/',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           //"MP_Maintain_Task_ID": {"id": GetStorage().read("selectedTaskId")},
@@ -308,12 +316,16 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       try {
         Get.find<MaintenanceMpResourceController>().getWorkOrders();
       } catch (e) {
-        print("no page");
+        if (kDebugMode) {
+          print("no page");
+        }
       }
       try {
         Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
       } catch (e) {
-        print("no page");
+        if (kDebugMode) {
+          print("no page");
+        }
       }
     }
   }

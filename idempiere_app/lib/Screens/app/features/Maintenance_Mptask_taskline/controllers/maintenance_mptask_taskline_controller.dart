@@ -113,21 +113,21 @@ class MaintenanceMptaskLineController extends GetxController {
     bytes += generator.text("P. IVA ${orgInfo.records![0].taxID}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.hr();
-    bytes += generator.text("Document Type: ".tr + "${args["docType"]}",
+    bytes += generator.text("${"Document Type: ".tr}${args["docType"]}",
         styles: const PosStyles(align: PosAlign.center));
-    bytes += generator.text('Document: '.tr + '${args["docN"]} $formattedDate',
+    bytes += generator.text('${'Document: '.tr}${args["docN"]} $formattedDate',
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.hr();
     bytes += generator.text(
-        'Request Description'.tr + ': ${requestFieldController.text}',
+        '${'Request Description'.tr}: ${requestFieldController.text}',
         styles: const PosStyles(align: PosAlign.left),
         linesAfter: 1);
     bytes += generator.text(
-        'Activity To Do'.tr + ': ${noteFieldController.text}',
+        '${'Activity To Do'.tr}: ${noteFieldController.text}',
         styles: const PosStyles(align: PosAlign.left),
         linesAfter: 1);
     bytes += generator.text(
-        'Activity Done'.tr + ': ${manualNoteFieldController.text}',
+        '${'Activity Done'.tr}: ${manualNoteFieldController.text}',
         styles: const PosStyles(align: PosAlign.left));
     bytes += generator.hr(ch: '=');
 
@@ -178,7 +178,7 @@ class MaintenanceMptaskLineController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/MP_OT_Task/$id');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/MP_OT_Task/$id');
 
     if (await checkConnection()) {
       emptyAPICallStak();
@@ -216,14 +216,14 @@ class MaintenanceMptaskLineController extends GetxController {
       List<dynamic> list = [];
       if (GetStorage().read('deleteCallList') == null) {
         var call = jsonEncode({
-          "url": '$protocol://' + ip + '/api/v1/models/MP_OT_Task/$id',
+          "url": '$protocol://$ip/api/v1/models/MP_OT_Task/$id',
         });
 
         list.add(call);
       } else {
         list = GetStorage().read('deleteCallList');
         var call = jsonEncode({
-          "url": '$protocol://' + ip + '/api/v1/models/MP_OT_Task/$id',
+          "url": '$protocol://$ip/api/v1/models/MP_OT_Task/$id',
         });
         list.add(call);
       }
@@ -282,8 +282,7 @@ class MaintenanceMptaskLineController extends GetxController {
       }
     }
 
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["id"]}');
     if (await checkConnection()) {
       emptyAPICallStak();
       var response = await http.put(
@@ -328,10 +327,10 @@ class MaintenanceMptaskLineController extends GetxController {
       Get.find<MaintenanceMptaskController>().getWorkOrders();
       Map calls = {};
       if (GetStorage().read('storedEditAPICalls') == null) {
-        calls['$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}'] = msg;
+        calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
       } else {
         calls = GetStorage().read('storedEditAPICalls');
-        calls['$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}'] = msg;
+        calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
       }
       GetStorage().write('storedEditAPICalls', calls);
       Get.snackbar(
@@ -418,6 +417,7 @@ class MaintenanceMptaskLineController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

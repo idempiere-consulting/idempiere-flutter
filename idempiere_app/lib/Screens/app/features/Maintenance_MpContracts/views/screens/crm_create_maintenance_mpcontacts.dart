@@ -33,7 +33,7 @@ class _CreateLeadState extends State<CreateLead> {
       "IsSalesLead": true
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/');
     //print(msg);
     var response = await http.post(
       url,
@@ -71,9 +71,8 @@ class _CreateLeadState extends State<CreateLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -97,7 +96,7 @@ class _CreateLeadState extends State<CreateLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{

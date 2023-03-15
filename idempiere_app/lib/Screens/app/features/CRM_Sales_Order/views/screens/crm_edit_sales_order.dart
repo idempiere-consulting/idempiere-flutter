@@ -39,8 +39,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
       'TotalLines': double.parse(amountFieldController.text),
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/C_Order/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_Order/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -80,8 +79,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -119,9 +117,8 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_DocType?\$filter= DocBaseType eq \'SOO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_DocType?\$filter= DocBaseType eq \'SOO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -145,9 +142,8 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq ${(bPartnerId)} and IsShipTo eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq ${(bPartnerId)} and IsShipTo eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -176,9 +172,8 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 195');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 195');
 
     var response = await http.get(
       url,

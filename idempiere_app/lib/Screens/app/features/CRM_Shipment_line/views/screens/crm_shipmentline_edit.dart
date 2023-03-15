@@ -27,8 +27,8 @@ class _EditShipmentlineState extends State<EditShipmentline> {
       "IsSelected": checkboxState,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/m_inoutline/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/m_inoutline/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -68,8 +68,8 @@ class _EditShipmentlineState extends State<EditShipmentline> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/m_inoutline/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/m_inoutline/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,

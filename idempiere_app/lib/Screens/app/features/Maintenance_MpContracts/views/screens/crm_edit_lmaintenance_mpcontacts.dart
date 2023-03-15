@@ -49,9 +49,8 @@ class _EditMaintenanceMpContractsState
     }
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/MP_Maintain/${args["maintainId"]}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/MP_Maintain/${args["maintainId"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -66,10 +65,10 @@ class _EditMaintenanceMpContractsState
       final file = File(
           '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
-      var _trx =
+      var trx =
           MPMaintainContractJSON.fromJson(jsonDecode(file.readAsStringSync()));
 
-      for (var element in _trx.records!) {
+      for (var element in trx.records!) {
         if (element.id == args["maintainId"]) {
           element.dateNextRun = date;
           element.cBPartnerID?.id = businesspartnerId;
@@ -77,7 +76,7 @@ class _EditMaintenanceMpContractsState
           element.litMpMaintainHelp = helpFieldController.text;
         }
       }
-      file.writeAsStringSync(jsonEncode(_trx.toJson()));
+      file.writeAsStringSync(jsonEncode(trx.toJson()));
       Get.find<MaintenanceMpContractsController>().getContracts();
       //print("done!");
       Get.snackbar(
@@ -104,9 +103,8 @@ class _EditMaintenanceMpContractsState
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/MP_Maintain/${args["maintainId"]}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/MP_Maintain/${args["maintainId"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -145,9 +143,8 @@ class _EditMaintenanceMpContractsState
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -171,7 +168,7 @@ class _EditMaintenanceMpContractsState
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -316,9 +313,9 @@ class _EditMaintenanceMpContractsState
   getBusinessPartner() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/c_bpartner?\$filter= C_BPartner_ID eq $businesspartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner?\$filter= C_BPartner_ID eq $businesspartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -351,10 +348,10 @@ class _EditMaintenanceMpContractsState
 
   getBusinessPartnerLocation() async {
     final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/c_bpartner_location?\$filter= C_BPartner_ID eq $businesspartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner_location?\$filter= C_BPartner_ID eq $businesspartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{

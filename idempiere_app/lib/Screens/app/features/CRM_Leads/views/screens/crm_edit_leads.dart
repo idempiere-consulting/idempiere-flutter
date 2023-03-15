@@ -1,11 +1,14 @@
 import 'dart:convert';
 //import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/campaign_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/sector_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +24,7 @@ class _EditLeadState extends State<EditLead> {
   editLead() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    final msg = jsonEncode({
+    /* final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "Name": nameFieldController.text,
@@ -30,13 +33,40 @@ class _EditLeadState extends State<EditLead> {
       "EMail": mailFieldController.text,
       "SalesRep_ID": {"identifier": salesrepValue},
       "LeadStatus": {"id": dropdownValue}
-    });
+    }); */
+    var json = {
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "Name": nameFieldController.text,
+      "BPName": bPartnerFieldController.text,
+      "Phone": phoneFieldController.text,
+      "EMail": mailFieldController.text,
+      "URL": urlFieldController.text,
+      "IsSalesLead": true,
+      "LeadStatus": {"id": dropdownValue},
+    };
+
+    if (salesrepValue != "") {
+      json.addAll({
+        "SalesRep_ID": {"identifier": salesrepValue},
+      });
+    }
+    if (sectorValue != 0) {
+      json.addAll({
+        "C_Job_ID": {"id": sectorValue},
+      });
+    }
+    if (campaignDropdownValue != "") {
+      json.addAll({
+        "C_Campaign_ID": {"id": int.parse(campaignDropdownValue)},
+      });
+    }
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
-      body: msg,
+      body: jsonEncode(json),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': authorization,
@@ -156,6 +186,70 @@ class _EditLeadState extends State<EditLead> {
     //print(json.);
   }
 
+  Future<List<JRecords>> getAllSectors() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_job');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonsectors = SectorJSON.fromJson(jsondecoded);
+
+      return jsonsectors.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load sectors");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<CRecords>> getAllCampaigns() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_campaign');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonsectors = CampaignJSON.fromJson(jsondecoded);
+
+      return jsonsectors.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load campaigns");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
   void fillFields() {
     nameFieldController.text = args["name"] ?? "";
     bPartnerFieldController.text = args["bpName"] ?? "";
@@ -175,8 +269,12 @@ class _EditLeadState extends State<EditLead> {
   var phoneFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var mailFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var urlFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
+  String campaignDropdownValue = "";
+  int sectorValue = 0;
 
   @override
   void initState() {
@@ -185,12 +283,16 @@ class _EditLeadState extends State<EditLead> {
     phoneFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
+    urlFieldController = TextEditingController(text: args["url"] ?? "");
     dropdownValue = Get.arguments["leadStatus"];
+    campaignDropdownValue = args["campaign"] ?? "";
+    sectorValue = args["sector"] ?? 0;
     fillFields();
     getAllLeadStatuses();
   }
 
   static String _displayStringForOption(Records option) => option.name!;
+  static String _displaySectorStringForOption(JRecords option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 
@@ -303,6 +405,18 @@ class _EditLeadState extends State<EditLead> {
                   ),
                 ),
                 Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: urlFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.link),
+                      border: OutlineInputBorder(),
+                      labelText: 'Website',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -353,6 +467,113 @@ class _EditLeadState extends State<EditLead> {
 
                                   //print(salesrepValue);
                                 },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Sector".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllSectors(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<JRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<JRecords>(
+                                displayStringForOption:
+                                    _displaySectorStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<JRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((JRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (JRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    sectorValue = selection.id!;
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Campaign".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllCampaigns(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                hint: Text("Select a Campaign".tr),
+                                value: campaignDropdownValue == ""
+                                    ? null
+                                    : campaignDropdownValue,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    campaignDropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                  );
+                                }).toList(),
                               )
                             : const Center(
                                 child: CircularProgressIndicator(),

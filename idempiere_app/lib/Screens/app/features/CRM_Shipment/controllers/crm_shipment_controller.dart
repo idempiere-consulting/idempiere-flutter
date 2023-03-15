@@ -61,9 +61,8 @@ class CRMShipmentController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -116,9 +115,8 @@ class CRMShipmentController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_shipment_v?\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&\$orderby= MovementDate desc'); //?\$filter= AD_User2_ID eq $adUserId or SalesRep_ID eq $adUserId&\$orderby= MovementDate desc
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&\$orderby= MovementDate desc'); //?\$filter= AD_User2_ID eq $adUserId or SalesRep_ID eq $adUserId&\$orderby= MovementDate desc
 
     var response = await http.get(
       url,
@@ -157,9 +155,8 @@ class CRMShipmentController extends GetxController {
 
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/processes/scriptclosedtodraftedshipmreceipt');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/processes/scriptclosedtodraftedshipmreceipt');
 
     var response = await http.post(
       url,
@@ -202,9 +199,8 @@ class CRMShipmentController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_inout/${_trx.records![index].id}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_inout/${_trx.records![index].id}');
 
     var msg = jsonEncode({
       'DocStatus': {"id": "CO"}
@@ -237,9 +233,9 @@ class CRMShipmentController extends GetxController {
   Future<void> getBusinessPartner(int index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -271,9 +267,8 @@ class CRMShipmentController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/M_InOutLine?\$filter= M_InOut_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_InOutLine?\$filter= M_InOut_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
     //print(Get.arguments["id"]);
     var response = await http.get(
       url,
@@ -306,9 +301,8 @@ class CRMShipmentController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/shipment-customer/${_trx.records![index].id}/print');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/shipment-customer/${_trx.records![index].id}/print');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -343,9 +337,8 @@ class CRMShipmentController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
     //print(Get.arguments["id"]);
     var response = await http.get(
       url,
@@ -406,10 +399,10 @@ class CRMShipmentController extends GetxController {
     bytes += generator.hr();
 
     bytes += generator.text(
-        "Document Type: ".tr + "${trx.records![index].cDocTypeID!.identifier}",
+        "${"Document Type: ".tr}${trx.records![index].cDocTypeID!.identifier}",
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text(
-        'Document: '.tr + '${trx.records![index].documentNo} $formattedDate',
+        '${'Document: '.tr}${trx.records![index].documentNo} $formattedDate',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 1);
 
@@ -522,6 +515,7 @@ class CRMShipmentController extends GetxController {
   }
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -660,45 +654,5 @@ class CRMShipmentController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getShipments() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

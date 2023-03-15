@@ -33,6 +33,7 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: depend_on_referenced_packages
 import 'package:pdf/pdf.dart';
 
 import 'package:flutter/material.dart';

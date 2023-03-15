@@ -171,7 +171,7 @@ class MaintenanceMpResourceBarcodeScreen
               //const SizedBox(height: 5),
               Row(
                 //mainAxisAlignment: MainAxisAlignment.,
-                children: [
+                children: const [
                   /* Container(
                     margin: const EdgeInsets.only(left: 10),
                     child: Obx(
@@ -200,7 +200,7 @@ class MaintenanceMpResourceBarcodeScreen
                 ],
               ),
               Row(
-                children: [
+                children: const [
                   /* Container(
                     margin: const EdgeInsets.only(left: 10),
                     child: Obx(

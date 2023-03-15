@@ -63,9 +63,8 @@ class DashboardController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate ge \'$formattedDate 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedDate 23:59:59\'&\$orderby=JP_ToDo_ScheduledStartDate asc');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and JP_ToDo_ScheduledStartDate ge \'$formattedDate 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedDate 23:59:59\'&\$orderby=JP_ToDo_ScheduledStartDate asc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -132,9 +131,8 @@ class DashboardController extends GetxController {
       final ip = GetStorage().read('ip');
       String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
-      var url = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userid and AD_Client_ID eq ${GetStorage().read("clientid")}');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/lit_mobile_checkread?\$filter= SalesRep_ID eq $userid and AD_Client_ID eq ${GetStorage().read("clientid")}');
       var response = await http.get(
         url,
         headers: <String, String>{
@@ -152,6 +150,7 @@ class DashboardController extends GetxController {
   }
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

@@ -69,9 +69,8 @@ class CRMCustomerBPController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -123,9 +122,8 @@ class CRMCustomerBPController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BPartner?\$filter= IsCustomer eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$skip=${pagesCount.value}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BPartner?\$filter= IsCustomer eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$skip=${pagesCount.value}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -151,6 +149,7 @@ class CRMCustomerBPController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -313,7 +312,7 @@ class Provider extends GetConnect {
     } */
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/lead');
     var response = await http.get(
       url,
       headers: <String, String>{

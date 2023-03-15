@@ -65,19 +65,23 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
         title: Center(
           child: Text('Anomaly List'.tr),
         ),
-        actions: const [
-          /* Padding(
+        actions: [
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
-              onPressed: () {
+              onPressed: () async {
+                if (await checkConnection()) {
+                  await emptyAPICallStak();
+                  controller.syncAnomalies();
+                }
                 //createResAnomaly();
-                controller.createSalesOrderFromAnomaly();
+                //controller.createSalesOrderFromAnomaly();
               },
               icon: const Icon(
-                Icons.done_all_outlined,
+                Icons.sync,
               ),
             ),
-          ), */
+          ),
         ],
       ),
       //key: controller.scaffoldKey,

@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
-import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/calendar_screen.dart';
+
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 
 class EditWorkOrderCalendarEvent extends StatefulWidget {
@@ -22,10 +22,9 @@ class _EditWorkOrderCalendarEventState
     extends State<EditWorkOrderCalendarEvent> {
   deleteEvent() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/${args['id']}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo/${args['id']}');
     var response = await http.delete(
       url,
       headers: <String, String>{
@@ -35,7 +34,7 @@ class _EditWorkOrderCalendarEventState
     );
     if (response.statusCode == 200) {
       //print("done!");
-      Get.off(const CalendarScreen());
+      Get.back();
       Get.snackbar(
         "Done!".tr,
         "The record was deleted".tr,
@@ -61,7 +60,7 @@ class _EditWorkOrderCalendarEventState
 
   editEvent() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "Name": nameFieldController.text,
       "Description": descriptionFieldController.text,
@@ -73,8 +72,7 @@ class _EditWorkOrderCalendarEventState
       "JP_ToDo_Type": {"id": "S"},
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/${args['id']}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo/${args['id']}');
     //print(msg);
     var response = await http.put(
       url,

@@ -373,12 +373,16 @@ class _CreateMaintenanceMpResourceState
         try {
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         try {
           Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         Get.snackbar(
           "Done!".tr,
@@ -429,12 +433,16 @@ class _CreateMaintenanceMpResourceState
         try {
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         try {
           Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         Get.snackbar(
           "Done!".tr,
@@ -596,12 +604,16 @@ class _CreateMaintenanceMpResourceState
         try {
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         try {
           Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         Get.snackbar(
           "Done!".tr,
@@ -755,12 +767,16 @@ class _CreateMaintenanceMpResourceState
       try {
         Get.find<MaintenanceMpResourceController>().getWorkOrders();
       } catch (e) {
-        print("no page");
+        if (kDebugMode) {
+          print("no page");
+        }
       }
       try {
         Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
       } catch (e) {
-        print("no page");
+        if (kDebugMode) {
+          print("no page");
+        }
       }
       setState(() {
         saveFlag = false;
@@ -783,6 +799,10 @@ class _CreateMaintenanceMpResourceState
         print(jsonResources.records![i].mProductCategoryID?.identifier);
       }
     } */
+
+    if (kDebugMode) {
+      print(Get.arguments["id"]);
+    }
 
     jsonResources.records!.retainWhere((element) =>
         (element.mProductCategoryID?.identifier ?? "")
@@ -908,14 +928,18 @@ class _CreateMaintenanceMpResourceState
                     Get.find<MaintenanceMpResourceController>()
                         .openResourceType();
                   } catch (e) {
-                    print("no page");
+                    if (kDebugMode) {
+                      print("no page");
+                    }
                   }
 
                   try {
                     Get.find<MaintenanceMpResourceBarcodeController>()
                         .openResourceType();
                   } catch (e) {
-                    print("no page");
+                    if (kDebugMode) {
+                      print("no page");
+                    }
                   }
                 },
                 icon: const Icon(

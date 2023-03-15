@@ -378,10 +378,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Text("€" +
-                                                  controller.trx.records![index]
-                                                      .opportunityAmt
-                                                      .toString()),
+                                              Text(
+                                                  "€${controller.trx.records![index].opportunityAmt}"),
                                             ],
                                           ),
                                           Row(
@@ -420,9 +418,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                       final ip = GetStorage()
                                                           .read('ip');
                                                       String authorization =
-                                                          'Bearer ' +
-                                                              GetStorage().read(
-                                                                  'token');
+                                                          'Bearer ${GetStorage().read('token')}';
                                                       final msg = jsonEncode({
                                                         "DocAction": "CO",
                                                       });
@@ -430,9 +426,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                           GetStorage()
                                                               .read('protocol');
                                                       var url = Uri.parse(
-                                                          '$protocol://' +
-                                                              ip +
-                                                              '/api/v1/models/c_opportunity/${controller.trx.records![index].id}');
+                                                          '$protocol://$ip/api/v1/models/c_opportunity/${controller.trx.records![index].id}');
 
                                                       var response =
                                                           await http.put(
@@ -787,10 +781,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Text("€" +
-                                                  controller.trx.records![index]
-                                                      .opportunityAmt
-                                                      .toString()),
+                                              Text(
+                                                  "€${controller.trx.records![index].opportunityAmt}"),
                                             ],
                                           ),
                                           Row(
@@ -1125,10 +1117,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Text("€" +
-                                                  controller.trx.records![index]
-                                                      .opportunityAmt
-                                                      .toString()),
+                                              Text(
+                                                  "€${controller.trx.records![index].opportunityAmt}"),
                                             ],
                                           ),
                                           Row(

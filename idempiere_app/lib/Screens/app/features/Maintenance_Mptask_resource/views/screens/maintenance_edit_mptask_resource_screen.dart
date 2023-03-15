@@ -40,7 +40,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    final msg = jsonEncode({
+    var msg = jsonEncode({
       "id": Get.arguments["id"],
       "M_Product_ID": {"id": productId},
       "LIT_Control3DateFrom": date3,
@@ -70,14 +70,14 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       ),
       "IsActive": isActive,
       "LIT_ResourceStatus": {"id": dropdownValue},
-      "Length": int.parse(
+      "Length": double.parse(
           lengthFieldController.text != "" ? lengthFieldController.text : "0"),
-      "Width": int.parse(
+      "Width": double.parse(
           widthFieldController.text != "" ? widthFieldController.text : "0"),
-      "WeightedAmt": int.parse(weightAmtFieldController.text != ""
+      "WeightedAmt": double.parse(weightAmtFieldController.text != ""
           ? weightAmtFieldController.text
           : "0"),
-      "Height": int.parse(
+      "Height": double.parse(
           heightFieldController.text != "" ? heightFieldController.text : "0"),
       "Color": colorFieldController.text,
       /* "lit_ResourceGroup_ID": {
@@ -85,6 +85,55 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       } */
       //"IsPrinted": sendWorkOrder,
     });
+
+    if (dropdownValue3 != "") {
+      msg = jsonEncode({
+        "id": Get.arguments["id"],
+        "M_Product_ID": {"id": productId},
+        "LIT_Control3DateFrom": date3,
+        "LIT_Control2DateFrom": date2,
+        "LIT_Control1DateFrom": date1,
+        "Name": nameFieldController.text,
+        "SerNo": sernoFieldController.text,
+        "Description": descriptionFieldController.text,
+        "V_Number": numberFieldController.text,
+        "lineNo": int.parse(
+            lineFieldController.text == "" ? "0" : lineFieldController.text),
+        "LocationComment": locationFieldController.text,
+        "Manufacturer": manufacturerFieldController.text,
+        "ManufacturedYear": int.parse(yearFieldController.text == "null"
+            ? "0"
+            : yearFieldController.text),
+        "ProdCode": barcodeFieldController.text,
+        "TextDetails": cartelFieldController.text,
+        "LIT_ProductModel": productModelFieldController.text,
+        "DateOrdered": dateOrdered,
+        "ServiceDate": firstUseDate,
+        "Note": observationFieldController.text,
+        "UserName": userNameFieldController.text,
+        "UseLifeYears": int.parse(
+          useLifeYearsFieldController.text == ""
+              ? "0"
+              : useLifeYearsFieldController.text,
+        ),
+        "IsActive": isActive,
+        "LIT_ResourceStatus": {"id": dropdownValue},
+        "Length": int.parse(lengthFieldController.text != ""
+            ? lengthFieldController.text
+            : "0"),
+        "Width": int.parse(
+            widthFieldController.text != "" ? widthFieldController.text : "0"),
+        "WeightedAmt": int.parse(weightAmtFieldController.text != ""
+            ? weightAmtFieldController.text
+            : "0"),
+        "Height": int.parse(heightFieldController.text != ""
+            ? heightFieldController.text
+            : "0"),
+        "Color": colorFieldController.text,
+        "lit_ResourceGroup_ID": {"id": dropdownValue3}
+        //"IsPrinted": sendWorkOrder,
+      });
+    }
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
@@ -138,10 +187,11 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           heightFieldController.text != "" ? heightFieldController.text : "0");
 
       trx.records![Get.arguments["index"]].color = colorFieldController.text;
-      trx.records![Get.arguments["index"]].litResourceGroupID =
-          LitResourceGroupID(
-        id: dropdownValue3 == "" ? 1000000 : int.parse(dropdownValue3),
-      );
+      if (dropdownValue3 != "") {
+        trx.records![Get.arguments["index"]].litResourceGroupID =
+            LitResourceGroupID(id: int.parse(dropdownValue3));
+      }
+
       //trx.records![Get.arguments["index"]].isPrinted = sendWorkOrder;
 
       var url = Uri.parse(
@@ -163,12 +213,16 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           try {
             Get.find<MaintenanceMpResourceController>().getWorkOrders();
           } catch (e) {
-            print("no page");
+            if (kDebugMode) {
+              print("no page");
+            }
           }
           try {
             Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
           } catch (e) {
-            print("no page");
+            if (kDebugMode) {
+              print("no page");
+            }
           }
           //print("done!");
           //Get.back();
@@ -205,12 +259,16 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
         try {
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         try {
           Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
         } catch (e) {
-          print("no page");
+          if (kDebugMode) {
+            print("no page");
+          }
         }
         //MaintenanceMpResourceBarcodeController
 
@@ -380,7 +438,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     //salesRepFieldController.text = args["salesRep"];
   } */
 
-  //dynamic args = Get.arguments;
+  dynamic args = Get.arguments;
   var numberFieldController;
   var lineFieldController;
   var nameFieldController;
@@ -472,8 +530,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     date1 = Get.arguments["date1"] ?? "";
     dateCalc3 = 0;
     offline = Get.arguments["offlineid"] ?? -1;
-    dateOrdered = "";
-    firstUseDate = "";
+    dateOrdered = Get.arguments["dateOrder"] ?? "";
+    firstUseDate = Get.arguments["serviceDate"] ?? "";
     //sendWorkOrder = Get.arguments["isPrinted"] ?? false;
     isActive = true;
     //print(Get.arguments["offlineid"]);
@@ -518,7 +576,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   height: 10,
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[0] == "Y",
+                  visible: (args["perm"])[0] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -534,7 +592,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[1] == "Y",
+                  visible: (args["perm"])[1] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -625,7 +683,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ), */
                 Visibility(
-                  visible: (Get.arguments["perm"])[3] == "Y",
+                  visible: (args["perm"])[3] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -642,7 +700,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[4] == "Y",
+                  visible: (args["perm"])[4] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -669,7 +727,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[6] == "Y",
+                  visible: (args["perm"])[6] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -684,7 +742,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[7] == "Y",
+                  visible: (args["perm"])[7] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -699,7 +757,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[8] == "Y",
+                  visible: (args["perm"])[8] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -713,7 +771,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                     child: DateTimePicker(
                       locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
-                      initialValue: '',
+                      initialValue: dateOrdered,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
                       dateLabelText: 'Date Ordered'.tr,
@@ -736,7 +794,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[9] == "Y",
+                  visible: (args["perm"])[9] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -750,7 +808,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                     child: DateTimePicker(
                       locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
-                      initialValue: '',
+                      initialValue: firstUseDate,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
                       dateLabelText: 'First Use Date'.tr,
@@ -773,7 +831,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[11] == "Y",
+                  visible: (args["perm"])[11] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -797,7 +855,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[23] == "Y",
+                  visible: (args["perm"])[23] == "Y",
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
@@ -810,7 +868,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[23] == "Y",
+                  visible: (args["perm"])[23] == "Y",
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     width: size.width,
@@ -827,6 +885,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                               AsyncSnapshot<List<RefRecords>> snapshot) =>
                           snapshot.hasData
                               ? DropdownButton(
+                                  hint: Text("Select a Destination".tr),
                                   value: dropdownValue3 == ""
                                       ? null
                                       : dropdownValue3,
@@ -853,7 +912,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[12] == "Y",
+                  visible: (args["perm"])[12] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -868,7 +927,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[13] == "Y",
+                  visible: (args["perm"])[13] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -883,7 +942,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[14] == "Y",
+                  visible: (args["perm"])[14] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -919,7 +978,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[15] == "Y",
+                  visible: (args["perm"])[15] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -956,7 +1015,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[16] == "Y",
+                  visible: (args["perm"])[16] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -993,7 +1052,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[17] == "Y",
+                  visible: (args["perm"])[17] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -1030,7 +1089,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[18] == "Y",
+                  visible: (args["perm"])[18] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1055,7 +1114,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[19] == "Y",
+                  visible: (args["perm"])[19] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1079,7 +1138,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[20] == "Y",
+                  visible: (args["perm"])[20] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1104,7 +1163,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[21] == "Y",
+                  visible: (args["perm"])[21] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1129,7 +1188,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[22] == "Y",
+                  visible: (args["perm"])[22] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1196,7 +1255,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[10] == "Y",
+                  visible: (args["perm"])[10] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1222,11 +1281,11 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Prodotto",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(
@@ -1435,11 +1494,11 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: const Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Prodotto",
                       style: TextStyle(fontSize: 12),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(

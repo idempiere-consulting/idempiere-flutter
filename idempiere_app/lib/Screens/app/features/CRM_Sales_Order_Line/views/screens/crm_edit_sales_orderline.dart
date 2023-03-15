@@ -32,7 +32,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
       "DatePromised": date,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_orderline/$id');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_orderline/$id');
     //print(msg);
     var response = await http.put(
       url,
@@ -73,7 +73,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_orderline/$id');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_orderline/$id');
     //print(msg);
     var response = await http.delete(
       url,

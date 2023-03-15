@@ -1921,10 +1921,10 @@ class MaintenanceMpResourceBarcodeController extends GetxController {
     //print(GetStorage().read('selectedTaskDocNo'));
     _dataAvailable.value = false;
     late List<RRecords> temp;
-    var flag = true;
+    /* var flag = true;
     var now = DateTime.now();
     var twentyDaysAgoDate = now.add(const Duration(days: -20));
-    var twentyDaysLater = now.add(const Duration(days: 20));
+    var twentyDaysLater = now.add(const Duration(days: 20)); */
     //var formatter = DateFormat('yyyy-MM-dd');
     //String formattedDate = formatter.format(now);
     //print(GetStorage().read('workOrderResourceSync'));

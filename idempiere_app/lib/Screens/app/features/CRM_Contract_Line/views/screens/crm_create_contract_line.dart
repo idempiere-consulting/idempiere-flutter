@@ -27,7 +27,7 @@ class CreateSalesOrderLine extends StatefulWidget {
 class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
   createSalesOrderLine() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     // ignore: prefer_typing_uninitialized_variables
     var msg;
 
@@ -83,7 +83,7 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
       });
     }
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_orderline/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_orderline/');
     //print(msg);
     var response = await http.post(
       url,
@@ -121,12 +121,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getPriceListVersionID() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_pricelist_version?\$select=M_PriceList_Version_ID&\$orderby=ValidFrom DESC&\$filter=M_PriceList_ID eq ${Get.arguments["priceListId"]} & ValidFrom le ${Get.arguments["dateOrdered"]}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_pricelist_version?\$select=M_PriceList_Version_ID&\$orderby=ValidFrom DESC&\$filter=M_PriceList_ID eq ${Get.arguments["priceListId"]} & ValidFrom le ${Get.arguments["dateOrdered"]}');
 
     var response = await http.get(
       url,
@@ -150,12 +149,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getProductPrice() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_productprice?\$select=PriceStd,PriceList&\$filter=M_Product_ID eq $productId and M_PriceList_Version_ID eq $priceListVersionID');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_productprice?\$select=PriceStd,PriceList&\$filter=M_Product_ID eq $productId and M_PriceList_Version_ID eq $priceListVersionID');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -179,12 +177,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getAdditionalProductInfo() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter=M_Product_ID eq $productId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter=M_Product_ID eq $productId and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -206,12 +203,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getInstAttr(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -248,12 +244,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> searchByCode(dynamic value) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter=Value eq \'$value\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter=Value eq \'$value\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -291,12 +286,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> searchByInstAttr(dynamic id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_storageonhand?\$filter=M_AttributeSetInstance_ID eq $id and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -332,12 +326,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
   Future<void> getProductByInstAttr(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter=M_Product_ID eq $id and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter=M_Product_ID eq $id and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,

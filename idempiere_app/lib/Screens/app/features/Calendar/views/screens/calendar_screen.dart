@@ -250,7 +250,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= DateLastLogin neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -266,6 +267,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       return jsonContacts.records!;
     } else {
+      print(response.body);
       throw Exception("Failed to load sales reps");
     }
 

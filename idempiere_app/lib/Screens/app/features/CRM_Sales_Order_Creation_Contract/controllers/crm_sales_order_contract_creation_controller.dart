@@ -116,9 +116,8 @@ class CRMSalesOrderContractCreationController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mobile_order_defaults_v?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_order_defaults_v?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     if (businessPartnerId != 0) {
       var response = await http.get(
         url,
@@ -143,7 +142,7 @@ class CRMSalesOrderContractCreationController extends GetxController {
   Future<void> createMaintainContract() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-
+    final protocol = GetStorage().read('protocol');
     // ignore: unused_local_variable
     var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
@@ -154,7 +153,7 @@ class CRMSalesOrderContractCreationController extends GetxController {
     });
 
     var url =
-        Uri.parse('http://' + ip + '/api/v1/windows/preventive-maintenance/');
+        Uri.parse('$protocol://$ip/api/v1/windows/preventive-maintenance/');
     var response = await http.post(
       url,
       headers: <String, String>{
@@ -275,8 +274,8 @@ class CRMSalesOrderContractCreationController extends GetxController {
         final ip = GetStorage().read('ip');
         String authorization = 'Bearer ${GetStorage().read('token')}';
         final protocol = GetStorage().read('protocol');
-        var url = Uri.parse(
-            '$protocol://' + ip + '/api/v1/processes/createbpbyvatapirest');
+        var url =
+            Uri.parse('$protocol://$ip/api/v1/processes/createbpbyvatapirest');
         var msg = jsonEncode({
           "CountryCode": countryCodeFieldController.text,
           "VATNumber": vatCodeFieldController.text
@@ -352,14 +351,13 @@ class CRMSalesOrderContractCreationController extends GetxController {
   getBusinessPartner(String vat) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/c_bpartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     if (vat != "0") {
-      url = Uri.parse('http://' +
-          ip +
-          '/api/v1/models/c_bpartner?\$filter= LIT_TaxID eq \'$vat\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+      url = Uri.parse(
+          '$protocol://$ip/api/v1/models/c_bpartner?\$filter= LIT_TaxID eq \'$vat\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     }
     var response = await http.get(
       url,
@@ -385,9 +383,9 @@ class CRMSalesOrderContractCreationController extends GetxController {
   getBusinessPartnerLocation() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/c_bpartner_location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner_location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -412,7 +410,7 @@ class CRMSalesOrderContractCreationController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -440,9 +438,8 @@ class CRMSalesOrderContractCreationController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_org?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_org?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -470,9 +467,8 @@ class CRMSalesOrderContractCreationController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_DocType?\$filter= DocBaseType eq \'SOO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_DocType?\$filter= DocBaseType eq \'SOO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -506,9 +502,8 @@ class CRMSalesOrderContractCreationController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 195');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 195');
 
     var response = await http.get(
       url,
@@ -535,9 +530,8 @@ class CRMSalesOrderContractCreationController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_PaymentTerm?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_PaymentTerm?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
     if (businessPartnerId != 0) {
       var response = await http.get(
         url,
@@ -572,9 +566,8 @@ class CRMSalesOrderContractCreationController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BPartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BPartner?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -648,6 +641,7 @@ class CRMSalesOrderContractCreationController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

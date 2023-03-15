@@ -21,7 +21,7 @@ class EditContactBP extends StatefulWidget {
 class _EditContactBPState extends State<EditContactBP> {
   editContactBP() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -31,8 +31,7 @@ class _EditContactBPState extends State<EditContactBP> {
       "EMail": mailFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -67,10 +66,9 @@ class _EditContactBPState extends State<EditContactBP> {
 
   deleteLead() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -106,11 +104,10 @@ class _EditContactBPState extends State<EditContactBP> {
 
   Future<List<LSRecords>> getAllLeadStatuses() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -262,12 +259,12 @@ class _EditContactBPState extends State<EditContactBP> {
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Business Partner".tr,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
-                    alignment: Alignment.centerLeft,
                   ),
                 ),
                 Container(

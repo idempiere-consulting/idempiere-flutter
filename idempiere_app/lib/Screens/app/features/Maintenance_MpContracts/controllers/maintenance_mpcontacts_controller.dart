@@ -71,9 +71,10 @@ class MaintenanceMpContractsController extends GetxController {
 
   Future<void> getADUserID() async {
     final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse(
-        'http://' + ip + '/api/v1/models/ad_user?\$filter= IsSupportUser eq Y');
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= IsSupportUser eq Y');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -256,8 +257,10 @@ class MaintenanceMpContractsController extends GetxController {
 
         //print(msg);
         final protocol = GetStorage().read('protocol');
-        var url = Uri.parse(
-            '$protocol://' + ip + '/api/v1/processes/generateworkorder');
+        var url =
+            Uri.parse('$protocol://$ip/api/v1/processes/generateworkorder');
+
+        //print(url);
 
         var response = await http.post(
           url,
@@ -362,9 +365,8 @@ class MaintenanceMpContractsController extends GetxController {
     //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -407,9 +409,8 @@ class MaintenanceMpContractsController extends GetxController {
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -462,6 +463,7 @@ class MaintenanceMpContractsController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

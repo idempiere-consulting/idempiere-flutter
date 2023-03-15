@@ -23,8 +23,7 @@ class _EditShipmentState extends State<EditShipment> {
       "PrivateNote": noteFieldController.text,
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/m_inout/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/m_inout/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,

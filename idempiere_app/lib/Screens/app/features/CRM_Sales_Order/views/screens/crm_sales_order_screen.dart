@@ -36,6 +36,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+// ignore: depend_on_referenced_packages
 import 'package:pdf/pdf.dart';
 
 import 'package:flutter/material.dart';
@@ -77,9 +78,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_order/${controller.trx.records![index].id}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_order/${controller.trx.records![index].id}');
     //print(url);
 
     var response = await http.put(
@@ -688,6 +688,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                       child: IconButton(
                         onPressed: () {
                           //controller.getSalesOrders();
+                          Get.toNamed('/SalesOrderContractCreation');
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.lightBlue,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          //controller.getSalesOrders();
                           Get.toNamed('/SalesOrderCreation');
                         },
                         icon: const Icon(
@@ -783,7 +796,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(() => Visibility(
                                   visible: controller.searchFilterValue.value ==
@@ -927,6 +940,23 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         .records![index]
                                                         .cBPartnerID
                                                         ?.id,
+                                                    "bPartnerName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.identifier,
+                                                    "isPaid": controller.trx
+                                                        .records![index].isPaid,
+                                                    "pRuleId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.id,
+                                                    "amt": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .totalLines
+                                                        .toString(),
                                                   });
                                             },
                                           ),
@@ -1079,13 +1109,13 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       ),
                                                       onPressed: () async {
                                                         Get.defaultDialog(
-                                                          title:
-                                                              'Complete Action',
-                                                          content: const Text(
-                                                              "Are you sure you want to complete the record?"),
+                                                          title: 'Complete'.tr,
+                                                          content: Text(
+                                                              "Are you sure you want to complete the record?"
+                                                                  .tr),
                                                           onCancel: () {},
                                                           onConfirm: () async {
-                                                            final ip =
+                                                            /*  final ip =
                                                                 GetStorage()
                                                                     .read('ip');
                                                             String
@@ -1098,6 +1128,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 jsonEncode({
                                                               "DocAction": "CO",
                                                             });
+                                                            print(msg);
                                                             final protocol =
                                                                 GetStorage().read(
                                                                     'protocol');
@@ -1105,7 +1136,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 '$protocol://' +
                                                                     ip +
                                                                     '/api/v1/models/c_order/${controller.trx.records![index].id}');
-
+                                                            print(url);
                                                             var response =
                                                                 await http.put(
                                                               url,
@@ -1121,11 +1152,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             if (response
                                                                     .statusCode ==
                                                                 200) {
-                                                              //print("done!");
                                                               completeOrder(
                                                                   index);
                                                             } else {
-                                                              //print(response.body);
+                                                              print(response
+                                                                  .body);
                                                               Get.snackbar(
                                                                 "Error!".tr,
                                                                 "Record not completed"
@@ -1137,7 +1168,9 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                       .red,
                                                                 ),
                                                               );
-                                                            }
+                                                            } */
+                                                            completeOrder(
+                                                                index);
                                                           },
                                                         );
                                                       },
@@ -1571,10 +1604,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                     .read('ip');
                                                             String
                                                                 authorization =
-                                                                'Bearer ' +
-                                                                    GetStorage()
-                                                                        .read(
-                                                                            'token');
+                                                                'Bearer ${GetStorage().read('token')}';
                                                             final msg =
                                                                 jsonEncode({
                                                               "DocAction": "CO",
@@ -1583,9 +1613,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 GetStorage().read(
                                                                     'protocol');
                                                             var url = Uri.parse(
-                                                                '$protocol://' +
-                                                                    ip +
-                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
+                                                                '$protocol://$ip/api/v1/models/c_order/${controller.trx.records![index].id}');
 
                                                             var response =
                                                                 await http.put(

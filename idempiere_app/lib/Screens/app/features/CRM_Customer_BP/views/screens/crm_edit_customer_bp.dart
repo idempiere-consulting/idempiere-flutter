@@ -18,7 +18,7 @@ class EditCRMCustomerBP extends StatefulWidget {
 class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
   editCustomer() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -27,8 +27,8 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
       "C_BP_Group_ID": int.parse(dropdownValue),
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/C_BPartner/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/C_BPartner/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -63,10 +63,9 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
 
   deleteCustomer() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -102,11 +101,10 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
 
   Future<List<Records>> getAllBPGroups() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BP_Group?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BP_Group?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{

@@ -1033,6 +1033,17 @@ class LocaleString extends Translations {
           'Sold': 'Venduto',
           'All Types': 'Tutti i Tipi',
           'All Group Locations': 'Tutti i Gruppi Destinazione',
+          'Supported Weight': 'Peso Supportato',
+          'Length': 'Lunghezza',
+          'Width': 'Larghezza',
+          'Height': 'Altezza',
+          'Is Active': 'Attivo',
+          'Sales Order Creation': 'Creazione ODV',
+          'Select which Article to Edit': 'Seleziona l\'Articolo da Editare',
+          'No Article Selected': 'Nessun Articolo Selezionato',
+          'Reopen': 'Riapri',
+          'The Record has been Reopened': 'Il Record è stato Riaperto',
+          'The Record has been Completed': 'Il Record è stato Completato',
         },
       };
 }

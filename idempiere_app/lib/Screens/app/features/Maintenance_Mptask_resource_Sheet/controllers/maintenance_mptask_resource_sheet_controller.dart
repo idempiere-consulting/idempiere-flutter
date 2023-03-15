@@ -102,9 +102,8 @@ class MaintenanceMpResourceSheetController extends GetxController {
     });
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/MP_Maintain_Resource/$id/attachments');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/MP_Maintain_Resource/$id/attachments');
 
     var response = await http.post(
       url,
@@ -132,9 +131,8 @@ class MaintenanceMpResourceSheetController extends GetxController {
     if (GetStorage().read('postCallList') == null) {
       var call = jsonEncode({
         "offlineid": GetStorage().read('postCallId'),
-        "url": '$protocol://' +
-            ip +
-            '/api/v1/models/MP_Maintain_Resource/$id/attachments',
+        "url":
+            '$protocol://$ip/api/v1/models/MP_Maintain_Resource/$id/attachments',
         "name": "signature.jpg",
         "data": GetStorage().read('SignatureWorkOrderResource')
       });
@@ -144,9 +142,8 @@ class MaintenanceMpResourceSheetController extends GetxController {
       list = GetStorage().read('postCallList');
       var call = jsonEncode({
         "offlineid": GetStorage().read('postCallId'),
-        "url": '$protocol://' +
-            ip +
-            '/api/v1/models/MP_Maintain_Resource/$id/attachments',
+        "url":
+            '$protocol://$ip/api/v1/models/MP_Maintain_Resource/$id/attachments',
         "name": "signature.jpg",
         "data": GetStorage().read('SignatureWorkOrderResource')
       });
@@ -160,13 +157,13 @@ class MaintenanceMpResourceSheetController extends GetxController {
   sendSurveyLines() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
 
     for (var i = 0; i < isChecked.length; i++) {
       var msg = jsonEncode({"LIT_IsField1": isChecked[i]});
 
-      var url = Uri.parse('http://' +
-          ip +
-          '/api/v1/models/mp_resource_survey_line/${surveyLines.records![i].id}');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/mp_resource_survey_line/${surveyLines.records![i].id}');
       // ignore: unused_local_variable
       var response = await http.put(
         url,
@@ -181,21 +178,17 @@ class MaintenanceMpResourceSheetController extends GetxController {
 
   sendSurveyLinesOffline() async {
     final ip = GetStorage().read('ip');
-
+    final protocol = GetStorage().read('protocol');
     for (var i = 0; i < isChecked.length; i++) {
       var msg = jsonEncode({"LIT_IsField1": isChecked[i]});
 
       Map calls = {};
       if (GetStorage().read('storedEditAPICalls') == null) {
-        calls['http://' +
-                ip +
-                '/api/v1/models/mp_resource_survey_line/${surveyLines.records![i].id}'] =
+        calls['$protocol://$ip/api/v1/models/mp_resource_survey_line/${surveyLines.records![i].id}'] =
             msg;
       } else {
         calls = GetStorage().read('storedEditAPICalls');
-        calls['http://' +
-                ip +
-                '/api/v1/models/mp_resource_survey_line/${surveyLines.records![i].id}'] =
+        calls['$protocol://$ip/api/v1/models/mp_resource_survey_line/${surveyLines.records![i].id}'] =
             msg;
       }
       GetStorage().write('storedEditAPICalls', calls);
@@ -241,6 +234,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
     final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "id": Get.arguments["id"],
@@ -312,9 +306,8 @@ class MaintenanceMpResourceSheetController extends GetxController {
       trx.records![Get.arguments["index"]].lineNo = int.parse(
           lineFieldController.text == "" ? "0" : lineFieldController.text);
 
-      var url = Uri.parse('http://' +
-          ip +
-          '/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${Get.arguments["id"]}');
       if (isConnected) {
         emptyAPICallStak();
         var response = await http.put(
@@ -367,15 +360,11 @@ class MaintenanceMpResourceSheetController extends GetxController {
         Get.find<MaintenanceMpResourceController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
-          calls['http://' +
-                  ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${Get.arguments["id"]}'] =
+          calls['$protocol://$ip/api/v1/windows/preventive-maintenance/tabs/resources/${Get.arguments["id"]}'] =
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['http://' +
-                  ip +
-                  '/api/v1/windows/preventive-maintenance/tabs/resources/${Get.arguments["id"]}'] =
+          calls['$protocol://$ip/api/v1/windows/preventive-maintenance/tabs/resources/${Get.arguments["id"]}'] =
               msg;
         }
         GetStorage().write('storedEditAPICalls', calls);
@@ -447,6 +436,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
   }
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

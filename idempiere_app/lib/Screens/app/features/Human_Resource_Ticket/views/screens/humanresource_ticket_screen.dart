@@ -66,12 +66,13 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -86,10 +87,11 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                 Row(
                   children: [
                     Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET HR: ".tr + controller.trx.rowcount.toString())
-                          : Text("TICKET HR: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("TICKET HR: ".tr +
+                              controller.trx.rowcount.toString())
+                          : Text("TICKET HR: ".tr)),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -212,7 +214,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Status".tr + ": ",
+                                              "${"Status".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -229,7 +231,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Summary".tr +": ",
+                                              "${"Summary".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -245,7 +247,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Priority".tr +": ",
+                                              "${"Priority".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -304,10 +306,11 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                 Row(
                   children: [
                     Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET HR: ".tr + controller.trx.rowcount.toString())
-                          : Text("TICKET HR: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("TICKET HR: ".tr +
+                              controller.trx.rowcount.toString())
+                          : Text("TICKET HR: ".tr)),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -430,7 +433,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Status".tr + ": ",
+                                              "${"Status".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -447,7 +450,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Summary".tr +": ",
+                                              "${"Summary".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -463,7 +466,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Priority".tr +": ",
+                                              "${"Priority".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -522,10 +525,11 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                 Row(
                   children: [
                     Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET HR: ".tr + controller.trx.rowcount.toString())
-                          : Text("TICKET HR: ".tr)),
                       margin: const EdgeInsets.only(left: 15),
+                      child: Obx(() => controller.dataAvailable
+                          ? Text("TICKET HR: ".tr +
+                              controller.trx.rowcount.toString())
+                          : Text("TICKET HR: ".tr)),
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -648,7 +652,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Status".tr + ": ",
+                                              "${"Status".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -665,7 +669,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Summary".tr +": ",
+                                              "${"Summary".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -681,7 +685,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Priority".tr +": ",
+                                              "${"Priority".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),

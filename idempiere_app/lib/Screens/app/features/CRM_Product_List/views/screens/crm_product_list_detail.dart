@@ -28,9 +28,8 @@ class _ProductListDetailState extends State<ProductListDetail>
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter= M_Product_ID eq ${args["id"]}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter= M_Product_ID eq ${args["id"]}');
     var response = await http.get(
       url,
       headers: <String, String>{

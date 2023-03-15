@@ -63,7 +63,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
       });
     }
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/jp_todo/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo/');
 
     //print(msg);
     var response = await http.post(
@@ -136,9 +136,8 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
 
     var response = await http.get(
       url,
@@ -180,9 +179,8 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_project?\$filter= C_Project_ID eq $projectId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_project?\$filter= C_Project_ID eq $projectId');
 
     var response = await http.get(
       url,
@@ -215,9 +213,8 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     String authorization =
         'Bearer ${GetStorage().read('token')}'; //GetStorage().read("clientid")
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_project?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_project?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{

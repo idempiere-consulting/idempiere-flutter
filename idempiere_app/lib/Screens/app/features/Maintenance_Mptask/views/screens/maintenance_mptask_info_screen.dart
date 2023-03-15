@@ -40,7 +40,9 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       trx = InfoCountJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       //InfoCountJSON list = InfoCountJSON(records: []);

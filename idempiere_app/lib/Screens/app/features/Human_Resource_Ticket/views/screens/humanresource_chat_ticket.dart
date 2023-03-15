@@ -31,11 +31,10 @@ class _MyHomePageState extends State<HumanResourceChat> {
 
   getLog() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/R_RequestUpdate?\$filter=R_Request_ID eq ${Get.arguments["ticketid"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/R_RequestUpdate?\$filter=R_Request_ID eq ${Get.arguments["ticketid"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -91,12 +90,11 @@ class _MyHomePageState extends State<HumanResourceChat> {
     final msg = jsonEncode({"Result": message.text});
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/request/${Get.arguments["ticketid"]}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/request/${Get.arguments["ticketid"]}');
 
     var response = await http.put(
       url,

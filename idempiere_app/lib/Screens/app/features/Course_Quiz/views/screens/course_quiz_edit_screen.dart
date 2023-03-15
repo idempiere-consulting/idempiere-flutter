@@ -24,8 +24,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["id"]}');
     var response = await http.delete(
       url,
       headers: <String, String>{
@@ -76,8 +75,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
       "DateWorkStart": date
     });
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/mp_ot/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
@@ -117,9 +115,8 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/s_resource?\$filter=AD_User_ID eq $userId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/s_resource?\$filter=AD_User_ID eq $userId');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -142,9 +139,8 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_BPartner_Location?\$filter=C_BPartner_ID eq $id');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter=C_BPartner_ID eq $id');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -177,9 +173,8 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_SysConfig?\$filter=Name eq \'LIT_Maintenance_Order_Doc_ID\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_SysConfig?\$filter=Name eq \'LIT_Maintenance_Order_Doc_ID\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -202,7 +197,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/c_bpartner');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_bpartner');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -223,7 +218,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/s_resource');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/s_resource');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -252,7 +247,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
     var response = await http.get(
       url,
       headers: <String, String>{

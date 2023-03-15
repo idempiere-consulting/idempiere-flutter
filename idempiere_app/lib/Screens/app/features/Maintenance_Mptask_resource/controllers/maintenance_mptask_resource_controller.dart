@@ -1939,15 +1939,6 @@ class MaintenanceMpResourceController extends GetxController {
 
     //print(_trx.records!.length);
 
-    if (init) {
-      //filter3Available.value = false;
-      var found =
-          _trx.records!.where((element) => element.litResourceGroupID != null);
-      if (found.isNotEmpty) {
-        dropDownValue3.value = found.first.litResourceGroupID!.id.toString();
-      }
-      init = false;
-    }
     //print(_trx.records!.length);
     _trx2 = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
@@ -2016,7 +2007,16 @@ class MaintenanceMpResourceController extends GetxController {
         default:
       }
     }
-
+    if (init) {
+      //filter3Available.value = false;
+      var found = _trx.records!.where((element) =>
+          element.litResourceGroupID != null &&
+          element.mpMaintainID?.id == GetStorage().read('selectedTaskDocNo'));
+      if (found.isNotEmpty) {
+        dropDownValue3.value = found.first.litResourceGroupID!.id.toString();
+      }
+      init = false;
+    }
     //FILTRO DESTINAZIONE
     if (dropDownValue3.value != "0") {
       var temp = (_trx.records!.where((element) =>

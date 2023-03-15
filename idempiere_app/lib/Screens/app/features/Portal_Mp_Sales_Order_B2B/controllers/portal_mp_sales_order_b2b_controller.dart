@@ -384,12 +384,14 @@ class PortalMpSalesOrderB2BController extends GetxController {
     //productFilterAvailable.value = false;
     productsAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
+    String authorization =
+        'Bearer ${GetStorage().read('token')}'; //contains(tolower(Value),\'${searchFieldController.text}\')
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= contains(tolower(value),\'${searchFieldController.text}\')');
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= SKU eq \'${searchFieldController.text}\'');
 
-    /* print('$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter'); */
+    print(
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= SKU eq \'${searchFieldController.text}\'');
 
     var response = await http.get(
       url,
@@ -400,7 +402,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //print(utf8.decode(response.bodyBytes));
+      print(utf8.decode(response.bodyBytes));
       /* filteredProds =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
       filteredProds.records!.removeWhere((element) => true);

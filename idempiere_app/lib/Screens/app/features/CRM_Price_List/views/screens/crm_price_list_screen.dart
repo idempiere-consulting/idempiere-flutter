@@ -568,8 +568,7 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
               ),
               ListTile(
                 title: Text(
-                  "  ${controller.trx.records![index].cCurrencyID?.identifier ?? "?"} " +
-                      controller.trx.records![index].priceList.toString(),
+                  "  ${controller.trx.records![index].cCurrencyID?.identifier ?? "?"} ${controller.trx.records![index].priceList}",
                   style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),

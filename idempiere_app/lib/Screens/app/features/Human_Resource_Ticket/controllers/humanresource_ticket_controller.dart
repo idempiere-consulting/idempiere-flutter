@@ -60,10 +60,10 @@ class HumanResourceTicketController extends GetxController {
         },
         items: _tt.records!.map((list) {
           return DropdownMenuItem<String>(
+            value: list.id.toString(),
             child: Text(
               list.name.toString(),
             ),
-            value: list.id.toString(),
           );
         }).toList(),
       ),
@@ -84,9 +84,8 @@ class HumanResourceTicketController extends GetxController {
 
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/R_RequestType?\$filter= Description eq \'HR\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/R_RequestType?\$filter= Description eq \'HR\'');
 
     var response = await http.get(
       url,
@@ -103,10 +102,10 @@ class HumanResourceTicketController extends GetxController {
 
       for (var i = 0; i < json.rowcount!; i++) {
         ticketFilter =
-            ticketFilter + "R_RequestType_ID eq ${json.records![i].id}";
+            "${ticketFilter}R_RequestType_ID eq ${json.records![i].id}";
 
         if (i != json.rowcount! - 1) {
-          ticketFilter = ticketFilter + " OR ";
+          ticketFilter = "$ticketFilter OR ";
         }
       }
       //print(ticketFilter);
@@ -119,9 +118,8 @@ class HumanResourceTicketController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/r_request/${trx.records![index].id}/attachments/ticketimage.jpg');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/r_request/${trx.records![index].id}/attachments/ticketimage.jpg');
 
     var response = await http.get(
       url,
@@ -165,10 +163,10 @@ class HumanResourceTicketController extends GetxController {
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -195,9 +193,9 @@ class HumanResourceTicketController extends GetxController {
   Future<void> getClosedTicketsID() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/R_Status?\$filter= Value eq \'R101\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/R_Status?\$filter= Value eq \'R101\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -225,9 +223,8 @@ class HumanResourceTicketController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/R_RequestType?\$filter=startswith(LIT_RequestSubType,\'HR\') and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/R_RequestType?\$filter=startswith(LIT_RequestSubType,\'HR\') and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -294,9 +291,8 @@ class HumanResourceTicketController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -321,9 +317,8 @@ class HumanResourceTicketController extends GetxController {
       "R_Status_ID": 1000024,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/r_request/${trx.records![index].id}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/r_request/${trx.records![index].id}');
 
     var response = await http.put(
       url,
@@ -357,6 +352,7 @@ class HumanResourceTicketController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -495,45 +491,5 @@ class HumanResourceTicketController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

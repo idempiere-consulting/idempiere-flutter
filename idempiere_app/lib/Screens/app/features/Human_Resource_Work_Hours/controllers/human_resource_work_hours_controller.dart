@@ -48,9 +48,8 @@ class HumanResourceWorkHoursController extends GetxController {
               String.fromCharCodes(ndef.cachedMessage!.records[0].payload);
 
           var text2 = text.substring(1);
-          var url = Uri.parse('$protocol://' +
-              ip +
-              '/api/v1/models/ad_user?\$filter= DocumentNo eq \'$text2\'');
+          var url = Uri.parse(
+              '$protocol://$ip/api/v1/models/ad_user?\$filter= DocumentNo eq \'$text2\'');
 
           var response = await http.get(
             url,
@@ -125,7 +124,7 @@ class HumanResourceWorkHoursController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/lit_workhour/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_workhour/');
 
     var msg = jsonEncode({
       "AD_User_ID": {"id": userId},
@@ -167,6 +166,7 @@ class HumanResourceWorkHoursController extends GetxController {
   }
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

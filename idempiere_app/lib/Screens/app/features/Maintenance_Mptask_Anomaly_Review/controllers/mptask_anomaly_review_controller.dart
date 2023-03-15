@@ -27,9 +27,8 @@ class AnomalyReviewController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_DocType?\$filter= Name eq \'Warehouse Order\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_DocType?\$filter= Name eq \'Warehouse Order\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -68,9 +67,8 @@ class AnomalyReviewController extends GetxController {
         });
         //print(msg);
         final protocol = GetStorage().read('protocol');
-        var url = Uri.parse('$protocol://' +
-            ip +
-            '/api/v1/processes/createsalesorderfromanomaly');
+        var url = Uri.parse(
+            '$protocol://$ip/api/v1/processes/createsalesorderfromanomaly');
 
         var response = await http.post(
           url,
@@ -161,9 +159,8 @@ class AnomalyReviewController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/LIT_NC?\$filter= MP_OT_ID eq ${args["id"]} and IsClosed eq N and C_Order_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/LIT_NC?\$filter= MP_OT_ID eq ${args["id"]} and IsClosed eq N and C_Order_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -188,6 +185,7 @@ class AnomalyReviewController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

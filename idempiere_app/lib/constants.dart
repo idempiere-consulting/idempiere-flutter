@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
@@ -91,6 +92,9 @@ emptyPostCallStack() {
       if (response.statusCode == 201) {
         list.remove(element);
       } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
         flag = true;
       }
     });
@@ -98,7 +102,7 @@ emptyPostCallStack() {
     if (flag == false) {
       Get.snackbar(
         "Done!".tr,
-        "Records saved locally have been synchronized!".tr,
+        "Create Records saved locally have been synchronized!".tr,
         duration: const Duration(milliseconds: 800),
         isDismissible: true,
         icon: const Icon(
@@ -149,7 +153,7 @@ emptyEditAPICallStack() {
     if (flag == false) {
       Get.snackbar(
         "Done!".tr,
-        "Records saved locally have been synchronized!".tr,
+        " Edit Records saved locally have been synchronized!".tr,
         duration: const Duration(milliseconds: 800),
         isDismissible: true,
         icon: const Icon(
@@ -203,7 +207,7 @@ emptyDeleteCallStack() {
     if (flag == false) {
       Get.snackbar(
         "Done!".tr,
-        "Records saved locally have been synchronized!".tr,
+        "Delete Records saved locally have been synchronized!".tr,
         duration: const Duration(milliseconds: 800),
         isDismissible: true,
         icon: const Icon(

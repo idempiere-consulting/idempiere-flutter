@@ -42,13 +42,13 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
 
   sendTicketAttachedImage(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final msg = jsonEncode({"name": "ticketimage.jpg", "data": image64});
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/r_request/$id/attachments');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/r_request/$id/attachments');
 
     var response = await http.post(
       url,
@@ -73,7 +73,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     String formattedDateTo = formatter.format(dateT);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -92,7 +92,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/R_Request');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/R_Request');
     //print(msg);
     var response = await http.post(
       url,
@@ -143,7 +143,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     //String formattedDateTo = formatter.format(dateT);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -162,7 +162,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/R_Request');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/R_Request');
     //print(msg);
     var response = await http.post(
       url,
@@ -207,7 +207,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
 
   createTicketGeneric() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -224,7 +224,7 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/R_Request');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/R_Request');
     //print(msg);
     var response = await http.post(
       url,
@@ -286,10 +286,10 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
   Future<void> getBusinessPartner() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    final protocol = GetStorage().read('protocol');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -315,10 +315,10 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
   Future<void> getRStatus() async {
     //var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/R_Status?\$filter= Value eq \'R00\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    final protocol = GetStorage().read('protocol');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/R_Status?\$filter= Value eq \'R00\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -341,10 +341,10 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
   Future<void> getSalesRep() async {
     //var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/AD_User?\$filter= Value eq \'tba\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    final protocol = GetStorage().read('protocol');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_User?\$filter= Value eq \'tba\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -370,11 +370,10 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
 
   getTicketTypeInfo() async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/R_RequestType?\$filter= R_RequestType_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/R_RequestType?\$filter= R_RequestType_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -398,11 +397,10 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
   Future<List<Types>> getFreeSlots() async {
     List<Types> list = [];
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_resourcefreeslot_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_resourcefreeslot_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -465,11 +463,10 @@ class _CreateHumanResourceTicketState extends State<CreateHumanResourceTicket> {
     //print(formattedFiftyDaysAgo);
 
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and JP_ToDo_ScheduledStartDate ge \'$formattedDate\' and JP_ToDo_ScheduledStartDate le \'$formattedfourteenDayslater 23:59:59\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and JP_ToDo_ScheduledStartDate ge \'$formattedDate\' and JP_ToDo_ScheduledStartDate le \'$formattedfourteenDayslater 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
