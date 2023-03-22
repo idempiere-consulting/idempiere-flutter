@@ -522,6 +522,41 @@ class _CreateMaintenanceMpResourceState
         "lit_ResourceGroup_ID": {"id": int.parse(dropdownValue3)}
       });
     }
+    final now = DateTime.now();
+    final checkDate = DateTime.parse(date1);
+    final revisionDate = DateTime.parse(date2);
+    final testDate = DateTime.parse(date3);
+    final today = DateTime(now.year, now.month, now.day);
+
+    if (DateTime(checkDate.year, checkDate.month, checkDate.day) == today) {
+      msg.addAll({
+        "AD_User_ID": {"id": GetStorage().read('userId')},
+        "LIT_ResourceActivity": {"id": "CHK"},
+      });
+    }
+    if (DateTime(revisionDate.year, revisionDate.month, revisionDate.day) ==
+        today) {
+      msg.addAll({
+        "AD_User_ID": {"id": GetStorage().read('userId')},
+        "LIT_ResourceActivity": {"id": "REV"},
+      });
+    }
+    if (DateTime(testDate.year, testDate.month, testDate.day) == today) {
+      msg.addAll({
+        "AD_User_ID": {"id": GetStorage().read('userId')},
+        "LIT_ResourceActivity": {"id": "TST"},
+      });
+    }
+    if (DateTime(testDate.year, testDate.month, testDate.day) == today &&
+        int.parse(manufacturedYearFieldController.text == ""
+                ? "0"
+                : manufacturedYearFieldController.text) ==
+            today.year) {
+      msg.addAll({
+        "AD_User_ID": {"id": GetStorage().read('userId')},
+        "LIT_ResourceActivity": {"id": "CHK"},
+      });
+    }
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
@@ -531,47 +566,51 @@ class _CreateMaintenanceMpResourceState
 
     EDIType edt = EDIType(id: args["id"]);
     RRecords record = RRecords(
-        mProductID: prod,
-        mpMaintainID: MPMaintainID(id: GetStorage().read('selectedTaskDocNo')),
-        //mpOtDocumentno: GetStorage().read('selectedTaskDocNo'),
-        resourceType: res,
-        resourceQty: 1,
-        eDIType: edt,
-        lITControl3DateFrom: date3,
-        lITControl2DateFrom: date2,
-        lITControl1DateFrom: date1,
-        note: noteFieldController.text,
-        serNo: sernoFieldController.text,
-        locationComment: locationFieldController.text,
-        //value: locationCodeFieldController.text,
-        manufacturer: manufacturerFieldController.text,
-        manufacturedYear: int.parse(manufacturedYearFieldController.text == ""
-            ? "0"
-            : manufacturedYearFieldController.text),
-        useLifeYears: int.parse(useLifeYearsFieldController.text == ""
-            ? "0"
-            : useLifeYearsFieldController.text),
-        lITProductModel: productModelFieldController.text,
-        number: numberFieldController.text,
-        lineNo: int.parse(
-            lineFieldController.text == "" ? "0" : lineFieldController.text),
-        //lot: lotFieldController.text,
-        dateOrdered: dateOrdered,
-        serviceDate: firstUseDate,
-        userName: userNameFieldController.text,
-        prodCode: barcodeFieldController.text,
-        resourceStatus: ResourceStatus(id: "INS", identifier: "Installato"),
-        length: int.parse(lengthFieldController.text != ""
-            ? lengthFieldController.text
-            : "0"),
-        width: int.parse(
-            widthFieldController.text != "" ? widthFieldController.text : "0"),
-        weightAmt: int.parse(weightAmtFieldController.text != ""
-            ? weightAmtFieldController.text
-            : "0"),
-        color: colorFieldController.text,
-        textDetails: cartelFieldController.text,
-        litResourceGroupID: LitResourceGroupID(id: int.parse(dropdownValue3)));
+      mProductID: prod,
+      mpMaintainID: MPMaintainID(id: GetStorage().read('selectedTaskDocNo')),
+      //mpOtDocumentno: GetStorage().read('selectedTaskDocNo'),
+      resourceType: res,
+      resourceQty: 1,
+      eDIType: edt,
+      lITControl3DateFrom: date3,
+      lITControl2DateFrom: date2,
+      lITControl1DateFrom: date1,
+      note: noteFieldController.text,
+      serNo: sernoFieldController.text,
+      locationComment: locationFieldController.text,
+      //value: locationCodeFieldController.text,
+      manufacturer: manufacturerFieldController.text,
+      manufacturedYear: int.parse(manufacturedYearFieldController.text == ""
+          ? "0"
+          : manufacturedYearFieldController.text),
+      useLifeYears: int.parse(useLifeYearsFieldController.text == ""
+          ? "0"
+          : useLifeYearsFieldController.text),
+      lITProductModel: productModelFieldController.text,
+      number: numberFieldController.text,
+      lineNo: int.parse(
+          lineFieldController.text == "" ? "0" : lineFieldController.text),
+      //lot: lotFieldController.text,
+      dateOrdered: dateOrdered,
+      serviceDate: firstUseDate,
+      userName: userNameFieldController.text,
+      prodCode: barcodeFieldController.text,
+      resourceStatus: ResourceStatus(id: "INS", identifier: "Installato"),
+      length: int.parse(
+          lengthFieldController.text != "" ? lengthFieldController.text : "0"),
+      width: int.parse(
+          widthFieldController.text != "" ? widthFieldController.text : "0"),
+      weightAmt: int.parse(weightAmtFieldController.text != ""
+          ? weightAmtFieldController.text
+          : "0"),
+      color: colorFieldController.text,
+      textDetails: cartelFieldController.text,
+    );
+
+    if (dropdownValue3 != "") {
+      record.litResourceGroupID =
+          LitResourceGroupID(id: int.parse(dropdownValue3));
+    }
 
     var url = Uri.parse(
         '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}');
