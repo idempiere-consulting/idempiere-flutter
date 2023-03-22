@@ -322,6 +322,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                     ),
                   ),
                 ),
+                //const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -515,6 +516,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                     ),
                   ),
                 ),
+                //const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(

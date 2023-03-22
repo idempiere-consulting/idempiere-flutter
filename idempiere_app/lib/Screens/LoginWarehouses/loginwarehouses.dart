@@ -1223,14 +1223,26 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         case "0":
           Get.offAllNamed("/Dashboard");
           break;
-        case "24":
-          Get.offAllNamed("/MaintenanceMptask");
+        case "2":
+          Get.offAllNamed("/CRM");
           break;
         case "8":
           Get.offAllNamed("/SalesOrder");
           break;
+        case "22":
+          Get.offAllNamed("/Maintenance");
+          break;
+        case "24":
+          Get.offAllNamed("/MaintenanceMptask");
+          break;
         case "32":
           Get.offAllNamed("/PortalMp");
+          break;
+        case "51":
+          Get.offAllNamed("/PortalMpSalesOrderB2B");
+          break;
+        case "52":
+          Get.offAllNamed("/TrainingCourse");
           break;
         case "69":
           Get.offAllNamed("/SupplychainLoadUnload");

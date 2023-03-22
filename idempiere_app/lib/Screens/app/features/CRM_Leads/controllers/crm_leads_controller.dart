@@ -3,6 +3,10 @@ part of dashboard;
 class CRMLeadController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late LeadJson _trx;
+  SalesStageJson salestages = SalesStageJson(records: []);
+  bool saleStagesAvailable = false;
+  TextEditingController amtFieldController = TextEditingController(text: "0");
+  var saleStageValue = 0;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 
@@ -21,6 +25,7 @@ class CRMLeadController extends GetxController {
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
+  var leadStatusValue = "".obs;
 
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
@@ -30,6 +35,7 @@ class CRMLeadController extends GetxController {
       {"id": "1", "name": "Name"},
       {"id": "2", "name": "Mail"},
       {"id": "3", "name": "Phone N°"},
+      {"id": "4", "name": "Lead Status"},
     ]
   };
 
@@ -37,6 +43,162 @@ class CRMLeadController extends GetxController {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types;
+  }
+
+  getAllSaleStages() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_SalesStage');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      salestages = SalesStageJson.fromJson(jsonDecode(response.body));
+
+      saleStagesAvailable = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load sale stages");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  static String _displayStringForOption(SSRecords option) => option.name!;
+
+  convertLead(int index) {
+    Get.defaultDialog(
+        title: 'Create Opportunity'.tr,
+        content: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 40),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Sale Stage".tr,
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              margin: const EdgeInsets.all(10),
+              child: Autocomplete<SSRecords>(
+                displayStringForOption: _displayStringForOption,
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text == '') {
+                    return const Iterable<SSRecords>.empty();
+                  }
+                  return salestages.records!.where((SSRecords option) {
+                    return option.name!
+                        .toString()
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase());
+                  });
+                },
+                onSelected: (SSRecords selection) {
+                  //debugPrint(
+                  //'You just selected ${_displayStringForOption(selection)}');
+                  saleStageValue = selection.id!;
+
+                  //print(salesrepValue);
+                },
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: TextField(
+                controller: amtFieldController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.link),
+                  border: OutlineInputBorder(),
+                  labelText: 'Opportunity Amount',
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                keyboardType: const TextInputType.numberWithOptions(
+                    signed: true, decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                ],
+              ),
+            ),
+          ],
+        ),
+        onCancel: () {},
+        onConfirm: () async {
+          final ip = GetStorage().read('ip');
+          String authorization = 'Bearer ${GetStorage().read('token')}';
+          var msg = jsonEncode({
+            "record-id": _trx.windowrecords![index].id,
+            "CreateOpportunity": true,
+            "C_SalesStage_ID": saleStageValue,
+            "OpportunityAmt": double.parse(amtFieldController.text),
+            "AD_User_ID": _trx.windowrecords![index].id,
+            //"C_DocType_ID": _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
+          });
+
+          //print(msg);
+          final protocol = GetStorage().read('protocol');
+          var url =
+              Uri.parse('$protocol://$ip/api/v1/processes/aduserconvertlead');
+
+          //print(url);
+
+          var response = await http.post(
+            url,
+            body: msg,
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': authorization,
+            },
+          );
+          if (response.statusCode == 200) {
+            //print("done!");
+            Get.back();
+            if (kDebugMode) {
+              print(response.body);
+            }
+
+            Get.snackbar(
+              "Done!".tr,
+              "Sales Order has been created".tr,
+              icon: const Icon(
+                Icons.done,
+                color: Colors.green,
+              ),
+            );
+          } else {
+            if (kDebugMode) {
+              print(response.body);
+            }
+            Get.snackbar(
+              "Error!".tr,
+              "Sales Order not created".tr,
+              icon: const Icon(
+                Icons.error,
+                color: Colors.red,
+              ),
+            );
+          }
+        });
   }
 
   @override
@@ -48,6 +210,7 @@ class CRMLeadController extends GetxController {
     });
 
     getLeads();
+    getAllSaleStages();
     //getADUserID();
     adUserId = GetStorage().read('userId');
   }
@@ -92,6 +255,31 @@ class CRMLeadController extends GetxController {
     }
   }
 
+  Future<List<LSRecords>> getAllLeadStatuses() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
+      //print(json.rowcount);
+
+      return json.records!;
+    } else {
+      throw Exception("Failed to load lead statuses");
+    }
+
+    //print(response.body);
+  }
+
   Future<void> makePhoneCall(String phoneNumber) async {
     // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
     // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
@@ -122,7 +310,7 @@ class CRMLeadController extends GetxController {
     _dataAvailable.value = false;
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     var searchUrlFilter = "";
-    if (searchFieldController.text != "") {
+    if (searchFieldController.text != "" || dropdownValue.value == '4') {
       switch (dropdownValue.value) {
         case "1":
           searchUrlFilter =
@@ -136,6 +324,9 @@ class CRMLeadController extends GetxController {
         case "3":
           searchUrlFilter =
               " and contains(Phone,'${searchFieldController.text}')";
+          break;
+        case "4":
+          searchUrlFilter = " and LeadStatus eq '${leadStatusValue.value}'";
           break;
         default:
       }
@@ -154,6 +345,7 @@ class CRMLeadController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
         '$protocol://$ip/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
+    print(url);
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -163,6 +355,7 @@ class CRMLeadController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
+
       _trx = LeadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
@@ -170,7 +363,9 @@ class CRMLeadController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

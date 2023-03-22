@@ -29,6 +29,8 @@ class _CreateLeadState extends State<CreateLead> {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "Name": nameFieldController.text,
+      "Description": descriptionFieldController.text,
+      "Note": noteFieldController.text,
       "BPName": bPartnerFieldController.text,
       "Phone": phoneFieldController.text,
       "EMail": mailFieldController.text,
@@ -42,9 +44,14 @@ class _CreateLeadState extends State<CreateLead> {
         "SalesRep_ID": {"identifier": salesrepValue},
       });
     }
-    if (sectorValue != 0) {
+    if (sectorValue != "") {
       json.addAll({
-        "C_Job_ID": {"id": sectorValue},
+        "lit_IndustrySector_ID": {"id": int.parse(sectorValue)},
+      });
+    }
+    if (sizeDropdownValue != "") {
+      json.addAll({
+        "lit_LeadSize_ID": {"id": int.parse(sizeDropdownValue)},
       });
     }
     if (campaignDropdownValue != "") {
@@ -53,7 +60,13 @@ class _CreateLeadState extends State<CreateLead> {
       });
     }
 
-    print(jsonEncode(json));
+    if (sourceDropdownValue != "") {
+      json.addAll({
+        "LeadSource": {"id": sourceDropdownValue},
+      });
+    }
+
+    //print(jsonEncode(json));
     /* final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -130,7 +143,8 @@ class _CreateLeadState extends State<CreateLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= DateLastLogin neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -158,7 +172,7 @@ class _CreateLeadState extends State<CreateLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/c_job');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_IndustrySector');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -200,12 +214,75 @@ class _CreateLeadState extends State<CreateLead> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var jsondecoded = jsonDecode(response.body);
 
       var jsonsectors = CampaignJSON.fromJson(jsondecoded);
 
       return jsonsectors.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load campaigns");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<CRecords>> getAllLeadSizes() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_LeadSize');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonsectors = CampaignJSON.fromJson(jsondecoded);
+
+      return jsonsectors.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load campaigns");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<LSRecords>> getAllLeadSources() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_ref_list?\$filter= AD_Reference_ID eq 53415 ');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
+
+      return json.records!;
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -239,10 +316,17 @@ class _CreateLeadState extends State<CreateLead> {
   var mailFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var urlFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var descriptionFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var noteFieldController;
+
   String dropdownValue = "";
   String campaignDropdownValue = "";
   String salesrepValue = "";
-  int sectorValue = 0;
+  String sourceDropdownValue = "";
+  String sizeDropdownValue = "";
+  String sectorValue = "";
 
   @override
   void initState() {
@@ -252,18 +336,22 @@ class _CreateLeadState extends State<CreateLead> {
     bPartnerFieldController = TextEditingController();
     mailFieldController = TextEditingController();
     urlFieldController = TextEditingController();
+    descriptionFieldController = TextEditingController();
+    noteFieldController = TextEditingController();
     dropdownValue = "N";
+    sourceDropdownValue = "";
     campaignDropdownValue = "";
     salesrepValue = "";
-    sectorValue = 0;
+    sectorValue = "";
+    sizeDropdownValue = "";
     //fillFields();
     //getAllLeadStatuses();
     //getAllSectors();
-    getAllCampaigns();
+    //getAllCampaigns();
+    getAllLeadSources();
   }
 
   static String _displayStringForOption(Records option) => option.name!;
-  static String _displaySectorStringForOption(JRecords option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 
@@ -301,11 +389,41 @@ class _CreateLeadState extends State<CreateLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
                     controller: nameFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: noteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -413,6 +531,7 @@ class _CreateLeadState extends State<CreateLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.all(10),
+                  width: size.width,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.grey,
@@ -425,32 +544,75 @@ class _CreateLeadState extends State<CreateLead> {
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<JRecords>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<JRecords>(
-                                displayStringForOption:
-                                    _displaySectorStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<JRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((JRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (JRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
+                            ? DropdownButton(
+                                hint: Text("Select a Sector".tr),
+                                value: sectorValue == "" ? null : sectorValue,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
                                   setState(() {
-                                    sectorValue = selection.id!;
+                                    sectorValue = newValue!;
                                   });
-
-                                  //print(salesrepValue);
+                                  //print(dropdownValue);
                                 },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Lead Size".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadSizes(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                hint: Text("Select a Size".tr),
+                                value: sizeDropdownValue == ""
+                                    ? null
+                                    : sizeDropdownValue,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    sizeDropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                  );
+                                }).toList(),
                               )
                             : const Center(
                                 child: CircularProgressIndicator(),
@@ -497,6 +659,59 @@ class _CreateLeadState extends State<CreateLead> {
                                 items: snapshot.data!.map((list) {
                                   return DropdownMenuItem<String>(
                                     value: list.id.toString(),
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Lead Source".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadSources(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                hint: Text('Select a Lead Source'.tr),
+                                value: sourceDropdownValue == ""
+                                    ? null
+                                    : sourceDropdownValue,
+                                //icon: const Icon(Icons.arrow_downward),
+                                elevation: 16,
+
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    sourceDropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
                                     child: Text(
                                       list.name.toString(),
                                     ),

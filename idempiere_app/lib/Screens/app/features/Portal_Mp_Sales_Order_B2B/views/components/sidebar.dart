@@ -28,7 +28,7 @@ class _Sidebar extends StatelessWidget {
             SelectionButton(
               initialSelected: 9,
               data: [
-                /* SelectionButtonData(
+                SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
                   label: "Dashboard",
@@ -63,35 +63,41 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "SalesOrder".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Training and Course".tr,
+                  visible: false,
                 ),
                 //Impianto
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Maintenance".tr,
+                  visible: false,
                 ),
                 //Impianti dettaglio
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Anomaly".tr,
+                  visible: false,
                 ),
                 //Scadenze
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Invoice".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Contract".tr,
-                ), */
+                  visible: false,
+                ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,

@@ -215,7 +215,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id');
+        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= M_Product_Category_ID eq $id');
 
     var response = await http.get(
       url,
@@ -226,7 +226,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //print('done');
       skuProducts = [];
       filteredProds.records!.removeWhere((element) => true);
       ProductListJson temp =
@@ -312,7 +311,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter');
+        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter');
 
     /* print('$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $id $colorUrlFilter $sizeUrlFilter'); */
 
@@ -366,7 +365,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
             .map((size) => MultiSelectItem<FilterSize>(size, size.name))
             .toList();
       }
-      //print(utf8.decode(response.bodyBytes));
+      print(utf8.decode(response.bodyBytes));
       /* filteredProds =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
       //productFilterAvailable.value = true;
@@ -388,10 +387,10 @@ class PortalMpSalesOrderB2BController extends GetxController {
         'Bearer ${GetStorage().read('token')}'; //contains(tolower(Value),\'${searchFieldController.text}\')
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= SKU eq \'${searchFieldController.text}\'');
+        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= SKU eq \'${searchFieldController.text}\'');
 
-    print(
-        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= SKU eq \'${searchFieldController.text}\'');
+    /*  print(
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= SKU eq \'${searchFieldController.text}\''); */
 
     var response = await http.get(
       url,
@@ -402,10 +401,12 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
+
       /* filteredProds =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
       filteredProds.records!.removeWhere((element) => true);
+
       skuProducts = [];
       ProductListJson temp =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -445,6 +446,13 @@ class PortalMpSalesOrderB2BController extends GetxController {
         _sizeItems = _sizes
             .map((size) => MultiSelectItem<FilterSize>(size, size.name))
             .toList();
+      }
+
+      if (filteredProds.records!.isNotEmpty) {
+        chosenCategoryName.value =
+            filteredProds.records![0].productCategoryName2!;
+        prodCategoriesAvailable.value == true;
+        productFilterAvailable.value = true;
       }
       //productFilterAvailable.value = true;
       productsAvailable.value = true;
@@ -750,6 +758,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       /* Get.find<CRMSalesOrderController>().getSalesOrders();
       Get.back(); */
+      Get.off('/PortalMpSalesOrderB2B');
       //print("done!");
       Get.snackbar(
         "${json["DocumentNo"]}",
@@ -769,7 +778,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
         print(response.body);
         Get.snackbar(
           "Error!".tr,
-          "Record not updated".tr,
+          "Record not created".tr,
           icon: const Icon(
             Icons.error,
             color: Colors.red,
@@ -784,6 +793,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
   //print(json.);
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

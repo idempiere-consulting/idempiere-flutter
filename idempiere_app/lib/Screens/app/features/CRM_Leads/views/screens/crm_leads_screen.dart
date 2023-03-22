@@ -7,12 +7,15 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/services.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salestagejson.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -30,7 +33,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -150,6 +153,8 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                           elevation: 16,
                           onChanged: (String? newValue) {
                             controller.dropdownValue.value = newValue!;
+                            controller.searchFieldController.text = "";
+                            controller.leadStatusValue.value = "";
                             //print(dropdownValue);
                           },
                           items: controller.dropDownList.map((list) {
@@ -163,29 +168,81 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                         ),
                       ),
                     ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            /* controller.searchFilterValue.value =
-                                controller.searchFieldController.text; */
-                            controller.getLeads();
-                          },
-                          onEditingComplete: () {
-                            FocusScope.of(context).unfocus();
-                          },
-                          decoration: InputDecoration(
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value != "4",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10),
+                            child: TextField(
+                              controller: controller.searchFieldController,
+                              onSubmitted: (String? value) {
+                                /* controller.searchFilterValue.value =
+                                  controller.searchFieldController.text; */
+                                controller.getLeads();
+                              },
+                              onEditingComplete: () {
+                                FocusScope.of(context).unfocus();
+                              },
+                              decoration: InputDecoration(
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                                prefixIcon: const Icon(EvaIcons.search),
+                                hintText: "search..",
+                                isDense: true,
+                                fillColor: Theme.of(context).cardColor,
+                              ),
                             ),
-                            prefixIcon: const Icon(EvaIcons.search),
-                            hintText: "search..",
-                            isDense: true,
-                            fillColor: Theme.of(context).cardColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value == "4",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            child: FutureBuilder(
+                              future: controller.getAllLeadStatuses(),
+                              builder: (BuildContext ctx,
+                                      AsyncSnapshot<List<LSRecords>>
+                                          snapshot) =>
+                                  snapshot.hasData
+                                      ? Obx(() => DropdownButton(
+                                            underline: const SizedBox(),
+                                            hint:
+                                                Text("Select a Lead Status".tr),
+                                            isExpanded: true,
+                                            value: controller.leadStatusValue
+                                                        .value ==
+                                                    ""
+                                                ? null
+                                                : controller
+                                                    .leadStatusValue.value,
+                                            elevation: 16,
+                                            onChanged: (newValue) {
+                                              controller.leadStatusValue.value =
+                                                  newValue as String;
+                                              controller.getLeads();
+                                              //print(dropdownValue);
+                                            },
+                                            items: snapshot.data!.map((list) {
+                                              return DropdownMenuItem<String>(
+                                                value: list.value.toString(),
+                                                child: Text(
+                                                  list.name.toString(),
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ))
+                                      : const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                            ),
                           ),
                         ),
                       ),
@@ -257,6 +314,14 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                           "name": controller.trx
                                                   .windowrecords![index].name ??
                                               "",
+                                          "description": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .description ??
+                                              "",
+                                          "note": controller.trx
+                                                  .windowrecords![index].note ??
+                                              "",
                                           "leadStatus": controller
                                                   .trx
                                                   .windowrecords![index]
@@ -265,6 +330,11 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                               "",
                                           "bpName": controller
                                               .trx.windowrecords![index].bPName,
+                                          "businessPartner": controller
+                                              .trx
+                                              .windowrecords![index]
+                                              .cbPartnerID
+                                              ?.identifier,
                                           "Tel": controller
                                                   .trx
                                                   .windowrecords![index]
@@ -277,6 +347,36 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                               "",
                                           "url": controller.trx
                                                   .windowrecords![index].url ??
+                                              "",
+                                          "size": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .litLeadSizeID
+                                                  ?.id ??
+                                              "",
+                                          "source": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .leadSource
+                                                  ?.id ??
+                                              "",
+                                          "sector": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .litIndustrySectorID
+                                                  ?.id ??
+                                              "",
+                                          "campaign": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .cCampaignID
+                                                  ?.id ??
+                                              "",
+                                          "address": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPLocationID
+                                                  ?.identifier ??
                                               "",
                                           "salesRep": controller
                                                   .trx
@@ -320,162 +420,178 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                   children: [
                                     Column(
                                       children: [
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              "Business Partner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller
-                                                    .trx
-                                                    .windowrecords![index]
-                                                    .bPName ??
-                                                ""),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.call,
-                                                color: Colors.green,
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPName !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              const Text(
+                                                "Business Partner: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              tooltip: 'Call',
-                                              onPressed: () {
-                                                //log("info button pressed");
-                                                if (controller
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .bPName ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPLocationID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                  onPressed: () {},
+                                                  icon: const Icon(
+                                                    Icons.location_on,
+                                                    color: Colors.red,
+                                                  )),
+                                              Expanded(
+                                                child: Text(controller
                                                         .trx
                                                         .windowrecords![index]
-                                                        .phone ==
-                                                    null) {
-                                                  log("info button pressed");
-                                                } else {
-                                                  controller.makePhoneCall(
-                                                      controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .phone
-                                                          .toString());
-                                                }
-                                              },
-                                            ),
-                                            Text(controller
-                                                    .trx
-                                                    .windowrecords![index]
-                                                    .phone ??
-                                                ""),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.mail,
-                                                color: Colors.white,
+                                                        .bPLocationID
+                                                        ?.identifier ??
+                                                    ""),
                                               ),
-                                              tooltip: 'EMail',
-                                              onPressed: () {
-                                                if (controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .eMail ==
-                                                    null) {
-                                                  log("mail button pressed");
-                                                } else {
-                                                  controller.writeMailTo(
-                                                      controller
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .phone !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
                                                           .trx
                                                           .windowrecords![index]
-                                                          .eMail
-                                                          .toString());
-                                                }
-                                              },
-                                            ),
-                                            Text(controller
-                                                    .trx
-                                                    .windowrecords![index]
-                                                    .eMail ??
-                                                ""),
-                                          ],
+                                                          .phone ==
+                                                      null) {
+                                                    log("info button pressed");
+                                                  } else {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .windowrecords![
+                                                                index]
+                                                            .phone
+                                                            .toString());
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .phone ??
+                                                  ""),
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "SalesRep".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller
-                                                    .trx
-                                                    .windowrecords![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""),
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .eMail !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.mail,
+                                                  color: Colors.white,
+                                                ),
+                                                tooltip: 'EMail',
+                                                onPressed: () {
+                                                  if (controller
+                                                          .trx
+                                                          .windowrecords![index]
+                                                          .eMail ==
+                                                      null) {
+                                                    log("mail button pressed");
+                                                  } else {
+                                                    controller.writeMailTo(
+                                                        controller
+                                                            .trx
+                                                            .windowrecords![
+                                                                index]
+                                                            .eMail
+                                                            .toString());
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .eMail ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .salesRepID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"SalesRep".tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .salesRepID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ],
+                                          ),
                                         ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.green),
+                                            Visibility(
+                                              visible: controller
+                                                      ._trx
+                                                      .windowrecords![index]
+                                                      .cbPartnerID ==
+                                                  null,
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  controller.convertLead(index);
+                                                },
+                                                child: Text("Convert Lead".tr),
                                               ),
-                                              onPressed: () async {
-                                                Get.defaultDialog(
-                                                  title: 'Convert Action',
-                                                  content: const Text(
-                                                      "Are you sure you want to convert the record?"),
-                                                  onCancel: () {},
-                                                  onConfirm: () async {
-                                                    final ip =
-                                                        GetStorage().read('ip');
-                                                    String authorization =
-                                                        'Bearer ${GetStorage().read('token')}';
-                                                    final msg = jsonEncode({
-                                                      "DocAction": "CO",
-                                                    });
-                                                    final protocol =
-                                                        GetStorage()
-                                                            .read('protocol');
-                                                    var url = Uri.parse(
-                                                        '$protocol://$ip/api/v1/models/ad_user/${controller.trx.windowrecords![index].id}');
-
-                                                    var response =
-                                                        await http.put(
-                                                      url,
-                                                      body: msg,
-                                                      headers: <String, String>{
-                                                        'Content-Type':
-                                                            'application/json',
-                                                        'Authorization':
-                                                            authorization,
-                                                      },
-                                                    );
-                                                    if (response.statusCode ==
-                                                        200) {
-                                                      //print("done!");
-                                                      /* completeOrder(
-                                                              index); */
-                                                    } else {
-                                                      //print(response.body);
-                                                      Get.snackbar(
-                                                        "Error!".tr,
-                                                        "Record not completed"
-                                                            .tr,
-                                                        icon: const Icon(
-                                                          Icons.error,
-                                                          color: Colors.red,
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                );
-                                              },
-                                              child: Text("Convert Lead".tr),
                                             ),
                                           ],
                                         ),

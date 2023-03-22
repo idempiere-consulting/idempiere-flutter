@@ -93,8 +93,14 @@ class _BodyState extends State<Body> {
           case "0":
             Get.offAllNamed("/Dashboard");
             break;
+          case "2":
+            Get.offAllNamed("/CRM");
+            break;
           case "8":
             Get.offAllNamed("/SalesOrder");
+            break;
+          case "22":
+            Get.offAllNamed("/Maintenance");
             break;
           case "24":
             Get.offAllNamed("/MaintenanceMptask");
@@ -102,19 +108,18 @@ class _BodyState extends State<Body> {
           case "32":
             Get.offAllNamed("/PortalMp");
             break;
-          case "2":
-            Get.offAllNamed("/CRM");
+          case "51":
+            Get.offAllNamed("/PortalMpSalesOrderB2B");
             break;
           case "52":
             Get.offAllNamed("/TrainingCourse");
-            break;
-          case "22":
-            Get.offAllNamed("/Maintenance");
             break;
           case "69":
             Get.offAllNamed("/SupplychainLoadUnload");
             break;
           default:
+            Get.offAllNamed("/Dashboard");
+            break;
         }
       } else {
         Get.snackbar(

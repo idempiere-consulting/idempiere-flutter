@@ -429,23 +429,19 @@ class PortalMpSalesOrderB2BScreen
                                                             "") {
                                                           flag = true;
                                                           controller
-                                                              .colorUrlFilter = controller
-                                                                  .colorUrlFilter +
-                                                              " AND (AD_PrintColor_ID eq ${element.id}";
+                                                                  .colorUrlFilter =
+                                                              "${controller.colorUrlFilter} AND (AD_PrintColor_ID eq ${element.id}";
                                                         } else {
                                                           controller
-                                                              .colorUrlFilter = controller
-                                                                  .colorUrlFilter +
-                                                              " OR AD_PrintColor_ID eq ${element.id}";
+                                                                  .colorUrlFilter =
+                                                              "${controller.colorUrlFilter} OR AD_PrintColor_ID eq ${element.id}";
                                                           flag = true;
                                                         }
                                                       }
                                                       if (flag) {
                                                         controller
                                                                 .colorUrlFilter =
-                                                            controller
-                                                                    .colorUrlFilter +
-                                                                ")";
+                                                            "${controller.colorUrlFilter})";
                                                       }
                                                       controller
                                                           .getFilteredProducts2(
@@ -674,10 +670,7 @@ class PortalMpSalesOrderB2BScreen
                                               visible: controller
                                                   .productsAvailable.value,
                                               child: Text(
-                                                controller.filteredProds
-                                                        .records!.length
-                                                        .toString() +
-                                                    " Products",
+                                                "${controller.filteredProds.records!.length} Products",
                                                 style: const TextStyle(
                                                     color: Colors.grey),
                                               ),
@@ -943,6 +936,22 @@ class PortalMpSalesOrderB2BScreen
                                                             controller
                                                                     .prodDetail
                                                                     .records![0]
+                                                                    .sKU ??
+                                                                "",
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        20)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                            controller
+                                                                    .prodDetail
+                                                                    .records![0]
                                                                     .name ??
                                                                 "",
                                                             style:
@@ -976,7 +985,7 @@ class PortalMpSalesOrderB2BScreen
                                                     children: [
                                                       Expanded(
                                                         child: Text(
-                                                            "EUR ${controller.filteredProds.records![controller.detailIndex].price.toString()}",
+                                                            "EUR ${controller.filteredProds.records![controller.detailIndex].price.toString()} + ${"Vat".tr}",
                                                             style:
                                                                 const TextStyle(
                                                                     fontSize:
@@ -1068,12 +1077,12 @@ class PortalMpSalesOrderB2BScreen
                                                                 .map((list) {
                                                               return DropdownMenuItem<
                                                                   String>(
+                                                                value: list.id
+                                                                    .toString(),
                                                                 child: Text(
                                                                   list.name
                                                                       .toString(),
                                                                 ),
-                                                                value: list.id
-                                                                    .toString(),
                                                               );
                                                             }).toList(),
                                                           ))
@@ -1561,7 +1570,7 @@ class PortalMpSalesOrderB2BScreen
                                                                                 MainAxisAlignment.spaceBetween,
                                                                             children: <Widget>[
                                                                               Text(
-                                                                                "€ " + controller.productList[index].cost.toString(),
+                                                                                "€ ${controller.productList[index].cost} + ${"Vat".tr}",
                                                                                 style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                                                                               ),
                                                                               Container(
@@ -1608,7 +1617,8 @@ class PortalMpSalesOrderB2BScreen
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Text("Subtotal".tr),
+                                                    Text(
+                                                        "${"Subtotal".tr} + ${"Vat".tr}"),
                                                     Obx(
                                                       () => Text(
                                                         "EUR ${controller.total.value}",

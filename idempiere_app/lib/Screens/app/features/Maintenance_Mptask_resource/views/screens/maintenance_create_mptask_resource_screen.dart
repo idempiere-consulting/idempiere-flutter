@@ -466,7 +466,7 @@ class _CreateMaintenanceMpResourceState
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    final msg = jsonEncode({
+    final msg = {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
@@ -510,13 +510,18 @@ class _CreateMaintenanceMpResourceState
           heightFieldController.text != "" ? heightFieldController.text : "0"),
       "Color": colorFieldController.text,
       "LIT_ResourceStatus": {
-        "id": Get.arguments["property"] == null ||
-                Get.arguments["property"] == false
+        "id": args["property"] == null || args["property"] == false
             ? "INS"
             : "NEW"
       },
-      "IsOwned": Get.arguments["property"] ?? false,
-    });
+      "IsOwned": args["property"] ?? false,
+    };
+
+    if (dropdownValue3 != "") {
+      msg.addAll({
+        "lit_ResourceGroup_ID": {"id": int.parse(dropdownValue3)}
+      });
+    }
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
@@ -524,7 +529,7 @@ class _CreateMaintenanceMpResourceState
     ResourceType res =
         ResourceType(id: "BP", identifier: "Parti Scheda Prodotto");
 
-    EDIType edt = EDIType(id: Get.arguments["id"]);
+    EDIType edt = EDIType(id: args["id"]);
     RRecords record = RRecords(
         mProductID: prod,
         mpMaintainID: MPMaintainID(id: GetStorage().read('selectedTaskDocNo')),
@@ -565,7 +570,8 @@ class _CreateMaintenanceMpResourceState
             ? weightAmtFieldController.text
             : "0"),
         color: colorFieldController.text,
-        textDetails: cartelFieldController.text);
+        textDetails: cartelFieldController.text,
+        litResourceGroupID: LitResourceGroupID(id: int.parse(dropdownValue3)));
 
     var url = Uri.parse(
         '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}');
@@ -576,7 +582,7 @@ class _CreateMaintenanceMpResourceState
       emptyAPICallStak();
       var response = await http.post(
         url,
-        body: msg,
+        body: jsonEncode(msg),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization': authorization,
@@ -640,7 +646,7 @@ class _CreateMaintenanceMpResourceState
       record.offlineId = GetStorage().read('postCallId');
       List<dynamic> list = [];
       if (GetStorage().read('postCallList') == null) {
-        var call = jsonEncode({
+        var call = {
           "offlineid": GetStorage().read('postCallId'),
           "url":
               '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
@@ -691,12 +697,18 @@ class _CreateMaintenanceMpResourceState
               ? heightFieldController.text
               : "0"),
           "Color": colorFieldController.text,
-        });
+        };
 
-        list.add(call);
+        if (dropdownValue3 != "") {
+          msg.addAll({
+            "lit_ResourceGroup_ID": {"id": int.parse(dropdownValue3)}
+          });
+        }
+
+        list.add(jsonEncode(call));
       } else {
         list = GetStorage().read('postCallList');
-        var call = jsonEncode({
+        var call = {
           "offlineid": GetStorage().read('postCallId'),
           "url":
               '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
@@ -747,8 +759,14 @@ class _CreateMaintenanceMpResourceState
               ? heightFieldController.text
               : "0"),
           "Color": colorFieldController.text,
-        });
-        list.add(call);
+        };
+        if (dropdownValue3 != "") {
+          msg.addAll({
+            "lit_ResourceGroup_ID": {"id": int.parse(dropdownValue3)}
+          });
+        }
+
+        list.add(jsonEncode(call));
       }
       GetStorage().write('postCallId', GetStorage().read('postCallId') + 1);
       GetStorage().write('postCallList', list);
@@ -795,18 +813,17 @@ class _CreateMaintenanceMpResourceState
 
     /* for (var i = 0; i < jsonResources.records!.length; i++) {
       if (((jsonResources.records![i].mProductCategoryID?.identifier ?? "")
-          .contains((Get.arguments["id"] as String).tr))) {
+          .contains((args["id"] as String).tr))) {
         print(jsonResources.records![i].mProductCategoryID?.identifier);
       }
     } */
 
     if (kDebugMode) {
-      print(Get.arguments["id"]);
+      print(args["id"]);
     }
 
     jsonResources.records!.retainWhere((element) =>
-        (element.mProductCategoryID?.identifier ?? "")
-            .contains(Get.arguments["id"]));
+        (element.mProductCategoryID?.identifier ?? "").contains(args["id"]));
 
     //print(jsonResources.records!.length);
 
@@ -815,6 +832,20 @@ class _CreateMaintenanceMpResourceState
     //print(list[0].eMail);
 
     //print(json.);
+  }
+
+  Future<List<RefRecords>> getResourceGroup() async {
+    const filename = "listresourcegroup";
+    final file2 = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var dJson =
+        RefListResourceTypeJson.fromJson(jsonDecode(file2.readAsStringSync()));
+
+    dJson.records!.retainWhere((element) =>
+        element.mpMaintain3ID?.id == GetStorage().read('selectedTaskDocNo'));
+
+    return dJson.records!;
   }
 
   /* void fillFields() {
@@ -827,7 +858,7 @@ class _CreateMaintenanceMpResourceState
     //salesRepFieldController.text = args["salesRep"];
   } */
 
-  //dynamic args = Get.arguments;
+  dynamic args = Get.arguments;
   var numberFieldController;
   var noteFieldController;
   var valueFieldController;
@@ -861,6 +892,7 @@ class _CreateMaintenanceMpResourceState
   late ResourceTypeJson tt;
   late String dropDownValue;
   bool saveFlag = true;
+  String dropdownValue3 = "";
 
   @override
   void initState() {
@@ -868,7 +900,7 @@ class _CreateMaintenanceMpResourceState
     saveFlag = true;
     dropDownValue = "1.1.2";
     tt = ResourceTypeJson.fromJson(
-        jsonDecode((Get.arguments["reflistresourcetype"]).readAsStringSync()));
+        jsonDecode((args["reflistresourcetype"]).readAsStringSync()));
     noteFieldController = TextEditingController();
     valueFieldController = TextEditingController();
     locationFieldController = TextEditingController();
@@ -899,6 +931,7 @@ class _CreateMaintenanceMpResourceState
     productName = "";
     dateOrdered = "";
     firstUseDate = "";
+    dropdownValue3 = "";
     //getAllProducts();
   }
 
@@ -988,7 +1021,7 @@ class _CreateMaintenanceMpResourceState
                   height: 10,
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[0] == "Y",
+                  visible: (args["perm"])[0] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1010,7 +1043,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[1] == "Y",
+                  visible: (args["perm"])[1] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1088,7 +1121,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[3] == "Y",
+                  visible: (args["perm"])[3] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1103,7 +1136,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[4] == "Y",
+                  visible: (args["perm"])[4] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1118,7 +1151,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[5] == "Y",
+                  visible: (args["perm"])[5] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1133,7 +1166,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[6] == "Y",
+                  visible: (args["perm"])[6] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1148,7 +1181,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[7] == "Y",
+                  visible: (args["perm"])[7] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1163,7 +1196,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[8] == "Y",
+                  visible: (args["perm"])[8] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -1200,7 +1233,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[9] == "Y",
+                  visible: (args["perm"])[9] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -1237,7 +1270,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[10] == "Y",
+                  visible: (args["perm"])[10] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1252,7 +1285,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[11] == "Y",
+                  visible: (args["perm"])[11] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1273,7 +1306,64 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[12] == "Y",
+                  visible: (args["perm"])[23] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Resource Group".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[23] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getResourceGroup(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<RefRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  hint: Text("Select a Destination".tr),
+                                  value: dropdownValue3 == ""
+                                      ? null
+                                      : dropdownValue3,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropdownValue3 = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[12] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1288,7 +1378,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[13] == "Y",
+                  visible: (args["perm"])[13] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1303,7 +1393,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[14] == "Y",
+                  visible: (args["perm"])[14] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1325,7 +1415,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[15] == "Y",
+                  visible: (args["perm"])[15] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -1362,7 +1452,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[16] == "Y",
+                  visible: (args["perm"])[16] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -1376,7 +1466,7 @@ class _CreateMaintenanceMpResourceState
                     child: DateTimePicker(
                       locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
-                      initialValue: (Get.arguments["perm"])[16] == "N"
+                      initialValue: (args["perm"])[16] == "N"
                           ? ''
                           : DateTime.now().toString(),
                       firstDate: DateTime(2000),
@@ -1401,7 +1491,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[17] == "Y",
+                  visible: (args["perm"])[17] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
@@ -1415,7 +1505,7 @@ class _CreateMaintenanceMpResourceState
                     child: DateTimePicker(
                       locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
-                      initialValue: (Get.arguments["perm"])[17] == "N"
+                      initialValue: (args["perm"])[17] == "N"
                           ? ''
                           : DateTime.now().toString(),
                       firstDate: DateTime(2000),
@@ -1440,7 +1530,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[18] == "Y",
+                  visible: (args["perm"])[18] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1465,7 +1555,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[19] == "Y",
+                  visible: (args["perm"])[19] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1489,7 +1579,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[20] == "Y",
+                  visible: (args["perm"])[20] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1514,7 +1604,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[21] == "Y",
+                  visible: (args["perm"])[21] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1539,7 +1629,7 @@ class _CreateMaintenanceMpResourceState
                   ),
                 ),
                 Visibility(
-                  visible: (Get.arguments["perm"])[22] == "Y",
+                  visible: (args["perm"])[22] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
