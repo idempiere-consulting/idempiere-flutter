@@ -5,14 +5,21 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/salesrep.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salestagejson.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_edit_opportunity.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_create.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_create_tasks.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -30,7 +37,8 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:path_provider/path_provider.dart';
 
 // binding
 part '../../bindings/crm_opportunity_binding.dart';
@@ -115,7 +123,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         ),
                       ),
                     ),
-                    Container(
+                    /* Container(
                       margin: const EdgeInsets.only(left: 30),
                       child: TextButton(
                         onPressed: () {
@@ -125,11 +133,41 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         child: const Text('filter'),
                         //Text(controller.value.value),
                       ),
-                    ),
+                    ), */
                   ],
                 ),
                 Row(
                   children: [
+                    Visibility(
+                      visible: false,
+                      child: Flexible(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10),
+                          child: TextField(
+                            controller: controller.searchFieldController,
+                            onSubmitted: (String? value) {
+                              /* controller.searchFilterValue.value =
+                                    controller.searchFieldController.text; */
+                              controller.getOpportunities();
+                            },
+                            onEditingComplete: () {
+                              FocusScope.of(context).unfocus();
+                            },
+                            decoration: InputDecoration(
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              prefixIcon: const Icon(EvaIcons.search),
+                              hintText: "search..",
+                              isDense: true,
+                              fillColor: Theme.of(context).cardColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                     Container(
                       margin: const EdgeInsets.all(10),
                       //padding: const EdgeInsets.all(10),
@@ -142,13 +180,13 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                       ), */
                       child: Obx(
                         () => DropdownButton(
+                          underline: const SizedBox(),
                           icon: const Icon(Icons.filter_alt_sharp),
                           value: controller.dropdownValue.value,
                           elevation: 16,
                           onChanged: (String? newValue) {
                             controller.dropdownValue.value = newValue!;
-
-                            //print(dropdownValue);
+                            controller.saleStageValue.value = "";
                           },
                           items: controller.dropDownList.map((list) {
                             return DropdownMenuItem<String>(
@@ -161,28 +199,262 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         ),
                       ),
                     ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value == "1",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10),
+                            child: FutureBuilder(
+                              future: controller.getAllBPs(),
+                              builder: (BuildContext ctx,
+                                      AsyncSnapshot<List<BPRecords>>
+                                          snapshot) =>
+                                  snapshot.hasData
+                                      ? TypeAheadField<BPRecords>(
+                                          textFieldConfiguration:
+                                              TextFieldConfiguration(
+                                            //autofocus: true,
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .copyWith(
+                                                    fontStyle:
+                                                        FontStyle.italic),
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              prefixIcon:
+                                                  const Icon(EvaIcons.search),
+                                              hintText: "search..",
+                                              isDense: true,
+                                              fillColor:
+                                                  Theme.of(context).cardColor,
+                                            ),
+                                          ),
+                                          suggestionsCallback: (pattern) async {
+                                            return snapshot.data!.where(
+                                                (element) => (element.name ??
+                                                        "")
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        pattern.toLowerCase()));
+                                          },
+                                          itemBuilder: (context, suggestion) {
+                                            return ListTile(
+                                              //leading: Icon(Icons.shopping_cart),
+                                              title:
+                                                  Text(suggestion.name ?? ""),
+                                            );
+                                          },
+                                          onSuggestionSelected: (suggestion) {
+                                            controller.businessPartnerId =
+                                                suggestion.id!;
+                                            controller.getOpportunities();
+                                          },
+                                        )
+                                      : const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value == "2",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10),
+                            child: FutureBuilder(
+                              future: controller.getAllProducts(),
+                              builder: (BuildContext ctx,
+                                      AsyncSnapshot<List<PRecords>> snapshot) =>
+                                  snapshot.hasData
+                                      ? TypeAheadField<PRecords>(
+                                          textFieldConfiguration:
+                                              TextFieldConfiguration(
+                                            //autofocus: true,
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .copyWith(
+                                                    fontStyle:
+                                                        FontStyle.italic),
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              prefixIcon:
+                                                  const Icon(EvaIcons.search),
+                                              hintText: "search..",
+                                              isDense: true,
+                                              fillColor:
+                                                  Theme.of(context).cardColor,
+                                            ),
+                                          ),
+                                          suggestionsCallback: (pattern) async {
+                                            return snapshot.data!.where((element) =>
+                                                ("${element.value}_${element.name}")
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        pattern.toLowerCase()));
+                                          },
+                                          itemBuilder: (context, suggestion) {
+                                            return ListTile(
+                                              //leading: Icon(Icons.shopping_cart),
+                                              title:
+                                                  Text(suggestion.name ?? ""),
+                                              subtitle:
+                                                  Text(suggestion.value ?? ""),
+                                            );
+                                          },
+                                          onSuggestionSelected: (suggestion) {
+                                            controller.productId =
+                                                suggestion.id!;
+                                            controller.getOpportunities();
+                                          },
+                                        )
+                                      : const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value == "3",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10),
+                            child: FutureBuilder(
+                              future: controller.getAllSalesRep(),
+                              builder: (BuildContext ctx,
+                                      AsyncSnapshot<List<CRecords>> snapshot) =>
+                                  snapshot.hasData
+                                      ? TypeAheadField<CRecords>(
+                                          textFieldConfiguration:
+                                              TextFieldConfiguration(
+                                            //autofocus: true,
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .copyWith(
+                                                    fontStyle:
+                                                        FontStyle.italic),
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              prefixIcon:
+                                                  const Icon(EvaIcons.search),
+                                              hintText: "search..",
+                                              isDense: true,
+                                              fillColor:
+                                                  Theme.of(context).cardColor,
+                                            ),
+                                          ),
+                                          suggestionsCallback: (pattern) async {
+                                            return snapshot.data!.where(
+                                                (element) => (element.name ??
+                                                        "")
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        pattern.toLowerCase()));
+                                          },
+                                          itemBuilder: (context, suggestion) {
+                                            return ListTile(
+                                              //leading: Icon(Icons.shopping_cart),
+                                              title:
+                                                  Text(suggestion.name ?? ""),
+                                            );
+                                          },
+                                          onSuggestionSelected: (suggestion) {
+                                            controller.salesRepId =
+                                                suggestion.id!;
+                                            controller.getOpportunities();
+                                          },
+                                        )
+                                      : const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value == "4",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            child: Obx(() => DropdownButton(
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Sale Stage".tr),
+                                  isExpanded: true,
+                                  value: controller.saleStageValue.value == ""
+                                      ? null
+                                      : controller.saleStageValue.value,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    controller.saleStageValue.value =
+                                        newValue as String;
+                                    controller.getOpportunities();
+                                    //print(dropdownValue);
+                                  },
+                                  items: controller.salestages.records!
+                                      .map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )),
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: kSpacing),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        if (controller.pagesCount > 1) {
+                          controller.pagesCount.value -= 1;
+                          controller.getOpportunities();
+                        }
+                      },
+                      icon: const Icon(Icons.skip_previous),
+                    ),
+                    Obx(() => Text(
+                        "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                    IconButton(
+                      onPressed: () {
+                        if (controller.pagesCount < controller.pagesTot.value) {
+                          controller.pagesCount.value += 1;
+                          controller.getOpportunities();
+                        }
+                      },
+                      icon: const Icon(Icons.skip_next),
+                    )
+                  ],
+                ),
+                //const SizedBox(height: kSpacing),
                 Obx(() => controller.dataAvailable
                     ? ListView.builder(
                         primary: false,
@@ -190,286 +462,306 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         shrinkWrap: true,
                         itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
-                          return Obx(
-                            () => Visibility(
-                              visible: controller.searchFilterValue.value == ""
-                                  ? true
-                                  : controller.dropdownValue.value == "1"
-                                      ? controller.trx.records![index].cBPartnerID!.identifier
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(controller.searchFilterValue.value
-                                              .toLowerCase())
-                                      : controller.dropdownValue.value == "2"
-                                          ? (controller.trx.records![index].mProductID?.identifier ?? "")
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(controller.searchFilterValue.value
-                                                  .toLowerCase())
-                                          : controller.dropdownValue.value ==
-                                                  "3"
-                                              ? controller.trx.records![index]
-                                                  .salesRepID!.identifier
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(controller.searchFilterValue.value
-                                                      .toLowerCase())
-                                              : controller.dropdownValue.value ==
-                                                      "4"
-                                                  ? controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cSalesStageID!
-                                                      .identifier
-                                                      .toString()
-                                                      .toLowerCase()
-                                                      .contains(controller.searchFilterValue.value.toLowerCase())
-                                                  : true,
-                              child: Card(
-                                elevation: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                child: Container(
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
                                   decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: ExpansionTile(
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding:
-                                          const EdgeInsets.only(right: 12.0),
-                                      decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.paid,
-                                          color: Colors.green,
-                                        ),
-                                        tooltip: 'Edit Opportunity'.tr,
-                                        onPressed: () {
-                                          Get.to(const EditOpportunity(),
-                                              arguments: {
-                                                "id": controller
-                                                    .trx.records![index].id,
-                                                "SaleStageID": controller
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                    tooltip: 'Edit Opportunity'.tr,
+                                    onPressed: () {
+                                      Get.to(const EditOpportunity(),
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "SaleStageID": controller
+                                                .trx
+                                                .records![index]
+                                                .cSalesStageID!
+                                                .id,
+                                            "salesRep": controller
                                                     .trx
                                                     .records![index]
-                                                    .cSalesStageID!
-                                                    .id,
-                                                "salesRep": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .salesRepID
-                                                        ?.identifier ??
-                                                    "",
-                                                "productName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    "",
-                                                "productId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.id ??
-                                                    0,
-                                                "opportunityAmt": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .opportunityAmt ??
-                                                    0,
-                                                "cBPartnerID": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.id ??
-                                                    0,
-                                                "cBPartnerName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.identifier ??
-                                                    "",
-                                                "Description": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .description ??
-                                                    "",
-                                              });
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      controller.trx.records![index].cBPartnerID
-                                              ?.identifier ??
-                                          "???",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                                    .salesRepID
+                                                    ?.identifier ??
+                                                "",
+                                            "productName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mProductID
+                                                    ?.identifier ??
+                                                "",
+                                            "productId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mProductID
+                                                    ?.id ??
+                                                0,
+                                            "opportunityAmt": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .opportunityAmt ??
+                                                0,
+                                            "cBPartnerID": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.id ??
+                                                0,
+                                            "cBPartnerName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier ??
+                                                "",
+                                            "Description": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                "",
+                                            "Note": controller
+                                                    .trx.records![index].note ??
+                                                "",
+                                            "Probability": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .probability ??
+                                                0,
+                                            "CampaignName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cCampaignID
+                                                    ?.identifier ??
+                                                "",
+                                            "CampaignId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cCampaignID
+                                                    ?.id ??
+                                                "",
+                                          });
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].cBPartnerID
+                                          ?.identifier ??
+                                      "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.linear_scale,
-                                            color: Colors.yellowAccent),
-                                        Text(
-                                          controller.trx.records![index]
-                                                  .cSalesStageID!.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ],
+                                subtitle: Row(
+                                  children: <Widget>[
+                                    const Icon(Icons.linear_scale,
+                                        color: Colors.yellowAccent),
+                                    Text(
+                                      controller.trx.records![index]
+                                              .cSalesStageID!.identifier ??
+                                          "??",
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                     ),
-                                    /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: Colors.white,
+                                  size: 30.0,
+                                ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
                                     children: [
-                                      Column(
+                                      Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'ContactBP'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .aDUserID
-                                                      ?.identifier ??
-                                                  ""),
-                                            ],
+                                          Text(
+                                            "${'ContactBP'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'Product'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Expanded(
-                                                child: Text(controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    ""),
-                                              ),
-                                            ],
+                                          Text(controller.trx.records![index]
+                                                  .aDUserID?.identifier ??
+                                              ""),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'Product'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'OpportunityAmt'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "€${controller.trx.records![index].opportunityAmt}"),
-                                            ],
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mProductID
+                                                    ?.identifier ??
+                                                ""),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'SalesRep'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .salesRepID
-                                                      ?.identifier ??
-                                                  ""),
-                                            ],
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'OpportunityAmt'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              ElevatedButton(
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          Colors.green),
-                                                ),
-                                                onPressed: () async {
-                                                  Get.defaultDialog(
-                                                    title: 'Create Sales Order',
-                                                    content: const Text(
-                                                        "Are you sure you want to create a Sales Order from Opportunity?"),
-                                                    onCancel: () {},
-                                                    onConfirm: () async {
-                                                      final ip = GetStorage()
-                                                          .read('ip');
-                                                      String authorization =
-                                                          'Bearer ${GetStorage().read('token')}';
-                                                      final msg = jsonEncode({
-                                                        "DocAction": "CO",
-                                                      });
-                                                      final protocol =
-                                                          GetStorage()
-                                                              .read('protocol');
-                                                      var url = Uri.parse(
-                                                          '$protocol://$ip/api/v1/models/c_opportunity/${controller.trx.records![index].id}');
+                                          Text(
+                                              "€${controller.trx.records![index].opportunityAmt}"),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'SalesRep'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(controller.trx.records![index]
+                                                  .salesRepID?.identifier ??
+                                              ""),
+                                        ],
+                                      ),
+                                      Visibility(
+                                        visible: controller._trx.records![index]
+                                                .latestJPToDoID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "${'Latest Appointment'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .latestJPToDoName ??
+                                                      "",
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Create Sales Order'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to create a Sales Order from Opportunity?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  final ip =
+                                                      GetStorage().read('ip');
+                                                  String authorization =
+                                                      'Bearer ${GetStorage().read('token')}';
+                                                  final msg = jsonEncode({
+                                                    "DocAction": "CO",
+                                                  });
+                                                  final protocol = GetStorage()
+                                                      .read('protocol');
+                                                  var url = Uri.parse(
+                                                      '$protocol://$ip/api/v1/models/c_opportunity/${controller.trx.records![index].id}');
 
-                                                      var response =
-                                                          await http.put(
-                                                        url,
-                                                        body: msg,
-                                                        headers: <String,
-                                                            String>{
-                                                          'Content-Type':
-                                                              'application/json',
-                                                          'Authorization':
-                                                              authorization,
-                                                        },
-                                                      );
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                        //print("done!");
-                                                        /* completeOrder(
-                                                                  index); */
-                                                      } else {
-                                                        //print(response.body);
-                                                        Get.snackbar(
-                                                          "Error!".tr,
-                                                          "Record not completed"
-                                                              .tr,
-                                                          icon: const Icon(
-                                                            Icons.error,
-                                                            color: Colors.red,
-                                                          ),
-                                                        );
-                                                      }
+                                                  var response = await http.put(
+                                                    url,
+                                                    body: msg,
+                                                    headers: <String, String>{
+                                                      'Content-Type':
+                                                          'application/json',
+                                                      'Authorization':
+                                                          authorization,
                                                     },
                                                   );
+                                                  if (response.statusCode ==
+                                                      200) {
+                                                    //print("done!");
+                                                    /* completeOrder(
+                                                                index); */
+                                                  } else {
+                                                    //print(response.body);
+                                                    Get.snackbar(
+                                                      "Error!".tr,
+                                                      "Record not completed".tr,
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.red,
+                                                      ),
+                                                    );
+                                                  }
                                                 },
-                                                child: Text(
-                                                    "Create Sales Order".tr),
-                                              ),
-                                            ],
+                                              );
+                                            },
+                                            tooltip: "Create Sales Order".tr,
+                                            icon: const Icon(
+                                                Icons.description_outlined),
                                           ),
+                                          IconButton(
+                                            tooltip: "Create Appointment".tr,
+                                            onPressed: () {
+                                              Get.to(
+                                                  const CreateOpportunityTasks(),
+                                                  arguments: {
+                                                    "opportunityId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .id,
+                                                    "opportunityName":
+                                                        controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .description,
+                                                    "bPartnerId": controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cBPartnerID
+                                                            ?.id ??
+                                                        0,
+                                                  });
+                                            },
+                                            icon: const Icon(Icons.add_task),
+                                          )
                                         ],
                                       ),
                                     ],
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                           );
@@ -933,7 +1225,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         itemBuilder: (BuildContext context, int index) {
                           return Obx(
                             () => Visibility(
-                              visible: controller.searchFilterValue.value == ""
+                              visible: /* controller.searchFilterValue.value == ""
                                   ? true
                                   : controller.dropdownValue.value == "1"
                                       ? controller.trx.records![index].cBPartnerID!.identifier
@@ -965,7 +1257,8 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                       .toString()
                                                       .toLowerCase()
                                                       .contains(controller.searchFilterValue.value.toLowerCase())
-                                                  : true,
+                                                  : */
+                                  true,
                               child: Card(
                                 elevation: 8.0,
                                 margin: const EdgeInsets.symmetric(
@@ -986,7 +1279,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                                   color: Colors.white24))),
                                       child: IconButton(
                                         icon: const Icon(
-                                          Icons.paid,
+                                          Icons.edit,
                                           color: Colors.green,
                                         ),
                                         tooltip: 'Edit Opportunity',

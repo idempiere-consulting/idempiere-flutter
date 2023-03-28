@@ -53,256 +53,270 @@ class NotificationScreen extends GetView<NotificationController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Notifications".tr),
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: IconButton(
-              onPressed: () {
-                controller.readAllNotifications();
-              },
-              icon: const Icon(
-                Icons.checklist,
+    return WillPopScope(
+      onWillPop: () async {
+        Get.offNamed('/Dashboard');
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Notifications".tr),
+          leading: IconButton(
+            icon: const Icon(Icons.chevron_left),
+            onPressed: () {
+              Get.offNamed('/Dashboard');
+            },
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: IconButton(
+                onPressed: () {
+                  controller.readAllNotifications();
+                },
+                icon: const Icon(
+                  Icons.checklist,
+                ),
               ),
             ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: ResponsiveBuilder(
+            mobileBuilder: (context, constraints) {
+              return Column(children: [
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            final item =
+                                controller.trx.records![index].recordName!;
+                            return Dismissible(
+                              key: Key(item),
+                              onDismissed: (direction) {
+                                controller.sendReadNotification(index);
+                              },
+                              child: Card(
+                                elevation: 8.0,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 6.0),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(64, 75, 96, .9)),
+                                  child: ListTile(
+                                      onTap: () {
+                                        controller
+                                            .getToNotificationRecord(index);
+                                      },
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: const Icon(Icons.notifications,
+                                            color: Colors.white),
+                                      ),
+                                      title: Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .recordName ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.linear_scale,
+                                              color: Colors.yellowAccent),
+                                          Text(
+                                              " ${controller.trx.records![index].docType!}",
+                                              style: const TextStyle(
+                                                  color: Colors.white))
+                                        ],
+                                      ),
+                                      trailing: const Icon(
+                                          Icons.keyboard_arrow_right,
+                                          color: Colors.white,
+                                          size: 30.0)),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
+            },
+            tabletBuilder: (context, constraints) {
+              return Column(children: [
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            final item =
+                                controller.trx.records![index].recordName!;
+                            return Dismissible(
+                              key: Key(item),
+                              onDismissed: (direction) {
+                                controller.sendReadNotification(index);
+                              },
+                              child: Card(
+                                elevation: 8.0,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 6.0),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(64, 75, 96, .9)),
+                                  child: ListTile(
+                                      onTap: () {
+                                        controller
+                                            .getToNotificationRecord(index);
+                                      },
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: const Icon(Icons.notifications,
+                                            color: Colors.white),
+                                      ),
+                                      title: Text(
+                                        controller.trx.records![index]
+                                                .recordName ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.linear_scale,
+                                              color: Colors.yellowAccent),
+                                          Text(
+                                              " ${controller.trx.records![index].docType!}",
+                                              style: const TextStyle(
+                                                  color: Colors.white))
+                                        ],
+                                      ),
+                                      trailing: const Icon(
+                                          Icons.keyboard_arrow_right,
+                                          color: Colors.white,
+                                          size: 30.0)),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
+            },
+            desktopBuilder: (context, constraints) {
+              return Column(children: [
+                const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            final item =
+                                controller.trx.records![index].recordName!;
+                            return Dismissible(
+                              key: Key(item),
+                              onDismissed: (direction) {
+                                controller.sendReadNotification(index);
+                              },
+                              child: Card(
+                                elevation: 8.0,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 6.0),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromRGBO(64, 75, 96, .9)),
+                                  child: ListTile(
+                                      onTap: () {
+                                        controller
+                                            .getToNotificationRecord(index);
+                                      },
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: const Icon(Icons.notifications,
+                                            color: Colors.white),
+                                      ),
+                                      title: Text(
+                                        controller.trx.records![index]
+                                                .recordName ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.linear_scale,
+                                              color: Colors.yellowAccent),
+                                          Text(
+                                              " ${controller.trx.records![index].docType!}",
+                                              style: const TextStyle(
+                                                  color: Colors.white))
+                                        ],
+                                      ),
+                                      trailing: const Icon(
+                                          Icons.keyboard_arrow_right,
+                                          color: Colors.white,
+                                          size: 30.0)),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
+            },
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: ResponsiveBuilder(
-          mobileBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing),
-              Obx(
-                () => controller.dataAvailable
-                    ? ListView.builder(
-                        primary: false,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
-                        itemBuilder: (BuildContext context, int index) {
-                          final item =
-                              controller.trx.records![index].recordName!;
-                          return Dismissible(
-                            key: Key(item),
-                            onDismissed: (direction) {
-                              controller.sendReadNotification(index);
-                            },
-                            child: Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ListTile(
-                                    onTap: () {
-                                      controller.getToNotificationRecord(index);
-                                    },
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding:
-                                          const EdgeInsets.only(right: 12.0),
-                                      decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: const Icon(Icons.notifications,
-                                          color: Colors.white),
-                                    ),
-                                    title: Text(
-                                      controller
-                                              .trx.records![index].recordName ??
-                                          "??",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.linear_scale,
-                                            color: Colors.yellowAccent),
-                                        Text(
-                                            " ${controller.trx.records![index].docType!}",
-                                            style: const TextStyle(
-                                                color: Colors.white))
-                                      ],
-                                    ),
-                                    trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.white,
-                                        size: 30.0)),
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ),
-            ]);
-          },
-          tabletBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing),
-              Obx(
-                () => controller.dataAvailable
-                    ? ListView.builder(
-                        primary: false,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
-                        itemBuilder: (BuildContext context, int index) {
-                          final item =
-                              controller.trx.records![index].recordName!;
-                          return Dismissible(
-                            key: Key(item),
-                            onDismissed: (direction) {
-                              controller.sendReadNotification(index);
-                            },
-                            child: Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ListTile(
-                                    onTap: () {
-                                      controller.getToNotificationRecord(index);
-                                    },
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding:
-                                          const EdgeInsets.only(right: 12.0),
-                                      decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: const Icon(Icons.notifications,
-                                          color: Colors.white),
-                                    ),
-                                    title: Text(
-                                      controller
-                                              .trx.records![index].recordName ??
-                                          "??",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.linear_scale,
-                                            color: Colors.yellowAccent),
-                                        Text(
-                                            " ${controller.trx.records![index].docType!}",
-                                            style: const TextStyle(
-                                                color: Colors.white))
-                                      ],
-                                    ),
-                                    trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.white,
-                                        size: 30.0)),
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ),
-            ]);
-          },
-          desktopBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing),
-              Obx(
-                () => controller.dataAvailable
-                    ? ListView.builder(
-                        primary: false,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
-                        itemBuilder: (BuildContext context, int index) {
-                          final item =
-                              controller.trx.records![index].recordName!;
-                          return Dismissible(
-                            key: Key(item),
-                            onDismissed: (direction) {
-                              controller.sendReadNotification(index);
-                            },
-                            child: Card(
-                              elevation: 8.0,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(64, 75, 96, .9)),
-                                child: ListTile(
-                                    onTap: () {
-                                      controller.getToNotificationRecord(index);
-                                    },
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding:
-                                          const EdgeInsets.only(right: 12.0),
-                                      decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: const Icon(Icons.notifications,
-                                          color: Colors.white),
-                                    ),
-                                    title: Text(
-                                      controller
-                                              .trx.records![index].recordName ??
-                                          "??",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.linear_scale,
-                                            color: Colors.yellowAccent),
-                                        Text(
-                                            " ${controller.trx.records![index].docType!}",
-                                            style: const TextStyle(
-                                                color: Colors.white))
-                                      ],
-                                    ),
-                                    trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.white,
-                                        size: 30.0)),
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ),
-            ]);
-          },
         ),
       ),
     );

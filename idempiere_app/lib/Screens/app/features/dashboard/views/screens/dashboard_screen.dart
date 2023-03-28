@@ -86,14 +86,14 @@ class DashboardScreen extends GetView<DashboardController> {
               //_buildProfile(data: controller.getProfil(), counter: 0),
               const SizedBox(height: kSpacing),
               Obx(() => Visibility(
-                visible: int.parse(controller.list[105], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
-                child: _buildProgress(
+                    visible: int.parse(controller.list[105], radix: 16)
+                                .toRadixString(2)
+                                .padLeft(4, "0")
+                                .toString()[1] ==
+                            "1"
+                        ? true
+                        : false,
+                    child: _buildProgress(
                       axis: Axis.vertical,
                       text: controller.value.value,
                       function: controller.changeFilter,
@@ -101,17 +101,18 @@ class DashboardScreen extends GetView<DashboardController> {
                       inprogress: controller.inProgressCount.value,
                       notYetStarted: controller.notDoneCount.value,
                     ),
-              )),
+                  )),
 
               const SizedBox(height: kSpacing * 1),
 
               Obx(
                 () => Visibility(
-                  visible: controller.workStartHour.value != "N/A" && int.parse(controller.list[105], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
+                  visible: controller.workStartHour.value != "N/A" &&
+                          int.parse(controller.list[105], radix: 16)
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1"
                       ? true
                       : false,
                   child: ElevatedButton.icon(
@@ -124,8 +125,8 @@ class DashboardScreen extends GetView<DashboardController> {
                       Icons.pending_actions_rounded,
                       size: 24.0,
                     ),
-                    label: Text(
-                        'You Started at '.tr + controller.workStartHour.value), // <-- Text
+                    label: Text('You Started at '.tr +
+                        controller.workStartHour.value), // <-- Text
                   ),
                 ),
               ),
@@ -189,8 +190,8 @@ class DashboardScreen extends GetView<DashboardController> {
                       Icons.pending_actions_rounded,
                       size: 24.0,
                     ),
-                    label: Text(
-                        'You Started at '.tr + controller.workStartHour.value), // <-- Text
+                    label: Text('You Started at '.tr +
+                        controller.workStartHour.value), // <-- Text
                   ),
                 ),
               ),
@@ -254,8 +255,8 @@ class DashboardScreen extends GetView<DashboardController> {
                       Icons.pending_actions_rounded,
                       size: 24.0,
                     ),
-                    label: Text(
-                        'You Started at '.tr + controller.workStartHour.value), // <-- Text
+                    label: Text('You Started at '.tr +
+                        controller.workStartHour.value), // <-- Text
                   ),
                 ),
               ),
@@ -445,7 +446,7 @@ class DashboardScreen extends GetView<DashboardController> {
       child: _ProfilTile(
         data: data,
         onPressedNotification: () {
-          Get.toNamed('/Notification');
+          Get.offNamed('/Notification');
         },
         counter: counter,
       ),

@@ -1149,12 +1149,11 @@ class PortalMpSalesOrderB2BScreen
                                                                           .chosenDetailSize
                                                                           .value !=
                                                                       "") {
-                                                                    var search = controller.skuProducts.where((element) =>
-                                                                        element
-                                                                            .value ==
-                                                                        controller.filteredProds.records![controller.detailIndex].sku! +
-                                                                            "." +
-                                                                            controller.chosenDetailSizeName);
+                                                                    var search = controller
+                                                                        .skuProducts
+                                                                        .where((element) =>
+                                                                            element.value ==
+                                                                            "${controller.filteredProds.records![controller.detailIndex].sku!}.${controller.chosenDetailSizeName}");
                                                                     controller
                                                                         .productList
                                                                         .add(
@@ -1206,7 +1205,7 @@ class PortalMpSalesOrderB2BScreen
                                                                         .value++;
                                                                     controller
                                                                         .updateTotal();
-                                                                    controller
+                                                                    /* controller
                                                                         .productDetailAvailable
                                                                         .value = false;
                                                                     controller
@@ -1217,7 +1216,7 @@ class PortalMpSalesOrderB2BScreen
                                                                         .value = true;
                                                                     controller
                                                                         .chosenDetailSize
-                                                                        .value = "";
+                                                                        .value = ""; */
                                                                   }
                                                                 } else {
                                                                   controller

@@ -104,7 +104,9 @@ class _EditLeadState extends State<EditLead> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Error!".tr,
         "Record not updated".tr,
@@ -497,7 +499,9 @@ class _EditLeadState extends State<EditLead> {
         }
       }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -583,7 +587,9 @@ class _EditLeadState extends State<EditLead> {
         }
       }
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -619,7 +625,9 @@ class _EditLeadState extends State<EditLead> {
       addressFieldController.text =
           "${json["Address1"] ?? ""}, ${json["C_City_ID"]["identifier"]}, ${json["Postal"]} ${json["C_Region_ID"]["identifier"]}";
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

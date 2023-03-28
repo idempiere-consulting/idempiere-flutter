@@ -75,6 +75,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   html_editor_enhanced: ^2.5.1
+  flutter_typeahead: ^4.3.7
     
 
 dev_dependencies:

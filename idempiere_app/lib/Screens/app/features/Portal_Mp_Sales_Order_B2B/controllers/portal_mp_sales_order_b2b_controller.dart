@@ -365,9 +365,10 @@ class PortalMpSalesOrderB2BController extends GetxController {
             .map((size) => MultiSelectItem<FilterSize>(size, size.name))
             .toList();
       }
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
       /* filteredProds =
-          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); 
+      */
       //productFilterAvailable.value = true;
       productsAvailable.value = true;
     } else {
@@ -387,7 +388,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
         'Bearer ${GetStorage().read('token')}'; //contains(tolower(Value),\'${searchFieldController.text}\')
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= SKU eq \'${searchFieldController.text}\'');
+        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= contains(Value,\'${searchFieldController.text}\')');
 
     /*  print(
         '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= SKU eq \'${searchFieldController.text}\''); */
@@ -756,9 +757,18 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 
+      prodCategoriesAvailable.value = true;
+      productsAvailable.value = false;
+      productDetailAvailable.value = false;
+      productFilterAvailable.value = false;
+      shoppingCartAvailable.value = false;
+      productList = [];
+      shoppingCartCounter.value = 0;
+      updateTotal();
+
       /* Get.find<CRMSalesOrderController>().getSalesOrders();
       Get.back(); */
-      Get.off('/PortalMpSalesOrderB2B');
+      //Get.off('/PortalMpSalesOrderB2B');
       //print("done!");
       Get.snackbar(
         "${json["DocumentNo"]}",
@@ -768,11 +778,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
           color: Colors.green,
         ),
       );
-
-      /* cOrderId = json["id"];
-      if (cOrderId != 0) {
-        createSalesOrderLine();
-      } */
     } else {
       if (kDebugMode) {
         print(response.body);

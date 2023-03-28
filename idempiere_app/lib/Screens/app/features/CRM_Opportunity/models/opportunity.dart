@@ -49,13 +49,17 @@ class Records {
   final num? opportunityAmt;
   final CCurrencyID? cCurrencyID;
   final CSalesStageID? cSalesStageID;
-  final int? probability;
+  final num? probability;
   final num? weightedAmt;
   final bool? isPublished;
   final bool? isFavourite;
   final String? modelname;
   final MProductID? mProductID;
   final String? description;
+  final String? note;
+  final CCampaignID? cCampaignID;
+  final String? latestJPToDoName;
+  final int? latestJPToDoID;
 
   Records({
     this.id,
@@ -82,6 +86,10 @@ class Records {
     this.modelname,
     this.mProductID,
     this.description,
+    this.cCampaignID,
+    this.note,
+    this.latestJPToDoID,
+    this.latestJPToDoName,
   });
 
   Records.fromJson(Map<String, dynamic> json)
@@ -127,11 +135,18 @@ class Records {
         mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
             ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
             : null,
-        probability = json['Probability'] as int?,
+        cCampaignID = (json['C_Campaign_ID'] as Map<String, dynamic>?) != null
+            ? CCampaignID.fromJson(
+                json['C_Campaign_ID'] as Map<String, dynamic>)
+            : null,
+        latestJPToDoID = json['latest_jptodo_id'] as int?,
+        latestJPToDoName = json['latest_jptodo'] as String?,
+        probability = json['Probability'] as num?,
         weightedAmt = json['WeightedAmt'] as num?,
         isPublished = json['IsPublished'] as bool?,
         isFavourite = json['IsFavourite'] as bool?,
         modelname = json['model-name'] as String?,
+        note = json['Comments'] as String?,
         description = json['Description'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -157,7 +172,11 @@ class Records {
         'IsPublished': isPublished,
         'IsFavourite': isFavourite,
         'model-name': modelname,
+        'Comments': note,
+        'C_Campaign_ID': cCampaignID?.toJson(),
         'Description': description,
+        'latest_jptodo': latestJPToDoName,
+        'latest_jptodo_id': latestJPToDoID,
       };
 }
 
@@ -283,6 +302,33 @@ class CBPartnerID {
   });
 
   CBPartnerID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CCampaignID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CCampaignID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CCampaignID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

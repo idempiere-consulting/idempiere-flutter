@@ -155,7 +155,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       List<EventRecords>? list = json.records;
 
-      for (var i = 0; i < int.parse('${json.rowcount}'); i++) {
+      for (var i = 0; i < int.parse('${json.records!.length}'); i++) {
         //print(list![i].jPToDoScheduledStartTime);
         var formatter = DateFormat('yyyy-MM-dd');
         var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);
@@ -267,7 +267,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
       return jsonContacts.records!;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       throw Exception("Failed to load sales reps");
     }
 

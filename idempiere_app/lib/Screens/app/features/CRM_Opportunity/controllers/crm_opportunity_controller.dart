@@ -3,6 +3,10 @@ part of dashboard;
 class CRMOpportunityController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late OpportunityJson _trx;
+
+  SalesStageJson salestages = SalesStageJson(records: []);
+  bool saleStagesAvailable = false;
+  var saleStageValue = "".obs;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
@@ -11,6 +15,16 @@ class CRMOpportunityController extends GetxController {
 
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
+
+  int businessPartnerId = 0;
+  int productId = 0;
+  int salesRepId = 0;
+
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  static String _displaySaleStageStringForOption(SSRecords option) =>
+      option.name!;
 
   final json = {
     "types": [
@@ -31,18 +45,154 @@ class CRMOpportunityController extends GetxController {
   void onInit() {
     dropDownList = getTypes()!;
     super.onInit();
+    getAllSaleStages();
     getOpportunities();
   }
 
   bool get dataAvailable => _dataAvailable.value;
   OpportunityJson get trx => _trx;
+  get displayStringForOption => _displayStringForOption;
 
-  Future<void> getOpportunities() async {
-    _dataAvailable.value = false;
+  static String _displayStringForOption(BPRecords option) => option.name!;
+
+  Future<List<BPRecords>> getAllBPs() async {
+    //await getBusinessPartner();
+    //print(response.body);
+    const filename = "businesspartner";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
+
+    var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    return jsonbps.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<PRecords>> getAllProducts() async {
+    //print(response.body);
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsondecoded = jsonDecode(await file.readAsString());
+    var jsonResources = ProductJson.fromJson(jsondecoded);
+    //print(jsonResources.rowcount);
+    return jsonResources.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/c_opportunity');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= DateLastLogin neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonContacts = ContactsJson.fromJson(jsondecoded);
+
+      return jsonContacts.records!;
+    } else {
+      throw Exception("Failed to load sales reps");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  getAllSaleStages() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_SalesStage');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      salestages = SalesStageJson.fromJson(jsonDecode(response.body));
+
+      saleStagesAvailable = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load sale stages");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<void> getOpportunities() async {
+    _dataAvailable.value = false;
+
+    var searchUrlFilter = "";
+
+    switch (dropdownValue.value) {
+      case "1":
+        if (businessPartnerId != 0) {
+          searchUrlFilter = " and C_BPartner_ID eq $businessPartnerId";
+        }
+
+        break;
+      case "2":
+        if (productId != 0) {
+          searchUrlFilter = " and M_Product_ID eq $productId";
+        }
+        break;
+      case "3":
+        if (salesRepId != 0) {
+          searchUrlFilter = " and SalesRep_ID eq $salesRepId";
+        }
+        break;
+      case "4":
+        if (saleStageValue.value != "") {
+          searchUrlFilter = " and C_SalesStage_ID eq ${saleStageValue.value}";
+        }
+        break;
+      default:
+    }
+    businessPartnerId = 0;
+    productId = 0;
+    salesRepId = 0;
+
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and C_Opportunity_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_opportunity_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}$notificationFilter$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -54,6 +204,8 @@ class CRMOpportunityController extends GetxController {
       //print(response.body);
       _trx =
           OpportunityJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
       //print(_trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

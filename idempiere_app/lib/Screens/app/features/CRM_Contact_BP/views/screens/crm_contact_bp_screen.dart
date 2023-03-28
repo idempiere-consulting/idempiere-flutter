@@ -5,14 +5,17 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact_bp_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_edit_contact_bp.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -31,6 +34,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -161,13 +165,110 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                         ),
                       ),
                     ),
-                    Flexible(
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value != "2",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10),
+                            child: TextField(
+                              controller: controller.searchFieldController,
+                              onSubmitted: (String? value) {
+                                /* controller.searchFilterValue.value =
+                                  controller.searchFieldController.text; */
+                                controller.getContacts();
+                              },
+                              onEditingComplete: () {
+                                FocusScope.of(context).unfocus();
+                              },
+                              decoration: InputDecoration(
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                                prefixIcon: const Icon(EvaIcons.search),
+                                hintText: "search..",
+                                isDense: true,
+                                fillColor: Theme.of(context).cardColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value == "2",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10),
+                            child: FutureBuilder(
+                              future: controller.getAllBPs(),
+                              builder: (BuildContext ctx,
+                                      AsyncSnapshot<List<BPRecords>>
+                                          snapshot) =>
+                                  snapshot.hasData
+                                      ? TypeAheadField<BPRecords>(
+                                          textFieldConfiguration:
+                                              TextFieldConfiguration(
+                                            //autofocus: true,
+                                            style: DefaultTextStyle.of(context)
+                                                .style
+                                                .copyWith(
+                                                    fontStyle:
+                                                        FontStyle.italic),
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              prefixIcon:
+                                                  const Icon(EvaIcons.search),
+                                              hintText: "search..",
+                                              isDense: true,
+                                              fillColor:
+                                                  Theme.of(context).cardColor,
+                                            ),
+                                          ),
+                                          suggestionsCallback: (pattern) async {
+                                            return snapshot.data!.where(
+                                                (element) => (element.name ??
+                                                        "")
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        pattern.toLowerCase()));
+                                          },
+                                          itemBuilder: (context, suggestion) {
+                                            return ListTile(
+                                              //leading: Icon(Icons.shopping_cart),
+                                              title:
+                                                  Text(suggestion.name ?? ""),
+                                            );
+                                          },
+                                          onSuggestionSelected: (suggestion) {
+                                            controller.businessPartnerId =
+                                                suggestion.id!;
+                                            controller.getContacts();
+                                          },
+                                        )
+                                      : const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    /* Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
                           controller: controller.searchFieldController,
                           onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
+                            controller.searchFilterValue.value = 
                                 controller.searchFieldController.text;
                           },
                           decoration: InputDecoration(
@@ -179,7 +280,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                           ),
                         ),
                       ),
-                    ),
+                    ), */
                   ],
                 ),
                 Row(
@@ -216,190 +317,144 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                           shrinkWrap: true,
                           itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Obx(
-                              () => Visibility(
-                                visible: controller.searchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.dropdownValue.value == "1"
-                                        ? controller.trx.records![index].name
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(controller
-                                                .searchFilterValue.value
-                                                .toLowerCase())
-                                        : controller.dropdownValue.value == "2"
-                                            ? controller.trx.records![index]
-                                                .cBPartnerID!.identifier
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .searchFilterValue.value
-                                                    .toLowerCase())
-                                            : controller.dropdownValue.value ==
-                                                    "3"
-                                                ? controller
-                                                    .trx.records![index].phone
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .contains(
-                                                        controller.searchFilterValue.value.toLowerCase())
-                                                : controller.dropdownValue.value == "4"
-                                                    ? controller.trx.records![index].eMail.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
-                                                    : true,
-                                child: Card(
-                                  elevation: 8.0,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 6.0),
-                                  child: Container(
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
                                     decoration: const BoxDecoration(
-                                        color: Color.fromRGBO(64, 75, 96, .9)),
-                                    child: ExpansionTile(
-                                      tilePadding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      leading: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 12.0),
-                                        decoration: const BoxDecoration(
-                                            border: Border(
-                                                right: BorderSide(
-                                                    width: 1.0,
-                                                    color: Colors.white24))),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.green,
-                                          ),
-                                          tooltip: 'Edit Contact'.tr,
-                                          onPressed: () {
-                                            //log("info button pressed");
-                                            Get.to(const EditContactBP(),
-                                                arguments: {
-                                                  "id": controller
-                                                      .trx.records![index].id,
-                                                  "name": controller
-                                                      .trx.records![index].name,
-                                                  "bpName": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerID!
-                                                      .identifier,
-                                                  "Tel": controller.trx
-                                                      .records![index].phone,
-                                                  "eMail": controller.trx
-                                                      .records![index].eMail,
-                                                });
-                                          },
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Contact'.tr,
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        Get.to(const EditContactBP(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "name": controller
+                                                  .trx.records![index].name,
+                                              "bpName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID!
+                                                  .identifier,
+                                              "Tel": controller
+                                                  .trx.records![index].phone,
+                                              "eMail": controller
+                                                  .trx.records![index].eMail,
+                                            });
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.trx.records![index].name ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID!.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                       ),
-                                      title: Text(
-                                        controller.trx.records![index].name ??
-                                            "???",
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                      subtitle: Row(
-                                        children: <Widget>[
-                                          const Icon(Icons.linear_scale,
-                                              color: Colors.yellowAccent),
-                                          Expanded(
-                                            child: Text(
-                                              controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerID!
-                                                      .identifier ??
-                                                  "??",
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      /* trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.white,
-                                        size: 30.0,
-                                      ), */
-                                      childrenPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20.0, vertical: 10.0),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
                                       children: [
-                                        Column(
+                                        Row(
                                           children: [
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.call,
-                                                    color: Colors.green,
-                                                  ),
-                                                  tooltip: 'Call',
-                                                  onPressed: () {
-                                                    //log("info button pressed");
-                                                    if (controller
-                                                            .trx
-                                                            .records![index]
-                                                            .phone ==
-                                                        null) {
-                                                      log("info button pressed");
-                                                    } else {
-                                                      controller.makePhoneCall(
-                                                          controller
-                                                              .trx
-                                                              .records![index]
-                                                              .phone
-                                                              .toString());
-                                                    }
-                                                  },
-                                                ),
-                                                Text(controller
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.call,
+                                                color: Colors.green,
+                                              ),
+                                              tooltip: 'Call',
+                                              onPressed: () {
+                                                //log("info button pressed");
+                                                if (controller
                                                         .trx
                                                         .records![index]
-                                                        .phone ??
-                                                    ""),
-                                              ],
+                                                        .phone ==
+                                                    null) {
+                                                  log("info button pressed");
+                                                } else {
+                                                  controller.makePhoneCall(
+                                                      controller.trx
+                                                          .records![index].phone
+                                                          .toString());
+                                                }
+                                              },
                                             ),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.mail,
-                                                    color: Colors.white,
-                                                  ),
-                                                  tooltip: 'EMail',
-                                                  onPressed: () {
-                                                    if (controller
-                                                            .trx
-                                                            .records![index]
-                                                            .eMail ==
-                                                        null) {
-                                                      log("mail button pressed");
-                                                    } else {
-                                                      controller.writeMailTo(
-                                                          controller
-                                                              .trx
-                                                              .records![index]
-                                                              .eMail
-                                                              .toString());
-                                                    }
-                                                  },
-                                                ),
-                                                Text(controller
+                                            Text(controller.trx.records![index]
+                                                    .phone ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.mail,
+                                                color: Colors.white,
+                                              ),
+                                              tooltip: 'EMail',
+                                              onPressed: () {
+                                                if (controller
                                                         .trx
                                                         .records![index]
-                                                        .eMail ??
-                                                    ""),
-                                              ],
+                                                        .eMail ==
+                                                    null) {
+                                                  log("mail button pressed");
+                                                } else {
+                                                  controller.writeMailTo(
+                                                      controller.trx
+                                                          .records![index].eMail
+                                                          .toString());
+                                                }
+                                              },
                                             ),
+                                            Text(controller.trx.records![index]
+                                                    .eMail ??
+                                                ""),
                                           ],
                                         ),
                                       ],
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             );

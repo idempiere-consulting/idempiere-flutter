@@ -1061,6 +1061,8 @@ class LocaleString extends Translations {
           'Cart': 'Carrello',
           'products': 'articoli',
           'Vat': 'IVA',
+          'Create Sales Order': 'Crea ODV',
+          'Create Appointment': 'Crea Appuntamento',
         },
       };
 }

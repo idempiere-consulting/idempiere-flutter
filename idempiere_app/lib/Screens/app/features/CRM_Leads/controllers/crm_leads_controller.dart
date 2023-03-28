@@ -345,7 +345,7 @@ class CRMLeadController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
         '$protocol://$ip/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
-    print(url);
+    //print(url);
     var response = await http.get(
       url,
       headers: <String, String>{

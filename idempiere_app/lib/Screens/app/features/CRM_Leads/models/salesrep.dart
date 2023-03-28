@@ -3,7 +3,7 @@ class ContactsJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<Records>? records;
+  final List<CRecords>? records;
 
   ContactsJson({
     this.pagecount,
@@ -19,7 +19,7 @@ class ContactsJson {
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => CRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class ContactsJson {
       };
 }
 
-class Records {
+class CRecords {
   final int? id;
   final String? uid;
   final String? name;
@@ -70,7 +70,7 @@ class Records {
   final String? modelname;
   final CBPartnerID? cbPartnerID;
 
-  Records({
+  CRecords({
     this.id,
     this.uid,
     this.name,
@@ -115,7 +115,7 @@ class Records {
   /*  @override
   int get hashCode => hashValues(name); */
 
-  Records.fromJson(Map<String, dynamic> json)
+  CRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         name = json['Name'] as String?,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.d
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class EditContactBP extends StatefulWidget {
   const EditContactBP({Key? key}) : super(key: key);
@@ -129,10 +131,14 @@ class _EditContactBPState extends State<EditContactBP> {
 
   Future<List<BPRecords>> getAllBPs() async {
     //print(response.body);
-    var jsondecoded = jsonDecode(GetStorage().read('businessPartnerSync'));
-    var jsonResources = BusinessPartnerJson.fromJson(jsondecoded);
-    //print(jsonResources.rowcount);
-    return jsonResources.records!;
+    const filename = "businesspartner";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
+
+    var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    return jsonbps.records!;
 
     //print(list[0].eMail);
 

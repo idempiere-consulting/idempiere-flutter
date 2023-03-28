@@ -90,7 +90,7 @@ class NotificationController extends GetxController {
   }
 
   readAllNotifications() {
-    int count = _trx.rowcount!;
+    int count = _trx.records!.length;
     _dataAvailable.value = false;
 
     if (count > 0) {
@@ -118,8 +118,13 @@ class NotificationController extends GetxController {
             arguments: {"notificationId": _trx.records![index].id});
 
         break;
+      case "OPPORTUNITY":
+        Get.offNamed('/Opportunity',
+            arguments: {"notificationId": _trx.records![index].id});
+
+        break;
       case "FDV":
-        Get.offNamed('/SalesOrder',
+        Get.offNamed('/Invoice',
             arguments: {"notificationId": _trx.records![index].id});
 
         break;
@@ -130,7 +135,7 @@ class NotificationController extends GetxController {
         break;
       default:
     }
-    Get.find<DashboardController>().getNotificationCounter();
+    //Get.find<DashboardController>().getNotificationCounter();
   }
 
   Future<void> getNotifications() async {

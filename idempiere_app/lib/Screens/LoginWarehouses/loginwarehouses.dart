@@ -1281,8 +1281,53 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         GetStorage().write('permission', list);
         GetStorage().write('permission2', permissions2);
         GetStorage().write('permission3', permissions3);
-        if (GetStorage().read('products') != null) {
-          Get.offAllNamed('/Dashboard');
+        if (GetStorage().read('checkboxSyncDataLogin') == false) {
+          var value = "0";
+          List<dynamic> list = GetStorage().read('permission');
+          for (var i = 0; i < list.length; i++) {
+            if (int.parse(list[i], radix: 16)
+                    .toRadixString(2)
+                    .padLeft(8, "0")
+                    .toString()[4] ==
+                "1") {
+              value = i.toString();
+            }
+          }
+          DateTime now = DateTime.now();
+          DateTime date = DateTime(now.year, now.month, now.day);
+          GetStorage().write('lastLoginDate', date.toString());
+          switch (value) {
+            case "0":
+              Get.offAllNamed("/Dashboard");
+              break;
+            case "2":
+              Get.offAllNamed("/CRM");
+              break;
+            case "8":
+              Get.offAllNamed("/SalesOrder");
+              break;
+            case "22":
+              Get.offAllNamed("/Maintenance");
+              break;
+            case "24":
+              Get.offAllNamed("/MaintenanceMptask");
+              break;
+            case "32":
+              Get.offAllNamed("/PortalMp");
+              break;
+            case "51":
+              Get.offAllNamed("/PortalMpSalesOrderB2B");
+              break;
+            case "52":
+              Get.offAllNamed("/TrainingCourse");
+              break;
+            case "69":
+              Get.offAllNamed("/SupplychainLoadUnload");
+              break;
+            default:
+              Get.offAllNamed("/Dashboard");
+              break;
+          }
         } else {
           syncData();
         }
