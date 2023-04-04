@@ -127,7 +127,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           "IsClosed": isClosed,
         });
       }
-      //print(msg);
+      print(msg);
 
       //print(msg);
       var response = await http.post(
@@ -147,8 +147,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         }
         file2.writeAsStringSync(jsonEncode(res.toJson()));
         try {
-          Get.find<MaintenanceMpResourceController>().syncThisWorkOrderResource(
-              GetStorage().read('selectedTaskDocNo'));
+          Get.find<MaintenanceMpResourceController>()
+              .syncSingleResource(args["id"]);
         } catch (e) {
           if (kDebugMode) {
             print('no page');
@@ -156,8 +156,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
         }
         try {
           Get.find<MaintenanceMpResourceBarcodeController>()
-              .syncThisWorkOrderResource(
-                  GetStorage().read('selectedTaskDocNo'));
+              .syncSingleResource(args["id"]);
         } catch (e) {
           if (kDebugMode) {
             print('no page');

@@ -464,19 +464,15 @@ class PortalMpSalesOrderB2BController extends GetxController {
     }
   }
 
-  Future<void> getProduct(String sku, BuildContext context) async {
-    //productFilterAvailable.value = false;
-    //productDetailAvailable.value = false;
-    rows.removeWhere((element) => true);
-    columns.removeWhere((element) => true);
-
-    gridSkuSelected = sku;
+  Future<void> getProduct(int id) async {
+    productFilterAvailable.value = false;
+    productDetailAvailable.value = false;
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_b2bdetailgrid_v?\$filter= SKU eq \'$sku\'');
+        '$protocol://$ip/api/v1/models/m_product?\$filter= M_Product_ID eq $id');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -488,61 +484,12 @@ class PortalMpSalesOrderB2BController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
 
-      var gridDetail = B2BGridDetailJSON.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
-
-      var columnList = gridDetail.records![0].stringAgg!.split(';');
-      columns.add(PlutoColumn(
-          title: 'Size',
-          field: 'Size',
-          type: PlutoColumnType.text(),
-          readOnly: true));
-      for (var element in columnList) {
-        columns.add(PlutoColumn(
-          title: element,
-          field: element,
-          type: PlutoColumnType.text(),
-        ));
-      }
-
-      /* columns.add(PlutoColumn(
-        title: 'status',
-        field: 'status',
-        type: PlutoColumnType.text(),
-        //readOnly: true,
-        hide: true,
-      )); */
-
-      var rowList = gridDetail.records![0].prices!.split(';');
-      //print(rowList);
-
-      /* PlutoRow(cells: {
-        'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'user name 1'),
-        'status': PlutoCell(value: 'saved'),
-      }), */
-      Map<String, PlutoCell> priceRow = {};
-      priceRow.addAll({
-        'Size': PlutoCell(value: 'Price'),
-      });
-      for (var i = 0; i < columnList.length; i++) {
-        priceRow.addAll({
-          columnList[i]: PlutoCell(value: rowList[i]),
-        });
-      }
-
-      /* priceRow.addAll({
-        columnList[columnList.length - 1]: PlutoCell(value: 'Added'),
-      }); */
-      rows.add(PlutoRow(cells: priceRow));
-
-      //var currentStock = gridDetail.records![0].!.split(';');
-
-      openGridPopUp(context);
+      prodDetail =
+          ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       //getProdB2BStock(id);
 
-      //productDetailAvailable.value = true;
+      productDetailAvailable.value = true;
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -845,128 +792,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
       }
     }
   }
-
-  //grid
-
-  final List<PlutoColumn> columns = [];
-
-  final List<PlutoRow> rows = [];
-
-  late PlutoGridStateManager stateManager;
-
-  String gridSkuSelected = "";
-
-  Map<String, String> gridProdValueList = {};
-
-  openGridPopUp(BuildContext context) {
-    PlutoGridPopupCustom(
-      button: gridAddToCart,
-      context: context,
-      columns: columns,
-      width: columns.length * 100,
-      //height: 400,
-      rows: rows,
-      mode: PlutoGridMode.normal,
-      configuration: const PlutoGridConfiguration(
-        columnSize:
-            PlutoGridColumnSizeConfig(autoSizeMode: PlutoAutoSizeMode.scale),
-      ),
-      onLoaded: (PlutoGridOnLoadedEvent event) {
-        gridProdValueList = {};
-        final newRows = event.stateManager.getNewRows(count: 1);
-
-        /* for (var e in newRows) {
-          e.cells['status']!.value = 'created';
-        } */
-
-        for (var i = 1; i < columns.length; i++) {
-          newRows[0].cells[columns[i].field]!.value = '0';
-        }
-
-        event.stateManager.appendRows(newRows);
-
-        event.stateManager.setCurrentCell(
-          newRows.first.cells.entries.first.value,
-          event.stateManager.refRows.length - 1,
-        );
-
-        event.stateManager.moveScrollByRow(
-          PlutoMoveDirection.down,
-          event.stateManager.refRows.length - 2,
-        );
-
-        //event.stateManager.setKeepFocus(true);
-        //stateManager = event.stateManager;
-      },
-      onSelected: (PlutoGridOnSelectedEvent event) {
-        //event.
-        /* controller.text = event.row!.cells[selectFieldName]!.value.toString(); */
-      },
-      onSorted: (PlutoGridOnSortedEvent event) {
-        //print(event);
-      },
-      onChanged: (event) {
-        //print('$gridSkuSelected.${columns[event.columnIdx].field}');
-        gridProdValueList.addAll({
-          '$gridSkuSelected.${columns[event.columnIdx].field}': event.value,
-        });
-        //print(event);
-        //event.
-        //print(event.row.sortIdx);
-      },
-    );
-  }
-
-  gridAddToCart() {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-
-    gridProdValueList.forEach((key, value) async {
-      if (0 < (int.tryParse(value) ?? 0)) {
-        var url = Uri.parse(
-            '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= Value eq \'$key\'');
-
-        var response = await http.get(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Authorization': authorization,
-          },
-        );
-
-        if (response.statusCode == 200) {
-          var data = ProductListJson.fromJson(
-              jsonDecode(utf8.decode(response.bodyBytes)));
-
-          productList.add(ProductCheckout(
-            id: data.records![0].id!,
-            name: data.records![0].name!,
-            qty: int.parse(
-              value,
-            ),
-            cost: data.records![0].price ?? 0,
-            adPrintColorID: data.records![0].adPrintColorID,
-            litProductSizeID: data.records![0].litProductSizeID,
-            imageData: data.records![0].imageData,
-            imageUrl: data.records![0].imageUrl,
-          ));
-
-          shoppingCartCounter.value++;
-          updateTotal();
-
-          //print(data.records![0].id);
-        } else {
-          if (kDebugMode) {
-            print(response.body);
-          }
-        }
-      }
-    });
-    Get.back();
-  }
-
-  //end grid
 
   //print(list[0].eMail);
 

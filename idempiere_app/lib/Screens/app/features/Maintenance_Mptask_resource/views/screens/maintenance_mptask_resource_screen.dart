@@ -178,6 +178,7 @@ class MaintenanceMpResourceScreen
                       () => Visibility(
                         visible: controller.filter3Available.value,
                         child: DropdownButton(
+                          underline: const SizedBox(),
                           value: controller.dropDownValue3.value,
                           style: const TextStyle(fontSize: 12.0),
                           elevation: 16,
@@ -207,6 +208,7 @@ class MaintenanceMpResourceScreen
                       () => Visibility(
                         visible: controller.filter1Available.value,
                         child: DropdownButton(
+                          underline: const SizedBox(),
                           value: controller.dropDownValue2.value,
                           style: const TextStyle(fontSize: 12.0),
                           elevation: 16,
@@ -282,6 +284,7 @@ class MaintenanceMpResourceScreen
                       ), */
                     child: Obx(
                       () => DropdownButton(
+                        underline: const SizedBox(),
                         icon: const Icon(Icons.filter_alt_sharp),
                         value: controller.dropdownValue.value,
                         elevation: 16,
@@ -315,11 +318,15 @@ class MaintenanceMpResourceScreen
                               controller.searchFieldController.text;
                         },
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.search_outlined),
-                          border: const OutlineInputBorder(),
-                          //labelText: 'Product Value',
-                          hintText: 'Search'.tr,
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          prefixIcon: const Icon(EvaIcons.search),
+                          hintText: "search..".tr,
+                          isDense: true,
+                          fillColor: Theme.of(context).cardColor,
                         ),
                       ),
                     ),
@@ -1094,7 +1101,7 @@ class MaintenanceMpResourceScreen
                                                         "note": controller
                                                             .trx
                                                             .records![index]
-                                                            .name,
+                                                            .note,
                                                         "resTypeId": controller
                                                             .trx
                                                             .records![index]
@@ -1529,9 +1536,11 @@ class MaintenanceMpResourceScreen
                                           children: [
                                             Row(children: [
                                               Text('Note: '.tr),
-                                              Text(controller.trx
-                                                      .records![index].note ??
-                                                  ""),
+                                              Expanded(
+                                                child: Text(controller.trx
+                                                        .records![index].note ??
+                                                    ""),
+                                              ),
                                             ]),
                                             Row(children: [
                                               Text('Status: '.tr),

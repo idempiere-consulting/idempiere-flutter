@@ -36,6 +36,8 @@ class Records {
   final String? uid;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
+  final CLocationID? cLocationID;
+  final CBPartnerLocationID? cbPartnerLocationID;
   final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
@@ -45,7 +47,12 @@ class Records {
   final String? name;
   final num? salesVolume;
   final bool? isSummary;
+  final String? lITTaxID;
+  final String? sdiCode;
   final ADLanguage? aDLanguage;
+  final SalesRepID? salesRepID;
+  final CPaymentTermID? cPaymentTermID;
+  final PaymentRule? paymentRule;
   final bool? isVendor;
   final bool? isCustomer;
   final bool? isProspect;
@@ -81,6 +88,7 @@ class Records {
     this.uid,
     this.aDClientID,
     this.aDOrgID,
+    this.cLocationID,
     this.isActive,
     this.created,
     this.createdBy,
@@ -88,6 +96,7 @@ class Records {
     this.updatedBy,
     this.value,
     this.name,
+    this.salesRepID,
     this.salesVolume,
     this.isSummary,
     this.aDLanguage,
@@ -101,6 +110,8 @@ class Records {
     this.potentialLifeTimeValue,
     this.actualLifeTimeValue,
     this.shareOfCustomer,
+    this.cPaymentTermID,
+    this.paymentRule,
     this.isEmployee,
     this.isSalesRep,
     this.isOneTime,
@@ -110,6 +121,7 @@ class Records {
     this.deliveryRule,
     this.cBPGroupID,
     this.sendEMail,
+    this.lITTaxID,
     this.sOCreditStatus,
     this.totalOpenBalance,
     this.isPOTaxExempt,
@@ -119,6 +131,8 @@ class Records {
     this.lITIsPriceListUpdatable,
     this.lITNoInvoiceXMLVendor,
     this.isValid,
+    this.sdiCode,
+    this.cbPartnerLocationID,
     this.modelname,
   });
 
@@ -131,6 +145,15 @@ class Records {
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
+        cLocationID = (json['C_Location_ID'] as Map<String, dynamic>?) != null
+            ? CLocationID.fromJson(
+                json['C_Location_ID'] as Map<String, dynamic>)
+            : null,
+        cbPartnerLocationID =
+            (json['C_BPartner_Location_ID'] as Map<String, dynamic>?) != null
+                ? CBPartnerLocationID.fromJson(
+                    json['C_BPartner_Location_ID'] as Map<String, dynamic>)
+                : null,
         isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
@@ -142,11 +165,24 @@ class Records {
             : null,
         value = json['Value'] as String?,
         name = json['Name'] as String?,
+        sdiCode = json['LIT_FEPA_IPA'] as String?,
         salesVolume = json['SalesVolume'] as num?,
         isSummary = json['IsSummary'] as bool?,
         aDLanguage = (json['AD_Language'] as Map<String, dynamic>?) != null
             ? ADLanguage.fromJson(json['AD_Language'] as Map<String, dynamic>)
             : null,
+        salesRepID = (json['SalesRep_ID'] as Map<String, dynamic>?) != null
+            ? SalesRepID.fromJson(json['SalesRep_ID'] as Map<String, dynamic>)
+            : null,
+        cPaymentTermID =
+            (json['C_PaymentTerm_ID'] as Map<String, dynamic>?) != null
+                ? CPaymentTermID.fromJson(
+                    json['C_PaymentTerm_ID'] as Map<String, dynamic>)
+                : null,
+        paymentRule = (json['PaymentRule'] as Map<String, dynamic>?) != null
+            ? PaymentRule.fromJson(json['PaymentRule'] as Map<String, dynamic>)
+            : null,
+        lITTaxID = json['LIT_TaxID'] as String?,
         isVendor = json['IsVendor'] as bool?,
         isCustomer = json['IsCustomer'] as bool?,
         isProspect = json['IsProspect'] as bool?,
@@ -197,6 +233,7 @@ class Records {
         'uid': uid,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
+        'C_Location_ID': cLocationID?.toJson(),
         'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
@@ -212,6 +249,7 @@ class Records {
         'IsProspect': isProspect,
         'FirstSale': firstSale,
         'SO_CreditLimit': sOCreditLimit,
+        'SalesRep_ID': salesRepID?.toJson(),
         'SO_CreditUsed': sOCreditUsed,
         'AcqusitionCost': acqusitionCost,
         'PotentialLifeTimeValue': potentialLifeTimeValue,
@@ -226,6 +264,7 @@ class Records {
         'DeliveryRule': deliveryRule?.toJson(),
         'C_BP_Group_ID': cBPGroupID?.toJson(),
         'SendEMail': sendEMail,
+        'LIT_TaxID': lITTaxID,
         'SOCreditStatus': sOCreditStatus?.toJson(),
         'TotalOpenBalance': totalOpenBalance,
         'IsPOTaxExempt': isPOTaxExempt,
@@ -235,6 +274,7 @@ class Records {
         'LIT_isPriceListUpdatable': lITIsPriceListUpdatable,
         'LIT_NoInvoiceXMLVendor': lITNoInvoiceXMLVendor,
         'IsValid': isValid,
+        'LIT_FEPA_IPA': sdiCode,
         'model-name': modelname
       };
 }
@@ -282,6 +322,141 @@ class ADOrgID {
   ADOrgID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CLocationID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CLocationID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CLocationID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CBPartnerLocationID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CBPartnerLocationID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CBPartnerLocationID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class SalesRepID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  SalesRepID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  SalesRepID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CPaymentTermID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CPaymentTermID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CPaymentTermID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class PaymentRule {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  PaymentRule({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  PaymentRule.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

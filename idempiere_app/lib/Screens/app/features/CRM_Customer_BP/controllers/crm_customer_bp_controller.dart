@@ -19,16 +19,19 @@ class CRMCustomerBPController extends GetxController {
   var pagesTot = 1.obs;
 
   var searchFieldController = TextEditingController();
+  var countryCodeFieldController = TextEditingController();
+  var vatCodeFieldController = TextEditingController();
   var searchFilterValue = "".obs;
 
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
+  var bpGroupValue = "".obs;
+
   final json = {
     "types": [
-      {"id": "1", "name": "Business Partner".tr},
-      {"id": "2", "name": "Business Partner Group".tr},
-      {"id": "3", "name": "Value".tr},
+      {"id": "1", "name": "Name".tr},
+      {"id": "2", "name": "BP Group".tr},
     ]
   };
 
@@ -48,6 +51,7 @@ class CRMCustomerBPController extends GetxController {
 
     getCustomers();
     getADUserID();
+    getAllBPGroups();
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -62,6 +66,31 @@ class CRMCustomerBPController extends GetxController {
 
     value.value = filters[filterCount];
     getCustomers();
+  }
+
+  Future<List<BPGRecords>> getAllBPGroups() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_BP_Group');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = BusinessPartnerGroupJSON.fromJson(jsonDecode(response.body));
+      //print(json.rowcount);
+
+      return json.records!;
+    } else {
+      throw Exception("Failed to load lead bp groups");
+    }
+
+    //print(response.body);
   }
 
   Future<void> getADUserID() async {
@@ -117,13 +146,30 @@ class CRMCustomerBPController extends GetxController {
   }
 
   Future<void> getCustomers() async {
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    var apiUrlFilter = [
+      "",
+      " and SalesRep_ID eq ${GetStorage().read("userId")}"
+    ];
     _dataAvailable.value = false;
+    var searchUrlFilter = "";
+
+    switch (dropdownValue.value) {
+      case "1":
+        searchUrlFilter = " and contains(Name,'${searchFieldController.text}')";
+
+        break;
+      case "2":
+        searchUrlFilter = " and C_BP_Group_ID eq ${bpGroupValue.value}";
+        break;
+
+      default:
+    }
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_BPartner?\$filter= IsCustomer eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$skip=${pagesCount.value}');
+        '$protocol://$ip/api/v1/models/lit_mobile_customer_v?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -131,15 +177,115 @@ class CRMCustomerBPController extends GetxController {
         'Authorization': authorization,
       },
     );
+    print(url);
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       _trx =
           CustomerBpJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pagesTot.value = _trx.pagecount!;
       //print(trx.records);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     }
+  }
+
+  createBusinessPartner() async {
+    Get.defaultDialog(
+      title: 'Create Business Partner'.tr,
+      content: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(20),
+            child: TextField(
+              //maxLines: 5,
+              //readOnly: true,
+              controller: countryCodeFieldController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.badge),
+                border: const OutlineInputBorder(),
+                labelText: 'Country Code'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(20),
+            child: TextField(
+              //maxLines: 5,
+              //readOnly: true,
+              controller: vatCodeFieldController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.badge),
+                border: const OutlineInputBorder(),
+                labelText: 'VAT Code'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
+        ],
+      ),
+      onCancel: () {},
+      onConfirm: () async {
+        final ip = GetStorage().read('ip');
+        String authorization = 'Bearer ${GetStorage().read('token')}';
+        final protocol = GetStorage().read('protocol');
+        var url =
+            Uri.parse('$protocol://$ip/api/v1/processes/createbpbyvatapirest');
+        var msg = jsonEncode({
+          "CountryCode": countryCodeFieldController.text,
+          "VATNumber": vatCodeFieldController.text
+        });
+        //print(msg);
+        var response = await http.post(
+          url,
+          body: msg,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          //print("done!");
+          var json = jsonDecode(response.body);
+          Get.back();
+          //print(response.body);
+          if (json["IsError"] == false) {
+            //getBusinessPartner(vatCodeFieldController.text);
+            getCustomers();
+            Get.snackbar(
+              "Done!".tr,
+              "Business Partner has been created".tr,
+              icon: const Icon(
+                Icons.done,
+                color: Colors.green,
+              ),
+            );
+          } else {
+            Get.snackbar(
+              "Error!".tr,
+              "Business Partner not created".tr,
+              icon: const Icon(
+                Icons.error,
+                color: Colors.red,
+              ),
+            );
+          }
+        } else {
+          if (kDebugMode) {
+            print(response.body);
+          }
+          Get.snackbar(
+            "Error!".tr,
+            "Business Partner not created".tr,
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
+      },
+    );
   }
 
   /* void openDrawer() {

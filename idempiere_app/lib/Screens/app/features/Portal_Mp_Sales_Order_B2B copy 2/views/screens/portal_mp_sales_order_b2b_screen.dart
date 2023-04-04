@@ -18,11 +18,9 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/mode
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_B2B/models/b2b_productcategory_json.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_B2B/models/b2bgriddetail_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_B2B/models/b2bprodstock_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
-import 'package:idempiere_app/Screens/app/shared_components/pluto_grid_pupup_custom.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/project_card.dart';
@@ -42,7 +40,6 @@ import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pluto_grid/pluto_grid.dart';
 import '../../../Maintenance_Mptask_resource/models/product_json.dart';
 
 import '../../../CRM_Product_List/models/product_list_json.dart';
@@ -720,10 +717,10 @@ class PortalMpSalesOrderB2BScreen
                                                                 .identifier!));
                                                   }
                                                 }
-                                                controller.getProduct(
-                                                    controller.filteredProds
-                                                        .records![index].sku!,
-                                                    context);
+                                                controller.getProduct(controller
+                                                    .filteredProds
+                                                    .records![index]
+                                                    .id!);
 
                                                 /* controller.chosenDetailSize
                                                         .value =
@@ -878,44 +875,529 @@ class PortalMpSalesOrderB2BScreen
                             ),
                           )),
                       Obx(
-                        () => controller.productDetailAvailable.value &&
-                                controller.shoppingCartAvailable.value == false
-                            ? SizedBox(
-                                width: controller.columns.length * 100,
-                                height: 400,
-                                child: PlutoGrid(
-                                    configuration: PlutoGridConfiguration(
-                                      columnSize: PlutoGridColumnSizeConfig(
-                                          autoSizeMode:
-                                              PlutoAutoSizeMode.scale),
+                        () =>
+                            controller.productDetailAvailable.value &&
+                                    controller.shoppingCartAvailable.value ==
+                                        false
+                                ? Visibility(
+                                    visible:
+                                        controller.productDetailAvailable.value,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: StaggeredGrid.count(
+                                        crossAxisCount: 8,
+                                        mainAxisSpacing: 8,
+                                        crossAxisSpacing: 8,
+                                        children: [
+                                          StaggeredGridTile.count(
+                                            crossAxisCellCount: 4,
+                                            mainAxisCellCount: 6,
+                                            child: ClipRRect(
+                                              /* borderRadius:
+                                                            BorderRadius.circular(
+                                                                8), */
+                                              child: controller
+                                                          .filteredProds
+                                                          .records?[0]
+                                                          .imageData !=
+                                                      null
+                                                  ? Image.memory(
+                                                      const Base64Codec()
+                                                          .decode((controller
+                                                                  .filteredProds
+                                                                  .records![
+                                                                      controller
+                                                                          .detailIndex]
+                                                                  .imageData!)
+                                                              .replaceAll(
+                                                                  RegExp(r'\n'),
+                                                                  '')),
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : Image.network(controller
+                                                          .filteredProds
+                                                          .records![controller
+                                                              .detailIndex]
+                                                          .imageUrl ??
+                                                      'https://freesvg.org/img/Simple-Image-Not-Found-Icon.png'),
+                                            ),
+                                          ),
+                                          StaggeredGridTile.count(
+                                            crossAxisCellCount: 4,
+                                            mainAxisCellCount: 8,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(8),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                            controller
+                                                                    .prodDetail
+                                                                    .records![0]
+                                                                    .sKU ??
+                                                                "",
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        20)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                            controller
+                                                                    .prodDetail
+                                                                    .records![0]
+                                                                    .name ??
+                                                                "",
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        20)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          controller
+                                                                  .prodDetail
+                                                                  .records![0]
+                                                                  .mProductCategoryID!
+                                                                  .identifier ??
+                                                              "N/A",
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 30),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                            "EUR ${controller.filteredProds.records![controller.detailIndex].price.toString()} + ${"Vat".tr}",
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        20)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Obx(() => DropdownButton(
+                                                            hint: Text(
+                                                                'Choose a Size'
+                                                                    .tr),
+
+                                                            value: controller
+                                                                        .chosenDetailSize
+                                                                        .value ==
+                                                                    ""
+                                                                ? null
+                                                                : controller
+                                                                    .chosenDetailSize
+                                                                    .value,
+                                                            //icon: const Icon(Icons.arrow_downward),
+                                                            elevation: 16,
+                                                            //style: const TextStyle(color: Colors.deepPurple),
+                                                            /* underline: Container(
+                                                                  height: 2,
+                                                                  color: Colors.deepPurpleAccent,
+                                                                ), */
+                                                            onChanged:
+                                                                (newValue) {
+                                                              //print(newValue);
+                                                              controller
+                                                                      .chosenDetailSize
+                                                                      .value =
+                                                                  newValue
+                                                                      .toString();
+
+                                                              for (var element
+                                                                  in controller
+                                                                      ._sizes) {
+                                                                if (element.id
+                                                                        .toString() ==
+                                                                    controller
+                                                                        .chosenDetailSize
+                                                                        .value) {
+                                                                  controller
+                                                                          .chosenDetailSizeName =
+                                                                      element
+                                                                          .name;
+                                                                }
+                                                              }
+
+                                                              /* print(controller
+                                                                  .filteredProds
+                                                                  .records![
+                                                                      controller
+                                                                          .detailIndex]
+                                                                  .sku! +
+                                                              "." +
+                                                              controller
+                                                                  .chosenDetailSizeName);  */
+
+                                                              var search = controller.skuProducts.where((element) =>
+                                                                  element
+                                                                      .value ==
+                                                                  controller
+                                                                          .filteredProds
+                                                                          .records![controller
+                                                                              .detailIndex]
+                                                                          .sku! +
+                                                                      "." +
+                                                                      controller
+                                                                          .chosenDetailSizeName);
+
+                                                              if (search
+                                                                  .isNotEmpty) {
+                                                                /* print(
+                                                                    "trovato"); */
+                                                                controller
+                                                                    .getProdB2BStock(
+                                                                        search
+                                                                            .first
+                                                                            .id!);
+                                                              }
+                                                            },
+                                                            items: controller
+                                                                .detailDropDownSizes
+                                                                .map((list) {
+                                                              return DropdownMenuItem<
+                                                                  String>(
+                                                                value: list.id
+                                                                    .toString(),
+                                                                child: Text(
+                                                                  list.name
+                                                                      .toString(),
+                                                                ),
+                                                              );
+                                                            }).toList(),
+                                                          ))
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10),
+                                                    margin:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    child: TextField(
+                                                      controller: controller
+                                                          .qtyFieldController,
+                                                      keyboardType:
+                                                          const TextInputType
+                                                                  .numberWithOptions(
+                                                              signed: true,
+                                                              decimal: true),
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter
+                                                            .allow(
+                                                                RegExp("[0-9]"))
+                                                      ],
+                                                      decoration:
+                                                          InputDecoration(
+                                                        prefixIcon: const Icon(
+                                                            Icons.scale),
+                                                        border:
+                                                            const OutlineInputBorder(),
+                                                        labelText:
+                                                            'Quantity'.tr,
+                                                        floatingLabelBehavior:
+                                                            FloatingLabelBehavior
+                                                                .always,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    //height: 80,
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            top: 40,
+                                                            bottom: 20),
+                                                    child: Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: ElevatedButton(
+                                                              onPressed: () {
+                                                                var list = controller
+                                                                    .productList
+                                                                    .where((element) =>
+                                                                        element
+                                                                            .id ==
+                                                                        controller
+                                                                            .prodDetail
+                                                                            .records![0]
+                                                                            .id!);
+
+                                                                if (list
+                                                                    .isEmpty) {
+                                                                  if (controller
+                                                                          .chosenDetailSize
+                                                                          .value !=
+                                                                      "") {
+                                                                    var search = controller
+                                                                        .skuProducts
+                                                                        .where((element) =>
+                                                                            element.value ==
+                                                                            "${controller.filteredProds.records![controller.detailIndex].sku!}.${controller.chosenDetailSizeName}");
+                                                                    controller
+                                                                        .productList
+                                                                        .add(
+                                                                            ProductCheckout(
+                                                                      id: search
+                                                                          .first
+                                                                          .id!,
+                                                                      name: controller
+                                                                          .prodDetail
+                                                                          .records![
+                                                                              0]
+                                                                          .name!,
+                                                                      qty: int
+                                                                          .parse(
+                                                                        controller
+                                                                            .qtyFieldController
+                                                                            .text,
+                                                                      ),
+                                                                      cost: controller
+                                                                              .filteredProds
+                                                                              .records![controller.detailIndex]
+                                                                              .price ??
+                                                                          0,
+                                                                      adPrintColorID: controller
+                                                                          .filteredProds
+                                                                          .records![
+                                                                              controller.detailIndex]
+                                                                          .adPrintColorID,
+                                                                      litProductSizeID: LitProductSizeID(
+                                                                          id: int.parse(controller
+                                                                              .chosenDetailSize
+                                                                              .value),
+                                                                          identifier:
+                                                                              controller.chosenDetailSizeName),
+                                                                      imageData: controller
+                                                                          .filteredProds
+                                                                          .records![
+                                                                              controller.detailIndex]
+                                                                          .imageData,
+                                                                      imageUrl: controller
+                                                                          .filteredProds
+                                                                          .records![
+                                                                              controller.detailIndex]
+                                                                          .imageUrl,
+                                                                    ));
+
+                                                                    controller
+                                                                        .shoppingCartCounter
+                                                                        .value++;
+                                                                    controller
+                                                                        .updateTotal();
+                                                                    /* controller
+                                                                        .productDetailAvailable
+                                                                        .value = false;
+                                                                    controller
+                                                                        .productFilterAvailable
+                                                                        .value = true;
+                                                                    controller
+                                                                        .productsAvailable
+                                                                        .value = true;
+                                                                    controller
+                                                                        .chosenDetailSize
+                                                                        .value = ""; */
+                                                                  }
+                                                                } else {
+                                                                  controller
+                                                                      .qtyFieldController
+                                                                      .text = "1";
+                                                                  controller
+                                                                      .shoppingCartAvailable
+                                                                      .value = true;
+                                                                  controller
+                                                                      .prodStockAvailable
+                                                                      .value = false;
+                                                                }
+                                                              },
+                                                              child: Text(
+                                                                (controller.productList.where((element) =>
+                                                                        element
+                                                                            .id ==
+                                                                        controller
+                                                                            .prodDetail
+                                                                            .records![0]
+                                                                            .id!)).isEmpty
+                                                                    ? "Add to Cart".tr
+                                                                    : "Item added, go to your Cart".tr,
+                                                                style:
+                                                                    const TextStyle(
+                                                                        fontSize:
+                                                                            15),
+                                                              )),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  /* ExpansionTile(
+                                                title: Text(
+                                                    "Composition and Washing Instructions"),
+                                              ), */
+                                                  Obx(
+                                                    () => controller
+                                                            .prodStockAvailable
+                                                            .value
+                                                        ? ExpansionTile(
+                                                            initiallyExpanded:
+                                                                true,
+                                                            title: Text(
+                                                                "Product Stock"
+                                                                    .tr,
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white)),
+                                                            children: [
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                    top: 8.0,
+                                                                    bottom: 8.0,
+                                                                    left: 15,
+                                                                    right: 15,
+                                                                  ),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Row(
+                                                                        children: [
+                                                                          Text(
+                                                                            "${"Warehouse".tr}: ",
+                                                                            style:
+                                                                                const TextStyle(fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          Text((controller.currentStock.qtyOnHand ?? 0)
+                                                                              .toString()),
+                                                                        ],
+                                                                      ),
+                                                                      Row(
+                                                                        children: [
+                                                                          Text(
+                                                                            "${"Headquarter".tr}: ",
+                                                                            style:
+                                                                                const TextStyle(fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          Text((controller.providerStock.qtyAvailable ?? 0)
+                                                                              .toString()),
+                                                                        ],
+                                                                      ),
+                                                                      Row(
+                                                                        children: [
+                                                                          Text(
+                                                                            "${"Restock".tr}: ",
+                                                                            style:
+                                                                                const TextStyle(fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          Text((controller.futureStock.qtyOrdered ?? 0)
+                                                                              .toString()),
+                                                                        ],
+                                                                      ),
+                                                                      Row(
+                                                                        children: [
+                                                                          Text(
+                                                                            "${"Restock Date".tr}: ",
+                                                                            style:
+                                                                                const TextStyle(fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          Text(controller.futureStock.litDateReStock ??
+                                                                              ""),
+                                                                        ],
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                              ])
+                                                        : const SizedBox(),
+                                                  ),
+                                                  Visibility(
+                                                    visible: controller
+                                                            .prodDetail
+                                                            .records![0]
+                                                            .description !=
+                                                        null,
+                                                    child: ExpansionTile(
+                                                        initiallyExpanded: true,
+                                                        title: Text(
+                                                            "Product Description"
+                                                                .tr,
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .white)),
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                              top: 8.0,
+                                                              bottom: 8.0,
+                                                              left: 15,
+                                                              right: 15,
+                                                            ),
+                                                            child: Column(
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Text(controller
+                                                                            .prodDetail
+                                                                            .records![0]
+                                                                            .description ??
+                                                                        "N/A"),
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ),
+                                                          )
+                                                        ]),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          /* StaggeredGridTile.count(
+                                  crossAxisCellCount: 4,
+                                  mainAxisCellCount: 2,
+                                  child: Tile(index: 1),
+                                ),
+                                StaggeredGridTile.count(
+                                  crossAxisCellCount: 2,
+                                  mainAxisCellCount: 2,
+                                  child: Tile(index: 2),
+                                ),
+                                StaggeredGridTile.count(
+                                  crossAxisCellCount: 2,
+                                  mainAxisCellCount: 2,
+                                  child: Tile(index: 3),
+                                ),
+                                StaggeredGridTile.count(
+                                  crossAxisCellCount: 8,
+                                  mainAxisCellCount: 4,
+                                  child: Tile(index: 4),
+                                ), */
+                                        ],
+                                      ),
                                     ),
-                                    onLoaded: (PlutoGridOnLoadedEvent event) {
-                                      final newRows = event.stateManager
-                                          .getNewRows(count: 1);
-
-                                      /* for (var e in newRows) {
-          e.cells['status']!.value = 'created';
-        } */
-
-                                      event.stateManager.appendRows(newRows);
-
-                                      event.stateManager.setCurrentCell(
-                                        newRows.first.cells.entries.first.value,
-                                        event.stateManager.refRows.length - 1,
-                                      );
-
-                                      event.stateManager.moveScrollByRow(
-                                        PlutoMoveDirection.down,
-                                        event.stateManager.refRows.length - 2,
-                                      );
-
-                                      event.stateManager.setKeepFocus(true);
-                                      controller.stateManager =
-                                          event.stateManager;
-                                    },
-                                    columns: controller.columns,
-                                    rows: controller.rows))
-                            : const SizedBox(),
+                                  )
+                                : const SizedBox(),
                       ),
                       Obx(
                         () => controller.shoppingCartAvailable.value

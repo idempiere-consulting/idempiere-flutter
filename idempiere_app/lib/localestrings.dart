@@ -1063,6 +1063,10 @@ class LocaleString extends Translations {
           'Vat': 'IVA',
           'Create Sales Order': 'Crea ODV',
           'Create Appointment': 'Crea Appuntamento',
+          'Open Items': 'Partite Aperte',
+          'BP Group': 'Gruppo BP',
+          'CUSTOMERS': 'CLIENTI',
+          'Tax ID': 'Partita IVA',
         },
       };
 }

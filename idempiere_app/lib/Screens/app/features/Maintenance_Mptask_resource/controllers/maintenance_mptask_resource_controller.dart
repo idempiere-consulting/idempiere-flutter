@@ -1827,6 +1827,7 @@ class MaintenanceMpResourceController extends GetxController {
               }
             }
           }
+
           file.writeAsStringSync(jsonEncode(temp.toJson()));
           //productSync = false;
           getWorkOrders();
@@ -1973,7 +1974,8 @@ class MaintenanceMpResourceController extends GetxController {
                       .isBefore(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo') &&
-              element.resourceStatus!.id == "INS")).toList();
+              (element.resourceStatus!.id == "INS" ||
+                  element.resourceStatus!.id == "REV"))).toList();
           //print(temp);
           _trx.records = temp;
           _trx.rowcount = _trx.records?.length;
@@ -1987,7 +1989,8 @@ class MaintenanceMpResourceController extends GetxController {
                       .isAfter(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo') &&
-              element.resourceStatus!.id == "INS")).toList();
+              (element.resourceStatus!.id == "INS" ||
+                  element.resourceStatus!.id == "REV"))).toList();
           //print(temp);
           _trx.records = temp;
           _trx.rowcount = _trx.records?.length;

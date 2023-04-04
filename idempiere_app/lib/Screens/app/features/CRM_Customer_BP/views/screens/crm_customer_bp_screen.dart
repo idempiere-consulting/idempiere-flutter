@@ -10,6 +10,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/models/businesspartnergroup_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/models/customer_bp_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_edit_customer_bp.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
@@ -30,7 +31,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -62,6 +63,14 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
         return false;
       },
       child: Scaffold(
+        floatingActionButton: FloatingActionButton.small(
+          backgroundColor: kNotifColor,
+          //foregroundColor: Colors.white,
+          onPressed: () {
+            controller.createBusinessPartner();
+          },
+          child: const Icon(Icons.add),
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -89,11 +98,11 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                     Container(
                       margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
-                          ? Text("CUSTOMERS: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("CUSTOMERS: ".tr)),
+                          ? Text(
+                              "${"CUSTOMERS".tr}: ${controller.trx.rowcount}")
+                          : Text("${"CUSTOMERS".tr}: ")),
                     ),
-                    Container(
+                    /* Container(
                       margin: const EdgeInsets.only(left: 40),
                       child: IconButton(
                         onPressed: () {
@@ -104,7 +113,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                           color: Colors.lightBlue,
                         ),
                       ),
-                    ),
+                    ), */
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
@@ -145,12 +154,13 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                       ), */
                       child: Obx(
                         () => DropdownButton(
+                          underline: const SizedBox(),
                           icon: const Icon(Icons.filter_alt_sharp),
                           value: controller.dropdownValue.value,
                           elevation: 16,
                           onChanged: (String? newValue) {
                             controller.dropdownValue.value = newValue!;
-
+                            controller.bpGroupValue.value = "";
                             //print(dropdownValue);
                           },
                           items: controller.dropDownList.map((list) {
@@ -164,7 +174,86 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                         ),
                       ),
                     ),
-                    Flexible(
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value == "1",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 10),
+                            child: TextField(
+                              controller: controller.searchFieldController,
+                              onSubmitted: (String? value) {
+                                /* controller.searchFilterValue.value =
+                                  controller.searchFieldController.text; */
+                                controller.getCustomers();
+                              },
+                              onEditingComplete: () {
+                                FocusScope.of(context).unfocus();
+                              },
+                              decoration: InputDecoration(
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide.none,
+                                ),
+                                prefixIcon: const Icon(EvaIcons.search),
+                                hintText: "search..",
+                                isDense: true,
+                                fillColor: Theme.of(context).cardColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.dropdownValue.value == "2",
+                        child: Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            child: FutureBuilder(
+                              future: controller.getAllBPGroups(),
+                              builder: (BuildContext ctx,
+                                      AsyncSnapshot<List<BPGRecords>>
+                                          snapshot) =>
+                                  snapshot.hasData
+                                      ? Obx(() => DropdownButton(
+                                            underline: const SizedBox(),
+                                            hint: Text("Select a BP Group".tr),
+                                            isExpanded: true,
+                                            value: controller
+                                                        .bpGroupValue.value ==
+                                                    ""
+                                                ? null
+                                                : controller.bpGroupValue.value,
+                                            elevation: 16,
+                                            onChanged: (newValue) {
+                                              controller.bpGroupValue.value =
+                                                  newValue as String;
+                                              controller.getCustomers();
+                                              /* print(newValue);
+                                              print(controller
+                                                  .bpGroupValue.value); */
+                                            },
+                                            items: snapshot.data!.map((list) {
+                                              return DropdownMenuItem<String>(
+                                                value: list.id.toString(),
+                                                child: Text(
+                                                  list.name.toString(),
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ))
+                                      : const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    /* Flexible(
                       child: Container(
                         margin: const EdgeInsets.only(left: 10, right: 10),
                         child: TextField(
@@ -182,10 +271,11 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                           ),
                         ),
                       ),
-                    ),
+                    ), */
                   ],
                 ),
                 Row(
+                  //mainAxisAlignment: MainAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     IconButton(
@@ -195,7 +285,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                           controller.getCustomers();
                         }
                       },
-                      icon: const Icon(Icons.skip_previous),
+                      icon: const Icon(Icons.navigate_before),
                     ),
                     Obx(() => Text(
                         "${controller.pagesCount.value}/${controller.pagesTot.value}")),
@@ -206,7 +296,7 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                           controller.getCustomers();
                         }
                       },
-                      icon: const Icon(Icons.skip_next),
+                      icon: const Icon(Icons.navigate_next),
                     )
                   ],
                 ),
@@ -219,156 +309,174 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                           shrinkWrap: true,
                           itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Obx(
-                              () => Visibility(
-                                visible: controller.searchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.dropdownValue.value == "1"
-                                        ? controller.trx.records![index].name
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(controller
-                                                .searchFilterValue.value
-                                                .toLowerCase())
-                                        : controller.dropdownValue.value == "2"
-                                            ? (controller.trx.records![index]
-                                                    .cBPGroupID?.identifier)
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .searchFilterValue.value
-                                                    .toLowerCase())
-                                            : controller.dropdownValue.value ==
-                                                    "3"
-                                                ? controller
-                                                    .trx.records![index].value
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .contains(
-                                                        controller.searchFilterValue.value.toLowerCase())
-                                                : true,
-                                child: Card(
-                                  elevation: 8.0,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 6.0),
-                                  child: Container(
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
                                     decoration: const BoxDecoration(
-                                        color: Color.fromRGBO(64, 75, 96, .9)),
-                                    child: ExpansionTile(
-                                      tilePadding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      leading: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 12.0),
-                                        decoration: const BoxDecoration(
-                                            border: Border(
-                                                right: BorderSide(
-                                                    width: 1.0,
-                                                    color: Colors.white24))),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.green,
-                                          ),
-                                          tooltip: 'Edit Customer'.tr,
-                                          onPressed: () {
-                                            //log("info button pressed");
-                                            Get.to(const EditCRMCustomerBP(),
-                                                arguments: {
-                                                  "id": controller
-                                                      .trx.records![index].id,
-                                                  "Name": controller
-                                                          .trx
-                                                          .records![index]
-                                                          .name ??
-                                                      "",
-                                                  "C_BP_Group_ID": controller
-                                                          .trx
-                                                          .records![index]
-                                                          .cBPGroupID
-                                                          ?.id ??
-                                                      "",
-                                                  "Value": controller.trx
-                                                      .records![index].value,
-                                                });
-                                          },
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Customer'.tr,
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        Get.to(const EditCRMCustomerBP(),
+                                            arguments: {
+                                              "id": controller
+                                                  .trx.records![index].id,
+                                              "Name": controller.trx
+                                                      .records![index].name ??
+                                                  "",
+                                              "C_BP_Group_ID": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPGroupID
+                                                      ?.id ??
+                                                  "",
+                                              "pTermId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cPaymentTermID
+                                                      ?.id ??
+                                                  "",
+                                              "pRuleId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .paymentRule
+                                                      ?.id ??
+                                                  "",
+                                              "taxID": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITTaxID ??
+                                                  "",
+                                              "Value": controller
+                                                  .trx.records![index].value,
+                                              "SDI": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .sdiCode ??
+                                                  "",
+                                              "addressName": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cLocationID
+                                                      ?.identifier ??
+                                                  "",
+                                              "bpLocationId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cbPartnerLocationID
+                                                      ?.id ??
+                                                  0,
+                                            });
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.trx.records![index].name ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.pin_drop,
+                                          color: Colors.red),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cLocationID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                       ),
-                                      title: Text(
-                                        controller.trx.records![index].name ??
-                                            "???",
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                      subtitle: Row(
-                                        children: <Widget>[
-                                          const Icon(Icons.linear_scale,
-                                              color: Colors.greenAccent),
-                                          Text(
-                                            controller.trx.records![index]
-                                                    .value ??
-                                                "??",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                      /* trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.white,
-                                        size: 30.0,
-                                      ), */
-                                      childrenPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20.0, vertical: 10.0),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
                                       children: [
-                                        Column(
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].salesRepID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"SalesRep".tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .salesRepID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
                                           children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "BP Group: ".tr,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPGroupID
-                                                        ?.identifier ??
-                                                    ""),
-                                              ],
+                                            Text(
+                                              "${"BP Group".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
                                             ),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                    onPressed: () {
-                                                      Get.offNamed('/OpenItems',
-                                                          arguments: {
-                                                            "bpId": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .id,
-                                                            "bpName": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .name,
-                                                          });
-                                                    },
-                                                    icon: const Icon(Icons
-                                                        .currency_exchange))
-                                              ],
-                                            ),
+                                            Text(controller.trx.records![index]
+                                                    .cBPGroupID?.identifier ??
+                                                ""),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                                tooltip: "Open Items".tr,
+                                                onPressed: () {
+                                                  Get.offNamed('/OpenItems',
+                                                      arguments: {
+                                                        "bpId": controller.trx
+                                                            .records![index].id,
+                                                        "bpName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .name,
+                                                      });
+                                                },
+                                                icon: const Icon(Icons.euro))
                                           ],
                                         ),
                                       ],
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             );
