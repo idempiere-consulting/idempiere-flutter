@@ -177,9 +177,9 @@ class CRMCustomerBPController extends GetxController {
         'Authorization': authorization,
       },
     );
-    print(url);
+    //print(url);
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       _trx =
           CustomerBpJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       pagesTot.value = _trx.pagecount!;

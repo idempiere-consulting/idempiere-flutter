@@ -486,7 +486,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
 
       var gridDetail = B2BGridDetailJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
@@ -502,6 +502,9 @@ class PortalMpSalesOrderB2BController extends GetxController {
           title: element,
           field: element,
           type: PlutoColumnType.text(),
+          checkReadOnly: (row, cell) {
+            return row.sortIdx != rows.length - 1;
+          },
         ));
       }
 
@@ -513,7 +516,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
         hide: true,
       )); */
 
-      var rowList = gridDetail.records![0].prices!.split(';');
+      var rowPriceList = gridDetail.records![0].prices!.split(';');
       //print(rowList);
 
       /* PlutoRow(cells: {
@@ -527,7 +530,41 @@ class PortalMpSalesOrderB2BController extends GetxController {
       });
       for (var i = 0; i < columnList.length; i++) {
         priceRow.addAll({
-          columnList[i]: PlutoCell(value: rowList[i]),
+          columnList[i]: PlutoCell(value: rowPriceList[i]),
+        });
+      }
+
+      var rowqtyAvailableList = gridDetail.records![0].qtyAvailable!.split(';');
+
+      Map<String, PlutoCell> qtyAvailableRow = {};
+      qtyAvailableRow.addAll({
+        'Size': PlutoCell(value: 'Available'),
+      });
+      for (var i = 0; i < columnList.length; i++) {
+        qtyAvailableRow.addAll({
+          columnList[i]: PlutoCell(value: rowqtyAvailableList[i]),
+        });
+      }
+
+      var rowqtyOrderedList = gridDetail.records![0].qtyOrdered!.split(';');
+
+      Map<String, PlutoCell> qtyOrderedRow = {};
+      qtyOrderedRow.addAll({
+        'Size': PlutoCell(value: 'Ordered'),
+      });
+      for (var i = 0; i < columnList.length; i++) {
+        qtyOrderedRow.addAll({
+          columnList[i]: PlutoCell(value: rowqtyOrderedList[i]),
+        });
+      }
+
+      Map<String, PlutoCell> qtyInStockRow = {};
+      qtyInStockRow.addAll({
+        'Size': PlutoCell(value: 'BP Stock'),
+      });
+      for (var i = 0; i < columnList.length; i++) {
+        qtyInStockRow.addAll({
+          columnList[i]: PlutoCell(value: '0'),
         });
       }
 
@@ -535,10 +572,13 @@ class PortalMpSalesOrderB2BController extends GetxController {
         columnList[columnList.length - 1]: PlutoCell(value: 'Added'),
       }); */
       rows.add(PlutoRow(cells: priceRow));
+      rows.add(PlutoRow(cells: qtyAvailableRow));
+      rows.add(PlutoRow(cells: qtyInStockRow));
+      rows.add(PlutoRow(cells: qtyOrderedRow));
 
       //var currentStock = gridDetail.records![0].!.split(';');
 
-      openGridPopUp(context);
+      openGridPopUp(context, sku);
 
       //getProdB2BStock(id);
 
@@ -858,7 +898,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   Map<String, String> gridProdValueList = {};
 
-  openGridPopUp(BuildContext context) {
+  openGridPopUp(BuildContext context, String sku) {
     PlutoGridPopupCustom(
       button: gridAddToCart,
       context: context,
@@ -867,6 +907,18 @@ class PortalMpSalesOrderB2BController extends GetxController {
       //height: 400,
       rows: rows,
       mode: PlutoGridMode.normal,
+      createHeader: (stateManager) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              sku,
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+          ],
+        );
+      },
       configuration: const PlutoGridConfiguration(
         columnSize:
             PlutoGridColumnSizeConfig(autoSizeMode: PlutoAutoSizeMode.scale),
@@ -895,7 +947,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
           event.stateManager.refRows.length - 2,
         );
 
-        //event.stateManager.setKeepFocus(true);
+        event.stateManager.setKeepFocus(true);
         //stateManager = event.stateManager;
       },
       onSelected: (PlutoGridOnSelectedEvent event) {

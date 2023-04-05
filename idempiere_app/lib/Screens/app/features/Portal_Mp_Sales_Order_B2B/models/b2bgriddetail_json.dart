@@ -40,6 +40,8 @@ class Records {
   final String? sKU;
   final String? stringAgg;
   final String? prices;
+  final String? qtyAvailable;
+  final String? qtyOrdered;
   final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
@@ -52,6 +54,8 @@ class Records {
     this.sKU,
     this.stringAgg,
     this.prices,
+    this.qtyAvailable,
+    this.qtyOrdered,
     this.isActive,
     this.created,
     this.createdBy,
@@ -65,6 +69,8 @@ class Records {
         sKU = json['SKU'] as String?,
         stringAgg = json['string_agg'] as String?,
         prices = json['prices'] as String?,
+        qtyAvailable = json['QtyAvailable'] as String?,
+        qtyOrdered = json['QtyOrdered'] as String?,
         isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
@@ -81,6 +87,8 @@ class Records {
         'SKU': sKU,
         'string_agg': stringAgg,
         'prices': prices,
+        'QtyAvailable': qtyAvailable,
+        'QtyOrdered': qtyOrdered,
         'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
