@@ -607,6 +607,22 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                                       Row(
                                         children: [
                                           Text(
+                                            "${'Description'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
                                             "${'Product'.tr}: ",
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.bold),

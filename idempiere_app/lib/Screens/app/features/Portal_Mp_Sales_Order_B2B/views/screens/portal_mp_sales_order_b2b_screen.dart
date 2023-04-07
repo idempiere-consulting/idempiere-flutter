@@ -1148,12 +1148,39 @@ class PortalMpSalesOrderB2BScreen
                                                       const EdgeInsets.only(
                                                           top: 25),
                                                   child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       Expanded(
                                                         child: ElevatedButton(
                                                             onPressed: () {
-                                                              controller
-                                                                  .createSalesOrder();
+                                                              Get.defaultDialog(
+                                                                  title:
+                                                                      'Create Order'
+                                                                          .tr,
+                                                                  textCancel:
+                                                                      'No'.tr,
+                                                                  textConfirm:
+                                                                      'Yes'.tr,
+                                                                  onConfirm:
+                                                                      controller
+                                                                          .createSalesOrder,
+                                                                  content:
+                                                                      Column(
+                                                                    children: [
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Text('Are you sure you want to proceed?'
+                                                                              .tr)
+                                                                        ],
+                                                                      )
+                                                                    ],
+                                                                  ));
+                                                              /* controller
+                                                                  .createSalesOrder(); */
                                                             },
                                                             child: Text(
                                                                 "Proceed".tr)),

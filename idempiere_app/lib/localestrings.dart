@@ -1067,6 +1067,10 @@ class LocaleString extends Translations {
           'BP Group': 'Gruppo BP',
           'CUSTOMERS': 'CLIENTI',
           'Tax ID': 'Partita IVA',
+          'Latest Activity': 'Ultima Attività',
+          'Are you sure you want to proceed?': 'Sicuro di voler procedere?',
+          'Create Order': 'Crea Ordine',
+          'Date Restock': 'Data Riordino'
         },
       };
 }

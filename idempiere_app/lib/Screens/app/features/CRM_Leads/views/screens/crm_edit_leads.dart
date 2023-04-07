@@ -76,7 +76,7 @@ class _EditLeadState extends State<EditLead> {
     }
     if (addressId != 0) {
       json.addAll({
-        //"C_Location_ID": {"id": addressId},
+        "C_Location_ID": {"id": addressId},
         "BP_Location_ID": {"id": addressId},
       });
     }

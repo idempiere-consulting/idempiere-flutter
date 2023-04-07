@@ -344,7 +344,7 @@ class CRMLeadController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/ad_user?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_lead_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
     //print(url);
     var response = await http.get(
       url,
@@ -366,6 +366,106 @@ class CRMLeadController extends GetxController {
       if (kDebugMode) {
         print(response.body);
       }
+    }
+  }
+
+  createPhoneCallActivity(int id) async {
+    var now = DateTime.now();
+
+    var hourTime = "00";
+
+    var minuteTime = "00";
+
+    if (now.hour < 10) {
+      hourTime = "0${now.hour}";
+    } else {
+      hourTime = "${now.hour}";
+    }
+
+    if (now.minute < 10) {
+      minuteTime = "0${now.minute}";
+    } else {
+      minuteTime = "${now.minute}";
+    }
+
+    var formatter = DateFormat('yyyy-MM-dd');
+    var date = formatter.format(now);
+    var startTime = '$hourTime:$minuteTime:00Z';
+    var msg = {
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "ContactActivityType": {"id": "PC"},
+      "Description": 'phone call',
+      "AD_User_ID": {"id": id},
+      "StartDate": "${date}T$startTime",
+    };
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_ContactActivity');
+    var response = await http.post(
+      url,
+      body: jsonEncode(msg),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
+  createEmailActivity(int id) async {
+    var now = DateTime.now();
+
+    var hourTime = "00";
+
+    var minuteTime = "00";
+
+    if (now.hour < 10) {
+      hourTime = "0${now.hour}";
+    } else {
+      hourTime = "${now.hour}";
+    }
+
+    if (now.minute < 10) {
+      minuteTime = "0${now.minute}";
+    } else {
+      minuteTime = "${now.minute}";
+    }
+
+    var formatter = DateFormat('yyyy-MM-dd');
+    var date = formatter.format(now);
+    var startTime = '$hourTime:$minuteTime:00Z';
+    var msg = {
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "ContactActivityType": {"id": "EM"},
+      "Description": 'mail',
+      "AD_User_ID": {"id": id},
+      "StartDate": "${date}T$startTime",
+    };
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_ContactActivity');
+    var response = await http.post(
+      url,
+      body: jsonEncode(msg),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      print(response.body);
+    } else {
+      print(response.body);
     }
   }
 

@@ -341,7 +341,7 @@ class _CreateLeadState extends State<CreateLead> {
     dropdownValue = "N";
     sourceDropdownValue = "";
     campaignDropdownValue = "";
-    salesrepValue = "";
+    salesrepValue = GetStorage().read("user");
     sectorValue = "";
     sizeDropdownValue = "";
     //fillFields();
@@ -489,6 +489,8 @@ class _CreateLeadState extends State<CreateLead> {
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
                             ? Autocomplete<Records>(
+                                initialValue: TextEditingValue(
+                                    text: GetStorage().read('user')),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {

@@ -493,8 +493,8 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       var columnList = gridDetail.records![0].stringAgg!.split(';');
       columns.add(PlutoColumn(
-          title: 'Size',
-          field: 'Size',
+          title: 'Size'.tr,
+          field: 'Size'.tr,
           type: PlutoColumnType.text(),
           readOnly: true));
       for (var element in columnList) {
@@ -526,7 +526,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       }), */
       Map<String, PlutoCell> priceRow = {};
       priceRow.addAll({
-        'Size': PlutoCell(value: 'Price'),
+        'Size'.tr: PlutoCell(value: 'Price'.tr),
       });
       for (var i = 0; i < columnList.length; i++) {
         priceRow.addAll({
@@ -538,7 +538,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       Map<String, PlutoCell> qtyAvailableRow = {};
       qtyAvailableRow.addAll({
-        'Size': PlutoCell(value: 'Available'),
+        'Size'.tr: PlutoCell(value: 'Headquarter'.tr),
       });
       for (var i = 0; i < columnList.length; i++) {
         qtyAvailableRow.addAll({
@@ -550,7 +550,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       Map<String, PlutoCell> qtyOrderedRow = {};
       qtyOrderedRow.addAll({
-        'Size': PlutoCell(value: 'Ordered'),
+        'Size'.tr: PlutoCell(value: 'Restock'.tr),
       });
       for (var i = 0; i < columnList.length; i++) {
         qtyOrderedRow.addAll({
@@ -560,11 +560,23 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       Map<String, PlutoCell> qtyInStockRow = {};
       qtyInStockRow.addAll({
-        'Size': PlutoCell(value: 'BP Stock'),
+        'Size'.tr: PlutoCell(value: 'Warehouse'.tr),
       });
       for (var i = 0; i < columnList.length; i++) {
         qtyInStockRow.addAll({
           columnList[i]: PlutoCell(value: '0'),
+        });
+      }
+
+      var dateStockList = gridDetail.records![0].dateRestocks!.split(';');
+
+      Map<String, PlutoCell> dateStockRow = {};
+      dateStockRow.addAll({
+        'Size'.tr: PlutoCell(value: 'Date Restock'.tr),
+      });
+      for (var i = 0; i < columnList.length; i++) {
+        dateStockRow.addAll({
+          columnList[i]: PlutoCell(value: (dateStockList[i])),
         });
       }
 
@@ -575,6 +587,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       rows.add(PlutoRow(cells: qtyAvailableRow));
       rows.add(PlutoRow(cells: qtyInStockRow));
       rows.add(PlutoRow(cells: qtyOrderedRow));
+      rows.add(PlutoRow(cells: dateStockRow));
 
       //var currentStock = gridDetail.records![0].!.split(';');
 
@@ -951,6 +964,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
         //stateManager = event.stateManager;
       },
       onSelected: (PlutoGridOnSelectedEvent event) {
+        print(event.rowIdx);
         //event.
         /* controller.text = event.row!.cells[selectFieldName]!.value.toString(); */
       },

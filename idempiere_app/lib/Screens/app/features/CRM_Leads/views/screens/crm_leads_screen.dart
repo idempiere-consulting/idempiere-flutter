@@ -15,6 +15,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_lead_create_tasks.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salestagejson.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -34,6 +35,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -65,6 +67,14 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
         return false;
       },
       child: Scaffold(
+        floatingActionButton: FloatingActionButton.small(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          onPressed: () {
+            Get.to(const CreateLead());
+          },
+          child: const Icon(Icons.person_add),
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -94,7 +104,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                           ? Text("LEAD: ${controller.trx.rowcount}")
                           : const Text("LEAD: ")),
                     ),
-                    Container(
+                    /* Container(
                       margin: const EdgeInsets.only(left: 40),
                       child: IconButton(
                         onPressed: () {
@@ -105,7 +115,7 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                           color: Colors.lightBlue,
                         ),
                       ),
-                    ),
+                    ), */
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
@@ -497,6 +507,13 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                                                 index]
                                                             .phone
                                                             .toString());
+                                                    controller
+                                                        .createPhoneCallActivity(
+                                                            controller
+                                                                .trx
+                                                                .windowrecords![
+                                                                    index]
+                                                                .id!);
                                                   }
                                                 },
                                               ),
@@ -537,6 +554,13 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                                                 index]
                                                             .eMail
                                                             .toString());
+                                                    controller
+                                                        .createEmailActivity(
+                                                            controller
+                                                                .trx
+                                                                .windowrecords![
+                                                                    index]
+                                                                .id!);
                                                   }
                                                 },
                                               ),
@@ -571,10 +595,93 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
                                             ],
                                           ),
                                         ),
+                                        Visibility(
+                                          visible: controller
+                                                  ._trx
+                                                  .windowrecords![index]
+                                                  .latestJPToDoID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Latest Appointment'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {},
+                                                  child: Text(
+                                                    controller
+                                                            ._trx
+                                                            .windowrecords![
+                                                                index]
+                                                            .latestJPToDoName ??
+                                                        "",
+                                                    style: const TextStyle(
+                                                        color: kNotifColor),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  ._trx
+                                                  .windowrecords![index]
+                                                  .latestActivityID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Latest Activity'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {},
+                                                  child: Expanded(
+                                                    child: Text(
+                                                      controller
+                                                              ._trx
+                                                              .windowrecords![
+                                                                  index]
+                                                              .latestActivityName ??
+                                                          "",
+                                                      style: const TextStyle(
+                                                          color: kNotifColor),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
+                                            IconButton(
+                                              tooltip: "Create Appointment".tr,
+                                              onPressed: () {
+                                                Get.to(const CreateLeadTasks(),
+                                                    arguments: {
+                                                      "leadId": controller
+                                                          ._trx
+                                                          .windowrecords![index]
+                                                          .id,
+                                                      "leadName": controller
+                                                          ._trx
+                                                          .windowrecords![index]
+                                                          .name,
+                                                      /* "bPartnerId": controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cBPartnerID
+                                                            ?.id ??
+                                                        0, */
+                                                    });
+                                              },
+                                              icon: const Icon(Icons.add_task),
+                                            ),
                                             Visibility(
                                               visible: controller
                                                       ._trx

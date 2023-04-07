@@ -60,6 +60,10 @@ class Windowrecords {
   final CCampaignID? cCampaignID;
   final LitLeadSizeID? litLeadSizeID;
   final LitIndustrySectorID? litIndustrySectorID;
+  final String? latestJPToDoName;
+  final int? latestJPToDoID;
+  final String? latestActivityName;
+  final int? latestActivityID;
   final String? slug;
 
   Windowrecords({
@@ -90,6 +94,10 @@ class Windowrecords {
     this.cCampaignID,
     this.litLeadSizeID,
     this.litIndustrySectorID,
+    this.latestJPToDoID,
+    this.latestJPToDoName,
+    this.latestActivityID,
+    this.latestActivityName,
     this.slug,
   });
 
@@ -150,6 +158,10 @@ class Windowrecords {
         isPublic = json['IsPublic'] as bool?,
         lITIsPartner = json['LIT_IsPartner'] as bool?,
         isConfirmed = json['IsConfirmed'] as bool?,
+        latestJPToDoID = json['latest_jptodo_id'] as int?,
+        latestJPToDoName = json['latest_jptodo'] as String?,
+        latestActivityID = json['latest_activity_id'] as int?,
+        latestActivityName = json['latest_activity'] as String?,
         slug = json['slug'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -180,6 +192,10 @@ class Windowrecords {
         'lit_IndustrySector_ID': litIndustrySectorID?.toJson(),
         'lit_LeadSize_ID': litLeadSizeID?.toJson(),
         'IsConfirmed': isConfirmed,
+        'latest_jptodo': latestJPToDoName,
+        'latest_jptodo_id': latestJPToDoID,
+        'latest_activity_id': latestActivityID,
+        'latest_activity': latestActivityName,
         'slug': slug
       };
 }
