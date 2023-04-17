@@ -9,8 +9,9 @@ class CRMSalesOrderContractCreationController extends GetxController {
   late PaymentTermsJson pTerms;
   late PaymentRuleJson pRules;
 
+  var bpLocationId = "0".obs;
   var paymentTermId = "0".obs;
-  var paymentRuleId = "B".obs;
+  var paymentRuleId = "K".obs;
 
   List<ProductCheckout> productList = [];
   late SalesOrderDefaultsJson defValues;
@@ -498,7 +499,7 @@ class CRMSalesOrderContractCreationController extends GetxController {
   }
 
   Future<void> getPaymentRules() async {
-    pTermAvailable.value = false;
+    pRuleAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -532,32 +533,31 @@ class CRMSalesOrderContractCreationController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
         '$protocol://$ip/api/v1/models/C_PaymentTerm?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
-    if (businessPartnerId != 0) {
-      var response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        /* if (kDebugMode) {
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      /* if (kDebugMode) {
         print(response.body);
       } */
-        //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-        pTerms = PaymentTermsJson.fromJson(
-            jsonDecode(utf8.decode(response.bodyBytes)));
-        getDefaultPaymentTermsFromBP();
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pTerms = PaymentTermsJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
 
-        for (var element in pTerms.records!) {
-          if (element.isDefault == true) {
-            paymentTermId.value = element.id!.toString();
-          }
+      for (var element in pTerms.records!) {
+        if (element.isDefault == true) {
+          paymentTermId.value = element.id!.toString();
         }
-      } else {
-        if (kDebugMode) {
-          print(response.body);
-        }
+      }
+      pTermAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
       }
     }
   }
@@ -595,6 +595,135 @@ class CRMSalesOrderContractCreationController extends GetxController {
     } else {
       if (kDebugMode) {
         print(response.body);
+      }
+    }
+  }
+
+  Future<void> getLocationFromBP() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      var bpLocation = BusinessPartnerLocationJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (bpLocation.rowcount! > 0) {
+        if (bpLocation.records![0].id != null) {
+          bpLocationId.value = bpLocation.records![0].id.toString();
+        }
+      }
+      //print(trx.rowcount);
+      //print(response.body);
+      //print(paymentTermId);
+      //bpLocationAvailable.value = true;
+      // ignore: unnecessary_null_comparison
+      //pTermAvailable.value = pTerm != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> createSalesOrder() async {
+    Get.back();
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/sales-order');
+
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    //print(formattedDate);
+    List<Map<String, Object>> list = [];
+
+    for (var element in productList) {
+      list.add({
+        "M_Product_ID": {"id": element.id},
+        "qtyEntered": element.qty
+      });
+    }
+
+    var msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+      "C_BPartner_ID": {"id": businessPartnerId},
+      "C_BPartner_Location_ID": {"id": bpLocationId.value},
+      "Bill_BPartner_ID": {"id": businessPartnerId},
+      "Bill_Location_ID": {"id": defValues.records![0].cBPartnerLocationID!.id},
+      "Revision": defValues.records![0].revision,
+      "AD_User_ID": defValues.records![0].aDUserID!.id,
+      "Bill_User_ID": defValues.records![0].billUserID!.id,
+      "C_DocTypeTarget_ID": {"id": int.parse(dropdownValue.value)},
+      "DateOrdered": "${formattedDate}T00:00:00Z",
+      "DatePromised": "${formattedDate}T00:00:00Z",
+      "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
+      "DeliveryRule": defValues.records![0].deliveryRule!.id,
+      "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
+      "FreightCostRule": defValues.records![0].freightCostRule!.id,
+      "PriorityRule": defValues.records![0].priorityRule!.id,
+      "InvoiceRule": defValues.records![0].invoiceRule!.id,
+      "M_PriceList_ID": defValues.records![0].mPriceListID!.id,
+      "SalesRep_ID": defValues.records![0].salesRepID!.id,
+      "C_Currency_ID": defValues.records![0].cCurrencyID!.id,
+      "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
+      "PaymentRule": {"id": paymentRuleId.value},
+      "order-line".tr: list,
+    });
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      //print(response.body);
+
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      Get.find<CRMSalesOrderController>().getSalesOrders();
+      Get.back();
+      //print("done!");
+      Get.snackbar(
+        "${json["DocumentNo"]}",
+        "The record has been created".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+
+      /* cOrderId = json["id"];
+      if (cOrderId != 0) {
+        createSalesOrderLine();
+      } */
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+        Get.snackbar(
+          "Error!".tr,
+          "Record not updated".tr,
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
       }
     }
   }

@@ -25,17 +25,40 @@ class CRMLeadController extends GetxController {
 
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
-  var leadStatusValue = "".obs;
 
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
+  var userFilter = "";
+  var sectorFilter = "";
+  var nameFilter = "";
+  var mailFilter = "";
+  var phoneFilter = "";
+  var statusFilter = "";
+  var sizeFilter = "";
+  var campaignFilter = "";
+  var sourceFilter = "";
+
+  var sectorId = "0".obs;
+  var selectedUserRadioTile = 0.obs;
+  var nameValue = "".obs;
+  var mailValue = "".obs;
+  var phoneValue = "".obs;
+  var statusId = "0".obs;
+  var sizeId = "0".obs;
+  var campaignId = "0".obs;
+  var sourceId = "0".obs;
+
   final json = {
     "types": [
-      {"id": "1", "name": "Name"},
+      {"id": "1", "name": "Name".tr},
       {"id": "2", "name": "Mail"},
       {"id": "3", "name": "Phone N°"},
-      {"id": "4", "name": "Lead Status"},
+      {"id": "4", "name": "Lead Status".tr},
+      {"id": "5", "name": "Sector".tr},
+      {"id": "6", "name": "Lead Size".tr},
+      {"id": "7", "name": "Campaign".tr},
+      {"id": "8", "name": "Lead Source".tr},
     ]
   };
 
@@ -255,31 +278,6 @@ class CRMLeadController extends GetxController {
     }
   }
 
-  Future<List<LSRecords>> getAllLeadStatuses() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
-      //print(json.rowcount);
-
-      return json.records!;
-    } else {
-      throw Exception("Failed to load lead statuses");
-    }
-
-    //print(response.body);
-  }
-
   Future<void> makePhoneCall(String phoneNumber) async {
     // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
     // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
@@ -308,29 +306,41 @@ class CRMLeadController extends GetxController {
 
   Future<void> getLeads() async {
     _dataAvailable.value = false;
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    /* var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     var searchUrlFilter = "";
-    if (searchFieldController.text != "" || dropdownValue.value == '4') {
-      switch (dropdownValue.value) {
-        case "1":
-          searchUrlFilter =
-              " and contains(Name,'${searchFieldController.text}')";
 
-          break;
-        case "2":
-          searchUrlFilter =
-              " and contains(EMail,'${searchFieldController.text}')";
-          break;
-        case "3":
-          searchUrlFilter =
-              " and contains(Phone,'${searchFieldController.text}')";
-          break;
-        case "4":
-          searchUrlFilter = " and LeadStatus eq '${leadStatusValue.value}'";
-          break;
-        default:
-      }
-    }
+    switch (dropdownValue.value) {
+      case "1":
+        searchUrlFilter = " and contains(Name,'${searchFieldController.text}')";
+
+        break;
+      case "2":
+        searchUrlFilter =
+            " and contains(EMail,'${searchFieldController.text}')";
+        break;
+      case "3":
+        searchUrlFilter =
+            " and contains(Phone,'${searchFieldController.text}')";
+        break;
+      case "4":
+        searchUrlFilter = " and LeadStatus eq '${leadStatusValue.value}'";
+        break;
+      case "5":
+        searchUrlFilter =
+            " and lit_IndustrySector_ID eq ${leadSectorValue.value}";
+        break;
+      case "6":
+        searchUrlFilter = " and lit_LeadSize_ID eq ${leadSizeValue.value}";
+        break;
+      case "7":
+        searchUrlFilter = " and C_Campaign_ID eq ${leadCampaignValue.value}";
+        break;
+      case "8":
+        searchUrlFilter = " and LeadSource eq ${leadSourceValue.value}";
+        break;
+      default:
+    } */
+
     var notificationFilter = "";
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
@@ -344,7 +354,7 @@ class CRMLeadController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_lead_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_lead_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}$nameFilter$mailFilter$phoneFilter$userFilter$sectorFilter$statusFilter$sizeFilter$campaignFilter$sourceFilter&\$skip=${(pagesCount.value - 1) * 100}');
     //print(url);
     var response = await http.get(
       url,
@@ -391,20 +401,39 @@ class CRMLeadController extends GetxController {
     var formatter = DateFormat('yyyy-MM-dd');
     var date = formatter.format(now);
     var startTime = '$hourTime:$minuteTime:00Z';
-    var msg = {
+    /* var msg = {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "ContactActivityType": {"id": "PC"},
       "Description": 'phone call',
       "AD_User_ID": {"id": id},
       "StartDate": "${date}T$startTime",
+    }; */
+
+    var msg = {
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "AD_User_ID": {"id": GetStorage().read('userId')},
+      "Name": "Phone Call".tr,
+      "Description": '$date $hourTime:$minuteTime - ${"Phone Call".tr}',
+      "Qty": 0.5,
+      //"C_BPartner_ID": {"id": businessPartnerId},
+      "JP_ToDo_ScheduledStartDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledEndDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledStartTime": startTime,
+      "JP_ToDo_ScheduledEndTime": startTime,
+      "JP_ToDo_Status": {"id": 'CO'},
+      "IsOpenToDoJP": true,
+      "JP_ToDo_Type": {"id": "T"},
+      "LIT_Ad_User_Lead_ID": {"id": id},
+      //"C_Project_ID": {"id": projectId}
     };
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/C_ContactActivity');
-    var response = await http.post(
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo');
+    /* var response = await */ http.post(
       url,
       body: jsonEncode(msg),
       headers: <String, String>{
@@ -412,11 +441,11 @@ class CRMLeadController extends GetxController {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 201) {
+    /* if (response.statusCode == 201) {
       print(response.body);
     } else {
       print(response.body);
-    }
+    } */
   }
 
   createEmailActivity(int id) async {
@@ -444,17 +473,27 @@ class CRMLeadController extends GetxController {
     var msg = {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "ContactActivityType": {"id": "EM"},
-      "Description": 'mail',
-      "AD_User_ID": {"id": id},
-      "StartDate": "${date}T$startTime",
+      "AD_User_ID": {"id": GetStorage().read('userId')},
+      "Name": "Email".tr,
+      "Description": '$date $hourTime:$minuteTime - ${"Email".tr}',
+      "Qty": 0.5,
+      //"C_BPartner_ID": {"id": businessPartnerId},
+      "JP_ToDo_ScheduledStartDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledEndDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledStartTime": startTime,
+      "JP_ToDo_ScheduledEndTime": startTime,
+      "JP_ToDo_Status": {"id": 'CO'},
+      "IsOpenToDoJP": true,
+      "JP_ToDo_Type": {"id": "T"},
+      "LIT_Ad_User_Lead_ID": {"id": id},
+      //"C_Project_ID": {"id": projectId}
     };
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://$ip/api/v1/models/C_ContactActivity');
-    var response = await http.post(
+    /* var response = await */ http.post(
       url,
       body: jsonEncode(msg),
       headers: <String, String>{
@@ -462,11 +501,11 @@ class CRMLeadController extends GetxController {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 201) {
+    /* if (response.statusCode == 201) {
       print(response.body);
     } else {
       print(response.body);
-    }
+    } */
   }
 
   /* void openDrawer() {

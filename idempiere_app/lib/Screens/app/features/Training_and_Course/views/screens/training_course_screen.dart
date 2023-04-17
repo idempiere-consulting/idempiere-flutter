@@ -60,12 +60,13 @@ class TrainingCourseScreen extends GetView<TrainingCourseController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
@@ -85,7 +86,7 @@ class TrainingCourseScreen extends GetView<TrainingCourseController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-                const SizedBox(height: kSpacing * 2),
+                //const SizedBox(height: kSpacing * 2),
                 /* _buildTaskOverview(
                   data: controller.getAllTask(),
                   headerAxis: Axis.vertical,
@@ -98,8 +99,8 @@ class TrainingCourseScreen extends GetView<TrainingCourseController> {
                   crossAxisCount: 6,
                   crossAxisCellCount: 6,
                 ), */
-                const SizedBox(height: kSpacing),
-                _buildRecentMessages(data: controller.getChatting()),
+                /* const SizedBox(height: kSpacing),
+                _buildRecentMessages(data: controller.getChatting()), */
               ]);
             },
             tabletBuilder: (context, constraints) {

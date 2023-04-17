@@ -8,6 +8,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -66,6 +67,14 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
         return false;
       },
       child: Scaffold(
+        /* floatingActionButton: FloatingActionButton.small(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          onPressed: () {
+            //Get.to(const CreateOpportunity());
+          },
+          child: const Icon(MaterialSymbols.person_add_outlined),
+        ), */
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -93,7 +102,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                               controller.trx.rowcount.toString())
                           : Text("CONTACTS: ".tr)),
                     ),
-                    Container(
+                    /* Container(
                       margin: const EdgeInsets.only(left: 40),
                       child: IconButton(
                         onPressed: () {
@@ -104,7 +113,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                           color: Colors.lightBlue,
                         ),
                       ),
-                    ),
+                    ), */
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
@@ -372,7 +381,7 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale,
+                                      const Icon(Icons.handshake,
                                           color: Colors.yellowAccent),
                                       Expanded(
                                         child: Text(
@@ -385,11 +394,18 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                       ),
                                     ],
                                   ),
-                                  /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
+                                  trailing: IconButton(
+                                      tooltip: 'Zoom Business Partner'.tr,
+                                      onPressed: () {
+                                        Get.offNamed('/CustomerBP', arguments: {
+                                          'notificationId': controller.trx
+                                              .records![index].cBPartnerID?.id,
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.search,
+                                        color: kNotifColor,
+                                      )),
                                   childrenPadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   children: [

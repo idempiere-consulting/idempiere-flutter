@@ -165,11 +165,20 @@ class CRMCustomerBPController extends GetxController {
       default:
     }
 
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and lit_mobile_customer_v_id eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_customer_v?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_customer_v?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$searchUrlFilter$notificationFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{

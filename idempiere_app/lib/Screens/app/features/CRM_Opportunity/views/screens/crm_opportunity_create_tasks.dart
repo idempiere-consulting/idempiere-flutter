@@ -33,10 +33,10 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
       "Description": descriptionFieldController.text,
       "Qty": 1.0,
       "C_BPartner_ID": {"id": businessPartnerId},
-      "JP_ToDo_ScheduledStartDate": "${date}T$startTime",
-      "JP_ToDo_ScheduledEndDate": "${date}T$startTime",
-      "JP_ToDo_ScheduledStartTime": startTime,
-      "JP_ToDo_ScheduledEndTime": startTime,
+      "JP_ToDo_ScheduledStartDate": "${date}T$timeStart:00Z",
+      "JP_ToDo_ScheduledEndDate": "${date}T$timeEnd:00Z",
+      "JP_ToDo_ScheduledStartTime": '$timeStart:00Z',
+      "JP_ToDo_ScheduledEndTime": '$timeEnd:00Z',
       "JP_ToDo_Status": {"id": dropdownValue},
       "IsOpenToDoJP": true,
       "JP_ToDo_Type": {"id": "S"},
@@ -181,7 +181,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
     });
   }
 
-  Future<List<Records>> getAllProjects() async {
+  Future<List<PJRecords>> getAllProjects() async {
     final ip = GetStorage().read('ip');
     String authorization =
         'Bearer ${GetStorage().read('token')}'; //GetStorage().read("clientid")
@@ -241,6 +241,8 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
     var formatter = DateFormat('yyyy-MM-dd');
     date = formatter.format(now);
     startTime = '$hourTime:$minuteTime:00Z';
+    timeStart = '$hourTime:$minuteTime';
+    timeEnd = '$hourTime:$minuteTime';
   }
 
   var args = Get.arguments;
@@ -284,12 +286,10 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
     dropDownList = getTypes()!;
     dropdownValue = "WP";
 
-    timeStart = "";
-    timeEnd = "";
     //getProject();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  static String _displayStringForOption(PJRecords option) => option.name!;
 
   @override
   Widget build(BuildContext context) {
@@ -414,7 +414,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
-                    readOnly: true,
+                    //readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
@@ -445,7 +445,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
-                    readOnly: true,
+                    //readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
@@ -561,17 +561,18 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                   child: FutureBuilder(
                     future: getAllProjects(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
                         snapshot.hasData && flagProject
-                            ? Autocomplete<Records>(
+                            ? Autocomplete<PJRecords>(
                                 initialValue: initialValue,
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<PJRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((PJRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -579,7 +580,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (PJRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   projectId = selection.id!;
@@ -786,17 +787,18 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                   child: FutureBuilder(
                     future: getAllProjects(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
                         snapshot.hasData && flagProject
-                            ? Autocomplete<Records>(
+                            ? Autocomplete<PJRecords>(
                                 initialValue: initialValue,
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<PJRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((PJRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -804,7 +806,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (PJRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   projectId = selection.id!;

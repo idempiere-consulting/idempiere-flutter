@@ -411,11 +411,18 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
                                       ),
                                     ],
                                   ),
-                                  /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
+                                  trailing: IconButton(
+                                      tooltip: 'Zoom Contacts'.tr,
+                                      onPressed: () {
+                                        Get.offNamed('/ContactBP', arguments: {
+                                          'notificationId':
+                                              controller.trx.records![index].id,
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.search,
+                                        color: kNotifColor,
+                                      )),
                                   childrenPadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   children: [

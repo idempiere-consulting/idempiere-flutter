@@ -98,8 +98,8 @@ class ProductionScreen extends GetView<ProductionController> {
                 crossAxisCount: 6,
                 crossAxisCellCount: 6,
               ), */
-              const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              /*  const SizedBox(height: kSpacing),
+              _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
           tabletBuilder: (context, constraints) {

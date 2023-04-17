@@ -43,6 +43,7 @@ class EventRecords {
   final String? name;
   final String? description;
   final CBPartnerID? cBPartnerID;
+  final CProjectID? cProjectID;
   final String? updated;
   final UpdatedBy? updatedBy;
   final JPToDoType? jPToDoType;
@@ -76,6 +77,7 @@ class EventRecords {
     this.name,
     this.description,
     this.cBPartnerID,
+    this.cProjectID,
     this.updated,
     this.updatedBy,
     this.jPToDoType,
@@ -118,6 +120,9 @@ class EventRecords {
         cBPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
             ? CBPartnerID.fromJson(
                 json['C_BPartner_ID'] as Map<String, dynamic>)
+            : null,
+        cProjectID = (json['C_Project_ID'] as Map<String, dynamic>?) != null
+            ? CProjectID.fromJson(json['C_Project_ID'] as Map<String, dynamic>)
             : null,
         updated = json['Updated'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
@@ -165,6 +170,7 @@ class EventRecords {
         'Name': name,
         'Description': description,
         'C_BPartner_ID': cBPartnerID?.toJson(),
+        'C_Project_ID': cProjectID?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
         'JP_ToDo_Type': jPToDoType?.toJson(),
@@ -390,6 +396,33 @@ class CBPartnerID {
   });
 
   CBPartnerID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CProjectID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CProjectID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CProjectID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

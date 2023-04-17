@@ -8,6 +8,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -69,6 +70,14 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
         return false;
       },
       child: Scaffold(
+        floatingActionButton: FloatingActionButton.small(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          onPressed: () {
+            Get.to(const CreateOpportunity());
+          },
+          child: const Icon(MaterialSymbols.add_business),
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -99,7 +108,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                               controller.trx.rowcount.toString())
                           : Text("OPPORTUNITY: ".tr)),
                     ),
-                    Container(
+                    /* Container(
                       margin: const EdgeInsets.only(left: 40),
                       child: IconButton(
                         onPressed: () {
@@ -110,7 +119,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                           color: Colors.lightBlue,
                         ),
                       ),
-                    ),
+                    ), */
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(

@@ -1555,7 +1555,7 @@ CRUD=1111=F
   6 Clienti		        : F3
   7 Task Lead(JPTODO)	: F3
   8 Opportunità 	    : F3
-  9 Offerta di Vendita 	: F3
+  9 Offerta di Vendita 	: F3 F / 000*1* permesso x poter completare il documento
  10 Listino Prodotti	: 4
  11 Doc. di Trasporto   : F3
  12 Fatt.di Vendita 	: 4

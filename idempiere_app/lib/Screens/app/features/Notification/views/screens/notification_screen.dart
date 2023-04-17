@@ -127,15 +127,19 @@ class NotificationScreen extends GetView<NotificationController> {
                                         child: const Icon(Icons.notifications,
                                             color: Colors.white),
                                       ),
-                                      title: Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .recordName ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                      title: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .recordName ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 

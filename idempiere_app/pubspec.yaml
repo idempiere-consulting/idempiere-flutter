@@ -76,6 +76,8 @@ dependencies:
     sdk: flutter
   html_editor_enhanced: ^2.5.1
   flutter_typeahead: ^4.3.7
+  flutter_material_symbols: ^0.0.4
+  flutter_speed_dial: ^6.2.0
     
 
 dev_dependencies:

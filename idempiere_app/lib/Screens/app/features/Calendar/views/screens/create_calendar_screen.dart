@@ -62,7 +62,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
     }
   }
 
-  Future<List<Records>> getAllProjects() async {
+  Future<List<PJRecords>> getAllProjects() async {
     final ip = GetStorage().read('ip');
     String authorization =
         'Bearer ${GetStorage().read('token')}'; //GetStorage().read("clientid")
@@ -238,7 +238,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
   int businessPartnerId = 0;
   final List<dynamic> list = GetStorage().read('permission');
 
-  static String _displayStringForOption(Records option) => option.name!;
+  static String _displayStringForOption(PJRecords option) => option.name!;
 
   @override
   void initState() {
@@ -349,17 +349,18 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   child: FutureBuilder(
                     future: getAllProjects(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
                         snapshot.hasData && flagProject
-                            ? Autocomplete<Records>(
+                            ? Autocomplete<PJRecords>(
                                 initialValue: initialValue,
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<PJRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((PJRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -367,7 +368,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (PJRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   projectId = selection.id!;

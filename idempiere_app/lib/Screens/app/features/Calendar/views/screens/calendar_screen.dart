@@ -6,6 +6,7 @@ library dashboard;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
@@ -128,6 +129,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Future<void> getAllEvents() async {
+    selectedEvents = {};
     var now = DateTime.now();
     DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
     DateTime sixtyDaysLater = now.add(const Duration(days: 60));
@@ -215,8 +217,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ];
         }
       }
-      flag = true;
-      setState(() {});
+
+      setState(() {
+        flag = true;
+      });
 
       //print(json.rowcount);
     } else {
@@ -307,6 +311,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   int adUserId = 0;
   bool flag = true;
 
+  var userFieldController;
+
   final List<dynamic> list = GetStorage().read('permission');
 
   @override
@@ -317,6 +323,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     flag = true;
     adUserId = GetStorage().read('userId');
     super.initState();
+    userFieldController =
+        TextEditingController(text: GetStorage().read('user'));
     selectedEvents = {};
     getAllEvents();
     selectedDay = DateTime.now();
@@ -352,8 +360,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
-            _buildProfile(data: getProfil()),
-            const SizedBox(height: kSpacing),
+            //_buildProfile(data: getProfil()),
+            //const SizedBox(height: kSpacing),
             Visibility(
               visible: int.parse(list[0], radix: 16)
                           .toRadixString(2)
@@ -363,13 +371,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ? true
                   : false,
               child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
                 margin: const EdgeInsets.all(10),
                 child: FutureBuilder(
                   future: getAllSalesRep(),
@@ -384,7 +385,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       "1"
                                   ? true
                                   : false,
-                              child: Autocomplete<Records>(
+                              child: /* Autocomplete<Records>(
                                 initialValue: TextEditingValue(
                                     text: GetStorage().read('user') ?? ""),
                                 displayStringForOption: _displayStringForOption,
@@ -413,8 +414,48 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                                   //print(salesrepValue);
                                 },
-                              ),
-                            )
+                              ), */
+                                  TypeAheadField<Records>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  controller: userFieldController,
+                                  //autofocus: true,
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    hintText: "search..",
+                                    isDense: true,
+                                    fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  setState(() {
+                                    flag = false;
+                                    adUserId = suggestion.id!;
+                                    userFieldController.text = suggestion.name;
+                                    //flag = true;
+                                  });
+                                  getAllEvents();
+                                },
+                              ))
                           : Visibility(
                               visible: int.parse(list[0], radix: 16)
                                           .toRadixString(2)

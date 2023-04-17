@@ -61,6 +61,7 @@ class Windowrecords {
   final LitLeadSizeID? litLeadSizeID;
   final LitIndustrySectorID? litIndustrySectorID;
   final String? latestJPToDoName;
+  final String? latestJPToDoStatus;
   final int? latestJPToDoID;
   final String? latestActivityName;
   final int? latestActivityID;
@@ -96,6 +97,7 @@ class Windowrecords {
     this.litIndustrySectorID,
     this.latestJPToDoID,
     this.latestJPToDoName,
+    this.latestJPToDoStatus,
     this.latestActivityID,
     this.latestActivityName,
     this.slug,
@@ -160,6 +162,7 @@ class Windowrecords {
         isConfirmed = json['IsConfirmed'] as bool?,
         latestJPToDoID = json['latest_jptodo_id'] as int?,
         latestJPToDoName = json['latest_jptodo'] as String?,
+        latestJPToDoStatus = json['latest_jptodo_status'] as String?,
         latestActivityID = json['latest_activity_id'] as int?,
         latestActivityName = json['latest_activity'] as String?,
         slug = json['slug'] as String?;
@@ -193,6 +196,7 @@ class Windowrecords {
         'lit_LeadSize_ID': litLeadSizeID?.toJson(),
         'IsConfirmed': isConfirmed,
         'latest_jptodo': latestJPToDoName,
+        'latest_jptodo_status': latestJPToDoStatus,
         'latest_jptodo_id': latestJPToDoID,
         'latest_activity_id': latestActivityID,
         'latest_activity': latestActivityName,

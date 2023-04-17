@@ -208,7 +208,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     });
   }
 
-  Future<List<Records>> getAllProjects() async {
+  Future<List<PJRecords>> getAllProjects() async {
     final ip = GetStorage().read('ip');
     String authorization =
         'Bearer ${GetStorage().read('token')}'; //GetStorage().read("clientid")
@@ -307,7 +307,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
     getProject();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  static String _displayStringForOption(PJRecords option) => option.name!;
 
   @override
   Widget build(BuildContext context) {
@@ -403,17 +403,18 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   child: FutureBuilder(
                     future: getAllProjects(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
                         snapshot.hasData && flagProject
-                            ? Autocomplete<Records>(
+                            ? Autocomplete<PJRecords>(
                                 initialValue: initialValue,
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<PJRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((PJRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -421,7 +422,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (PJRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   projectId = selection.id!;
@@ -628,17 +629,18 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   child: FutureBuilder(
                     future: getAllProjects(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
                         snapshot.hasData && flagProject
-                            ? Autocomplete<Records>(
+                            ? Autocomplete<PJRecords>(
                                 initialValue: initialValue,
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<PJRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((PJRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -646,7 +648,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (PJRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   projectId = selection.id!;
@@ -853,17 +855,18 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                   child: FutureBuilder(
                     future: getAllProjects(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
                         snapshot.hasData && flagProject
-                            ? Autocomplete<Records>(
+                            ? Autocomplete<PJRecords>(
                                 initialValue: initialValue,
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<PJRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((PJRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -871,7 +874,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (PJRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   projectId = selection.id!;

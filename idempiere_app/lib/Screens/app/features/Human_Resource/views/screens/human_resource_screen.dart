@@ -58,12 +58,13 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
             child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
@@ -96,8 +97,8 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
                 crossAxisCount: 6,
                 crossAxisCellCount: 6,
               ), */ */
-              const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              /*  const SizedBox(height: kSpacing),
+              _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
           tabletBuilder: (context, constraints) {

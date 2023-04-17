@@ -1,6 +1,8 @@
 part of dashboard;
 
 class CRMSalesOrderController extends GetxController {
+  List<dynamic> list = GetStorage().read('permission');
+
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late SalesOrderJson _trx;
 

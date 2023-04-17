@@ -363,6 +363,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.0+2"
+  flutter_material_symbols:
+    dependency: "direct main"
+    description:
+      name: flutter_material_symbols
+      sha256: "14845fb68cfb4ec264de5a49e0f3e7bc7c8f1b61898605162a378b17a06a80a0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   flutter_parsed_text:
     dependency: transitive
     description:
@@ -379,6 +387,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.7"
+  flutter_speed_dial:
+    dependency: "direct main"
+    description:
+      name: flutter_speed_dial
+      sha256: "41d7ad0bc224248637b3a5e0b9083e912a75445bdb450cf82b8ed06d7af7c61d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.0"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:

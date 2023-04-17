@@ -14,7 +14,7 @@ class CRMSalesOrderCreationController extends GetxController {
   int businessPartnerId = 0;
   var bpLocationId = "0".obs;
   var paymentTermId = "0".obs;
-  var paymentRuleId = "B".obs;
+  var paymentRuleId = "K".obs;
   var businessPartnerName = "".obs;
   int cOrderId = 0;
   int priceListVersionID = 0;
@@ -251,9 +251,9 @@ class CRMSalesOrderCreationController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      /* if (kDebugMode) {
+      if (kDebugMode) {
         print(response.body);
-      } */
+      }
       _trx =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);

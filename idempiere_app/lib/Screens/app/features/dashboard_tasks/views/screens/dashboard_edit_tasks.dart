@@ -10,6 +10,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/models/project_json.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_tasks_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -170,6 +171,37 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
       return jsonContacts.records!;
     } else {
       throw Exception("Failed to load sales reps");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<PJRecords>> getAllProjects() async {
+    final ip = GetStorage().read('ip');
+    String authorization =
+        'Bearer ${GetStorage().read('token')}'; //GetStorage().read("clientid")
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_project?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //var jsondecoded = jsonDecode(response.body);
+
+      var jsonProjects =
+          ProjectJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      return jsonProjects.records!;
+    } else {
+      throw Exception("Failed to load projects");
     }
 
     //print(list[0].eMail);

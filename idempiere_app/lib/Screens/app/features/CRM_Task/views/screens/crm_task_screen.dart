@@ -5,13 +5,20 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Task/models/task_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_edit_task.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_filters_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -29,6 +36,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -55,6 +64,128 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        shape: const AutomaticNotchedShape(
+            RoundedRectangleBorder(), StadiumBorder()),
+        //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+        color: Theme.of(context).cardColor,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        child: Row(
+                          children: [
+                            //Icon(Icons.filter_alt),
+                            Obx(() => controller.dataAvailable
+                                ? Text("TASK: ".tr +
+                                    controller.trx.rowcount.toString())
+                                : Text("TASK: ".tr)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                  ],
+                )
+              ],
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (controller.pagesCount > 1) {
+                            controller.pagesCount.value -= 1;
+                            controller.getTasks();
+                          }
+                        },
+                        icon: const Icon(Icons.skip_previous),
+                      ),
+                      Obx(() => Text(
+                          "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                      IconButton(
+                        onPressed: () {
+                          if (controller.pagesCount <
+                              controller.pagesTot.value) {
+                            controller.pagesCount.value += 1;
+                            controller.getTasks();
+                          }
+                        },
+                        icon: const Icon(Icons.skip_next),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.home_menu,
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+        children: [
+          SpeedDialChild(
+              label: 'Filter'.tr,
+              child: Obx(() => Icon(
+                    MaterialSymbols.filter_alt_filled,
+                    color: controller.businessPartnerId.value == 0 &&
+                            controller.selectedUserRadioTile.value == 0 &&
+                            controller.selectedStatusRadioTile.value == 0
+                        ? Colors.white
+                        : kNotifColor,
+                  )),
+              onTap: () {
+                Get.to(const CRMFilterTask(), arguments: {
+                  'selectedUserRadioTile':
+                      controller.selectedUserRadioTile.value,
+                  'selectedStatusRadioTile':
+                      controller.selectedStatusRadioTile.value,
+                  'businessPartnerId': controller.businessPartnerId.value,
+                  'businessPartnerName': controller.businessPartnerName,
+                });
+              }),
+          SpeedDialChild(
+            label: 'New'.tr,
+            child: const Icon(MaterialSymbols.calendar_add_on),
+          )
+        ],
+      ),
       //key: controller.scaffoldKey,
       drawer: (ResponsiveBuilder.isDesktop(context))
           ? null
@@ -69,13 +200,13 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
           mobileBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
+              _buildHeader2(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Row(
+              //_buildProfile(data: controller.getProfil()),
+              //const SizedBox(height: kSpacing),
+              /* Row(
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 15),
@@ -83,7 +214,7 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                         ? Text("TASK: ".tr + controller.trx.rowcount.toString())
                         : Text("TASK: ".tr)),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
@@ -94,7 +225,7 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ),
+                  ), */
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -107,7 +238,8 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                       ),
                     ),
                   ),
-                  Container(
+
+                  /* Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Obx(
                       () => TextButton(
@@ -118,17 +250,43 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                         child: Text(controller.value.value),
                       ),
                     ),
-                  ),
+                  ), */
                 ],
-              ),
-              const SizedBox(height: kSpacing),
+              ), */
+
+              /* Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount > 1) {
+                        controller.pagesCount.value -= 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_previous),
+                  ),
+                  Obx(() => Text(
+                      "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount < controller.pagesTot.value) {
+                        controller.pagesCount.value += 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_next),
+                  )
+                ],
+              ), */
+              //const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
                     ? ListView.builder(
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
+                        itemCount: controller._trx.records!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 8.0,
@@ -154,34 +312,57 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                                     ),
                                     tooltip: 'Edit Task'.tr,
                                     onPressed: () {
-                                      //log("info button pressed");
-                                      /* Get.to(const EditLead(), arguments: {
-                                        "id": controller
-                                            .trx.windowrecords![index].id,
-                                        "name": controller.trx
-                                                .windowrecords![index].name ??
+                                      Get.to(const EditCRMTask(), arguments: {
+                                        "id":
+                                            controller._trx.records![index].id,
+                                        "name": controller
+                                                ._trx.records![index].name ??
                                             "",
-                                        "leadStatus": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .leadStatus
+                                        "description": controller
+                                            ._trx.records![index].description,
+                                        "typeId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoType
                                                 ?.id ??
-                                            "",
+                                            'S',
+                                        "startDate": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartDate,
+                                        "startTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartTime!
+                                            .substring(0, 5),
+                                        "endTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledEndTime!
+                                            .substring(0, 5),
+                                        "statusId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoStatus
+                                                ?.id ??
+                                            'NY',
+                                        "user": controller._trx.records![index]
+                                            .aDUserID?.identifier,
+                                        "bpId": controller._trx.records![index]
+                                            .cBPartnerID?.id,
                                         "bpName": controller
-                                            .trx.windowrecords![index].bPName,
-                                        "Tel": controller.trx
-                                                .windowrecords![index].phone ??
-                                            "",
-                                        "eMail": controller.trx
-                                                .windowrecords![index].eMail ??
-                                            "",
-                                        "salesRep": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .salesRepID
-                                                ?.identifier ??
-                                            ""
-                                      }); */
+                                            ._trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                        "projectId": controller._trx
+                                            .records![index].cProjectID?.id,
+                                        "projectName": controller
+                                            ._trx
+                                            .records![index]
+                                            .cProjectID
+                                            ?.identifier,
+                                      });
                                     },
                                   ),
                                 ),
@@ -193,16 +374,52 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                                 ),
                                 // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index]
-                                              .jPToDoStatus!.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .description ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${DateTime.tryParse(controller.trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${controller.trx.records![index].jPToDoScheduledStartTime == null ? "" : controller.trx.records![index].jPToDoScheduledStartTime!.substring(0, 5)} - ${controller.trx.records![index].jPToDoScheduledEndTime == null ? "" : controller.trx.records![index].jPToDoScheduledEndTime!.substring(0, 5)}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.handshake,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .cBPartnerID?.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -215,101 +432,53 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                                     horizontal: 20.0, vertical: 10.0),
                                 children: [
                                   Column(
-                                    children: const [
-                                      /*  Row(
-                                        children: [
-                                          const Text(
-                                            "Business Partner: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .bPName ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.call,
-                                              color: Colors.green,
+                                    children: [
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .cProjectID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'Project'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
                                             ),
-                                            tooltip: 'Call',
-                                            onPressed: () {
-                                              //log("info button pressed");
-                                              if (controller
+                                            Expanded(
+                                              child: Text(controller
                                                       .trx
-                                                      .windowrecords![index]
-                                                      .phone ==
-                                                  null) {
-                                                log("info button pressed");
-                                              } else {
-                                                controller.makePhoneCall(
-                                                    controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .phone
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .phone ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.mail,
-                                              color: Colors.white,
+                                                      .records![index]
+                                                      .cProjectID
+                                                      ?.identifier ??
+                                                  ""),
                                             ),
-                                            tooltip: 'EMail',
-                                            onPressed: () {
-                                              if (controller
-                                                      .trx
-                                                      .windowrecords![index]
-                                                      .eMail ==
-                                                  null) {
-                                                log("mail button pressed");
-                                              } else {
-                                                controller.writeMailTo(
-                                                    controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .eMail
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .eMail ??
-                                              ""),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""),
-                                        ],
-                                      ), */
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].aDUserID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'User'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .aDUserID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -854,6 +1023,40 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

@@ -2,33 +2,65 @@ part of dashboard;
 
 class CRMTaskController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late TaskJson _trx;
+  late EventJson _trx;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
   var value = "Tutti".obs;
 
+  var userFilter = "";
+  var statusFilter = "";
+  var businessPartnerFilter = "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var selectedUserRadioTile = 0.obs;
+  var selectedStatusRadioTile = 0.obs;
+
   var filters = ["Tutti", "Miei" /* , "Team" */];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  final json = {
+    "types": [
+      {"id": "1", "name": "Business Partner".tr},
+    ]
+  };
+
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
+  }
+
+  TextEditingController bpSearchFieldController = TextEditingController();
+
   @override
   void onInit() {
+    dropDownList = getTypes()!;
     super.onInit();
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
+
+    //print();
 
     getTasks();
     getADUserID();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  TaskJson get trx => _trx;
+  EventJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -67,6 +99,23 @@ class CRMTaskController extends GetxController {
     }
   }
 
+  Future<List<BPRecords>> getAllBPs() async {
+    //await getBusinessPartner();
+    //print(response.body);
+    const filename = "businesspartner";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
+
+    var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    return jsonbps.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
   Future<void> makePhoneCall(String phoneNumber) async {
     // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
     // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
@@ -94,13 +143,13 @@ class CRMTaskController extends GetxController {
   }
 
   Future<void> getTasks() async {
-    var apiUrlFilter = ["", " and AD_User_ID eq $adUserId"];
     _dataAvailable.value = false;
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/JP_ToDo?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+        '$protocol://$ip/api/v1/models/JP_ToDo?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}$userFilter$statusFilter$businessPartnerFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -110,7 +159,9 @@ class CRMTaskController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = TaskJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      _trx = EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

@@ -10,6 +10,7 @@ import 'dart:typed_data';
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -125,6 +126,14 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
         return false;
       },
       child: Scaffold(
+        floatingActionButton: FloatingActionButton.small(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          onPressed: () {
+            Get.toNamed('/SalesOrderCreation');
+          },
+          child: const Icon(MaterialSymbols.assignment_add_outlined),
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -168,7 +177,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                         ),
                       ),
                     ),
-                    Container(
+                    /* Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
                         onPressed: () {
@@ -180,7 +189,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           color: Colors.yellow,
                         ),
                       ),
-                    ),
+                    ), */
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
@@ -567,11 +576,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                   ),
                                                   Visibility(
                                                     visible: controller
-                                                            .trx
-                                                            .records![index]
-                                                            .docStatus
-                                                            ?.id !=
-                                                        'CO',
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            'CO' &&
+                                                        int.parse(
+                                                                    controller
+                                                                        .list[8],
+                                                                    radix: 16)
+                                                                .toRadixString(2)
+                                                                .padLeft(8, "0")
+                                                                .toString()[7] ==
+                                                            "1",
                                                     child: ElevatedButton(
                                                       style: ButtonStyle(
                                                         backgroundColor:

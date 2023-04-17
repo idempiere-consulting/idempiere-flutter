@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_term_json.dart';
@@ -41,6 +42,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -373,6 +375,8 @@ class CRMSalesOrderContractCreationScreen
                                           selection.id!;
                                       controller.getBusinessPartner("0");
                                       controller.getSalesOrderDefaultValues();
+                                      controller.getDefaultPaymentTermsFromBP();
+                                      controller.getLocationFromBP();
                                     },
                                   )
                                 : const Center(
@@ -382,11 +386,16 @@ class CRMSalesOrderContractCreationScreen
                     ),
                   ),
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      controller.createBusinessPartner();
-                    },
-                    child: const Text('New Business Partner')),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          controller.createBusinessPartner();
+                        },
+                        child: Text('New Business Partner'.tr)),
+                  ),
+                ),
                 Obx(
                   () => Visibility(
                     visible: controller.filterCount.value == 0 ||
@@ -809,7 +818,7 @@ class CRMSalesOrderContractCreationScreen
                                       controller.productNameFieldController
                                           .text = selection.name!;
                                       controller.descriptionFieldController
-                                          .text = selection.description!;
+                                          .text = selection.description ?? "";
                                     },
                                   )
                                 : const Center(
@@ -905,10 +914,12 @@ class CRMSalesOrderContractCreationScreen
                   ),
                 ),
 
-                Visibility(
-                    visible: controller.filterCount.value == 2,
-                    child: ElevatedButton(
-                        onPressed: () {}, child: const Text("Add Product"))),
+                Obx(
+                  () => Visibility(
+                      visible: controller.filterCount.value == 2,
+                      child: ElevatedButton(
+                          onPressed: () {}, child: const Text("Add Product"))),
+                ),
                 Obx(
                   () => Visibility(
                       visible: controller.filterCount.value == 2,
