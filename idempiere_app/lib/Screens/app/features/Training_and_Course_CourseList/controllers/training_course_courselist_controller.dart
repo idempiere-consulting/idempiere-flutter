@@ -7,6 +7,18 @@ class TrainingCourseCourseListController extends GetxController {
   late CourseListJson _trx;
   //var passwordFieldController = TextEditingController();
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  var userFilter = "";
+  var businessPartnerFilter = "";
+
+  var selectedUserRadioTile = 0.obs;
+  var teacherId = 0;
+  var teacherName = "";
+  var businessPartnerId = 0.obs;
+  var businessPartnerName = "";
+
   CourseListJson get trx => _trx;
   bool get dataAvailable => _dataAvailable.value;
 
@@ -24,7 +36,8 @@ class TrainingCourseCourseListController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/mp_maintain?\$filter= WindowType eq \'T\' and isChild eq \'N\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/mp_maintain?\$filter= WindowType eq \'T\' and isChild eq \'N\' and AD_Client_ID eq ${GetStorage().read('clientid')}$userFilter$businessPartnerFilter&\$skip=${(pagesCount.value - 1) * 100}');
+
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -36,6 +49,7 @@ class TrainingCourseCourseListController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = CourseListJson.fromJson(jsonDecode(response.body));
+      pagesTot.value = _trx.pagecount!;
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {

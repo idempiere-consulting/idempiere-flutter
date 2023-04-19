@@ -1085,6 +1085,8 @@ class LocaleString extends Translations {
           'All Sectors': 'Tutti i Settori',
           'Lead Status': 'Stato Lead',
           'All Lead Statuses': 'Tutti gli Stati Lead',
+          'Teacher Filter': 'Filtro Docente',
+          'Teacher': 'Docente',
         },
       };
 }

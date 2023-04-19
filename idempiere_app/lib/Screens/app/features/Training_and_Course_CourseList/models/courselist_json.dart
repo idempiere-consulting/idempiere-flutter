@@ -44,6 +44,7 @@ class Records {
   String? created;
   CreatedBy? createdBy;
   String? dateNextRun;
+  String? dateStart;
   String? description;
   DocStatus? docStatus;
   int? interval;
@@ -62,6 +63,7 @@ class Records {
   String? name;
   String? help;
   ADUserID? aDUserID;
+  ADUserID? aDUser2ID;
   int? mPMaintainID2;
   String? modelname;
   CBPartnerID? cBPartnerID;
@@ -77,6 +79,7 @@ class Records {
     this.created,
     this.createdBy,
     this.dateNextRun,
+    this.dateStart,
     this.description,
     this.docStatus,
     this.interval,
@@ -95,6 +98,7 @@ class Records {
     this.name,
     this.help,
     this.aDUserID,
+    this.aDUser2ID,
     this.mPMaintainID2,
     this.modelname,
     this.cBPartnerID,
@@ -115,6 +119,7 @@ class Records {
         ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
         : null;
     dateNextRun = json['DateNextRun'] as String?;
+    dateStart = json['DateStart'] as String?;
     description = json['Description'] as String?;
     docStatus = (json['DocStatus'] as Map<String, dynamic>?) != null
         ? DocStatus.fromJson(json['DocStatus'] as Map<String, dynamic>)
@@ -148,6 +153,9 @@ class Records {
     aDUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
         ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
         : null;
+    aDUser2ID = (json['AD_User2_ID'] as Map<String, dynamic>?) != null
+        ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
+        : null;
     mPMaintainID2 = json['MP_Maintain_ID2'] as int?;
     modelname = json['model-name'] as String?;
     mpMaintainParentID =
@@ -171,6 +179,7 @@ class Records {
     json['Created'] = created;
     json['CreatedBy'] = createdBy?.toJson();
     json['DateNextRun'] = dateNextRun;
+    json['DateStart'] = dateStart;
     json['Description'] = description;
     json['DocStatus'] = docStatus?.toJson();
     json['Interval'] = interval;
