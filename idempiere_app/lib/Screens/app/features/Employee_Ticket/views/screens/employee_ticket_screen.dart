@@ -11,6 +11,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Employee_Ticket/views/screens/employee_create_ticket.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_create_ticket.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/ticketsjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
@@ -33,13 +34,14 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
-part '../../bindings/humanresource_ticket_binding.dart';
+part '../../bindings/employee_ticket_binding.dart';
 
 // controller
-part '../../controllers/humanresource_ticket_controller.dart';
+part '../../controllers/employee_ticket_controller.dart';
 
 // models
 part '../../models/profile.dart';
@@ -53,8 +55,8 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
-  const HumanResourceTicketScreen({Key? key}) : super(key: key);
+class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
+  const EmployeeTicketScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +154,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
           ),
         ),
 
-        /* floatingActionButtonLocation:
+        floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.home_menu,
@@ -168,7 +170,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                   controller.openTicketType();
                 })
           ],
-        ), */
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -255,6 +257,26 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ExpansionTile(
+                                  trailing: Icon(
+                                    controller._trx.records![index].taskStatus
+                                                ?.id ==
+                                            "9"
+                                        ? Icons.check
+                                        : controller._trx.records![index]
+                                                    .taskStatus?.id ==
+                                                "9"
+                                            ? Icons.cancel_outlined
+                                            : Icons.timelapse,
+                                    color: controller._trx.records![index]
+                                                .taskStatus?.id ==
+                                            "9"
+                                        ? kNotifColor
+                                        : controller._trx.records![index]
+                                                    .taskStatus?.id ==
+                                                "9"
+                                            ? Colors.red
+                                            : Colors.yellow,
+                                  ),
                                   tilePadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   leading: Container(
@@ -265,39 +287,59 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.chat,
-                                        color: Colors.green,
+                                        color: controller._trx.records![index]
+                                                    .rRequestTypeID?.id ==
+                                                controller.genericTicketId
+                                            ? Colors.green
+                                            : Colors.grey,
                                       ),
-                                      tooltip: 'Edit Ticket'.tr,
+                                      tooltip: 'Open Ticket Chat'.tr,
                                       onPressed: () {
-                                        Get.to(const TicketInternalChat(),
-                                            arguments: {
-                                              "ticketid": controller
-                                                  .trx.records![index].id
-                                            });
+                                        if (controller._trx.records![index]
+                                                .rRequestTypeID?.id ==
+                                            controller.genericTicketId) {
+                                          Get.to(const TicketInternalChat(),
+                                              arguments: {
+                                                "ticketid": controller
+                                                    .trx.records![index].id
+                                              });
+                                        }
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index]
-                                            .rRequestTypeID?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          "${controller.trx.records![index].documentNo}_${controller.trx.records![index].rRequestTypeID?.identifier ?? "???"}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
                                   subtitle: Column(children: [
                                     Row(
                                       children: <Widget>[
-                                        const Icon(Icons.description),
+                                        const Icon(
+                                          Icons.event,
+                                          color: Colors.white,
+                                        ),
                                         Expanded(
                                           child: Text(
-                                            controller.trx.records![index]
-                                                    .summary ??
-                                                "??",
+                                            DateTime.tryParse(controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .startDate ??
+                                                        "") ==
+                                                    null
+                                                ? ""
+                                                : "${DateTime.parse(controller._trx.records![index].startDate!).day}/${DateTime.parse(controller._trx.records![index].startDate!).month}/${DateTime.parse(controller._trx.records![index].startDate!).year} ${DateTime.parse(controller._trx.records![index].startDate!).hour}:${DateTime.parse(controller._trx.records![index].startDate!).minute}",
                                             maxLines: 1,
                                             style: const TextStyle(
                                                 color: Colors.white),

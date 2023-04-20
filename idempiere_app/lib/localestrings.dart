@@ -1087,6 +1087,16 @@ class LocaleString extends Translations {
           'All Lead Statuses': 'Tutti gli Stati Lead',
           'Teacher Filter': 'Filtro Docente',
           'Teacher': 'Docente',
+          'Date From': 'Data Da',
+          'Date To': 'Data A',
+          'EXAMS: ': 'ESAMI: ',
+          'Course Attendance': 'Presenza Corsi',
+          'Score': 'Punteggio',
+          'Course List': 'Lista Corsi',
+          'Are you sure you want to finish the Quiz?':
+              'Sicuro di voler terminare il Quiz?',
+          'Send': 'Invia',
+          'Employee Ticket': 'Ticket Dipendente',
         },
       };
 }

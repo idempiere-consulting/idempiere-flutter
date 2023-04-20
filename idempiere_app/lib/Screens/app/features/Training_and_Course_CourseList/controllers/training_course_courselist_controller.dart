@@ -12,12 +12,16 @@ class TrainingCourseCourseListController extends GetxController {
 
   var userFilter = "";
   var businessPartnerFilter = "";
+  var dateStartFilter = "";
+  var dateEndFilter = "";
 
   var selectedUserRadioTile = 0.obs;
   var teacherId = 0;
   var teacherName = "";
   var businessPartnerId = 0.obs;
   var businessPartnerName = "";
+  var dateStartValue = "";
+  var dateEndValue = "";
 
   CourseListJson get trx => _trx;
   bool get dataAvailable => _dataAvailable.value;
@@ -36,7 +40,7 @@ class TrainingCourseCourseListController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/mp_maintain?\$filter= WindowType eq \'T\' and isChild eq \'N\' and AD_Client_ID eq ${GetStorage().read('clientid')}$userFilter$businessPartnerFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '/api/v1/models/mp_maintain?\$filter= WindowType eq \'T\' and isChild eq \'N\' and AD_Client_ID eq ${GetStorage().read('clientid')}$userFilter$businessPartnerFilter$dateStartFilter&\$skip=${(pagesCount.value - 1) * 100}');
 
     var response = await http.get(
       url,

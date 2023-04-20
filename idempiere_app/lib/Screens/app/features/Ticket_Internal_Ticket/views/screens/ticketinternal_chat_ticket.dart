@@ -97,7 +97,7 @@ class TicketInternalChatState extends State<TicketInternalChat> {
 
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/windows/request/${Get.arguments["ticketid"]}');
+        '/api/v1/windows/request-all/${Get.arguments["ticketid"]}');
 
     var response = await http.put(
       url,

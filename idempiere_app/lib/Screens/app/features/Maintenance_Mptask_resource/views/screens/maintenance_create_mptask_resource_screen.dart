@@ -524,8 +524,8 @@ class _CreateMaintenanceMpResourceState
     }
     final now = DateTime.now();
     final checkDate = DateTime.parse(date1);
-    final revisionDate = DateTime.parse(date2);
-    final testDate = DateTime.parse(date3);
+    final revisionDate = DateTime.tryParse(date2);
+    final testDate = DateTime.tryParse(date3);
     final today = DateTime(now.year, now.month, now.day);
 
     if (DateTime(checkDate.year, checkDate.month, checkDate.day) == today) {
@@ -534,28 +534,37 @@ class _CreateMaintenanceMpResourceState
         "LIT_ResourceActivity": {"id": "CHK"},
       });
     }
-    if (DateTime(revisionDate.year, revisionDate.month, revisionDate.day) ==
-        today) {
-      msg.addAll({
-        "AD_User_ID": {"id": GetStorage().read('userId')},
-        "LIT_ResourceActivity": {"id": "REV"},
-      });
+
+    if (revisionDate != null) {
+      if (DateTime(revisionDate.year, revisionDate.month, revisionDate.day) ==
+          today) {
+        msg.addAll({
+          "AD_User_ID": {"id": GetStorage().read('userId')},
+          "LIT_ResourceActivity": {"id": "REV"},
+        });
+      }
     }
-    if (DateTime(testDate.year, testDate.month, testDate.day) == today) {
-      msg.addAll({
-        "AD_User_ID": {"id": GetStorage().read('userId')},
-        "LIT_ResourceActivity": {"id": "TST"},
-      });
+
+    if (testDate != null) {
+      if (DateTime(testDate.year, testDate.month, testDate.day) == today) {
+        msg.addAll({
+          "AD_User_ID": {"id": GetStorage().read('userId')},
+          "LIT_ResourceActivity": {"id": "TST"},
+        });
+      }
     }
-    if (DateTime(testDate.year, testDate.month, testDate.day) == today &&
-        int.parse(manufacturedYearFieldController.text == ""
-                ? "0"
-                : manufacturedYearFieldController.text) ==
-            today.year) {
-      msg.addAll({
-        "AD_User_ID": {"id": GetStorage().read('userId')},
-        "LIT_ResourceActivity": {"id": "CHK"},
-      });
+
+    if (testDate != null) {
+      if (DateTime(testDate.year, testDate.month, testDate.day) == today &&
+          int.parse(manufacturedYearFieldController.text == ""
+                  ? "0"
+                  : manufacturedYearFieldController.text) ==
+              today.year) {
+        msg.addAll({
+          "AD_User_ID": {"id": GetStorage().read('userId')},
+          "LIT_ResourceActivity": {"id": "CHK"},
+        });
+      }
     }
 
     WorkOrderResourceLocalJson trx = WorkOrderResourceLocalJson.fromJson(
@@ -960,9 +969,13 @@ class _CreateMaintenanceMpResourceState
     weightAmtFieldController = TextEditingController(text: "0");
     heightFieldController = TextEditingController(text: "0");
     colorFieldController = TextEditingController(text: "");
-    date3 = (DateTime.now().toString()).substring(0, 10);
+    date3 = (args["perm"])[17] == "N"
+        ? ''
+        : (DateTime.now().toString()).substring(0, 10);
     dateCalc3 = 0;
-    date2 = (DateTime.now().toString()).substring(0, 10);
+    date2 = (args["perm"])[16] == "N"
+        ? ''
+        : (DateTime.now().toString()).substring(0, 10);
     dateCalc3 = 0;
     date1 = (DateTime.now().toString()).substring(0, 10);
     dateCalc3 = 0;

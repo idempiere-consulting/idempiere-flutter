@@ -1,11 +1,13 @@
 part of dashboard;
 
-class HumanResourceTicketController extends GetxController {
+class EmployeeTicketController extends GetxController {
   late TicketsJson _trx;
   late TicketTypeJson _tt;
   var _hasCallSupport = false;
 
   String dropdownValue = "";
+
+  int genericTicketId = 0;
 
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
@@ -58,7 +60,7 @@ class HumanResourceTicketController extends GetxController {
         onChanged: (String? newValue) {
           dropdownValue = newValue!;
           Get.back();
-          Get.to(const CreateHumanResourceTicket(),
+          Get.to(const CreateEmployeeTicket(),
               arguments: {"id": dropdownValue});
         },
         items: _tt.records!.map((list) {
@@ -243,6 +245,12 @@ class HumanResourceTicketController extends GetxController {
 
       dropdownValue = _tt.records![0].id.toString();
 
+      for (var element in _tt.records!) {
+        if (element.lITRequestSubType?.id == 'HRG') {
+          genericTicketId = element.id ?? 0;
+        }
+      }
+
       //businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
       //getTickets();
       //print(businessPartnerId);
@@ -291,11 +299,16 @@ class HumanResourceTicketController extends GetxController {
       }
     }
     _dataAvailable.value = false;
+
+    var now = DateTime.now();
+    DateTime fiftyDaysAgo = now.subtract(const Duration(days: 50));
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/r_request?\$filter= StartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -432,7 +445,7 @@ class HumanResourceTicketController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "iDempiere APP",
+      projectName: "Employee".tr,
       releaseTime: DateTime.now(),
     );
   }

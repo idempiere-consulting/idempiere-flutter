@@ -59,6 +59,93 @@ class TrainingCourseSurveyScreen
         return false;
       },
       child: Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder()),
+          //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+          color: Theme.of(context).cardColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.getCourseSurveys();
+                          },
+                          child: Row(
+                            children: [
+                              //Icon(Icons.filter_alt),
+                              Obx(() => controller.dataAvailable
+                                  ? Text("EXAMS: ".tr +
+                                      controller.trx.rowcount.toString())
+                                  : Text("EXAMS: ".tr)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                    ],
+                  )
+                ],
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount > 1) {
+                              controller.pagesCount.value -= 1;
+                              controller.getCourseSurveys();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                        Obx(() => Text(
+                            "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount <
+                                controller.pagesTot.value) {
+                              controller.pagesCount.value += 1;
+                              controller.getCourseSurveys();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -74,19 +161,19 @@ class TrainingCourseSurveyScreen
             mobileBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
+                /* _buildProfile(data: controller.getProfil()),
                 const SizedBox(height: kSpacing),
                 Row(
                   children: [
                     Container(
                       margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
-                          ? Text("${"COURSES: ".tr}${controller.trx.rowcount}")
-                          : Text("COURSES: ".tr)),
+                          ? Text("${"EXAMS: ".tr}${controller.trx.rowcount}")
+                          : Text("EXAMS: ".tr)),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -114,7 +201,7 @@ class TrainingCourseSurveyScreen
                     ),
                   ],
                 ),
-                const SizedBox(height: kSpacing),
+                const SizedBox(height: kSpacing), */
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -147,17 +234,18 @@ class TrainingCourseSurveyScreen
                                       ),
                                       tooltip: 'Take the Quiz'.tr,
                                       onPressed: () {
+                                        print(controller.trx.records![index]
+                                            .mpResourceSurveyID?.id);
                                         //log("info button pressed");
                                         Get.toNamed('/QuizCourse', arguments: {
-                                          "id":
-                                              controller.trx.records![index].id,
+                                          "id": controller.trx.records![index]
+                                              .mpResourceSurveyID?.id,
                                         });
                                       },
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].mProductID
-                                            ?.identifier ??
+                                    controller.trx.records![index].name ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -169,12 +257,14 @@ class TrainingCourseSurveyScreen
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .mProductID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -219,19 +309,19 @@ class TrainingCourseSurveyScreen
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
+                /* _buildProfile(data: controller.getProfil()),
                 const SizedBox(height: kSpacing),
                 Row(
                   children: [
                     Container(
                       margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
-                          ? Text("${"COURSES: ".tr}${controller.trx.rowcount}")
-                          : Text("COURSES: ".tr)),
+                          ? Text("${"EXAMS: ".tr}${controller.trx.rowcount}")
+                          : Text("EXAMS: ".tr)),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -259,7 +349,7 @@ class TrainingCourseSurveyScreen
                     ),
                   ],
                 ),
-                const SizedBox(height: kSpacing),
+                const SizedBox(height: kSpacing), */
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -292,17 +382,18 @@ class TrainingCourseSurveyScreen
                                       ),
                                       tooltip: 'Take the Quiz'.tr,
                                       onPressed: () {
+                                        print(controller.trx.records![index]
+                                            .mpResourceSurveyID?.id);
                                         //log("info button pressed");
                                         Get.toNamed('/QuizCourse', arguments: {
-                                          "id":
-                                              controller.trx.records![index].id,
+                                          "id": controller.trx.records![index]
+                                              .mpResourceSurveyID?.id,
                                         });
                                       },
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].mProductID
-                                            ?.identifier ??
+                                    controller.trx.records![index].name ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -314,12 +405,14 @@ class TrainingCourseSurveyScreen
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .mProductID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -364,19 +457,19 @@ class TrainingCourseSurveyScreen
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
+                /* _buildProfile(data: controller.getProfil()),
                 const SizedBox(height: kSpacing),
                 Row(
                   children: [
                     Container(
                       margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
-                          ? Text("${"COURSES: ".tr}${controller.trx.rowcount}")
-                          : Text("COURSES: ".tr)),
+                          ? Text("${"EXAMS: ".tr}${controller.trx.rowcount}")
+                          : Text("EXAMS: ".tr)),
                     ),
                     /* Container(
                       margin: const EdgeInsets.only(left: 40),
@@ -404,7 +497,7 @@ class TrainingCourseSurveyScreen
                     ),
                   ],
                 ),
-                const SizedBox(height: kSpacing),
+                const SizedBox(height: kSpacing), */
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -437,17 +530,18 @@ class TrainingCourseSurveyScreen
                                       ),
                                       tooltip: 'Take the Quiz'.tr,
                                       onPressed: () {
+                                        print(controller.trx.records![index]
+                                            .mpResourceSurveyID?.id);
                                         //log("info button pressed");
                                         Get.toNamed('/QuizCourse', arguments: {
-                                          "id":
-                                              controller.trx.records![index].id,
+                                          "id": controller.trx.records![index]
+                                              .mpResourceSurveyID?.id,
                                         });
                                       },
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].mProductID
-                                            ?.identifier ??
+                                    controller.trx.records![index].name ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -459,12 +553,14 @@ class TrainingCourseSurveyScreen
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .mProductID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -527,6 +623,40 @@ class TrainingCourseSurveyScreen
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

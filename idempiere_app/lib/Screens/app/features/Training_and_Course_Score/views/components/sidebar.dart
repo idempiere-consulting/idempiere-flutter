@@ -29,7 +29,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 4,
+              initialSelected: 3,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -37,21 +37,9 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person_add,
-                  icon: EvaIcons.personOutline,
-                  label: "Training and Course",
-                  visible: int.parse(list[52], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
-                ),
-                SelectionButtonData(
                   activeIcon: Icons.paid,
                   icon: Icons.paid_outlined,
-                  label: "Course Attendance",
+                  label: "Course Attendance".tr,
                   visible: int.parse(list[53], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -63,7 +51,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.contact_mail,
                   icon: Icons.contact_mail_outlined,
-                  label: "Quiz",
+                  label: "Quiz".tr,
                   visible: int.parse(list[54], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -75,7 +63,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.contact_mail,
                   icon: Icons.contact_mail_outlined,
-                  label: "Score",
+                  label: "Score".tr,
                   visible: int.parse(list[55], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -87,7 +75,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person_add,
                   icon: EvaIcons.personOutline,
-                  label: "Course List",
+                  label: "Course List".tr,
                   visible: int.parse(list[57], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -104,13 +92,11 @@ class _Sidebar extends StatelessWidget {
                   case 0:
                     Get.offNamed('/Dashboard');
                     break;
+
                   case 1:
-                    Get.offNamed('/TrainingCourse');
-                    break;
-                  case 2:
                     Get.offNamed('/TrainingCoursePresence');
                     break;
-                  case 3:
+                  case 2:
                     /* Get.defaultDialog(
                       title: "Your Quiz Code:",
                       content: RoundedPasswordField(
@@ -151,10 +137,10 @@ class _Sidebar extends StatelessWidget {
                     ); */
                     Get.offNamed('/TrainingCourseSurvey');
                     break;
-                  case 4:
+                  case 3:
                     Get.offNamed('/TrainingCourseScore');
                     break;
-                  case 5:
+                  case 4:
                     Get.offNamed('/TrainingCourseCourseListScreen');
                     break;
                   default:

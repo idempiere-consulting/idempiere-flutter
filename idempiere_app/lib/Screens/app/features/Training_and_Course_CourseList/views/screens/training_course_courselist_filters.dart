@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,6 +14,7 @@ import 'package:idempiere_app/Screens/app/features/Training_and_Course_CourseLis
 
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 //models
@@ -29,6 +32,7 @@ class TrainingCourseCourseListFilter extends StatefulWidget {
 class _TrainingCourseCourseListFilterState
     extends State<TrainingCourseCourseListFilter> {
   applyFilters() {
+    var inputFormat = DateFormat('dd/MM/yyyy');
     if (selectedUserRadioTile > 0) {
       if (selectedUserRadioTile == 2 && teacherId > 0) {
         Get.find<TrainingCourseCourseListController>().userFilter =
@@ -48,10 +52,43 @@ class _TrainingCourseCourseListFilterState
       Get.find<TrainingCourseCourseListController>().businessPartnerFilter = "";
     }
 
+    if (dateStartFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateStartFieldController.text);
+
+        Get.find<TrainingCourseCourseListController>().dateStartFilter =
+            " and DateStart ge '${DateFormat('yyyy-MM-dd').format(date)} 00:00:00'";
+        Get.find<TrainingCourseCourseListController>().dateStartValue =
+            dateStartFieldController.text;
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      Get.find<TrainingCourseCourseListController>().dateStartFilter = "";
+      Get.find<TrainingCourseCourseListController>().dateStartValue = '';
+    }
+
+    if (dateEndFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateEndFieldController.text);
+
+        Get.find<TrainingCourseCourseListController>().dateEndFilter =
+            " and DateStart le '${DateFormat('yyyy-MM-dd').format(date)} 23:59:59'";
+        Get.find<TrainingCourseCourseListController>().dateEndValue =
+            dateEndFieldController.text;
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      Get.find<TrainingCourseCourseListController>().dateStartFilter = "";
+      Get.find<TrainingCourseCourseListController>().dateStartValue = '';
+    }
+
     Get.find<TrainingCourseCourseListController>().selectedUserRadioTile.value =
         selectedUserRadioTile;
-    Get.find<TrainingCourseCourseListController>().businessPartnerId.value =
-        businessPartnerId;
+    Get.find<TrainingCourseCourseListController>().teacherId = teacherId;
+    Get.find<TrainingCourseCourseListController>().teacherName =
+        teacherFieldController.text;
     Get.find<TrainingCourseCourseListController>().businessPartnerName =
         businessPartnerFieldController.text;
 
@@ -116,6 +153,8 @@ class _TrainingCourseCourseListFilterState
   int selectedUserRadioTile = 0;
   int teacherId = 0;
   late TextEditingController teacherFieldController;
+  late TextEditingController dateStartFieldController;
+  late TextEditingController dateEndFieldController;
 
   int businessPartnerId = 0;
   late TextEditingController businessPartnerFieldController;
@@ -130,6 +169,9 @@ class _TrainingCourseCourseListFilterState
     businessPartnerId = args['businessPartnerId'] ?? 0;
     businessPartnerFieldController =
         TextEditingController(text: args['businessPartnerName'] ?? "");
+    dateStartFieldController =
+        TextEditingController(text: args['dateStart'] ?? "");
+    dateEndFieldController = TextEditingController(text: args['dateEnd'] ?? "");
     //getAllDocType();
     //getAllBPartners();
   }
@@ -212,8 +254,7 @@ class _TrainingCourseCourseListFilterState
                                           });
                                         }
                                       },
-                                      controller:
-                                          businessPartnerFieldController,
+                                      controller: teacherFieldController,
                                       //autofocus: true,
 
                                       decoration: InputDecoration(
@@ -329,9 +370,55 @@ class _TrainingCourseCourseListFilterState
                                   ),
                       ),
                     ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: TextField(
+                        // maxLength: 10,
+                        keyboardType: TextInputType.datetime,
+                        controller: dateStartFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(EvaIcons.calendarOutline),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Date From'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          hintText: 'DD/MM/YYYY',
+                          counterText: '',
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                          LengthLimitingTextInputFormatter(10),
+                          _DateFormatterCustom(),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: TextField(
+                        // maxLength: 10,
+                        keyboardType: TextInputType.datetime,
+                        controller: dateEndFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(EvaIcons.calendarOutline),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Date To'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          hintText: 'DD/MM/YYYY',
+                          counterText: '',
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                          LengthLimitingTextInputFormatter(10),
+                          _DateFormatterCustom(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -351,6 +438,97 @@ class _TrainingCourseCourseListFilterState
           },
         ),
       ),
+    );
+  }
+}
+
+class _DateFormatterCustom extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue prevText, TextEditingValue currText) {
+    int selectionIndex;
+
+    // Get the previous and current input strings
+    String pText = prevText.text;
+    String cText = currText.text;
+    // Abbreviate lengths
+    int cLen = cText.length;
+    int pLen = pText.length;
+
+    if (cLen == 1) {
+      // Can only be 0, 1, 2 or 3
+      if (int.parse(cText) > 3) {
+        // Remove char
+        cText = '';
+      }
+    } else if (cLen == 2 && pLen == 1) {
+      // Days cannot be greater than 31
+      int dd = int.parse(cText.substring(0, 2));
+      if (dd == 0 || dd > 31) {
+        // Remove char
+        cText = cText.substring(0, 1);
+      } else {
+        // Add a / char
+        cText += '/';
+      }
+    } else if (cLen == 4) {
+      // Can only be 0 or 1
+      if (int.parse(cText.substring(3, 4)) > 1) {
+        // Remove char
+        cText = cText.substring(0, 3);
+      }
+    } else if (cLen == 5 && pLen == 4) {
+      // Month cannot be greater than 12
+      int mm = int.parse(cText.substring(3, 5));
+      if (mm == 0 || mm > 12) {
+        // Remove char
+        cText = cText.substring(0, 4);
+      } else {
+        // Add a / char
+        cText += '/';
+      }
+    } else if ((cLen == 3 && pLen == 4) || (cLen == 6 && pLen == 7)) {
+      // Remove / char
+      cText = cText.substring(0, cText.length - 1);
+    } else if (cLen == 3 && pLen == 2) {
+      if (int.parse(cText.substring(2, 3)) > 1) {
+        // Replace char
+        cText = '${cText.substring(0, 2)}/';
+      } else {
+        // Insert / char
+        cText =
+            '${cText.substring(0, pLen)}/${cText.substring(pLen, pLen + 1)}';
+      }
+    } else if (cLen == 6 && pLen == 5) {
+      // Can only be 1 or 2 - if so insert a / char
+      int y1 = int.parse(cText.substring(5, 6));
+      if (y1 < 1 || y1 > 2) {
+        // Replace char
+        cText = '${cText.substring(0, 5)}/';
+      } else {
+        // Insert / char
+        cText = '${cText.substring(0, 5)}/${cText.substring(5, 6)}';
+      }
+    } else if (cLen == 7) {
+      // Can only be 1 or 2
+      int y1 = int.parse(cText.substring(6, 7));
+      if (y1 < 1 || y1 > 2) {
+        // Remove char
+        cText = cText.substring(0, 6);
+      }
+    } else if (cLen == 8) {
+      // Can only be 19 or 20
+      int y2 = int.parse(cText.substring(6, 8));
+      if (y2 < 19 || y2 > 20) {
+        // Remove char
+        cText = cText.substring(0, 7);
+      }
+    }
+
+    selectionIndex = cText.length;
+    return TextEditingValue(
+      text: cText,
+      selection: TextSelection.collapsed(offset: selectionIndex),
     );
   }
 }

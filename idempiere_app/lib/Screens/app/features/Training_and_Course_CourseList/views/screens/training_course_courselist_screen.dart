@@ -163,7 +163,9 @@ class TrainingCourseCourseListScreen
                 child: Obx(() => Icon(
                       MaterialSymbols.filter_alt_filled,
                       color: controller.selectedUserRadioTile.value == 0 &&
-                              controller.businessPartnerId.value == 0
+                              controller.businessPartnerId.value == 0 &&
+                              controller.dateStartValue == "" &&
+                              controller.dateEndValue == ""
                           ? Colors.white
                           : kNotifColor,
                     )),
@@ -176,6 +178,8 @@ class TrainingCourseCourseListScreen
                         'businessPartnerName': controller.businessPartnerName,
                         'teacherId': controller.teacherId,
                         'teacherName': controller.teacherName,
+                        'dateStart': controller.dateStartValue,
+                        'dateEnd': controller.dateEndValue,
                       });
                 }),
             /* SpeedDialChild(

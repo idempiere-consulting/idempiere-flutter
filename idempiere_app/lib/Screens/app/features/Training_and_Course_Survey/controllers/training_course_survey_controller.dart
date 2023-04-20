@@ -7,6 +7,9 @@ class TrainingCourseSurveyController extends GetxController {
   late TrainingCourseJson _trx;
   //var passwordFieldController = TextEditingController();
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
   TrainingCourseJson get trx => _trx;
   bool get dataAvailable => _dataAvailable.value;
 
@@ -24,7 +27,7 @@ class TrainingCourseSurveyController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/lit_trainingcourse_v?\$filter= AD_User_ID eq $adUserId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/lit_trainingcourse_v?\$filter= mp_resource_survey_ID neq null and AD_User_ID eq $adUserId and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -35,6 +38,7 @@ class TrainingCourseSurveyController extends GetxController {
 
     if (response.statusCode == 200) {
       _trx = TrainingCourseJson.fromJson(jsonDecode(response.body));
+      pagesTot.value = _trx.pagecount!;
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {

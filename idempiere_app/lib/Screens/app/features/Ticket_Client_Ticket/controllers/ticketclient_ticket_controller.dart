@@ -151,10 +151,11 @@ class TicketClientTicketController extends GetxController {
   }
 
   Future<void> getBusinessPartner() async {
+    final protocol = GetStorage().read('protocol');
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
@@ -187,9 +188,10 @@ class TicketClientTicketController extends GetxController {
   Future<void> getClosedTicketsID() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/R_Status?\$filter= Value eq \'R98\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/R_Status?\$filter= Value eq \'R99\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{

@@ -192,7 +192,7 @@ class CourseQuizController extends GetxController {
       String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
       var url = Uri.parse(
-          '$protocol://$ip/api/v1/models/mp_resource_survey?\$filter= MP_Maintain_Resource_ID eq ${Get.arguments["id"]} and LIT_SurveyCategory eq \'SU\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+          '$protocol://$ip/api/v1/models/mp_resource_survey?\$filter= mp_resource_survey_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}'); //and LIT_SurveyCategory eq \'SU\'
 
       var response = await http.get(
         url,
@@ -212,7 +212,7 @@ class CourseQuizController extends GetxController {
     } else {
       Get.snackbar(
         "No internet connection!".tr,
-        "Failed to update records.".tr,
+        "Failed to get records.".tr,
         icon: const Icon(
           Icons.signal_wifi_connected_no_internet_4,
           color: Colors.red,

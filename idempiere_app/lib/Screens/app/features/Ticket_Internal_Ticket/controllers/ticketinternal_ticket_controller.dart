@@ -76,6 +76,8 @@ class TicketInternalTicketController extends GetxController {
       }
       //print(ticketFilter);
       getTickets();
+    } else {
+      print(response.body);
     }
   }
 
@@ -128,10 +130,11 @@ class TicketInternalTicketController extends GetxController {
   }
 
   Future<void> getBusinessPartner() async {
+    final protocol = GetStorage().read('protocol');
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
@@ -158,9 +161,10 @@ class TicketInternalTicketController extends GetxController {
   }
 
   Future<void> getClosedTicketsID() async {
+    final protocol = GetStorage().read('protocol');
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/R_Status?\$filter= Value eq \'R98\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
@@ -181,7 +185,7 @@ class TicketInternalTicketController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
     } else {
-      //print(response.body);
+      print(response.body);
     }
   }
 
@@ -214,7 +218,7 @@ class TicketInternalTicketController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
     } else {
-      //print(response.body);
+      print(response.body);
     }
   }
 
@@ -275,6 +279,8 @@ class TicketInternalTicketController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      print(response.body);
     }
   }
 
