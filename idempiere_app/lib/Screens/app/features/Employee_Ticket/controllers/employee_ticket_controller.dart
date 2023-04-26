@@ -308,7 +308,7 @@ class EmployeeTicketController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/r_request?\$filter= StartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/r_request?\$filter= StartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= StartDate');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -357,6 +357,46 @@ class EmployeeTicketController extends GetxController {
       Get.snackbar(
         "Errore!",
         "Il Ticket non è stato chiuso",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  deleteTicket(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/r_request/$id');
+    //print(msg);
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //Get.find<CRMLeadController>().getLeads();
+      getTickets();
+      //Get.back();
+      //print("done!");
+
+      Get.snackbar(
+        "Done!".tr,
+        "The record has been deleted".tr,
+        icon: const Icon(
+          Icons.delete,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      print(response.body);
+      Get.snackbar(
+        "Error!".tr,
+        "Record not deleted".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,

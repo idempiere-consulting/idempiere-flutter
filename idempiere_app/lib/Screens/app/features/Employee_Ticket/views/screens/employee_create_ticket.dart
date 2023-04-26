@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
-import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_ticket_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Employee_Ticket/views/screens/employee_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/freeslotjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -88,6 +88,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
       "C_BPartner_ID": {"id": businessPartnerId},
       "StartDate": "${formattedDateFrom}T00:00:00Z",
       "CloseDate": "${formattedDateTo}T00:00:00Z",
+      "TaskStatus": '0',
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
@@ -107,7 +108,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
         sendTicketAttachedImage(json["id"]);
         //print(response.body);
       }
-      Get.find<HumanResourceTicketController>().getTickets();
+      Get.find<EmployeeTicketController>().getTickets();
       Get.back();
       //print("done!");
       Get.snackbar(
@@ -160,10 +161,11 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
       "StartDate": "${formattedDateFrom}T$timeStart:00Z",
       "CloseDate": "${formattedDateFrom}T$timeEnd:00Z",
       "Result": noteFieldController.text,
+      "TaskStatus": '0',
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/windows/request-all');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/R_Request');
     //print(msg);
     var response = await http.post(
       url,
@@ -179,7 +181,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
         sendTicketAttachedImage(json["id"]);
         //print(response.body);
       }
-      Get.find<HumanResourceTicketController>().getTickets();
+      Get.find<EmployeeTicketController>().getTickets();
       Get.back();
       //print("done!");
       Get.snackbar(
@@ -223,6 +225,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
       "Summary": nameFieldController.text,
       "ConfidentialTypeEntry": {"id": "C"},
       "C_BPartner_ID": {"id": businessPartnerId},
+      "TaskStatus": '0',
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
@@ -242,7 +245,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
         sendTicketAttachedImage(json["id"]);
         //print(response.body);
       }
-      Get.find<HumanResourceTicketController>().getTickets();
+      Get.find<EmployeeTicketController>().getTickets();
       Get.back();
       //print("done!");
       Get.snackbar(
@@ -766,6 +769,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -796,6 +800,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                     // padding: const EdgeInsets.all(10),
                     width: size.width,
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.calendar_month),
                         border: const OutlineInputBorder(),
@@ -833,6 +838,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                     width: size.width,
 
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.access_time),
                         border: const OutlineInputBorder(),
@@ -865,6 +871,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                     margin: const EdgeInsets.all(10),
                     width: size.width,
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.access_time),
                         border: const OutlineInputBorder(),
@@ -892,21 +899,6 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                   ),
                 ),
                 Visibility(
-                  visible: ticketTypeValue == "HRP",
-                  child: Container(
-                    margin: const EdgeInsets.all(10),
-                    child: TextField(
-                      controller: noteFieldController,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.badge),
-                        border: const OutlineInputBorder(),
-                        labelText: 'Note'.tr,
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
                   visible: ticketTypeValue == "HRH" || ticketTypeValue == "HRI",
                   child: Container(
                     margin: const EdgeInsets.all(10),
@@ -919,6 +911,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -939,6 +932,21 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       },
                       // ignore: avoid_print
                       onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP" || ticketTypeValue == "HRH",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: noteFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.badge),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Note'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
@@ -1113,6 +1121,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -1149,6 +1158,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),

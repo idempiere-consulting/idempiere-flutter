@@ -87,6 +87,7 @@ class PLRecords {
   final LitProductSizeID? litProductSizeID;
   final String? imageUrl;
   final String? sku;
+  final String? dateRestock;
   final String? sizes;
 
   PLRecords(
@@ -145,6 +146,7 @@ class PLRecords {
       this.adPrintColorID,
       this.sku,
       this.sizes,
+      this.dateRestock,
       this.imageUrl});
 
   PLRecords.fromJson(Map<String, dynamic> json)
@@ -234,6 +236,7 @@ class PLRecords {
                 : null,
         imageUrl = json['ImageURL'] as String?,
         sku = json['SKU'] as String?,
+        dateRestock = json['lit_DateReStock'] as String?,
         sizes = json['sizes'] as String?,
         price = json['PriceList'] as num?;
 

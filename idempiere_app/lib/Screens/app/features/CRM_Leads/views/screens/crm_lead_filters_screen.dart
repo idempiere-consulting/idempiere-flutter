@@ -87,7 +87,7 @@ class _CRMFilterLeadState extends State<CRMFilterLead> {
 
     if (sourceId != "0") {
       Get.find<CRMLeadController>().sourceFilter =
-          " and LeadStatus eq '$statusId'";
+          " and LeadSource eq '$sourceId'";
     } else {
       Get.find<CRMLeadController>().sourceFilter = "";
     }

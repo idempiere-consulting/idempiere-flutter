@@ -91,9 +91,9 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                             children: [
                               //Icon(Icons.filter_alt),
                               Obx(() => controller.dataAvailable
-                                  ? Text("TICKET HR: ".tr +
+                                  ? Text("TICKET: ".tr +
                                       controller.trx.rowcount.toString())
-                                  : Text("TICKET HR: ".tr)),
+                                  : Text("TICKET: ".tr)),
                             ],
                           ),
                         ),
@@ -379,7 +379,7 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "${"Summary".tr}: ",
+                                              "${"Note".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -410,14 +410,59 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                           ],
                                         ),
                                         Row(
+                                          children: [
+                                            Text(
+                                              "${"Assigned To".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .salesRepID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Answer".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller.trx
+                                                      .records![index].help ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
                                             IconButton(
-                                              icon: const Icon(Icons.check),
+                                              icon: const Icon(Icons.delete),
                                               onPressed: () {
-                                                controller
-                                                    .checkcloseTicket(index);
+                                                Get.defaultDialog(
+                                                    title: "Delete Ticket",
+                                                    middleText:
+                                                        "Are you sure you want to delete the Ticket?",
+                                                    //contentPadding: const EdgeInsets.all(2.0),
+                                                    barrierDismissible: true,
+                                                    textCancel: "Cancel",
+                                                    textConfirm: "Confirm",
+                                                    onConfirm: () {
+                                                      Get.back();
+                                                      controller.deleteTicket(
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .id!);
+                                                    });
                                               },
                                             ),
                                             IconButton(
