@@ -5,6 +5,8 @@ class HumanResourceTicketController extends GetxController {
   late TicketTypeJson _tt;
   var _hasCallSupport = false;
 
+  int genericTicketId = 0;
+
   String dropdownValue = "";
 
   var pagesCount = 1.obs;
@@ -243,6 +245,12 @@ class HumanResourceTicketController extends GetxController {
 
       dropdownValue = _tt.records![0].id.toString();
 
+      for (var element in _tt.records!) {
+        if (element.lITRequestSubType?.id == 'HRG') {
+          genericTicketId = element.id ?? 0;
+        }
+      }
+
       //businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
       //getTickets();
       //print(businessPartnerId);
@@ -295,7 +303,7 @@ class HumanResourceTicketController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= StartDate');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -313,7 +321,9 @@ class HumanResourceTicketController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -321,7 +331,7 @@ class HumanResourceTicketController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
-      "R_Status_ID": 1000024,
+      "TaskStatus": "X",
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
@@ -344,6 +354,41 @@ class HumanResourceTicketController extends GetxController {
       Get.snackbar(
         "Errore!",
         "Il Ticket non è stato chiuso",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> confirmTicket(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final msg = jsonEncode({
+      "TaskStatus": "9",
+    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/r_request/${trx.records![index].id}');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      getTickets();
+      //print("done!");
+      //completeOrder(index);
+    } else {
+      //print(response.body);
+      Get.snackbar(
+        "Error!".tr,
+        "Ticket not confirmed".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,

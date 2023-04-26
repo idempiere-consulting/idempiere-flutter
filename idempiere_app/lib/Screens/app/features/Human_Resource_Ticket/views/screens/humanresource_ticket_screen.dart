@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -32,7 +31,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -255,6 +254,26 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ExpansionTile(
+                                  trailing: Icon(
+                                    controller._trx.records![index].taskStatus
+                                                ?.id ==
+                                            "9"
+                                        ? Icons.check
+                                        : controller._trx.records![index]
+                                                    .taskStatus?.id ==
+                                                "9"
+                                            ? Icons.cancel_outlined
+                                            : Icons.timelapse,
+                                    color: controller._trx.records![index]
+                                                .taskStatus?.id ==
+                                            "9"
+                                        ? kNotifColor
+                                        : controller._trx.records![index]
+                                                    .taskStatus?.id ==
+                                                "9"
+                                            ? Colors.red
+                                            : Colors.yellow,
+                                  ),
                                   tilePadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   leading: Container(
@@ -265,39 +284,59 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.chat,
-                                        color: Colors.green,
+                                        color: controller._trx.records![index]
+                                                    .rRequestTypeID?.id ==
+                                                controller.genericTicketId
+                                            ? Colors.green
+                                            : Colors.grey,
                                       ),
-                                      tooltip: 'Edit Ticket'.tr,
+                                      tooltip: 'Open Ticket Chat'.tr,
                                       onPressed: () {
-                                        Get.to(const TicketInternalChat(),
-                                            arguments: {
-                                              "ticketid": controller
-                                                  .trx.records![index].id
-                                            });
+                                        if (controller._trx.records![index]
+                                                .rRequestTypeID?.id ==
+                                            controller.genericTicketId) {
+                                          Get.to(const TicketInternalChat(),
+                                              arguments: {
+                                                "ticketid": controller
+                                                    .trx.records![index].id
+                                              });
+                                        }
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index]
-                                            .rRequestTypeID?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          "${controller.trx.records![index].documentNo}_${controller.trx.records![index].rRequestTypeID?.identifier ?? "???"}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
                                   subtitle: Column(children: [
                                     Row(
                                       children: <Widget>[
-                                        const Icon(Icons.description),
+                                        const Icon(
+                                          Icons.event,
+                                          color: Colors.white,
+                                        ),
                                         Expanded(
                                           child: Text(
-                                            controller.trx.records![index]
-                                                    .summary ??
-                                                "??",
+                                            DateTime.tryParse(controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .startDate ??
+                                                        "") ==
+                                                    null
+                                                ? ""
+                                                : "${DateTime.parse(controller._trx.records![index].startDate!).day}/${DateTime.parse(controller._trx.records![index].startDate!).month}/${DateTime.parse(controller._trx.records![index].startDate!).year} ${DateTime.parse(controller._trx.records![index].startDate!).hour}:${DateTime.parse(controller._trx.records![index].startDate!).minute}",
                                             maxLines: 1,
                                             style: const TextStyle(
                                                 color: Colors.white),
@@ -337,7 +376,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "${"Summary".tr}: ",
+                                              "${"Note".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -368,15 +407,84 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
                                           ],
                                         ),
                                         Row(
+                                          children: [
+                                            Text(
+                                              "${"Assigned To".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .salesRepID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Answer".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller.trx
+                                                      .records![index].help ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            IconButton(
-                                              icon: const Icon(Icons.check),
-                                              onPressed: () {
-                                                controller
-                                                    .checkcloseTicket(index);
-                                              },
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .taskStatus
+                                                      ?.id !=
+                                                  "9",
+                                              child: IconButton(
+                                                tooltip: 'Confirm Ticket'.tr,
+                                                icon: const Icon(Icons.check),
+                                                onPressed: () {
+                                                  Get.defaultDialog(
+                                                      title:
+                                                          "Confirm Ticket".tr,
+                                                      middleText:
+                                                          "Are you sure you want to confirm the Ticket?",
+                                                      //contentPadding: const EdgeInsets.all(2.0),
+                                                      barrierDismissible: true,
+                                                      textCancel: "Cancel",
+                                                      textConfirm: "Confirm",
+                                                      onConfirm: () {
+                                                        Get.back();
+                                                        controller
+                                                            .confirmTicket(
+                                                                index);
+                                                      });
+                                                },
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .taskStatus
+                                                      ?.id !=
+                                                  "9",
+                                              child: IconButton(
+                                                tooltip: 'Close Ticket'.tr,
+                                                icon: const Icon(Icons.cancel),
+                                                onPressed: () {
+                                                  controller
+                                                      .checkcloseTicket(index);
+                                                },
+                                              ),
                                             ),
                                             IconButton(
                                               icon:

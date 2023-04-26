@@ -9,6 +9,7 @@ class ProductCheckout {
   String? imageUrl;
   ADPrintColorID? adPrintColorID;
   LitProductSizeID? litProductSizeID;
+  String? datePromised;
 
   ProductCheckout(
       {required this.id,
@@ -18,7 +19,8 @@ class ProductCheckout {
       this.imageData,
       this.imageUrl,
       this.adPrintColorID,
-      this.litProductSizeID});
+      this.litProductSizeID,
+      this.datePromised});
 }
 
 /* class ADPrintColorID {

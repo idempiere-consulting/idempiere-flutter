@@ -402,7 +402,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //print(utf8.decode(response.bodyBytes));
+      print(utf8.decode(response.bodyBytes));
 
       /* filteredProds =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
@@ -451,7 +451,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       if (filteredProds.records!.isNotEmpty) {
         chosenCategoryName.value =
-            filteredProds.records![0].productCategoryName2!;
+            filteredProds.records![0].productCategoryName2 ?? " ";
         prodCategoriesAvailable.value == true;
         productFilterAvailable.value = true;
       }
@@ -818,7 +818,9 @@ class PortalMpSalesOrderB2BController extends GetxController {
     for (var element in productList) {
       list.add({
         "M_Product_ID": {"id": element.id},
-        "qtyEntered": element.qty
+        "qtyEntered": element.qty,
+        element.datePromised != null ? "DatePromised" : "aaaaaaa":
+            element.datePromised ?? "",
       });
     }
 
@@ -859,7 +861,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       },
     );
     if (response.statusCode == 201) {
-      //print(response.body);
+      print(response.body);
 
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 
@@ -871,7 +873,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       productList = [];
       shoppingCartCounter.value = 0;
       updateTotal();
-
+      getDocument(json["id"]);
       /* Get.find<CRMSalesOrderController>().getSalesOrders();
       Get.back(); */
       //Get.off('/PortalMpSalesOrderB2B');
@@ -899,6 +901,41 @@ class PortalMpSalesOrderB2BController extends GetxController {
     }
   }
 
+  Future<void> getDocument(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/sales-order/$id/print');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      String pdfString = json["exportFile"];
+      //print(pdfString);
+
+      List<int> list = base64.decode(pdfString);
+      Uint8List bytes = Uint8List.fromList(list);
+      //print(bytes);
+
+      //final pdf = await rootBundle.load('document.pdf');
+      await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes);
+
+      //return json.records!;
+    } else {
+      //throw Exception("Failed to load PDF");
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   //grid
 
   final List<PlutoColumn> columns = [];
@@ -909,7 +946,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   String gridSkuSelected = "";
 
-  Map<String, String> gridProdValueList = {};
+  Map<String, List<dynamic>> gridProdValueList = {};
 
   openGridPopUp(BuildContext context, String sku) {
     PlutoGridPopupCustom(
@@ -926,8 +963,8 @@ class PortalMpSalesOrderB2BController extends GetxController {
           children: [
             Text(
               sku,
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ],
         );
@@ -972,9 +1009,12 @@ class PortalMpSalesOrderB2BController extends GetxController {
         //print(event);
       },
       onChanged: (event) {
-        //print('$gridSkuSelected.${columns[event.columnIdx].field}');
+        print(rows[1].cells[columns[event.columnIdx].field]!.value);
         gridProdValueList.addAll({
-          '$gridSkuSelected.${columns[event.columnIdx].field}': event.value,
+          '$gridSkuSelected.${columns[event.columnIdx].field}': [
+            event.value,
+            rows[1].cells[columns[event.columnIdx].field]!.value
+          ],
         });
         //print(event);
         //event.
@@ -989,7 +1029,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     final protocol = GetStorage().read('protocol');
 
     gridProdValueList.forEach((key, value) async {
-      if (0 < (int.tryParse(value) ?? 0)) {
+      if (0 < (int.tryParse(value[0]) ?? 0)) {
         var url = Uri.parse(
             '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= Value eq \'$key\'');
 
@@ -1009,13 +1049,16 @@ class PortalMpSalesOrderB2BController extends GetxController {
             id: data.records![0].id!,
             name: data.records![0].name!,
             qty: int.parse(
-              value,
+              value[0],
             ),
             cost: data.records![0].price ?? 0,
             adPrintColorID: data.records![0].adPrintColorID,
             litProductSizeID: data.records![0].litProductSizeID,
             imageData: data.records![0].imageData,
             imageUrl: data.records![0].imageUrl,
+            datePromised: int.parse(value[0]) > int.parse(value[1])
+                ? data.records![0].dateRestock
+                : null,
           ));
 
           shoppingCartCounter.value++;

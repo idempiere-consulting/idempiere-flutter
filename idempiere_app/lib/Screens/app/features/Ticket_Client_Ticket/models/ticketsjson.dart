@@ -72,6 +72,7 @@ class Records {
   final int? qtyPlan;
   final String? dateStartPlan;
   final String? name;
+  final String? help;
   final String? modelname;
 
   Records({
@@ -115,6 +116,7 @@ class Records {
     this.qtyPlan,
     this.dateStartPlan,
     this.name,
+    this.help,
     this.modelname,
   });
 
@@ -158,6 +160,7 @@ class Records {
             ? NextAction.fromJson(json['NextAction'] as Map<String, dynamic>)
             : null,
         dateNextAction = json['DateNextAction'] as String?,
+        help = json['Help'] as String?,
         processed = json['Processed'] as bool?,
         rRequestTypeID =
             (json['R_RequestType_ID'] as Map<String, dynamic>?) != null

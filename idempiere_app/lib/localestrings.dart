@@ -493,7 +493,9 @@ class LocaleString extends Translations {
           'Paid': 'Paid',
           'Not Paid': 'Not Paid',
         },
+
         //ITALIAN LANGUAGE
+
         'it_IT': {
           'changelang': 'Lingua   ',
           'Calendar': 'Calendario',
@@ -1097,6 +1099,8 @@ class LocaleString extends Translations {
               'Sicuro di voler terminare il Quiz?',
           'Send': 'Invia',
           'Employee Ticket': 'Ticket Dipendente',
+          'Confirm Ticket': 'Conferma Ticket',
+          'Close Ticket': 'Chiudi Ticket',
         },
       };
 }
