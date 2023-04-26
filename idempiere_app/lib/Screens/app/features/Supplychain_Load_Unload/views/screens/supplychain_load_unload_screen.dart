@@ -238,7 +238,7 @@ class SupplychainLoadUnloadScreen
                                   ),
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.calendar_month),
+                                      const Icon(Icons.calendar_month, color: Colors.white,),
                                       Text(
                                         controller.trx.records![index]
                                                 .movementDate ??

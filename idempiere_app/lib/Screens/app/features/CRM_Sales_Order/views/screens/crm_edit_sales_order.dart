@@ -222,7 +222,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
   String dropdownBPLocation = "";
   int bPartnerId = Get.arguments['bPartnerId'] ?? 0;
   bool isPaid = false;
-  String paymentRuleId = "B";
+  String paymentRuleId = "K";
   bool pRuleAvailable = false;
   late PaymentRuleJson pRules;
 
@@ -230,7 +230,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
   void initState() {
     isPaid = args['isPaid'] ?? false;
     pRuleAvailable = false;
-    paymentRuleId = args["PruleId"] ?? "B";
+    paymentRuleId = args["PruleId"] ?? "K";
     //dropdownValue = (args["C_BP_Group_ID"]).toString();
     dropdownDocType = (args["docTypeTargetId"]).toString();
     dropdownBPLocation = (args["BPartnerLocationId"]).toString();

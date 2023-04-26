@@ -209,7 +209,7 @@ class TicketController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "CRM",
+      projectName: "Ticket",
       releaseTime: DateTime.now(),
     );
   }

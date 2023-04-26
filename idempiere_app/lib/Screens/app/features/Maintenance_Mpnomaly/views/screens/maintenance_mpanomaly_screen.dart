@@ -82,7 +82,7 @@ class MaintenanceMpanomalyScreen
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: 100,
+                        itemCount: controller._trx.windowrecords!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 8.0,

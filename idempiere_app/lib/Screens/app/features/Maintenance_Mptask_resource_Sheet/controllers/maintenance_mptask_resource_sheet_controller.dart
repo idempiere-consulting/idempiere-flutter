@@ -509,7 +509,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "iDempiere APP",
+      projectName: "Intervento",
       releaseTime: DateTime.now(),
     );
   }

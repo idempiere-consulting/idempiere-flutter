@@ -203,7 +203,7 @@ class CRMPaymentController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "iDempiere APP",
+      projectName: "CRM",
       releaseTime: DateTime.now(),
     );
   }
