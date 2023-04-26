@@ -1101,7 +1101,7 @@ class LocaleString extends Translations {
           'Employee Ticket': 'Ticket Dipendente',
           'Confirm Ticket': 'Conferma Ticket',
           'Close Ticket': 'Chiudi Ticket',
-          
+          'Apply Filters': 'Applica Filtri',
         },
       };
 }

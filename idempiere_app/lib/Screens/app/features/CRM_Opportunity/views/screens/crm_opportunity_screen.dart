@@ -9,6 +9,7 @@ import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -70,13 +71,129 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
         return false;
       },
       child: Scaffold(
-        floatingActionButton: FloatingActionButton.small(
+        bottomNavigationBar: BottomAppBar(
+          shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder()),
+          //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+          color: Theme.of(context).cardColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.getOpportunities();
+                          },
+                          child: Row(
+                            children: [
+                              //Icon(Icons.filter_alt),
+                              Obx(() => controller.dataAvailable
+                                  ? Text("OPPORTUNITY: ".tr +
+                                      controller.trx.rowcount.toString())
+                                  : Text("OPPORTUNITY: ".tr)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                    ],
+                  )
+                ],
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount > 1) {
+                              controller.pagesCount.value -= 1;
+                              controller.getOpportunities();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                        Obx(() => Text(
+                            "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount <
+                                controller.pagesTot.value) {
+                              controller.pagesCount.value += 1;
+                              controller.getOpportunities();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.home_menu,
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.white,
-          onPressed: () {
-            Get.to(const CreateOpportunity());
-          },
-          child: const Icon(MaterialSymbols.add_business),
+          /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+          children: [
+            SpeedDialChild(
+                label: 'Filter'.tr,
+                child: Icon(
+                  MaterialSymbols.filter_alt_filled,
+                  color: Colors.white,
+                ),
+                onTap: () {
+                  /* Get.to(() => const CRMFilterLead(), arguments: {
+                    "sectorId": controller.sectorId.value,
+                    "selectedUserRadioTile":
+                        controller.selectedUserRadioTile.value,
+                    'name': controller.nameValue.value,
+                    'mail': controller.mailValue.value,
+                    'phone': controller.phoneValue.value,
+                    "statusId": controller.statusId.value,
+                    'sizeId': controller.sizeId.value,
+                    'campaignId': controller.campaignId.value,
+                    'sourceId': controller.sourceId.value,
+                  }); */
+                }),
+            SpeedDialChild(
+                label: 'New'.tr,
+                child: const Icon(Icons.add_business),
+                onTap: () {
+                  Get.to(() => const CreateOpportunity());
+                })
+          ],
         ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
@@ -93,376 +210,11 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
             mobileBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("OPPORTUNITY: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("OPPORTUNITY: ".tr)),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateOpportunity());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getOpportunities();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: TextButton(
-                        onPressed: () {
-                          //controller.changeFilter();
-                          //print("hello");
-                        },
-                        child: const Text('filter'),
-                        //Text(controller.value.value),
-                      ),
-                    ), */
-                  ],
-                ),
-                Row(
-                  children: [
-                    Visibility(
-                      visible: false,
-                      child: Flexible(
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 10, right: 10),
-                          child: TextField(
-                            controller: controller.searchFieldController,
-                            onSubmitted: (String? value) {
-                              /* controller.searchFilterValue.value =
-                                    controller.searchFieldController.text; */
-                              controller.getOpportunities();
-                            },
-                            onEditingComplete: () {
-                              FocusScope.of(context).unfocus();
-                            },
-                            decoration: InputDecoration(
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              prefixIcon: const Icon(EvaIcons.search),
-                              hintText: "search..",
-                              isDense: true,
-                              fillColor: Theme.of(context).cardColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          underline: const SizedBox(),
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
-                            controller.saleStageValue.value = "";
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Obx(
-                      () => Visibility(
-                        visible: controller.dropdownValue.value == "1",
-                        child: Flexible(
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10, right: 10),
-                            child: FutureBuilder(
-                              future: controller.getAllBPs(),
-                              builder: (BuildContext ctx,
-                                      AsyncSnapshot<List<BPRecords>>
-                                          snapshot) =>
-                                  snapshot.hasData
-                                      ? TypeAheadField<BPRecords>(
-                                          textFieldConfiguration:
-                                              TextFieldConfiguration(
-                                            //autofocus: true,
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .copyWith(
-                                                    fontStyle:
-                                                        FontStyle.italic),
-                                            decoration: InputDecoration(
-                                              filled: true,
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              prefixIcon:
-                                                  const Icon(EvaIcons.search),
-                                              hintText: "search..",
-                                              isDense: true,
-                                              fillColor:
-                                                  Theme.of(context).cardColor,
-                                            ),
-                                          ),
-                                          suggestionsCallback: (pattern) async {
-                                            return snapshot.data!.where(
-                                                (element) => (element.name ??
-                                                        "")
-                                                    .toLowerCase()
-                                                    .contains(
-                                                        pattern.toLowerCase()));
-                                          },
-                                          itemBuilder: (context, suggestion) {
-                                            return ListTile(
-                                              //leading: Icon(Icons.shopping_cart),
-                                              title:
-                                                  Text(suggestion.name ?? ""),
-                                            );
-                                          },
-                                          onSuggestionSelected: (suggestion) {
-                                            controller.businessPartnerId =
-                                                suggestion.id!;
-                                            controller.getOpportunities();
-                                          },
-                                        )
-                                      : const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Obx(
-                      () => Visibility(
-                        visible: controller.dropdownValue.value == "2",
-                        child: Flexible(
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10, right: 10),
-                            child: FutureBuilder(
-                              future: controller.getAllProducts(),
-                              builder: (BuildContext ctx,
-                                      AsyncSnapshot<List<PRecords>> snapshot) =>
-                                  snapshot.hasData
-                                      ? TypeAheadField<PRecords>(
-                                          textFieldConfiguration:
-                                              TextFieldConfiguration(
-                                            //autofocus: true,
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .copyWith(
-                                                    fontStyle:
-                                                        FontStyle.italic),
-                                            decoration: InputDecoration(
-                                              filled: true,
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              prefixIcon:
-                                                  const Icon(EvaIcons.search),
-                                              hintText: "search..",
-                                              isDense: true,
-                                              fillColor:
-                                                  Theme.of(context).cardColor,
-                                            ),
-                                          ),
-                                          suggestionsCallback: (pattern) async {
-                                            return snapshot.data!.where((element) =>
-                                                ("${element.value}_${element.name}")
-                                                    .toLowerCase()
-                                                    .contains(
-                                                        pattern.toLowerCase()));
-                                          },
-                                          itemBuilder: (context, suggestion) {
-                                            return ListTile(
-                                              //leading: Icon(Icons.shopping_cart),
-                                              title:
-                                                  Text(suggestion.name ?? ""),
-                                              subtitle:
-                                                  Text(suggestion.value ?? ""),
-                                            );
-                                          },
-                                          onSuggestionSelected: (suggestion) {
-                                            controller.productId =
-                                                suggestion.id!;
-                                            controller.getOpportunities();
-                                          },
-                                        )
-                                      : const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Obx(
-                      () => Visibility(
-                        visible: controller.dropdownValue.value == "3",
-                        child: Flexible(
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10, right: 10),
-                            child: FutureBuilder(
-                              future: controller.getAllSalesRep(),
-                              builder: (BuildContext ctx,
-                                      AsyncSnapshot<List<CRecords>> snapshot) =>
-                                  snapshot.hasData
-                                      ? TypeAheadField<CRecords>(
-                                          textFieldConfiguration:
-                                              TextFieldConfiguration(
-                                            //autofocus: true,
-                                            style: DefaultTextStyle.of(context)
-                                                .style
-                                                .copyWith(
-                                                    fontStyle:
-                                                        FontStyle.italic),
-                                            decoration: InputDecoration(
-                                              filled: true,
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              prefixIcon:
-                                                  const Icon(EvaIcons.search),
-                                              hintText: "search..",
-                                              isDense: true,
-                                              fillColor:
-                                                  Theme.of(context).cardColor,
-                                            ),
-                                          ),
-                                          suggestionsCallback: (pattern) async {
-                                            return snapshot.data!.where(
-                                                (element) => (element.name ??
-                                                        "")
-                                                    .toLowerCase()
-                                                    .contains(
-                                                        pattern.toLowerCase()));
-                                          },
-                                          itemBuilder: (context, suggestion) {
-                                            return ListTile(
-                                              //leading: Icon(Icons.shopping_cart),
-                                              title:
-                                                  Text(suggestion.name ?? ""),
-                                            );
-                                          },
-                                          onSuggestionSelected: (suggestion) {
-                                            controller.salesRepId =
-                                                suggestion.id!;
-                                            controller.getOpportunities();
-                                          },
-                                        )
-                                      : const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Obx(
-                      () => Visibility(
-                        visible: controller.dropdownValue.value == "4",
-                        child: Flexible(
-                          child: Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Obx(() => DropdownButton(
-                                  underline: const SizedBox(),
-                                  hint: Text("Select a Sale Stage".tr),
-                                  isExpanded: true,
-                                  value: controller.saleStageValue.value == ""
-                                      ? null
-                                      : controller.saleStageValue.value,
-                                  elevation: 16,
-                                  onChanged: (newValue) {
-                                    controller.saleStageValue.value =
-                                        newValue as String;
-                                    controller.getOpportunities();
-                                    //print(dropdownValue);
-                                  },
-                                  items: controller.salestages.records!
-                                      .map((list) {
-                                    return DropdownMenuItem<String>(
-                                      value: list.id.toString(),
-                                      child: Text(
-                                        list.name.toString(),
-                                      ),
-                                    );
-                                  }).toList(),
-                                )),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        if (controller.pagesCount > 1) {
-                          controller.pagesCount.value -= 1;
-                          controller.getOpportunities();
-                        }
-                      },
-                      icon: const Icon(Icons.skip_previous),
-                    ),
-                    Obx(() => Text(
-                        "${controller.pagesCount.value}/${controller.pagesTot.value}")),
-                    IconButton(
-                      onPressed: () {
-                        if (controller.pagesCount < controller.pagesTot.value) {
-                          controller.pagesCount.value += 1;
-                          controller.getOpportunities();
-                        }
-                      },
-                      icon: const Icon(Icons.skip_next),
-                    )
-                  ],
-                ),
+
                 //const SizedBox(height: kSpacing),
                 Obx(() => controller.dataAvailable
                     ? ListView.builder(
@@ -1489,6 +1241,40 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

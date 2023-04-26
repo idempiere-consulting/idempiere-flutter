@@ -48,6 +48,7 @@ class _CreateSupplychainInventoryState
       });
     }
 
+    print(msg);
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' + ip + '/api/v1/models/M_Inventory/');
     //print(msg);

@@ -16,9 +16,14 @@ class CRMOpportunityController extends GetxController {
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
-  int businessPartnerId = 0;
-  int productId = 0;
-  int salesRepId = 0;
+  var userFilter = "";
+  var statusFilter = "";
+  var businessPartnerFilter = "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var selectedUserRadioTile = 0.obs;
+  var selectedStatusRadioTile = 0.obs;
 
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
@@ -150,36 +155,6 @@ class CRMOpportunityController extends GetxController {
   Future<void> getOpportunities() async {
     _dataAvailable.value = false;
 
-    var searchUrlFilter = "";
-
-    switch (dropdownValue.value) {
-      case "1":
-        if (businessPartnerId != 0) {
-          searchUrlFilter = " and C_BPartner_ID eq $businessPartnerId";
-        }
-
-        break;
-      case "2":
-        if (productId != 0) {
-          searchUrlFilter = " and M_Product_ID eq $productId";
-        }
-        break;
-      case "3":
-        if (salesRepId != 0) {
-          searchUrlFilter = " and SalesRep_ID eq $salesRepId";
-        }
-        break;
-      case "4":
-        if (saleStageValue.value != "") {
-          searchUrlFilter = " and C_SalesStage_ID eq ${saleStageValue.value}";
-        }
-        break;
-      default:
-    }
-    businessPartnerId = 0;
-    productId = 0;
-    salesRepId = 0;
-
     var notificationFilter = "";
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
@@ -192,7 +167,7 @@ class CRMOpportunityController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_opportunity_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}$notificationFilter$searchUrlFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_opportunity_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}$notificationFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
