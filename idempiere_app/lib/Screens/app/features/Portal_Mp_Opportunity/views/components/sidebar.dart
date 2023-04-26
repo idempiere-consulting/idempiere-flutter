@@ -31,7 +31,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
+                  label: "Dashboard".tr,
                   visible: int.parse(list[0], radix: 16)
                           .toRadixString(2)
                           .padLeft(8, "0")
@@ -92,13 +92,29 @@ class _Sidebar extends StatelessWidget {
                   icon: EvaIcons.personOutline,
                   label: "Contract".tr,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Sales Order B2B".tr,
+                  visible: int.parse(list[51], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
                 //Get.toNamed('/${value.label}');
                 switch (index) {
                   case 0:
-                    Get.offNamed('/Dashboard');
+                    if (int.parse(list[0], radix: 16)
+                            .toRadixString(2)
+                            .padLeft(8, "0")
+                            .toString()[1] ==
+                        "1") {
+                      Get.offNamed('/Dashboard');
+                    }
 
                     break;
 
@@ -132,6 +148,9 @@ class _Sidebar extends StatelessWidget {
 
                   case 8:
                     Get.offNamed('/PortalMpContract');
+                    break;
+                  case 9:
+                    Get.offNamed('/PortalMpSalesOrderB2B');
                     break;
 
                   default:

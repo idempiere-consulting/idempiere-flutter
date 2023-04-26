@@ -24,14 +24,14 @@ class _Sidebar extends StatelessWidget {
                 data: data,
               ),
             ),
-            const Divider(thickness: 7),
+            const Divider(thickness: 1),
             SelectionButton(
               initialSelected: 7,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
+                  label: "Dashboard".tr,
                   visible: int.parse(list[0], radix: 16)
                           .toRadixString(2)
                           .padLeft(8, "0")
@@ -108,7 +108,14 @@ class _Sidebar extends StatelessWidget {
                 //Get.toNamed('/${value.label}');
                 switch (index) {
                   case 0:
-                    Get.offNamed('/Dashboard');
+                    if (int.parse(list[0], radix: 16)
+                            .toRadixString(2)
+                            .padLeft(8, "0")
+                            .toString()[1] ==
+                        "1") {
+                      Get.offNamed('/Dashboard');
+                    }
+
                     break;
 
                   case 1:

@@ -31,7 +31,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
+                  label: "Dashboard".tr,
                   visible: int.parse(list[0], radix: 16)
                           .toRadixString(2)
                           .padLeft(8, "0")
@@ -63,40 +63,34 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "SalesOrder".tr,
-                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Training and Course".tr,
-                  visible: false,
                 ),
                 //Impianto
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Maintenance".tr,
-                  visible: false,
                 ),
                 //Impianti dettaglio
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Anomaly".tr,
-                  visible: false,
                 ),
                 //Scadenze
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Invoice".tr,
-                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Contract".tr,
-                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
@@ -108,19 +102,20 @@ class _Sidebar extends StatelessWidget {
                           .toString()[1] ==
                       "1",
                 ),
-                SelectionButtonData(
-                  activeIcon: EvaIcons.logOut,
-                  icon: EvaIcons.logOutOutline,
-                  label: "Log Out",
-                  visible: true,
-                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
                 //Get.toNamed('/${value.label}');
                 switch (index) {
                   case 0:
-                    Get.offNamed('/Dashboard');
+                    if (int.parse(list[0], radix: 16)
+                            .toRadixString(2)
+                            .padLeft(8, "0")
+                            .toString()[1] ==
+                        "1") {
+                      Get.offNamed('/Dashboard');
+                    }
+
                     break;
 
                   case 1:
@@ -157,9 +152,7 @@ class _Sidebar extends StatelessWidget {
                   case 9:
                     Get.offNamed('/PortalMpSalesOrderB2B');
                     break;
-                  case 10:
-                    Get.offAllNamed("/");
-                    break;
+
                   default:
                 }
               },

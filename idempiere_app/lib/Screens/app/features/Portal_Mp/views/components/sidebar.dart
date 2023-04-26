@@ -31,7 +31,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
-                  label: "Dashboard",
+                  label: "Dashboard".tr,
                   visible: int.parse(list[0], radix: 16)
                           .toRadixString(2)
                           .padLeft(8, "0")

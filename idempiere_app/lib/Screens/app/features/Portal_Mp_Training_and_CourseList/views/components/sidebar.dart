@@ -1,6 +1,5 @@
 part of dashboard;
 
-// ignore: must_be_immutable
 class _Sidebar extends StatelessWidget {
   _Sidebar({
     required this.data,
@@ -10,8 +9,6 @@ class _Sidebar extends StatelessWidget {
   final ProjectCardData data;
 
   final List<dynamic> list = GetStorage().read('permission');
-
-  TextEditingController passwordFieldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,72 +26,81 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 5,
+              initialSelected: 9,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
                   label: "Dashboard".tr,
+                  visible: int.parse(list[0], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person_add,
+                  activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Training and Course",
-                  visible: int.parse(list[52], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
+                  label: "Ticket".tr,
+                  visible: int.parse(list[37], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
+                //Richieste di offerta
                 SelectionButtonData(
-                  activeIcon: Icons.paid,
-                  icon: Icons.paid_outlined,
-                  label: "Course Attendance",
-                  visible: int.parse(list[53], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.contact_mail,
-                  icon: Icons.contact_mail_outlined,
-                  label: "Quiz",
-                  visible: int.parse(list[54], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.contact_mail,
-                  icon: Icons.contact_mail_outlined,
-                  label: "Score",
-                  visible: int.parse(list[55], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
-                ),
-                SelectionButtonData(
-                  activeIcon: Icons.person_add,
+                  activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "Course List",
-                  visible: int.parse(list[57], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
+                  label: "Sales Order Request".tr,
+                  visible: int.parse(list[36], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "SalesOrder".tr,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Training and Course".tr,
+                ),
+                //Impianto
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Maintenance".tr,
+                ),
+                //Impianti dettaglio
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Anomaly".tr,
+                ),
+                //Scadenze
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Invoice".tr,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Contract".tr,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Sales Order B2B".tr,
+                  visible: int.parse(list[51], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
               ],
               onSelected: (index, value) {
@@ -102,23 +108,51 @@ class _Sidebar extends StatelessWidget {
                 //Get.toNamed('/${value.label}');
                 switch (index) {
                   case 0:
-                    Get.offNamed('/Dashboard');
+                    if (int.parse(list[0], radix: 16)
+                            .toRadixString(2)
+                            .padLeft(8, "0")
+                            .toString()[1] ==
+                        "1") {
+                      Get.offNamed('/Dashboard');
+                    }
+
                     break;
+
                   case 1:
+                    Get.offNamed('/TicketClientTicket');
+                    break;
+                  //Richieste di offerta
+                  case 2:
+                    Get.offNamed('/PortalMpOpportunity');
+                    break;
+
+                  case 3:
+                    Get.offNamed('/PortalMpSalesOrder');
+                    break;
+
+                  case 4:
                     Get.offNamed('/PortalMpTrainingCourse');
                     break;
-                  case 2:
-                    Get.offNamed('/PortalMpTrainingCoursePresence');
-                    break;
-                  case 3:
-                    Get.offNamed('/PortalMpTrainingCourseSurvey');
-                    break;
-                  case 4:
-                    Get.offNamed('/PortalMpTrainingCourseScore');
-                    break;
+                  //Impianto
                   case 5:
-                    Get.offNamed('/PortalMpTrainingCourseCourseListScreen');
+                    Get.offNamed('/PortalMpMaintenanceMp');
                     break;
+                  //Impianti dettaglio
+                  case 6:
+                    Get.offNamed('/PortalMpAnomaly');
+                    break;
+                  //Scadenze
+                  case 7:
+                    Get.offNamed('/PortalMpInvoice');
+                    break;
+
+                  case 8:
+                    Get.offNamed('/PortalMpContract');
+                    break;
+                  case 9:
+                    Get.offNamed('/PortalMpSalesOrderB2B');
+                    break;
+
                   default:
                 }
               },
