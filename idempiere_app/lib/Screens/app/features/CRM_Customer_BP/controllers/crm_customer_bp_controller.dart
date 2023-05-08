@@ -23,6 +23,16 @@ class CRMCustomerBPController extends GetxController {
   var vatCodeFieldController = TextEditingController();
   var searchFilterValue = "".obs;
 
+  var userFilter = "";
+  var nameFilter = "";
+  var bpGroupFilter = "";
+
+  var selectedUserRadioTile = 0.obs;
+  var salesRepId = 0;
+  var salesRepName = "";
+  var nameValue = "".obs;
+  var bpGroupId = "0".obs;
+
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
@@ -151,19 +161,6 @@ class CRMCustomerBPController extends GetxController {
       " and SalesRep_ID eq ${GetStorage().read("userId")}"
     ];
     _dataAvailable.value = false;
-    var searchUrlFilter = "";
-
-    switch (dropdownValue.value) {
-      case "1":
-        searchUrlFilter = " and contains(Name,'${searchFieldController.text}')";
-
-        break;
-      case "2":
-        searchUrlFilter = " and C_BP_Group_ID eq ${bpGroupValue.value}";
-        break;
-
-      default:
-    }
 
     var notificationFilter = "";
     if (Get.arguments != null) {
@@ -178,7 +175,7 @@ class CRMCustomerBPController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_customer_v?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$searchUrlFilter$notificationFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_customer_v?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$nameFilter$bpGroupFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{

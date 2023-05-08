@@ -19,11 +19,18 @@ class CRMOpportunityController extends GetxController {
   var userFilter = "";
   var statusFilter = "";
   var businessPartnerFilter = "";
+  var saleStageFilter = "";
+  var productFilter = "";
 
   var businessPartnerId = 0.obs;
   String businessPartnerName = "";
+  var productId = 0.obs;
+  String productName = "";
   var selectedUserRadioTile = 0.obs;
+  var salesRepId = 0;
+  var salesRepName = "";
   var selectedStatusRadioTile = 0.obs;
+  var saleStageId = "0".obs;
 
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
@@ -167,7 +174,7 @@ class CRMOpportunityController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_opportunity_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}$notificationFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_opportunity_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}$notificationFilter$userFilter$saleStageFilter$businessPartnerFilter$productFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{

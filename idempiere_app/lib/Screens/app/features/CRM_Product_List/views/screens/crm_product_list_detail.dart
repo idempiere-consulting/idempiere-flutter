@@ -46,6 +46,8 @@ class _ProductListDetailState extends State<ProductListDetail>
       valueFieldController.text = json.records![0].value;
       nameFieldController.text = json.records![0].name;
       descriptionFieldController.text = json.records![0].description ?? "";
+      helpFieldController.text = json.records![0].help ?? "";
+
       if (json.records![0].discontinued != true) {
         setState(() {
           flagAvailable = true;
@@ -299,9 +301,15 @@ class _ProductListDetailState extends State<ProductListDetail>
                   _buildPriceWidgets(),
                   const SizedBox(height: 12.0),
                   _buildDivider(screenSize),
-                  const SizedBox(height: 12.0),
-                  _buildFurtherInfoWidget(),
-                  const SizedBox(height: 12.0),
+                  Visibility(
+                      visible: args['add'] == true,
+                      child: const SizedBox(height: 12.0)),
+                  Visibility(
+                      visible: args['add'] == true,
+                      child: _buildFurtherInfoWidget()),
+                  Visibility(
+                      visible: args['add'] == true,
+                      child: const SizedBox(height: 12.0)),
                   _buildDivider(screenSize),
                   const SizedBox(height: 12.0),
                   /* _buildSizeChartWidgets(),
@@ -356,9 +364,19 @@ class _ProductListDetailState extends State<ProductListDetail>
                 TabBarView(
                   controller: imagesController,
                   children: <Widget>[
-                    Image.network(
-                      "https://assets.myntassets.com/h_240,q_90,w_180/v1/assets/images/1304671/2016/4/14/11460624898615-Hancock-Men-Shirts-8481460624898035-1_mini.jpg",
-                    ),
+                    args["image"] != null
+                        ? Image.memory(
+                            const Base64Codec().decode(
+                                (args["image"]).replaceAll(RegExp(r'\n'), '')),
+                            fit: BoxFit.cover,
+                          )
+                        : args['imageUrl'] != null
+                            ? Image.network(
+                                args['imageUrl'],
+                              )
+                            : Image.network(
+                                "https://assets.myntassets.com/h_240,q_90,w_180/v1/assets/images/1304671/2016/4/14/11460624898615-Hancock-Men-Shirts-8481460624898035-1_mini.jpg",
+                              ),
                     /* Image.memory(
                       const Base64Codec().decode((Get.arguments["image64"])
                           .replaceAll(RegExp(r'\n'), '')),
@@ -438,7 +456,7 @@ class _ProductListDetailState extends State<ProductListDetail>
     );
   }
 
-  _buildFurtherInfoWidget() {
+  Widget _buildFurtherInfoWidget() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
@@ -638,9 +656,9 @@ class _ProductListDetailState extends State<ProductListDetail>
                   color: Colors.white,
                 ),
               ),
-              const Text(
-                "86% acrylic, 9% polyster, 1% metallic yarn Hand-wash cold",
-                style: TextStyle(
+              Text(
+                helpFieldController.text,
+                style: const TextStyle(
                   color: Colors.white,
                 ),
               )
@@ -685,7 +703,7 @@ class _ProductListDetailState extends State<ProductListDetail>
         left: 12.0,
       ),
       child: Text(
-        "MORE INFO",
+        "MORE INFO".tr,
         style: TextStyle(
           color: Colors.grey[600],
         ),
@@ -700,7 +718,7 @@ class _ProductListDetailState extends State<ProductListDetail>
         bottom: 12.0,
       ),
       child: Text(
-        "Product Code: ${valueFieldController.text}\nTax info: Applicable GST will be charged at the time of chekout",
+        "${"Product Code".tr}: ${valueFieldController.text}\n",
         style: TextStyle(
           color: Colors.grey[500],
         ),

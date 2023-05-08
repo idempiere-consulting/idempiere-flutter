@@ -2,119 +2,115 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
-import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 //models
 
 //screens
 
-class CRMFilterTask extends StatefulWidget {
-  const CRMFilterTask({Key? key}) : super(key: key);
+class CRMFilterSalesOrder extends StatefulWidget {
+  const CRMFilterSalesOrder({Key? key}) : super(key: key);
 
   @override
-  State<CRMFilterTask> createState() => _CRMFilterTaskState();
+  State<CRMFilterSalesOrder> createState() => _CRMFilterSalesOrderState();
 }
 
-class _CRMFilterTaskState extends State<CRMFilterTask> {
+class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
   applyFilters() {
-    var inputFormat = DateFormat('dd/MM/yyyy');
     if (selectedUserRadioTile > 0) {
-      if (selectedUserRadioTile == 2 && userId > 0) {
-        Get.find<CRMTaskController>().userFilter = " and AD_User_ID eq $userId";
+      if (selectedUserRadioTile == 2 && salesRepId > 0) {
+        Get.find<CRMSalesOrderController>().userFilter =
+            " and SalesRep_ID eq $salesRepId";
       } else {
-        Get.find<CRMTaskController>().userFilter =
-            " and AD_User_ID eq ${GetStorage().read('userId')}";
+        Get.find<CRMSalesOrderController>().userFilter =
+            " and SalesRep_ID eq ${GetStorage().read('userId')}";
       }
     } else {
-      Get.find<CRMTaskController>().userFilter = "";
-    }
-
-    if (selectedStatusRadioTile > 0) {
-      switch (selectedStatusRadioTile) {
-        case 1:
-          Get.find<CRMTaskController>().statusFilter =
-              " and JP_ToDo_Status neq 'CO'";
-
-          break;
-        case 2:
-          Get.find<CRMTaskController>().statusFilter =
-              " and JP_ToDo_Status eq 'CO'";
-
-          break;
-        default:
-      }
-    } else {
-      Get.find<CRMTaskController>().statusFilter = "";
+      Get.find<CRMSalesOrderController>().userFilter = "";
     }
 
     if (businessPartnerId > 0) {
-      Get.find<CRMTaskController>().businessPartnerFilter =
+      Get.find<CRMSalesOrderController>().businessPartnerFilter =
           " and C_BPartner_ID eq $businessPartnerId";
     } else {
-      Get.find<CRMTaskController>().businessPartnerFilter = "";
+      Get.find<CRMSalesOrderController>().businessPartnerFilter = "";
     }
 
-    if (dateStartFieldController.text != "") {
-      try {
-        var date = inputFormat.parse(dateStartFieldController.text);
-
-        Get.find<CRMTaskController>().dateStartFilter =
-            " and JP_ToDo_ScheduledStartDate ge '${DateFormat('yyyy-MM-dd').format(date)} 00:00:00'";
-        Get.find<CRMTaskController>().dateStartValue =
-            dateStartFieldController.text;
-      } catch (e) {
-        print(e);
-      }
+    if (docNoFieldController.text != "") {
+      Get.find<CRMSalesOrderController>().docNoFilter =
+          " and contains(DocumentNo,'${docNoFieldController.text}')";
     } else {
-      Get.find<CRMTaskController>().dateStartFilter = "";
-      Get.find<CRMTaskController>().dateStartValue = '';
+      Get.find<CRMSalesOrderController>().docNoFilter = "";
     }
 
-    if (dateEndFieldController.text != "") {
-      try {
-        var date = inputFormat.parse(dateEndFieldController.text);
-
-        Get.find<CRMTaskController>().dateEndFilter =
-            " and JP_ToDo_ScheduledEndDate le '${DateFormat('yyyy-MM-dd').format(date)} 23:59:59'";
-        Get.find<CRMTaskController>().dateEndValue =
-            dateEndFieldController.text;
-      } catch (e) {
-        print(e);
-      }
-    } else {
-      Get.find<CRMTaskController>().dateEndFilter = "";
-      Get.find<CRMTaskController>().dateEndValue = '';
-    }
-
-    Get.find<CRMTaskController>().selectedUserRadioTile.value =
+    Get.find<CRMSalesOrderController>().selectedUserRadioTile.value =
         selectedUserRadioTile;
-    Get.find<CRMTaskController>().userName = userFieldController.text;
-    Get.find<CRMTaskController>().userId = userId;
 
-    Get.find<CRMTaskController>().selectedStatusRadioTile.value =
-        selectedStatusRadioTile;
-    Get.find<CRMTaskController>().businessPartnerId.value = businessPartnerId;
+    Get.find<CRMSalesOrderController>().salesRepId = salesRepId;
+    Get.find<CRMSalesOrderController>().salesRepName =
+        salesRepFieldController.text;
+
+    Get.find<CRMSalesOrderController>().businessPartnerId.value =
+        businessPartnerId;
 
     if (businessPartnerId > 0) {
-      Get.find<CRMTaskController>().businessPartnerName =
+      Get.find<CRMSalesOrderController>().businessPartnerName =
           bpSearchFieldController.text;
     } else {
-      Get.find<CRMTaskController>().businessPartnerName = "";
+      Get.find<CRMSalesOrderController>().businessPartnerName = "";
+    }
+    Get.find<CRMSalesOrderController>().docNoValue.value =
+        docNoFieldController.text;
+
+    Get.find<CRMSalesOrderController>().getSalesOrders();
+    Get.back();
+  }
+
+  saveFilters() {
+    if (selectedUserRadioTile > 0) {
+      if (selectedUserRadioTile == 2 && salesRepId > 0) {
+        GetStorage()
+            .write('SalesOrder_userFilter', " and SalesRep_ID eq $salesRepId");
+      } else {
+        GetStorage().write('SalesOrder_userFilter',
+            " and SalesRep_ID eq ${GetStorage().read('userId')}");
+      }
+    } else {
+      GetStorage().write('SalesOrder_userFilter', "");
     }
 
-    Get.find<CRMTaskController>().getTasks();
-    Get.back();
+    if (businessPartnerId > 0) {
+      GetStorage().write('SalesOrder_businessPartnerFilter',
+          " and C_BPartner_ID eq $businessPartnerId");
+    } else {
+      GetStorage().write('SalesOrder_businessPartnerFilter', "");
+    }
+
+    if (docNoFieldController.text != "") {
+      GetStorage().write('SalesOrder_docNoFilter',
+          " and contains(DocumentNo,'${docNoFieldController.text}')");
+    } else {
+      GetStorage().write('SalesOrder_docNoFilter', "");
+    }
+
+    GetStorage()
+        .write('SalesOrder_selectedUserRadioTile', selectedUserRadioTile);
+    GetStorage().write('SalesOrder_salesRepId', salesRepId);
+    GetStorage().write('SalesOrder_salesRepName', salesRepFieldController.text);
+    GetStorage().write('SalesOrder_businessPartnerId', businessPartnerId);
+    GetStorage()
+        .write('SalesOrder_businessPartnerName', bpSearchFieldController.text);
+    GetStorage().write('SalesOrder_docNo', docNoFieldController.text);
   }
 
   Future<List<BPRecords>> getAllBPs() async {
@@ -169,36 +165,26 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
     });
   }
 
-  setSelectedStatusRadioTile(int val) {
-    setState(() {
-      selectedStatusRadioTile = val;
-    });
-  }
-
   dynamic args = Get.arguments;
   int selectedUserRadioTile = 0;
-  int selectedStatusRadioTile = 0;
-  int userId = 0;
-  late TextEditingController userFieldController;
+  late TextEditingController salesRepFieldController;
+  int salesRepId = 0;
 
   int businessPartnerId = 0;
   late TextEditingController bpSearchFieldController;
-  late TextEditingController dateStartFieldController;
-  late TextEditingController dateEndFieldController;
+  late TextEditingController docNoFieldController;
 
   @override
   void initState() {
     super.initState();
     bpSearchFieldController =
         TextEditingController(text: args['businessPartnerName'] ?? "");
+    salesRepFieldController =
+        TextEditingController(text: args['salesRepName'] ?? "");
+    salesRepId = args['salesRepId'] ?? 0;
     selectedUserRadioTile = args['selectedUserRadioTile'] ?? 0;
-    userId = args['userId'] ?? 0;
-    userFieldController = TextEditingController(text: args['userName'] ?? "");
-    selectedStatusRadioTile = args['selectedStatusRadioTile'] ?? 0;
     businessPartnerId = args['businessPartnerId'] ?? 0;
-    dateStartFieldController =
-        TextEditingController(text: args['dateStart'] ?? "");
-    dateEndFieldController = TextEditingController(text: args['dateEnd'] ?? "");
+    docNoFieldController = TextEditingController(text: args['docNo'] ?? "");
     //getAllDocType();
     //getAllBPartners();
   }
@@ -210,6 +196,37 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
       floatingActionButton: ElevatedButton(
           onPressed: applyFilters, child: Text('Apply Filters'.tr)),
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: IconButton(
+              tooltip: 'reset filters',
+              onPressed: () {
+                setState(() {
+                  selectedUserRadioTile = 0;
+                  salesRepId = 0;
+                  salesRepFieldController.text = "";
+                  businessPartnerId = 0;
+                  bpSearchFieldController.text = "";
+                  docNoFieldController.text = "";
+                });
+              },
+              icon: const Icon(
+                MaterialSymbols.filter_alt_off,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: IconButton(
+              tooltip: 'save filters',
+              onPressed: saveFilters,
+              icon: const Icon(
+                MaterialSymbols.bookmark,
+              ),
+            ),
+          ),
+        ],
         leading: IconButton(
             onPressed: () {
               Get.back();
@@ -227,7 +244,7 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                 ExpansionTile(
                   initiallyExpanded: true,
                   title: Text(
-                    'User Filter'.tr,
+                    'SalesRep Filter'.tr,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
@@ -277,15 +294,15 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                                       onChanged: (value) {
                                         if (value == "") {
                                           setState(() {
-                                            userId = 0;
+                                            salesRepId = 0;
                                           });
                                         }
                                       },
-                                      controller: userFieldController,
+                                      controller: salesRepFieldController,
                                       //autofocus: true,
 
                                       decoration: InputDecoration(
-                                        labelText: 'User'.tr,
+                                        labelText: 'SalesRep'.tr,
                                         filled: true,
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -311,9 +328,9 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                                       );
                                     },
                                     onSuggestionSelected: (suggestion) {
-                                      userFieldController.text =
+                                      salesRepFieldController.text =
                                           suggestion.name!;
-                                      userId = suggestion.id!;
+                                      salesRepId = suggestion.id!;
                                     },
                                   )
                                 : const Center(
@@ -335,58 +352,6 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                 ExpansionTile(
                   initiallyExpanded: true,
                   title: Text(
-                    'Status Filter'.tr,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  childrenPadding:
-                      const EdgeInsets.only(bottom: 10, right: 10, left: 10),
-                  children: [
-                    RadioListTile(
-                      value: 0,
-                      groupValue: selectedStatusRadioTile,
-                      title: Text("All".tr),
-                      //subtitle: Text("Radio 1 Subtitle"),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedStatusRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
-
-                      //selected: true,
-                    ),
-                    RadioListTile(
-                      value: 1,
-                      groupValue: selectedStatusRadioTile,
-                      title: Text("Open Only".tr),
-                      //subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedStatusRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
-                      selected: false,
-                    ),
-                    RadioListTile(
-                      value: 2,
-                      groupValue: selectedStatusRadioTile,
-                      title: Text("Closed Only".tr),
-                      //subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedStatusRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
-                      selected: false,
-                    )
-                  ],
-                ),
-                ExpansionTile(
-                  initiallyExpanded: true,
-                  title: Text(
                     'Fields Filter'.tr,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
@@ -395,7 +360,8 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                       bottom: 10, right: 10, left: 10, top: 10),
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      margin: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 10),
                       child: FutureBuilder(
                         future: getAllBPs(),
                         builder: (BuildContext ctx,
@@ -415,10 +381,7 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                                       },
                                       controller: bpSearchFieldController,
                                       //autofocus: true,
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .copyWith(
-                                              fontStyle: FontStyle.italic),
+
                                       decoration: InputDecoration(
                                         labelText: 'Business Partner'.tr,
                                         //filled: true,
@@ -456,49 +419,19 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                       ),
                     ),
                     Container(
-                      margin:
-                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      margin: const EdgeInsets.all(10),
                       child: TextField(
-                        // maxLength: 10,
-                        keyboardType: TextInputType.datetime,
-                        controller: dateStartFieldController,
+                        controller: docNoFieldController,
                         decoration: InputDecoration(
                           isDense: true,
-                          prefixIcon: const Icon(EvaIcons.calendarOutline),
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
                           border: const OutlineInputBorder(),
-                          labelText: 'Date From'.tr,
+                          labelText: 'DocumentNo'.tr,
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          hintText: 'DD/MM/YYYY',
-                          counterText: '',
                         ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
-                          LengthLimitingTextInputFormatter(10),
-                          _DateFormatterCustom(),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin:
-                          const EdgeInsets.only(left: 10, right: 10, top: 20),
-                      child: TextField(
-                        // maxLength: 10,
-                        keyboardType: TextInputType.datetime,
-                        controller: dateEndFieldController,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          prefixIcon: const Icon(EvaIcons.calendarOutline),
-                          border: const OutlineInputBorder(),
-                          labelText: 'Date To'.tr,
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          hintText: 'DD/MM/YYYY',
-                          counterText: '',
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
-                          LengthLimitingTextInputFormatter(10),
-                          _DateFormatterCustom(),
-                        ],
+                        minLines: 1,
+                        maxLines: 4,
                       ),
                     ),
                   ],
@@ -523,97 +456,6 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
           },
         ),
       ),
-    );
-  }
-}
-
-class _DateFormatterCustom extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue prevText, TextEditingValue currText) {
-    int selectionIndex;
-
-    // Get the previous and current input strings
-    String pText = prevText.text;
-    String cText = currText.text;
-    // Abbreviate lengths
-    int cLen = cText.length;
-    int pLen = pText.length;
-
-    if (cLen == 1) {
-      // Can only be 0, 1, 2 or 3
-      if (int.parse(cText) > 3) {
-        // Remove char
-        cText = '';
-      }
-    } else if (cLen == 2 && pLen == 1) {
-      // Days cannot be greater than 31
-      int dd = int.parse(cText.substring(0, 2));
-      if (dd == 0 || dd > 31) {
-        // Remove char
-        cText = cText.substring(0, 1);
-      } else {
-        // Add a / char
-        cText += '/';
-      }
-    } else if (cLen == 4) {
-      // Can only be 0 or 1
-      if (int.parse(cText.substring(3, 4)) > 1) {
-        // Remove char
-        cText = cText.substring(0, 3);
-      }
-    } else if (cLen == 5 && pLen == 4) {
-      // Month cannot be greater than 12
-      int mm = int.parse(cText.substring(3, 5));
-      if (mm == 0 || mm > 12) {
-        // Remove char
-        cText = cText.substring(0, 4);
-      } else {
-        // Add a / char
-        cText += '/';
-      }
-    } else if ((cLen == 3 && pLen == 4) || (cLen == 6 && pLen == 7)) {
-      // Remove / char
-      cText = cText.substring(0, cText.length - 1);
-    } else if (cLen == 3 && pLen == 2) {
-      if (int.parse(cText.substring(2, 3)) > 1) {
-        // Replace char
-        cText = '${cText.substring(0, 2)}/';
-      } else {
-        // Insert / char
-        cText =
-            '${cText.substring(0, pLen)}/${cText.substring(pLen, pLen + 1)}';
-      }
-    } else if (cLen == 6 && pLen == 5) {
-      // Can only be 1 or 2 - if so insert a / char
-      int y1 = int.parse(cText.substring(5, 6));
-      if (y1 < 1 || y1 > 2) {
-        // Replace char
-        cText = '${cText.substring(0, 5)}/';
-      } else {
-        // Insert / char
-        cText = '${cText.substring(0, 5)}/${cText.substring(5, 6)}';
-      }
-    } else if (cLen == 7) {
-      // Can only be 1 or 2
-      int y1 = int.parse(cText.substring(6, 7));
-      if (y1 < 1 || y1 > 2) {
-        // Remove char
-        cText = cText.substring(0, 6);
-      }
-    } else if (cLen == 8) {
-      // Can only be 19 or 20
-      int y2 = int.parse(cText.substring(6, 8));
-      if (y2 < 19 || y2 > 20) {
-        // Remove char
-        cText = cText.substring(0, 7);
-      }
-    }
-
-    selectionIndex = cText.length;
-    return TextEditingValue(
-      text: cText,
-      selection: TextSelection.collapsed(offset: selectionIndex),
     );
   }
 }

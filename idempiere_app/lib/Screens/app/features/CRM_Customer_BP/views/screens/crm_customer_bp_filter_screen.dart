@@ -7,10 +7,10 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/models/businesspartnergroup_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_customer_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salestagejson.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:path_provider/path_provider.dart';
@@ -19,91 +19,52 @@ import 'package:path_provider/path_provider.dart';
 
 //screens
 
-class CRMFilterOpportunity extends StatefulWidget {
-  const CRMFilterOpportunity({Key? key}) : super(key: key);
+class CRMFilterCustomer extends StatefulWidget {
+  const CRMFilterCustomer({Key? key}) : super(key: key);
 
   @override
-  State<CRMFilterOpportunity> createState() => _CRMFilterOpportunityState();
+  State<CRMFilterCustomer> createState() => _CRMFilterCustomerState();
 }
 
-class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
+class _CRMFilterCustomerState extends State<CRMFilterCustomer> {
   applyFilters() {
     if (selectedUserRadioTile > 0) {
       if (selectedUserRadioTile == 2 && salesRepId > 0) {
-        Get.find<CRMOpportunityController>().userFilter =
+        Get.find<CRMCustomerBPController>().userFilter =
             " and SalesRep_ID eq $salesRepId";
       } else {
-        Get.find<CRMOpportunityController>().userFilter =
+        Get.find<CRMCustomerBPController>().userFilter =
             " and SalesRep_ID eq ${GetStorage().read('userId')}";
       }
     } else {
-      Get.find<CRMOpportunityController>().userFilter = "";
+      Get.find<CRMCustomerBPController>().userFilter = "";
     }
 
-    if (businessPartnerId > 0) {
-      Get.find<CRMOpportunityController>().businessPartnerFilter =
-          " and C_BPartner_ID eq $businessPartnerId";
+    if (nameFieldController.text != "") {
+      Get.find<CRMCustomerBPController>().nameFilter =
+          " and contains(tolower(Name),'${nameFieldController.text}')";
     } else {
-      Get.find<CRMOpportunityController>().businessPartnerFilter = "";
-    }
-    if (productId > 0) {
-      Get.find<CRMOpportunityController>().productFilter =
-          " and M_Product_ID eq $productId";
-    } else {
-      Get.find<CRMOpportunityController>().productFilter = "";
-    }
-    if (productId > 0) {
-      Get.find<CRMOpportunityController>().productName =
-          productFieldController.text;
-    } else {
-      Get.find<CRMOpportunityController>().productName = "";
+      Get.find<CRMCustomerBPController>().nameFilter = "";
     }
 
-    if (saleStageId != "0") {
-      Get.find<CRMOpportunityController>().saleStageFilter =
-          " and C_SalesStage_ID eq $saleStageId";
+    if (bpGroupId != "0") {
+      Get.find<CRMCustomerBPController>().bpGroupFilter =
+          " and C_BP_Group_ID eq $bpGroupId";
     } else {
-      Get.find<CRMOpportunityController>().saleStageFilter = "";
+      Get.find<CRMCustomerBPController>().bpGroupFilter = "";
     }
 
-    Get.find<CRMOpportunityController>().selectedUserRadioTile.value =
+    Get.find<CRMCustomerBPController>().selectedUserRadioTile.value =
         selectedUserRadioTile;
-
-    Get.find<CRMOpportunityController>().salesRepId = salesRepId;
-    Get.find<CRMOpportunityController>().salesRepName =
+    Get.find<CRMCustomerBPController>().salesRepId = salesRepId;
+    Get.find<CRMCustomerBPController>().bpGroupId.value = bpGroupId;
+    Get.find<CRMCustomerBPController>().salesRepName =
         salesRepFieldController.text;
+    Get.find<CRMCustomerBPController>().nameValue.value =
+        nameFieldController.text;
 
-    Get.find<CRMOpportunityController>().businessPartnerId.value =
-        businessPartnerId;
-    Get.find<CRMOpportunityController>().productId.value = productId;
-
-    if (businessPartnerId > 0) {
-      Get.find<CRMOpportunityController>().businessPartnerName =
-          bpSearchFieldController.text;
-    } else {
-      Get.find<CRMOpportunityController>().businessPartnerName = "";
-    }
-    Get.find<CRMOpportunityController>().saleStageId.value = saleStageId;
-
-    Get.find<CRMOpportunityController>().getOpportunities();
+    Get.find<CRMCustomerBPController>().getCustomers();
     Get.back();
-  }
-
-  Future<List<BPRecords>> getAllBPs() async {
-    //await getBusinessPartner();
-    //print(response.body);
-    const filename = "businesspartner";
-    final file = File(
-        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-    var jsondecoded = jsonDecode(file.readAsStringSync());
-
-    var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
-
-    return jsonbps.records!;
-
-    //print(list[0].eMail);
-
-    //print(json.);
   }
 
   Future<List<Records>> getAllSalesRep() async {
@@ -135,28 +96,11 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
     //print(json.);
   }
 
-  Future<List<PRecords>> getAllProducts() async {
-    //print(response.body);
-    const filename = "products";
-    final file = File(
-        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-
-    var jsondecoded = jsonDecode(await file.readAsString());
-    var jsonResources = ProductJson.fromJson(jsondecoded);
-    //print(jsonResources.rowcount);
-    return jsonResources.records!;
-
-    //print(list[0].eMail);
-
-    //print(json.);
-  }
-
-  Future<List<SSRecords>> getAllSaleStages() async {
+  Future<List<BPGRecords>> getAllBPGroups() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_SalesStage?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_BP_Group');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -164,21 +108,18 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
         'Authorization': authorization,
       },
     );
-
     if (response.statusCode == 200) {
-      var jsondecoded = jsonDecode(response.body);
-
-      var json = SalesStageJson.fromJson(jsondecoded);
-      json.records!.insert(0, SSRecords(id: 0, name: 'All'.tr));
+      //print(response.body);
+      var json = BusinessPartnerGroupJSON.fromJson(jsonDecode(response.body));
+      json.records!.insert(0, BPGRecords(id: 0, name: 'All'.tr));
+      //print(json.rowcount);
 
       return json.records!;
     } else {
-      throw Exception("Failed to load sale stages");
+      throw Exception("Failed to load lead bp groups");
     }
 
-    //print(list[0].eMail);
-
-    //print(json.);
+    //print(response.body);
   }
 
   setSelectedUserRadioTile(int val) {
@@ -192,26 +133,19 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
   late TextEditingController salesRepFieldController;
   int salesRepId = 0;
 
-  int businessPartnerId = 0;
-  late TextEditingController bpSearchFieldController;
-  int productId = 0;
-  late TextEditingController productFieldController;
-  String saleStageId = "0";
+  late TextEditingController nameFieldController;
+  String bpGroupId = "0";
 
   @override
   void initState() {
     super.initState();
-    bpSearchFieldController =
-        TextEditingController(text: args['businessPartnerName'] ?? "");
+
+    selectedUserRadioTile = args['selectedUserRadioTile'] ?? 0;
     salesRepFieldController =
         TextEditingController(text: args['salesRepName'] ?? "");
     salesRepId = args['salesRepId'] ?? 0;
-    selectedUserRadioTile = args['selectedUserRadioTile'] ?? 0;
-    businessPartnerId = args['businessPartnerId'] ?? 0;
-    productFieldController =
-        TextEditingController(text: args['productName'] ?? "");
-    productId = args['productId'] ?? 0;
-    saleStageId = args['saleStageId'] ?? 0;
+    nameFieldController = TextEditingController(text: args['name']);
+    bpGroupId = args['bpGroupId'] ?? "0";
     //getAllDocType();
     //getAllBPartners();
   }
@@ -356,136 +290,32 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
                       bottom: 10, right: 10, left: 10, top: 10),
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(
-                          left: 10, right: 10, bottom: 10),
-                      child: FutureBuilder(
-                        future: getAllBPs(),
-                        builder: (BuildContext ctx,
-                                AsyncSnapshot<List<BPRecords>> snapshot) =>
-                            snapshot.hasData
-                                ? TypeAheadField<BPRecords>(
-                                    direction: AxisDirection.up,
-                                    //getImmediateSuggestions: true,
-                                    textFieldConfiguration:
-                                        TextFieldConfiguration(
-                                      onChanged: (value) {
-                                        if (value == "") {
-                                          setState(() {
-                                            businessPartnerId = 0;
-                                          });
-                                        }
-                                      },
-                                      controller: bpSearchFieldController,
-                                      //autofocus: true,
-
-                                      decoration: InputDecoration(
-                                        labelText: 'Business Partner'.tr,
-                                        //filled: true,
-                                        border: const OutlineInputBorder(
-                                            /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                            ),
-                                        prefixIcon: const Icon(EvaIcons.search),
-                                        //hintText: "search..",
-                                        isDense: true,
-                                        //fillColor: Theme.of(context).cardColor,
-                                      ),
-                                    ),
-                                    suggestionsCallback: (pattern) async {
-                                      return snapshot.data!.where((element) =>
-                                          (element.name ?? "")
-                                              .toLowerCase()
-                                              .contains(pattern.toLowerCase()));
-                                    },
-                                    itemBuilder: (context, suggestion) {
-                                      return ListTile(
-                                        //leading: Icon(Icons.shopping_cart),
-                                        title: Text(suggestion.name ?? ""),
-                                      );
-                                    },
-                                    onSuggestionSelected: (suggestion) {
-                                      bpSearchFieldController.text =
-                                          suggestion.name!;
-                                      businessPartnerId = suggestion.id!;
-                                    },
-                                  )
-                                : const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: nameFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(
-                          left: 10, right: 10, bottom: 10, top: 10),
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
                       child: FutureBuilder(
-                        future: getAllProducts(),
+                        future: getAllBPGroups(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<PRecords>> snapshot) =>
-                            snapshot.hasData
-                                ? TypeAheadField<PRecords>(
-                                    direction: AxisDirection.up,
-                                    //getImmediateSuggestions: true,
-                                    textFieldConfiguration:
-                                        TextFieldConfiguration(
-                                      onChanged: (value) {
-                                        if (value == "") {
-                                          setState(() {
-                                            productId = 0;
-                                          });
-                                          print(productId);
-                                        }
-                                      },
-                                      controller: productFieldController,
-                                      //autofocus: true,
-
-                                      decoration: InputDecoration(
-                                        labelText: 'Product'.tr,
-                                        //filled: true,
-                                        border: const OutlineInputBorder(
-                                            /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                            ),
-                                        prefixIcon: const Icon(EvaIcons.search),
-                                        //hintText: "search..",
-                                        isDense: true,
-                                        //fillColor: Theme.of(context).cardColor,
-                                      ),
-                                    ),
-                                    suggestionsCallback: (pattern) async {
-                                      return snapshot.data!.where((element) =>
-                                          ("${element.value}_${element.name}")
-                                              .toLowerCase()
-                                              .contains(pattern.toLowerCase()));
-                                    },
-                                    itemBuilder: (context, suggestion) {
-                                      return ListTile(
-                                        //leading: Icon(Icons.shopping_cart),
-                                        title: Text(suggestion.name ?? ""),
-                                        subtitle: Text(suggestion.value ?? ""),
-                                      );
-                                    },
-                                    onSuggestionSelected: (suggestion) {
-                                      productFieldController.text =
-                                          suggestion.name!;
-                                      productId = suggestion.id!;
-                                    },
-                                  )
-                                : const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 10, right: 10, top: 10, bottom: 10),
-                      child: FutureBuilder(
-                        future: getAllSaleStages(),
-                        builder: (BuildContext ctx,
-                                AsyncSnapshot<List<SSRecords>> snapshot) =>
+                                AsyncSnapshot<List<BPGRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
-                                      labelText: 'Sale Stage'.tr,
+                                      labelText: 'BP Group'.tr,
                                       //filled: true,
                                       border: const OutlineInputBorder(
                                           /* borderRadius: BorderRadius.circular(10),
@@ -499,15 +329,13 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
                                     child: DropdownButton(
                                       isDense: true,
                                       underline: const SizedBox(),
-                                      hint: Text("Select a Sale Stage".tr),
+                                      hint: Text("Select a BP Group".tr),
                                       isExpanded: true,
-                                      value: saleStageId == ""
-                                          ? null
-                                          : saleStageId,
+                                      value: bpGroupId == "" ? null : bpGroupId,
                                       elevation: 16,
                                       onChanged: (newValue) {
                                         setState(() {
-                                          saleStageId = newValue as String;
+                                          bpGroupId = newValue as String;
                                         });
 
                                         //print(dropdownValue);

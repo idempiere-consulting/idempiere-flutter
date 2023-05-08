@@ -14,6 +14,27 @@ class CRMInvoiceController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  var userFilter = GetStorage().read('Invoice_userFilter') ?? "";
+  var businessPartnerFilter =
+      GetStorage().read('Invoice_businessPartnerFilter') ?? "";
+  var docNoFilter = GetStorage().read('Invoice_docNoFilter') ?? "";
+  var descriptionFilter = GetStorage().read('Invoice_descriptionFilter') ?? "";
+  var dateStartFilter = GetStorage().read('Invoice_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('Invoice_dateEndFilter') ?? "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var selectedUserRadioTile = 0.obs;
+  var salesRepId = 0;
+  var salesRepName = "";
+  var docNoValue = "".obs;
+  var description = "".obs;
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
+
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
 
@@ -39,6 +60,18 @@ class CRMInvoiceController extends GetxController {
   void onInit() {
     dropDownList = getTypes()!;
     super.onInit();
+    selectedUserRadioTile.value =
+        GetStorage().read('Invoice_selectedUserRadioTile') ?? 0;
+    businessPartnerName =
+        GetStorage().read('Invoice_businessPartnerName') ?? "";
+    businessPartnerId.value =
+        GetStorage().read('Invoice_businessPartnerId') ?? 0;
+    salesRepId = GetStorage().read('Invoice_salesRepId') ?? 0;
+    salesRepName = GetStorage().read('Invoice_salesRepName') ?? "";
+    docNoValue.value = GetStorage().read('Invoice_docNo') ?? "";
+    description.value = GetStorage().read('Invoice_description') ?? "";
+    dateStartValue.value = GetStorage().read('Invoice_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('Invoice_dateEnd') ?? "";
     getInvoices();
     getADUserID();
     setConnect();
@@ -115,8 +148,7 @@ class CRMInvoiceController extends GetxController {
     String formattedDate = formatter.format(now);
     String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
-    var notificationFilter =
-        ' and IsSoTrx eq Y and DateInvoiced le \'$formattedDate 23:59:59\' and DateInvoiced ge \'$formattedNinetyDaysAgo 00:00:00\'';
+    var notificationFilter = '';
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
         notificationFilter =
@@ -129,7 +161,7 @@ class CRMInvoiceController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_invoice?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter&\$orderby= DateInvoiced desc');
+        '$protocol://$ip/api/v1/models/c_invoice?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter$descriptionFilter$dateStartFilter$dateEndFilter&\$orderby= DateInvoiced desc&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -140,6 +172,8 @@ class CRMInvoiceController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = InvoiceJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

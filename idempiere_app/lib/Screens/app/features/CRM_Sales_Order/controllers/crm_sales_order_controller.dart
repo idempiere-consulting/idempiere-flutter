@@ -18,6 +18,21 @@ class CRMSalesOrderController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  var userFilter = GetStorage().read('SalesOrder_userFilter') ?? "";
+  var businessPartnerFilter =
+      GetStorage().read('SalesOrder_businessPartnerFilter') ?? "";
+  var docNoFilter = GetStorage().read('SalesOrder_docNoFilter') ?? "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var selectedUserRadioTile = 0.obs;
+  var salesRepId = 0;
+  var salesRepName = "";
+  var docNoValue = "".obs;
+
   var searchFieldController = TextEditingController();
   var searchFilterValue = "".obs;
 
@@ -44,6 +59,15 @@ class CRMSalesOrderController extends GetxController {
   void onInit() {
     dropDownList = getTypes()!;
     super.onInit();
+    selectedUserRadioTile.value =
+        GetStorage().read('SalesOrder_selectedUserRadioTile') ?? 0;
+    businessPartnerName =
+        GetStorage().read('SalesOrder_businessPartnerName') ?? "";
+    businessPartnerId.value =
+        GetStorage().read('SalesOrder_businessPartnerId') ?? 0;
+    salesRepId = GetStorage().read('SalesOrder_salesRepId') ?? 0;
+    salesRepName = GetStorage().read('SalesOrder_salesRepName') ?? "";
+    docNoValue.value = GetStorage().read('SalesOrder_docNo') ?? "";
     getSalesOrders();
     getADUserID();
     setConnect();
@@ -128,7 +152,7 @@ class CRMSalesOrderController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter&\$orderby= DateOrdered desc');
+        '$protocol://$ip/api/v1/models/c_order?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter&\$orderby= DateOrdered desc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -140,6 +164,8 @@ class CRMSalesOrderController extends GetxController {
       //print(response.body);
       _trx =
           SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

@@ -132,8 +132,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
 
   Future<void> getAllEvents() async {
     var now = DateTime.now();
-    DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
-    DateTime sixtyDaysLater = now.add(const Duration(days: 60));
+    DateTime fiftyDaysAgo = now.subtract(const Duration(days: 30));
+    DateTime sixtyDaysLater = now.add(const Duration(days: 30));
     var formatter = DateFormat('yyyy-MM-dd');
     //String formattedDate = formatter.format(now);
     String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
@@ -143,7 +143,7 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_jp_todo_v?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedSixtyDaysLater 23:59:59\'');
+        '$protocol://$ip/api/v1/models/lit_mobile_jp_todo_v?\$filter=  JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedSixtyDaysLater 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -158,69 +158,187 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
           EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       List<EventRecords>? list = json.records;
 
-      for (var i = 0; i < json.records!.length; i++) {
-        //print(list![i].mpotid?.id);
-        var formatter = DateFormat('yyyy-MM-dd');
-        var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);
+      if (json.pagecount! > 1) {
+        int index = 1;
+        getAllEventsPages(json, index);
+      } else {
+        for (var i = 0; i < json.records!.length; i++) {
+          //print('hallo');
+          //print(list![i].mpotid?.id);
+          var formatter = DateFormat('yyyy-MM-dd');
+          var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);
 
-        if (selectedEvents[
-                DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] !=
-            null) {
-          selectedEvents[
-                  DateTime.parse('${formatter.format(date)} 00:00:00.000Z')]!
-              .add(
-            Event(
-                id: list[i].id!,
-                workOrderId: list[i].mpotid?.id ?? 0,
-                workOrderName: list[i].mpotid?.identifier ?? "",
-                type: list[i].jPToDoType!.identifier ?? "???",
-                typeId: list[i].jPToDoType!.id!,
-                status: list[i].jPToDoStatus!.identifier ?? "???",
-                statusId: list[i].jPToDoStatus!.id!,
-                title: list[i].name ?? "???",
-                description: list[i].description ?? "",
-                scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
-                startDate: formatter.format(date),
-                scheduledStartTime:
-                    list[i].jPToDoScheduledStartTime!.substring(0, 5),
-                scheduledEndTime:
-                    list[i].jPToDoScheduledEndTime!.substring(0, 5),
-                phone: list[i].phone ?? "N/A",
-                phone2: list[i].phone2 ?? "N/A",
-                refname: list[i].refname ?? "N/A",
-                ref2name: list[i].ref2name ?? "N/A",
-                cBPartner: list[i].cBPartnerID?.identifier ?? ""),
-          );
-        } else {
-          selectedEvents[
-              DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
-            Event(
-                id: list[i].id!,
-                workOrderId: list[i].mpotid?.id ?? 0,
-                workOrderName: list[i].mpotid?.identifier ?? "",
-                type: list[i].jPToDoType!.identifier ?? "???",
-                typeId: list[i].jPToDoType!.id!,
-                status: list[i].jPToDoStatus!.identifier ?? "???",
-                statusId: list[i].jPToDoStatus!.id!,
-                title: list[i].name ?? "???",
-                description: list[i].description ?? "",
-                scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "???",
-                startDate: formatter.format(date),
-                scheduledStartTime:
-                    list[i].jPToDoScheduledStartTime!.substring(0, 5),
-                scheduledEndTime:
-                    list[i].jPToDoScheduledEndTime!.substring(0, 5),
-                phone: list[i].phone ?? "N/A",
-                phone2: list[i].phone2 ?? "N/A",
-                refname: list[i].refname ?? "N/A",
-                ref2name: list[i].ref2name ?? "N/A",
-                cBPartner: list[i].cBPartnerID?.identifier ?? "")
-          ];
+          if (selectedEvents[
+                  DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] !=
+              null) {
+            selectedEvents[
+                    DateTime.parse('${formatter.format(date)} 00:00:00.000Z')]!
+                .add(
+              Event(
+                  id: list[i].id!,
+                  workOrderId: list[i].mpotid?.id ?? 0,
+                  workOrderName: list[i].mpotid?.identifier ?? "",
+                  type: list[i].jPToDoType!.identifier ?? "???",
+                  typeId: list[i].jPToDoType!.id!,
+                  status: list[i].jPToDoStatus!.identifier ?? "???",
+                  statusId: list[i].jPToDoStatus!.id!,
+                  title: list[i].name ?? "???",
+                  description: list[i].description ?? "",
+                  scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
+                  startDate: formatter.format(date),
+                  scheduledStartTime:
+                      list[i].jPToDoScheduledStartTime!.substring(0, 5),
+                  scheduledEndTime:
+                      list[i].jPToDoScheduledEndTime!.substring(0, 5),
+                  phone: list[i].phone ?? "N/A",
+                  phone2: list[i].phone2 ?? "N/A",
+                  refname: list[i].refname ?? "N/A",
+                  ref2name: list[i].ref2name ?? "N/A",
+                  cBPartner: list[i].cBPartnerID?.identifier ?? ""),
+            );
+          } else {
+            selectedEvents[
+                DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
+              Event(
+                  id: list[i].id!,
+                  workOrderId: list[i].mpotid?.id ?? 0,
+                  workOrderName: list[i].mpotid?.identifier ?? "",
+                  type: list[i].jPToDoType!.identifier ?? "???",
+                  typeId: list[i].jPToDoType!.id!,
+                  status: list[i].jPToDoStatus!.identifier ?? "???",
+                  statusId: list[i].jPToDoStatus!.id!,
+                  title: list[i].name ?? "???",
+                  description: list[i].description ?? "",
+                  scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "???",
+                  startDate: formatter.format(date),
+                  scheduledStartTime:
+                      list[i].jPToDoScheduledStartTime!.substring(0, 5),
+                  scheduledEndTime:
+                      list[i].jPToDoScheduledEndTime!.substring(0, 5),
+                  phone: list[i].phone ?? "N/A",
+                  phone2: list[i].phone2 ?? "N/A",
+                  refname: list[i].refname ?? "N/A",
+                  ref2name: list[i].ref2name ?? "N/A",
+                  cBPartner: list[i].cBPartnerID?.identifier ?? "")
+            ];
+          }
         }
+        flag = true;
+        setState(() {});
       }
-      flag = true;
-      setState(() {});
+      //print(json.rowcount);
+    } else {
+      //throw Exception("Failed to load events");
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
 
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<void> getAllEventsPages(EventJson json, int index) async {
+    var now = DateTime.now();
+    DateTime fiftyDaysAgo = now.subtract(const Duration(days: 50));
+    DateTime sixtyDaysLater = now.add(const Duration(days: 60));
+    var formatter = DateFormat('yyyy-MM-dd');
+    //String formattedDate = formatter.format(now);
+    String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
+    String formattedSixtyDaysLater = formatter.format(sixtyDaysLater);
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_jp_todo_v?\$filter=  JP_ToDo_Type eq \'S\' and AD_User_ID eq $adUserId and JP_ToDo_ScheduledStartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and JP_ToDo_ScheduledStartDate le \'$formattedSixtyDaysLater 23:59:59\'&\$skip=${(index * 100)}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      //print(response.body);
+      var pageJson =
+          EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      List<EventRecords>? list = json.records;
+
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        getAllEventsPages(json, index);
+      } else {
+        for (var i = 0; i < json.records!.length; i++) {
+          //print('hallo');
+          //print(list![i].mpotid?.id);
+          var formatter = DateFormat('yyyy-MM-dd');
+          var date = DateTime.parse(list![i].jPToDoScheduledStartDate!);
+
+          if (selectedEvents[
+                  DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] !=
+              null) {
+            selectedEvents[
+                    DateTime.parse('${formatter.format(date)} 00:00:00.000Z')]!
+                .add(
+              Event(
+                  id: list[i].id!,
+                  workOrderId: list[i].mpotid?.id ?? 0,
+                  workOrderName: list[i].mpotid?.identifier ?? "",
+                  type: list[i].jPToDoType!.identifier ?? "???",
+                  typeId: list[i].jPToDoType!.id!,
+                  status: list[i].jPToDoStatus!.identifier ?? "???",
+                  statusId: list[i].jPToDoStatus!.id!,
+                  title: list[i].name ?? "???",
+                  description: list[i].description ?? "",
+                  scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "",
+                  startDate: formatter.format(date),
+                  scheduledStartTime:
+                      list[i].jPToDoScheduledStartTime!.substring(0, 5),
+                  scheduledEndTime:
+                      list[i].jPToDoScheduledEndTime!.substring(0, 5),
+                  phone: list[i].phone ?? "N/A",
+                  phone2: list[i].phone2 ?? "N/A",
+                  refname: list[i].refname ?? "N/A",
+                  ref2name: list[i].ref2name ?? "N/A",
+                  cBPartner: list[i].cBPartnerID?.identifier ?? ""),
+            );
+          } else {
+            selectedEvents[
+                DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
+              Event(
+                  id: list[i].id!,
+                  workOrderId: list[i].mpotid?.id ?? 0,
+                  workOrderName: list[i].mpotid?.identifier ?? "",
+                  type: list[i].jPToDoType!.identifier ?? "???",
+                  typeId: list[i].jPToDoType!.id!,
+                  status: list[i].jPToDoStatus!.identifier ?? "???",
+                  statusId: list[i].jPToDoStatus!.id!,
+                  title: list[i].name ?? "???",
+                  description: list[i].description ?? "",
+                  scheduledStartDate: list[i].jPToDoScheduledStartDate ?? "???",
+                  startDate: formatter.format(date),
+                  scheduledStartTime:
+                      list[i].jPToDoScheduledStartTime!.substring(0, 5),
+                  scheduledEndTime:
+                      list[i].jPToDoScheduledEndTime!.substring(0, 5),
+                  phone: list[i].phone ?? "N/A",
+                  phone2: list[i].phone2 ?? "N/A",
+                  refname: list[i].refname ?? "N/A",
+                  ref2name: list[i].ref2name ?? "N/A",
+                  cBPartner: list[i].cBPartnerID?.identifier ?? "")
+            ];
+          }
+        }
+        flag = true;
+        setState(() {});
+      }
       //print(json.rowcount);
     } else {
       //throw Exception("Failed to load events");

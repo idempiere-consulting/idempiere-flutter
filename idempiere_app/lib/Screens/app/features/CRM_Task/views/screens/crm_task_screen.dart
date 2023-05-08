@@ -166,7 +166,9 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                     MaterialSymbols.filter_alt_filled,
                     color: controller.businessPartnerId.value == 0 &&
                             controller.selectedUserRadioTile.value == 0 &&
-                            controller.selectedStatusRadioTile.value == 0
+                            controller.selectedStatusRadioTile.value == 0 &&
+                            controller.dateStartValue == "" &&
+                            controller.dateEndValue == ""
                         ? Colors.white
                         : kNotifColor,
                   )),
@@ -176,8 +178,12 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                       controller.selectedUserRadioTile.value,
                   'selectedStatusRadioTile':
                       controller.selectedStatusRadioTile.value,
+                  'userId': controller.userId,
+                  'userName': controller.userName,
                   'businessPartnerId': controller.businessPartnerId.value,
                   'businessPartnerName': controller.businessPartnerName,
+                  'dateStart': controller.dateStartValue,
+                  'dateEnd': controller.dateEndValue,
                 });
               }),
           SpeedDialChild(

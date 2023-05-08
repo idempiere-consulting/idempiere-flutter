@@ -38,6 +38,7 @@ class Records {
   final ADOrgID? aDOrgID;
   final bool? isActive;
   final String? created;
+  final String? help;
   final CreatedBy? createdBy;
   final String? updated;
   final UpdatedBy? updatedBy;
@@ -101,6 +102,7 @@ class Records {
     this.updatedBy,
     this.name,
     this.description,
+    this.help,
     this.isSummary,
     this.cUOMID,
     this.isStocked,
@@ -168,6 +170,7 @@ class Records {
             : null,
         name = json['Name'] as String?,
         description = json['Description'] as String?,
+        help = json['Help'] as String?,
         isSummary = json['IsSummary'] as bool?,
         cUOMID = (json['C_UOM_ID'] as Map<String, dynamic>?) != null
             ? CUOMID.fromJson(json['C_UOM_ID'] as Map<String, dynamic>)

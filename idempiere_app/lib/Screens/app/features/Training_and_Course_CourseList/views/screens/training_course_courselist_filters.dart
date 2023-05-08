@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -80,8 +79,8 @@ class _TrainingCourseCourseListFilterState
         print(e);
       }
     } else {
-      Get.find<TrainingCourseCourseListController>().dateStartFilter = "";
-      Get.find<TrainingCourseCourseListController>().dateStartValue = '';
+      Get.find<TrainingCourseCourseListController>().dateEndFilter = "";
+      Get.find<TrainingCourseCourseListController>().dateEndValue = '';
     }
 
     Get.find<TrainingCourseCourseListController>().selectedUserRadioTile.value =

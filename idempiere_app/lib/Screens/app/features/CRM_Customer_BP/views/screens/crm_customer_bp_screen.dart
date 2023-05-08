@@ -7,11 +7,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/models/businesspartnergroup_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/models/customer_bp_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_customer_bp_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_edit_customer_bp.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -63,13 +66,127 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
         return false;
       },
       child: Scaffold(
-        floatingActionButton: FloatingActionButton.small(
-          backgroundColor: kNotifColor,
-          //foregroundColor: Colors.white,
-          onPressed: () {
-            controller.createBusinessPartner();
-          },
-          child: const Icon(Icons.add),
+        bottomNavigationBar: BottomAppBar(
+          shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder()),
+          //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+          color: Theme.of(context).cardColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.getCustomers();
+                          },
+                          child: Row(
+                            children: [
+                              //Icon(Icons.filter_alt),
+                              Obx(() => controller.dataAvailable
+                                  ? Text(
+                                      "${"CUSTOMERS".tr}: ${controller.trx.rowcount}")
+                                  : Text("${"CUSTOMERS".tr}: ")),
+                            ],
+                          ),
+                        ),
+                      ),
+                      /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                    ],
+                  )
+                ],
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount > 1) {
+                              controller.pagesCount.value -= 1;
+                              controller.getCustomers();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                        Obx(() => Text(
+                            "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount <
+                                controller.pagesTot.value) {
+                              controller.pagesCount.value += 1;
+                              controller.getCustomers();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.home_menu,
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+          children: [
+            SpeedDialChild(
+                label: 'Filter'.tr,
+                child: Obx(() => Icon(
+                      MaterialSymbols.filter_alt_filled,
+                      color: controller.selectedUserRadioTile.value == 0 &&
+                              controller.nameValue.value == "" &&
+                              controller.bpGroupId.value == "0"
+                          ? Colors.white
+                          : kNotifColor,
+                    )),
+                onTap: () {
+                  Get.to(() => const CRMFilterCustomer(), arguments: {
+                    'selectedUserRadioTile':
+                        controller.selectedUserRadioTile.value,
+                    'salesRepId': controller.salesRepId,
+                    'salesRepName': controller.salesRepName,
+                    'name': controller.nameValue.value,
+                    'bpGroupId': controller.bpGroupId.value,
+                  });
+                }),
+            /* SpeedDialChild(
+                label: 'New'.tr,
+                child: const Icon(MaterialSymbols.person_add),
+                onTap: () {}) */
+          ],
         ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
@@ -86,220 +203,14 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
             mobileBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
 
                 /* _buildProfile(data: controller.getProfil()),
                 const SizedBox(height: kSpacing), */
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text(
-                              "${"CUSTOMERS".tr}: ${controller.trx.rowcount}")
-                          : Text("${"CUSTOMERS".tr}: ")),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getCustomers();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          underline: const SizedBox(),
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
-                            controller.bpGroupValue.value = "";
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Obx(
-                      () => Visibility(
-                        visible: controller.dropdownValue.value == "1",
-                        child: Flexible(
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10, right: 10),
-                            child: TextField(
-                              controller: controller.searchFieldController,
-                              onSubmitted: (String? value) {
-                                /* controller.searchFilterValue.value =
-                                  controller.searchFieldController.text; */
-                                controller.getCustomers();
-                              },
-                              onEditingComplete: () {
-                                FocusScope.of(context).unfocus();
-                              },
-                              decoration: InputDecoration(
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                                prefixIcon: const Icon(EvaIcons.search),
-                                hintText: "search..",
-                                isDense: true,
-                                fillColor: Theme.of(context).cardColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Obx(
-                      () => Visibility(
-                        visible: controller.dropdownValue.value == "2",
-                        child: Flexible(
-                          child: Container(
-                            margin: const EdgeInsets.all(10),
-                            child: FutureBuilder(
-                              future: controller.getAllBPGroups(),
-                              builder: (BuildContext ctx,
-                                      AsyncSnapshot<List<BPGRecords>>
-                                          snapshot) =>
-                                  snapshot.hasData
-                                      ? Obx(() => DropdownButton(
-                                            underline: const SizedBox(),
-                                            hint: Text("Select a BP Group".tr),
-                                            isExpanded: true,
-                                            value: controller
-                                                        .bpGroupValue.value ==
-                                                    ""
-                                                ? null
-                                                : controller.bpGroupValue.value,
-                                            elevation: 16,
-                                            onChanged: (newValue) {
-                                              controller.bpGroupValue.value =
-                                                  newValue as String;
-                                              controller.getCustomers();
-                                              /* print(newValue);
-                                              print(controller
-                                                  .bpGroupValue.value); */
-                                            },
-                                            items: snapshot.data!.map((list) {
-                                              return DropdownMenuItem<String>(
-                                                value: list.id.toString(),
-                                                child: Text(
-                                                  list.name.toString(),
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ))
-                                      : const Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    /* Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ), */
-                  ],
-                ),
-                Row(
-                  //mainAxisAlignment: MainAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        if (controller.pagesCount > 1) {
-                          controller.pagesCount.value -= 1;
-                          controller.getCustomers();
-                        }
-                      },
-                      icon: const Icon(Icons.navigate_before),
-                    ),
-                    Obx(() => Text(
-                        "${controller.pagesCount.value}/${controller.pagesTot.value}")),
-                    IconButton(
-                      onPressed: () {
-                        if (controller.pagesCount < controller.pagesTot.value) {
-                          controller.pagesCount.value += 1;
-                          controller.getCustomers();
-                        }
-                      },
-                      icon: const Icon(Icons.navigate_next),
-                    )
-                  ],
-                ),
+
                 //const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
@@ -1030,6 +941,40 @@ class CRMCustomerBPScreen extends GetView<CRMCustomerBPController> {
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

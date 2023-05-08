@@ -22,6 +22,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salest
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_edit_opportunity.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_create.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_create_tasks.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_filters_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -169,23 +170,27 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
           children: [
             SpeedDialChild(
                 label: 'Filter'.tr,
-                child: Icon(
-                  MaterialSymbols.filter_alt_filled,
-                  color: Colors.white,
-                ),
+                child: Obx(() => Icon(
+                      MaterialSymbols.filter_alt_filled,
+                      color: controller.businessPartnerId.value == 0 &&
+                              controller.selectedUserRadioTile.value == 0 &&
+                              controller.saleStageId.value == "0" &&
+                              controller.productId.value == 0
+                          ? Colors.white
+                          : kNotifColor,
+                    )),
                 onTap: () {
-                  /* Get.to(() => const CRMFilterLead(), arguments: {
-                    "sectorId": controller.sectorId.value,
-                    "selectedUserRadioTile":
+                  Get.to(const CRMFilterOpportunity(), arguments: {
+                    'selectedUserRadioTile':
                         controller.selectedUserRadioTile.value,
-                    'name': controller.nameValue.value,
-                    'mail': controller.mailValue.value,
-                    'phone': controller.phoneValue.value,
-                    "statusId": controller.statusId.value,
-                    'sizeId': controller.sizeId.value,
-                    'campaignId': controller.campaignId.value,
-                    'sourceId': controller.sourceId.value,
-                  }); */
+                    'salesRepId': controller.salesRepId,
+                    'salesRepName': controller.salesRepName,
+                    'businessPartnerId': controller.businessPartnerId.value,
+                    'businessPartnerName': controller.businessPartnerName,
+                    'productId': controller.productId.value,
+                    'productName': controller.productName,
+                    'saleStageId': controller.saleStageId.value,
+                  });
                 }),
             SpeedDialChild(
                 label: 'New'.tr,

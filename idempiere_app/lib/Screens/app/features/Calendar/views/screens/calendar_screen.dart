@@ -311,6 +311,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   int adUserId = 0;
   bool flag = true;
 
+  // ignore: prefer_typing_uninitialized_variables
   var userFieldController;
 
   final List<dynamic> list = GetStorage().read('permission');

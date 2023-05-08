@@ -483,6 +483,11 @@ class MaintenanceMpResourceBarcodeScreen
                                                                 .trx
                                                                 .records![index]
                                                                 .serviceDate,
+                                                        "orderedDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
                                                         "endDate": controller
                                                             .trx
                                                             .records![index]
@@ -1092,7 +1097,7 @@ class MaintenanceMpResourceBarcodeScreen
                                                         "note": controller
                                                             .trx
                                                             .records![index]
-                                                            .name,
+                                                            .note,
                                                         "resTypeId": controller
                                                             .trx
                                                             .records![index]
@@ -1451,12 +1456,7 @@ class MaintenanceMpResourceBarcodeScreen
                                               children: [
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    color: controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .toDoAction! ==
-                                                                "OK" ||
+                                                    color: controller.trx.records![index].toDoAction! == "OK" ||
                                                             controller
                                                                     .trx
                                                                     .records![
@@ -1464,14 +1464,23 @@ class MaintenanceMpResourceBarcodeScreen
                                                                     .toDoAction! ==
                                                                 "NEW"
                                                         ? kNotifColor
-                                                        : controller.trx.records![index].toDoAction! ==
-                                                                    "PR" ||
+                                                        : controller.trx.records![index].toDoAction! == "PR" ||
                                                                 controller.trx.records![index].toDoAction! ==
-                                                                    "PC"
+                                                                    "PC" ||
+                                                                controller.trx.records![index].toDoAction! ==
+                                                                    "PRnow" ||
+                                                                controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .toDoAction! ==
+                                                                    "PCnow"
                                                             ? const Color.fromARGB(
                                                                 255, 209, 189, 4)
                                                             : controller.trx.records![index].toDoAction! ==
-                                                                    "PT"
+                                                                        "PT" ||
+                                                                    controller.trx.records![index].toDoAction! ==
+                                                                        "PTnow"
                                                                 ? Colors.orange
                                                                 : controller
                                                                             .trx
@@ -1523,9 +1532,11 @@ class MaintenanceMpResourceBarcodeScreen
                                           children: [
                                             Row(children: [
                                               Text('Note: '.tr),
-                                              Text(controller.trx
-                                                      .records![index].note ??
-                                                  ""),
+                                              Expanded(
+                                                child: Text(controller.trx
+                                                        .records![index].note ??
+                                                    ""),
+                                              ),
                                             ]),
                                             Row(children: [
                                               Text('Status: '.tr),

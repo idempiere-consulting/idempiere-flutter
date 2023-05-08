@@ -37,6 +37,8 @@ class Records {
   final MovementType? movementType;
   final String? movementDate;
   final String? privateNote;
+  final String? description;
+  final String? externalAspect;
   final bool? processed;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
@@ -50,6 +52,7 @@ class Records {
   final CDocTypeID? cDocTypeID;
   final bool? isPrinted;
   final String? dateAcct;
+  final String? shipDate;
   final CBPartnerID? cBPartnerID;
   final CBPartnerLocationID? cBPartnerLocationID;
   final MWarehouseID? mWarehouseID;
@@ -83,7 +86,10 @@ class Records {
     this.uid,
     this.movementType,
     this.movementDate,
+    this.shipDate,
     this.privateNote,
+    this.description,
+    this.externalAspect,
     this.processed,
     this.aDClientID,
     this.aDOrgID,
@@ -134,7 +140,10 @@ class Records {
                 json['MovementType'] as Map<String, dynamic>)
             : null,
         movementDate = json['MovementDate'] as String?,
+        shipDate = json['ShipDate'] as String?,
         privateNote = json['PrivateNote'] as String?,
+        description = json['Description'] as String?,
+        externalAspect = json['LIT_ExternalAspect'] as String?,
         processed = json['Processed'] as bool?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
@@ -225,7 +234,9 @@ class Records {
         'uid': uid,
         'MovementType': movementType?.toJson(),
         'MovementDate': movementDate,
+        'ShipDate': shipDate,
         'PrivateNote': privateNote,
+        'Description': description,
         'Processed': processed,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),

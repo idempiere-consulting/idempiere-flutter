@@ -9,7 +9,16 @@ class CRMContactBPController extends GetxController {
 
   var value = "Tutti".obs;
 
-  int businessPartnerId = 0;
+  var businessPartnerFilter = "";
+  var nameFilter = "";
+  var mailFilter = "";
+  var phoneFilter = "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var nameValue = "".obs;
+  var mailValue = "".obs;
+  var phoneValue = "".obs;
 
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
@@ -133,32 +142,7 @@ class CRMContactBPController extends GetxController {
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     //var userFilters = [];
     _dataAvailable.value = false;
-    var searchUrlFilter = "";
 
-    switch (dropdownValue.value) {
-      case "1":
-        if (searchFieldController.text != "") {
-          searchUrlFilter =
-              " and contains(Name,'${searchFieldController.text}')";
-        }
-
-        break;
-      case "2":
-        if (businessPartnerId != 0) {
-          searchUrlFilter = " and C_BPartner_ID eq $businessPartnerId";
-        }
-        break;
-      case "3":
-        searchUrlFilter =
-            " and contains(Phone,'${searchFieldController.text}')";
-        break;
-      case "4":
-        searchUrlFilter =
-            " and contains(EMail,'${searchFieldController.text}')";
-        break;
-      default:
-    }
-    businessPartnerId = 0;
     var notificationFilter = "";
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
@@ -171,7 +155,7 @@ class CRMContactBPController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/ad_user?\$filter=C_BPartner_ID neq null and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$searchUrlFilter$notificationFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/ad_user?\$filter=C_BPartner_ID neq null and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$businessPartnerFilter$nameFilter$phoneFilter$mailFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{

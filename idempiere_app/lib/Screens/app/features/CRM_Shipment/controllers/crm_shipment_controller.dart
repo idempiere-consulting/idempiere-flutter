@@ -16,6 +16,20 @@ class CRMShipmentController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var businessPartnerFilter = "";
+  var dateStartFilter = "";
+  var dateEndFilter = "";
+  var docNoFilter = "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
+  var docNoValue = "".obs;
+
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -116,7 +130,7 @@ class CRMShipmentController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$orderby= MovementDate desc'); //\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&
+        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}$businessPartnerFilter$dateStartFilter$dateEndFilter$docNoFilter&\$orderby= MovementDate desc&\$skip=${(pagesCount.value - 1) * 100}'); //\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&
 
     var response = await http.get(
       url,
@@ -128,6 +142,8 @@ class CRMShipmentController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = ShipmentJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

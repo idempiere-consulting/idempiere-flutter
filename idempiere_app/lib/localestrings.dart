@@ -1102,6 +1102,13 @@ class LocaleString extends Translations {
           'Confirm Ticket': 'Conferma Ticket',
           'Close Ticket': 'Chiudi Ticket',
           'Apply Filters': 'Applica Filtri',
+          'Shipment Date': 'Data Spedizione',
+          'Movement Type': 'Causale',
+          'External Aspect': 'Aspetto Esteriore',
+          'Movement Date': 'Data Movimento',
+          'Delivery Via Rule': 'Mezzo di Trasporto',
+          'Product Code': 'Codice Prodotto',
+          'MORE INFO': 'INFORMAZIONI AGGIUNTIVE',
         },
       };
 }

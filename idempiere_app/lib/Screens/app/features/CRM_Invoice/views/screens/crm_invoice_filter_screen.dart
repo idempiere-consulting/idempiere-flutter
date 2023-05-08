@@ -2,14 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:intl/intl.dart';
@@ -19,102 +21,186 @@ import 'package:path_provider/path_provider.dart';
 
 //screens
 
-class CRMFilterTask extends StatefulWidget {
-  const CRMFilterTask({Key? key}) : super(key: key);
+class CRMFilterInvoice extends StatefulWidget {
+  const CRMFilterInvoice({Key? key}) : super(key: key);
 
   @override
-  State<CRMFilterTask> createState() => _CRMFilterTaskState();
+  State<CRMFilterInvoice> createState() => _CRMFilterInvoiceState();
 }
 
-class _CRMFilterTaskState extends State<CRMFilterTask> {
+class _CRMFilterInvoiceState extends State<CRMFilterInvoice> {
   applyFilters() {
     var inputFormat = DateFormat('dd/MM/yyyy');
     if (selectedUserRadioTile > 0) {
-      if (selectedUserRadioTile == 2 && userId > 0) {
-        Get.find<CRMTaskController>().userFilter = " and AD_User_ID eq $userId";
+      if (selectedUserRadioTile == 2 && salesRepId > 0) {
+        Get.find<CRMInvoiceController>().userFilter =
+            " and SalesRep_ID eq $salesRepId";
       } else {
-        Get.find<CRMTaskController>().userFilter =
-            " and AD_User_ID eq ${GetStorage().read('userId')}";
+        Get.find<CRMInvoiceController>().userFilter =
+            " and SalesRep_ID eq ${GetStorage().read('userId')}";
       }
     } else {
-      Get.find<CRMTaskController>().userFilter = "";
-    }
-
-    if (selectedStatusRadioTile > 0) {
-      switch (selectedStatusRadioTile) {
-        case 1:
-          Get.find<CRMTaskController>().statusFilter =
-              " and JP_ToDo_Status neq 'CO'";
-
-          break;
-        case 2:
-          Get.find<CRMTaskController>().statusFilter =
-              " and JP_ToDo_Status eq 'CO'";
-
-          break;
-        default:
-      }
-    } else {
-      Get.find<CRMTaskController>().statusFilter = "";
+      Get.find<CRMInvoiceController>().userFilter = "";
     }
 
     if (businessPartnerId > 0) {
-      Get.find<CRMTaskController>().businessPartnerFilter =
+      Get.find<CRMInvoiceController>().businessPartnerFilter =
           " and C_BPartner_ID eq $businessPartnerId";
     } else {
-      Get.find<CRMTaskController>().businessPartnerFilter = "";
+      Get.find<CRMInvoiceController>().businessPartnerFilter = "";
+    }
+
+    if (docNoFieldController.text != "") {
+      Get.find<CRMInvoiceController>().docNoFilter =
+          " and contains(DocumentNo,'${docNoFieldController.text}')";
+    } else {
+      Get.find<CRMInvoiceController>().docNoFilter = "";
+    }
+
+    if (descriptionFieldController.text != "") {
+      Get.find<CRMInvoiceController>().descriptionFilter =
+          " and contains(tolower(Description),'${descriptionFieldController.text}')";
+    } else {
+      Get.find<CRMInvoiceController>().descriptionFilter = "";
     }
 
     if (dateStartFieldController.text != "") {
       try {
         var date = inputFormat.parse(dateStartFieldController.text);
 
-        Get.find<CRMTaskController>().dateStartFilter =
-            " and JP_ToDo_ScheduledStartDate ge '${DateFormat('yyyy-MM-dd').format(date)} 00:00:00'";
-        Get.find<CRMTaskController>().dateStartValue =
+        Get.find<CRMInvoiceController>().dateStartFilter =
+            " and DateInvoiced ge '${DateFormat('yyyy-MM-dd').format(date)} 00:00:00'";
+        Get.find<CRMInvoiceController>().dateStartValue.value =
             dateStartFieldController.text;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else {
-      Get.find<CRMTaskController>().dateStartFilter = "";
-      Get.find<CRMTaskController>().dateStartValue = '';
+      Get.find<CRMInvoiceController>().dateStartFilter = "";
+      Get.find<CRMInvoiceController>().dateStartValue.value = '';
     }
 
     if (dateEndFieldController.text != "") {
       try {
         var date = inputFormat.parse(dateEndFieldController.text);
 
-        Get.find<CRMTaskController>().dateEndFilter =
-            " and JP_ToDo_ScheduledEndDate le '${DateFormat('yyyy-MM-dd').format(date)} 23:59:59'";
-        Get.find<CRMTaskController>().dateEndValue =
+        Get.find<CRMInvoiceController>().dateEndFilter =
+            " and DateInvoiced le '${DateFormat('yyyy-MM-dd').format(date)} 23:59:59'";
+        Get.find<CRMInvoiceController>().dateEndValue.value =
             dateEndFieldController.text;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else {
-      Get.find<CRMTaskController>().dateEndFilter = "";
-      Get.find<CRMTaskController>().dateEndValue = '';
+      Get.find<CRMInvoiceController>().dateEndFilter = "";
+      Get.find<CRMInvoiceController>().dateEndValue.value = '';
     }
 
-    Get.find<CRMTaskController>().selectedUserRadioTile.value =
+    Get.find<CRMInvoiceController>().selectedUserRadioTile.value =
         selectedUserRadioTile;
-    Get.find<CRMTaskController>().userName = userFieldController.text;
-    Get.find<CRMTaskController>().userId = userId;
 
-    Get.find<CRMTaskController>().selectedStatusRadioTile.value =
-        selectedStatusRadioTile;
-    Get.find<CRMTaskController>().businessPartnerId.value = businessPartnerId;
+    Get.find<CRMInvoiceController>().salesRepId = salesRepId;
+    Get.find<CRMInvoiceController>().salesRepName =
+        salesRepFieldController.text;
+
+    Get.find<CRMInvoiceController>().businessPartnerId.value =
+        businessPartnerId;
 
     if (businessPartnerId > 0) {
-      Get.find<CRMTaskController>().businessPartnerName =
+      Get.find<CRMInvoiceController>().businessPartnerName =
           bpSearchFieldController.text;
     } else {
-      Get.find<CRMTaskController>().businessPartnerName = "";
+      Get.find<CRMInvoiceController>().businessPartnerName = "";
+    }
+    Get.find<CRMInvoiceController>().docNoValue.value =
+        docNoFieldController.text;
+    Get.find<CRMInvoiceController>().description.value =
+        descriptionFieldController.text;
+
+    Get.find<CRMInvoiceController>().getInvoices();
+    Get.back();
+  }
+
+  saveFilters() {
+    var inputFormat = DateFormat('dd/MM/yyyy');
+    if (selectedUserRadioTile > 0) {
+      if (selectedUserRadioTile == 2 && salesRepId > 0) {
+        GetStorage()
+            .write('Invoice_userFilter', " and SalesRep_ID eq $salesRepId");
+      } else {
+        GetStorage().write('Invoice_userFilter',
+            " and SalesRep_ID eq ${GetStorage().read('userId')}");
+      }
+    } else {
+      GetStorage().write('Invoice_userFilter', "");
     }
 
-    Get.find<CRMTaskController>().getTasks();
-    Get.back();
+    if (businessPartnerId > 0) {
+      GetStorage().write('Invoice_businessPartnerFilter',
+          " and C_BPartner_ID eq $businessPartnerId");
+    } else {
+      GetStorage().write('Invoice_businessPartnerFilter', "");
+    }
+
+    if (docNoFieldController.text != "") {
+      GetStorage().write('Invoice_docNoFilter',
+          " and contains(DocumentNo,'${docNoFieldController.text}')");
+    } else {
+      GetStorage().write('Invoice_docNoFilter', "");
+    }
+
+    if (descriptionFieldController.text != "") {
+      GetStorage().write('Invoice_descriptionFilter',
+          " and contains(tolower(Description),'${descriptionFieldController.text}')");
+    } else {
+      GetStorage().write('Invoice_descriptionFilter', "");
+    }
+
+    if (dateStartFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateStartFieldController.text);
+        GetStorage().write('Invoice_dateStartFilter',
+            " and DateInvoiced ge '${DateFormat('yyyy-MM-dd').format(date)} 00:00:00'");
+        GetStorage().write('Invoice_dateStart', dateStartFieldController.text);
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } else {
+      GetStorage().write('Invoice_dateStartFilter', "");
+      GetStorage().write('Invoice_dateStart', "");
+    }
+
+    if (dateEndFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateEndFieldController.text);
+
+        GetStorage().write('Invoice_dateEndFilter',
+            " and DateInvoiced le '${DateFormat('yyyy-MM-dd').format(date)} 23:59:59'");
+        GetStorage().write('Invoice_dateEnd', dateEndFieldController.text);
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    } else {
+      GetStorage().write('Invoice_dateEndFilter', "");
+      GetStorage().write('Invoice_dateEnd', "");
+    }
+
+    GetStorage().write('Invoice_selectedUserRadioTile', selectedUserRadioTile);
+    GetStorage().write('Invoice_salesRepId', salesRepId);
+    GetStorage().write('Invoice_salesRepName', salesRepFieldController.text);
+    GetStorage().write('Invoice_businessPartnerId', businessPartnerId);
+    GetStorage()
+        .write('Invoice_businessPartnerName', bpSearchFieldController.text);
+    GetStorage().write('Invoice_docNo', docNoFieldController.text);
+    GetStorage().write('Invoice_description', descriptionFieldController.text);
   }
 
   Future<List<BPRecords>> getAllBPs() async {
@@ -169,20 +255,15 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
     });
   }
 
-  setSelectedStatusRadioTile(int val) {
-    setState(() {
-      selectedStatusRadioTile = val;
-    });
-  }
-
   dynamic args = Get.arguments;
   int selectedUserRadioTile = 0;
-  int selectedStatusRadioTile = 0;
-  int userId = 0;
-  late TextEditingController userFieldController;
+  late TextEditingController salesRepFieldController;
+  int salesRepId = 0;
 
   int businessPartnerId = 0;
   late TextEditingController bpSearchFieldController;
+  late TextEditingController docNoFieldController;
+  late TextEditingController descriptionFieldController;
   late TextEditingController dateStartFieldController;
   late TextEditingController dateEndFieldController;
 
@@ -191,11 +272,14 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
     super.initState();
     bpSearchFieldController =
         TextEditingController(text: args['businessPartnerName'] ?? "");
+    salesRepFieldController =
+        TextEditingController(text: args['salesRepName'] ?? "");
+    salesRepId = args['salesRepId'] ?? 0;
     selectedUserRadioTile = args['selectedUserRadioTile'] ?? 0;
-    userId = args['userId'] ?? 0;
-    userFieldController = TextEditingController(text: args['userName'] ?? "");
-    selectedStatusRadioTile = args['selectedStatusRadioTile'] ?? 0;
     businessPartnerId = args['businessPartnerId'] ?? 0;
+    docNoFieldController = TextEditingController(text: args['docNo'] ?? "");
+    descriptionFieldController =
+        TextEditingController(text: args['description'] ?? "");
     dateStartFieldController =
         TextEditingController(text: args['dateStart'] ?? "");
     dateEndFieldController = TextEditingController(text: args['dateEnd'] ?? "");
@@ -210,6 +294,37 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
       floatingActionButton: ElevatedButton(
           onPressed: applyFilters, child: Text('Apply Filters'.tr)),
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: IconButton(
+              tooltip: 'reset filters',
+              onPressed: () {
+                setState(() {
+                  selectedUserRadioTile = 0;
+                  salesRepId = 0;
+                  salesRepFieldController.text = "";
+                  businessPartnerId = 0;
+                  bpSearchFieldController.text = "";
+                  docNoFieldController.text = "";
+                });
+              },
+              icon: const Icon(
+                MaterialSymbols.filter_alt_off,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: IconButton(
+              tooltip: 'save filters',
+              onPressed: saveFilters,
+              icon: const Icon(
+                MaterialSymbols.bookmark,
+              ),
+            ),
+          ),
+        ],
         leading: IconButton(
             onPressed: () {
               Get.back();
@@ -227,7 +342,7 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                 ExpansionTile(
                   initiallyExpanded: true,
                   title: Text(
-                    'User Filter'.tr,
+                    'SalesRep Filter'.tr,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
@@ -277,15 +392,15 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                                       onChanged: (value) {
                                         if (value == "") {
                                           setState(() {
-                                            userId = 0;
+                                            salesRepId = 0;
                                           });
                                         }
                                       },
-                                      controller: userFieldController,
+                                      controller: salesRepFieldController,
                                       //autofocus: true,
 
                                       decoration: InputDecoration(
-                                        labelText: 'User'.tr,
+                                        labelText: 'SalesRep'.tr,
                                         filled: true,
                                         border: OutlineInputBorder(
                                           borderRadius:
@@ -311,9 +426,9 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                                       );
                                     },
                                     onSuggestionSelected: (suggestion) {
-                                      userFieldController.text =
+                                      salesRepFieldController.text =
                                           suggestion.name!;
-                                      userId = suggestion.id!;
+                                      salesRepId = suggestion.id!;
                                     },
                                   )
                                 : const Center(
@@ -335,58 +450,6 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                 ExpansionTile(
                   initiallyExpanded: true,
                   title: Text(
-                    'Status Filter'.tr,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  childrenPadding:
-                      const EdgeInsets.only(bottom: 10, right: 10, left: 10),
-                  children: [
-                    RadioListTile(
-                      value: 0,
-                      groupValue: selectedStatusRadioTile,
-                      title: Text("All".tr),
-                      //subtitle: Text("Radio 1 Subtitle"),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedStatusRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
-
-                      //selected: true,
-                    ),
-                    RadioListTile(
-                      value: 1,
-                      groupValue: selectedStatusRadioTile,
-                      title: Text("Open Only".tr),
-                      //subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedStatusRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
-                      selected: false,
-                    ),
-                    RadioListTile(
-                      value: 2,
-                      groupValue: selectedStatusRadioTile,
-                      title: Text("Closed Only".tr),
-                      //subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedStatusRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
-                      selected: false,
-                    )
-                  ],
-                ),
-                ExpansionTile(
-                  initiallyExpanded: true,
-                  title: Text(
                     'Fields Filter'.tr,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
@@ -395,7 +458,8 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                       bottom: 10, right: 10, left: 10, top: 10),
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      margin: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 10),
                       child: FutureBuilder(
                         future: getAllBPs(),
                         builder: (BuildContext ctx,
@@ -415,10 +479,7 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                                       },
                                       controller: bpSearchFieldController,
                                       //autofocus: true,
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .copyWith(
-                                              fontStyle: FontStyle.italic),
+
                                       decoration: InputDecoration(
                                         labelText: 'Business Partner'.tr,
                                         //filled: true,
@@ -456,8 +517,39 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                       ),
                     ),
                     Container(
-                      margin:
-                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: docNoFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'DocumentNo'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: descriptionFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Description'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
                       child: TextField(
                         // maxLength: 10,
                         keyboardType: TextInputType.datetime,
@@ -479,8 +571,7 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                       ),
                     ),
                     Container(
-                      margin:
-                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      margin: const EdgeInsets.all(10),
                       child: TextField(
                         // maxLength: 10,
                         keyboardType: TextInputType.datetime,
@@ -503,7 +594,7 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -512,13 +603,13 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
           tabletBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: const [],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: const [],
             );
           },
         ),

@@ -10,12 +10,20 @@ class CRMProductListController extends GetxController {
 
   var searchFieldController = TextEditingController();
 
-  var value = "Tutti".obs;
-
-  var filters = ["Tutti", "Miei" /* , "Team" */];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+
+  var valueFilter = "";
+  var nameFilter = "";
+  var descriptionFilter = "";
+
+  var value = "".obs;
+  var name = "".obs;
+  var description = "".obs;
+
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
 
   @override
   void onInit() {
@@ -28,23 +36,13 @@ class CRMProductListController extends GetxController {
   ProductListJson get trx => _trx;
   //String get value => _value.toString();
 
-  changeFilter() {
-    filterCount++;
-    if (filterCount == 2) {
-      filterCount = 0;
-    }
-
-    value.value = filters[filterCount];
-    getProductLists();
-  }
-
   Future<void> getProductLists() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$valueFilter$nameFilter$descriptionFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -60,6 +58,7 @@ class CRMProductListController extends GetxController {
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
+      pagesTot.value = _trx.pagecount!;
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {

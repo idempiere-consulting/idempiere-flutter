@@ -1827,6 +1827,7 @@ class MaintenanceMpResourceBarcodeController extends GetxController {
               }
             }
           }
+
           file.writeAsStringSync(jsonEncode(temp.toJson()));
           //productSync = false;
           getWorkOrders();
@@ -1921,10 +1922,10 @@ class MaintenanceMpResourceBarcodeController extends GetxController {
     //print(GetStorage().read('selectedTaskDocNo'));
     _dataAvailable.value = false;
     late List<RRecords> temp;
-    /* var flag = true;
+    var flag = true;
     var now = DateTime.now();
     var twentyDaysAgoDate = now.add(const Duration(days: -20));
-    var twentyDaysLater = now.add(const Duration(days: 20)); */
+    var twentyDaysLater = now.add(const Duration(days: 20));
     //var formatter = DateFormat('yyyy-MM-dd');
     //String formattedDate = formatter.format(now);
     //print(GetStorage().read('workOrderResourceSync'));
@@ -1939,20 +1940,11 @@ class MaintenanceMpResourceBarcodeController extends GetxController {
 
     //print(_trx.records!.length);
 
-    /* if (init) {
-      //filter3Available.value = false;
-      var found =
-          _trx.records!.where((element) => element.litResourceGroupID != null);
-      if (found.isNotEmpty) {
-        dropDownValue3.value = found.first.litResourceGroupID!.id.toString();
-      }
-      init = false;
-    } */
     //print(_trx.records!.length);
     _trx2 = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
 
-    /* if (dropDownValue2.value != "0") {
+    if (dropDownValue2.value != "0") {
       temp = (_trx.records!.where((element) =>
           element.eDIType?.id == dropDownValue2.value &&
           element.mpMaintainID?.id ==
@@ -1961,8 +1953,8 @@ class MaintenanceMpResourceBarcodeController extends GetxController {
       _trx.records = temp;
       _trx.rowcount = _trx.records?.length;
       flag = false;
-    } */
-    /* if (filterCount != 0) {
+    }
+    if (filterCount != 0) {
       switch (filterCount) {
         case 1:
           temp = (_trx.records!.where((element) =>
@@ -1982,7 +1974,8 @@ class MaintenanceMpResourceBarcodeController extends GetxController {
                       .isBefore(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo') &&
-              element.resourceStatus!.id == "INS")).toList();
+              (element.resourceStatus!.id == "INS" ||
+                  element.resourceStatus!.id == "REV"))).toList();
           //print(temp);
           _trx.records = temp;
           _trx.rowcount = _trx.records?.length;
@@ -1996,7 +1989,8 @@ class MaintenanceMpResourceBarcodeController extends GetxController {
                       .isAfter(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo') &&
-              element.resourceStatus!.id == "INS")).toList();
+              (element.resourceStatus!.id == "INS" ||
+                  element.resourceStatus!.id == "REV"))).toList();
           //print(temp);
           _trx.records = temp;
           _trx.rowcount = _trx.records?.length;
@@ -2015,23 +2009,39 @@ class MaintenanceMpResourceBarcodeController extends GetxController {
           break;
         default:
       }
-    } */
-
+    }
+    if (init) {
+      //filter3Available.value = false;
+      var found = _trx.records!.where((element) =>
+          element.litResourceGroupID != null &&
+          element.mpMaintainID?.id == GetStorage().read('selectedTaskDocNo'));
+      if (found.isNotEmpty) {
+        dropDownValue3.value = found.first.litResourceGroupID!.id.toString();
+      }
+      init = false;
+    }
     //FILTRO DESTINAZIONE
-    /* if (dropDownValue3.value != "0") {
+    if (dropDownValue3.value != "0") {
       var temp = (_trx.records!.where((element) =>
           element.litResourceGroupID?.id == int.parse(dropDownValue3.value) &&
           element.mpMaintainID?.id ==
               GetStorage().read('selectedTaskDocNo'))).toList();
       _trx.records = temp;
-    } */
+    }
+    if (flag) {
+      temp = (_trx.records!.where((element) =>
+          element.mpMaintainID?.id ==
+          GetStorage().read('selectedTaskDocNo'))).toList();
+      //print(temp);
+      _trx.records = temp;
+      _trx.rowcount = _trx.records?.length;
+    }
 
-    temp = (_trx.records!.where((element) =>
-            element.mpMaintainID?.id == GetStorage().read('selectedTaskDocNo')))
-        .toList();
-    //print(temp);
-    _trx.records = temp;
-    _trx.rowcount = _trx.records?.length;
+    for (var element in _trx.records!) {
+      if (kDebugMode) {
+        print(element.anomaliesCount);
+      }
+    }
 
     //print(_trx.records!.length);
 

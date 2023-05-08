@@ -17,11 +17,17 @@ class CRMTaskController extends GetxController {
   var userFilter = "";
   var statusFilter = "";
   var businessPartnerFilter = "";
+  var dateStartFilter = "";
+  var dateEndFilter = "";
 
   var businessPartnerId = 0.obs;
   String businessPartnerName = "";
   var selectedUserRadioTile = 0.obs;
+  var userId = 0;
+  var userName = "";
   var selectedStatusRadioTile = 0.obs;
+  var dateStartValue = "";
+  var dateEndValue = "";
 
   var filters = ["Tutti", "Miei" /* , "Team" */];
   var filterCount = 0;
@@ -149,7 +155,7 @@ class CRMTaskController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/JP_ToDo?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}$userFilter$statusFilter$businessPartnerFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/JP_ToDo?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}$userFilter$statusFilter$businessPartnerFilter$dateStartFilter$dateEndFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
