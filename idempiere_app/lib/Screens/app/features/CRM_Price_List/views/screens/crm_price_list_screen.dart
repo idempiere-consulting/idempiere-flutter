@@ -8,12 +8,15 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Price_List/models/price_list_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Price_List/views/screens/crm_price_list_detail.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Price_List/views/screens/crm_price_list_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -64,33 +67,147 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
         return false;
       },
       child: Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder()),
+          //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+          color: Theme.of(context).cardColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.getPriceList();
+                          },
+                          child: Row(
+                            children: [
+                              //Icon(Icons.filter_alt),
+                              Obx(() => controller.dataAvailable
+                                  ? Text("PRODUCTS: ".tr +
+                                      controller.trx.rowcount.toString())
+                                  : Text("PRODUCTS: ".tr)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                    ],
+                  )
+                ],
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount > 1) {
+                              controller.pagesCount.value -= 1;
+                              controller.getPriceList();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                        Obx(() => Text(
+                            "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount <
+                                controller.pagesTot.value) {
+                              controller.pagesCount.value += 1;
+                              controller.getPriceList();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: Obx(
           () => Visibility(
             visible: controller.businessPartnerId.value > 0 &&
                 controller.priceListId > 0,
-            child: FloatingActionButton(
-              backgroundColor: kNotifColor,
-              //foregroundColor: kNotifColor,
-              onPressed: () {
-                if (controller._isListShown.value) {
-                  controller._isListShown.value = false;
-                } else {
-                  //controller.getPriceList();
-                  controller._isListShown.value = true;
-                  controller.getPriceList();
-                }
-              },
-              child: Obx(
-                () => Icon(
-                  controller._isListShown.value == false
-                      ? Icons.find_in_page
-                      : Icons.skip_previous,
-                  color: Colors.white,
-                ),
-              ),
+            child: SpeedDial(
+              animatedIcon: AnimatedIcons.home_menu,
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+              /*  buttonSize: const Size(, 45),
+          childrenButtonSize: const Size(45, 45), */
+              children: [
+                SpeedDialChild(
+                    label: 'Filter'.tr,
+                    child: Obx(
+                      () => Icon(
+                        MaterialSymbols.filter_alt_filled,
+                        color: controller._isListShown.value == false
+                            ? Colors.red
+                            : controller.value.value == "" &&
+                                    controller.name.value == "" &&
+                                    controller.description.value == ""
+                                ? Colors.white
+                                : kNotifColor,
+                      ),
+                    ),
+                    onTap: () {
+                      if (controller._isListShown.value) {
+                        Get.to(const CRMFilterPriceList(), arguments: {
+                          'value': controller.value.value,
+                          'name': controller.name.value,
+                          'description': controller.description.value,
+                        });
+                      }
+                    }),
+                SpeedDialChild(
+                    label: 'Back'.tr,
+                    child: Obx(
+                      () => Icon(
+                        MaterialSymbols.chevron_left,
+                        color: controller._isListShown.value == false
+                            ? Colors.red
+                            : Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      controller._isListShown.value = false;
+                    }),
+              ],
             ),
           ),
         ),
+
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -106,41 +223,11 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
             mobileBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
                 const SizedBox(height: 10),
-                Obx(
-                  () => Visibility(
-                    visible: controller._isListShown.value == true,
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 10, right: 10),
-                      child: TextField(
-                        controller: controller.searchFieldController,
-                        onSubmitted: (String? value) {
-                          for (var i = 0; i < controller.trx.rowcount!; i++) {
-                            if (value.toString().toLowerCase() ==
-                                controller.trx.records![i].value!
-                                    .toLowerCase()) {
-                              Get.to(const ProductListDetail(), arguments: {
-                                "id": controller.trx.records![i].mProductID?.id,
-                                "price": controller.trx.records![i].priceList,
-                              });
-                            }
-                          }
-                        },
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.search_outlined),
-                          border: const OutlineInputBorder(),
-                          //labelText: 'Product Value',
-                          hintText: 'Product Value'.tr,
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                 Obx(
                   () => Visibility(
                     visible: controller._isListShown.value == false,
@@ -200,6 +287,8 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
                                           selection.id!;
                                       controller.priceListId.value =
                                           selection.mPriceListID!.id!;
+                                      controller._isListShown.value = true;
+                                      controller.getPriceList();
                                     },
                                   )
                                 : const Center(
@@ -439,6 +528,40 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
     );
   }
 
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildProgress({Axis axis = Axis.horizontal}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
@@ -546,6 +669,7 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
           });
         },
         child: Card(
+          color: const Color.fromRGBO(64, 75, 96, .9),
           margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -563,7 +687,10 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
                                   .replaceAll(RegExp(r'\n'), '')),
                           fit: BoxFit.cover,
                         )
-                      : const Text("no image"),
+                      : controller.trx.records![index].imageUrl != null
+                          ? Image.network(
+                              controller.trx.records![index].imageUrl!)
+                          : const Text('no image'),
                 ),
               ),
               ListTile(

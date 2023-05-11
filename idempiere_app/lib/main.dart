@@ -15,16 +15,22 @@ import 'package:idempiere_app/Screens/app/features/CRM/views/screens/crm_screen.
 import 'package:idempiere_app/Screens/app/features/CRM_Commission/views/screens/crm_commission_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/crm_contract_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contract_Customer/views/screens/crm_contract_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contract_Customer_Line/views/screens/crm_contract_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/views/screens/crm_contract_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_customer_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice_Line/views/screens/crm_invoice_line_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice_PO/views/screens/crm_invoice_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice_PO_Line/views/screens/crm_invoice_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Open_Items/views/screens/crm_openitems_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm_payment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Price_List/views/screens/crm_price_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Purchase_Order%20/views/screens/crm_sales_order_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Purchase_Order_Line/views/screens/crm_sales_order_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/views/screens/crm_sales_order_creation_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_Contract/views/screens/crm_sales_order_contract_creation_screen.dart';
@@ -72,6 +78,7 @@ import 'package:idempiere_app/Screens/app/features/Production/views/screens/prod
 import 'package:idempiere_app/Screens/app/features/Production_Order/views/screens/production_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase/views/screens/purchase_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Lead/views/screens/purchase_lead_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Purchase_Product_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Productwarehouseprice/views/screens/purchase_productwarehouseprice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Settings/views/screens/settings_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Signature/signature_page.dart';
@@ -198,9 +205,19 @@ class MyApp extends StatelessWidget {
           binding: CRMContractBinding(),
         ),
         GetPage(
+          name: '/ContractCustomer',
+          page: () => const CRMContractCustomerScreen(),
+          binding: CRMContractCustomerBinding(),
+        ),
+        GetPage(
           name: '/ContractLine',
           page: () => const CRMContractLineScreen(),
           binding: CRMContractLineBinding(),
+        ),
+        GetPage(
+          name: '/ContractCustomerLine',
+          page: () => const CRMContractCustomerLineScreen(),
+          binding: CRMContractCustomerLineBinding(),
         ),
         GetPage(
           name: '/CustomerBP',
@@ -218,6 +235,11 @@ class MyApp extends StatelessWidget {
           binding: CRMSalesOrderBinding(),
         ),
         GetPage(
+          name: '/PurchaseOrder',
+          page: () => const CRMPurchaseOrderScreen(),
+          binding: CRMPurchaseOrderBinding(),
+        ),
+        GetPage(
           name: '/SalesOrderCreation',
           page: () => const CRMSalesOrderCreationScreen(),
           binding: CRMSalesOrderCreationBinding(),
@@ -231,6 +253,11 @@ class MyApp extends StatelessWidget {
           name: '/SalesOrderLine',
           page: () => const CRMSalesOrderLineScreen(),
           binding: CRMSalesOrderLineBinding(),
+        ),
+        GetPage(
+          name: '/PurchaseOrderLine',
+          page: () => const CRMPurchaseOrderLineScreen(),
+          binding: CRMPurchaseOrderLineBinding(),
         ),
         GetPage(
           name: '/ProductList',
@@ -251,6 +278,16 @@ class MyApp extends StatelessWidget {
           name: '/InvoiceLine',
           page: () => const CRMInvoiceLineScreen(),
           binding: CRMInvoiceLineBinding(),
+        ),
+        GetPage(
+          name: '/InvoicePO',
+          page: () => const CRMInvoicePOScreen(),
+          binding: CRMInvoicePOBinding(),
+        ),
+        GetPage(
+          name: '/InvoicePOLine',
+          page: () => const CRMInvoicePOLineScreen(),
+          binding: CRMInvoicePOLineBinding(),
         ),
         GetPage(
           name: '/Payment',
@@ -506,6 +543,11 @@ class MyApp extends StatelessWidget {
           name: '/PurchaseLead',
           page: () => const PurchaseLeadScreen(),
           binding: PurchaseLeadBinding(),
+        ),
+        GetPage(
+          name: '/PurchaseProductList',
+          page: () => const PurchaseProductListScreen(),
+          binding: PurchaseProductListBinding(),
         ),
         GetPage(
           name: '/PurchaseProductwarehouseprice',

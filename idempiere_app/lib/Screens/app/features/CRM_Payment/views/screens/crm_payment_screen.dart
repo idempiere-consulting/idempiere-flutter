@@ -7,11 +7,15 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Payment/models/crm_payment_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm_payment_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -61,6 +65,125 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
         return false;
       },
       child: Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder()),
+          //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+          color: Theme.of(context).cardColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.getPayments();
+                          },
+                          child: Row(
+                            children: [
+                              //Icon(Icons.filter_alt),
+                              Obx(() => controller.dataAvailable
+                                  ? Text("RECEIPTS: ".tr +
+                                      controller.trx.rowcount.toString())
+                                  : Text("RECEIPTS: ".tr)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                    ],
+                  )
+                ],
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount > 1) {
+                              controller.pagesCount.value -= 1;
+                              controller.getPayments();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                        Obx(() => Text(
+                            "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount <
+                                controller.pagesTot.value) {
+                              controller.pagesCount.value += 1;
+                              controller.getPayments();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.home_menu,
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+          children: [
+            SpeedDialChild(
+                label: 'Filter'.tr,
+                child: Obx(() => Icon(
+                      MaterialSymbols.filter_alt_filled,
+                      color: controller.businessPartnerId.value == 0 &&
+                              controller.dateStartValue.value == "" &&
+                              controller.dateEndValue.value == "" &&
+                              controller.bankAccountId.value == 0
+                          ? Colors.white
+                          : kNotifColor,
+                    )),
+                onTap: () {
+                  Get.to(const CRMFilterPayment(), arguments: {
+                    'businessPartnerId': controller.businessPartnerId.value,
+                    'businessPartnerName': controller.businessPartnerName,
+                    'dateStart': controller.dateStartValue.value,
+                    'dateEnd': controller.dateEndValue.value,
+                    'bankAccountId': controller.bankAccountId.value,
+                    'bankAccountName': controller.bankAccountName,
+                  });
+                }),
+          ],
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -76,67 +199,17 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
             mobileBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("RECEIPTS: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("RECEIPTS: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getPayments();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,
@@ -197,7 +270,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].documentNo ??
+                                    controller.trx.records![index].cBPartnerID
+                                            ?.identifier ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -207,8 +281,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
+                                      const Icon(Icons.event,
+                                          color: Colors.white),
                                       Text(
                                         controller
                                                 .trx.records![index].dateAcct ??
@@ -247,7 +321,7 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                             IconButton(
                                               icon: const Icon(
                                                 Icons.account_balance,
-                                                color: Colors.green,
+                                                color: Colors.white,
                                               ),
                                               tooltip: 'Bank'.tr,
                                               onPressed: () {
@@ -266,20 +340,6 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                         ),
                                         Row(
                                           children: [
-                                            IconButton(
-                                                icon: const Icon(
-                                                  Icons.mail,
-                                                  color: Colors.white,
-                                                ),
-                                                tooltip: 'Business Partner',
-                                                onPressed: () {}),
-                                            Text(controller.trx.records![index]
-                                                    .cBPartnerID?.identifier ??
-                                                "??"),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
                                             Text(
                                               controller.trx.records![index]
                                                       .isReceipt!
@@ -292,21 +352,67 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                                 '${controller.trx.records![index].payAmt}'),
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Invoice: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              controller.trx.records![index]
-                                                      .cInvoiceID?.identifier ??
-                                                  "??",
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ],
+                                        Visibility(
+                                          visible: controller._trx
+                                                  .records![index].cInvoiceID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Invoice: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Get.offNamed('/Invoice',
+                                                        arguments: {
+                                                          "notificationId":
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cInvoiceID
+                                                                  ?.id,
+                                                        });
+                                                  },
+                                                  child: Text(
+                                                    controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cInvoiceID
+                                                            ?.identifier ??
+                                                        "",
+                                                    style: const TextStyle(
+                                                        color: kNotifColor),
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .description !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Description".tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                controller.trx.records![index]
+                                                        .description ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -831,6 +937,40 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

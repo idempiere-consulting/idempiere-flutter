@@ -60,34 +60,40 @@ class _Sidebar extends StatelessWidget {
                       "1",
                 ),
                 SelectionButtonData(
+                  visible: false,
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "SalesOrder".tr,
                 ),
                 SelectionButtonData(
+                  visible: false,
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Training and Course".tr,
                 ),
                 //Impianto
                 SelectionButtonData(
+                  visible: false,
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Maintenance".tr,
                 ),
                 //Impianti dettaglio
                 SelectionButtonData(
+                  visible: false,
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Anomaly".tr,
                 ),
                 //Scadenze
                 SelectionButtonData(
+                  visible: false,
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Invoice".tr,
                 ),
                 SelectionButtonData(
+                  visible: false,
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Contract".tr,

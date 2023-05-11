@@ -25,6 +25,20 @@ class TicketInternalTicketController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  var businessPartnerFilter =
+      GetStorage().read('TicketInternal_businessPartnerFilter') ?? "";
+  var dateStartFilter =
+      GetStorage().read('TicketInternal_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('TicketInternal_dateEndFilter') ?? "";
+
+  var businessPartnerId2 = 0.obs;
+  String businessPartnerName = "";
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -33,6 +47,13 @@ class TicketInternalTicketController extends GetxController {
     });
     getTicketTypes();
     getClosedTicketsID();
+
+    businessPartnerName =
+        GetStorage().read('TicketInternal_businessPartnerName') ?? "";
+    businessPartnerId2.value =
+        GetStorage().read('TicketInternal_businessPartnerId') ?? 0;
+    dateStartValue.value = GetStorage().read('TicketInternal_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('TicketInternal_dateEnd') ?? "";
     //getBusinessPartner();
     //getTickets();
     //getADUserID();
@@ -264,7 +285,7 @@ class TicketInternalTicketController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)');
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)$businessPartnerFilter$dateStartFilter$dateEndFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -275,6 +296,8 @@ class TicketInternalTicketController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = TicketsJson.fromJson(jsonDecode(response.body));
+
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

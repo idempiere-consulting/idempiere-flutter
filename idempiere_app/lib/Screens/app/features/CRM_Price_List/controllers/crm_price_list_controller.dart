@@ -10,7 +10,16 @@ class CRMPriceListController extends GetxController {
 
   var searchFieldController = TextEditingController();
 
-  var value = "Tutti".obs;
+  var valueFilter = "";
+  var nameFilter = "";
+  var descriptionFilter = "";
+
+  var value = "".obs;
+  var name = "".obs;
+  var description = "".obs;
+
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
 
   var filters = ["Tutti", "Miei" /* , "Team" */];
   var filterCount = 0;
@@ -75,7 +84,7 @@ class CRMPriceListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= M_PriceList_ID eq ${priceListId.value} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= M_PriceList_ID eq ${priceListId.value} and AD_Client_ID eq ${GetStorage().read("clientid")}$valueFilter$nameFilter$descriptionFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -89,6 +98,7 @@ class CRMPriceListController extends GetxController {
       }
       _trx =
           PriceListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

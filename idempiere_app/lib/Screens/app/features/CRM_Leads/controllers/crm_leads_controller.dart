@@ -354,7 +354,7 @@ class CRMLeadController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_lead_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}$nameFilter$mailFilter$phoneFilter$userFilter$sectorFilter$statusFilter$sizeFilter$campaignFilter$sourceFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_lead_v?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}$nameFilter$mailFilter$phoneFilter$userFilter$sectorFilter$statusFilter$sizeFilter$campaignFilter$sourceFilter&\$skip=${(pagesCount.value - 1) * 100}');
     //print(url);
     var response = await http.get(
       url,

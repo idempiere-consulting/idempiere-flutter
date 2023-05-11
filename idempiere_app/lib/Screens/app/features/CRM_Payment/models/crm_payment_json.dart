@@ -38,6 +38,7 @@ class Records {
   final ADOrgID? aDOrgID;
   final bool? isActive;
   final String? created;
+  final String? description;
   final CreatedBy? createdBy;
   final String? updated;
   final UpdatedBy? updatedBy;
@@ -87,6 +88,7 @@ class Records {
     this.aDOrgID,
     this.isActive,
     this.created,
+    this.description,
     this.createdBy,
     this.updated,
     this.updatedBy,
@@ -141,6 +143,7 @@ class Records {
             : null,
         isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
+        description = json['Description'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
@@ -226,6 +229,7 @@ class Records {
         'AD_Org_ID': aDOrgID?.toJson(),
         'IsActive': isActive,
         'Created': created,
+        'Description': description,
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),

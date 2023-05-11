@@ -1109,6 +1109,15 @@ class LocaleString extends Translations {
           'Delivery Via Rule': 'Mezzo di Trasporto',
           'Product Code': 'Codice Prodotto',
           'MORE INFO': 'INFORMAZIONI AGGIUNTIVE',
+          'Invoice Vendor': 'Fattura di Acquisto',
+          'Invoice Customer': 'Fattura di Vendita',
+          'Purchase Order': 'Ordine di Acquisto',
+          'Contracts Vendor': 'Contratto di Vendita',
+          'Contracts Customer': 'Contratto di Acquisto',
+          'Payment': 'Pagamento',
+          'Price List': 'Listino Prezzi',
+          'PURCHASE LEAD': 'LEAD ACQUISTI',
+          'Purchase Lead': 'Lead Acquisti'
         },
       };
 }

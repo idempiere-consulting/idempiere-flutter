@@ -7,10 +7,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract/models/contract_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/crm_contract_filter_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/crm_edit_contract.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -61,6 +65,123 @@ class CRMContractScreen extends GetView<CRMContractController> {
         return false;
       },
       child: Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder()),
+          //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+          color: Theme.of(context).cardColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.getContracts();
+                          },
+                          child: Row(
+                            children: [
+                              //Icon(Icons.filter_alt),
+                              Obx(() => controller.dataAvailable
+                                  ? Text("CONTRACTS: ".tr +
+                                      controller.trx.rowcount.toString())
+                                  : Text("CONTRACTS: ".tr)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                    ],
+                  )
+                ],
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount > 1) {
+                              controller.pagesCount.value -= 1;
+                              controller.getContracts();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                        Obx(() => Text(
+                            "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount <
+                                controller.pagesTot.value) {
+                              controller.pagesCount.value += 1;
+                              controller.getContracts();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.home_menu,
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+          children: [
+            SpeedDialChild(
+                label: 'Filter'.tr,
+                child: Obx(() => Icon(
+                      MaterialSymbols.filter_alt_filled,
+                      color: controller.businessPartnerId.value == 0 &&
+                              controller.docNoValue.value == "" &&
+                              controller.docTypeId.value == "0"
+                          ? Colors.white
+                          : kNotifColor,
+                    )),
+                onTap: () {
+                  Get.to(const CRMFilterContract(), arguments: {
+                    'businessPartnerId': controller.businessPartnerId.value,
+                    'businessPartnerName': controller.businessPartnerName,
+                    'docNo': controller.docNoValue.value,
+                    "docTypeId": controller.docTypeId.value,
+                  });
+                }),
+          ],
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -73,139 +194,13 @@ class CRMContractScreen extends GetView<CRMContractController> {
             mobileBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
                 /* _buildProfile(data: controller.getProfil()),
                 const SizedBox(height: kSpacing), */
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("CONTRACTS: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("CONTRACTS: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.pagesCount.value = 1;
-                          controller.getContracts();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
 
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        if (controller.pagesCount > 1) {
-                          controller.pagesCount.value -= 1;
-                          controller.getContracts();
-                        }
-                      },
-                      icon: const Icon(Icons.skip_previous),
-                    ),
-                    Obx(() => Text(
-                        "${controller.pagesCount.value}/${controller.pagesTot.value}")),
-                    IconButton(
-                      onPressed: () {
-                        if (controller.pagesCount < controller.pagesTot.value) {
-                          controller.pagesCount.value += 1;
-                          controller.getContracts();
-                        }
-                      },
-                      icon: const Icon(Icons.skip_next),
-                    )
-                  ],
-                ),
                 //const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
@@ -283,27 +278,73 @@ class CRMContractScreen extends GetView<CRMContractController> {
                                         child: IconButton(
                                           icon: const Icon(
                                             Icons.edit,
-                                            color: Colors.green,
+                                            color: Colors.grey,
                                           ),
-                                          tooltip: 'Edit Contact'.tr,
+                                          tooltip: 'Edit Contract'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
-                                            /* Get.to(const EditContactBP(),
+                                            Get.to(const CRMEditContract(),
                                                 arguments: {
                                                   "id": controller
                                                       .trx.records![index].id,
                                                   "name": controller
-                                                      .trx.records![index].name,
-                                                  "bpName": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .name ??
+                                                      "",
+                                                  "docNo": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .documentNo ??
+                                                      "",
+                                                  "businessPartnerId":
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerID
+                                                              ?.id ??
+                                                          0,
+                                                  "businessPartnerName":
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerID
+                                                              ?.identifier ??
+                                                          "",
+                                                  "description": controller
                                                       .trx
                                                       .records![index]
-                                                      .cBPartnerID!
-                                                      .identifier,
-                                                  "Tel": controller.trx
-                                                      .records![index].phone,
-                                                  "eMail": controller.trx
-                                                      .records![index].eMail,
-                                                }); */
+                                                      .description,
+                                                  "dateFrom": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validfromdate,
+                                                  "dateTo": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validtodate,
+                                                  "frequencyTypeId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .frequencyType
+                                                          ?.id ??
+                                                      "0",
+                                                  "paymentTermId": controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cPaymentTermID
+                                                      ?.id,
+                                                  "paymentRuleId": controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .paymentRule
+                                                      ?.id,
+                                                  "frequencyNextDate":
+                                                      controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .frequencyNextDate,
+                                                });
                                           },
                                         ),
                                       ),
@@ -317,21 +358,43 @@ class CRMContractScreen extends GetView<CRMContractController> {
                                       ),
                                       // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                      subtitle: Row(
-                                        children: <Widget>[
-                                          const Icon(Icons.handshake,
-                                              color: Colors.yellowAccent),
-                                          Expanded(
-                                            child: Text(
-                                              controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerID!
-                                                      .identifier ??
-                                                  "??",
-                                              style: const TextStyle(
+                                      subtitle: Column(
+                                        children: [
+                                          Row(
+                                            children: <Widget>[
+                                              const Icon(MaterialSymbols.topic,
                                                   color: Colors.white),
-                                            ),
+                                              Expanded(
+                                                child: Text(
+                                                  controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cDocTypeTargetID
+                                                          ?.identifier ??
+                                                      "??",
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              const Icon(Icons.handshake,
+                                                  color: Colors.white),
+                                              Expanded(
+                                                child: Text(
+                                                  controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID!
+                                                          .identifier ??
+                                                      "??",
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -345,7 +408,94 @@ class CRMContractScreen extends GetView<CRMContractController> {
                                               horizontal: 20.0, vertical: 10.0),
                                       children: [
                                         Column(
-                                          children: const [],
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Name".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .name ??
+                                                      ""),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Description".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .name ??
+                                                      ""),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Validity Date from".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validfromdate!
+                                                      .substring(0, 10)),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Validity Date to".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validtodate!
+                                                      .substring(0, 10)),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Frequency".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .frequencyType
+                                                          ?.identifier ??
+                                                      ""),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -386,6 +536,40 @@ class CRMContractScreen extends GetView<CRMContractController> {
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

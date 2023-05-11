@@ -2,9 +2,16 @@ part of dashboard;
 
 class PurchaseLeadController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late PurchaseLeadJson _trx;
+  late LeadJson _trx;
+  SalesStageJson salestages = SalesStageJson(records: []);
+  bool saleStagesAvailable = false;
+  TextEditingController amtFieldController = TextEditingController(text: "0");
+  var saleStageValue = 0;
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
+
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -16,19 +23,223 @@ class PurchaseLeadController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var searchFieldController = TextEditingController();
+  var searchFilterValue = "".obs;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  var userFilter = "";
+  var sectorFilter = "";
+  var nameFilter = "";
+  var mailFilter = "";
+  var phoneFilter = "";
+  var statusFilter = "";
+  var sizeFilter = "";
+  var campaignFilter = "";
+  var sourceFilter = "";
+
+  var sectorId = "0".obs;
+  var selectedUserRadioTile = 0.obs;
+  var nameValue = "".obs;
+  var mailValue = "".obs;
+  var phoneValue = "".obs;
+  var statusId = "0".obs;
+  var sizeId = "0".obs;
+  var campaignId = "0".obs;
+  var sourceId = "0".obs;
+
+  final json = {
+    "types": [
+      {"id": "1", "name": "Name".tr},
+      {"id": "2", "name": "Mail"},
+      {"id": "3", "name": "Phone N°"},
+      {"id": "4", "name": "Lead Status".tr},
+      {"id": "5", "name": "Sector".tr},
+      {"id": "6", "name": "Lead Size".tr},
+      {"id": "7", "name": "Campaign".tr},
+      {"id": "8", "name": "Lead Source".tr},
+    ]
+  };
+
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(json);
+
+    return dJson.types;
+  }
+
+  getAllSaleStages() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_SalesStage');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      salestages = SalesStageJson.fromJson(jsonDecode(response.body));
+
+      saleStagesAvailable = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load sale stages");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  static String _displayStringForOption(SSRecords option) => option.name!;
+
+  convertLead(int index) {
+    Get.defaultDialog(
+        title: 'Create Opportunity'.tr,
+        content: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 40),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Sale Stage".tr,
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              margin: const EdgeInsets.all(10),
+              child: Autocomplete<SSRecords>(
+                displayStringForOption: _displayStringForOption,
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text == '') {
+                    return const Iterable<SSRecords>.empty();
+                  }
+                  return salestages.records!.where((SSRecords option) {
+                    return option.name!
+                        .toString()
+                        .toLowerCase()
+                        .contains(textEditingValue.text.toLowerCase());
+                  });
+                },
+                onSelected: (SSRecords selection) {
+                  //debugPrint(
+                  //'You just selected ${_displayStringForOption(selection)}');
+                  saleStageValue = selection.id!;
+
+                  //print(salesrepValue);
+                },
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: TextField(
+                controller: amtFieldController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.link),
+                  border: OutlineInputBorder(),
+                  labelText: 'Opportunity Amount',
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                keyboardType: const TextInputType.numberWithOptions(
+                    signed: true, decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                ],
+              ),
+            ),
+          ],
+        ),
+        onCancel: () {},
+        onConfirm: () async {
+          final ip = GetStorage().read('ip');
+          String authorization = 'Bearer ${GetStorage().read('token')}';
+          var msg = jsonEncode({
+            "record-id": _trx.windowrecords![index].id,
+            "CreateOpportunity": true,
+            "C_SalesStage_ID": saleStageValue,
+            "OpportunityAmt": double.parse(amtFieldController.text),
+            "AD_User_ID": _trx.windowrecords![index].id,
+            //"C_DocType_ID": _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
+          });
+
+          //print(msg);
+          final protocol = GetStorage().read('protocol');
+          var url =
+              Uri.parse('$protocol://$ip/api/v1/processes/aduserconvertlead');
+
+          //print(url);
+
+          var response = await http.post(
+            url,
+            body: msg,
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': authorization,
+            },
+          );
+          if (response.statusCode == 200) {
+            //print("done!");
+            Get.back();
+            if (kDebugMode) {
+              print(response.body);
+            }
+
+            Get.snackbar(
+              "Done!".tr,
+              "Sales Order has been created".tr,
+              icon: const Icon(
+                Icons.done,
+                color: Colors.green,
+              ),
+            );
+          } else {
+            if (kDebugMode) {
+              print(response.body);
+            }
+            Get.snackbar(
+              "Error!".tr,
+              "Sales Order not created".tr,
+              icon: const Icon(
+                Icons.error,
+                color: Colors.red,
+              ),
+            );
+          }
+        });
+  }
+
   @override
   void onInit() {
+    dropDownList = getTypes()!;
     super.onInit();
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
 
     getLeads();
-    getADUserID();
+    getAllSaleStages();
+    //getADUserID();
+    adUserId = GetStorage().read('userId');
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  PurchaseLeadJson get trx => _trx;
+  LeadJson get trx => _trx;
   //String get value => _value.toString();
 
   changeFilter() {
@@ -46,9 +257,8 @@ class PurchaseLeadController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -58,7 +268,7 @@ class PurchaseLeadController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       adUserId = json["records"][0]["id"];
 
@@ -95,14 +305,57 @@ class PurchaseLeadController extends GetxController {
   }
 
   Future<void> getLeads() async {
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    _dataAvailable.value = false;
+    /* var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    var searchUrlFilter = "";
+
+    switch (dropdownValue.value) {
+      case "1":
+        searchUrlFilter = " and contains(Name,'${searchFieldController.text}')";
+
+        break;
+      case "2":
+        searchUrlFilter =
+            " and contains(EMail,'${searchFieldController.text}')";
+        break;
+      case "3":
+        searchUrlFilter =
+            " and contains(Phone,'${searchFieldController.text}')";
+        break;
+      case "4":
+        searchUrlFilter = " and LeadStatus eq '${leadStatusValue.value}'";
+        break;
+      case "5":
+        searchUrlFilter =
+            " and lit_IndustrySector_ID eq ${leadSectorValue.value}";
+        break;
+      case "6":
+        searchUrlFilter = " and lit_LeadSize_ID eq ${leadSizeValue.value}";
+        break;
+      case "7":
+        searchUrlFilter = " and C_Campaign_ID eq ${leadCampaignValue.value}";
+        break;
+      case "8":
+        searchUrlFilter = " and LeadSource eq ${leadSourceValue.value}";
+        break;
+      default:
+    } */
+
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and AD_User_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= IsVendorLead eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_lead_v?\$filter= IsVendorLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}$nameFilter$mailFilter$phoneFilter$userFilter$sectorFilter$statusFilter$sizeFilter$campaignFilter$sourceFilter&\$skip=${(pagesCount.value - 1) * 100}');
+    //print(url);
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -112,12 +365,147 @@ class PurchaseLeadController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = PurchaseLeadJson.fromJson(jsonDecode(response.body));
+
+      _trx = LeadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
+  }
+
+  createPhoneCallActivity(int id) async {
+    var now = DateTime.now();
+
+    var hourTime = "00";
+
+    var minuteTime = "00";
+
+    if (now.hour < 10) {
+      hourTime = "0${now.hour}";
+    } else {
+      hourTime = "${now.hour}";
+    }
+
+    if (now.minute < 10) {
+      minuteTime = "0${now.minute}";
+    } else {
+      minuteTime = "${now.minute}";
+    }
+
+    var formatter = DateFormat('yyyy-MM-dd');
+    var date = formatter.format(now);
+    var startTime = '$hourTime:$minuteTime:00Z';
+    /* var msg = {
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "ContactActivityType": {"id": "PC"},
+      "Description": 'phone call',
+      "AD_User_ID": {"id": id},
+      "StartDate": "${date}T$startTime",
+    }; */
+
+    var msg = {
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "AD_User_ID": {"id": GetStorage().read('userId')},
+      "Name": "Phone Call".tr,
+      "Description": '$date $hourTime:$minuteTime - ${"Phone Call".tr}',
+      "Qty": 0.5,
+      //"C_BPartner_ID": {"id": businessPartnerId},
+      "JP_ToDo_ScheduledStartDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledEndDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledStartTime": startTime,
+      "JP_ToDo_ScheduledEndTime": startTime,
+      "JP_ToDo_Status": {"id": 'CO'},
+      "IsOpenToDoJP": true,
+      "JP_ToDo_Type": {"id": "T"},
+      "LIT_Ad_User_Lead_ID": {"id": id},
+      //"C_Project_ID": {"id": projectId}
+    };
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo');
+    /* var response = await */ http.post(
+      url,
+      body: jsonEncode(msg),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    /* if (response.statusCode == 201) {
+      print(response.body);
+    } else {
+      print(response.body);
+    } */
+  }
+
+  createEmailActivity(int id) async {
+    var now = DateTime.now();
+
+    var hourTime = "00";
+
+    var minuteTime = "00";
+
+    if (now.hour < 10) {
+      hourTime = "0${now.hour}";
+    } else {
+      hourTime = "${now.hour}";
+    }
+
+    if (now.minute < 10) {
+      minuteTime = "0${now.minute}";
+    } else {
+      minuteTime = "${now.minute}";
+    }
+
+    var formatter = DateFormat('yyyy-MM-dd');
+    var date = formatter.format(now);
+    var startTime = '$hourTime:$minuteTime:00Z';
+    var msg = {
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "AD_User_ID": {"id": GetStorage().read('userId')},
+      "Name": "Email".tr,
+      "Description": '$date $hourTime:$minuteTime - ${"Email".tr}',
+      "Qty": 0.5,
+      //"C_BPartner_ID": {"id": businessPartnerId},
+      "JP_ToDo_ScheduledStartDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledEndDate": "${date}T$startTime",
+      "JP_ToDo_ScheduledStartTime": startTime,
+      "JP_ToDo_ScheduledEndTime": startTime,
+      "JP_ToDo_Status": {"id": 'CO'},
+      "IsOpenToDoJP": true,
+      "JP_ToDo_Type": {"id": "T"},
+      "LIT_Ad_User_Lead_ID": {"id": id},
+      //"C_Project_ID": {"id": projectId}
+    };
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_ContactActivity');
+    /* var response = await */ http.post(
+      url,
+      body: jsonEncode(msg),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    /* if (response.statusCode == 201) {
+      print(response.body);
+    } else {
+      print(response.body);
+    } */
   }
 
   /* void openDrawer() {
@@ -127,6 +515,7 @@ class PurchaseLeadController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -199,7 +588,7 @@ class PurchaseLeadController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "Acquisti",
+      projectName: "CRM",
       releaseTime: DateTime.now(),
     );
   }
@@ -265,45 +654,5 @@ class PurchaseLeadController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

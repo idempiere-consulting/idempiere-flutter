@@ -58,46 +58,22 @@ class TicketInternalScreen extends GetView<TicketInternalController> {
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
         body: SingleChildScrollView(
             child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
+              _buildHeader2(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              //  _buildProfile(data: controller.getProfil()),
-              //  const SizedBox(height: kSpacing),
-              //  _buildProgress(axis: Axis.vertical),
-              //  const SizedBox(height: kSpacing),
-              //  _buildTeamMember(data: controller.getMember()),
-              /*  const SizedBox(height: kSpacing),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                child: GetPremiumCard(onPressed: () {}),
-              ), */
-              /* const SizedBox(height: kSpacing * 2),
-              _buildTaskOverview(
-                data: controller.getAllTask(),
-                headerAxis: Axis.vertical,
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing * 2),
-              _buildActiveProject(
-                data: controller.getActiveProject(),
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ), */
-              const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
             ]);
           },
           tabletBuilder: (context, constraints) {
@@ -188,6 +164,40 @@ class TicketInternalScreen extends GetView<TicketInternalController> {
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

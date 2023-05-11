@@ -1,12 +1,14 @@
 part of dashboard;
 
 class _Sidebar extends StatelessWidget {
-  const _Sidebar({
+  _Sidebar({
     required this.data,
     Key? key,
   }) : super(key: key);
 
   final ProjectCardData data;
+
+  final List<dynamic> list = GetStorage().read('permission');
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +34,33 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: EvaIcons.arrowBack,
-                  icon: EvaIcons.arrowBackOutline,
-                  label: "PurchaseLead".tr,
+                  activeIcon: EvaIcons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Purchase Lead".tr,
+                  visible: int.parse(list[59], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
                   label: "PurchaseProductwarehouseprice".tr,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.ballot,
+                  icon: Icons.ballot_outlined,
+                  label: "ProductList".tr,
+                  visible: int.parse(list[9], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
               ],
               onSelected: (index, value) {
@@ -56,6 +77,9 @@ class _Sidebar extends StatelessWidget {
 
                   case 2:
                     Get.offNamed('/PurchaseProductwarehouseprice');
+                    break;
+                  case 3:
+                    Get.offNamed('/PurchaseProductList');
                     break;
 
                   default:

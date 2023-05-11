@@ -307,6 +307,9 @@ class _CRMFilterInvoiceState extends State<CRMFilterInvoice> {
                   businessPartnerId = 0;
                   bpSearchFieldController.text = "";
                   docNoFieldController.text = "";
+                  descriptionFieldController.text = "";
+                  dateStartFieldController.text = "";
+                  dateEndFieldController.text = "";
                 });
               },
               icon: const Icon(

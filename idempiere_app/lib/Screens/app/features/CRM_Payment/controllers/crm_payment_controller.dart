@@ -16,13 +16,36 @@ class CRMPaymentController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  var businessPartnerFilter =
+      GetStorage().read('Payment_businessPartnerFilter') ?? "";
+  var dateStartFilter = GetStorage().read('Payment_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('Payment_dateEndFilter') ?? "";
+  var bankAccountFilter = GetStorage().read('Payment_bankAccountFilter') ?? "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
+  var bankAccountId = 0.obs;
+  String bankAccountName = "";
+
   @override
   void onInit() {
     super.onInit();
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
-
+    businessPartnerName =
+        GetStorage().read('Payment_businessPartnerName') ?? "";
+    businessPartnerId.value =
+        GetStorage().read('Payment_businessPartnerId') ?? 0;
+    dateStartValue.value = GetStorage().read('Payment_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('Payment_dateEnd') ?? "";
+    bankAccountId.value = GetStorage().read('Payment_bankAccountId') ?? 0;
+    bankAccountName = GetStorage().read('Payment_bankAccountName') ?? "";
     getPayments();
     getADUserID();
   }
@@ -105,7 +128,7 @@ class CRMPaymentController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_Payment?\$filter= DateAcct le \'$formattedDate 23:59:59\' and DateAcct ge \'$formattedNinetyDaysAgo 00:00:00\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}&\$orderby= DateAcct desc');
+        '$protocol://$ip/api/v1/models/C_Payment?\$filter=  AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$businessPartnerFilter$dateStartFilter$dateEndFilter$bankAccountFilter&\$orderby= DateAcct desc&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -116,6 +139,8 @@ class CRMPaymentController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = PaymentJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

@@ -1,27 +1,36 @@
 import 'dart:convert';
 //import 'dart:developer';
 
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/campaign_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/city_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/coutry_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/region_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/sector_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Purchase_Lead/views/screens/purchase_lead_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 
-class EditLead extends StatefulWidget {
-  const EditLead({Key? key}) : super(key: key);
+class EditPurchaseLead extends StatefulWidget {
+  const EditPurchaseLead({Key? key}) : super(key: key);
 
   @override
-  State<EditLead> createState() => _EditLeadState();
+  State<EditPurchaseLead> createState() => _EditPurchaseLeadState();
 }
 
-class _EditLeadState extends State<EditLead> {
+class _EditPurchaseLeadState extends State<EditPurchaseLead> {
   editLead() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    final msg = jsonEncode({
+    /* final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "Name": nameFieldController.text,
@@ -30,21 +39,64 @@ class _EditLeadState extends State<EditLead> {
       "EMail": mailFieldController.text,
       "SalesRep_ID": {"identifier": salesrepValue},
       "LeadStatus": {"id": dropdownValue}
-    });
+    }); */
+    var json = {
+      "Name": nameFieldController.text,
+      "Description": descriptionFieldController.text,
+      "Note": noteFieldController.text,
+      "BPName": bPartnerFieldController.text,
+      "Phone": phoneFieldController.text,
+      "EMail": mailFieldController.text,
+      "URL": urlFieldController.text,
+      "IsSalesLead": true,
+      "LeadStatus": {"id": dropdownValue},
+    };
+
+    if (salesrepValue != "") {
+      json.addAll({
+        "SalesRep_ID": {"identifier": salesrepValue},
+      });
+    }
+    if (sectorValue != "") {
+      json.addAll({
+        "lit_IndustrySector_ID": {"id": int.parse(sectorValue)},
+      });
+    }
+    if (sizeDropdownValue != "") {
+      json.addAll({
+        "lit_LeadSize_ID": {"id": int.parse(sizeDropdownValue)},
+      });
+    }
+    if (campaignDropdownValue != "") {
+      json.addAll({
+        "C_Campaign_ID": {"id": int.parse(campaignDropdownValue)},
+      });
+    }
+    if (sourceDropdownValue != "") {
+      json.addAll({
+        "LeadSource": {"id": sourceDropdownValue},
+      });
+    }
+    if (addressId != 0) {
+      json.addAll({
+        "C_Location_ID": {"id": addressId},
+        "BP_Location_ID": {"id": addressId},
+      });
+    }
+
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.put(
       url,
-      body: msg,
+      body: jsonEncode(json),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': authorization,
       },
     );
     if (response.statusCode == 200) {
-      Get.find<CRMLeadController>().getLeads();
+      Get.find<PurchaseLeadController>().getLeads();
       //print("done!");
       Get.snackbar(
         "Done!".tr,
@@ -55,6 +107,9 @@ class _EditLeadState extends State<EditLead> {
         ),
       );
     } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Error!".tr,
         "Record not updated".tr,
@@ -69,8 +124,8 @@ class _EditLeadState extends State<EditLead> {
   deleteLead() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url =
-        Uri.parse('http://' + ip + '/api/v1/models/ad_user/${args["id"]}');
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -108,9 +163,8 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 53416 ');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -134,7 +188,8 @@ class _EditLeadState extends State<EditLead> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/ad_user');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= DateLastLogin neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -158,6 +213,427 @@ class _EditLeadState extends State<EditLead> {
     //print(json.);
   }
 
+  Future<List<JRecords>> getAllSectors() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_IndustrySector');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonsectors = SectorJSON.fromJson(jsondecoded);
+
+      return jsonsectors.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load sectors");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<CRecords>> getAllCampaigns() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_campaign');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonsectors = CampaignJSON.fromJson(jsondecoded);
+
+      return jsonsectors.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load campaigns");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<CRecords>> getAllLeadSizes() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_LeadSize');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonsectors = CampaignJSON.fromJson(jsondecoded);
+
+      return jsonsectors.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load campaigns");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<LSRecords>> getAllLeadSources() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_ref_list?\$filter= AD_Reference_ID eq 53415 ');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
+
+      return json.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load campaigns");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  getAllCountries() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_country');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      countries = CountryJSON.fromJson(jsonDecode(response.body));
+      if (countries.pagecount! > 1) {
+        int index = 1;
+        getAllCountriesPages(index);
+      } else {
+        setState(() {
+          countriesDataAvailable = true;
+        });
+        //businessPartnerSync = false;
+        if (kDebugMode) {
+          print('Countries Checked');
+        }
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load cities");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  getAllCountriesPages(int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_country?\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          CountryJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        countries.records!.add(element);
+      }
+
+      if (countries.pagecount! > index) {
+        getAllCountriesPages(index);
+      } else {
+        if (kDebugMode) {
+          print(countries.records!.length);
+        }
+        setState(() {
+          countriesDataAvailable = true;
+        });
+        //businessPartnerSync = false;
+        if (kDebugMode) {
+          print('Countries Checked');
+        }
+      }
+    }
+  }
+
+  getAllRegions() async {
+    setState(() {
+      regionsDataAvailable = false;
+    });
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_region?\$filter= C_Country_ID eq $countryId');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      regions = RegionJSON.fromJson(jsonDecode(response.body));
+      if (regions.pagecount! > 1) {
+        int index = 1;
+        getAllRegionsPages(index);
+      } else {
+        setState(() {
+          regionsDataAvailable = true;
+        });
+        //businessPartnerSync = false;
+        if (kDebugMode) {
+          print('Regions Checked');
+        }
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load cities");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  getAllRegionsPages(int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_country?\$filter= C_Country_ID eq $countryId&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          RegionJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        regions.records!.add(element);
+      }
+
+      if (regions.pagecount! > index) {
+        getAllRegionsPages(index);
+      } else {
+        if (kDebugMode) {
+          print(regions.records!.length);
+        }
+        setState(() {
+          regionsDataAvailable = true;
+        });
+        //businessPartnerSync = false;
+        if (kDebugMode) {
+          print('Regions Checked');
+        }
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  getAllCities() async {
+    setState(() {
+      citiesDataAvailable = false;
+    });
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_city?\$filter= C_Country_ID eq $countryId and C_Region_ID eq $regionId');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      cities = CityJSON.fromJson(jsonDecode(response.body));
+      if (cities.pagecount! > 1) {
+        int index = 1;
+        getAllCitiesPages(index);
+      } else {
+        setState(() {
+          citiesDataAvailable = true;
+        });
+        //businessPartnerSync = false;
+        if (kDebugMode) {
+          print('Regions Checked');
+        }
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load cities");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  getAllCitiesPages(int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_country?\$filter= C_Country_ID eq $countryId&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson =
+          CityJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        cities.records!.add(element);
+      }
+
+      if (cities.pagecount! > index) {
+        getAllCitiesPages(index);
+      } else {
+        if (kDebugMode) {
+          print(cities.records!.length);
+        }
+        setState(() {
+          citiesDataAvailable = true;
+        });
+        //businessPartnerSync = false;
+        if (kDebugMode) {
+          print('Regions Checked');
+        }
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  createNewAddress() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+
+    var json = {
+      "Address1": address1FieldController.text,
+      "C_Country_ID": countryId,
+      "C_Region_ID": regionId,
+      "C_City_ID": cityId,
+      "Postal": postalCode,
+      "City": city,
+      "RegionName": region,
+    };
+
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_Location');
+    //print(msg);
+    var response = await http.post(
+      url,
+      body: jsonEncode(json),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+      addressId = json["id"];
+      addressFieldController.text =
+          "${json["Address1"] ?? ""}, ${json["C_City_ID"]["identifier"]}, ${json["Postal"]} ${json["C_Region_ID"]["identifier"]}";
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   void fillFields() {
     nameFieldController.text = args["name"] ?? "";
     bPartnerFieldController.text = args["bpName"] ?? "";
@@ -177,22 +653,95 @@ class _EditLeadState extends State<EditLead> {
   var phoneFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var mailFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var urlFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var descriptionFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var noteFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var bpNameFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var addressFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
+  late TextEditingController salesRepFieldController;
+  String campaignDropdownValue = "";
+  String sourceDropdownValue = "";
+  String sizeDropdownValue = "";
+  String sectorValue = "";
+
+  int addressId = 0;
+  // ignore: prefer_typing_uninitialized_variables
+  var address1FieldController;
+
+  bool createAddress = false;
+
+  CountryJSON countries = CountryJSON(records: []);
+  bool countriesDataAvailable = false;
+  int countryId = 0;
+
+  RegionJSON regions = RegionJSON(records: []);
+  bool regionsDataAvailable = false;
+  int regionId = 0;
+
+  CityJSON cities = CityJSON(records: []);
+  bool citiesDataAvailable = false;
+  int cityId = 0;
+  String postalCode = "";
+  String region = "";
+  String city = "";
 
   @override
   void initState() {
     super.initState();
     nameFieldController = TextEditingController();
     phoneFieldController = TextEditingController();
-    bPartnerFieldController = TextEditingController();
+    bpNameFieldController = TextEditingController(text: args["bpName"] ?? "");
+    bPartnerFieldController =
+        TextEditingController(text: args["businessPartner"] ?? "");
     mailFieldController = TextEditingController();
+    urlFieldController = TextEditingController(text: args["url"] ?? "");
+    salesRepFieldController = TextEditingController(text: args["salesRep"]);
     dropdownValue = Get.arguments["leadStatus"];
+    campaignDropdownValue = (args["campaign"] ?? "").toString();
+    sectorValue = (args["sector"] ?? "").toString();
+    sourceDropdownValue = args["source"] ?? "";
+    descriptionFieldController =
+        TextEditingController(text: args["description"] ?? "");
+    noteFieldController = TextEditingController(text: args["note"] ?? "");
+    sizeDropdownValue = (args["size"] ?? "").toString();
+
+    addressFieldController = TextEditingController(text: args["address"] ?? "");
+    address1FieldController = TextEditingController();
+
+    addressId = 0;
+
+    createAddress = false;
+
+    countriesDataAvailable = false;
+    countryId = 0;
+
+    regionsDataAvailable = false;
+    regionId = 0;
+
+    citiesDataAvailable = false;
+    cityId = 0;
+    postalCode = "";
+    region = "";
+    city = "";
+
     fillFields();
+    getAllCountries();
     getAllLeadStatuses();
   }
 
   static String _displayStringForOption(Records option) => option.name!;
+  static String _displayCountryStringForOption(CtrRecords option) =>
+      option.name!;
+  static String _displayRegionStringForOption(RegRecords option) =>
+      option.name!;
+  static String _displayCityStringForOption(CitRecords option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 
@@ -202,8 +751,8 @@ class _EditLeadState extends State<EditLead> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text('Edit Lead'),
+        title: Center(
+          child: Text('Edit Lead'.tr),
         ),
         actions: [
           Padding(
@@ -211,13 +760,13 @@ class _EditLeadState extends State<EditLead> {
             child: IconButton(
               onPressed: () {
                 Get.defaultDialog(
-                  title: "Eliminazione record",
-                  middleText: "Sicuro di voler eliminare il record?",
+                  title: "Record deletion".tr,
+                  middleText: "Are you sure you want to delete the record?".tr,
                   backgroundColor: const Color.fromRGBO(38, 40, 55, 1),
                   //titleStyle: TextStyle(color: Colors.white),
                   //middleTextStyle: TextStyle(color: Colors.white),
-                  textConfirm: "Elimina",
-                  textCancel: "Annulla",
+                  textConfirm: "Delete".tr,
+                  textCancel: "Cancel".tr,
                   cancelTextColor: Colors.white,
                   confirmTextColor: Colors.white,
                   buttonColor: const Color.fromRGBO(31, 29, 44, 1),
@@ -259,11 +808,13 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -271,11 +822,27 @@ class _EditLeadState extends State<EditLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: noteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -284,10 +851,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -305,39 +872,414 @@ class _EditLeadState extends State<EditLead> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: urlFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.link),
+                      border: OutlineInputBorder(),
+                      labelText: 'Website',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: args["salesRep"]),
-                                displayStringForOption: _displayStringForOption,
+                            ? TypeAheadField<Records>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  //autofocus: true,
+                                  controller: salesRepFieldController,
+                                  decoration: InputDecoration(
+                                    labelText: 'SalesRep'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    //isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  setState(() {
+                                    salesrepValue = suggestion.name!;
+                                    salesRepFieldController.text =
+                                        suggestion.name!;
+                                  });
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  //padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllSectors(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<JRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Sector'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  hint: Text("Select a Sector".tr),
+                                  value: sectorValue == "" ? null : sectorValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      sectorValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadSizes(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Lead Size'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  hint: Text("Select a Size".tr),
+                                  value: sizeDropdownValue == ""
+                                      ? null
+                                      : sizeDropdownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      sizeDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllCampaigns(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Campaign'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Campaign".tr),
+                                  value: campaignDropdownValue == ""
+                                      ? null
+                                      : campaignDropdownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      campaignDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadSources(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Lead Source'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  hint: Text('Select a Lead Source'.tr),
+                                  value: sourceDropdownValue == ""
+                                      ? null
+                                      : sourceDropdownValue,
+                                  //icon: const Icon(Icons.arrow_downward),
+                                  elevation: 16,
+
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      sourceDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadStatuses(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'LeadStatus'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  value: dropdownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: bpNameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'BP Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: bPartnerFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.handshake_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Business Partner',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: addressFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.location_on),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Address'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                const Divider(),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        createAddress = !createAddress;
+                      });
+                      //openAddressCreation();
+                    },
+                    child: createAddress
+                        ? Text('Close Address Creation'.tr)
+                        : Text('Open Address Creation'.tr)),
+                Visibility(
+                  visible: createAddress,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        child: TextField(
+                          minLines: 1,
+                          maxLines: 5,
+                          controller: address1FieldController,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.edit_road),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Street'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(left: 40),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Country".tr,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                      countriesDataAvailable
+                          ? Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              child: Autocomplete<CtrRecords>(
+                                //initialValue: TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption:
+                                    _displayCountryStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<CtrRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return countries.records!
+                                      .where((CtrRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -345,69 +1287,151 @@ class _EditLeadState extends State<EditLead> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (CtrRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
+                                    countryId = selection.id!;
+                                    regionId = 0;
+                                    cityId = 0;
+                                    citiesDataAvailable = false;
                                   });
+                                  getAllRegions();
 
                                   //print(salesrepValue);
                                 },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
                               ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllLeadStatuses(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<LSRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                      Visibility(
+                        visible: regionsDataAvailable,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Region".tr,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      regionsDataAvailable
+                          ? Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              child: Autocomplete<RegRecords>(
+                                //initialValue: TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption:
+                                    _displayRegionStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<RegRecords>.empty();
+                                  }
+                                  return regions.records!
+                                      .where((RegRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
                                   });
-                                  //print(dropdownValue);
                                 },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    value: list.value.toString(),
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
+                                onSelected: (RegRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    regionId = selection.id!;
+                                    cityId = 0;
+                                    region = selection.name ?? "";
+                                  });
+                                  getAllCities();
+                                  //getAllRegions();
+
+                                  //print(salesrepValue);
+                                },
                               ),
+                            )
+                          : const SizedBox(),
+                      Visibility(
+                        visible: citiesDataAvailable,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "City".tr,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      citiesDataAvailable
+                          ? Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              child: Autocomplete<CitRecords>(
+                                //initialValue: TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption:
+                                    _displayCityStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<CitRecords>.empty();
+                                  }
+                                  return cities.records!
+                                      .where((CitRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (CitRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    cityId = selection.id!;
+                                    postalCode = selection.postal ?? "";
+                                    city = selection.name ?? "";
+                                  });
+                                  //getAllCities();
+                                  //getAllRegions();
+
+                                  //print(salesrepValue);
+                                },
+                              ),
+                            )
+                          : const SizedBox(),
+                      Visibility(
+                          visible:
+                              countryId != 0 && regionId != 0 && cityId != 0,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                createNewAddress();
+                              },
+                              child: Text('Create Address'.tr))),
+                    ],
                   ),
+                ),
+                const SizedBox(
+                  height: 100,
                 ),
               ],
             );
@@ -422,10 +1446,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -446,10 +1470,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -468,11 +1492,11 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 ),
@@ -525,11 +1549,11 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "LeadStatus".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 ),
@@ -584,10 +1608,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: nameFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Nome',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -608,10 +1632,10 @@ class _EditLeadState extends State<EditLead> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: phoneFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.phone_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Telefono',
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Phone'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -630,11 +1654,11 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Agente",
-                      style: TextStyle(fontSize: 12),
+                      "SalesRep".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 ),
@@ -687,11 +1711,11 @@ class _EditLeadState extends State<EditLead> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 40),
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Stato Lead",
-                      style: TextStyle(fontSize: 12),
+                      "LeadStatus".tr,
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 ),

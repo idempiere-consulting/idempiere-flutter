@@ -92,7 +92,7 @@ class _Button extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(10),
           child: Padding(
-            padding: const EdgeInsets.all(kSpacing),
+            padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 _icon((!selected) ? data.icon : data.activeIcon),

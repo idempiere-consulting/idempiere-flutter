@@ -34,7 +34,7 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person_add,
+                  activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Lead".tr,
                   visible: int.parse(list[3], radix: 16)
@@ -108,7 +108,19 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.description,
                   icon: Icons.description_outlined,
-                  label: "SalesOrder".tr,
+                  label: "Sales Order".tr,
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.description,
+                  icon: Icons.description_outlined,
+                  label: "Purchase Order".tr,
                   visible: int.parse(list[8], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -132,7 +144,19 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.receipt,
                   icon: Icons.receipt_outlined,
-                  label: "Invoice".tr,
+                  label: "Invoice Customer".tr,
+                  visible: int.parse(list[11], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.receipt,
+                  icon: Icons.receipt_outlined,
+                  label: "Invoice Vendor".tr,
                   visible: int.parse(list[11], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -231,24 +255,30 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/SalesOrder');
                     break;
                   case 8:
-                    Get.offNamed('/Shipment');
+                    Get.offNamed('/PurchaseOrder');
                     break;
                   case 9:
-                    Get.offNamed('/Invoice');
+                    Get.offNamed('/Shipment');
                     break;
                   case 10:
-                    Get.offNamed('/Payment');
+                    Get.offNamed('/Invoice');
                     break;
                   case 11:
-                    Get.offNamed('/Commission');
+                    Get.offNamed('/InvoicePO');
                     break;
                   case 12:
-                    Get.offNamed('/OpenItems');
+                    Get.offNamed('/Payment');
                     break;
                   case 13:
-                    Get.offNamed('/PriceList');
+                    Get.offNamed('/Commission');
                     break;
                   case 14:
+                    Get.offNamed('/OpenItems');
+                    break;
+                  case 15:
+                    Get.offNamed('/PriceList');
+                    break;
+                  case 16:
                     Get.offNamed('/Contract');
                     break;
                   default:

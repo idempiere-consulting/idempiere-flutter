@@ -12,6 +12,16 @@ class CRMContractController extends GetxController {
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
 
+  var businessPartnerFilter =
+      GetStorage().read('Contract_businessPartnerFilter') ?? "";
+  var docNoFilter = GetStorage().read('Contract_docNoFilter') ?? "";
+  var docTypeFilter = GetStorage().read('Contract_docTypeFilter') ?? "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var docNoValue = "".obs;
+  var docTypeId = "0".obs;
+
   var filters = ["Tutti", "Miei" /* , "Team" */];
   var filterCount = 0;
   // ignore: prefer_final_fields
@@ -40,6 +50,13 @@ class CRMContractController extends GetxController {
   void onInit() {
     dropDownList = getTypes()!;
     super.onInit();
+    businessPartnerName =
+        GetStorage().read('Contract_businessPartnerName') ?? "";
+    businessPartnerId.value =
+        GetStorage().read('Contract_businessPartnerId') ?? 0;
+    docNoValue.value = GetStorage().read('Contract_docNo') ?? "";
+    docTypeId.value = GetStorage().read('Contract_docTypeId') ?? "0";
+
     getContracts();
     getADUserID();
   }
@@ -109,6 +126,7 @@ class CRMContractController extends GetxController {
   }
 
   Future<void> getContracts() async {
+    _dataAvailable.value = false;
     var apiUrlFilter = [
       "",
       " and SalesRep_ID eq ${GetStorage().read('userId')}"
@@ -128,12 +146,12 @@ class CRMContractController extends GetxController {
       searchFilter = "and DocumentNo contains ${searchFieldController.text}";
     }
     //var userFilters = [];
-    _dataAvailable.value = false;
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_contract?\$filter= IsSoTrx eq \'Y\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/c_contract?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$businessPartnerFilter$docNoFilter$docTypeFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
