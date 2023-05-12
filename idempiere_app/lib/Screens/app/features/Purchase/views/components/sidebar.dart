@@ -62,6 +62,54 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.description,
+                  icon: Icons.description_outlined,
+                  label: "Sales Order Customer".tr,
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.receipt,
+                  icon: Icons.receipt_outlined,
+                  label: "Invoice Vendor".tr,
+                  visible: int.parse(list[11], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.request_quote,
+                  icon: Icons.request_quote_outlined,
+                  label: "Contracts Customer".tr,
+                  visible: int.parse(list[21], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.payments,
+                  icon: Icons.payments_outlined,
+                  label: "Payment".tr,
+                  visible: int.parse(list[12], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -80,6 +128,18 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 3:
                     Get.offNamed('/PurchaseProductList');
+                    break;
+                  case 4:
+                    Get.offNamed('/PurchaseOrder');
+                    break;
+                  case 5:
+                    Get.offNamed('/PurchaseInvoice');
+                    break;
+                  case 6:
+                    Get.offNamed('/PurchaseContract');
+                    break;
+                  case 7:
+                    Get.offNamed('/PurchasePayment');
                     break;
 
                   default:

@@ -1116,8 +1116,10 @@ class LocaleString extends Translations {
           'Contracts Customer': 'Contratto di Acquisto',
           'Payment': 'Pagamento',
           'Price List': 'Listino Prezzi',
-          'PURCHASE LEAD': 'LEAD ACQUISTI',
-          'Purchase Lead': 'Lead Acquisti'
+          'PURCHASE LEAD': 'LEAD FORNITORI',
+          'Purchase Lead': 'Lead Fornitori',
+          'Sales Order Customer': 'Ordine di Acquisto',
+          'Receipt': 'Incasso',
         },
       };
 }
