@@ -128,7 +128,7 @@ class CRMPaymentController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_Payment?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$businessPartnerFilter$dateStartFilter$dateEndFilter$bankAccountFilter&\$orderby= DateAcct desc&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/C_Payment?\$filter= IsReceipt eq N and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$businessPartnerFilter$dateStartFilter$dateEndFilter$bankAccountFilter&\$orderby= DateAcct desc&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{

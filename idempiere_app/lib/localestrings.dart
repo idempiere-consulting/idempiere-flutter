@@ -1120,6 +1120,8 @@ class LocaleString extends Translations {
           'Purchase Lead': 'Lead Fornitori',
           'Sales Order Customer': 'Ordine di Acquisto',
           'Receipt': 'Incasso',
+          'PAYMENTS': 'PAGAMENTI',
+          'MATERIAL RECEIPT: ': 'ENTRATE MERCI: ',
         },
       };
 }

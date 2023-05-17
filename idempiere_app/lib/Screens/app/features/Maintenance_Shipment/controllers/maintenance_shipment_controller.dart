@@ -121,7 +121,7 @@ class MaintenanceShipmentController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&\$orderby= MovementDate desc'); //?\$filter= AD_User2_ID eq $adUserId or SalesRep_ID eq $adUserId&\$orderby= MovementDate desc
+        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= IsSoTrx eq Y and (AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')})&\$orderby= MovementDate desc'); //?\$filter= AD_User2_ID eq $adUserId or SalesRep_ID eq $adUserId&\$orderby= MovementDate desc
 
     var response = await http.get(
       url,

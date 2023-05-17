@@ -42,6 +42,7 @@ class Records {
   final String? prices;
   final String? qtyAvailable;
   final String? qtyOrdered;
+  final String? qtyOnHand;
   final String? dateRestocks;
   final bool? isActive;
   final String? created;
@@ -57,6 +58,7 @@ class Records {
     this.prices,
     this.qtyAvailable,
     this.qtyOrdered,
+    this.qtyOnHand,
     this.dateRestocks,
     this.isActive,
     this.created,
@@ -73,6 +75,7 @@ class Records {
         prices = json['prices'] as String?,
         qtyAvailable = json['QtyAvailable'] as String?,
         qtyOrdered = json['QtyOrdered'] as String?,
+        qtyOnHand = json['QtyOnHand'] as String?,
         dateRestocks = json['daterestocks'] as String?,
         isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
@@ -93,6 +96,7 @@ class Records {
         'QtyAvailable': qtyAvailable,
         'QtyOrdered': qtyOrdered,
         'daterestocks': dateRestocks,
+        'QtyOnHand': qtyOnHand,
         'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),

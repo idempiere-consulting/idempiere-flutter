@@ -558,13 +558,15 @@ class PortalMpSalesOrderB2BController extends GetxController {
         });
       }
 
-      Map<String, PlutoCell> qtyInStockRow = {};
-      qtyInStockRow.addAll({
+      var rowqtyOnHandList = gridDetail.records![0].qtyOnHand!.split(';');
+
+      Map<String, PlutoCell> qtyOnHandRow = {};
+      qtyOnHandRow.addAll({
         'Size'.tr: PlutoCell(value: 'Warehouse'.tr),
       });
       for (var i = 0; i < columnList.length; i++) {
-        qtyInStockRow.addAll({
-          columnList[i]: PlutoCell(value: '0'),
+        qtyOnHandRow.addAll({
+          columnList[i]: PlutoCell(value: rowqtyOnHandList[i]),
         });
       }
 
@@ -585,7 +587,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       }); */
       rows.add(PlutoRow(cells: priceRow));
       rows.add(PlutoRow(cells: qtyAvailableRow));
-      rows.add(PlutoRow(cells: qtyInStockRow));
+      rows.add(PlutoRow(cells: qtyOnHandRow));
       rows.add(PlutoRow(cells: qtyOrderedRow));
       rows.add(PlutoRow(cells: dateStockRow));
 

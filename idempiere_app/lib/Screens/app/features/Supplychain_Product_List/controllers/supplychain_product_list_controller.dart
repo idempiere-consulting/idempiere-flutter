@@ -1,138 +1,48 @@
 part of dashboard;
 
-class PurchasePaymentController extends GetxController {
+class SupplychainProductListController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late PaymentJson _trx;
-  var _hasCallSupport = false;
+  late ProductListJson _trx;
   //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
-  var value = "Tutti".obs;
+  var searchFieldController = TextEditingController();
 
-  var filters = ["Tutti", "Miei" /* , "Team" */];
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var valueFilter = "";
+  var nameFilter = "";
+  var descriptionFilter = "";
+
+  var value = "".obs;
+  var name = "".obs;
+  var description = "".obs;
+
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
-
-  var businessPartnerFilter =
-      GetStorage().read('PurchasePayment_businessPartnerFilter') ?? "";
-  var dateStartFilter =
-      GetStorage().read('PurchasePayment_dateStartFilter') ?? "";
-  var dateEndFilter = GetStorage().read('PurchasePayment_dateEndFilter') ?? "";
-  var bankAccountFilter =
-      GetStorage().read('PurchasePayment_bankAccountFilter') ?? "";
-
-  var businessPartnerId = 0.obs;
-  String businessPartnerName = "";
-  var dateStartValue = "".obs;
-  var dateEndValue = "".obs;
-  var bankAccountId = 0.obs;
-  String bankAccountName = "";
 
   @override
   void onInit() {
     super.onInit();
-    canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
-      _hasCallSupport = result;
-    });
-    businessPartnerName =
-        GetStorage().read('PurchasePayment_businessPartnerName') ?? "";
-    businessPartnerId.value =
-        GetStorage().read('PurchasePayment_businessPartnerId') ?? 0;
-    dateStartValue.value = GetStorage().read('PurchasePayment_dateStart') ?? "";
-    dateEndValue.value = GetStorage().read('PurchasePayment_dateEnd') ?? "";
-    bankAccountId.value =
-        GetStorage().read('PurchasePayment_bankAccountId') ?? 0;
-    bankAccountName =
-        GetStorage().read('PurchasePayment_bankAccountName') ?? "";
-    getPayments();
-    getADUserID();
+
+    getProductLists();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  PaymentJson get trx => _trx;
+  ProductListJson get trx => _trx;
   //String get value => _value.toString();
 
-  changeFilter() {
-    filterCount++;
-    if (filterCount == 2) {
-      filterCount = 0;
-    }
-
-    value.value = filters[filterCount];
-    getPayments();
-  }
-
-  Future<void> getADUserID() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
-
-      adUserId = json["records"][0]["id"];
-
-      //print(trx.rowcount);
-      //print(response.body);
-      // ignore: unnecessary_null_comparison
-    }
-  }
-
-  Future<void> makePhoneCall(String phoneNumber) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    if (_hasCallSupport) {
-      final Uri launchUri = Uri(
-        scheme: 'tel',
-        path: phoneNumber,
-      );
-      await launchUrl(launchUri);
-    }
-  }
-
-  Future<void> writeMailTo(String receiver) async {
-    // Use `Uri` to ensure that `phoneNumber` is properly URL-encoded.
-    // Just using 'tel:$phoneNumber' would create invalid URLs in some cases,
-    // such as spaces in the input, which would cause `launch` to fail on some
-    // platforms.
-    final Uri launchUri = Uri(
-      scheme: 'mailto',
-      path: receiver,
-    );
-    await launchUrl(launchUri);
-  }
-
-  Future<void> getPayments() async {
-    var now = DateTime.now();
-    DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
-    var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
-    String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+  Future<void> getProductLists() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_Payment?\$filter= IsReceipt eq N and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$businessPartnerFilter$dateStartFilter$dateEndFilter$bankAccountFilter&\$orderby= DateAcct desc&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$valueFilter$nameFilter$descriptionFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -141,12 +51,14 @@ class PurchasePaymentController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
-      _trx = PaymentJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-
-      pagesTot.value = _trx.pagecount!;
+      if (kDebugMode) {
+        print(response.body);
+      }
+      _trx =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);
+      pagesTot.value = _trx.pagecount!;
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {

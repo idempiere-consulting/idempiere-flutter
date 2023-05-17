@@ -87,6 +87,7 @@ import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot_Lin
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/views/screens/supplychain_load_unload_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/views/screens/supplychain_load_unload_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Product_List/views/screens/supplychain_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Productwarehouse/views/screens/supplychain_productwarehouse_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket/views/screens/ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client/views/screens/ticketclient_screen.dart';
@@ -605,6 +606,11 @@ class MyApp extends StatelessWidget {
           name: '/SupplychainMaterialreceipt',
           page: () => const SupplychainMaterialreceiptScreen(),
           binding: SupplychainMaterialreceiptBinding(),
+        ),
+        GetPage(
+          name: '/SupplychainProductList',
+          page: () => const SupplychainProductListScreen(),
+          binding: SupplychainProductListBinding(),
         ),
         GetPage(
           name: '/VehicleEquipment',

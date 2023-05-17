@@ -5,6 +5,7 @@ import 'dart:io';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +22,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_b
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CreateMaintenanceMpResource extends StatefulWidget {
@@ -457,6 +459,7 @@ class _CreateMaintenanceMpResourceState
   }
 
   createWorkOrderResource(bool isConnected) async {
+    var inputFormat = DateFormat('dd/MM/yyyy');
     final protocol = GetStorage().read('protocol');
     //print(now);
     const filename = "workorderresource";
@@ -475,9 +478,9 @@ class _CreateMaintenanceMpResourceState
       "ResourceType": {"id": "BP"},
       "LIT_ResourceType": {"id": dropDownValue},
       "ResourceQty": 1,
-      "LIT_Control3DateFrom": date3,
-      "LIT_Control2DateFrom": date2,
-      "LIT_Control1DateFrom": date1,
+      //"LIT_Control3DateFrom": date3,
+      //"LIT_Control2DateFrom": date2,
+      //"LIT_Control1DateFrom": date1,
       "Note": noteFieldController.text,
       "SerNo": sernoFieldController.text,
       "LocationComment": locationFieldController.text,
@@ -517,15 +520,66 @@ class _CreateMaintenanceMpResourceState
       "IsOwned": args["property"] ?? false,
     };
 
+    if (dateCheckFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateCheckFieldController.text);
+
+        msg.addAll(
+            {"LIT_Control1DateFrom": DateFormat('yyyy-MM-dd').format(date)});
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
+    if (dateRevisionFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateRevisionFieldController.text);
+
+        msg.addAll(
+            {"LIT_Control2DateFrom": DateFormat('yyyy-MM-dd').format(date)});
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
+    if (dateTestingFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateTestingFieldController.text);
+
+        msg.addAll(
+            {"LIT_Control2DateFrom": DateFormat('yyyy-MM-dd').format(date)});
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
+
     if (dropdownValue3 != "") {
       msg.addAll({
         "lit_ResourceGroup_ID": {"id": int.parse(dropdownValue3)}
       });
     }
     final now = DateTime.now();
-    final checkDate = DateTime.parse(date1);
-    final revisionDate = DateTime.tryParse(date2);
-    final testDate = DateTime.tryParse(date3);
+    final checkDate = inputFormat.parse(dateCheckFieldController.text);
+    var revisionDate;
+    try {
+      revisionDate = inputFormat.parse(dateRevisionFieldController.text);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    var testDate;
+    try {
+      testDate = inputFormat.parse(dateTestingFieldController.text);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
     final today = DateTime(now.year, now.month, now.day);
 
     if (DateTime(checkDate.year, checkDate.month, checkDate.day) == today) {
@@ -583,7 +637,7 @@ class _CreateMaintenanceMpResourceState
       eDIType: edt,
       lITControl3DateFrom: date3,
       lITControl2DateFrom: date2,
-      lITControl1DateFrom: date1,
+      //lITControl1DateFrom: date1,
       note: noteFieldController.text,
       serNo: sernoFieldController.text,
       locationComment: locationFieldController.text,
@@ -615,6 +669,41 @@ class _CreateMaintenanceMpResourceState
       color: colorFieldController.text,
       textDetails: cartelFieldController.text,
     );
+
+    if (dateCheckFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateCheckFieldController.text);
+
+        record.lITControl1DateFrom = DateFormat('yyyy-MM-dd').format(date);
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
+    if (dateRevisionFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateRevisionFieldController.text);
+
+        record.lITControl2DateFrom = DateFormat('yyyy-MM-dd').format(date);
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
+
+    if (dateTestingFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateTestingFieldController.text);
+
+        record.lITControl3DateFrom = DateFormat('yyyy-MM-dd').format(date);
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
 
     if (dropdownValue3 != "") {
       record.litResourceGroupID =
@@ -747,6 +836,46 @@ class _CreateMaintenanceMpResourceState
           "Color": colorFieldController.text,
         };
 
+        if (dateCheckFieldController.text != "") {
+          try {
+            var date = inputFormat.parse(dateCheckFieldController.text);
+
+            call.addAll({
+              "LIT_Control1DateFrom": DateFormat('yyyy-MM-dd').format(date)
+            });
+          } catch (e) {
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        }
+        if (dateRevisionFieldController.text != "") {
+          try {
+            var date = inputFormat.parse(dateRevisionFieldController.text);
+
+            call.addAll({
+              "LIT_Control2DateFrom": DateFormat('yyyy-MM-dd').format(date)
+            });
+          } catch (e) {
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        }
+        if (dateTestingFieldController.text != "") {
+          try {
+            var date = inputFormat.parse(dateTestingFieldController.text);
+
+            call.addAll({
+              "LIT_Control2DateFrom": DateFormat('yyyy-MM-dd').format(date)
+            });
+          } catch (e) {
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        }
+
         if (dropdownValue3 != "") {
           msg.addAll({
             "lit_ResourceGroup_ID": {"id": int.parse(dropdownValue3)}
@@ -770,7 +899,7 @@ class _CreateMaintenanceMpResourceState
           "ResourceQty": 1,
           "LIT_Control3DateFrom": date3,
           "LIT_Control2DateFrom": date2,
-          "LIT_Control1DateFrom": date1,
+          //"LIT_Control1DateFrom": date1,
           "Note": noteFieldController.text,
           "SerNo": sernoFieldController.text,
           "LocationComment": locationFieldController.text,
@@ -808,8 +937,47 @@ class _CreateMaintenanceMpResourceState
               : "0"),
           "Color": colorFieldController.text,
         };
+        if (dateCheckFieldController.text != "") {
+          try {
+            var date = inputFormat.parse(dateCheckFieldController.text);
+
+            call.addAll({
+              "LIT_Control1DateFrom": DateFormat('yyyy-MM-dd').format(date)
+            });
+          } catch (e) {
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        }
+        if (dateRevisionFieldController.text != "") {
+          try {
+            var date = inputFormat.parse(dateRevisionFieldController.text);
+
+            call.addAll({
+              "LIT_Control2DateFrom": DateFormat('yyyy-MM-dd').format(date)
+            });
+          } catch (e) {
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        }
+        if (dateTestingFieldController.text != "") {
+          try {
+            var date = inputFormat.parse(dateTestingFieldController.text);
+
+            call.addAll({
+              "LIT_Control2DateFrom": DateFormat('yyyy-MM-dd').format(date)
+            });
+          } catch (e) {
+            if (kDebugMode) {
+              print(e);
+            }
+          }
+        }
         if (dropdownValue3 != "") {
-          msg.addAll({
+          call.addAll({
             "lit_ResourceGroup_ID": {"id": int.parse(dropdownValue3)}
           });
         }
@@ -927,6 +1095,9 @@ class _CreateMaintenanceMpResourceState
   var weightAmtFieldController;
   var heightFieldController;
   var colorFieldController;
+  late TextEditingController dateCheckFieldController;
+  late TextEditingController dateRevisionFieldController;
+  late TextEditingController dateTestingFieldController;
   String date3 = "";
   int dateCalc3 = 0;
   String date2 = "";
@@ -969,6 +1140,16 @@ class _CreateMaintenanceMpResourceState
     weightAmtFieldController = TextEditingController(text: "0");
     heightFieldController = TextEditingController(text: "0");
     colorFieldController = TextEditingController(text: "");
+    dateCheckFieldController = TextEditingController(
+        text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
+    dateRevisionFieldController = TextEditingController(
+        text: (args["perm"])[16] == "N"
+            ? ''
+            : DateFormat('dd/MM/yyyy').format(DateTime.now()));
+    dateTestingFieldController = TextEditingController(
+        text: (args["perm"])[17] == "N"
+            ? ''
+            : DateFormat('dd/MM/yyyy').format(DateTime.now()));
     date3 = (args["perm"])[17] == "N"
         ? ''
         : (DateTime.now().toString()).substring(0, 10);
@@ -984,7 +1165,6 @@ class _CreateMaintenanceMpResourceState
     dateOrdered = "";
     firstUseDate = "";
     dropdownValue3 = "";
-    //getAllProducts();
   }
 
   static String _displayStringForOption(Records option) =>
@@ -1470,6 +1650,30 @@ class _CreateMaintenanceMpResourceState
                   visible: (args["perm"])[15] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      // maxLength: 10,
+                      keyboardType: TextInputType.datetime,
+                      controller: dateCheckFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(EvaIcons.calendarOutline),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Check Date'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        hintText: 'DD/MM/YYYY',
+                        counterText: '',
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                        LengthLimitingTextInputFormatter(10),
+                        _DateFormatterCustom(),
+                      ],
+                    ),
+                  ),
+                ),
+                /* Visibility(
+                  visible: (args["perm"])[15] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
                     padding: const EdgeInsets.all(10),
                     width: size.width,
                     decoration: BoxDecoration(
@@ -1502,8 +1706,32 @@ class _CreateMaintenanceMpResourceState
                       onSaved: (val) => print(val),
                     ),
                   ),
-                ),
+                ), */
                 Visibility(
+                  visible: (args["perm"])[16] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      // maxLength: 10,
+                      keyboardType: TextInputType.datetime,
+                      controller: dateRevisionFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(EvaIcons.calendarOutline),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Revision Date'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        hintText: 'DD/MM/YYYY',
+                        counterText: '',
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                        LengthLimitingTextInputFormatter(10),
+                        _DateFormatterCustom(),
+                      ],
+                    ),
+                  ),
+                ),
+                /* Visibility(
                   visible: (args["perm"])[16] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
@@ -1541,8 +1769,32 @@ class _CreateMaintenanceMpResourceState
                       onSaved: (val) => print(val),
                     ),
                   ),
-                ),
+                ), */
                 Visibility(
+                  visible: (args["perm"])[17] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      // maxLength: 10,
+                      keyboardType: TextInputType.datetime,
+                      controller: dateTestingFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(EvaIcons.calendarOutline),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Testing Date'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        hintText: 'DD/MM/YYYY',
+                        counterText: '',
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                        LengthLimitingTextInputFormatter(10),
+                        _DateFormatterCustom(),
+                      ],
+                    ),
+                  ),
+                ),
+                /* Visibility(
                   visible: (args["perm"])[17] == "Y",
                   child: Container(
                     margin: const EdgeInsets.all(10),
@@ -1580,7 +1832,7 @@ class _CreateMaintenanceMpResourceState
                       onSaved: (val) => print(val),
                     ),
                   ),
-                ),
+                ), */
                 Visibility(
                   visible: (args["perm"])[18] == "Y",
                   child: Container(
@@ -2538,6 +2790,97 @@ class _CreateMaintenanceMpResourceState
           },
         ),
       ),
+    );
+  }
+}
+
+class _DateFormatterCustom extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue prevText, TextEditingValue currText) {
+    int selectionIndex;
+
+    // Get the previous and current input strings
+    String pText = prevText.text;
+    String cText = currText.text;
+    // Abbreviate lengths
+    int cLen = cText.length;
+    int pLen = pText.length;
+
+    if (cLen == 1) {
+      // Can only be 0, 1, 2 or 3
+      if (int.parse(cText) > 3) {
+        // Remove char
+        cText = '';
+      }
+    } else if (cLen == 2 && pLen == 1) {
+      // Days cannot be greater than 31
+      int dd = int.parse(cText.substring(0, 2));
+      if (dd == 0 || dd > 31) {
+        // Remove char
+        cText = cText.substring(0, 1);
+      } else {
+        // Add a / char
+        cText += '/';
+      }
+    } else if (cLen == 4) {
+      // Can only be 0 or 1
+      if (int.parse(cText.substring(3, 4)) > 1) {
+        // Remove char
+        cText = cText.substring(0, 3);
+      }
+    } else if (cLen == 5 && pLen == 4) {
+      // Month cannot be greater than 12
+      int mm = int.parse(cText.substring(3, 5));
+      if (mm == 0 || mm > 12) {
+        // Remove char
+        cText = cText.substring(0, 4);
+      } else {
+        // Add a / char
+        cText += '/';
+      }
+    } else if ((cLen == 3 && pLen == 4) || (cLen == 6 && pLen == 7)) {
+      // Remove / char
+      cText = cText.substring(0, cText.length - 1);
+    } else if (cLen == 3 && pLen == 2) {
+      if (int.parse(cText.substring(2, 3)) > 1) {
+        // Replace char
+        cText = '${cText.substring(0, 2)}/';
+      } else {
+        // Insert / char
+        cText =
+            '${cText.substring(0, pLen)}/${cText.substring(pLen, pLen + 1)}';
+      }
+    } else if (cLen == 6 && pLen == 5) {
+      // Can only be 1 or 2 - if so insert a / char
+      int y1 = int.parse(cText.substring(5, 6));
+      if (y1 < 1 || y1 > 2) {
+        // Replace char
+        cText = '${cText.substring(0, 5)}/';
+      } else {
+        // Insert / char
+        cText = '${cText.substring(0, 5)}/${cText.substring(5, 6)}';
+      }
+    } else if (cLen == 7) {
+      // Can only be 1 or 2
+      int y1 = int.parse(cText.substring(6, 7));
+      if (y1 < 1 || y1 > 2) {
+        // Remove char
+        cText = cText.substring(0, 6);
+      }
+    } else if (cLen == 8) {
+      // Can only be 19 or 20
+      int y2 = int.parse(cText.substring(6, 8));
+      if (y2 < 19 || y2 > 20) {
+        // Remove char
+        cText = cText.substring(0, 7);
+      }
+    }
+
+    selectionIndex = cText.length;
+    return TextEditingValue(
+      text: cText,
+      selection: TextSelection.collapsed(offset: selectionIndex),
     );
   }
 }
