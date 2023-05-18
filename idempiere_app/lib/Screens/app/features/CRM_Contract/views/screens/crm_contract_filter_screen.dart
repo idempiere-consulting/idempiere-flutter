@@ -357,13 +357,13 @@ class _CRMFilterContractState extends State<CRMFilterContract> {
           tabletBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: const [],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: const [],
             );
           },
         ),

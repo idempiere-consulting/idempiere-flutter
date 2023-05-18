@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -14,12 +13,6 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/mode
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 
 //models
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/doctype_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/bplocation_json.dart';
-
-//screens
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
-import 'package:idempiere_app/constants.dart';
 
 class CRMEditInvoice extends StatefulWidget {
   const CRMEditInvoice({Key? key}) : super(key: key);
@@ -161,7 +154,7 @@ class _CRMEditInvoiceState extends State<CRMEditInvoice> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -186,7 +179,7 @@ class _CRMEditInvoiceState extends State<CRMEditInvoice> {
           mobileBuilder: (context, constraints) {
             return Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Container(
@@ -312,12 +305,12 @@ class _CRMEditInvoiceState extends State<CRMEditInvoice> {
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: [],
+              children: const [],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: [],
+              children: const [],
             );
           },
         ),

@@ -54,7 +54,7 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
     final protocol = GetStorage().read('protocol');
     var url =
         Uri.parse('$protocol://$ip/api/v1/models/C_BPartner/${args["id"]}');
-    print(msg);
+    //print(msg);
     var response = await http.put(
       url,
       body: jsonEncode(msg),
@@ -607,10 +607,10 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
   bool locationCreated = false;
   bool noAddress = false;
 
-  var address1FieldController;
-  var countryFieldController;
-  var regionFieldController;
-  var cityFieldController;
+  late TextEditingController address1FieldController;
+  late TextEditingController countryFieldController;
+  late TextEditingController regionFieldController;
+  late TextEditingController cityFieldController;
 
   CountryJSON countries = CountryJSON(records: []);
   bool countriesDataAvailable = false;
@@ -1056,7 +1056,8 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                                   regionId = 0;
                                   cityId = 0;
                                   citiesDataAvailable = false;
-                                  countryFieldController.text = suggestion.name;
+                                  countryFieldController.text =
+                                      suggestion.name ?? '';
                                 });
                                 getAllRegions();
                                 //productName = selection.name;
@@ -1131,7 +1132,8 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                                   regionId = suggestion.id!;
                                   cityId = 0;
                                   region = suggestion.name ?? "";
-                                  regionFieldController.text = suggestion.name;
+                                  regionFieldController.text =
+                                      suggestion.name ?? '';
                                 });
                                 getAllCities();
                                 //productName = selection.name;
@@ -1203,7 +1205,8 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                                   cityId = suggestion.id!;
                                   postalCode = suggestion.postal ?? "";
                                   city = suggestion.name ?? "";
-                                  cityFieldController.text = suggestion.name;
+                                  cityFieldController.text =
+                                      suggestion.name ?? '';
                                 });
                                 //productName = selection.name;
                               },

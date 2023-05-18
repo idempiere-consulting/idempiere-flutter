@@ -73,7 +73,6 @@ import 'package:idempiere_app/Screens/app/features/Production/views/screens/prod
 import 'package:idempiere_app/Screens/app/features/Production_Order/views/screens/production_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase/views/screens/purchase_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Lead/views/screens/purchase_lead_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Payment/views/screens/crm_payment_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Product_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Productwarehouseprice/views/screens/purchase_productwarehouseprice_screen.dart';

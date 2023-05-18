@@ -341,6 +341,7 @@ class CRMLeadController extends GetxController {
       default:
     } */
 
+    // ignore: unused_local_variable
     var notificationFilter = "";
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
