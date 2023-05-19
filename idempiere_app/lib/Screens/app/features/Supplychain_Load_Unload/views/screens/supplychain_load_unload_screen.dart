@@ -7,11 +7,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/models/loadunloadjson.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/views/screens/supplychain_create_load_unload.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/views/screens/supplychain_load_unload_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -107,6 +110,141 @@ class SupplychainLoadUnloadScreen
         return false;
       },
       child: Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder()),
+          //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+          color: Theme.of(context).cardColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.getLoadUnloads();
+                          },
+                          child: Row(
+                            children: [
+                              //Icon(Icons.filter_alt),
+                              Obx(() => controller.dataAvailable
+                                  ? Text("${"Load & Unload".tr}: ".tr +
+                                      controller.trx.rowcount.toString())
+                                  : Text("${"Load & Unload".tr}: ".tr)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                    ],
+                  )
+                ],
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount > 1) {
+                              controller.pagesCount.value -= 1;
+                              controller.getLoadUnloads();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                        Obx(() => Text(
+                            "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount <
+                                controller.pagesTot.value) {
+                              controller.pagesCount.value += 1;
+                              controller.getLoadUnloads();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.home_menu,
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+          children: [
+            SpeedDialChild(
+                label: 'Filter'.tr,
+                child: Obx(() => Icon(
+                      MaterialSymbols.filter_alt_filled,
+                      color: controller.businessPartnerId.value == 0 &&
+                              controller.selectedUserRadioTile.value == 0 &&
+                              controller.docNoValue.value == "" &&
+                              controller.description.value == "" &&
+                              controller.dateStartValue.value == "" &&
+                              controller.dateEndValue.value == ""
+                          ? Colors.white
+                          : kNotifColor,
+                    )),
+                onTap: () {
+                  Get.to(const SupplychainFilterLoadUnload(), arguments: {
+                    'selectedUserRadioTile':
+                        controller.selectedUserRadioTile.value,
+                    'salesRepId': controller.salesRepId,
+                    'salesRepName': controller.salesRepName,
+                    'businessPartnerId': controller.businessPartnerId.value,
+                    'businessPartnerName': controller.businessPartnerName,
+                    'docNo': controller.docNoValue.value,
+                    'description': controller.description.value,
+                    'dateStart': controller.dateStartValue.value,
+                    'dateEnd': controller.dateEndValue.value,
+                  });
+                }),
+            SpeedDialChild(
+                label: 'New'.tr,
+                child: const Icon(MaterialSymbols.assignment_add_outlined),
+                onTap: () {
+                  Get.to(const CreateSupplychainLoadUnload(), arguments: {
+                    "idDoc": controller.idDoc,
+                    "warehouseId": GetStorage().read("warehouseid")
+                  });
+                })
+          ],
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -238,7 +376,10 @@ class SupplychainLoadUnloadScreen
                                   ),
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.calendar_month, color: Colors.white,),
+                                      const Icon(
+                                        Icons.calendar_month,
+                                        color: Colors.white,
+                                      ),
                                       Text(
                                         controller.trx.records![index]
                                                 .movementDate ??

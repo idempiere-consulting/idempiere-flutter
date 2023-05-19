@@ -678,13 +678,13 @@ class _CRMFilterLeadState extends State<CRMFilterLead> {
           tabletBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: const [],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: const [],
             );
           },
         ),

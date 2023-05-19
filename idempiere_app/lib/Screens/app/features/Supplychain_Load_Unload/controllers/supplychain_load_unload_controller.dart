@@ -9,10 +9,44 @@ class SupplychainLoadUnloadController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  var userFilter = GetStorage().read('LoadUnload_userFilter') ?? "";
+  var businessPartnerFilter =
+      GetStorage().read('LoadUnload_businessPartnerFilter') ?? "";
+  var docNoFilter = GetStorage().read('LoadUnload_docNoFilter') ?? "";
+  var descriptionFilter =
+      GetStorage().read('LoadUnload_descriptionFilter') ?? "";
+  var dateStartFilter = GetStorage().read('LoadUnload_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('LoadUnload_dateEndFilter') ?? "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var selectedUserRadioTile = 0.obs;
+  var salesRepId = 0;
+  var salesRepName = "";
+  var docNoValue = "".obs;
+  var description = "".obs;
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
+
   @override
   void onInit() {
     getDocType();
     super.onInit();
+    selectedUserRadioTile.value =
+        GetStorage().read('LoadUnload_selectedUserRadioTile') ?? 0;
+    businessPartnerName =
+        GetStorage().read('LoadUnload_businessPartnerName') ?? "";
+    businessPartnerId.value =
+        GetStorage().read('LoadUnload_businessPartnerId') ?? 0;
+    salesRepId = GetStorage().read('LoadUnload_salesRepId') ?? 0;
+    salesRepName = GetStorage().read('LoadUnload_salesRepName') ?? "";
+    docNoValue.value = GetStorage().read('LoadUnload_docNo') ?? "";
+    description.value = GetStorage().read('LoadUnload_description') ?? "";
+    dateStartValue.value = GetStorage().read('LoadUnload_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('LoadUnload_dateEnd') ?? "";
 
     //getLoadUnloads();
     //getADUserID();
@@ -52,7 +86,7 @@ class SupplychainLoadUnloadController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_Inventory?\$filter= C_DocType_ID eq $idDoc and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/M_Inventory?\$filter= C_DocType_ID eq $idDoc and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{

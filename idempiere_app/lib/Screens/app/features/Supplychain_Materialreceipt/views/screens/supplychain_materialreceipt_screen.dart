@@ -21,6 +21,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_c
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/shipment_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_edit.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_create.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_edit.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -192,6 +193,12 @@ class SupplychainMaterialreceiptScreen
                     'dateEnd': controller.dateEndValue.value,
                   });
                 }),
+            SpeedDialChild(
+                label: 'New'.tr,
+                child: const Icon(MaterialSymbols.assignment_add_outlined),
+                onTap: () {
+                  Get.to(() => const CreateSupplychainMaterialReceipt());
+                })
           ],
         ),
         //key: controller.scaffoldKey,
