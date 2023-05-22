@@ -3,6 +3,8 @@ part of dashboard;
 class SupplychainMaterialreceiptController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late ShipmentJson _trx;
+
+  SalesOrderLineJson orderLineList = SalesOrderLineJson(records: []);
   var _hasCallSupport = false;
   //var _hasMailSupport = false;
 

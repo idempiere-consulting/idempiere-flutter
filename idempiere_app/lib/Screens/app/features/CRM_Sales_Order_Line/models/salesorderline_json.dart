@@ -74,9 +74,11 @@ class Records {
   final num? rRAmt;
   final CActivityID? cActivityID;
   final String? name;
+  final String? vendorProductNo;
   final num? lITStockInTrade;
   final num? lITGeneralPriceLimit;
   final String? modelname;
+  num? qtyRegistered;
 
   Records({
     this.id,
@@ -121,9 +123,11 @@ class Records {
     this.rRAmt,
     this.cActivityID,
     this.name,
+    this.vendorProductNo,
     this.lITStockInTrade,
     this.lITGeneralPriceLimit,
     this.modelname,
+    this.qtyRegistered,
   });
 
   Records.fromJson(Map<String, dynamic> json)
@@ -205,6 +209,7 @@ class Records {
                 json['C_Activity_ID'] as Map<String, dynamic>)
             : null,
         name = json['Name'] as String?,
+        vendorProductNo = json['VendorProductNo'] as String?,
         lITStockInTrade = json['LIT_StockInTrade'] as num?,
         lITGeneralPriceLimit = json['LIT_GeneralPriceLimit'] as num?,
         modelname = json['model-name'] as String?;
@@ -252,6 +257,7 @@ class Records {
         'RRAmt': rRAmt,
         'C_Activity_ID': cActivityID?.toJson(),
         'Name': name,
+        'VendorProductNo': vendorProductNo,
         'LIT_StockInTrade': lITStockInTrade,
         'LIT_GeneralPriceLimit': lITGeneralPriceLimit,
         'model-name': modelname

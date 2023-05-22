@@ -1122,6 +1122,11 @@ class LocaleString extends Translations {
           'Receipt': 'Incasso',
           'PAYMENTS': 'PAGAMENTI',
           'MATERIAL RECEIPT: ': 'ENTRATE MERCI: ',
+          'Ordered': 'Ordinata',
+          'Reserved': 'Residua',
+          'View Reserved Only': 'Vedi Solo Residui',
+          'All Received': 'Tutto Ricevuto',
+          'Vendor Code': 'Codice Venditore',
         },
       };
 }
