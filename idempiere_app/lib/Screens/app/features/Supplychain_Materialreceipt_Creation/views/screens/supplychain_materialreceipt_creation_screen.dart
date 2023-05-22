@@ -271,6 +271,8 @@ class SupplychainMaterialreceiptCreationScreen
                                         suggestion.name!;
                                     controller.businessPartnerId =
                                         suggestion.id!;
+                                    controller
+                                        .getPurchaseOrders(suggestion.id!);
                                   },
                                 )
                               : const Center(
@@ -628,7 +630,15 @@ class SupplychainMaterialreceiptCreationScreen
                     child: Container(
                       margin: const EdgeInsets.all(10),
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.defaultDialog(
+                                title: 'Confirm Material Receipt',
+                                content: Text(
+                                    'Are you sure you want to confirm the Material Receipt?'
+                                        .tr),
+                                textCancel: 'Cancel',
+                                onConfirm: () {});
+                          },
                           child: Text('Confirm Material Receipt'.tr)),
                     ),
                   ),

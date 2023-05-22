@@ -27,7 +27,7 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
     documentDateFieldController = TextEditingController();
     docNoFieldController = TextEditingController();
     pOrderdocNoSearchFieldController = TextEditingController();
-    getPurchaseOrders();
+    //getPurchaseOrders();
   }
 
   Future<void> createMaterialReceipt() async {
@@ -118,12 +118,12 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
     return jsonbps.records!;
   }
 
-  getPurchaseOrders() async {
+  getPurchaseOrders(int id) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_order?\$expand=c_orderLine&\$filter= IsSoTrx eq N and AD_Client_ID eq ${GetStorage().read('clientid')}&\$orderby=DateOrdered desc');
+        '$protocol://$ip/api/v1/models/c_order?\$expand=c_orderLine&\$filter= C_BPartner_ID eq $id and IsSoTrx eq N and AD_Client_ID eq ${GetStorage().read('clientid')}&\$orderby=DateOrdered desc');
 
     var response = await http.get(
       url,
